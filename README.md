@@ -1,3 +1,14 @@
+# Maple Online School
+
+Maple is moving to a React Native app and a Go backend:
+
+- [`mobile/`](mobile/README.md): the new app for Android, iOS and web (Expo)
+- [`api/`](api/README.md): the new Go API, which forwards anything it doesn't handle yet to Django
+- [`openapi/maple.yaml`](openapi/maple.yaml): the API contract shared by both
+- `src/` and `edify_backend/`: the current React web app and Django backend, retired module by module
+
+The notes below are the original Vite template README for the web app in `src/`.
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
