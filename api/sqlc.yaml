@@ -1,0 +1,13 @@
+version: "2"
+sql:
+  - engine: postgresql
+    schema:
+      - db/legacy/django_tables.sql
+      - db/migrations
+    queries: db/queries
+    gen:
+      go:
+        package: dbgen
+        out: internal/platform/dbgen
+        sql_package: pgx/v5
+        emit_empty_slices: true

@@ -1,0 +1,177 @@
+openapi: 3.1.0
+info:
+  title: Maple API
+  version: 0.1.0
+  description: |
+    The contract between the Maple apps and the Go API. Paths not listed here
+    are still served by the Django API through the Go service's forwarder,
+    under the same /api/v1/ prefix. Each module moved to Go is added here first.
+servers:
+  - url: http://localhost:8080
+    description: Local Go API
+security:
+  - bearer: []
+paths:
+  /api/health/:
+    get:
+      summary: Service and database health
+      security: []
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Health" }
+        "503":
+          description: The database is unreachable
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Health" }
+  /api/v1/auth/token/:
+    post:
+      summary: Sign in with email and password
+      description: Limited to 10 attempts per minute per IP address.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LoginRequest" }
+      responses:
+        "200":
+          description: Signed in
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/TokenPair" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+  /api/v1/auth/token/refresh/:
+    post:
+      summary: Swap a refresh token for a new token pair
+      description: Each refresh token works once. Reusing one returns 401.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/RefreshRequest" }
+      responses:
+        "200":
+          description: New tokens
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/TokenPair" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+  /api/v1/auth/logout/:
+    post:
+      summary: Sign out by revoking the refresh token
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/RefreshRequest" }
+      responses:
+        "204": { description: Signed out }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+  /api/v1/auth/me/:
+    get:
+      summary: The signed-in user, their school memberships and approved children
+      responses:
+        "200":
+          description: Current user
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Me" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+components:
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses:
+    BadRequest:
+      description: The request body is missing fields or is not valid JSON
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    Unauthorized:
+      description: Wrong credentials, or a missing, invalid or expired token
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    TooManyRequests:
+      description: Rate limit reached
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+  schemas:
+    Error:
+      type: object
+      required: [detail]
+      properties:
+        detail: { type: string }
+        code: { type: string }
+    Health:
+      type: object
+      required: [status, database]
+      properties:
+        status: { type: string, enum: [ok, degraded] }
+        database: { type: string, enum: [ok, unreachable] }
+    LoginRequest:
+      type: object
+      required: [email, password]
+      additionalProperties: false
+      properties:
+        email: { type: string, format: email }
+        password: { type: string }
+    RefreshRequest:
+      type: object
+      required: [refresh]
+      additionalProperties: false
+      properties:
+        refresh: { type: string }
+    TokenPair:
+      type: object
+      required: [access, refresh]
+      properties:
+        access: { type: string, description: "Short-lived access token (15 minutes by default)" }
+        refresh: { type: string, description: "Refresh token (7 days by default)" }
+    Role:
+      type: string
+      enum: [student, teacher, parent, admin, institution]
+    Membership:
+      type: object
+      required: [institution_id, institution_name, role, status]
+      properties:
+        institution_id: { type: integer, format: int64 }
+        institution_name: { type: string }
+        role: { type: string, description: "Role inside the school, such as headteacher or class_teacher" }
+        status: { type: string, enum: [pending, active, suspended] }
+    Child:
+      type: object
+      required: [user_id, full_name, relationship]
+      properties:
+        user_id: { type: integer, format: int64 }
+        full_name: { type: string }
+        relationship: { type: string }
+    Me:
+      type: object
+      required: [id, email, full_name, role, country_code, memberships, children]
+      properties:
+        id: { type: integer, format: int64 }
+        email: { type: string, format: email }
+        full_name: { type: string }
+        role: { $ref: "#/components/schemas/Role" }
+        country_code: { type: string }
+        memberships:
+          type: array
+          items: { $ref: "#/components/schemas/Membership" }
+        children:
+          type: array
+          description: Only children linked through an approved guardian link
+          items: { $ref: "#/components/schemas/Child" }

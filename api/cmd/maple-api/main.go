@@ -1,0 +1,89 @@
+// Command maple-api runs the Maple Go API.
+package main
+
+import (
+	"context"
+	"errors"
+	"log/slog"
+	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
+
+	"github.com/go-chi/chi/v5"
+
+	"github.com/O-Mario88/maple-online-School/api/internal/config"
+	"github.com/O-Mario88/maple-online-School/api/internal/identity"
+	"github.com/O-Mario88/maple-online-School/api/internal/platform/postgres"
+	"github.com/O-Mario88/maple-online-School/api/internal/server"
+)
+
+const shutdownGrace = 15 * time.Second
+
+func main() {
+	slog.SetDefault(slog.New(slog.NewJSONHandler(os.Stdout, nil)))
+	if err := run(); err != nil {
+		slog.Error("maple-api stopped", "err", err)
+		os.Exit(1)
+	}
+}
+
+func run() error {
+	cfg, err := config.Load()
+	if err != nil {
+		return err
+	}
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
+
+	pool, err := postgres.Open(ctx, cfg.DatabaseURL)
+	if err != nil {
+		return err
+	}
+	defer pool.Close()
+	if err := postgres.Migrate(ctx, pool); err != nil {
+		return err
+	}
+
+	store := identity.NewPostgresStore(pool)
+	tokens := &identity.TokenIssuer{SigningKey: cfg.JWTSigningKey, AccessTTL: cfg.AccessTTL, RefreshTTL: cfg.RefreshTTL}
+	auth := identity.NewHandler(store, store, store, tokens, cfg.RequireVerified)
+
+	handler, err := server.NewRouter(server.Options{
+		Pinger:            pool,
+		LegacyAPI:         cfg.LegacyAPIURL,
+		CORSOrigins:       cfg.CORSOrigins,
+		TrustProxyHeaders: cfg.TrustProxyHeaders,
+		Modules:           []func(chi.Router){auth.Mount},
+	})
+	if err != nil {
+		return err
+	}
+
+	srv := &http.Server{
+		Addr:              cfg.Addr,
+		Handler:           handler,
+		ReadHeaderTimeout: 10 * time.Second,
+		ReadTimeout:       30 * time.Second,
+		WriteTimeout:      60 * time.Second,
+		IdleTimeout:       120 * time.Second,
+	}
+	errCh := make(chan error, 1)
+	go func() {
+		slog.Info("maple-api listening", "addr", cfg.Addr, "legacy_api", cfg.LegacyAPIURL != "")
+		errCh <- srv.ListenAndServe()
+	}()
+
+	select {
+	case err := <-errCh:
+		if !errors.Is(err, http.ErrServerClosed) {
+			return err
+		}
+		return nil
+	case <-ctx.Done():
+	}
+	shutdownCtx, cancel := context.WithTimeout(context.Background(), shutdownGrace)
+	defer cancel()
+	return srv.Shutdown(shutdownCtx)
+}

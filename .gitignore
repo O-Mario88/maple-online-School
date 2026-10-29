@@ -65,3 +65,4 @@ edify_backend/media/*
 playwright-report/
 test-results/
 playwright/.cache/
+.local/
