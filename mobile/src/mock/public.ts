@@ -589,3 +589,53 @@ export const schoolsPage = {
     } as Record<string, { title: string; term: string; rows: Week[] }>,
   },
 };
+
+/** A sample signed digest link (valid until Sun 16 Nov 2026, 11:59 PM EAT) and an expired one, for design builds. */
+export const SAMPLE_DIGEST_TOKEN = 'eyJjaGlsZCI6ImFpc2hhLW5hbXV0ZWJpIiwid2VlayI6IjIwMjYtMTEtMDIiLCJleHAiOjE3OTQ4NjI3NDAwMDB9.demo-signature';
+export const EXPIRED_DIGEST_TOKEN = 'eyJjaGlsZCI6ImFpc2hhLW5hbXV0ZWJpIiwid2VlayI6IjIwMjYtMTEtMDIiLCJleHAiOjE3OTA4ODgzNDAwMDB9.demo-signature';
+
+export const parentDigest = {
+  childSlug: 'aisha-namutebi',
+  heroPhoto: photos.digestHero,
+  week: 'Week of 2 – 6 Nov 2026',
+  validUntil: 'Sun, 16 Nov 2026 · 11:59 PM',
+  child: { name: 'Aisha Namutebi', level: 'Primary 7', school: 'Kampala Hill School', photo: photos.digestChild },
+  stats: [
+    { value: '5/5', label: 'Days Attended', icon: 'check' as const, tint: '#16A34A' },
+    { value: '12', label: 'Competencies Mastered', icon: 'sparkle' as const, tint: '#F59E0B' },
+    { value: '4', label: 'Subjects Active', icon: 'star' as const, tint: '#F59E0B' },
+  ],
+  quote: { text: 'Great progress this week! Aisha is showing more confidence in problem solving and participates actively in class.', by: 'Ms. Sarah Kimani, Class Teacher' },
+  attendance: [
+    { day: 'Mon', date: 'Nov 2', present: true },
+    { day: 'Tue', date: 'Nov 3', present: true },
+    { day: 'Wed', date: 'Nov 4', present: true },
+    { day: 'Thu', date: 'Nov 5', present: true },
+    { day: 'Fri', date: 'Nov 6', present: true },
+  ],
+  competencies: [
+    { title: 'Fractions and Decimals', detail: 'Add and subtract fractions with different denominators', icon: 'chart' as const, tint: '#2F6BFF' },
+    { title: 'Reading Comprehension', detail: 'Identify main ideas and supporting details', icon: 'book' as const, tint: '#F97316' },
+    { title: 'Scientific Investigation', detail: 'Plan and carry out a simple experiment', icon: 'sparkle' as const, tint: '#2F6BFF' },
+    { title: 'Creative Writing', detail: 'Write a clear and well-structured paragraph', icon: 'notes' as const, tint: '#8B5CF6' },
+  ],
+  voice: {
+    teacher: 'Ms. Sarah Kimani',
+    role: 'Primary 7 Teacher',
+    photo: photos.digestTeacher,
+    seconds: 20,
+    transcript: "Hi! This is Ms. Sarah. Aisha had a fantastic week. She worked very hard in Mathematics and showed great improvement in her reading. Keep encouraging her to practise at home!",
+  },
+  subjects: [
+    { name: 'Mathematics', score: 0.85, tint: '#2F6BFF', icon: 'chart' as const },
+    { name: 'English', score: 0.78, tint: '#8B5CF6', icon: 'book' as const },
+    { name: 'Science', score: 0.92, tint: '#16A34A', icon: 'sparkle' as const },
+    { name: 'Social Studies', score: 0.8, tint: '#F97316', icon: 'globe' as const },
+  ],
+  highlights: [
+    { caption: 'Active participation in Mathematics', photo: photos.digestHighlights[0] },
+    { caption: 'Science experiment on plant growth', photo: photos.digestHighlights[1] },
+    { caption: 'Completed creative writing exercise', photo: photos.digestHighlights[2] },
+  ],
+  fees: { term: 'Term 3 Fees', totalUGX: 1_200_000, paidUGX: 600_000 },
+};

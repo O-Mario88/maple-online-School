@@ -174,6 +174,7 @@ export const PUBLIC_PREVIEWS = [
   { href: '/courses/complete-mathematics-primary-7', route: 'courses/[slug]', label: 'Course page', icon: 'book' },
   { href: '/event', label: 'Live event', icon: 'live' },
   { href: '/digest', label: 'Weekly digest', icon: 'chat' },
+  { href: '/p/digest/eyJjaGlsZCI6ImFpc2hhLW5hbXV0ZWJpIiwid2VlayI6IjIwMjYtMTEtMDIiLCJleHAiOjE3OTQ4NjI3NDAwMDB9.demo-signature', route: 'p/digest/[token]', label: 'Parent Sunday digest', icon: 'chat' },
   { href: '/pay', label: 'Fee payment link', icon: 'wallet' },
   { href: '/verify', label: 'Certificate check', icon: 'check' },
   { href: '/help', label: 'Help and status', icon: 'flag' },

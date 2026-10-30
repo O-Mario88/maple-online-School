@@ -61,6 +61,7 @@ function RootNavigator() {
       <Stack.Screen name="courses/[slug]" />
       <Stack.Screen name="explore" />
       <Stack.Screen name="schools" />
+      <Stack.Screen name="p/digest/[token]" />
       <Stack.Screen name="shorts" />
       <Stack.Screen name="live/[slug]" />
       <Stack.Screen name="past-papers/[board]/[subject]/[year]" />
