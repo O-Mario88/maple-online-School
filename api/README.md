@@ -9,6 +9,7 @@ forwarded to Django unchanged. Apps only ever talk to this service.
 | -------- | ------------ | ----- |
 | Identity | Done         | `/api/v1/auth/token/`, `token/refresh/`, `logout/`, `me/` |
 | Learning: assignments, submissions, grades | Done | `/api/v1/assessments/assessment/`, `/api/v1/assessments/submission/`, `/api/v1/grading/records/` |
+| School: classes, enrolment, daily register | Done | `/api/v1/classes/` (+ `{id}/roster/`), `/api/v1/class-enrollments/`, `/api/v1/attendance/daily/` |
 | Health   | Done         | `/api/health/` |
 | Everything else | Served by Django through the forwarder | all other `/api/v1/...` |
 
@@ -20,7 +21,8 @@ returns 405 instead of being forwarded.
 - Both use the same Postgres database. Django's migrations still create the tables.
 - Go **reads** the account and school tables (Django still writes those) and
   **owns all writes** to `assessments_assessment`, `assessments_submission`,
-  `grading_graderecord` and its own `identity_revoked_tokens`. Django's endpoints
+  `grading_graderecord`, `classes_class`, `classes_classenrollment`,
+  `attendance_dailyregister` and its own `identity_revoked_tokens`. Django's endpoints
   for those tables have been removed. Question writes (`assessments_question`)
   are still Django's until quizzes move.
 - Everything is scoped to the schools where the person has an **active**

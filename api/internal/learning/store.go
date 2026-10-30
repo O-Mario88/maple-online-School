@@ -12,13 +12,8 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 
 	"github.com/O-Mario88/maple-online-School/api/internal/platform/dbgen"
+	"github.com/O-Mario88/maple-online-School/api/internal/roles"
 )
-
-// staffRoles are the school roles allowed to create and grade work.
-var staffRoles = []string{
-	"headteacher", "deputy", "dos", "exam_officer", "ict_admin", "registrar",
-	"class_teacher", "subject_teacher", "librarian", "counselor",
-}
 
 // Scope describes which schools a signed-in person can act in.
 type Scope struct {
@@ -46,7 +41,7 @@ func (s *PostgresStore) Scope(ctx context.Context, userID int64) (Scope, error) 
 	if err != nil {
 		return Scope{}, fmt.Errorf("load schools: %w", err)
 	}
-	staff, err := s.q.StaffSchoolIDs(ctx, dbgen.StaffSchoolIDsParams{UserID: userID, StaffRoles: staffRoles})
+	staff, err := s.q.StaffSchoolIDs(ctx, dbgen.StaffSchoolIDsParams{UserID: userID, StaffRoles: roles.Staff})
 	if err != nil {
 		return Scope{}, fmt.Errorf("load staff schools: %w", err)
 	}

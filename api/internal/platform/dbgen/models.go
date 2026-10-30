@@ -66,6 +66,48 @@ type AssessmentsSubmission struct {
 	StudentID    int64
 }
 
+type AttendanceDailyregister struct {
+	ID            int64
+	RecordDate    pgtype.Date
+	Status        string
+	Notes         pgtype.Text
+	CreatedAt     pgtype.Timestamptz
+	InstitutionID int64
+	RecordedByID  pgtype.Int8
+	StudentID     int64
+	TermID        int64
+}
+
+type ClassesClass struct {
+	ID                   int64
+	Title                string
+	Visibility           string
+	IsPublished          bool
+	CreatedAt            pgtype.Timestamptz
+	ClassLevelID         int64
+	InstitutionID        int64
+	InstitutionSubjectID pgtype.Int8
+	TeacherID            int64
+}
+
+type ClassesClassenrollment struct {
+	ID              int64
+	Status          string
+	EnrolledAt      pgtype.Timestamptz
+	EnrolledClassID int64
+	StudentID       int64
+}
+
+type CurriculumClasslevel struct {
+	ID   int64
+	Name string
+}
+
+type CurriculumSubject struct {
+	ID   int64
+	Name string
+}
+
 type GradingGraderecord struct {
 	ID              int64
 	Score           pgtype.Numeric
@@ -94,10 +136,26 @@ type InstitutionsInstitutionmembership struct {
 	UserID        int64
 }
 
+type InstitutionsInstitutionsubject struct {
+	ID            int64
+	InstitutionID int64
+	SubjectID     int64
+	CustomName    pgtype.Text
+}
+
 type ParentPortalParentstudentlink struct {
 	ID               int64
 	RelationshipType string
 	ConsentStatus    string
 	ParentProfileID  int64
 	StudentProfileID int64
+}
+
+type SchedulingAcademicterm struct {
+	ID            int64
+	StartDate     pgtype.Date
+	EndDate       pgtype.Date
+	IsActive      bool
+	InstitutionID int64
+	Name          string
 }

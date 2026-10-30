@@ -92,3 +92,65 @@ CREATE TABLE parent_portal_parentstudentlink (
     parent_profile_id  bigint      NOT NULL,
     student_profile_id bigint      NOT NULL
 );
+
+-- Classes, enrolment and the daily register: Go owns writes.
+CREATE TABLE classes_class (
+    id                     bigint       PRIMARY KEY,
+    title                  varchar(255) NOT NULL,
+    visibility             varchar(20)  NOT NULL,
+    is_published           boolean      NOT NULL,
+    created_at             timestamptz  NOT NULL,
+    class_level_id         bigint       NOT NULL,
+    institution_id         bigint       NOT NULL,
+    institution_subject_id bigint,
+    teacher_id             bigint       NOT NULL
+);
+
+CREATE TABLE classes_classenrollment (
+    id                bigint      PRIMARY KEY,
+    status            varchar(20) NOT NULL,
+    enrolled_at       timestamptz NOT NULL,
+    enrolled_class_id bigint      NOT NULL,
+    student_id        bigint      NOT NULL,
+    UNIQUE (enrolled_class_id, student_id)
+);
+
+CREATE TABLE attendance_dailyregister (
+    id             bigint      PRIMARY KEY,
+    record_date    date        NOT NULL,
+    status         varchar(30) NOT NULL,
+    notes          text,
+    created_at     timestamptz NOT NULL,
+    institution_id bigint      NOT NULL,
+    recorded_by_id bigint,
+    student_id     bigint      NOT NULL,
+    term_id        bigint      NOT NULL,
+    UNIQUE (student_id, record_date)
+);
+
+-- Read only (Django still writes these).
+CREATE TABLE scheduling_academicterm (
+    id             bigint       PRIMARY KEY,
+    start_date     date         NOT NULL,
+    end_date       date         NOT NULL,
+    is_active      boolean      NOT NULL,
+    institution_id bigint       NOT NULL,
+    name           varchar(100) NOT NULL
+);
+
+CREATE TABLE curriculum_classlevel (
+    id   bigint       PRIMARY KEY,
+    name varchar(100) NOT NULL
+);
+
+CREATE TABLE institutions_institutionsubject (
+    id             bigint PRIMARY KEY,
+    institution_id bigint NOT NULL,
+    subject_id     bigint NOT NULL,
+    custom_name    varchar(255)
+);
+
+CREATE TABLE curriculum_subject (
+    id   bigint       PRIMARY KEY,
+    name varchar(255) NOT NULL
+);

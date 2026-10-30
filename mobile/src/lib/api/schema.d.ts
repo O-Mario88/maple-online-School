@@ -490,10 +490,375 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/classes/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Classes the user can see
+         * @description Leaders see their schools' classes, teachers the classes they teach, students (and approved parents) enrolled classes.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description 1-based page number; 20 items per page */
+                    page?: components["parameters"]["Page"];
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description A page of classes */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ClassPage"];
+                    };
+                };
+                401: components["responses"]["Unauthorized"];
+            };
+        };
+        put?: never;
+        /** Create a class (school leaders only) */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["NewClass"];
+                };
+            };
+            responses: {
+                /** @description Created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Class"];
+                    };
+                };
+                400: components["responses"]["BadRequest"];
+                403: components["responses"]["Forbidden"];
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/classes/{id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** One class */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The class */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Class"];
+                    };
+                };
+                404: components["responses"]["NotFound"];
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/classes/{id}/roster/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Students enrolled in a class (its teacher and school leaders only) */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The class and its students */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Roster"];
+                    };
+                };
+                403: components["responses"]["Forbidden"];
+                404: components["responses"]["NotFound"];
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/class-enrollments/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Enrol a student of the school in a class (school leaders only) */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** Format: int64 */
+                        enrolled_class: number;
+                        /** Format: int64 */
+                        student: number;
+                    };
+                };
+            };
+            responses: {
+                /** @description Enrolled */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                400: components["responses"]["BadRequest"];
+                403: components["responses"]["Forbidden"];
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/attendance/daily/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Register marks the user can see
+         * @description Staff see their schools' registers, students their own, parents their approved children's.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description 1-based page number; 20 items per page */
+                    page?: components["parameters"]["Page"];
+                    record_date?: string;
+                    class?: number;
+                    student?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description A page of marks */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["MarkPage"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Save a class register for a day (the class teacher or a school leader)
+         * @description Saving again for the same students and date updates their marks, so retries are safe.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["RegisterRequest"];
+                };
+            };
+            responses: {
+                /** @description Saved */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            saved: number;
+                            /** Format: int64 */
+                            class: number;
+                            /** Format: date */
+                            record_date: string;
+                        };
+                    };
+                };
+                400: components["responses"]["BadRequest"];
+                404: components["responses"]["NotFound"];
+                /** @description No school term covers the date */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        Class: {
+            /** Format: int64 */
+            id: number;
+            /** Format: int64 */
+            institution: number;
+            /** Format: int64 */
+            subject?: number | null;
+            subject_name: string;
+            /** Format: int64 */
+            class_level: number;
+            class_level_name: string;
+            /** Format: int64 */
+            teacher: number;
+            teacher_name: string;
+            title: string;
+            visibility: string;
+            is_published: boolean;
+            /** Format: date-time */
+            created_at: string;
+        };
+        NewClass: {
+            title: string;
+            /** Format: int64 */
+            institution: number;
+            /** Format: int64 */
+            class_level: number;
+            /** Format: int64 */
+            teacher: number;
+            is_published?: boolean;
+        };
+        Roster: {
+            class: components["schemas"]["Class"];
+            students: {
+                /** Format: int64 */
+                enrollment: number;
+                /** Format: int64 */
+                student: number;
+                student_name: string;
+                /** Format: date-time */
+                enrolled_at: string;
+            }[];
+        };
+        /** @enum {string} */
+        MarkStatus: "present" | "late" | "authorized_absent" | "unauthorized_absent";
+        Mark: {
+            /** Format: int64 */
+            id: number;
+            /** Format: int64 */
+            institution: number;
+            /** Format: int64 */
+            term: number;
+            term_name: string;
+            /** Format: int64 */
+            student: number;
+            student_name: string;
+            /** Format: date */
+            record_date: string;
+            status: components["schemas"]["MarkStatus"];
+            /** Format: int64 */
+            recorded_by: number | null;
+            recorder_name: string | null;
+            notes: string | null;
+            /** Format: date-time */
+            created_at: string;
+        };
+        RegisterRequest: {
+            /** Format: int64 */
+            class: number;
+            /** Format: date */
+            record_date: string;
+            entries: {
+                /** Format: int64 */
+                student: number;
+                status: components["schemas"]["MarkStatus"];
+                notes?: string;
+            }[];
+        };
+        ClassPage: components["schemas"]["PageMeta"] & {
+            results: components["schemas"]["Class"][];
+        };
+        MarkPage: components["schemas"]["PageMeta"] & {
+            results: components["schemas"]["Mark"][];
+        };
         /** @description A decimal with two places, such as "85.00" */
         Decimal: string;
         Question: {

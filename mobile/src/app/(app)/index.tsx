@@ -5,7 +5,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import type { Me } from '@/lib/api/client';
+import { AttendanceSection } from '@/features/learner/AttendanceSection';
 import { ParentResultsSection } from '@/features/parent/ParentResultsSection';
+import { ClassesSection } from '@/features/teacher/ClassesSection';
 import { StudentWorkSection } from '@/features/student/StudentWorkSection';
 import { TeacherWorkSection } from '@/features/teacher/TeacherWorkSection';
 import { useAuth, useMe } from '@/lib/auth/auth-context';
@@ -72,9 +74,30 @@ export default function HomeScreen() {
 
 /** The main work area for the person's role. */
 function RoleWork({ user }: { user: Me }) {
-  if (isStaff(user.memberships)) return <TeacherWorkSection />;
-  if (user.role === 'student') return <StudentWorkSection />;
-  if (user.role === 'parent') return <ParentResultsSection />;
+  if (isStaff(user.memberships)) {
+    return (
+      <>
+        <ClassesSection />
+        <TeacherWorkSection />
+      </>
+    );
+  }
+  if (user.role === 'student') {
+    return (
+      <>
+        <StudentWorkSection />
+        <AttendanceSection />
+      </>
+    );
+  }
+  if (user.role === 'parent') {
+    return (
+      <>
+        <ParentResultsSection />
+        <AttendanceSection />
+      </>
+    );
+  }
   return null;
 }
 

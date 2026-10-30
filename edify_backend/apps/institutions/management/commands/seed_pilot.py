@@ -64,6 +64,18 @@ class Command(BaseCommand):
                 name='Maple Pilot School'
             )
 
+            # ── Current term (the register needs one) ──────────────────
+            from scheduling.models import AcademicTerm
+            today = timezone.localdate()
+            AcademicTerm.objects.update_or_create(
+                institution=inst, name='Pilot term',
+                defaults={
+                    'start_date': today - timedelta(days=30),
+                    'end_date': today + timedelta(days=90),
+                    'is_active': True,
+                },
+            )
+
             # ── Users ──────────────────────────────────────────────────
             def ensure_user(email, full_name, role):
                 user, created = User.objects.get_or_create(

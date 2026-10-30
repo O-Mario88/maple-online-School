@@ -26,9 +26,8 @@ from curriculum.views import CountryViewSet, SubjectViewSet, ClassLevelViewSet, 
 from marketplace.views import ListingViewSet
 from ai_services.views import CopilotInferenceView
 from institutions.views import InstitutionViewSet, InstitutionMembershipViewSet, LearnerRegistrationViewSet, AdminPinResetView
-from classes.views import ClassViewSet, ClassEnrollmentViewSet
 from scheduling.views import TimetableSlotViewSet
-from attendance.views import DailyRegisterViewSet, LessonAttendanceViewSet
+from attendance.views import LessonAttendanceViewSet
 from grading.views import SubjectGradeViewSet, ReportCardViewSet
 from analytics.views import AnalyticsEventViewSet, DailyPlatformMetricViewSet, DailyInstitutionMetricViewSet, SubjectPerformanceSnapshotViewSet, SystemHealthSnapshotViewSet, StudentDashboardView, TeacherDashboardView, ParentDashboardView, AdminDashboardView, InstitutionDashboardView, CustomerSuccessChurnView
 from assessments.views import AssessmentWindowViewSet, QuestionViewSet
@@ -85,10 +84,9 @@ router.register(r'marketplace/lesson-qualifications', LessonQualificationViewSet
 router.register(r'institutions', InstitutionViewSet, basename='institution')
 router.register(r'institution-memberships', InstitutionMembershipViewSet, basename='institution-membership')
 router.register(r'institutions/learner-registrations', LearnerRegistrationViewSet, basename='learner-registration')
-router.register(r'classes', ClassViewSet, basename='class')
-router.register(r'class-enrollments', ClassEnrollmentViewSet, basename='class-enrollment')
+# classes and class-enrollments are served by the Go API (api/internal/school).
 router.register(r'scheduling/timetable', TimetableSlotViewSet, basename='timetable-slot')
-router.register(r'attendance/daily', DailyRegisterViewSet, basename='daily-register')
+# attendance/daily is served by the Go API (api/internal/school).
 router.register(r'attendance/lesson', LessonAttendanceViewSet, basename='lesson-attendance')
 router.register(r'grading/subjects', SubjectGradeViewSet, basename='subject-grade')
 router.register(r'grading/reports', ReportCardViewSet, basename='report-card')
