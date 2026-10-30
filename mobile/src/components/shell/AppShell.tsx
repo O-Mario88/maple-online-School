@@ -5,6 +5,7 @@ import { ShellContext } from '@/components/ui';
 import { Breakpoints, type Theme } from '@/constants/theme';
 import { useStyles } from '@/hooks/use-styles';
 
+import { DesignOverlays } from './DesignOverlays';
 import { Sidebar } from './Sidebar';
 import { TabBar } from './TabBar';
 
@@ -22,7 +23,10 @@ export function AppShell({ children }: { children: ReactNode }) {
     <ShellContext.Provider value={shell}>
       <View style={[styles.frame, wide && styles.frameWide]}>
         {wide ? <Sidebar /> : null}
-        <View style={styles.content}>{children}</View>
+        <View style={styles.content}>
+          {children}
+          <DesignOverlays />
+        </View>
         {wide ? null : <TabBar />}
       </View>
     </ShellContext.Provider>

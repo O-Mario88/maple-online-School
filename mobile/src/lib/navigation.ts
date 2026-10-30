@@ -175,3 +175,10 @@ export const PUBLIC_PREVIEWS = [
   { href: '/consent', label: 'Parent consent', icon: 'hand' },
   { href: '/claim-child', label: 'Link your child', icon: 'people' },
 ] as const satisfies readonly { href: string; label: string; icon: IconName }[];
+
+/** Screens that open over any portal: reached from buttons, not a menu. */
+export const SHARED_PREVIEWS = [
+  { href: '/copilot', label: 'Ask Maple', icon: 'sparkle' },
+  { href: '/report-concern', label: 'Report a concern', icon: 'flag' },
+  { href: '/checkout', label: 'Checkout', icon: 'wallet' },
+] as const satisfies readonly { href: string; label: string; icon: IconName }[];

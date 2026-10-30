@@ -1,4 +1,4 @@
-import { activeKey, navFor, portalsFor, PORTALS, type Person, PUBLIC_PREVIEWS, tabBar } from './navigation';
+import { activeKey, navFor, portalsFor, PORTALS, type Person, PUBLIC_PREVIEWS, SHARED_PREVIEWS, tabBar } from './navigation';
 
 const person = (role: string, memberships: { role: string; status?: string }[] = [], children = 0): Person => ({
   role,
@@ -117,5 +117,15 @@ describe('activeKey', () => {
       expect({ name, guarded: guarded.includes(`name="${name}"`) }).toEqual({ name, guarded: false });
       expect({ name, listed: layout.includes(`name="${name}"`) }).toEqual({ name, listed: true });
     }
+  });
+
+  // The AI helper, report-a-concern and checkout open over any portal, so they
+  // live in the signed-in group rather than in one portal's menu.
+  it.each(SHARED_PREVIEWS.map((p) => p.href))('shared screen %s has a signed-in route', (href) => {
+    /* eslint-disable @typescript-eslint/no-require-imports */
+    const fs: { existsSync(p: string): boolean } = require('fs');
+    const path: { join(...parts: string[]): string } = require('path');
+    /* eslint-enable @typescript-eslint/no-require-imports */
+    expect(fs.existsSync(path.join(dirname, '..', 'app', '(app)', `${href.slice(1)}.tsx`))).toBe(true);
   });
 });

@@ -43,7 +43,7 @@ export default function CourseScreen() {
                   />
                 ) : null}
                 {c.priceUGX > 0 && c.progress === 0 ? (
-                  <Button label={`Enrol · ${formatMoney(c.priceUGX, 'UGX')}`} variant="secondary" onPress={() => undefined} />
+                  <Button label={`Enrol · ${formatMoney(c.priceUGX, 'UGX')}`} variant="secondary" onPress={() => router.push('/checkout')} />
                 ) : null}
               </View>
             </View>

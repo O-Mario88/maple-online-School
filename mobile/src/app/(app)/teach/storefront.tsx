@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
@@ -35,7 +36,7 @@ export default function StorefrontScreen() {
                 {s.verified ? <Badge label="Verified educator" tone="good" /> : null}
                 <Text style={styles.headline}>{s.headline}</Text>
                 <Text style={styles.bio}>{bio || s.bio}</Text>
-                <Button label={`Book a lesson · ${formatMoney(s.hourlyUGX, 'UGX')}/h`} onPress={() => undefined} />
+                <Button label={`Book a lesson · ${formatMoney(s.hourlyUGX, 'UGX')}/h`} onPress={() => router.push('/checkout')} />
               </View>
               {s.courses.map((c) => (
                 <Row key={c} icon="book" title={c} />
