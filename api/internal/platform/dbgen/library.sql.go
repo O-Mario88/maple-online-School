@@ -641,6 +641,42 @@ func (q *Queries) LogLibraryChange(ctx context.Context, arg LogLibraryChangePara
 	return err
 }
 
+const memberSchoolIDs = `-- name: MemberSchoolIDs :many
+
+SELECT DISTINCT institution_id
+FROM institutions_institutionmembership
+WHERE user_id = $1 AND status = 'active'
+`
+
+// The library (playbook section 5): one store for notes, books, videos,
+// past papers and links. Go owns writes to these tables.
+//
+// Who sees an item:
+//   - its uploader, always;
+//   - leaders of the owning school, always;
+//   - Maple administrators, for platform-wide items (to moderate them);
+//   - everyone else, once published: platform-wide items, their schools'
+//     items, and items shared with a class they teach, lead or attend.
+func (q *Queries) MemberSchoolIDs(ctx context.Context, userID int64) ([]int64, error) {
+	rows, err := q.db.Query(ctx, memberSchoolIDs, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []int64{}
+	for rows.Next() {
+		var institution_id int64
+		if err := rows.Scan(&institution_id); err != nil {
+			return nil, err
+		}
+		items = append(items, institution_id)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const promoteItemToClass = `-- name: PromoteItemToClass :exec
 UPDATE resources_contentitem SET visibility_scope = 'class', updated_at = now()
 WHERE id = $1 AND visibility_scope = 'private'
@@ -809,7 +845,6 @@ func (q *Queries) UpdateLibraryItem(ctx context.Context, arg UpdateLibraryItemPa
 }
 
 const viewerClassIDs = `-- name: ViewerClassIDs :many
-
 SELECT c.id FROM classes_class c
 WHERE c.teacher_id = $1
    OR c.institution_id = ANY($2::bigint[])
@@ -824,16 +859,6 @@ type ViewerClassIDsParams struct {
 	LearnerIds    []int64
 }
 
-// The library (playbook section 5): one store for notes, books, videos,
-// past papers and links. Go owns writes to these tables.
-//
-// Who sees an item:
-//   - its uploader, always;
-//   - leaders of the owning school, always;
-//   - Maple administrators, for platform-wide items (to moderate them);
-//   - everyone else, once published: platform-wide items, their schools'
-//     items, and items shared with a class they teach, lead or attend.
-//
 // Classes the viewer teaches, leads (through their school) or attends
 // (themselves or an approved child).
 func (q *Queries) ViewerClassIDs(ctx context.Context, arg ViewerClassIDsParams) ([]int64, error) {

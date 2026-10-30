@@ -32,12 +32,11 @@ from discussions.views import ThreadViewSet, PostViewSet
 from exams.views import ExamCenterViewSet, CandidateRegistrationViewSet, SubjectSelectionViewSet, BoardSubmissionBatchViewSet
 from notifications.views import NotificationViewSet
 from parent_portal.views import ParentStudentLinkViewSet, WeeklySummaryViewSet, RiskAlertViewSet
-from resources.upload_view import ResourceUploadViewSet
+# The library (items, sharing, reading lists, progress) is served by the Go
+# API at /api/v1/library/. Tags, recommendations and the content dashboards
+# move with the analytics and AI work.
 from resources.content_views import (
-    ContentItemViewSet, TeacherContentViewSet, InstitutionContentViewSet,
-    AdminContentViewSet, ContentDeliveryView, ClassContentView,
-    ContentEngagementViewSet, ContentTagViewSet,
-    ContentAssignmentViewSet, ContentRecommendationViewSet,
+    ContentTagViewSet, ContentRecommendationViewSet,
     StudentContentDashboardView, TeacherContentDashboardView,
     ParentContentDashboardView,
 )
@@ -98,16 +97,9 @@ router.register(r'exams/board-submission-batch', BoardSubmissionBatchViewSet, ba
 # Lessons, notes, recordings and lesson attendance moved to the Go service.
 # Live sessions, reminders and missed-session recovery moved to the Go service.
 # The resource library and class resource links moved to the Go service.
-router.register(r'resources-upload', ResourceUploadViewSet, basename='resources-upload')
 
 # Content Management System
-router.register(r'content/items', ContentItemViewSet, basename='content-item')
-router.register(r'content/teacher', TeacherContentViewSet, basename='content-teacher')
-router.register(r'content/institution', InstitutionContentViewSet, basename='content-institution')
-router.register(r'content/admin', AdminContentViewSet, basename='content-admin')
-router.register(r'content/engagement', ContentEngagementViewSet, basename='content-engagement')
 router.register(r'content/tags', ContentTagViewSet, basename='content-tag')
-router.register(r'content/assignments', ContentAssignmentViewSet, basename='content-assignment')
 router.register(r'content/recommendations', ContentRecommendationViewSet, basename='content-recommendation')
 
 # Community & Extensions
@@ -191,8 +183,6 @@ urlpatterns = [
     path('api/v1/marketplace/pesapal-ipn/', PesapalIPNWebhookView.as_view(), name='pesapal-ipn'),
 
     # Content Delivery endpoints
-    path('api/v1/content/library/', ContentDeliveryView.as_view(), name='content-library'),
-    path('api/v1/content/classroom/', ClassContentView.as_view(), name='content-classroom'),
 
     # Content Dashboard endpoints
     path('api/v1/content/dashboard/student/', StudentContentDashboardView.as_view(), name='content-dashboard-student'),

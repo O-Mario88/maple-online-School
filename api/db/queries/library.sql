@@ -8,6 +8,11 @@
 --   * everyone else, once published: platform-wide items, their schools'
 --     items, and items shared with a class they teach, lead or attend.
 
+-- name: MemberSchoolIDs :many
+SELECT DISTINCT institution_id
+FROM institutions_institutionmembership
+WHERE user_id = $1 AND status = 'active';
+
 -- name: ViewerClassIDs :many
 -- Classes the viewer teaches, leads (through their school) or attends
 -- (themselves or an approved child).
