@@ -1,8 +1,10 @@
+import { router } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { Badge, Button, Card, Grid, Row } from '@/components/ui';
 import { Radius, Spacing, type Theme, Type } from '@/constants/theme';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
+import { CLASSROOM } from '@/lib/navigation';
 import { useStyles } from '@/hooks/use-styles';
 
 /** Inventory 42 and 43: the live host console and the class's understanding at a glance. */
@@ -16,6 +18,7 @@ export default function HostScreen() {
         const h = m.teacher.hostConsole;
         return (
           <>
+            <Button label="Open the full classroom" icon="live" onPress={() => router.push(CLASSROOM.href)} />
             <View style={styles.stage}>
               <Text style={styles.stageTitle}>{h.title}</Text>
               <Badge label={`Live · ${h.elapsed}`} tone="danger" />

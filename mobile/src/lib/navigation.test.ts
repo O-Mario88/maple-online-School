@@ -1,4 +1,4 @@
-import { activeKey, navFor, portalsFor, PORTALS, type Person, PUBLIC_PREVIEWS, SHARED_PREVIEWS, tabBar } from './navigation';
+import { activeKey, navFor, portalsFor, PORTALS, CLASSROOM, type Person, PUBLIC_PREVIEWS, SHARED_PREVIEWS, tabBar } from './navigation';
 
 const person = (role: string, memberships: { role: string; status?: string }[] = [], children = 0): Person => ({
   role,
@@ -128,5 +128,17 @@ describe('activeKey', () => {
     const path: { join(...parts: string[]): string } = require('path');
     /* eslint-enable @typescript-eslint/no-require-imports */
     expect(fs.existsSync(path.join(dirname, '..', 'app', '(app)', `${href.slice(1)}.tsx`))).toBe(true);
+  });
+
+  it('puts the full-screen classroom behind the sign-in guard', () => {
+    /* eslint-disable @typescript-eslint/no-require-imports */
+    const fs: { existsSync(p: string): boolean; readFileSync(p: string, e: string): string } = require('fs');
+    const path: { join(...parts: string[]): string } = require('path');
+    /* eslint-enable @typescript-eslint/no-require-imports */
+    const app = path.join(dirname, '..', 'app');
+    expect(fs.existsSync(path.join(app, `${CLASSROOM.route}.tsx`))).toBe(true);
+    const layout = fs.readFileSync(path.join(app, '_layout.tsx'), 'utf8');
+    const signedIn = layout.slice(layout.indexOf('<Stack.Protected guard={signedIn}>'), layout.indexOf('</Stack.Protected>'));
+    expect(signedIn).toContain(`name="${CLASSROOM.route}"`);
   });
 });

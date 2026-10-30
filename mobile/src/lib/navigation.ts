@@ -187,3 +187,6 @@ export const SHARED_PREVIEWS = [
   { href: '/report-concern', label: 'Report a concern', icon: 'flag' },
   { href: '/checkout', label: 'Checkout', icon: 'wallet' },
 ] as const satisfies readonly { href: string; label: string; icon: IconName }[];
+
+/** The full-screen live classroom: signed-in only, outside the app shell so the lesson gets the whole screen. */
+export const CLASSROOM = { href: '/classroom/p7-maths-revision-bootcamp', route: 'classroom/[slug]' } as const;

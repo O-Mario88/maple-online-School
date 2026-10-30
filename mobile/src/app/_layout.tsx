@@ -45,6 +45,8 @@ function RootNavigator() {
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Protected guard={signedIn}>
         <Stack.Screen name="(app)" />
+        {/* The live classroom takes the whole screen, outside the app shell. */}
+        <Stack.Screen name="classroom/[slug]" />
       </Stack.Protected>
       <Stack.Protected guard={!signedIn}>
         <Stack.Screen name="sign-in" />

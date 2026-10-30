@@ -45,6 +45,21 @@ export const ICONS = {
   trophy: { ios: 'trophy', material: 'emoji_events' },
   share: { ios: 'square.and.arrow.up', material: 'share' },
   heart: { ios: 'heart', material: 'favorite' },
+  grid: { ios: 'square.grid.2x2', material: 'grid_view' },
+  settings: { ios: 'gearshape', material: 'settings' },
+  micOff: { ios: 'mic.slash', material: 'mic_off' },
+  video: { ios: 'video', material: 'videocam' },
+  videoOff: { ios: 'video.slash', material: 'videocam_off' },
+  screen: { ios: 'rectangle.on.rectangle', material: 'present_to_all' },
+  smile: { ios: 'face.smiling', material: 'mood' },
+  notes: { ios: 'square.and.pencil', material: 'edit_note' },
+  transcript: { ios: 'text.alignleft', material: 'subject' },
+  folder: { ios: 'folder', material: 'folder' },
+  poll: { ios: 'chart.bar.xaxis', material: 'poll' },
+  rooms: { ios: 'square.grid.3x3', material: 'meeting_room' },
+  record: { ios: 'record.circle', material: 'radio_button_checked' },
+  help: { ios: 'questionmark.circle', material: 'help' },
+  send: { ios: 'paperplane', material: 'send' },
 } as const;
 
 export type IconName = keyof typeof ICONS;

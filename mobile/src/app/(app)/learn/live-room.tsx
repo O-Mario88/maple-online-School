@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
@@ -5,6 +6,7 @@ import { Icon } from '@/components/icon';
 import { Button, Card, Field, Grid, ProgressBar, ToggleRow } from '@/components/ui';
 import { Radius, Spacing, type Theme, Type } from '@/constants/theme';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
+import { CLASSROOM } from '@/lib/navigation';
 import { useStyles } from '@/hooks/use-styles';
 
 /** Inventory 25: the live classroom with low-data mode, a pulse poll, hand-raising and chat. */
@@ -19,6 +21,7 @@ export default function LiveRoomScreen() {
         const votes = room.poll.votes.reduce((a, b) => a + b, 0);
         return (
           <>
+            <Button label="Open the full classroom" icon="live" onPress={() => router.push(CLASSROOM.href)} />
             <View style={styles.stage} accessibilityLabel={`${room.teacher} is teaching. Whiteboard showing simultaneous equations.`}>
               <Text style={styles.board}>2x + 3y = 12{'\n'}x − y = 1   (×3)</Text>
               <View style={styles.stageFoot}>
