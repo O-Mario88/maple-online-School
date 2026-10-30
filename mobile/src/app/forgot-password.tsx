@@ -25,7 +25,7 @@ export default function ForgotPasswordScreen() {
           <Body>{sent}</Body>
         ) : (
           <>
-            <Body muted>Enter the email you sign in with. We'll send a link that works for 2 hours.</Body>
+            <Body muted>Enter the email you sign in with. We’ll send a link that works for 2 hours.</Body>
             <Field label="Email" value={email} onChangeText={setEmail} autoCapitalize="none" autoComplete="email" keyboardType="email-address" />
             <Button label="Send reset link" onPress={submit} busy={busy} disabled={!email.trim()} />
           </>

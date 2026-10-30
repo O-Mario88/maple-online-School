@@ -1,5 +1,5 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { Badge, type BadgeTone, Body, Button, Card, ErrorText, Loading, Row, Screen } from '@/components/ui';
 import { initialRegister, localToday, nextStatus, type Register, STATUS_LABELS } from '@/lib/school/attendance';
@@ -21,14 +21,10 @@ export default function RegisterScreen() {
   const roster = useRoster(classId);
   const today = useMarks({ class: classId, record_date: day });
   const save = useSaveRegister();
-  const [register, setRegister] = useState<Register | null>(null);
+  // Marks the teacher has changed; until then the register is today's saved marks.
+  const [edits, setEdits] = useState<Register | null>(null);
   const [saved, setSaved] = useState(false);
-
-  useEffect(() => {
-    if (roster.data && today.data && register === null) {
-      setRegister(initialRegister(roster.data.students, today.data));
-    }
-  }, [roster.data, today.data, register]);
+  const register = edits ?? (roster.data && today.data ? initialRegister(roster.data.students, today.data) : null);
 
   if (roster.error) {
     return (
@@ -51,7 +47,10 @@ export default function RegisterScreen() {
 
   const toggle = (student: number) => {
     setSaved(false);
-    setRegister((r) => (r ? { ...r, [student]: nextStatus(r[student] ?? 'present') } : r));
+    setEdits((e) => {
+      const base = e ?? register;
+      return base ? { ...base, [student]: nextStatus(base[student] ?? 'present') } : base;
+    });
   };
 
   async function handleSave() {

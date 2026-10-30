@@ -26,7 +26,7 @@ export default function SchoolScreen() {
         <InviteCard key={m.institution_id} school={m.institution_id} name={m.institution_name} />
       ))}
       {admissions ? <FamilyLinksCard /> : null}
-      {!canCreate && led.length === 0 && !admissions ? <Body muted>Ask your school's headteacher to invite you.</Body> : null}
+      {!canCreate && led.length === 0 && !admissions ? <Body muted>Ask your school’s headteacher to invite you.</Body> : null}
     </Screen>
   );
 }

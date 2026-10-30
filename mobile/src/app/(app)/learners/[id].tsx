@@ -14,7 +14,7 @@ export default function LearnersScreen() {
       eyebrow={title ?? 'Your class'}
       title="Learners who need you"
       subtitle="From the last 30 days of attendance, work handed in and marks.">
-      {Number.isInteger(classId) && classId > 0 ? <ClassInsightView classId={classId} /> : <Body muted>That class link isn't valid.</Body>}
+      {Number.isInteger(classId) && classId > 0 ? <ClassInsightView classId={classId} /> : <Body muted>That class link isn’t valid.</Body>}
     </Screen>
   );
 }
