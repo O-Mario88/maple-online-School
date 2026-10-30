@@ -90,6 +90,7 @@ function PortalHome({ portal, user }: { portal: Portal; user: Me }) {
               { title: 'School fees', detail: 'Bill classes, record payments, export the ledger', href: '/fees', icon: 'wallet' },
               { title: 'Staff and set-up', detail: 'Invite teachers and manage your school', href: '/school', icon: 'school' },
               { title: 'Curriculum', detail: 'The Uganda subjects your classes follow', href: '/curriculum', icon: 'map' },
+              { title: 'Messages', detail: 'Every conversation between staff and families', href: '/messages', icon: 'chat' },
             ]}
           />
           <ClassesSection />
@@ -143,8 +144,8 @@ function PortalHome({ portal, user }: { portal: Portal; user: Me }) {
 interface QuickAction {
   title: string;
   detail: string;
-  href: '/fees' | '/school' | '/curriculum' | '/library';
-  icon: 'wallet' | 'school' | 'map' | 'library';
+  href: '/fees' | '/school' | '/curriculum' | '/library' | '/messages';
+  icon: 'wallet' | 'school' | 'map' | 'library' | 'chat';
 }
 
 function QuickActions({ actions }: { actions: readonly QuickAction[] }) {

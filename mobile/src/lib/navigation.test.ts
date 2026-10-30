@@ -37,6 +37,12 @@ describe('navFor', () => {
     expect(new Set(items.map((i) => i.key)).size).toBe(items.length);
   });
 
+  it('gives staff and families messages, but not learners', () => {
+    expect(navFor('teacher').some((i) => i.href === '/messages')).toBe(true);
+    expect(navFor('parent').some((i) => i.href === '/messages')).toBe(true);
+    expect(navFor('learner').some((i) => i.href === '/messages')).toBe(false);
+  });
+
   it('only shows school set-up to the school portal', () => {
     expect(navFor('school').some((i) => i.href === '/school')).toBe(true);
     expect(navFor('learner').some((i) => i.href === '/school')).toBe(false);

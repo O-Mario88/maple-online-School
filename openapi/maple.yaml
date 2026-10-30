@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Maple API
-  version: 0.16.0
+  version: 0.17.0
   description: |
     The contract between the Maple apps and the Go API. Paths not listed here
     are still served by the Django API through the Go service's forwarder,
@@ -687,6 +687,84 @@ paths:
         "201": { description: Recorded, content: { application/json: { schema: { $ref: "#/components/schemas/Intervention" } } } }
         "400": { description: Unknown kind, empty message or learner not in the class }
         "404": { description: Not a class you teach or lead }
+  /api/v1/messages/contacts/:
+    get:
+      summary: Staff a confirmed parent can write to about their child
+      parameters: [{ name: student, in: query, required: true, schema: { type: integer, format: int64 } }]
+      responses:
+        "200":
+          description: The child's teachers and the school's leaders
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [count, results]
+                properties:
+                  count: { type: integer }
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      required: [id, name, role]
+                      properties: { id: { type: integer, format: int64 }, name: { type: string }, role: { type: string } }
+        "404": { description: Not your confirmed child }
+  /api/v1/messages/threads/:
+    get:
+      summary: Conversations you take part in, or can read as a school leader
+      parameters: [{ name: page, in: query, schema: { type: integer } }]
+      responses:
+        "200":
+          description: Most recent first
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [count, results]
+                properties:
+                  count: { type: integer }
+                  next: { type: string, nullable: true }
+                  previous: { type: string, nullable: true }
+                  results: { type: array, items: { $ref: "#/components/schemas/ThreadSummary" } }
+    post:
+      summary: Start a conversation about a learner
+      description: >-
+        Staff who teach the learner or lead their school write to the
+        learner's confirmed parents. A confirmed parent names the staff member
+        (one of the child's teachers or the school's leaders).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [student, subject, body]
+              properties:
+                student: { type: integer, format: int64 }
+                staff: { type: integer, format: int64, description: Required for parents }
+                subject: { type: string, maxLength: 200 }
+                body: { type: string, maxLength: 4000 }
+      responses:
+        "201": { description: The conversation, content: { application/json: { schema: { $ref: "#/components/schemas/Thread" } } } }
+        "400": { description: Missing subject or body, or a staff member the parent can't write to }
+        "404": { description: Not a learner you teach, lead or parent }
+  /api/v1/messages/threads/{id}/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    get:
+      summary: A conversation with its messages, oldest first
+      responses:
+        "200": { description: The conversation, content: { application/json: { schema: { $ref: "#/components/schemas/Thread" } } } }
+        "404": { description: Not yours to see }
+  /api/v1/messages/threads/{id}/messages/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    post:
+      summary: Reply (the staff member and confirmed parents only)
+      requestBody:
+        required: true
+        content: { application/json: { schema: { type: object, required: [body], properties: { body: { type: string, maxLength: 4000 } } } } }
+      responses:
+        "201": { description: The conversation, content: { application/json: { schema: { $ref: "#/components/schemas/Thread" } } } }
+        "403": { description: School leaders read but don't write }
+        "404": { description: Not yours to see }
   /api/v1/curriculum/full-tree/:
     get:
       summary: The course catalog (levels, classes, terms, subjects, topics, lessons)
@@ -1425,6 +1503,36 @@ components:
         application/json:
           schema: { $ref: "#/components/schemas/Error" }
   schemas:
+    ThreadSummary:
+      type: object
+      required: [id, subject, student, staff, last_message_at, last_body, last_author]
+      properties:
+        id: { type: integer, format: int64 }
+        subject: { type: string }
+        student: { $ref: "#/components/schemas/NamedRef" }
+        staff: { $ref: "#/components/schemas/NamedRef" }
+        last_message_at: { type: string, format: date-time }
+        last_body: { type: string }
+        last_author: { type: string }
+    Thread:
+      type: object
+      required: [id, subject, student, staff, can_reply, messages]
+      properties:
+        id: { type: integer, format: int64 }
+        subject: { type: string }
+        student: { $ref: "#/components/schemas/NamedRef" }
+        staff: { $ref: "#/components/schemas/NamedRef" }
+        can_reply: { type: boolean }
+        messages:
+          type: array
+          items:
+            type: object
+            required: [id, author, body, created_at]
+            properties:
+              id: { type: integer, format: int64 }
+              author: { $ref: "#/components/schemas/NamedRef" }
+              body: { type: string }
+              created_at: { type: string, format: date-time }
     NamedRef:
       type: object
       required: [id, name]

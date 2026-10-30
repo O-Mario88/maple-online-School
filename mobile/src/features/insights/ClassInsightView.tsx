@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
@@ -115,6 +116,15 @@ function LearnerCard({ classId, learner }: { classId: number; learner: LearnerIn
         </View>
       ) : (
         <View style={styles.actions}>
+          <Button
+            label="Start a conversation"
+            compact
+            variant="ghost"
+            icon="chat"
+            onPress={() =>
+              router.push({ pathname: '/messages/new', params: { student: String(learner.student.id), name: learner.student.name } })
+            }
+          />
           {ACTIONS.map((a) => (
             <Button
               key={a}

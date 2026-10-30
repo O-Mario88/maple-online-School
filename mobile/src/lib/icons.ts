@@ -30,6 +30,7 @@ export const ICONS = {
   live: { ios: 'dot.radiowaves.left.and.right', material: 'sensors' },
   book: { ios: 'book', material: 'menu_book' },
   flag: { ios: 'flag', material: 'flag' },
+  chat: { ios: 'bubble.left.and.bubble.right', material: 'forum' },
 } as const;
 
 export type IconName = keyof typeof ICONS;

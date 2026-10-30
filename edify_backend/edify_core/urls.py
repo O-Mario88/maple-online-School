@@ -27,7 +27,6 @@ from ai_services.views import CopilotInferenceView
 from attendance.views import LessonAttendanceViewSet
 from analytics.views import AnalyticsEventViewSet, DailyPlatformMetricViewSet, DailyInstitutionMetricViewSet, SubjectPerformanceSnapshotViewSet, SystemHealthSnapshotViewSet, StudentDashboardView, TeacherDashboardView, ParentDashboardView, AdminDashboardView, InstitutionDashboardView, CustomerSuccessChurnView
 from assessments.views import AssessmentWindowViewSet, QuestionViewSet
-from discussions.views import ThreadViewSet, PostViewSet
 from exams.views import ExamCenterViewSet, CandidateRegistrationViewSet, SubjectSelectionViewSet, BoardSubmissionBatchViewSet
 # The library (items, sharing, reading lists, progress) is served by the Go
 # API at /api/v1/library/. Tags, recommendations and the content dashboards
@@ -100,8 +99,6 @@ router.register(r'content/tags', ContentTagViewSet, basename='content-tag')
 router.register(r'content/recommendations', ContentRecommendationViewSet, basename='content-recommendation')
 
 # Community & Extensions
-router.register(r'discussions/thread', ThreadViewSet, basename='discussions-thread')
-router.register(r'discussions/post', PostViewSet, basename='discussions-post')
 router.register(r'tutoring/match-request', MatchRequestViewSet, basename='tutoring-match-request')
 router.register(r'tutoring/peer-points-ledger', PeerPointsLedgerViewSet, basename='tutoring-peer-points-ledger')
 from tutoring.views import TutorProfileViewSet, TutoringBountyViewSet

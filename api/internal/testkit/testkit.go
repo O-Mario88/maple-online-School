@@ -223,6 +223,7 @@ func Contains(list []int64, id int64) bool {
 func (w *World) cleanup() {
 	ctx := context.Background()
 	stmts := []string{
+		`DELETE FROM msg_threads WHERE staff_id = ANY($1) OR student_id = ANY($1) OR created_by = ANY($1)`,
 		`DELETE FROM insight_interventions WHERE staff_id = ANY($1) OR student_id = ANY($1)`,
 		`DELETE FROM grading_reportcard WHERE student_id = ANY($1)`,
 		`DELETE FROM grading_subjectgrade WHERE student_id = ANY($1)`,

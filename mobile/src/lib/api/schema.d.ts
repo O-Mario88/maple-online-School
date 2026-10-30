@@ -1986,6 +1986,260 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/messages/contacts/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Staff a confirmed parent can write to about their child */
+        get: {
+            parameters: {
+                query: {
+                    student: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The child's teachers and the school's leaders */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            count: number;
+                            results: {
+                                /** Format: int64 */
+                                id: number;
+                                name: string;
+                                role: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Not your confirmed child */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/messages/threads/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Conversations you take part in, or can read as a school leader */
+        get: {
+            parameters: {
+                query?: {
+                    page?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Most recent first */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            count: number;
+                            next?: string | null;
+                            previous?: string | null;
+                            results: components["schemas"]["ThreadSummary"][];
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Start a conversation about a learner
+         * @description Staff who teach the learner or lead their school write to the learner's confirmed parents. A confirmed parent names the staff member (one of the child's teachers or the school's leaders).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** Format: int64 */
+                        student: number;
+                        /**
+                         * Format: int64
+                         * @description Required for parents
+                         */
+                        staff?: number;
+                        subject: string;
+                        body: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description The conversation */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Thread"];
+                    };
+                };
+                /** @description Missing subject or body */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Not a learner you teach */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/messages/threads/{id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        /** A conversation with its messages, oldest first */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The conversation */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Thread"];
+                    };
+                };
+                /** @description Not yours to see */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/messages/threads/{id}/messages/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reply (the staff member and confirmed parents only) */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        body: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description The conversation */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Thread"];
+                    };
+                };
+                /** @description School leaders read but don't write */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Not yours to see */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/curriculum/full-tree/": {
         parameters: {
             query?: never;
@@ -4450,6 +4704,33 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        ThreadSummary: {
+            /** Format: int64 */
+            id: number;
+            subject: string;
+            student: components["schemas"]["NamedRef"];
+            staff: components["schemas"]["NamedRef"];
+            /** Format: date-time */
+            last_message_at: string;
+            last_body: string;
+            last_author: string;
+        };
+        Thread: {
+            /** Format: int64 */
+            id: number;
+            subject: string;
+            student: components["schemas"]["NamedRef"];
+            staff: components["schemas"]["NamedRef"];
+            can_reply: boolean;
+            messages: {
+                /** Format: int64 */
+                id: number;
+                author: components["schemas"]["NamedRef"];
+                body: string;
+                /** Format: date-time */
+                created_at: string;
+            }[];
+        };
         NamedRef: {
             /** Format: int64 */
             id: number;

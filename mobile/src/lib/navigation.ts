@@ -24,7 +24,7 @@ export interface Person {
 export interface NavItem {
   key: string;
   label: string;
-  href: '/' | '/lessons' | '/library' | '/curriculum' | '/fees' | '/school';
+  href: '/' | '/lessons' | '/library' | '/curriculum' | '/fees' | '/school' | '/messages';
   icon: IconName;
   /** Shown in the phone tab bar; everything is shown in the sidebar. */
   primary: boolean;
@@ -57,12 +57,13 @@ const library: NavItem = { key: 'library', label: 'Library', href: '/library', i
 const curriculum: NavItem = { key: 'curriculum', label: 'Curriculum', href: '/curriculum', icon: 'map', primary: true };
 const fees: NavItem = { key: 'fees', label: 'Fees', href: '/fees', icon: 'wallet', primary: true };
 const school: NavItem = { key: 'school', label: 'School', href: '/school', icon: 'school', primary: true };
+const messages: NavItem = { key: 'messages', label: 'Messages', href: '/messages', icon: 'chat', primary: true };
 
 const MENUS: Readonly<Record<Portal, readonly NavItem[]>> = {
   learner: [home, lessons, library, curriculum, fees],
-  teacher: [home, lessons, library, curriculum],
-  parent: [{ ...home, label: 'Family' }, lessons, fees, library],
-  school: [{ ...home, label: 'Dashboard' }, school, fees, lessons, library, { ...curriculum, primary: false }],
+  teacher: [home, lessons, messages, library, curriculum],
+  parent: [{ ...home, label: 'Family' }, messages, fees, lessons, library],
+  school: [{ ...home, label: 'Dashboard' }, school, fees, lessons, library, { ...messages, primary: false }, { ...curriculum, primary: false }],
   command: [{ ...home, label: 'Overview' }, curriculum, library],
 };
 

@@ -483,6 +483,25 @@ type LiveSessionsSessionreminder struct {
 	SessionID int64
 }
 
+type MsgMessage struct {
+	ID        int64
+	ThreadID  int64
+	AuthorID  int64
+	Body      string
+	CreatedAt pgtype.Timestamptz
+}
+
+type MsgThread struct {
+	ID            int64
+	SchoolID      int64
+	StudentID     int64
+	StaffID       int64
+	Subject       string
+	CreatedBy     int64
+	CreatedAt     pgtype.Timestamptz
+	LastMessageAt pgtype.Timestamptz
+}
+
 type ParentPortalParentstudentlink struct {
 	ID               int64
 	RelationshipType string
