@@ -112,7 +112,8 @@ describe('activeKey', () => {
     const guarded = layout.slice(layout.indexOf('<Stack.Protected'), layout.lastIndexOf('</Stack.Protected>'));
     expect(PUBLIC_PREVIEWS.length).toBeGreaterThan(0);
     for (const page of PUBLIC_PREVIEWS) {
-      const name = page.href.slice(1);
+      // A dynamic page names its route file, e.g. courses/[slug].
+      const name = 'route' in page ? page.route : page.href.slice(1);
       expect({ name, found: fs.existsSync(path.join(app, `${name}.tsx`)) }).toEqual({ name, found: true });
       expect({ name, guarded: guarded.includes(`name="${name}"`) }).toEqual({ name, guarded: false });
       expect({ name, listed: layout.includes(`name="${name}"`) }).toEqual({ name, listed: true });

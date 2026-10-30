@@ -8,7 +8,7 @@ import { Brand } from './palette';
 const LINKS = ['Home', 'Courses', 'Live Classes', 'Curriculums', 'For Schools', 'For Teachers', 'Pricing', 'About'] as const;
 
 /** The public site's top bar: logo, section links on wide screens, and sign-in. */
-export function HomeNav({ wide }: { wide: boolean }) {
+export function HomeNav({ wide, active = 'Home' }: { wide: boolean; active?: (typeof LINKS)[number] }) {
   return (
     <View style={[styles.bar, !wide && styles.barNarrow]} accessibilityRole="header">
       <View style={styles.brand}>
@@ -22,10 +22,10 @@ export function HomeNav({ wide }: { wide: boolean }) {
       </View>
       {wide ? (
         <View style={styles.links} accessibilityRole="menubar">
-          {LINKS.map((l, i) => (
-            <Pressable key={l} accessibilityRole="link" style={styles.link}>
-              <Text style={[styles.linkText, i === 0 && styles.linkActive]}>{l}</Text>
-              {i === 0 ? <View style={styles.underline} /> : null}
+          {LINKS.map((l) => (
+            <Pressable key={l} accessibilityRole="link" style={styles.link} onPress={l === 'Home' ? () => router.push('/welcome') : undefined}>
+              <Text style={[styles.linkText, l === active && styles.linkActive]}>{l}</Text>
+              {l === active ? <View style={styles.underline} /> : null}
             </Pressable>
           ))}
         </View>

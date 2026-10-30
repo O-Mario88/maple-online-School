@@ -122,3 +122,87 @@ export const claimChild = {
   code: '7KQ2-M9XA',
   match: { name: 'Amina Nakato', cls: 'S3 East', school: 'Kampala Hill School', adm: 'KHS/24/118' },
 };
+
+export type OutlineItemKind = 'video' | 'notes' | 'quiz' | 'live';
+
+export const coursePage = {
+  slug: 'complete-mathematics-primary-7',
+  breadcrumb: ['Explore', 'Primary', 'UNEB (Uganda)', 'Mathematics'],
+  badge: 'Bestseller',
+  title: 'Complete Mathematics for Primary 7 (2024 Curriculum)',
+  sub: 'Master every key Primary 7 mathematics concept with step-by-step video lessons, practice questions, past papers and live support.',
+  rating: 4.8,
+  reviews: 2340,
+  learners: 12540,
+  hours: 40,
+  tags: ['UNEB (Uganda)', 'Primary 7', 'Mathematics', 'English', 'Self-paced + Live Classes'],
+  trailer: { length: '2:30', board: ['Fractions', '3/4 + 2/3', '= 9/12 + 8/12', '= 17/12 = 1 5/12'] },
+  plans: [
+    { key: 'self', label: 'Self-paced', priceUGX: 120000, wasUGX: 160000 },
+    { key: 'live', label: 'With live classes', priceUGX: 180000, wasUGX: 220000 },
+    { key: 'school', label: 'Institution', priceUGX: 95000, wasUGX: 0 },
+  ],
+  includes: ['Full course access (12 months)', '40+ video lessons', 'Practice questions and past papers', 'Live revision classes (optional)', 'Downloadable notes and worksheets', 'Certificate of completion', 'Access on phone, tablet and web'],
+  features: [
+    { title: 'Curriculum aligned', detail: 'UNEB 2024', icon: 'map' as const },
+    { title: 'Expert teacher', detail: '10+ years experience', icon: 'person' as const },
+    { title: 'Live revision classes', detail: 'Join and ask questions', icon: 'live' as const },
+    { title: 'Past papers', detail: 'With marking schemes', icon: 'book' as const },
+    { title: 'Track your progress', detail: 'See your improvement', icon: 'chart' as const },
+  ],
+  outcomes: [
+    { title: 'Number and place value', detail: 'Work with whole numbers, decimals, fractions and percentages.', icon: 'chart' as const },
+    { title: 'Problem solving', detail: 'Apply mathematical ideas to real-world situations.', icon: 'sparkle' as const },
+    { title: 'Algebraic thinking', detail: 'Use simple algebra to solve real-life problems.', icon: 'star' as const },
+    { title: 'Data handling', detail: 'Collect, organise and interpret data.', icon: 'chart' as const },
+    { title: 'Geometry and measurement', detail: 'Solve problems with shapes, angles, area and volume.', icon: 'map' as const },
+    { title: 'Exam readiness', detail: 'Practise with past papers and exam techniques.', icon: 'book' as const },
+  ],
+  outline: [
+    {
+      title: 'Number Systems and Operations',
+      hours: 5,
+      lessons: [
+        { title: 'Place value to millions', items: [{ title: 'Video: reading big numbers', kind: 'video' as OutlineItemKind, mins: 12 }, { title: 'Notes: place value chart', kind: 'notes' as OutlineItemKind, mins: 5 }, { title: 'Quiz: 10 questions', kind: 'quiz' as OutlineItemKind, mins: 10 }] },
+        { title: 'Operations on whole numbers', items: [{ title: 'Video: long division', kind: 'video' as OutlineItemKind, mins: 15 }, { title: 'Quiz: mixed operations', kind: 'quiz' as OutlineItemKind, mins: 10 }] },
+      ],
+      lessonCount: 12,
+    },
+    {
+      title: 'Fractions, Decimals and Percentages',
+      hours: 4,
+      lessons: [
+        { title: 'Adding unlike fractions', items: [{ title: 'Video: common denominators', kind: 'video' as OutlineItemKind, mins: 14 }, { title: 'Live: Saturday revision', kind: 'live' as OutlineItemKind, mins: 60 }] },
+      ],
+      lessonCount: 10,
+    },
+    { title: 'Algebra and Patterns', hours: 4, lessons: [{ title: 'Simple equations', items: [{ title: 'Video: balancing equations', kind: 'video' as OutlineItemKind, mins: 13 }] }], lessonCount: 8 },
+    { title: 'Geometry and Measurement', hours: 6, lessons: [{ title: 'Angles in triangles', items: [{ title: 'Video: angle sum', kind: 'video' as OutlineItemKind, mins: 11 }] }], lessonCount: 14 },
+    { title: 'PLE Exam Preparation', hours: 8, lessons: [{ title: 'Past paper walkthroughs', items: [{ title: 'PLE 2023 Paper', kind: 'quiz' as OutlineItemKind, mins: 135 }] }], lessonCount: 16 },
+  ],
+  totals: { modules: 12, lessons: 86, hours: 40 },
+  teacher: {
+    name: 'Mr. James Kato',
+    title: 'Mathematics Teacher and Curriculum Specialist',
+    verified: true,
+    stats: [{ value: '10+', label: 'Years teaching' }, { value: '24K+', label: 'Learners taught' }, { value: '4.8★', label: 'Course rating' }],
+    bio: 'Mr. Kato is a seasoned mathematics teacher for primary and lower secondary. He has helped thousands of learners get excellent results in UNEB examinations.',
+  },
+  ratingBars: [0.78, 0.16, 0.04, 0.01, 0.01],
+  reviewList: [
+    { name: 'Nakato Sarah', when: '2 weeks ago', stars: 5, text: 'My daughter went from 52% to 81% in mocks. The fractions videos are so clear.' },
+    { name: 'Okello Brian', when: '1 month ago', stars: 5, text: 'The live revision on Saturdays helped me before PLE.' },
+  ],
+  sample: {
+    questions: [
+      { text: 'What is 3/4 + 2/3?', options: ['5/7', '17/12', '15/12', '11/12'], answer: 1, why: 'Use 12 as the common denominator: 9/12 + 8/12 = 17/12, or 1 5/12.' },
+      { text: 'Write 0.35 as a percentage.', options: ['3.5%', '35%', '0.35%', '350%'], answer: 1, why: 'Multiply by 100: 0.35 × 100 = 35%.' },
+      { text: 'What is 25% of UGX 8,000?', options: ['UGX 200', 'UGX 2,000', 'UGX 4,000', 'UGX 800'], answer: 1, why: '25% is a quarter, and a quarter of 8,000 is 2,000.' },
+    ],
+    minutes: 5,
+  },
+  related: [
+    { title: 'English for Primary 7', meta: 'UNEB · Primary 7', rating: 4.7, reviews: '1.2K', priceUGX: 100000, icon: 'book' as const },
+    { title: 'Science for Primary 7', meta: 'UNEB · Primary 7', rating: 4.6, reviews: '980', priceUGX: 90000, icon: 'sparkle' as const },
+  ],
+};

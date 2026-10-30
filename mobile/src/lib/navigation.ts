@@ -165,6 +165,7 @@ export function activeKey(items: readonly NavItem[], pathname: string): string |
  */
 export const PUBLIC_PREVIEWS = [
   { href: '/welcome', label: 'Home page', icon: 'sparkle' },
+  { href: '/courses/complete-mathematics-primary-7', route: 'courses/[slug]', label: 'Course page', icon: 'book' },
   { href: '/event', label: 'Live event', icon: 'live' },
   { href: '/digest', label: 'Weekly digest', icon: 'chat' },
   { href: '/pay', label: 'Fee payment link', icon: 'wallet' },
@@ -174,7 +175,7 @@ export const PUBLIC_PREVIEWS = [
   { href: '/qr-sign-in', label: 'Sign in with a QR code', icon: 'qr' },
   { href: '/consent', label: 'Parent consent', icon: 'hand' },
   { href: '/claim-child', label: 'Link your child', icon: 'people' },
-] as const satisfies readonly { href: string; label: string; icon: IconName }[];
+] as const satisfies readonly { href: string; route?: string; label: string; icon: IconName }[];
 
 /** Screens that open over any portal: reached from buttons, not a menu. */
 export const SHARED_PREVIEWS = [

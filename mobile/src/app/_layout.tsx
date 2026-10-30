@@ -52,6 +52,7 @@ function RootNavigator() {
       <Stack.Screen name="reset-password" />
       {/* Public pages (PUBLIC_PREVIEWS in lib/navigation): open to everyone. */}
       <Stack.Screen name="welcome" />
+      <Stack.Screen name="courses/[slug]" />
       <Stack.Screen name="event" />
       <Stack.Screen name="digest" />
       <Stack.Screen name="pay" />
