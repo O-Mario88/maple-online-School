@@ -156,8 +156,10 @@ CREATE TABLE scheduling_academicterm (
 );
 
 CREATE TABLE curriculum_classlevel (
-    id   bigint       PRIMARY KEY,
-    name varchar(100) NOT NULL
+    id                       bigint       PRIMARY KEY,
+    name                     varchar(100) NOT NULL,
+    level_id                 bigint       NOT NULL,
+    internal_canonical_grade integer      NOT NULL
 );
 
 CREATE TABLE institutions_institutionsubject (
@@ -169,7 +171,39 @@ CREATE TABLE institutions_institutionsubject (
 
 CREATE TABLE curriculum_subject (
     id   bigint       PRIMARY KEY,
-    name varchar(255) NOT NULL
+    name varchar(255) NOT NULL,
+    code varchar(50)
+);
+
+-- The rest of the curriculum: read only.
+CREATE TABLE curriculum_country (
+    id     bigint       PRIMARY KEY,
+    code   varchar(10)  NOT NULL,
+    name   varchar(100) NOT NULL,
+    active boolean      NOT NULL
+);
+
+CREATE TABLE curriculum_educationlevel (
+    id         bigint       PRIMARY KEY,
+    name       varchar(100) NOT NULL,
+    track_id   bigint       NOT NULL,
+    is_primary boolean      NOT NULL
+);
+
+CREATE TABLE curriculum_topic (
+    id             bigint       PRIMARY KEY,
+    name           varchar(255) NOT NULL,
+    "order"        integer      NOT NULL,
+    class_level_id bigint       NOT NULL,
+    subject_id     bigint       NOT NULL
+);
+
+CREATE TABLE curriculum_topiccompetency (
+    id                    bigint PRIMARY KEY,
+    description           text   NOT NULL,
+    code                  varchar(50),
+    curriculum_version_id bigint NOT NULL,
+    topic_id              bigint NOT NULL
 );
 
 -- Subject marks and report cards: Go owns writes.

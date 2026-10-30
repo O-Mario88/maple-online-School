@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Maple API
-  version: 0.5.0
+  version: 0.6.0
   description: |
     The contract between the Maple apps and the Go API. Paths not listed here
     are still served by the Django API through the Go service's forwarder,
@@ -476,6 +476,93 @@ paths:
         "400": { $ref: "#/components/responses/BadRequest" }
         "403": { $ref: "#/components/responses/Forbidden" }
         "409": { description: "Clash: {code: clash, detail, clashes[]}" }
+  /api/v1/institutions/:
+    get:
+      summary: Schools the user belongs to
+      responses: { "200": { description: "{count, results: Institution[]}" } }
+    post:
+      summary: Register a school; the caller becomes its headteacher
+      responses: { "201": { description: The school }, "400": { $ref: "#/components/responses/BadRequest" } }
+  /api/v1/institutions/{id}/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    patch:
+      summary: Update a school's details (school leaders)
+      responses: { "200": { description: The school }, "403": { $ref: "#/components/responses/Forbidden" }, "404": { $ref: "#/components/responses/NotFound" } }
+  /api/v1/institutions/{id}/bulk_invite/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    post:
+      summary: Invite staff or students by email (school leaders)
+      description: "Body {emails: string[], role}. New people get an account with no usable password and a pending membership."
+      responses: { "200": { description: "{invited, role, detail}" }, "403": { $ref: "#/components/responses/Forbidden" } }
+  /api/v1/institution-memberships/:
+    get:
+      summary: Memberships the user can see (their own, plus their schools' for leaders)
+      responses: { "200": { description: "{count, results: InstitutionMembership[]}" } }
+  /api/v1/institution-memberships/{id}/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    patch:
+      summary: Change a member's role or status (school leaders)
+      responses: { "200": { description: The membership }, "403": { $ref: "#/components/responses/Forbidden" }, "409": { description: Would remove the school's last active leader } }
+  /api/v1/institution-memberships/{id}/accept/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    post:
+      summary: Accept your own pending invitation
+      responses: { "200": { description: The membership }, "404": { $ref: "#/components/responses/NotFound" } }
+  /api/v1/curriculum/full-tree/:
+    get:
+      summary: The course catalog (levels, classes, terms, subjects, topics, lessons)
+      description: Public and cached for ten minutes. Same JSON shape as the Django catalog.
+      security: []
+      responses: { "200": { description: "{version, updatedAt, levels[]}" } }
+  /api/v1/curriculum/countries/:
+    get:
+      summary: Countries
+      responses: { "200": { description: "{count, results: Country[]}" }, "401": { $ref: "#/components/responses/Unauthorized" } }
+  /api/v1/curriculum/class-levels/:
+    get:
+      summary: Class levels (S1, S2 …)
+      responses: { "200": { description: "{count, results: ClassLevel[]}" }, "401": { $ref: "#/components/responses/Unauthorized" } }
+  /api/v1/curriculum/subjects/:
+    get:
+      summary: Subjects with their topics
+      responses:
+        "200":
+          description: "{count, results: CurriculumSubject[]}"
+        "401": { $ref: "#/components/responses/Unauthorized" }
+  /api/v1/curriculum/subjects/{id}/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    get:
+      summary: One subject with its topics
+      responses:
+        "200":
+          description: The subject
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CurriculumSubject" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /api/v1/curriculum/topics/:
+    get:
+      summary: Topics, optionally for one subject or class level
+      parameters:
+        - { name: subject, in: query, schema: { type: integer, format: int64 } }
+        - { name: class_level, in: query, schema: { type: integer, format: int64 } }
+      responses: { "200": { description: "{count, results: CurriculumTopic[]}" }, "401": { $ref: "#/components/responses/Unauthorized" } }
+  /api/v1/curriculum/topics/{id}/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    get:
+      summary: One topic
+      responses:
+        "200":
+          description: The topic
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CurriculumTopic" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /api/v1/curriculum/topic-competencies/:
+    get:
+      summary: Competencies, optionally for one topic
+      parameters: [{ name: topic, in: query, schema: { type: integer, format: int64 } }]
+      responses: { "200": { description: "{count, results: Competency[]}" }, "401": { $ref: "#/components/responses/Unauthorized" } }
 components:
   parameters:
     Page:
@@ -872,3 +959,24 @@ components:
           type: array
           description: Only children linked through an approved guardian link
           items: { $ref: "#/components/schemas/Child" }
+    CurriculumTopic:
+      type: object
+      required: [id, name, order, class_level_name, subject, class_level]
+      properties:
+        id: { type: integer, format: int64 }
+        name: { type: string }
+        order: { type: integer }
+        class_level_name: { type: string }
+        subject: { type: integer, format: int64 }
+        class_level: { type: integer, format: int64 }
+    CurriculumSubject:
+      type: object
+      required: [id, name, code, category, topics]
+      properties:
+        id: { type: integer, format: int64 }
+        name: { type: string }
+        code: { type: [string, "null"] }
+        category: { type: [string, "null"] }
+        topics:
+          type: array
+          items: { $ref: "#/components/schemas/CurriculumTopic" }

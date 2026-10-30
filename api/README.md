@@ -13,6 +13,7 @@ forwarded to Django unchanged. Apps only ever talk to this service.
 | Reports: subject marks, report cards | Done | `/api/v1/grading/subjects/`, `/api/v1/grading/reports/` (+ `generate/`, `{id}/`) |
 | Timetable: terms, rooms, lessons | Done | `/api/v1/scheduling/terms/`, `/api/v1/scheduling/rooms/`, `/api/v1/scheduling/timetable/` |
 | Institutions: schools, memberships, invitations | Done | `/api/v1/institutions/` (+ `{id}/`, `{id}/bulk_invite/`), `/api/v1/institution-memberships/` (+ `{id}/`, `{id}/accept/`) |
+| Curriculum: countries, levels, subjects, topics, catalog | Done (read-only) | `/api/v1/curriculum/full-tree/` (public), `countries/`, `class-levels/`, `subjects/` (+ `{id}/`), `topics/` (+ `{id}/`), `topic-competencies/` |
 | Health   | Done         | `/api/health/` |
 | Everything else | Served by Django through the forwarder | all other `/api/v1/...` |
 

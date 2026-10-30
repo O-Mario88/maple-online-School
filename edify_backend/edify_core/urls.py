@@ -22,7 +22,6 @@ from rest_framework_simplejwt.views import TokenRefreshView
 from edify_core.health import HealthView
 from accounts.views import VerifiedEmailTokenObtainPairView as TokenObtainPairView
 
-from curriculum.views import CountryViewSet, SubjectViewSet, ClassLevelViewSet, TopicViewSet
 from marketplace.views import ListingViewSet
 from ai_services.views import CopilotInferenceView
 from institutions.views import LearnerRegistrationViewSet, AdminPinResetView
@@ -57,16 +56,10 @@ from intelligence.views import (
 )
 
 router = DefaultRouter()
-router.register(r'curriculum/countries', CountryViewSet)
-router.register(r'curriculum/subjects', SubjectViewSet)
-router.register(r'curriculum/class-levels', ClassLevelViewSet)
-router.register(r'curriculum/topics', TopicViewSet)
-
-from curriculum.views import CurriculumTreeView
 
 # New Phase 1: NCDC Foundations
-from curriculum.views import TopicCompetencyViewSet, ResourceQualityReviewViewSet
-router.register(r'curriculum/topic-competencies', TopicCompetencyViewSet, basename='topic-competency')
+# Curriculum reads moved to the Go service; resource reviews move with resources.
+from curriculum.views import ResourceQualityReviewViewSet
 router.register(r'curriculum/resource-reviews', ResourceQualityReviewViewSet, basename='resource-review')
 
 from marketplace.views import ListingViewSet, PayoutRequestViewSet, PayoutBatchViewSet, LessonQualificationViewSet, TeacherPayoutProfileViewSet
@@ -197,9 +190,6 @@ urlpatterns = [
     
     # Institution Onboarding Phase 1-3
     path('api/v1/institutions/onboard-basic/', InstitutionOnboardingAPIView.as_view(), name='institution_onboard_basic'),
-
-    # Full Curriculum Tree Endpoint
-    path('api/v1/curriculum/full-tree/', CurriculumTreeView.as_view(), name='curriculum_full_tree'),
 
     # Intelligence: APIView endpoints
     path('api/v1/intelligence/passport/student/', StudentPassportView.as_view(), name='intelligence-student-passport'),

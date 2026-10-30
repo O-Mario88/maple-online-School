@@ -103,13 +103,46 @@ type ClassesClassenrollment struct {
 }
 
 type CurriculumClasslevel struct {
-	ID   int64
-	Name string
+	ID                     int64
+	Name                   string
+	LevelID                int64
+	InternalCanonicalGrade int32
+}
+
+type CurriculumCountry struct {
+	ID     int64
+	Code   string
+	Name   string
+	Active bool
+}
+
+type CurriculumEducationlevel struct {
+	ID        int64
+	Name      string
+	TrackID   int64
+	IsPrimary bool
 }
 
 type CurriculumSubject struct {
 	ID   int64
 	Name string
+	Code pgtype.Text
+}
+
+type CurriculumTopic struct {
+	ID           int64
+	Name         string
+	Order        int32
+	ClassLevelID int64
+	SubjectID    int64
+}
+
+type CurriculumTopiccompetency struct {
+	ID                  int64
+	Description         string
+	Code                pgtype.Text
+	CurriculumVersionID int64
+	TopicID             int64
 }
 
 type GradingGraderecord struct {
