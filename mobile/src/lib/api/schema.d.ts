@@ -1563,6 +1563,54 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/curriculum/programmes/{country}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * A country's national curriculum
+         * @description Public and cacheable. Levels in grade order, each class level's offered subjects (compulsory first), and the track's selection rules (elective limits, alternatives, components, exams, A-Level groups and combinations).
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    country: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The programme */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Programme"];
+                    };
+                };
+                /** @description No curriculum for that country */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/curriculum/countries/": {
         parameters: {
             query?: never;
@@ -3942,6 +3990,42 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        Programme: {
+            country: string;
+            tracks: {
+                /** Format: int64 */
+                id: number;
+                name: string;
+                rules: components["schemas"]["ProgrammeRule"][];
+                levels: {
+                    /** Format: int64 */
+                    id: number;
+                    name: string;
+                    classes: {
+                        /** Format: int64 */
+                        id: number;
+                        name: string;
+                        grade: number;
+                        subjects: {
+                            /** Format: int64 */
+                            id: number;
+                            code: string;
+                            name: string;
+                            compulsory: boolean;
+                        }[];
+                    }[];
+                }[];
+            }[];
+        };
+        ProgrammeRule: {
+            key: string;
+            /** @enum {string} */
+            kind: "approach" | "components" | "exam" | "alternative" | "elective_limit" | "principal_subjects" | "subject_groups" | "combinations";
+            classes: string[];
+            note?: string;
+        } & {
+            [key: string]: unknown;
+        };
         Slot: {
             /** Format: int64 */
             id: number;

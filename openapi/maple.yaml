@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Maple API
-  version: 0.12.0
+  version: 0.13.0
   description: |
     The contract between the Maple apps and the Go API. Paths not listed here
     are still served by the Django API through the Go service's forwarder,
@@ -561,6 +561,20 @@ paths:
       description: Public and cached for ten minutes. Same JSON shape as the Django catalog.
       security: []
       responses: { "200": { description: "{version, updatedAt, levels[]}" } }
+  /api/v1/curriculum/programmes/{country}/:
+    get:
+      summary: A country's national curriculum
+      description: >-
+        Public and cacheable. Levels in grade order, each class level's offered
+        subjects (compulsory first), and the track's selection rules (elective
+        limits, alternatives, components, exams, A-Level groups and combinations).
+      security: []
+      parameters: [{ name: country, in: path, required: true, schema: { type: string, example: UG } }]
+      responses:
+        "200":
+          description: The programme
+          content: { application/json: { schema: { $ref: "#/components/schemas/Programme" } } }
+        "404": { description: No curriculum for that country }
   /api/v1/curriculum/countries/:
     get:
       summary: Countries
@@ -1279,6 +1293,56 @@ components:
         application/json:
           schema: { $ref: "#/components/schemas/Error" }
   schemas:
+    Programme:
+      type: object
+      required: [country, tracks]
+      properties:
+        country: { type: string }
+        tracks:
+          type: array
+          items:
+            type: object
+            required: [id, name, levels, rules]
+            properties:
+              id: { type: integer, format: int64 }
+              name: { type: string }
+              rules: { type: array, items: { $ref: "#/components/schemas/ProgrammeRule" } }
+              levels:
+                type: array
+                items:
+                  type: object
+                  required: [id, name, classes]
+                  properties:
+                    id: { type: integer, format: int64 }
+                    name: { type: string }
+                    classes:
+                      type: array
+                      items:
+                        type: object
+                        required: [id, name, grade, subjects]
+                        properties:
+                          id: { type: integer, format: int64 }
+                          name: { type: string }
+                          grade: { type: integer }
+                          subjects:
+                            type: array
+                            items:
+                              type: object
+                              required: [id, code, name, compulsory]
+                              properties:
+                                id: { type: integer, format: int64 }
+                                code: { type: string }
+                                name: { type: string }
+                                compulsory: { type: boolean }
+    ProgrammeRule:
+      type: object
+      required: [key, kind, classes]
+      additionalProperties: true
+      properties:
+        key: { type: string }
+        kind: { type: string, enum: [approach, components, exam, alternative, elective_limit, principal_subjects, subject_groups, combinations] }
+        classes: { type: array, items: { type: string } }
+        note: { type: string }
     Slot:
       type: object
       required: [id, institution, term, assigned_class, class_title, day_of_week, start_time, end_time, room, room_name, teacher, teacher_name, is_draft]

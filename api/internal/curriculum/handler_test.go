@@ -38,6 +38,10 @@ func (f *fakeStore) TreeRows(context.Context) ([]TreeRow, error) {
 	return []TreeRow{{LevelID: 1, LevelName: "O-Level", ClassID: 10, ClassName: "S 1"}}, nil
 }
 
+func (f *fakeStore) Programme(context.Context, string) (Programme, error) {
+	return Programme{}, ErrNotFound
+}
+
 // signedIn stands in for identity.RequireUser: requests need an Authorization header.
 func signedIn(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

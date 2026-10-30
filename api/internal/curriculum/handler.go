@@ -6,6 +6,7 @@ import (
 	"log/slog"
 	"net/http"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 
@@ -70,6 +71,7 @@ type Store interface {
 	Topic(ctx context.Context, id int64) (TopicRef, error)
 	Competencies(ctx context.Context, topic *int64) ([]Competency, error)
 	TreeRows(ctx context.Context) ([]TreeRow, error)
+	Programme(ctx context.Context, country string) (Programme, error)
 }
 
 // Handler serves /api/v1/curriculum/... . The catalog tree is public; the
@@ -90,7 +92,7 @@ func NewHandler(store Store, requireUser func(http.Handler) http.Handler) *Handl
 // ownedPaths are read-only in Go; other methods on them get 405 rather than
 // falling through to Django. Resource quality reviews stay on Django until
 // the resources module moves.
-var ownedPaths = []string{"full-tree", "countries", "class-levels", "subjects", "topics", "topic-competencies"}
+var ownedPaths = []string{"full-tree", "programmes", "countries", "class-levels", "subjects", "topics", "topic-competencies"}
 
 // Mount registers the routes.
 func (h *Handler) Mount(r chi.Router) {
@@ -100,6 +102,7 @@ func (h *Handler) Mount(r chi.Router) {
 		})
 	}
 	r.Get("/api/v1/curriculum/full-tree/", h.fullTree)
+	r.Get("/api/v1/curriculum/programmes/{country}/", h.programme)
 	r.Group(func(r chi.Router) {
 		r.Use(h.requireUser)
 		r.Get("/api/v1/curriculum/countries/", list(h, func(ctx context.Context, _ *http.Request) (any, int, error) {
@@ -180,6 +183,21 @@ func (h *Handler) fullTree(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Cache-Control", "public, max-age=600")
 	httpx.WriteJSON(w, http.StatusOK, h.tree)
+}
+
+// programme serves a country's national curriculum. It is public: the
+// catalog and school set-up both start from it.
+func (h *Handler) programme(w http.ResponseWriter, r *http.Request) {
+	country := strings.ToUpper(chi.URLParam(r, "country"))
+	if len(country) < 2 || len(country) > 10 {
+		httpx.WriteError(w, http.StatusNotFound, "not_found", "Not found.")
+		return
+	}
+	p, err := h.store.Programme(r.Context(), country)
+	if err == nil {
+		w.Header().Set("Cache-Control", "public, max-age=600")
+	}
+	writeOne(w, p, err)
 }
 
 func queryID(r *http.Request, key string) *int64 {

@@ -136,6 +136,12 @@ type CurriculumCountry struct {
 	Active bool
 }
 
+type CurriculumCurriculumtrack struct {
+	ID        int64
+	Name      string
+	CountryID int64
+}
+
 type CurriculumEducationlevel struct {
 	ID        int64
 	Name      string
@@ -147,6 +153,19 @@ type CurriculumSubject struct {
 	ID   int64
 	Name string
 	Code pgtype.Text
+}
+
+type CurriculumSubjectcombination struct {
+	ID           int64
+	IsCore       bool
+	ClassLevelID int64
+	SubjectID    int64
+}
+
+type CurriculumSubjectselectionrule struct {
+	ID          int64
+	RulePayload []byte
+	TrackID     int64
 }
 
 type CurriculumTopic struct {
@@ -607,4 +626,30 @@ type SchedulingTimetableslot struct {
 	TermID          int64
 	IsDraft         bool
 	SubjectID       pgtype.Int8
+}
+
+type SeedClass struct {
+	Level pgtype.Text
+	Name  pgtype.Text
+	Grade pgtype.Int4
+}
+
+type SeedLevel struct {
+	Name      pgtype.Text
+	IsPrimary pgtype.Bool
+}
+
+type SeedOffer struct {
+	Classes []string
+	Code    pgtype.Text
+	Core    pgtype.Bool
+}
+
+type SeedRule struct {
+	Payload []byte
+}
+
+type SeedSubject struct {
+	Code pgtype.Text
+	Name pgtype.Text
 }

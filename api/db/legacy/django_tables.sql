@@ -206,6 +206,25 @@ CREATE TABLE curriculum_educationlevel (
     is_primary boolean      NOT NULL
 );
 
+CREATE TABLE curriculum_curriculumtrack (
+    id         bigint       PRIMARY KEY,
+    name       varchar(100) NOT NULL,
+    country_id bigint       NOT NULL
+);
+
+CREATE TABLE curriculum_subjectcombination (
+    id             bigint  PRIMARY KEY,
+    is_core        boolean NOT NULL,
+    class_level_id bigint  NOT NULL,
+    subject_id     bigint  NOT NULL
+);
+
+CREATE TABLE curriculum_subjectselectionrule (
+    id           bigint PRIMARY KEY,
+    rule_payload jsonb  NOT NULL,
+    track_id     bigint NOT NULL
+);
+
 CREATE TABLE curriculum_topic (
     id             bigint       PRIMARY KEY,
     name           varchar(255) NOT NULL,

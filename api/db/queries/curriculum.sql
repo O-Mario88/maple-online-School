@@ -41,3 +41,26 @@ JOIN curriculum_classlevel cl ON cl.level_id = el.id
 LEFT JOIN curriculum_topic t ON t.class_level_id = cl.id
 LEFT JOIN curriculum_subject s ON s.id = t.subject_id
 ORDER BY el.id, cl.internal_canonical_grade, cl.id, t."order", t.id;
+
+-- name: ProgrammeRows :many
+-- A country's curriculum: each class level with the subjects it offers.
+SELECT t.id AS track_id, t.name AS track_name, el.id AS level_id, el.name AS level_name,
+       cl.id AS class_id, cl.name AS class_name, cl.internal_canonical_grade AS grade,
+       COALESCE(s.id, 0)::bigint AS subject_id, COALESCE(s.code, '')::text AS subject_code,
+       COALESCE(s.name, '')::text AS subject_name, COALESCE(sc.is_core, false)::boolean AS compulsory
+FROM curriculum_country c
+JOIN curriculum_curriculumtrack t ON t.country_id = c.id
+JOIN curriculum_educationlevel el ON el.track_id = t.id
+JOIN curriculum_classlevel cl ON cl.level_id = el.id
+LEFT JOIN curriculum_subjectcombination sc ON sc.class_level_id = cl.id
+LEFT JOIN curriculum_subject s ON s.id = sc.subject_id
+WHERE c.code = sqlc.arg(country)::text
+ORDER BY t.id, cl.internal_canonical_grade, cl.id, sc.is_core DESC, s.name;
+
+-- name: ProgrammeRules :many
+SELECT r.track_id, r.rule_payload
+FROM curriculum_subjectselectionrule r
+JOIN curriculum_curriculumtrack t ON t.id = r.track_id
+JOIN curriculum_country c ON c.id = t.country_id
+WHERE c.code = sqlc.arg(country)::text
+ORDER BY r.id;

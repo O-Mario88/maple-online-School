@@ -219,6 +219,102 @@ func (q *Queries) ListTopics(ctx context.Context, arg ListTopicsParams) ([]ListT
 	return items, nil
 }
 
+const programmeRows = `-- name: ProgrammeRows :many
+SELECT t.id AS track_id, t.name AS track_name, el.id AS level_id, el.name AS level_name,
+       cl.id AS class_id, cl.name AS class_name, cl.internal_canonical_grade AS grade,
+       COALESCE(s.id, 0)::bigint AS subject_id, COALESCE(s.code, '')::text AS subject_code,
+       COALESCE(s.name, '')::text AS subject_name, COALESCE(sc.is_core, false)::boolean AS compulsory
+FROM curriculum_country c
+JOIN curriculum_curriculumtrack t ON t.country_id = c.id
+JOIN curriculum_educationlevel el ON el.track_id = t.id
+JOIN curriculum_classlevel cl ON cl.level_id = el.id
+LEFT JOIN curriculum_subjectcombination sc ON sc.class_level_id = cl.id
+LEFT JOIN curriculum_subject s ON s.id = sc.subject_id
+WHERE c.code = $1::text
+ORDER BY t.id, cl.internal_canonical_grade, cl.id, sc.is_core DESC, s.name
+`
+
+type ProgrammeRowsRow struct {
+	TrackID     int64
+	TrackName   string
+	LevelID     int64
+	LevelName   string
+	ClassID     int64
+	ClassName   string
+	Grade       int32
+	SubjectID   int64
+	SubjectCode string
+	SubjectName string
+	Compulsory  bool
+}
+
+// A country's curriculum: each class level with the subjects it offers.
+func (q *Queries) ProgrammeRows(ctx context.Context, country string) ([]ProgrammeRowsRow, error) {
+	rows, err := q.db.Query(ctx, programmeRows, country)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []ProgrammeRowsRow{}
+	for rows.Next() {
+		var i ProgrammeRowsRow
+		if err := rows.Scan(
+			&i.TrackID,
+			&i.TrackName,
+			&i.LevelID,
+			&i.LevelName,
+			&i.ClassID,
+			&i.ClassName,
+			&i.Grade,
+			&i.SubjectID,
+			&i.SubjectCode,
+			&i.SubjectName,
+			&i.Compulsory,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const programmeRules = `-- name: ProgrammeRules :many
+SELECT r.track_id, r.rule_payload
+FROM curriculum_subjectselectionrule r
+JOIN curriculum_curriculumtrack t ON t.id = r.track_id
+JOIN curriculum_country c ON c.id = t.country_id
+WHERE c.code = $1::text
+ORDER BY r.id
+`
+
+type ProgrammeRulesRow struct {
+	TrackID     int64
+	RulePayload []byte
+}
+
+func (q *Queries) ProgrammeRules(ctx context.Context, country string) ([]ProgrammeRulesRow, error) {
+	rows, err := q.db.Query(ctx, programmeRules, country)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []ProgrammeRulesRow{}
+	for rows.Next() {
+		var i ProgrammeRulesRow
+		if err := rows.Scan(&i.TrackID, &i.RulePayload); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const treeRows = `-- name: TreeRows :many
 SELECT el.id AS level_id, el.name AS level_name, cl.id AS class_id, cl.name AS class_name,
        t.id AS topic_id, t.name AS topic_name, s.id AS subject_id, s.name AS subject_name
