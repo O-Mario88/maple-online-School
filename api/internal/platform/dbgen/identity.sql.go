@@ -118,10 +118,21 @@ WHERE lower(email) = lower($1)
 LIMIT 1
 `
 
+type UserByEmailRow struct {
+	ID            int64
+	Password      string
+	Email         string
+	FullName      string
+	CountryCode   string
+	Role          string
+	IsActive      bool
+	EmailVerified bool
+}
+
 // Match case-insensitively so "Student.A@..." and "student.a@..." are the same login.
-func (q *Queries) UserByEmail(ctx context.Context, email string) (AccountsUser, error) {
+func (q *Queries) UserByEmail(ctx context.Context, email string) (UserByEmailRow, error) {
 	row := q.db.QueryRow(ctx, userByEmail, email)
-	var i AccountsUser
+	var i UserByEmailRow
 	err := row.Scan(
 		&i.ID,
 		&i.Password,
@@ -141,9 +152,20 @@ FROM accounts_user
 WHERE id = $1
 `
 
-func (q *Queries) UserByID(ctx context.Context, id int64) (AccountsUser, error) {
+type UserByIDRow struct {
+	ID            int64
+	Password      string
+	Email         string
+	FullName      string
+	CountryCode   string
+	Role          string
+	IsActive      bool
+	EmailVerified bool
+}
+
+func (q *Queries) UserByID(ctx context.Context, id int64) (UserByIDRow, error) {
 	row := q.db.QueryRow(ctx, userByID, id)
-	var i AccountsUser
+	var i UserByIDRow
 	err := row.Scan(
 		&i.ID,
 		&i.Password,

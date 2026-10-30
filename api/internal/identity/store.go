@@ -25,7 +25,7 @@ func NewPostgresStore(db dbgen.DBTX) *PostgresStore {
 
 func (s *PostgresStore) UserByEmail(ctx context.Context, email string) (User, error) {
 	row, err := s.q.UserByEmail(ctx, email)
-	return toUser(row, err)
+	return toUser(dbgen.UserByIDRow(row), err)
 }
 
 func (s *PostgresStore) UserByID(ctx context.Context, id int64) (User, error) {
@@ -69,7 +69,7 @@ func (s *PostgresStore) Revoke(ctx context.Context, tokenID string, userID int64
 	return n == 1, nil
 }
 
-func toUser(row dbgen.AccountsUser, err error) (User, error) {
+func toUser(row dbgen.UserByIDRow, err error) (User, error) {
 	if errors.Is(err, pgx.ErrNoRows) {
 		return User{}, ErrNotFound
 	}

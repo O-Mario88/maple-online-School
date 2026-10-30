@@ -25,7 +25,7 @@ from accounts.views import VerifiedEmailTokenObtainPairView as TokenObtainPairVi
 from curriculum.views import CountryViewSet, SubjectViewSet, ClassLevelViewSet, TopicViewSet
 from marketplace.views import ListingViewSet
 from ai_services.views import CopilotInferenceView
-from institutions.views import InstitutionViewSet, InstitutionMembershipViewSet, LearnerRegistrationViewSet, AdminPinResetView
+from institutions.views import LearnerRegistrationViewSet, AdminPinResetView
 from attendance.views import LessonAttendanceViewSet
 from analytics.views import AnalyticsEventViewSet, DailyPlatformMetricViewSet, DailyInstitutionMetricViewSet, SubjectPerformanceSnapshotViewSet, SystemHealthSnapshotViewSet, StudentDashboardView, TeacherDashboardView, ParentDashboardView, AdminDashboardView, InstitutionDashboardView, CustomerSuccessChurnView
 from assessments.views import AssessmentWindowViewSet, QuestionViewSet
@@ -79,8 +79,7 @@ router.register(r'marketplace/teacher-batches', PayoutBatchViewSet, basename='ma
 router.register(r'marketplace/lesson-qualifications', LessonQualificationViewSet, basename='marketplace-lesson-qual')
 
 # School OS Endpoints
-router.register(r'institutions', InstitutionViewSet, basename='institution')
-router.register(r'institution-memberships', InstitutionMembershipViewSet, basename='institution-membership')
+# institutions (list, create, edit, bulk_invite) and institution-memberships are served by the Go API (api/internal/institutions).
 router.register(r'institutions/learner-registrations', LearnerRegistrationViewSet, basename='learner-registration')
 # classes and class-enrollments are served by the Go API (api/internal/school).
 # scheduling/timetable (and terms, rooms) are served by the Go API (api/internal/timetable).

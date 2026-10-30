@@ -15,6 +15,7 @@ import (
 
 	"github.com/O-Mario88/maple-online-School/api/internal/config"
 	"github.com/O-Mario88/maple-online-School/api/internal/identity"
+	"github.com/O-Mario88/maple-online-School/api/internal/institutions"
 	"github.com/O-Mario88/maple-online-School/api/internal/learning"
 	"github.com/O-Mario88/maple-online-School/api/internal/platform/postgres"
 	"github.com/O-Mario88/maple-online-School/api/internal/reports"
@@ -57,13 +58,14 @@ func run() error {
 	classes := school.NewHandler(school.NewPostgresStore(pool), store, auth.RequireUser)
 	cards := reports.NewHandler(reports.NewPostgresStore(pool), store, auth.RequireUser)
 	week := timetable.NewHandler(timetable.NewPostgresStore(pool), store, auth.RequireUser)
+	schools := institutions.NewHandler(institutions.NewPostgresStore(pool), auth.RequireUser)
 
 	handler, err := server.NewRouter(server.Options{
 		Pinger:            pool,
 		LegacyAPI:         cfg.LegacyAPIURL,
 		CORSOrigins:       cfg.CORSOrigins,
 		TrustProxyHeaders: cfg.TrustProxyHeaders,
-		Modules:           []func(chi.Router){auth.Mount, work.Mount, classes.Mount, cards.Mount, week.Mount},
+		Modules:           []func(chi.Router){auth.Mount, work.Mount, classes.Mount, cards.Mount, week.Mount, schools.Mount},
 	})
 	if err != nil {
 		return err

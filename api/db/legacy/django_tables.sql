@@ -59,20 +59,37 @@ CREATE TABLE accounts_user (
     country_code      varchar(10)  NOT NULL,
     role              varchar(20)  NOT NULL,
     is_active         boolean      NOT NULL,
-    email_verified    boolean      NOT NULL
+    email_verified    boolean      NOT NULL,
+    is_superuser      boolean      NOT NULL,
+    whatsapp_opt_in   boolean      NOT NULL,
+    is_staff          boolean      NOT NULL,
+    date_joined       timestamptz  NOT NULL
 );
 
 CREATE TABLE institutions_institution (
-    id   bigint       PRIMARY KEY,
-    name varchar(255) NOT NULL
+    id                bigint       PRIMARY KEY,
+    name              varchar(255) NOT NULL,
+    slug              varchar(255) UNIQUE,
+    primary_color     varchar(7)   NOT NULL,
+    secondary_color   varchar(7)   NOT NULL,
+    country_code      varchar(10)  NOT NULL,
+    curriculum_track  varchar(50)  NOT NULL,
+    subscription_plan varchar(50)  NOT NULL,
+    is_active         boolean      NOT NULL,
+    created_at        timestamptz  NOT NULL,
+    grade_offerings   jsonb        NOT NULL,
+    school_level      varchar(50)  NOT NULL,
+    in_grace_period   boolean      NOT NULL
 );
 
 CREATE TABLE institutions_institutionmembership (
     id             bigint      PRIMARY KEY,
     role           varchar(20) NOT NULL,
     status         varchar(20) NOT NULL,
+    joined_at      timestamptz NOT NULL,
     institution_id bigint      NOT NULL,
-    user_id        bigint      NOT NULL
+    user_id        bigint      NOT NULL,
+    UNIQUE (user_id, institution_id, role)
 );
 
 CREATE TABLE accounts_parentprofile (

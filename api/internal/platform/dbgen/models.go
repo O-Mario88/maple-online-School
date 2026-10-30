@@ -27,6 +27,10 @@ type AccountsUser struct {
 	Role          string
 	IsActive      bool
 	EmailVerified bool
+	IsSuperuser   bool
+	WhatsappOptIn bool
+	IsStaff       bool
+	DateJoined    pgtype.Timestamptz
 }
 
 type AssessmentsAssessment struct {
@@ -156,14 +160,26 @@ type IdentityRevokedToken struct {
 }
 
 type InstitutionsInstitution struct {
-	ID   int64
-	Name string
+	ID               int64
+	Name             string
+	Slug             pgtype.Text
+	PrimaryColor     string
+	SecondaryColor   string
+	CountryCode      string
+	CurriculumTrack  string
+	SubscriptionPlan string
+	IsActive         bool
+	CreatedAt        pgtype.Timestamptz
+	GradeOfferings   []byte
+	SchoolLevel      string
+	InGracePeriod    bool
 }
 
 type InstitutionsInstitutionmembership struct {
 	ID            int64
 	Role          string
 	Status        string
+	JoinedAt      pgtype.Timestamptz
 	InstitutionID int64
 	UserID        int64
 }
