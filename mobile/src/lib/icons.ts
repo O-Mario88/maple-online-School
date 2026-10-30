@@ -43,6 +43,8 @@ export const ICONS = {
   clock: { ios: 'clock', material: 'schedule' },
   arrowRight: { ios: 'arrow.right', material: 'arrow_forward' },
   trophy: { ios: 'trophy', material: 'emoji_events' },
+  share: { ios: 'square.and.arrow.up', material: 'share' },
+  heart: { ios: 'heart', material: 'favorite' },
 } as const;
 
 export type IconName = keyof typeof ICONS;

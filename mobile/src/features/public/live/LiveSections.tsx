@@ -6,7 +6,28 @@ import { Icon } from '@/components/icon';
 import { formatMoney } from '@/lib/finance/fees';
 import type { MockData } from '@/mock';
 
-import { Brand } from '../palette';
+import { Brand, CARD_SHADOW } from '../palette';
+
+// Each syllabus item gets its own tile colour, as in the reference.
+const SYLLABUS_TINTS = [
+  { fg: '#2F6BFF', bg: '#EAF1FF' },
+  { fg: '#F59E0B', bg: '#FEF3DC' },
+  { fg: '#F97316', bg: '#FFEDD5' },
+  { fg: '#2F6BFF', bg: '#EAF1FF' },
+  { fg: '#8B5CF6', bg: '#EFEBFF' },
+  { fg: '#EF4444', bg: '#FDECEC' },
+] as const;
+
+const BADGE_ICONS = [
+  { icon: 'school' as const, color: '#8B5CF6' },
+  { icon: 'clock' as const, color: '#2F6BFF' },
+  { icon: 'check' as const, color: Brand.green },
+];
+const STAT_ICONS = [
+  { icon: 'people' as const, color: '#2F6BFF' },
+  { icon: 'chart' as const, color: '#2F6BFF' },
+  { icon: 'star' as const, color: Brand.amber },
+];
 
 type Session = MockData['publicPages']['liveSession'];
 
@@ -63,17 +84,20 @@ export function Syllabus({ s }: { s: Session }) {
       <Text style={styles.title} accessibilityRole="header">
         What You Will Learn
       </Text>
-      {s.syllabus.map((item, i) => (
-        <View key={item.title} style={styles.syllabusRow}>
-          <View style={styles.syllabusIcon}>
-            <Icon name={item.icon} size={20} color={Brand.purple} />
+      {s.syllabus.map((item, i) => {
+        const tint = SYLLABUS_TINTS[i % SYLLABUS_TINTS.length];
+        return (
+          <View key={item.title} style={styles.syllabusRow} accessibilityLabel={`${item.title}, about ${item.minutes} minutes. ${item.detail}`}>
+            <View style={[styles.syllabusIcon, { backgroundColor: tint.bg }]}>
+              <Icon name={item.icon} size={20} color={tint.fg} />
+            </View>
+            <View style={styles.flexShrink}>
+              <Text style={styles.strong}>{item.title}</Text>
+              <Text style={styles.muted}>{item.detail}</Text>
+            </View>
           </View>
-          <View style={styles.flexShrink}>
-            <Text style={styles.strong}>{`${i + 1}. ${item.title}`}</Text>
-            <Text style={styles.muted}>{`${item.detail} · ${item.minutes} min`}</Text>
-          </View>
-        </View>
-      ))}
+        );
+      })}
     </View>
   );
 }
@@ -91,15 +115,21 @@ export function LiveTeacher({ s }: { s: Session }) {
         <View style={styles.flexShrink}>
           <Text style={styles.strong}>{`${t.name}  ✓`}</Text>
           <Text style={styles.muted}>{t.title}</Text>
-          {t.badges.map((b) => (
-            <Text key={b} style={styles.badge}>{`✓ ${b}`}</Text>
+          {t.badges.map((b, i) => (
+            <View key={b} style={styles.badgeRow}>
+              <Icon name={BADGE_ICONS[i % BADGE_ICONS.length].icon} size={13} color={BADGE_ICONS[i % BADGE_ICONS.length].color} />
+              <Text style={styles.badge}>{b}</Text>
+            </View>
           ))}
         </View>
       </View>
       <View style={styles.stats}>
-        {t.stats.map((st) => (
+        {t.stats.map((st, i) => (
           <View key={st.label}>
-            <Text style={styles.stat}>{st.value}</Text>
+            <View style={styles.badgeRow}>
+              <Icon name={STAT_ICONS[i % STAT_ICONS.length].icon} size={16} color={STAT_ICONS[i % STAT_ICONS.length].color} />
+              <Text style={styles.stat}>{st.value}</Text>
+            </View>
             <Text style={styles.muted}>{st.label}</Text>
           </View>
         ))}
@@ -149,29 +179,30 @@ export function MoreLive({ s }: { s: Session }) {
 const styles = StyleSheet.create({
   flexShrink: { flexShrink: 1 },
   between: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 },
-  card: { gap: 12, padding: 20, borderRadius: 16, backgroundColor: Brand.surface, borderWidth: 1, borderColor: Brand.line },
+  card: { gap: 12, padding: 22, borderRadius: 16, backgroundColor: Brand.surface, ...CARD_SHADOW },
   section: { gap: 12 },
   title: { fontSize: 19, fontWeight: '700', color: Brand.ink },
   body: { fontSize: 14, lineHeight: 21, color: Brand.body, flexShrink: 1 },
   muted: { fontSize: 12, color: Brand.muted },
   strong: { fontSize: 14, fontWeight: '700', color: Brand.ink },
   link: { fontSize: 13, fontWeight: '600', color: Brand.blue },
-  strip: { flexDirection: 'row', flexWrap: 'wrap', gap: 14, padding: 16, borderRadius: 16, backgroundColor: Brand.surface, borderWidth: 1, borderColor: Brand.line },
+  strip: { flexDirection: 'row', flexWrap: 'wrap', gap: 14, padding: 16, borderRadius: 16, backgroundColor: Brand.surface, ...CARD_SHADOW },
   feature: { flexDirection: 'row', alignItems: 'center', gap: 10, flexGrow: 1, flexBasis: 170 },
   featureIcon: { width: 40, height: 40, borderRadius: 10, backgroundColor: Brand.blueSoft, alignItems: 'center', justifyContent: 'center' },
   point: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   forWho: { flexDirection: 'row', gap: 12, padding: 14, borderRadius: 12, backgroundColor: Brand.canvas, marginTop: 4 },
   forIcon: { width: 40, height: 40, borderRadius: 20, backgroundColor: Brand.blueSoft, alignItems: 'center', justifyContent: 'center' },
-  syllabusRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  syllabusIcon: { width: 42, height: 42, borderRadius: 10, backgroundColor: Brand.purpleSoft, alignItems: 'center', justifyContent: 'center' },
+  syllabusRow: { flexDirection: 'row', alignItems: 'center', gap: 14, paddingVertical: 2 },
+  syllabusIcon: { width: 44, height: 44, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
   teacherRow: { flexDirection: 'row', alignItems: 'center', gap: 14 },
   avatar: { width: 84, height: 84, borderRadius: 42 },
-  badge: { fontSize: 12, color: Brand.body, marginTop: 2 },
+  badge: { fontSize: 12, color: Brand.body },
+  badgeRow: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 3 },
   stats: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 8, borderTopWidth: StyleSheet.hairlineWidth, borderBottomWidth: StyleSheet.hairlineWidth, borderColor: Brand.line },
   stat: { fontSize: 18, fontWeight: '800', color: Brand.ink },
   outline: { alignItems: 'center', paddingVertical: 10, borderRadius: 8, borderWidth: 1, borderColor: Brand.blue },
   moreRow: { gap: 14 },
-  more: { width: 300, flexDirection: 'row', gap: 12, padding: 10, borderRadius: 14, backgroundColor: Brand.surface, borderWidth: 1, borderColor: Brand.line },
+  more: { width: 300, flexDirection: 'row', gap: 12, padding: 10, borderRadius: 14, backgroundColor: Brand.surface, ...CARD_SHADOW },
   moreThumb: { width: 96, height: 96, borderRadius: 10 },
   status: { alignSelf: 'flex-start', fontSize: 10, fontWeight: '800', color: Brand.surface, paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4, overflow: 'hidden', marginBottom: 2 },
   statusLive: { backgroundColor: Brand.live },

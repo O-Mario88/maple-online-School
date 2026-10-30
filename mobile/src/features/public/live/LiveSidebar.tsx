@@ -7,7 +7,7 @@ import { formatMoney } from '@/lib/finance/fees';
 import { calendarLink, seatsLeft, timeLeft } from '@/lib/live-event';
 import type { MockData } from '@/mock';
 
-import { Brand } from '../palette';
+import { Brand, CARD_SHADOW } from '../palette';
 
 type Session = MockData['publicPages']['liveSession'];
 
@@ -90,7 +90,7 @@ export function LiveSidebar({ s }: { s: Session }) {
 }
 
 const styles = StyleSheet.create({
-  card: { gap: 12, padding: 18, borderRadius: 16, backgroundColor: Brand.surface, borderWidth: 1, borderColor: Brand.line },
+  card: { gap: 12, padding: 20, borderRadius: 16, backgroundColor: Brand.surface, ...CARD_SHADOW },
   heading: { fontSize: 16, fontWeight: '700', color: Brand.ink },
   countdown: { flexDirection: 'row', gap: 8 },
   unit: { flex: 1, alignItems: 'center', paddingVertical: 10, borderRadius: 10, borderWidth: 1, borderColor: Brand.line },

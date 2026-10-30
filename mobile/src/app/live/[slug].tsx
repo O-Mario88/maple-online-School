@@ -15,10 +15,10 @@ import { mockData } from '@/lib/mock';
 
 const MAX_WIDTH = 1440;
 const SIDE = 400;
-const TABS = ['Overview', 'Syllabus', 'Teacher', 'More classes'] as const;
+const TABS = ['Overview', 'Syllabus', 'Teacher', 'Reviews', 'FAQ'] as const;
 type Tab = (typeof TABS)[number];
 type Section = 'about' | 'syllabus' | 'teacher' | 'more';
-const TAB_SECTION: Readonly<Record<Tab, Section>> = { Overview: 'about', Syllabus: 'syllabus', Teacher: 'teacher', 'More classes': 'more' };
+const TAB_SECTION: Readonly<Record<Tab, Section>> = { Overview: 'about', Syllabus: 'syllabus', Teacher: 'teacher', Reviews: 'teacher', FAQ: 'about' };
 
 /** Inventory 9: a public live class or bootcamp page anyone can open from a shared link. */
 export default function LiveSessionScreen() {
@@ -73,7 +73,10 @@ export default function LiveSessionScreen() {
               <View style={[styles.main, wide && styles.flex]}>
                 <LiveHero s={s} wide={wide} />
                 {wide ? null : sidebar}
-                <LiveFeatures s={s} />
+                {/* On wide screens the feature strip overlaps the hero's bottom edge, as in the reference. */}
+                <View style={wide ? styles.overlap : undefined}>
+                  <LiveFeatures s={s} />
+                </View>
                 <View style={styles.tabs} accessibilityRole="tablist">
                   {TABS.map((t) => {
                     const on = t === tab;
@@ -121,6 +124,7 @@ const styles = StyleSheet.create({
   colsWide: { flexDirection: 'row', alignItems: 'flex-start' },
   main: { gap: 20 },
   side: { width: SIDE },
+  overlap: { marginTop: -56, marginHorizontal: 18 },
   tabs: { flexDirection: 'row', flexWrap: 'wrap', gap: 4, borderBottomWidth: 1, borderBottomColor: Brand.line },
   tab: { paddingHorizontal: 14, paddingVertical: 12, borderBottomWidth: 2, borderBottomColor: 'transparent', marginBottom: -1 },
   tabOn: { borderBottomColor: Brand.blue },
