@@ -106,7 +106,14 @@ export function Sidebar() {
 
 function makeStyles(t: Theme) {
   return StyleSheet.create({
-    sidebar: { width: SidebarWidth, backgroundColor: t.sidebar, paddingHorizontal: Spacing.three, paddingVertical: Spacing.four },
+    sidebar: {
+      width: SidebarWidth,
+      backgroundColor: t.sidebar,
+      borderRightWidth: StyleSheet.hairlineWidth,
+      borderRightColor: t.border,
+      paddingHorizontal: Spacing.three,
+      paddingVertical: Spacing.four,
+    },
     brand: { flexDirection: 'row', alignItems: 'center', gap: Spacing.three, paddingHorizontal: Spacing.two, marginBottom: Spacing.four },
     flexText: { flex: 1 },
     brandName: { ...Type.heading, color: t.sidebarText },
@@ -138,9 +145,9 @@ function makeStyles(t: Theme) {
       borderRadius: Radius.md,
     },
     itemOn: { backgroundColor: t.sidebarElement },
-    itemHover: { backgroundColor: t.sidebarElement },
+    itemHover: { backgroundColor: t.backgroundSelected },
     itemText: { ...Type.small, fontWeight: '500', color: t.sidebarMuted, flex: 1 },
-    itemTextOn: { color: t.sidebarText, fontWeight: '600' },
+    itemTextOn: { color: t.accentText, fontWeight: '600' },
     marker: { width: 6, height: 6, borderRadius: 3, backgroundColor: t.accent },
     spacer: { flex: 1 },
     account: {

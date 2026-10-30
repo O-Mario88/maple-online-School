@@ -12,6 +12,7 @@ import { SamplePreview } from '@/features/public/course/SamplePreview';
 import { HomeNav } from '@/features/public/HomeNav';
 import { Brand, PUBLIC_WIDE } from '@/features/public/palette';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
+import { LightOnly } from '@/hooks/use-theme';
 import { mockData } from '@/lib/mock';
 
 const MAX_WIDTH = 1440;
@@ -46,10 +47,12 @@ export default function CourseLandingScreen() {
   const course = mock.publicPages.coursePage;
   if (slug !== course.slug) {
     return (
+      <LightOnly>
       <SafeAreaView style={styles.safe}>
         <HomeNav wide={wide} active="Courses" />
         <EmptyState icon="search" title="Course not found" body="This link may be old. Search for the course instead." />
       </SafeAreaView>
+      </LightOnly>
     );
   }
 
@@ -64,6 +67,7 @@ export default function CourseLandingScreen() {
   };
 
   return (
+    <LightOnly>
     <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
       <HomeNav wide={wide} active="Courses" />
       <ScrollView ref={scroll} contentContainerStyle={styles.page}>
@@ -107,6 +111,7 @@ export default function CourseLandingScreen() {
         </View>
       </ScrollView>
     </SafeAreaView>
+    </LightOnly>
   );
 }
 

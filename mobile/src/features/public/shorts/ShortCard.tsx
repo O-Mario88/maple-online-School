@@ -1,3 +1,4 @@
+import { Image } from 'expo-image';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { formatCount } from '@/lib/shorts';
@@ -23,6 +24,12 @@ export function Caption({ clip, size }: { clip: ShortEntry; size: number }) {
 export function ShortCard({ clip, active, onPress }: { clip: ShortEntry; active: boolean; onPress: () => void }) {
   return (
     <Pressable style={styles.wrap} onPress={onPress} accessibilityRole="button" accessibilityState={{ selected: active }} accessibilityLabel={`Play ${clip.title} by ${clip.teacher}`}>
+      {clip.photo ? (
+        // The reference frame already carries the subject, caption, views and likes.
+        <View style={[styles.frame, styles.photoFrame, active && styles.frameActive]}>
+          <Image source={clip.photo} style={StyleSheet.absoluteFill} contentFit="cover" />
+        </View>
+      ) : (
       <View style={[styles.frame, { backgroundColor: clip.tint }, active && styles.frameActive]}>
         <View style={styles.top}>
           <Text style={styles.subject}>{clip.subject}</Text>
@@ -37,6 +44,7 @@ export function ShortCard({ clip, active, onPress }: { clip: ShortEntry; active:
           <Text style={styles.stat}>{`♡ ${formatCount(clip.likes)}`}</Text>
         </View>
       </View>
+      )}
       <Text style={styles.title} numberOfLines={1}>
         {clip.title}
       </Text>
@@ -51,6 +59,7 @@ const styles = StyleSheet.create({
   wrap: { flexGrow: 1, flexBasis: 150, maxWidth: 220, gap: 4 },
   frame: { aspectRatio: 9 / 16, borderRadius: 12, overflow: 'hidden', padding: 10, justifyContent: 'space-between' },
   frameActive: { borderWidth: 3, borderColor: Brand.blue },
+  photoFrame: { padding: 0, backgroundColor: Brand.video },
   top: { gap: 2 },
   subject: { alignSelf: 'flex-start', fontSize: 11, fontWeight: '700', color: Brand.surface, backgroundColor: 'rgba(0,0,0,0.45)', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4, overflow: 'hidden' },
   meta: { fontSize: 10, color: 'rgba(255,255,255,0.85)' },

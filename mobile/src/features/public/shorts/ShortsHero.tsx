@@ -1,3 +1,4 @@
+import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Platform, StyleSheet, Text, View } from 'react-native';
 
@@ -8,7 +9,7 @@ import { Brand, HERO_GRADIENT } from '../palette';
 const SCRIPT_FONT = Platform.select({ web: '"Segoe Print", "Bradley Hand", cursive', default: undefined });
 
 /** "Maple Shorts: quick learning, real results" with the four promises. */
-export function ShortsHero({ promises, wide }: { promises: readonly string[]; wide: boolean }) {
+export function ShortsHero({ promises, wide, photo }: { promises: readonly string[]; wide: boolean; photo?: number }) {
   return (
     <LinearGradient colors={HERO_GRADIENT} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.hero}>
       <View style={[styles.copy, wide && styles.copyWide]}>
@@ -30,9 +31,13 @@ export function ShortsHero({ promises, wide }: { promises: readonly string[]; wi
       {wide ? (
         <View style={styles.art}>
           <Text style={[styles.script, { fontFamily: SCRIPT_FONT }]}>{'Big\nLearning\nIn Small\nMoments ♡'}</Text>
-          <Text style={styles.learner} accessibilityElementsHidden>
-            👩🏾‍💻
-          </Text>
+          {photo ? (
+            <Image source={photo} style={styles.photo} contentFit="cover" accessibilityLabel="A learner with headphones watching a Maple Short on her phone" />
+          ) : (
+            <Text style={styles.learner} accessibilityElementsHidden>
+              👩🏾‍💻
+            </Text>
+          )}
         </View>
       ) : null}
     </LinearGradient>
@@ -54,4 +59,5 @@ const styles = StyleSheet.create({
   art: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', gap: 12 },
   script: { fontSize: 22, lineHeight: 28, color: '#5B6B8C', transform: [{ rotate: '-8deg' }] },
   learner: { fontSize: 150 },
+  photo: { width: 300, height: 270, borderRadius: 16, marginVertical: -24, marginRight: -24 },
 });

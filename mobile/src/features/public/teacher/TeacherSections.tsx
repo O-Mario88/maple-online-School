@@ -1,3 +1,4 @@
+import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
@@ -77,8 +78,14 @@ export function CoursesRow({ t }: { t: Storefront }) {
         {t.courses.map((c) => (
           <Pressable key={c.title} style={styles.course} onPress={() => router.push(`/courses/${t.courseSlug}`)} accessibilityRole="link" accessibilityLabel={`${c.title}, ${formatMoney(c.priceUGX, 'UGX')}`}>
             <View style={[styles.courseThumb, { backgroundColor: c.tint }]}>
-              <Icon name="chart" size={30} color="rgba(255,255,255,0.85)" />
-              {c.badge ? <Text style={styles.courseBadge}>{c.badge}</Text> : null}
+              {c.photo ? (
+                <Image source={c.photo} style={styles.fill} contentFit="cover" />
+              ) : (
+                <>
+                  <Icon name="chart" size={30} color="rgba(255,255,255,0.85)" />
+                  {c.badge ? <Text style={styles.courseBadge}>{c.badge}</Text> : null}
+                </>
+              )}
             </View>
             <View style={styles.courseInfo}>
               <Text style={styles.strong} numberOfLines={2}>
@@ -106,11 +113,17 @@ export function ShortsRow({ t }: { t: Storefront }) {
       <SectionHead title="Latest Maple Shorts" link="View all" onPress={() => router.push('/shorts')} />
       <View style={styles.shorts}>
         {t.shorts.map((s) => (
-          <Pressable key={s.id} style={[styles.short, { backgroundColor: s.tint }]} onPress={() => router.push(`/shorts?id=${s.id}`)} accessibilityRole="link" accessibilityLabel={`${s.lead} ${s.highlight} ${s.tail}, free short`}>
-            <Text style={styles.shortText}>{s.lead}</Text>
-            <Text style={[styles.shortText, styles.shortHighlight]}>{s.highlight}</Text>
-            <Text style={styles.shortText}>{s.tail}</Text>
-            <Text style={styles.shortViews}>{`▷ ${s.views}`}</Text>
+          <Pressable key={s.id} style={[styles.short, { backgroundColor: s.tint }, s.photo ? styles.shortPhoto : null]} onPress={() => router.push(`/shorts?id=${s.id}`)} accessibilityRole="link" accessibilityLabel={`${s.lead} ${s.highlight} ${s.tail}, free short`}>
+            {s.photo ? (
+              <Image source={s.photo} style={StyleSheet.absoluteFill} contentFit="cover" />
+            ) : (
+              <>
+                <Text style={styles.shortText}>{s.lead}</Text>
+                <Text style={[styles.shortText, styles.shortHighlight]}>{s.highlight}</Text>
+                <Text style={styles.shortText}>{s.tail}</Text>
+                <Text style={styles.shortViews}>{`▷ ${s.views}`}</Text>
+              </>
+            )}
           </Pressable>
         ))}
       </View>
@@ -144,6 +157,7 @@ export function ReviewsRow({ t }: { t: Storefront }) {
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
+  fill: { width: '100%', height: '100%' },
   between: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 },
   card: { gap: 12, padding: 20, borderRadius: 16, backgroundColor: Brand.surface, borderWidth: 1, borderColor: Brand.line },
   section: { gap: 12 },
@@ -159,14 +173,15 @@ const styles = StyleSheet.create({
   rowIcon: { width: 42, height: 42, borderRadius: 10, backgroundColor: Brand.blueSoft, alignItems: 'center', justifyContent: 'center' },
   hRow: { gap: 14 },
   course: { width: 250, borderRadius: 14, backgroundColor: Brand.surface, borderWidth: 1, borderColor: Brand.line, overflow: 'hidden' },
-  courseThumb: { height: 110, alignItems: 'center', justifyContent: 'center' },
+  courseThumb: { height: 110, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
   courseBadge: { position: 'absolute', top: 10, left: 10, fontSize: 11, fontWeight: '800', color: Brand.ink, backgroundColor: HIGHLIGHT, paddingHorizontal: 8, paddingVertical: 2, borderRadius: 4, overflow: 'hidden' },
   courseInfo: { gap: 3, padding: 12 },
   price: { fontSize: 15, fontWeight: '800', color: Brand.ink, marginTop: 4 },
   sale: { color: Brand.live },
   was: { fontSize: 11, fontWeight: '400', color: Brand.muted, textDecorationLine: 'line-through' },
   shorts: { flexDirection: 'row', gap: 10 },
-  short: { flex: 1, aspectRatio: 9 / 15, maxWidth: 140, borderRadius: 12, padding: 10, justifyContent: 'flex-end', gap: 2 },
+  short: { flex: 1, aspectRatio: 9 / 15, maxWidth: 140, borderRadius: 12, padding: 10, justifyContent: 'flex-end', gap: 2, overflow: 'hidden' },
+  shortPhoto: { padding: 0 },
   shortText: { fontSize: 15, fontWeight: '900', color: Brand.surface, alignSelf: 'flex-start' },
   shortHighlight: { color: Brand.ink, backgroundColor: HIGHLIGHT, paddingHorizontal: 3 },
   shortViews: { fontSize: 11, fontWeight: '600', color: Brand.surface, marginTop: 6 },

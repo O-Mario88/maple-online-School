@@ -15,6 +15,7 @@ import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { mockData } from '@/lib/mock';
 import { EMPTY_SHORT_FILTERS, filterShorts, formatCount, type ShortFilters } from '@/lib/shorts';
 import type { ShortEntry } from '@/mock/public';
+import { LightOnly } from '@/hooks/use-theme';
 
 type ListKey = 'boards' | 'levels' | 'subjects' | 'types' | 'languages';
 
@@ -83,6 +84,7 @@ export default function ShortsScreen() {
   );
 
   return (
+    <LightOnly>
     <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
       <HomeNav wide={wide} active="Shorts" />
       <View style={[styles.body, wide && styles.bodyWide]}>
@@ -100,7 +102,7 @@ export default function ShortsScreen() {
         ) : null}
         <ScrollView style={styles.flex} contentContainerStyle={styles.main}>
           {wide ? null : <ShortPlayer clip={current} courseSlug={feed.courseSlug} />}
-          <ShortsHero promises={feed.promises} wide={wide} />
+          <ShortsHero promises={feed.promises} wide={wide} photo={feed.heroPhoto} />
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips}>
             {feed.topics.map((t) => {
               const on = filters.topic === t;
@@ -150,6 +152,7 @@ export default function ShortsScreen() {
         ) : null}
       </View>
     </SafeAreaView>
+    </LightOnly>
   );
 }
 

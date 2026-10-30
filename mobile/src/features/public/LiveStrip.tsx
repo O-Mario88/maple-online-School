@@ -1,3 +1,4 @@
+import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
@@ -15,7 +16,7 @@ function ClassCard({ c, index }: { c: LiveClass; index: number }) {
   return (
     <Pressable style={styles.card} accessibilityRole="button" accessibilityLabel={`${c.subject} with ${c.teacher}, ${live ? 'live now' : `starts in ${c.startsIn}`}`} onPress={() => router.push('/sign-up')}>
       <View style={[styles.thumb, { backgroundColor: THUMB_TINTS[index % THUMB_TINTS.length] }]}>
-        <Icon name={c.icon} size={28} color={Brand.surface} />
+        {c.photo ? <Image source={c.photo} style={styles.photo} contentFit="cover" accessibilityLabel={`${c.teacher} teaching`} /> : <Icon name={c.icon} size={28} color={Brand.surface} />}
       </View>
       <View style={styles.info}>
         <View style={styles.titleRow}>
@@ -87,7 +88,8 @@ const styles = StyleSheet.create({
   viewAllText: { fontSize: 13, fontWeight: '600', color: Brand.blue },
   row: { gap: 12 },
   card: { width: 278, flexDirection: 'row', gap: 12, padding: 10, borderRadius: 12, borderWidth: 1, borderColor: Brand.line, backgroundColor: Brand.surface },
-  thumb: { width: 74, height: 74, borderRadius: 8, alignItems: 'center', justifyContent: 'center' },
+  thumb: { width: 74, height: 74, borderRadius: 8, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
+  photo: { width: '100%', height: '100%' },
   info: { flex: 1, gap: 2 },
   titleRow: { flexDirection: 'row' },
   liveBadge: { paddingHorizontal: 6, paddingVertical: 1, borderRadius: 4, backgroundColor: Brand.live },

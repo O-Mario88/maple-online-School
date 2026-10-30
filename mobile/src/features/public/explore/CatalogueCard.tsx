@@ -1,3 +1,4 @@
+import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
@@ -27,6 +28,20 @@ function initials(name: string): string {
     .slice(0, 2);
 }
 
+/** Badge, save heart and duration drawn over a thumbnail that has no photo. */
+function ThumbOverlay({ item, saved, onSave, badgeText }: { item: CatalogueEntry; saved: boolean; onSave: () => void; badgeText: string }) {
+  return (
+    <>
+      <Icon name={item.icon} size={36} color="rgba(255,255,255,0.85)" />
+      <Text style={[styles.badge, { backgroundColor: BADGE_COLOURS[item.badge] ?? Brand.blue, color: badgeText }]}>{item.badge.toUpperCase()}</Text>
+      <Pressable style={styles.heart} onPress={onSave} accessibilityRole="button" accessibilityLabel={saved ? 'Remove from saved' : 'Save for later'} hitSlop={8}>
+        <Text style={styles.heartText}>{saved ? '♥' : '♡'}</Text>
+      </Pressable>
+      {item.startsIn ? <Text style={styles.starts}>{`Starts in ${item.startsIn}`}</Text> : <Text style={styles.hours}>{`◷ ${item.hours}`}</Text>}
+    </>
+  );
+}
+
 /** One catalogue result: thumbnail with badge, title, teacher, rating, price and add-to-cart. */
 export function CatalogueCard({ item, coursePage, list }: { item: CatalogueEntry; coursePage: string; list: boolean }) {
   const [saved, setSaved] = useState(false);
@@ -39,12 +54,12 @@ export function CatalogueCard({ item, coursePage, list }: { item: CatalogueEntry
       accessibilityRole="link"
       accessibilityLabel={`${item.title}, ${item.meta}, ${free ? 'free' : formatMoney(item.priceUGX, 'UGX')}`}>
       <View style={[styles.thumb, list && styles.thumbList, { backgroundColor: item.tint }]}>
-        <Icon name={item.icon} size={36} color="rgba(255,255,255,0.85)" />
-        <Text style={[styles.badge, { backgroundColor: BADGE_COLOURS[item.badge] ?? Brand.blue, color: badgeText }]}>{item.badge.toUpperCase()}</Text>
-        <Pressable style={styles.heart} onPress={() => setSaved((s) => !s)} accessibilityRole="button" accessibilityLabel={saved ? 'Remove from saved' : 'Save for later'} hitSlop={8}>
-          <Text style={styles.heartText}>{saved ? '♥' : '♡'}</Text>
-        </Pressable>
-        {item.startsIn ? <Text style={styles.starts}>{`Starts in ${item.startsIn}`}</Text> : <Text style={styles.hours}>{`◷ ${item.hours}`}</Text>}
+        {item.photo ? (
+          // The reference photo already carries its badge, heart and duration.
+          <Image source={item.photo} style={StyleSheet.absoluteFill} contentFit="cover" accessibilityLabel={`${item.teacher}, ${item.title}`} />
+        ) : (
+          <ThumbOverlay item={item} saved={saved} onSave={() => setSaved((s) => !s)} badgeText={badgeText} />
+        )}
       </View>
       <View style={styles.info}>
         <Text style={styles.title} numberOfLines={2}>
@@ -80,7 +95,7 @@ export function CatalogueCard({ item, coursePage, list }: { item: CatalogueEntry
 const styles = StyleSheet.create({
   card: { flexGrow: 1, flexBasis: 220, maxWidth: 360, borderRadius: 14, backgroundColor: Brand.surface, borderWidth: 1, borderColor: Brand.line, overflow: 'hidden' },
   cardList: { flexDirection: 'row', maxWidth: undefined, flexBasis: '100%' },
-  thumb: { height: 128, alignItems: 'center', justifyContent: 'center' },
+  thumb: { height: 128, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
   thumbList: { width: 200, height: undefined },
   badge: { position: 'absolute', top: 10, left: 10, fontSize: 10, fontWeight: '800', letterSpacing: 0.6, paddingHorizontal: 8, paddingVertical: 3, borderRadius: 4, overflow: 'hidden' },
   heart: { position: 'absolute', top: 6, right: 8 },

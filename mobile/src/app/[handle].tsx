@@ -11,6 +11,7 @@ import { TeacherHeader } from '@/features/public/teacher/TeacherHeader';
 import { AboutCard, CoursesRow, CredentialsCard, ReviewsRow, ShortsRow } from '@/features/public/teacher/TeacherSections';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { parseHandle } from '@/lib/booking';
+import { LightOnly } from '@/hooks/use-theme';
 import { mockData } from '@/lib/mock';
 
 const MAX_WIDTH = 1440;
@@ -21,6 +22,7 @@ const TAB_SECTION: Readonly<Record<string, Section>> = { Overview: 'about', 'Cou
 
 function NotFound({ wide }: { wide: boolean }) {
   return (
+    <LightOnly>
     <SafeAreaView style={styles.safe}>
       <HomeNav wide={wide} />
       <EmptyState
@@ -30,6 +32,7 @@ function NotFound({ wide }: { wide: boolean }) {
         action={<Button label="Explore" variant="secondary" compact onPress={() => router.push('/explore')} />}
       />
     </SafeAreaView>
+    </LightOnly>
   );
 }
 
@@ -64,6 +67,7 @@ export default function TeacherStorefrontScreen() {
   const booking = <BookingCard t={t} refParam={params.ref} />;
 
   return (
+    <LightOnly>
     <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
       <HomeNav wide={wide} active="For Teachers" />
       <ScrollView ref={scroll} contentContainerStyle={styles.page}>
@@ -107,6 +111,7 @@ export default function TeacherStorefrontScreen() {
         </View>
       </ScrollView>
     </SafeAreaView>
+    </LightOnly>
   );
 }
 

@@ -1,3 +1,4 @@
+import { Image } from 'expo-image';
 import * as Linking from 'expo-linking';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useState } from 'react';
@@ -30,6 +31,12 @@ export function TeacherHeader({ t, wide }: { t: Storefront; wide: boolean }) {
 
   return (
     <View>
+      {t.bannerPhoto ? (
+        // The reference banner already shows her quotes and the "Watch my introduction" button.
+        <Pressable style={[styles.banner, wide && styles.bannerPhotoWide]} accessibilityRole="button" accessibilityLabel={`Watch ${t.name}'s introduction, ${t.introLength}`}>
+          <Image source={t.bannerPhoto} style={StyleSheet.absoluteFill} contentFit="cover" contentPosition={wide ? 'center' : 'left'} />
+        </Pressable>
+      ) : (
       <LinearGradient colors={['#C9A27A', '#8C6A4F', '#5B4636']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={[styles.banner, wide && styles.bannerWide]}>
         {wide ? <Text style={[styles.quote, styles.quoteLeft, { fontFamily: SCRIPT_FONT }]}>{`“ ${t.quotes[0]} ♡`}</Text> : null}
         <Text style={styles.bannerFace} accessibilityElementsHidden>
@@ -43,14 +50,19 @@ export function TeacherHeader({ t, wide }: { t: Storefront; wide: boolean }) {
         </Pressable>
         {wide ? <Text style={[styles.quote, styles.quoteRight, { fontFamily: SCRIPT_FONT }]}>{`“ ${t.quotes[1]} ♡`}</Text> : null}
       </LinearGradient>
+      )}
 
       <View style={[styles.card, wide && styles.cardWide]}>
         <View style={[styles.identity, wide && styles.identityWide]}>
           <View style={styles.photoWrap}>
             <View style={styles.photo}>
-              <Text style={styles.photoFace} accessibilityElementsHidden>
-                👩🏾
-              </Text>
+              {t.avatar ? (
+                <Image source={t.avatar} style={styles.fill} contentFit="cover" accessibilityLabel={t.name} />
+              ) : (
+                <Text style={styles.photoFace} accessibilityElementsHidden>
+                  👩🏾
+                </Text>
+              )}
             </View>
             {t.online ? <Text style={styles.online}>● Online now</Text> : null}
           </View>
@@ -106,8 +118,11 @@ export function TeacherHeader({ t, wide }: { t: Storefront; wide: boolean }) {
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
+  fill: { width: '100%', height: '100%' },
   banner: { height: 220, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
   bannerWide: { height: 300, borderRadius: 20 },
+  // The reference banner keeps its own shape on wide screens so its quotes aren't cut off.
+  bannerPhotoWide: { height: undefined, aspectRatio: 2045 / 319, borderRadius: 20 },
   bannerFace: { fontSize: 170, position: 'absolute', bottom: 34 },
   quote: { position: 'absolute', top: 30, width: 260, fontSize: 24, lineHeight: 32, color: Brand.surface },
   quoteLeft: { left: 40, transform: [{ rotate: '-6deg' }] },

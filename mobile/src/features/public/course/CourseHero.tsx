@@ -1,3 +1,4 @@
+import { Image } from 'expo-image';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
@@ -8,6 +9,14 @@ import { Brand } from '../palette';
 type Course = MockData['publicPages']['coursePage'];
 
 function Trailer({ course, wide }: { course: Course; wide: boolean }) {
+  if (course.trailer.photo) {
+    // The reference frame already shows the trailer label and play button.
+    return (
+      <Pressable style={styles.video} accessibilityRole="button" accessibilityLabel={`Play the course trailer, ${course.trailer.length}`}>
+        <Image source={course.trailer.photo} style={StyleSheet.absoluteFill} contentFit="cover" />
+      </Pressable>
+    );
+  }
   return (
     <View style={styles.video} accessibilityLabel={`Course trailer, ${course.trailer.length}`}>
       <View style={styles.trailerTag}>

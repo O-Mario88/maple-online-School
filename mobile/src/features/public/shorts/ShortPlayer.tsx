@@ -1,3 +1,4 @@
+import { Image } from 'expo-image';
 import * as Linking from 'expo-linking';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
@@ -52,11 +53,16 @@ export function ShortPlayer({ clip, courseSlug, onClose }: { clip: ShortEntry; c
   return (
     <View style={styles.wrap}>
       <View style={[styles.video, { backgroundColor: clip.tint }]}>
+        {clip.photo ? <Image source={clip.photo} style={StyleSheet.absoluteFill} contentFit="cover" /> : null}
         <View style={styles.head}>
-          <View>
-            <Text style={styles.subject}>{clip.subject}</Text>
-            <Text style={styles.meta}>{clip.meta}</Text>
-          </View>
+          {clip.photo ? (
+            <View />
+          ) : (
+            <View>
+              <Text style={styles.subject}>{clip.subject}</Text>
+              <Text style={styles.meta}>{clip.meta}</Text>
+            </View>
+          )}
           <View style={styles.headActions}>
             <Pressable style={styles.followDark} onPress={() => setFollowing((f) => !f)} accessibilityRole="button">
               <Text style={styles.followDarkText}>{following ? 'Following' : 'Follow'}</Text>
@@ -68,9 +74,11 @@ export function ShortPlayer({ clip, courseSlug, onClose }: { clip: ShortEntry; c
             ) : null}
           </View>
         </View>
-        <Text style={styles.emoji} accessibilityElementsHidden>
-          {clip.emoji}
-        </Text>
+        {clip.photo ? null : (
+          <Text style={styles.emoji} accessibilityElementsHidden>
+            {clip.emoji}
+          </Text>
+        )}
         <Pressable style={styles.play} onPress={() => setPlaying((p) => !p)} accessibilityRole="button" accessibilityLabel={playing ? 'Pause' : 'Play'}>
           <Text style={styles.playIcon}>{playing ? '❚❚' : '▶'}</Text>
         </Pressable>
@@ -82,9 +90,7 @@ export function ShortPlayer({ clip, courseSlug, onClose }: { clip: ShortEntry; c
             </Pressable>
           ))}
         </View>
-        <View style={styles.captionWrap}>
-          <Caption clip={clip} size={30} />
-        </View>
+        <View style={styles.captionWrap}>{clip.photo ? null : <Caption clip={clip} size={30} />}</View>
         <View style={styles.scrub}>
           <View style={styles.track}>
             <View style={[styles.fill, { width: `${(elapsed / CLIP_SECONDS) * 100}%` }]} />

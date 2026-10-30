@@ -1,3 +1,4 @@
+import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
@@ -26,6 +27,14 @@ function Stepper({ step, total }: { step: number; total: number }) {
 }
 
 function VideoMock({ lesson }: { lesson: Lesson }) {
+  if (lesson.photo) {
+    // The reference frame already shows the lesson title, play button and controls.
+    return (
+      <Pressable style={styles.video} accessibilityRole="button" accessibilityLabel={`Play the sample lesson: ${lesson.title}`}>
+        <Image source={lesson.photo} style={StyleSheet.absoluteFill} contentFit="cover" />
+      </Pressable>
+    );
+  }
   return (
     <View style={styles.video} accessibilityLabel={`Sample lesson video: ${lesson.title}`}>
       <View style={styles.videoTag}>

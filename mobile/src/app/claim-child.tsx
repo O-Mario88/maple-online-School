@@ -7,7 +7,7 @@ import { PreviewScreen } from '@/features/preview/PreviewScreen';
 export default function ClaimChildScreen() {
   const [checked, setChecked] = useState(false);
   return (
-    <PreviewScreen back title="Link your child" subtitle="Use the code on the slip or SMS from school" width="narrow">
+    <PreviewScreen publicNav back title="Link your child" subtitle="Use the code on the slip or SMS from school" width="narrow">
       {(m) => {
         const c = m.publicPages.claimChild;
         return (

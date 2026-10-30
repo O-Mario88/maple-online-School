@@ -1,3 +1,4 @@
+import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 
@@ -35,24 +36,28 @@ export function HeroArt({ landing, wide }: { landing: Landing; wide: boolean }) 
   return (
     <View style={[styles.wrap, wide && styles.wrapWide]}>
       <LinearGradient colors={HERO_GRADIENT} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={[styles.panel, wide && styles.panelWide]}>
+        {landing.heroPhoto ? (
+          <Image source={landing.heroPhoto} style={StyleSheet.absoluteFill} contentFit="cover" contentPosition="top" accessibilityLabel="A smiling learner with headphones studying online, with teachers from around the world" />
+        ) : (
         <View style={[styles.globeArea, !wide && styles.globeNarrow]}>
-          <LinearGradient colors={['#3B82F6', '#1E3A8A']} start={{ x: 0.2, y: 0 }} end={{ x: 0.8, y: 1 }} style={styles.globe}>
-            <View style={[styles.land, styles.landA]} />
-            <View style={[styles.land, styles.landB]} />
-            <View style={[styles.land, styles.landC]} />
-            <View style={[styles.ring, styles.ringA]} />
-            <View style={[styles.ring, styles.ringB]} />
-          </LinearGradient>
-          {landing.teachers.map((t, i) => (
-            <View key={t} style={[styles.avatar, { left: ORBIT[i].left * GLOBE, top: ORBIT[i].top * GLOBE, backgroundColor: AVATAR_TINTS[i] }]} accessibilityLabel={`Teacher ${t}`}>
-              <Text style={styles.avatarText}>{initials(t)}</Text>
-            </View>
-          ))}
-          <Text style={styles.learner} accessibilityLabel="A learner studying with headphones">
-            🧑🏾‍💻
-          </Text>
-        </View>
-        <Text style={[styles.script, { fontFamily: SCRIPT_FONT }]}>{'Anytime\n  Anywhere\n    Together ♡'}</Text>
+            <LinearGradient colors={['#3B82F6', '#1E3A8A']} start={{ x: 0.2, y: 0 }} end={{ x: 0.8, y: 1 }} style={styles.globe}>
+              <View style={[styles.land, styles.landA]} />
+              <View style={[styles.land, styles.landB]} />
+              <View style={[styles.land, styles.landC]} />
+              <View style={[styles.ring, styles.ringA]} />
+              <View style={[styles.ring, styles.ringB]} />
+            </LinearGradient>
+            {landing.teachers.map((t, i) => (
+              <View key={t} style={[styles.avatar, { left: ORBIT[i].left * GLOBE, top: ORBIT[i].top * GLOBE, backgroundColor: AVATAR_TINTS[i] }]} accessibilityLabel={`Teacher ${t}`}>
+                <Text style={styles.avatarText}>{initials(t)}</Text>
+              </View>
+            ))}
+            <Text style={styles.learner} accessibilityLabel="A learner studying with headphones">
+              🧑🏾‍💻
+            </Text>
+          </View>
+        )}
+        {landing.heroPhoto ? null : <Text style={[styles.script, { fontFamily: SCRIPT_FONT }]}>{'Anytime\n  Anywhere\n    Together ♡'}</Text>}
         <Pressable style={styles.story} accessibilityRole="button" accessibilityLabel="Watch our story, 2 minutes">
           <View style={styles.storyPlay}>
             <Icon name="play" size={16} color={Brand.surface} />

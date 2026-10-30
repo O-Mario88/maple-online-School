@@ -24,7 +24,7 @@ function isDark(i: number): boolean {
 export default function QrSignInScreen() {
   const { styles } = useStyles(makeStyles);
   return (
-    <PreviewScreen back title="Sign in with your phone" subtitle="No password typed on a shared computer" width="narrow">
+    <PreviewScreen publicNav back title="Sign in with your phone" subtitle="No password typed on a shared computer" width="narrow">
       {(m) => {
         const q = m.publicPages.qrSignIn;
         return (

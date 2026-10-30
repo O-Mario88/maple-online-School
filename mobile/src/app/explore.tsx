@@ -12,6 +12,7 @@ import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { type CatalogueFilters, type CatalogueSort, EMPTY_FILTERS, facetCounts, filterCatalogue, sortCatalogue } from '@/lib/catalogue';
 import { mockData } from '@/lib/mock';
 import type { CatalogueEntry } from '@/mock/public';
+import { LightOnly } from '@/hooks/use-theme';
 
 const KIND_LABELS: Readonly<Record<string, string>> = { course: 'Courses', live: 'Live classes', paper: 'Past papers', bootcamp: 'Exam bootcamps', short: 'Short lessons' };
 const SORTS: readonly { value: CatalogueSort; label: string }[] = [
@@ -59,6 +60,7 @@ export default function ExploreScreen() {
   const sortIndex = SORTS.findIndex((s) => s.value === sort);
 
   return (
+    <LightOnly>
     <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
       <HomeNav wide={wide} active="Courses" />
       <View style={[styles.body, wide && styles.bodyWide]}>
@@ -113,6 +115,7 @@ export default function ExploreScreen() {
         </ScrollView>
       </View>
     </SafeAreaView>
+    </LightOnly>
   );
 }
 

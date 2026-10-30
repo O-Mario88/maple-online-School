@@ -4,7 +4,7 @@ import { PreviewScreen } from '@/features/preview/PreviewScreen';
 /** Inventory 14: help articles and live service status. */
 export default function HelpScreen() {
   return (
-    <PreviewScreen title="Help" subtitle="Answers for learners, parents, teachers and schools">
+    <PreviewScreen publicNav title="Help" subtitle="Answers for learners, parents, teachers and schools">
       {(m) => (
         <>
           <Field label="Search help" placeholder="e.g. pay fees with MTN" />

@@ -6,6 +6,10 @@ import { useColorScheme } from 'react-native';
 
 import { AuthProvider, useAuth } from '@/lib/auth/auth-context';
 
+// Signed-out visitors who open a signed-in address (such as /) land on sign-in,
+// not on whichever public page happens to be first.
+export const unstable_settings = { anchor: 'sign-in' };
+
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {

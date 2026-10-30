@@ -11,6 +11,7 @@ import { TryLesson } from '@/features/public/TryLesson';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { mockData } from '@/lib/mock';
 import { PUBLIC_PREVIEWS } from '@/lib/navigation';
+import { LightOnly } from '@/hooks/use-theme';
 
 const MAX_WIDTH = 1440;
 
@@ -27,6 +28,7 @@ export default function WelcomeScreen() {
   const landing = mock.publicPages.landing;
 
   return (
+    <LightOnly>
     <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
       <HomeNav wide={wide} />
       <ScrollView contentContainerStyle={styles.page}>
@@ -47,6 +49,7 @@ export default function WelcomeScreen() {
         </View>
       </ScrollView>
     </SafeAreaView>
+    </LightOnly>
   );
 }
 

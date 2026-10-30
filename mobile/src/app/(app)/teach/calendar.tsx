@@ -21,9 +21,9 @@ export default function CalendarScreen() {
   const [view, setView] = useState<'week' | 'schedule'>('week');
   const [title, setTitle] = useState('Revision: matrices');
   const colour = (k: EventKind) =>
-    k === 'school' ? theme.info : k === 'live' ? theme.accent : k === 'tutoring' ? theme.success : theme.textMuted;
+    k === 'school' ? theme.warning : k === 'live' ? theme.accent : k === 'tutoring' ? theme.success : theme.textMuted;
   const soft = (k: EventKind) =>
-    k === 'school' ? theme.infoSoft : k === 'live' ? theme.accentSoft : k === 'tutoring' ? theme.successSoft : theme.backgroundSelected;
+    k === 'school' ? theme.warningSoft : k === 'live' ? theme.accentSoft : k === 'tutoring' ? theme.successSoft : theme.backgroundSelected;
   return (
     <PreviewScreen title="Calendar" subtitle="School classes, live sessions, tutoring and your synced busy time, with no double-booking">
       {(m) => {

@@ -5,7 +5,7 @@ import { formatMoney } from '@/lib/finance/fees';
 /** Inventory 11: the weekly family digest, opened from WhatsApp or SMS without signing in. */
 export default function DigestScreen() {
   return (
-    <PreviewScreen title="This week at school" subtitle="Your weekly summary from Maple">
+    <PreviewScreen publicNav title="This week at school" subtitle="Your weekly summary from Maple">
       {(m) => {
         const d = m.publicPages.digest;
         return (

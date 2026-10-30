@@ -5,7 +5,7 @@ import { formatMoney } from '@/lib/finance/fees';
 /** Inventory 9: a public page for one live event, with seats and booking. */
 export default function EventScreen() {
   return (
-    <PreviewScreen back title="Live event" subtitle="Book a seat; pay with MTN, Airtel or card">
+    <PreviewScreen publicNav back title="Live event" subtitle="Book a seat; pay with MTN, Airtel or card">
       {(m) => {
         const e = m.publicPages.liveEvent;
         const taken = e.seats - e.seatsLeft;

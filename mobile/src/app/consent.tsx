@@ -4,7 +4,7 @@ import { PreviewScreen } from '@/features/preview/PreviewScreen';
 /** Inventory 5: a parent approves what a child under 13 can do before the account opens. */
 export default function ConsentScreen() {
   return (
-    <PreviewScreen title="Your consent" subtitle="Your child's account opens once you agree" width="narrow">
+    <PreviewScreen publicNav title="Your consent" subtitle="Your child's account opens once you agree" width="narrow">
       {(m) => {
         const c = m.publicPages.consent;
         return (

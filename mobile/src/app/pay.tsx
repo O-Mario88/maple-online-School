@@ -11,7 +11,7 @@ type Method = (typeof METHODS)[number];
 export default function PayLinkScreen() {
   const [method, setMethod] = useState<Method>('MTN MoMo');
   return (
-    <PreviewScreen title="Pay school fees" subtitle="Secure payment link">
+    <PreviewScreen publicNav title="Pay school fees" subtitle="Secure payment link">
       {(m) => {
         const p = m.publicPages.payLink;
         const total = p.items.reduce((s, i) => s + i.ugx, 0);

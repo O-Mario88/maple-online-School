@@ -4,7 +4,7 @@ import { PreviewScreen } from '@/features/preview/PreviewScreen';
 /** Inventory 13: anyone can check a Maple certificate is genuine. */
 export default function VerifyScreen() {
   return (
-    <PreviewScreen title="Check a certificate" subtitle="Scan the QR on a Maple certificate, or enter its ID">
+    <PreviewScreen publicNav title="Check a certificate" subtitle="Scan the QR on a Maple certificate, or enter its ID">
       {(m) => {
         const c = m.publicPages.credential;
         return (

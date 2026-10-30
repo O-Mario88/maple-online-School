@@ -15,7 +15,7 @@ export default function GetStartedScreen() {
   const [goal, setGoal] = useState('Pass my exams');
   const last = step === STEPS.length - 1;
   return (
-    <PreviewScreen title="Let's set up Maple for you" subtitle="Four quick choices; you can change them later" width="narrow">
+    <PreviewScreen publicNav title="Let's set up Maple for you" subtitle="Four quick choices; you can change them later" width="narrow">
       {(m) => {
         const g = m.publicPages.getStarted;
         const pages = [
