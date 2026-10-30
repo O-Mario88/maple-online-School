@@ -265,3 +265,52 @@ CREATE TABLE scheduling_timetableslot (
     is_draft          boolean NOT NULL,
     subject_id        bigint
 );
+
+-- Resource library (Go owns writes to resources_resource and resources_sharedresourcelink).
+CREATE TABLE resources_resource (
+    id                   bigint PRIMARY KEY,
+    owner_type           varchar(20) NOT NULL,
+    title                varchar(255) NOT NULL,
+    file_path            varchar(100),
+    external_url         varchar(500),
+    vimeo_upload_status  varchar(20) NOT NULL,
+    vimeo_video_id       varchar(50),
+    visibility           varchar(30) NOT NULL,
+    created_at           timestamptz NOT NULL,
+    class_level_id       bigint REFERENCES curriculum_classlevel(id),
+    owner_institution_id bigint REFERENCES institutions_institution(id),
+    subject_id           bigint REFERENCES curriculum_subject(id),
+    topic_id             bigint REFERENCES curriculum_topic(id),
+    uploaded_by_id       bigint NOT NULL REFERENCES accounts_user(id),
+    description          text,
+    author               varchar(255),
+    category             varchar(100),
+    price                numeric(8,2) NOT NULL,
+    rating               numeric(3,2) NOT NULL,
+    is_featured          boolean NOT NULL
+);
+
+CREATE TABLE resources_sharedresourcelink (
+    id              bigint PRIMARY KEY,
+    added_at        timestamptz NOT NULL,
+    added_by_id     bigint NOT NULL REFERENCES accounts_user(id),
+    resource_id     bigint NOT NULL REFERENCES resources_resource(id),
+    target_class_id bigint NOT NULL REFERENCES classes_class(id),
+    UNIQUE (resource_id, target_class_id)
+);
+
+-- Rows that point at a resource; Django cascaded or nulled them in the ORM.
+CREATE TABLE resources_resourcelessonlink (
+    id          bigint PRIMARY KEY,
+    resource_id bigint NOT NULL REFERENCES resources_resource(id)
+);
+
+CREATE TABLE resources_resourceengagementrecord (
+    id          bigint PRIMARY KEY,
+    resource_id bigint NOT NULL REFERENCES resources_resource(id)
+);
+
+CREATE TABLE intelligence_studytask (
+    id                 bigint PRIMARY KEY,
+    linked_resource_id bigint REFERENCES resources_resource(id)
+);

@@ -1,7 +1,9 @@
+import { router } from 'expo-router';
 import { useMemo } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { Card, Row } from '@/components/ui';
 import { Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import type { Me } from '@/lib/api/client';
@@ -59,6 +61,14 @@ export default function HomeScreen() {
         <Text style={styles.subtitle}>{home.subtitle}</Text>
 
         <RoleWork user={user} />
+        <Card title="Library">
+          <Row
+            title="Notes, guides and links"
+            detail="Your class resources and your schools' libraries"
+            onPress={() => router.push('/library')}
+            accessibilityHint="Opens the resource library"
+          />
+        </Card>
         <SchoolsCard user={user} styles={styles} />
         {user.role === 'parent' ? <ChildrenCard user={user} styles={styles} /> : null}
 

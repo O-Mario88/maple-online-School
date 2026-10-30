@@ -224,12 +224,58 @@ type InstitutionsInstitutionsubject struct {
 	CustomName    pgtype.Text
 }
 
+type IntelligenceStudytask struct {
+	ID               int64
+	LinkedResourceID pgtype.Int8
+}
+
 type ParentPortalParentstudentlink struct {
 	ID               int64
 	RelationshipType string
 	ConsentStatus    string
 	ParentProfileID  int64
 	StudentProfileID int64
+}
+
+type ResourcesResource struct {
+	ID                 int64
+	OwnerType          string
+	Title              string
+	FilePath           pgtype.Text
+	ExternalUrl        pgtype.Text
+	VimeoUploadStatus  string
+	VimeoVideoID       pgtype.Text
+	Visibility         string
+	CreatedAt          pgtype.Timestamptz
+	ClassLevelID       pgtype.Int8
+	OwnerInstitutionID pgtype.Int8
+	SubjectID          pgtype.Int8
+	TopicID            pgtype.Int8
+	UploadedByID       int64
+	Description        pgtype.Text
+	Author             pgtype.Text
+	Category           pgtype.Text
+	Price              pgtype.Numeric
+	Rating             pgtype.Numeric
+	IsFeatured         bool
+}
+
+type ResourcesResourceengagementrecord struct {
+	ID         int64
+	ResourceID int64
+}
+
+type ResourcesResourcelessonlink struct {
+	ID         int64
+	ResourceID int64
+}
+
+type ResourcesSharedresourcelink struct {
+	ID            int64
+	AddedAt       pgtype.Timestamptz
+	AddedByID     int64
+	ResourceID    int64
+	TargetClassID int64
 }
 
 type SchedulingAcademicterm struct {

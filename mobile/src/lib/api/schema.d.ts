@@ -1789,6 +1789,288 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/resources/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Resources the user can see
+         * @description Platform-shared and marketplace resources, the libraries of the user's schools, and their own private resources.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description 1-based page number; 20 items per page */
+                    page?: components["parameters"]["Page"];
+                    /** @description Matches title */
+                    search?: string;
+                    category?: string;
+                    subject?: number;
+                    visibility?: "private" | "institution_only" | "platform_shared" | "marketplace_public";
+                    ordering?: "created_at" | "-created_at" | "rating" | "-rating" | "price" | "-price";
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description A page of resources */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ResourcePage"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Add a resource by link (files go to /api/v1/resources-upload/upload/)
+         * @description School libraries need a staff membership there; platform sharing is for Maple administrators.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ResourceInput"];
+                };
+            };
+            responses: {
+                /** @description The resource */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Resource"];
+                    };
+                };
+                400: components["responses"]["BadRequest"];
+                403: components["responses"]["Forbidden"];
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/resources/{id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        /** One resource */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The resource */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Resource"];
+                    };
+                };
+                404: components["responses"]["NotFound"];
+            };
+        };
+        put?: never;
+        post?: never;
+        /** Remove a resource (its uploader, or a leader of the owning school) */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Removed */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                403: components["responses"]["Forbidden"];
+            };
+        };
+        options?: never;
+        head?: never;
+        /** Change a resource (its uploader) */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ResourceInput"];
+                };
+            };
+            responses: {
+                /** @description The resource */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Resource"];
+                    };
+                };
+                403: components["responses"]["Forbidden"];
+                404: components["responses"]["NotFound"];
+            };
+        };
+        trace?: never;
+    };
+    "/api/v1/resources/shared-resource-link/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Resources shared with classes the user can see */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description 1-based page number; 20 items per page */
+                    page?: components["parameters"]["Page"];
+                    target_class?: number;
+                    resource?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description A page of class links */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ClassResourcePage"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Share a resource with a class (its teacher or the school's leaders)
+         * @description The resource must be platform-shared or in that school's library.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** Format: int64 */
+                        resource: number;
+                        /** Format: int64 */
+                        target_class: number;
+                    };
+                };
+            };
+            responses: {
+                /** @description The link */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ClassResource"];
+                    };
+                };
+                400: components["responses"]["BadRequest"];
+                403: components["responses"]["Forbidden"];
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/resources/shared-resource-link/{id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Stop sharing (whoever shared it, the class's teacher, or the school's leaders) */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Removed */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                403: components["responses"]["Forbidden"];
+                404: components["responses"]["NotFound"];
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -2150,6 +2432,85 @@ export interface components {
             code: string | null;
             category: string | null;
             topics: components["schemas"]["CurriculumTopic"][];
+        };
+        Resource: {
+            /** Format: int64 */
+            id: number;
+            title: string;
+            description: string | null;
+            author: string | null;
+            author_name: string;
+            category: string | null;
+            /** @description Two-place decimal */
+            price: string;
+            /** @description Two-place decimal */
+            rating: string;
+            is_featured: boolean;
+            /** @description Path under the server's /media/ for uploaded files */
+            file_path: string | null;
+            external_url: string | null;
+            /** @enum {string} */
+            visibility: "private" | "institution_only" | "platform_shared" | "marketplace_public";
+            /** Format: int64 */
+            subject: number | null;
+            /** Format: int64 */
+            class_level: number | null;
+            /** Format: int64 */
+            topic: number | null;
+            /** Format: int64 */
+            uploaded_by: number;
+            /** @enum {string} */
+            owner_type: "platform" | "institution" | "teacher";
+            /** Format: int64 */
+            owner_institution: number | null;
+            /** Format: date-time */
+            created_at: string;
+            vimeo_video_id: string | null;
+        };
+        ResourceInput: {
+            title?: string;
+            description?: string | null;
+            author?: string | null;
+            category?: string | null;
+            /** Format: uri */
+            external_url?: string | null;
+            /** @enum {string} */
+            visibility?: "private" | "institution_only" | "platform_shared" | "marketplace_public";
+            /** Format: int64 */
+            owner_institution?: number | null;
+            /** Format: int64 */
+            subject?: number | null;
+            /** Format: int64 */
+            class_level?: number | null;
+            /** Format: int64 */
+            topic?: number | null;
+            /** @description Marketplace resources only */
+            price?: number;
+        };
+        ResourcePage: {
+            count: number;
+            next: string | null;
+            previous: string | null;
+            results: components["schemas"]["Resource"][];
+        };
+        ClassResource: {
+            /** Format: int64 */
+            id: number;
+            /** Format: date-time */
+            added_at: string;
+            /** Format: int64 */
+            added_by: number;
+            /** Format: int64 */
+            resource: number;
+            /** Format: int64 */
+            target_class: number;
+            resource_title: string;
+        };
+        ClassResourcePage: {
+            count: number;
+            next: string | null;
+            previous: string | null;
+            results: components["schemas"]["ClassResource"][];
         };
     };
     responses: {

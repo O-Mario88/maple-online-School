@@ -195,6 +195,8 @@ func (w *World) cleanup() {
 		`DELETE FROM grading_reportcard WHERE student_id = ANY($1)`,
 		`DELETE FROM grading_subjectgrade WHERE student_id = ANY($1)`,
 		`DELETE FROM attendance_dailyregister WHERE student_id = ANY($1) OR recorded_by_id = ANY($1)`,
+		`DELETE FROM resources_sharedresourcelink WHERE added_by_id = ANY($1) OR target_class_id IN (SELECT id FROM classes_class WHERE teacher_id = ANY($1)) OR resource_id IN (SELECT id FROM resources_resource WHERE uploaded_by_id = ANY($1))`,
+		`DELETE FROM resources_resource WHERE uploaded_by_id = ANY($1)`,
 		`DELETE FROM scheduling_timetableslot WHERE assigned_class_id IN (SELECT id FROM classes_class WHERE teacher_id = ANY($1))`,
 		`DELETE FROM grading_subjectgrade WHERE assigned_class_id IN (SELECT id FROM classes_class WHERE teacher_id = ANY($1))`,
 		`DELETE FROM classes_classenrollment WHERE student_id = ANY($1) OR enrolled_class_id IN (SELECT id FROM classes_class WHERE teacher_id = ANY($1))`,

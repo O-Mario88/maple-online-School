@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Maple API
-  version: 0.6.0
+  version: 0.7.0
   description: |
     The contract between the Maple apps and the Go API. Paths not listed here
     are still served by the Django API through the Go service's forwarder,
@@ -563,6 +563,107 @@ paths:
       summary: Competencies, optionally for one topic
       parameters: [{ name: topic, in: query, schema: { type: integer, format: int64 } }]
       responses: { "200": { description: "{count, results: Competency[]}" }, "401": { $ref: "#/components/responses/Unauthorized" } }
+  /api/v1/resources/:
+    get:
+      summary: Resources the user can see
+      description: Platform-shared and marketplace resources, the libraries of the user's schools, and their own private resources.
+      parameters:
+        - { $ref: "#/components/parameters/Page" }
+        - { name: search, in: query, description: Matches title, description or author, schema: { type: string } }
+        - { name: category, in: query, schema: { type: string } }
+        - { name: subject, in: query, schema: { type: integer, format: int64 } }
+        - { name: visibility, in: query, schema: { type: string, enum: [private, institution_only, platform_shared, marketplace_public] } }
+        - { name: ordering, in: query, schema: { type: string, enum: [created_at, -created_at, rating, -rating, price, -price] } }
+      responses:
+        "200":
+          description: A page of resources
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ResourcePage" }
+    post:
+      summary: Add a resource by link (files go to /api/v1/resources-upload/upload/)
+      description: School libraries need a staff membership there; platform sharing is for Maple administrators.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ResourceInput" }
+      responses:
+        "201":
+          description: The resource
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Resource" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /api/v1/resources/{id}/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    get:
+      summary: One resource
+      responses:
+        "200":
+          description: The resource
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Resource" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    patch:
+      summary: Change a resource (its uploader)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ResourceInput" }
+      responses:
+        "200":
+          description: The resource
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Resource" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    delete:
+      summary: Remove a resource (its uploader, or a leader of the owning school)
+      responses: { "204": { description: Removed, with its class links }, "403": { $ref: "#/components/responses/Forbidden" } }
+  /api/v1/resources/shared-resource-link/:
+    get:
+      summary: Resources shared with classes the user can see
+      parameters:
+        - { $ref: "#/components/parameters/Page" }
+        - { name: target_class, in: query, schema: { type: integer, format: int64 } }
+        - { name: resource, in: query, schema: { type: integer, format: int64 } }
+      responses:
+        "200":
+          description: A page of class links
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ClassResourcePage" }
+    post:
+      summary: Share a resource with a class (its teacher or the school's leaders)
+      description: The resource must be platform-shared or in that school's library.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [resource, target_class]
+              properties:
+                resource: { type: integer, format: int64 }
+                target_class: { type: integer, format: int64 }
+      responses:
+        "201":
+          description: The link
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ClassResource" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /api/v1/resources/shared-resource-link/{id}/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    delete:
+      summary: Stop sharing (whoever shared it, the class's teacher, or the school's leaders)
+      responses: { "204": { description: Removed }, "403": { $ref: "#/components/responses/Forbidden" }, "404": { $ref: "#/components/responses/NotFound" } }
 components:
   parameters:
     Page:
@@ -980,3 +1081,71 @@ components:
         topics:
           type: array
           items: { $ref: "#/components/schemas/CurriculumTopic" }
+    Resource:
+      type: object
+      required: [id, title, description, author, author_name, category, price, rating, is_featured, file_path, external_url, visibility, subject, class_level, topic, uploaded_by, owner_type, owner_institution, created_at, vimeo_video_id]
+      properties:
+        id: { type: integer, format: int64 }
+        title: { type: string }
+        description: { type: [string, "null"] }
+        author: { type: [string, "null"] }
+        author_name: { type: string }
+        category: { type: [string, "null"] }
+        price: { type: string, description: Two-place decimal }
+        rating: { type: string, description: Two-place decimal }
+        is_featured: { type: boolean }
+        file_path: { type: [string, "null"], description: "Path under the server's /media/ for uploaded files" }
+        external_url: { type: [string, "null"] }
+        visibility: { type: string, enum: [private, institution_only, platform_shared, marketplace_public] }
+        subject: { type: [integer, "null"], format: int64 }
+        class_level: { type: [integer, "null"], format: int64 }
+        topic: { type: [integer, "null"], format: int64 }
+        uploaded_by: { type: integer, format: int64 }
+        owner_type: { type: string, enum: [platform, institution, teacher] }
+        owner_institution: { type: [integer, "null"], format: int64 }
+        created_at: { type: string, format: date-time }
+        vimeo_video_id: { type: [string, "null"] }
+    ResourceInput:
+      type: object
+      properties:
+        title: { type: string, maxLength: 255 }
+        description: { type: [string, "null"] }
+        author: { type: [string, "null"] }
+        category: { type: [string, "null"] }
+        external_url: { type: [string, "null"], format: uri }
+        visibility: { type: string, enum: [private, institution_only, platform_shared, marketplace_public] }
+        owner_institution: { type: [integer, "null"], format: int64 }
+        subject: { type: [integer, "null"], format: int64 }
+        class_level: { type: [integer, "null"], format: int64 }
+        topic: { type: [integer, "null"], format: int64 }
+        price: { type: number, description: Marketplace resources only }
+    ResourcePage:
+      type: object
+      required: [count, next, previous, results]
+      properties:
+        count: { type: integer }
+        next: { type: [string, "null"] }
+        previous: { type: [string, "null"] }
+        results:
+          type: array
+          items: { $ref: "#/components/schemas/Resource" }
+    ClassResource:
+      type: object
+      required: [id, added_at, added_by, resource, target_class, resource_title]
+      properties:
+        id: { type: integer, format: int64 }
+        added_at: { type: string, format: date-time }
+        added_by: { type: integer, format: int64 }
+        resource: { type: integer, format: int64 }
+        target_class: { type: integer, format: int64 }
+        resource_title: { type: string }
+    ClassResourcePage:
+      type: object
+      required: [count, next, previous, results]
+      properties:
+        count: { type: integer }
+        next: { type: [string, "null"] }
+        previous: { type: [string, "null"] }
+        results:
+          type: array
+          items: { $ref: "#/components/schemas/ClassResource" }

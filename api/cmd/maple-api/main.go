@@ -20,6 +20,7 @@ import (
 	"github.com/O-Mario88/maple-online-School/api/internal/learning"
 	"github.com/O-Mario88/maple-online-School/api/internal/platform/postgres"
 	"github.com/O-Mario88/maple-online-School/api/internal/reports"
+	"github.com/O-Mario88/maple-online-School/api/internal/resources"
 	"github.com/O-Mario88/maple-online-School/api/internal/school"
 	"github.com/O-Mario88/maple-online-School/api/internal/server"
 	"github.com/O-Mario88/maple-online-School/api/internal/timetable"
@@ -61,13 +62,14 @@ func run() error {
 	week := timetable.NewHandler(timetable.NewPostgresStore(pool), store, auth.RequireUser)
 	schools := institutions.NewHandler(institutions.NewPostgresStore(pool), auth.RequireUser)
 	catalog := curriculum.NewHandler(curriculum.NewPostgresStore(pool), auth.RequireUser)
+	library := resources.NewHandler(resources.NewPostgresStore(pool), auth.RequireUser)
 
 	handler, err := server.NewRouter(server.Options{
 		Pinger:            pool,
 		LegacyAPI:         cfg.LegacyAPIURL,
 		CORSOrigins:       cfg.CORSOrigins,
 		TrustProxyHeaders: cfg.TrustProxyHeaders,
-		Modules:           []func(chi.Router){auth.Mount, work.Mount, classes.Mount, cards.Mount, week.Mount, schools.Mount, catalog.Mount},
+		Modules:           []func(chi.Router){auth.Mount, work.Mount, classes.Mount, cards.Mount, week.Mount, schools.Mount, catalog.Mount, library.Mount},
 	})
 	if err != nil {
 		return err

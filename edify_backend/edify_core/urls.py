@@ -35,7 +35,6 @@ from live_sessions.views import LiveSessionViewSet, SessionReminderViewSet
 from notifications.views import NotificationViewSet
 from parent_portal.views import ParentStudentLinkViewSet, WeeklySummaryViewSet, RiskAlertViewSet
 from resources.upload_view import ResourceUploadViewSet
-from resources.views import ResourceViewSet, SharedResourceLinkViewSet
 from resources.content_views import (
     ContentItemViewSet, TeacherContentViewSet, InstitutionContentViewSet,
     AdminContentViewSet, ContentDeliveryView, ClassContentView,
@@ -104,9 +103,8 @@ router.register(r'lessons/lesson-recording', LessonRecordingViewSet, basename='l
 router.register(r'lessons/lesson-attendance', LessonAttendanceViewSet, basename='lessons-lesson-attendance')
 router.register(r'live-sessions/live-session', LiveSessionViewSet, basename='live_sessions-live-session')
 router.register(r'live-sessions/session-reminder', SessionReminderViewSet, basename='live_sessions-session-reminder')
-router.register(r'resources', ResourceViewSet, basename='resources-resource')
+# The resource library and class resource links moved to the Go service.
 router.register(r'resources-upload', ResourceUploadViewSet, basename='resources-upload')
-router.register(r'resources/shared-resource-link', SharedResourceLinkViewSet, basename='resources-shared-resource-link')
 
 # Content Management System
 router.register(r'content/items', ContentItemViewSet, basename='content-item')
