@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Maple API
-  version: 0.14.0
+  version: 0.15.0
   description: |
     The contract between the Maple apps and the Go API. Paths not listed here
     are still served by the Django API through the Go service's forwarder,
@@ -594,6 +594,46 @@ paths:
         "200": { description: The link, content: { application/json: { schema: { $ref: "#/components/schemas/FamilyLink" } } } }
         "403": { description: Not admissions staff at the learner's school }
         "404": { description: No such link, or not yours to see }
+  /api/v1/inbox/:
+    get:
+      summary: Your notifications, newest first
+      parameters:
+        - { name: unread, in: query, description: "1 for unread only", schema: { type: string, enum: ["1"] } }
+        - { name: page, in: query, schema: { type: integer } }
+      responses:
+        "200":
+          description: A page of notifications
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [count, results]
+                properties:
+                  count: { type: integer }
+                  next: { type: string, nullable: true }
+                  previous: { type: string, nullable: true }
+                  results: { type: array, items: { $ref: "#/components/schemas/Notification" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+  /api/v1/inbox/summary/:
+    get:
+      summary: How many notifications are unread
+      responses:
+        "200":
+          description: The unread count
+          content: { application/json: { schema: { type: object, required: [unread], properties: { unread: { type: integer } } } } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+  /api/v1/inbox/{id}/read/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    post:
+      summary: Mark one of your notifications read
+      responses:
+        "204": { description: Marked read }
+        "404": { description: Not one of yours }
+  /api/v1/inbox/read-all/:
+    post:
+      summary: Mark all your notifications read
+      responses:
+        "204": { description: All marked read }
   /api/v1/curriculum/full-tree/:
     get:
       summary: The course catalog (levels, classes, terms, subjects, topics, lessons)
@@ -1332,6 +1372,17 @@ components:
         application/json:
           schema: { $ref: "#/components/schemas/Error" }
   schemas:
+    Notification:
+      type: object
+      required: [id, kind, title, body, link, created_at, read_at]
+      properties:
+        id: { type: integer, format: int64 }
+        kind: { type: string, description: "invoice, payment, family_link, …" }
+        title: { type: string }
+        body: { type: string }
+        link: { type: string, description: App path to act on it, such as /fees }
+        created_at: { type: string, format: date-time }
+        read_at: { type: string, format: date-time, nullable: true }
     FamilyLink:
       type: object
       required: [id, relationship, status, linked_at, parent, student, school_id, school_name]

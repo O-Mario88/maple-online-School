@@ -29,7 +29,6 @@ from analytics.views import AnalyticsEventViewSet, DailyPlatformMetricViewSet, D
 from assessments.views import AssessmentWindowViewSet, QuestionViewSet
 from discussions.views import ThreadViewSet, PostViewSet
 from exams.views import ExamCenterViewSet, CandidateRegistrationViewSet, SubjectSelectionViewSet, BoardSubmissionBatchViewSet
-from notifications.views import NotificationViewSet
 from parent_portal.views import ParentStudentLinkViewSet, WeeklySummaryViewSet, RiskAlertViewSet
 # The library (items, sharing, reading lists, progress) is served by the Go
 # API at /api/v1/library/. Tags, recommendations and the content dashboards
@@ -104,7 +103,6 @@ router.register(r'content/recommendations', ContentRecommendationViewSet, basena
 # Community & Extensions
 router.register(r'discussions/thread', ThreadViewSet, basename='discussions-thread')
 router.register(r'discussions/post', PostViewSet, basename='discussions-post')
-router.register(r'notifications/notification', NotificationViewSet, basename='notifications-notification')
 router.register(r'parent-portal/parent-student-link', ParentStudentLinkViewSet, basename='parent_portal-parent-student-link')
 router.register(r'parent-portal/weekly-summary', WeeklySummaryViewSet, basename='parent_portal-weekly-summary')
 router.register(r'parent-portal/risk-alert', RiskAlertViewSet, basename='parent_portal-risk-alert')

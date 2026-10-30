@@ -82,6 +82,9 @@ func TestRegistrarApprovesAndTheParentGetsAccess(t *testing.T) {
 	if n := f.decisions(t, f.link); n != 1 {
 		t.Errorf("the decision should be recorded once, got %d", n)
 	}
+	if n := f.w.Notes(f.parent, "family_link"); n != 1 {
+		t.Errorf("the parent should be told once, got %d", n)
+	}
 
 	// Approving again changes nothing and records nothing.
 	if code, _ := f.decide(f.head, f.link, "approve"); code != http.StatusOK {
@@ -97,6 +100,9 @@ func TestRegistrarApprovesAndTheParentGetsAccess(t *testing.T) {
 	}
 	if n := f.approvedChildren(t); n != 0 {
 		t.Errorf("a declined link must not grant access, got %d", n)
+	}
+	if n := f.w.Notes(f.parent, "family_link"); n != 2 {
+		t.Errorf("the parent should be told about the change too, got %d", n)
 	}
 }
 

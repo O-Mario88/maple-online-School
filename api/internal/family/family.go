@@ -21,6 +21,7 @@ import (
 
 	"github.com/O-Mario88/maple-online-School/api/internal/httpx"
 	"github.com/O-Mario88/maple-online-School/api/internal/identity"
+	"github.com/O-Mario88/maple-online-School/api/internal/inbox"
 	"github.com/O-Mario88/maple-online-School/api/internal/platform/dbgen"
 	"github.com/O-Mario88/maple-online-School/api/internal/roles"
 )
@@ -150,10 +151,31 @@ func (s *PostgresStore) Decide(ctx context.Context, v Viewer, linkID int64, deci
 	if len(rows) == 0 {
 		return Link{}, ErrNotFound
 	}
+	if link.ConsentStatus != decision {
+		if err := inbox.Notify(ctx, q, link.ParentID, decisionNote(rows[0], decision)); err != nil {
+			return Link{}, err
+		}
+	}
 	if err := tx.Commit(ctx); err != nil {
 		return Link{}, fmt.Errorf("commit: %w", err)
 	}
 	return toLink(rows[0]), nil
+}
+
+// decisionNote tells the parent what the school decided.
+func decisionNote(r dbgen.FamilyLinksRow, decision string) inbox.Note {
+	if decision == "approved" {
+		return inbox.Note{
+			Kind: "family_link", Link: "/",
+			Title: r.SchoolName + " confirmed you for " + r.StudentName,
+			Body:  "You can now follow " + r.StudentName + "'s lessons, results and fees.",
+		}
+	}
+	return inbox.Note{
+		Kind: "family_link", Link: "/",
+		Title: r.SchoolName + " didn't confirm your link to " + r.StudentName,
+		Body:  "Contact the school if you think this is a mistake.",
+	}
 }
 
 func firstShared(a, b []int64) int64 {

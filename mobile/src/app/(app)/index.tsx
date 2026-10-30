@@ -1,6 +1,7 @@
 import { router } from 'expo-router';
 
 import { Badge, Body, Button, Card, ErrorText, Grid, Loading, Row, Screen, Segmented, useShell } from '@/components/ui';
+import { InboxBell } from '@/components/shell/InboxBell';
 import { HomeStats } from '@/features/home/HomeStats';
 import { AttendanceSection } from '@/features/learner/AttendanceSection';
 import { ParentResultsSection } from '@/features/parent/ParentResultsSection';
@@ -60,7 +61,8 @@ export default function HomeScreen() {
       width="wide"
       eyebrow={`${today} · ${home.title}`}
       title={`${greeting(now)}, ${firstName}`}
-      subtitle={home.subtitle}>
+      subtitle={home.subtitle}
+      actions={wide ? undefined : <InboxBell />}>
       {!wide && portals.length > 1 ? (
         <Segmented
           label="Switch portal"

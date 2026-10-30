@@ -11,6 +11,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 
 	"github.com/O-Mario88/maple-online-School/api/internal/httpx"
+	"github.com/O-Mario88/maple-online-School/api/internal/inbox"
 	"github.com/O-Mario88/maple-online-School/api/internal/platform/dbgen"
 	"github.com/O-Mario88/maple-online-School/api/internal/roles"
 )
@@ -189,7 +190,11 @@ func invoiceOne(ctx context.Context, q *dbgen.Queries, accts map[string]int64, g
 			return fmt.Errorf("add invoice line: %w", err)
 		}
 	}
-	return nil
+	body := money(total, currency) + " for school fees."
+	if g.Due != nil {
+		body += " Due " + g.Due.Format("2 January 2006") + "."
+	}
+	return inbox.NotifyFamily(ctx, q, student, inbox.Note{Kind: "invoice", Title: "New invoice " + number, Body: body, Link: "/fees"})
 }
 
 func (s *PostgresStore) Invoices(ctx context.Context, v Viewer, student *int64, status *string, page httpx.Page) ([]Invoice, int64, error) {
@@ -401,6 +406,12 @@ func settle(ctx context.Context, q *dbgen.Queries, paymentID, by int64) error {
 	})
 	if err != nil {
 		return fmt.Errorf("complete payment: %w", err)
+	}
+	if err := inbox.NotifyFamily(ctx, q, p.StudentID, inbox.Note{
+		Kind: "payment", Title: "Payment received · " + receipt,
+		Body: money(p.AmountMinor, p.Currency) + " by " + methodName(p.Method) + ". Thank you.", Link: "/fees",
+	}); err != nil {
+		return err
 	}
 	if !p.InvoiceID.Valid {
 		return nil

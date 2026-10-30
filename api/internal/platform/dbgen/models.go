@@ -326,6 +326,17 @@ type IdentityRevokedToken struct {
 	ExpiresAt pgtype.Timestamptz
 }
 
+type InboxNotification struct {
+	ID        int64
+	UserID    int64
+	Kind      string
+	Title     string
+	Body      string
+	Link      string
+	CreatedAt pgtype.Timestamptz
+	ReadAt    pgtype.Timestamptz
+}
+
 type InstitutionsInstitution struct {
 	ID               int64
 	Name             string

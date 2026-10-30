@@ -153,6 +153,11 @@ func TestFeesInvoicesAndWhoSeesThem(t *testing.T) {
 	}
 
 	invoice := s.billed(t)
+	for user, want := range map[int64]int{s.student: 1, s.parent: 1, s.outsiderParent: 0} {
+		if n := s.w.Notes(user, "invoice"); n != want {
+			t.Errorf("invoice note for %d: want %d, got %d", user, want, n)
+		}
+	}
 	_, inv := s.w.Call(s.parent, http.MethodGet, "/api/v1/finance/invoices/"+itoa(invoice)+"/", nil)
 	if inv["total_minor"] != float64(650000) || inv["status"] != "issued" || len(inv["lines"].([]any)) != 2 {
 		t.Errorf("invoice detail: %v", inv)
@@ -193,6 +198,9 @@ func TestCashPaymentsAreIdempotent(t *testing.T) {
 	code, again := pay("cash-001")
 	if code != http.StatusOK || testkit.ID(again) != testkit.ID(first) {
 		t.Errorf("the same key returns the same payment: %d %v", code, again)
+	}
+	if n := s.w.Notes(s.parent, "payment"); n != 1 {
+		t.Errorf("the family hears about a payment once, got %d", n)
 	}
 	if got := s.balance(t, s.head, s.student); got != 450000 {
 		t.Errorf("one payment posted, balance should be 450000: %v", got)

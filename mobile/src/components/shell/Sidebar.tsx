@@ -11,6 +11,7 @@ import { activeKey, navFor, PORTAL_LABELS } from '@/lib/navigation';
 import { usePortal } from '@/lib/portal-context';
 
 import { BrandMark } from './BrandMark';
+import { InboxBell } from './InboxBell';
 
 /** The wide-screen menu: brand, portal switcher, sections and account. */
 export function Sidebar() {
@@ -26,10 +27,11 @@ export function Sidebar() {
     <SafeAreaView style={styles.sidebar} edges={['top', 'left', 'bottom']}>
       <View style={styles.brand}>
         <BrandMark size={32} />
-        <View>
+        <View style={styles.flexText}>
           <Text style={styles.brandName}>Maple</Text>
           <Text style={styles.brandSub}>Global Online School</Text>
         </View>
+        <InboxBell onDark />
       </View>
 
       {portals.length > 1 ? (
@@ -105,6 +107,7 @@ function makeStyles(t: Theme) {
   return StyleSheet.create({
     sidebar: { width: SidebarWidth, backgroundColor: t.sidebar, paddingHorizontal: Spacing.three, paddingVertical: Spacing.four },
     brand: { flexDirection: 'row', alignItems: 'center', gap: Spacing.three, paddingHorizontal: Spacing.two, marginBottom: Spacing.four },
+    flexText: { flex: 1 },
     brandName: { ...Type.heading, color: t.sidebarText },
     brandSub: { ...Type.caption, color: t.sidebarMuted },
     portals: {

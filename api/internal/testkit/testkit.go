@@ -104,7 +104,10 @@ func (w *World) LinkParent(parent, student int64, consent string) int64 {
 	if err := w.Pool.QueryRow(ctx, `SELECT id FROM accounts_parentprofile WHERE user_id = $1`, parent).Scan(&pp); err != nil {
 		pp = w.scalar(`INSERT INTO accounts_parentprofile (user_id) VALUES ($1) RETURNING id`, parent)
 	}
-	sp := w.scalar(`INSERT INTO accounts_studentprofile (user_id, onboarding_status) VALUES ($1, 'active') RETURNING id`, student)
+	var sp int64
+	if err := w.Pool.QueryRow(ctx, `SELECT id FROM accounts_studentprofile WHERE user_id = $1`, student).Scan(&sp); err != nil {
+		sp = w.scalar(`INSERT INTO accounts_studentprofile (user_id, onboarding_status) VALUES ($1, 'active') RETURNING id`, student)
+	}
 	return w.scalar(`INSERT INTO parent_portal_parentstudentlink (relationship_type, consent_status, linked_at, parent_profile_id, student_profile_id)
 		VALUES ('mother', $1, now(), $2, $3) RETURNING id`, consent, pp, sp)
 }
@@ -178,6 +181,17 @@ func (w *World) Raw(user int64, req *http.Request) (int, string) {
 	return rec.Code, rec.Body.String()
 }
 
+// Notes counts a person's in-app notifications of one kind.
+func (w *World) Notes(user int64, kind string) int {
+	w.T.Helper()
+	var n int
+	err := w.Pool.QueryRow(context.Background(), `SELECT count(*) FROM inbox_notifications WHERE user_id = $1 AND kind = $2`, user, kind).Scan(&n)
+	if err != nil {
+		w.T.Fatalf("count notes: %v", err)
+	}
+	return n
+}
+
 // IDs returns the "id" of each row in a paginated response.
 func IDs(page map[string]any) []int64 {
 	var out []int64
@@ -229,6 +243,7 @@ func (w *World) cleanup() {
 		`DELETE FROM grading_graderecord WHERE submission_id IN (SELECT id FROM assessments_submission WHERE student_id = ANY($1))`,
 		`DELETE FROM assessments_submission WHERE student_id = ANY($1)`,
 		`DELETE FROM assessments_assessment WHERE created_by_id = ANY($1)`,
+		`DELETE FROM inbox_notifications WHERE user_id = ANY($1)`,
 		`DELETE FROM family_link_decisions WHERE decided_by = ANY($1) OR link_id IN (SELECT id FROM parent_portal_parentstudentlink WHERE parent_profile_id IN (SELECT id FROM accounts_parentprofile WHERE user_id = ANY($1)))`,
 		`DELETE FROM parent_portal_parentstudentlink WHERE parent_profile_id IN (SELECT id FROM accounts_parentprofile WHERE user_id = ANY($1))`,
 		`DELETE FROM accounts_parentprofile WHERE user_id = ANY($1)`,
