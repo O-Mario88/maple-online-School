@@ -6,6 +6,7 @@ import { HomeStats } from '@/features/home/HomeStats';
 import { LearnersEntryCard } from '@/features/insights/LearnersEntryCard';
 import { AttendanceSection } from '@/features/learner/AttendanceSection';
 import { ParentResultsSection } from '@/features/parent/ParentResultsSection';
+import { NextUpHero } from '@/features/preview/NextUpHero';
 import { ReportsSection } from '@/features/shared/ReportsSection';
 import { TodaySection } from '@/features/shared/TodaySection';
 import { StudentWorkSection } from '@/features/student/StudentWorkSection';
@@ -72,6 +73,7 @@ export default function HomeScreen() {
           onChange={setPortal}
         />
       ) : null}
+      {portal === 'learner' ? <NextUpHero /> : null}
       <HomeStats portal={portal} user={user} />
       <PortalHome portal={portal} user={user} />
       {!wide ? <Button label="Sign out" variant="secondary" icon="logout" onPress={signOut} /> : null}
