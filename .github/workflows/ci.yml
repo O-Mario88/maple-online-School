@@ -66,3 +66,5 @@ jobs:
       - run: npm run typecheck
       - run: npx expo lint
       - run: npm test -- --ci
+      - name: Deployment build carries no mock data
+        run: npm run check:no-mock
