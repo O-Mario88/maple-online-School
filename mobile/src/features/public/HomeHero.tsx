@@ -55,7 +55,7 @@ export function HomeHero({ landing, wide }: { landing: Landing; wide: boolean })
             <Icon name="search" size={20} color={Brand.muted} />
             <TextInput style={styles.searchInput} placeholder="Search for courses, subjects, or skills..." placeholderTextColor={Brand.muted} accessibilityLabel="Search courses" />
           </View>
-          <Pressable style={styles.explore} accessibilityRole="button" onPress={() => router.push('/sign-up')}>
+          <Pressable style={styles.explore} accessibilityRole="button" onPress={() => router.push('/explore')}>
             <Text style={styles.exploreText}>Explore Courses</Text>
             <Icon name="arrowRight" size={18} color={Brand.surface} />
           </Pressable>
