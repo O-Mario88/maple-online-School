@@ -7,3 +7,9 @@ import "embed"
 //
 //go:embed migrations/*.sql
 var Migrations embed.FS
+
+// LegacySchema creates the tables Maple first made with Django. It is applied
+// once, to an empty database, before the migrations.
+//
+//go:embed baseline/legacy_schema.sql
+var LegacySchema string

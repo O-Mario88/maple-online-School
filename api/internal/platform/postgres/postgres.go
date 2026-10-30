@@ -31,8 +31,12 @@ func Open(ctx context.Context, url string) (*pgxpool.Pool, error) {
 	return pool, nil
 }
 
-// Migrate applies any pending migrations for Go-owned tables.
+// Migrate brings the database up to date. An empty database first gets the
+// tables Maple originally made with Django; then any pending Go migrations run.
 func Migrate(ctx context.Context, pool *pgxpool.Pool) error {
+	if err := applyLegacySchema(ctx, pool); err != nil {
+		return err
+	}
 	sqlDB := stdlib.OpenDBFromPool(pool)
 	defer sqlDB.Close()
 
@@ -43,6 +47,31 @@ func Migrate(ctx context.Context, pool *pgxpool.Pool) error {
 	}
 	if err := goose.UpContext(ctx, sqlDB, "migrations"); err != nil {
 		return fmt.Errorf("apply migrations: %w", err)
+	}
+	return nil
+}
+
+// applyLegacySchema creates the Django-era tables on a database that has none.
+// A database that already has them (made by Django, or by an earlier run) is
+// left alone.
+func applyLegacySchema(ctx context.Context, pool *pgxpool.Pool) error {
+	var present bool
+	if err := pool.QueryRow(ctx, "SELECT to_regclass('public.accounts_user') IS NOT NULL").Scan(&present); err != nil {
+		return fmt.Errorf("check for existing schema: %w", err)
+	}
+	if present {
+		return nil
+	}
+	tx, err := pool.Begin(ctx)
+	if err != nil {
+		return fmt.Errorf("begin legacy schema: %w", err)
+	}
+	defer func() { _ = tx.Rollback(ctx) }()
+	if _, err := tx.Exec(ctx, db.LegacySchema); err != nil {
+		return fmt.Errorf("create legacy schema: %w", err)
+	}
+	if err := tx.Commit(ctx); err != nil {
+		return fmt.Errorf("commit legacy schema: %w", err)
 	}
 	return nil
 }

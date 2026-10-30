@@ -71,18 +71,8 @@ jobs:
         with:
           go-version-file: api/go.mod
           cache-dependency-path: api/go.sum
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-          cache: 'pip'
-          cache-dependency-path: edify_backend/requirements.txt
-      - name: Create Django tables and pilot accounts for the database tests
-        working-directory: edify_backend
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          python manage.py migrate --noinput
-          python manage.py seed_pilot
+      # The Go API builds the whole schema itself (db/baseline then
+      # db/migrations), so the database tests start from an empty Postgres.
       - name: Check formatting
         working-directory: api
         run: test -z "$(gofmt -l .)" || (gofmt -l . && exit 1)

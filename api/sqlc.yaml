@@ -2,7 +2,7 @@ version: "2"
 sql:
   - engine: postgresql
     schema:
-      - db/legacy/django_tables.sql
+      - db/baseline/legacy_schema.sql
       - db/migrations
     queries: db/queries
     gen:

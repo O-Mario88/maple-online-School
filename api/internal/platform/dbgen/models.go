@@ -19,9 +19,12 @@ type AccountsParentprofile struct {
 }
 
 type AccountsStudentprofile struct {
-	ID               int64
-	OnboardingStatus string
-	UserID           int64
+	ID                   int64
+	OnboardingStatus     string
+	SystemUsername       pgtype.Text
+	StudentIDNumber      pgtype.Text
+	DefaultInstitutionID pgtype.Int8
+	UserID               int64
 }
 
 type AccountsTeacherprofile struct {
@@ -35,16 +38,18 @@ type AccountsTeacherprofile struct {
 type AccountsUser struct {
 	ID              int64
 	Password        string
+	LastLogin       pgtype.Timestamptz
+	IsSuperuser     bool
 	Email           string
 	FullName        string
 	CountryCode     string
 	Role            string
-	IsActive        bool
-	EmailVerified   bool
-	IsSuperuser     bool
+	Phone           pgtype.Text
 	WhatsappOptIn   bool
+	IsActive        bool
 	IsStaff         bool
 	DateJoined      pgtype.Timestamptz
+	EmailVerified   bool
 	EmailVerifiedAt pgtype.Timestamptz
 }
 
@@ -62,6 +67,21 @@ type AssessmentsAssessment struct {
 	Instructions  string
 	IsPublished   bool
 	Title         string
+}
+
+type AssessmentsAssessmentwindow struct {
+	ID               int64
+	Title            string
+	OpenTime         pgtype.Timestamptz
+	CloseTime        pgtype.Timestamptz
+	ClassReferenceID int64
+}
+
+type AssessmentsAssignmenttargetgroup struct {
+	ID            int64
+	Title         string
+	CreatedByID   pgtype.Int8
+	InstitutionID int64
 }
 
 type AssessmentsQuestion struct {
@@ -98,8 +118,13 @@ type AttendanceDailyregister struct {
 }
 
 type AttendanceLessonattendance struct {
-	ID       int64
-	LessonID int64
+	ID               int64
+	Status           string
+	FlaggedForReview bool
+	Timestamp        pgtype.Timestamptz
+	LessonID         int64
+	MarkedByID       pgtype.Int8
+	StudentID        int64
 }
 
 type ClassesClass struct {
@@ -140,6 +165,14 @@ type CurriculumCurriculumtrack struct {
 	ID        int64
 	Name      string
 	CountryID int64
+}
+
+type CurriculumCurriculumversion struct {
+	ID           int64
+	VersionLabel string
+	IsActive     bool
+	ReleaseDate  pgtype.Date
+	TrackID      int64
 }
 
 type CurriculumEducationlevel struct {
@@ -304,6 +337,12 @@ type GradingReportcard struct {
 	TermID              int64
 }
 
+type GradingReporttemplate struct {
+	ID            int64
+	Name          string
+	StructureBlob []byte
+}
+
 type GradingSubjectgrade struct {
 	ID              int64
 	FormativeScore  pgtype.Numeric
@@ -349,19 +388,21 @@ type InsightIntervention struct {
 }
 
 type InstitutionsInstitution struct {
-	ID               int64
-	Name             string
-	Slug             pgtype.Text
-	PrimaryColor     string
-	SecondaryColor   string
-	CountryCode      string
-	CurriculumTrack  string
-	SubscriptionPlan string
-	IsActive         bool
-	CreatedAt        pgtype.Timestamptz
-	GradeOfferings   []byte
-	SchoolLevel      string
-	InGracePeriod    bool
+	ID                 int64
+	Name               string
+	Slug               pgtype.Text
+	Logo               pgtype.Text
+	PrimaryColor       string
+	SecondaryColor     string
+	CountryCode        string
+	CurriculumTrack    string
+	SubscriptionPlan   string
+	IsActive           bool
+	CreatedAt          pgtype.Timestamptz
+	GradeOfferings     []byte
+	SchoolLevel        string
+	InGracePeriod      bool
+	TierExpirationDate pgtype.Timestamptz
 }
 
 type InstitutionsInstitutionmembership struct {
@@ -375,14 +416,60 @@ type InstitutionsInstitutionmembership struct {
 
 type InstitutionsInstitutionsubject struct {
 	ID            int64
+	IsOffered     bool
+	CustomName    pgtype.Text
 	InstitutionID int64
 	SubjectID     int64
-	CustomName    pgtype.Text
+}
+
+type IntelligenceStudyplan struct {
+	ID                    int64
+	WeekStart             pgtype.Date
+	WeekEnd               pgtype.Date
+	GeneratedAt           pgtype.Timestamptz
+	TotalEstimatedMinutes int32
+	CompletedMinutes      int32
+	InputsSnapshot        []byte
+	StudentID             int64
 }
 
 type IntelligenceStudytask struct {
-	ID               int64
-	LinkedResourceID pgtype.Int8
+	ID                 int64
+	Title              string
+	TaskType           string
+	Status             string
+	Urgency            string
+	ScheduledDate      pgtype.Date
+	EstimatedMinutes   int32
+	ActualMinutes      pgtype.Int4
+	Reason             string
+	CompletedAt        pgtype.Timestamptz
+	LinkedAssessmentID pgtype.Int8
+	LinkedResourceID   pgtype.Int8
+	PlanID             int64
+	SubjectID          pgtype.Int8
+	TopicID            pgtype.Int8
+}
+
+type InterventionsInterventionplan struct {
+	ID                int64
+	TargetOutcome     string
+	Status            string
+	Deadline          pgtype.Timestamptz
+	CreatedAt         pgtype.Timestamptz
+	AlertID           int64
+	AssignedTeacherID pgtype.Int8
+}
+
+type InterventionsStudentriskalert struct {
+	ID            int64
+	Severity      string
+	FlaggedReason string
+	Status        string
+	CreatedAt     pgtype.Timestamptz
+	ResolvedAt    pgtype.Timestamptz
+	InstitutionID int64
+	StudentID     int64
 }
 
 type LessonsLesson struct {
@@ -406,8 +493,11 @@ type LessonsLessonattendance struct {
 }
 
 type LessonsLessoninstance struct {
-	ID           int64
-	LessonPlanID pgtype.Int8
+	ID              int64
+	Date            pgtype.Date
+	IsCancelled     bool
+	LessonPlanID    pgtype.Int8
+	TimetableSlotID int64
 }
 
 type LessonsLessonnote struct {
@@ -419,8 +509,13 @@ type LessonsLessonnote struct {
 }
 
 type LessonsLessonqualificationrecord struct {
-	ID       pgtype.UUID
-	LessonID int64
+	ID               pgtype.UUID
+	Status           string
+	RejectionReason  pgtype.Text
+	CalculatedPayout pgtype.Numeric
+	ReviewedAt       pgtype.Timestamptz
+	LessonID         int64
+	PayoutBatchID    pgtype.UUID
 }
 
 type LessonsLessonrecording struct {
@@ -481,6 +576,29 @@ type LiveSessionsSessionreminder struct {
 	SendAt    pgtype.Timestamptz
 	Status    string
 	SessionID int64
+}
+
+type MarketplacePayoutrequest struct {
+	ID          int64
+	NetPayable  pgtype.Numeric
+	Status      string
+	RequestedAt pgtype.Timestamptz
+	ProcessedAt pgtype.Timestamptz
+	TeacherID   pgtype.Int8
+}
+
+type MarketplaceTeacherpayoutbatch struct {
+	ID              pgtype.UUID
+	CycleStartDate  pgtype.Timestamptz
+	CycleEndDate    pgtype.Timestamptz
+	GrossEarnings   pgtype.Numeric
+	DeductionAmount pgtype.Numeric
+	NetPayout       pgtype.Numeric
+	Status          string
+	CreatedAt       pgtype.Timestamptz
+	DisbursedAt     pgtype.Timestamptz
+	PayoutRequestID pgtype.Int8
+	TeacherID       int64
 }
 
 type MsgMessage struct {
@@ -628,14 +746,25 @@ type ResourcesResource struct {
 }
 
 type ResourcesResourceengagementrecord struct {
-	ID         int64
-	ResourceID int64
+	ID                   int64
+	AssignedBy           string
+	TotalActiveTimeMins  int32
+	CompletionPercentage pgtype.Numeric
+	LastPosition         int32
+	IsCompleted          bool
+	FirstOpened          pgtype.Timestamptz
+	LastAccessed         pgtype.Timestamptz
+	ResourceID           int64
+	StudentID            int64
 }
 
 type ResourcesResourcelessonlink struct {
 	ID         int64
-	ResourceID int64
+	Purpose    string
+	AddedAt    pgtype.Timestamptz
+	AddedByID  int64
 	LessonID   int64
+	ResourceID int64
 }
 
 type ResourcesSharedresourcelink struct {
@@ -648,11 +777,11 @@ type ResourcesSharedresourcelink struct {
 
 type SchedulingAcademicterm struct {
 	ID            int64
+	Name          string
 	StartDate     pgtype.Date
 	EndDate       pgtype.Date
 	IsActive      bool
 	InstitutionID int64
-	Name          string
 }
 
 type SchedulingRoom struct {
