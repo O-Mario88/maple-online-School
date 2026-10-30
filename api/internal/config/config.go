@@ -23,6 +23,15 @@ type Config struct {
 	TrustProxyHeaders bool
 	AppURL            string // where emailed links open (the app)
 	SMTP              SMTP
+	Finance           Finance
+}
+
+// Finance configures fee payments. WebhookSecret verifies provider
+// confirmations. Sandbox turns on a fake provider for development; it is
+// refused when APP_ENV is production.
+type Finance struct {
+	WebhookSecret []byte
+	Sandbox       bool
 }
 
 // SMTP is the mail server for sign-up and password emails. With no host,
@@ -45,6 +54,7 @@ func Load() (Config, error) {
 		CORSOrigins:       envList("CORS_ORIGINS"),
 		TrustProxyHeaders: envBool("TRUST_PROXY_HEADERS"),
 		AppURL:            env("APP_URL", "http://localhost:8081"),
+		Finance:           Finance{WebhookSecret: []byte(os.Getenv("FINANCE_WEBHOOK_SECRET")), Sandbox: envBool("FINANCE_SANDBOX")},
 		SMTP: SMTP{
 			Host: os.Getenv("SMTP_HOST"), Port: env("SMTP_PORT", "587"), Username: os.Getenv("SMTP_USERNAME"),
 			Password: os.Getenv("SMTP_PASSWORD"), From: env("MAIL_FROM", "no-reply@maple.school"),
@@ -64,6 +74,12 @@ func Load() (Config, error) {
 	}
 	if len(cfg.JWTSigningKey) < minKeyLength {
 		problems = append(problems, fmt.Errorf("JWT_SIGNING_KEY must be at least %d characters (use the Django SECRET_KEY while both backends run)", minKeyLength))
+	}
+	if cfg.Finance.Sandbox && os.Getenv("APP_ENV") == "production" {
+		problems = append(problems, errors.New("FINANCE_SANDBOX can't be on in production: it confirms payments without moving money"))
+	}
+	if len(cfg.Finance.WebhookSecret) > 0 && len(cfg.Finance.WebhookSecret) < minKeyLength {
+		problems = append(problems, fmt.Errorf("FINANCE_WEBHOOK_SECRET must be at least %d characters", minKeyLength))
 	}
 	if err := errors.Join(problems...); err != nil {
 		return Config{}, err

@@ -141,12 +141,30 @@ func (w *World) exec(query string, args ...any) {
 // Call sends a request as user (0 = anonymous) and decodes the JSON reply.
 func (w *World) Call(user int64, method, path string, body any) (int, map[string]any) {
 	w.T.Helper()
+	return w.CallWithHeaders(user, method, path, body, nil)
+}
+
+// CallWithHeaders is Call with extra request headers, such as Idempotency-Key.
+func (w *World) CallWithHeaders(user int64, method, path string, body any, headers map[string]string) (int, map[string]any) {
+	w.T.Helper()
 	var buf bytes.Buffer
 	if body != nil {
 		_ = json.NewEncoder(&buf).Encode(body)
 	}
 	req := httptest.NewRequest(method, path, &buf)
 	req.Header.Set("Content-Type", "application/json")
+	for k, v := range headers {
+		req.Header.Set(k, v)
+	}
+	code, raw := w.Raw(user, req)
+	var out map[string]any
+	_ = json.Unmarshal([]byte(raw), &out)
+	return code, out
+}
+
+// Raw sends req as user (0 for anonymous) and returns the status and body.
+func (w *World) Raw(user int64, req *http.Request) (int, string) {
+	w.T.Helper()
 	if user != 0 {
 		pair, err := w.Tokens.IssuePair(user)
 		if err != nil {
@@ -156,9 +174,7 @@ func (w *World) Call(user int64, method, path string, body any) (int, map[string
 	}
 	rec := httptest.NewRecorder()
 	w.Router.ServeHTTP(rec, req)
-	var out map[string]any
-	_ = json.Unmarshal(rec.Body.Bytes(), &out)
-	return rec.Code, out
+	return rec.Code, rec.Body.String()
 }
 
 // IDs returns the "id" of each row in a paginated response.

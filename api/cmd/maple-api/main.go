@@ -15,6 +15,7 @@ import (
 
 	"github.com/O-Mario88/maple-online-School/api/internal/config"
 	"github.com/O-Mario88/maple-online-School/api/internal/curriculum"
+	"github.com/O-Mario88/maple-online-School/api/internal/finance"
 	"github.com/O-Mario88/maple-online-School/api/internal/identity"
 	"github.com/O-Mario88/maple-online-School/api/internal/institutions"
 	"github.com/O-Mario88/maple-online-School/api/internal/learning"
@@ -67,6 +68,7 @@ func run() error {
 	catalog := curriculum.NewHandler(curriculum.NewPostgresStore(pool), auth.RequireUser)
 	plans := lessons.NewHandler(lessons.NewPostgresStore(pool), auth.RequireUser)
 	live := livesessions.NewHandler(livesessions.NewPostgresStore(pool), auth.RequireUser)
+	fees := finance.NewHandler(finance.NewPostgresStore(pool), auth.RequireUser, payments(cfg.Finance))
 	shelf := library.NewHandler(library.NewPostgresStore(pool), auth.RequireUser)
 	join := signup.NewHandler(signup.NewPostgresStore(pool), signup.Signer{Key: cfg.JWTSigningKey}, mailer(cfg.SMTP), cfg.AppURL)
 
@@ -75,7 +77,7 @@ func run() error {
 		LegacyAPI:         cfg.LegacyAPIURL,
 		CORSOrigins:       cfg.CORSOrigins,
 		TrustProxyHeaders: cfg.TrustProxyHeaders,
-		Modules:           []func(chi.Router){auth.Mount, work.Mount, classes.Mount, cards.Mount, week.Mount, schools.Mount, catalog.Mount, plans.Mount, live.Mount, join.Mount, shelf.Mount},
+		Modules:           []func(chi.Router){auth.Mount, work.Mount, classes.Mount, cards.Mount, week.Mount, schools.Mount, catalog.Mount, plans.Mount, live.Mount, join.Mount, shelf.Mount, fees.Mount},
 	})
 	if err != nil {
 		return err
@@ -116,4 +118,18 @@ func mailer(c config.SMTP) signup.Mailer {
 		return signup.LogMailer{}
 	}
 	return signup.SMTPMailer{Host: c.Host, Port: c.Port, Username: c.Username, Password: c.Password, From: c.From}
+}
+
+// payments sets up fee collection. Real mobile money and card providers are
+// added here when their contracts are signed; until then only the sandbox
+// (development) can collect, and the methods are otherwise refused.
+func payments(c config.Finance) finance.Payments {
+	p := finance.Payments{WebhookSecret: c.WebhookSecret, Providers: map[string]finance.Provider{}}
+	if c.Sandbox {
+		slog.Warn("FINANCE_SANDBOX is on: mobile money and card payments are simulated")
+		for _, method := range []string{"mtn_momo", "airtel_money", "card"} {
+			p.Providers[method] = finance.Sandbox{}
+		}
+	}
+	return p
 }

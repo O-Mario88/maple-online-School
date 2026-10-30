@@ -10,3 +10,6 @@ var Teachers = []string{"class_teacher", "subject_teacher", "librarian", "counse
 
 // Staff is everyone who works at a school (leaders, teachers and the registrar).
 var Staff = append(append(append([]string{}, Leaders...), Teachers...), "registrar")
+
+// Finance runs a school's fees: billing, recording payments and the ledger.
+var Finance = []string{"headteacher", "deputy", "registrar"}
