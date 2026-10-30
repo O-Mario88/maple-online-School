@@ -11,10 +11,11 @@ type NavLink = (typeof LINKS)[number];
 // Below this width the bar drops Pricing and About so the links don't run into the buttons.
 const ALL_LINKS_WIDTH = 1280;
 const SHORT_LINKS = 6;
-const LINK_ROUTES: Partial<Record<NavLink, '/welcome' | '/explore' | '/shorts' | '/past-papers/uneb-uce/mathematics/2025'>> = {
+const LINK_ROUTES: Partial<Record<NavLink, '/welcome' | '/explore' | '/shorts' | '/schools' | '/past-papers/uneb-uce/mathematics/2025'>> = {
   Home: '/welcome',
   Courses: '/explore',
   'Past Papers': '/past-papers/uneb-uce/mathematics/2025',
+  'For Schools': '/schools',
   Shorts: '/shorts',
 };
 

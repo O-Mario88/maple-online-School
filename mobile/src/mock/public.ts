@@ -503,3 +503,89 @@ export const pastPaperPages = {
     }),
   ] as readonly PastPaperEntry[],
 };
+
+type Week = { week: number; topic: string; objectives: string; resources: string };
+
+const weeks = (rows: readonly [string, string, string][]): Week[] => rows.map(([topic, objectives, resources], i) => ({ week: i + 1, topic, objectives, resources }));
+
+export const schoolsPage = {
+  heroPhoto: photos.schoolsHero,
+  promises: ['UNEB, KCSE, WAEC, IGCSE and more', 'Supports in-class and after-school learning', 'Trusted by schools across Africa and beyond'],
+  results: [
+    { value: '+32%', label: 'Average exam improvement', icon: 'chart' as const, tint: '#16A34A' },
+    { value: '94%', label: 'Student engagement', icon: 'people' as const, tint: '#2F6BFF' },
+    { value: '40%', label: 'Higher pass rates', icon: 'school' as const, tint: '#1D4ED8' },
+    { value: '92%', label: 'Teacher satisfaction', icon: 'heart' as const, tint: '#EF4444' },
+  ],
+  trusted: [
+    { name: 'UNEB', place: 'Uganda', crest: photos.crests.uneb },
+    { name: 'KCSE', place: 'Kenya', crest: photos.crests.kcse },
+    { name: 'WAEC', place: 'West Africa', crest: photos.crests.waec },
+    { name: 'IGCSE', place: 'Cambridge', crest: photos.crests.igcse },
+    { name: 'IB', place: 'International', crest: photos.crests.ib },
+    { name: 'Common Core', place: 'USA', crest: photos.crests.commonCore },
+    { name: 'AISU', place: 'International School', crest: photos.crests.aisu },
+    { name: 'Greenhill', place: 'Academy', crest: photos.crests.greenhill },
+  ],
+  features: [
+    { title: 'Live Classes', detail: 'Expert teachers for every subject', icon: 'live' as const, tint: '#8B5CF6' },
+    { title: 'Past Papers', detail: 'Interactive practice with solutions', icon: 'book' as const, tint: '#EF4444' },
+    { title: 'Curriculum Support', detail: 'Ready-to-use schemes and lesson plans', icon: 'map' as const, tint: '#2F6BFF' },
+    { title: 'Progress Tracking', detail: 'Real-time analytics for students and classes', icon: 'chart' as const, tint: '#16A34A' },
+    { title: 'Teacher Development', detail: 'Training and resources for your staff', icon: 'person' as const, tint: '#F59E0B' },
+    { title: 'Flexible Integration', detail: 'Works alongside your school systems', icon: 'grid' as const, tint: '#8B5CF6' },
+  ],
+  roi: {
+    curricula: ['UNEB (Uganda)', 'KCSE (Kenya)', 'WAEC (West Africa)', 'IGCSE (Cambridge)', 'IB (International)'],
+    subjects: ['Mathematics', 'English', 'Sciences', 'Social Studies', 'ICT', 'Languages'],
+    defaultSubjects: ['Mathematics', 'English', 'Sciences'],
+  },
+  setupSteps: [
+    { title: 'Create school account', detail: 'Basic school details' },
+    { title: 'Choose curriculum', detail: 'Select subjects and classes' },
+    { title: 'Add students (or import)', detail: 'Quick upload or manual entry' },
+    { title: 'Start learning', detail: 'Access classes, past papers and more' },
+  ],
+  templates: {
+    boards: ['UNEB', 'KCSE', 'WAEC', 'IGCSE', 'IB'],
+    levels: {
+      UNEB: ['Primary (P1–P7)', 'Lower Secondary (S1–S3)', 'Upper Secondary (S4–S6)', 'A Level / High School', 'International (IGCSE/IB)'],
+      KCSE: ['Lower Primary (Grade 1–3)', 'Upper Primary (Grade 4–6)', 'Junior School (Grade 7–9)', 'Form 3–4 (KCSE)'],
+      WAEC: ['Junior Secondary (JSS1–3)', 'Senior Secondary (SS1–3)'],
+      IGCSE: ['Lower Secondary (Year 7–9)', 'IGCSE (Year 10–11)', 'A Level (Year 12–13)'],
+      IB: ['Primary Years (PYP)', 'Middle Years (MYP)', 'Diploma (DP)'],
+    } as Record<string, readonly string[]>,
+    samples: {
+      UNEB: { title: 'Primary 7 – Mathematics', term: 'Term 1 Scheme of Work (Sample)', rows: weeks([
+        ['Number Systems', 'Understand place value, ordering and rounding', 'Lesson Plan | Slides | Worksheet'],
+        ['Fractions', 'Add, subtract, multiply and divide fractions', 'Lesson Plan | Practice | Assessment'],
+        ['Decimals', 'Convert between fractions and decimals', 'Lesson Plan | Examples | Worksheet'],
+        ['Percentages', 'Solve real-life problems using percentages', 'Lesson Plan | Practice | Quiz'],
+      ]) },
+      KCSE: { title: 'Form 3 – Mathematics', term: 'Term 1 Scheme of Work (Sample)', rows: weeks([
+        ['Quadratic Expressions', 'Expand and factorise quadratic expressions', 'Lesson Plan | Slides | Worksheet'],
+        ['Approximations and Errors', 'Estimate and find absolute and relative error', 'Lesson Plan | Practice | Quiz'],
+        ['Trigonometry (2)', 'Use the sine and cosine rules', 'Lesson Plan | Examples | Assessment'],
+        ['Surds', 'Simplify and rationalise surds', 'Lesson Plan | Practice | Worksheet'],
+      ]) },
+      WAEC: { title: 'SS2 – Mathematics', term: 'First Term Scheme of Work (Sample)', rows: weeks([
+        ['Logarithms', 'Use laws of logarithms to simplify expressions', 'Lesson Plan | Slides | Worksheet'],
+        ['Approximation', 'Round to significant figures and decimal places', 'Lesson Plan | Practice | Quiz'],
+        ['Sequences and Series', 'Find terms and sums of arithmetic progressions', 'Lesson Plan | Examples | Worksheet'],
+        ['Quadratic Equations', 'Solve by factorisation and formula', 'Lesson Plan | Practice | Assessment'],
+      ]) },
+      IGCSE: { title: 'Year 10 – Mathematics (Extended)', term: 'Autumn Term Scheme of Work (Sample)', rows: weeks([
+        ['Number', 'Standard form, bounds and percentages', 'Lesson Plan | Slides | Worksheet'],
+        ['Algebra', 'Indices, expanding and factorising', 'Lesson Plan | Practice | Quiz'],
+        ['Graphs', 'Linear and quadratic graphs', 'Lesson Plan | Examples | Worksheet'],
+        ['Geometry', 'Angle properties and similarity', 'Lesson Plan | Practice | Assessment'],
+      ]) },
+      IB: { title: 'MYP Year 4 – Mathematics', term: 'Unit 1 Planner (Sample)', rows: weeks([
+        ['Patterns and Sequences', 'Investigate and generalise number patterns', 'Unit Planner | Slides | Task'],
+        ['Linear Relationships', 'Model real situations with linear functions', 'Unit Planner | Practice | Quiz'],
+        ['Measurement', 'Solve problems with area and volume', 'Unit Planner | Examples | Task'],
+        ['Statistics', 'Collect, display and interpret data', 'Unit Planner | Practice | Assessment'],
+      ]) },
+    } as Record<string, { title: string; term: string; rows: Week[] }>,
+  },
+};

@@ -166,6 +166,7 @@ export function activeKey(items: readonly NavItem[], pathname: string): string |
 export const PUBLIC_PREVIEWS = [
   { href: '/welcome', label: 'Home page', icon: 'sparkle' },
   { href: '/explore', label: 'Catalogue', icon: 'search' },
+  { href: '/schools', label: 'For schools', icon: 'school' },
   { href: '/shorts', label: 'Maple Shorts', icon: 'play' },
   { href: '/@sarah-kimani', route: '[handle]', label: 'Teacher storefront', icon: 'person' },
   { href: '/live/p7-maths-revision-bootcamp', route: 'live/[slug]', label: 'Live bootcamp', icon: 'live' },
