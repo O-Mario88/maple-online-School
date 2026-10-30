@@ -1263,7 +1263,7 @@ export interface paths {
             };
         };
         put?: never;
-        /** Register a school; the caller becomes its headteacher */
+        /** Register a school; the caller (a school-admin or Maple admin account) becomes its headteacher */
         post: {
             parameters: {
                 query?: never;
@@ -1271,16 +1271,38 @@ export interface paths {
                 path?: never;
                 cookie?: never;
             };
-            requestBody?: never;
+            requestBody: {
+                content: {
+                    "application/json": {
+                        name: string;
+                        /** @enum {string} */
+                        country_code: "UG" | "KE" | "RW";
+                        /**
+                         * @default secondary
+                         * @enum {string}
+                         */
+                        school_level?: "primary" | "secondary";
+                    };
+                };
+            };
             responses: {
                 /** @description The school */
                 201: {
                     headers: {
                         [name: string]: unknown;
                     };
-                    content?: never;
+                    content: {
+                        "application/json": {
+                            /** Format: int64 */
+                            id: number;
+                            name: string;
+                            country_code: string;
+                            school_level: string;
+                        };
+                    };
                 };
                 400: components["responses"]["BadRequest"];
+                403: components["responses"]["Forbidden"];
             };
         };
         delete?: never;
@@ -1342,7 +1364,7 @@ export interface paths {
         put?: never;
         /**
          * Invite staff or students by email (school leaders)
-         * @description Body {emails: string[], role}. New people get an account with no usable password and a pending membership.
+         * @description New people get an account with no usable password and a pending membership; they set a password with "Forgot password".
          */
         post: {
             parameters: {
@@ -1353,14 +1375,28 @@ export interface paths {
                 };
                 cookie?: never;
             };
-            requestBody?: never;
+            requestBody: {
+                content: {
+                    "application/json": {
+                        emails: string[];
+                        /** @description headteacher, deputy, registrar, dos, class_teacher, subject_teacher, librarian, counselor, exam_officer, ict_admin or student */
+                        role: string;
+                    };
+                };
+            };
             responses: {
                 /** @description {invited, role, detail} */
                 200: {
                     headers: {
                         [name: string]: unknown;
                     };
-                    content?: never;
+                    content: {
+                        "application/json": {
+                            invited: number;
+                            role: string;
+                            detail: string;
+                        };
+                    };
                 };
                 403: components["responses"]["Forbidden"];
             };

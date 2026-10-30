@@ -481,8 +481,33 @@ paths:
       summary: Schools the user belongs to
       responses: { "200": { description: "{count, results: Institution[]}" } }
     post:
-      summary: Register a school; the caller becomes its headteacher
-      responses: { "201": { description: The school }, "400": { $ref: "#/components/responses/BadRequest" } }
+      summary: Register a school; the caller (a school-admin or Maple admin account) becomes its headteacher
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, country_code]
+              properties:
+                name: { type: string, maxLength: 255 }
+                country_code: { type: string, enum: [UG, KE, RW] }
+                school_level: { type: string, enum: [primary, secondary], default: secondary }
+      responses:
+        "201":
+          description: The school
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [id, name, country_code, school_level]
+                properties:
+                  id: { type: integer, format: int64 }
+                  name: { type: string }
+                  country_code: { type: string }
+                  school_level: { type: string }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "403": { $ref: "#/components/responses/Forbidden" }
   /api/v1/institutions/{id}/:
     parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
     patch:
@@ -492,8 +517,30 @@ paths:
     parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
     post:
       summary: Invite staff or students by email (school leaders)
-      description: "Body {emails: string[], role}. New people get an account with no usable password and a pending membership."
-      responses: { "200": { description: "{invited, role, detail}" }, "403": { $ref: "#/components/responses/Forbidden" } }
+      description: New people get an account with no usable password and a pending membership; they set a password with "Forgot password".
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [emails, role]
+              properties:
+                emails: { type: array, items: { type: string, format: email } }
+                role: { type: string, description: "headteacher, deputy, registrar, dos, class_teacher, subject_teacher, librarian, counselor, exam_officer, ict_admin or student" }
+      responses:
+        "200":
+          description: "{invited, role, detail}"
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [invited, role, detail]
+                properties:
+                  invited: { type: integer }
+                  role: { type: string }
+                  detail: { type: string }
+        "403": { $ref: "#/components/responses/Forbidden" }
   /api/v1/institution-memberships/:
     get:
       summary: Memberships the user can see (their own, plus their schools' for leaders)

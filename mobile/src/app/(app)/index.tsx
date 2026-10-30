@@ -69,6 +69,14 @@ export default function HomeScreen() {
             accessibilityHint="Opens the lesson plan"
           />
         </Card>
+        <Card title="School">
+          <Row
+            title="Your school"
+            detail="Set up your school and invite staff"
+            onPress={() => router.push('/school')}
+            accessibilityHint="Opens school set-up and invitations"
+          />
+        </Card>
         <Card title="Fees">
           <Row
             title="School fees"
