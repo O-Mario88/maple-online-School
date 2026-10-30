@@ -165,6 +165,92 @@ type CurriculumTopiccompetency struct {
 	TopicID             int64
 }
 
+type FinAccount struct {
+	ID       int64
+	SchoolID int64
+	Code     string
+	Name     string
+	Kind     string
+}
+
+type FinEntry struct {
+	ID          int64
+	JournalID   int64
+	AccountID   int64
+	StudentID   pgtype.Int8
+	Currency    string
+	DebitMinor  int64
+	CreditMinor int64
+}
+
+type FinFeeItem struct {
+	ID           int64
+	SchoolID     int64
+	Name         string
+	AmountMinor  int64
+	Currency     string
+	TermID       pgtype.Int8
+	ClassLevelID pgtype.Int8
+	Active       bool
+	CreatedAt    pgtype.Timestamptz
+}
+
+type FinInvoice struct {
+	ID         int64
+	SchoolID   int64
+	StudentID  int64
+	TermID     pgtype.Int8
+	ClassID    pgtype.Int8
+	Number     string
+	Currency   string
+	TotalMinor int64
+	Status     string
+	DueDate    pgtype.Date
+	JournalID  int64
+	IssuedBy   pgtype.Int8
+	CreatedAt  pgtype.Timestamptz
+	VoidedAt   pgtype.Timestamptz
+}
+
+type FinInvoiceLine struct {
+	ID          int64
+	InvoiceID   int64
+	FeeItemID   pgtype.Int8
+	Description string
+	AmountMinor int64
+}
+
+type FinJournal struct {
+	ID        int64
+	SchoolID  int64
+	Kind      string
+	Reference string
+	Memo      string
+	CreatedBy pgtype.Int8
+	CreatedAt pgtype.Timestamptz
+}
+
+type FinPayment struct {
+	ID                int64
+	SchoolID          int64
+	StudentID         int64
+	InvoiceID         pgtype.Int8
+	AmountMinor       int64
+	Currency          string
+	Method            string
+	Status            string
+	PayerPhone        string
+	Provider          string
+	ProviderReference pgtype.Text
+	IdempotencyKey    pgtype.Text
+	FailureReason     string
+	JournalID         pgtype.Int8
+	ReceiptNumber     pgtype.Text
+	InitiatedBy       pgtype.Int8
+	CreatedAt         pgtype.Timestamptz
+	CompletedAt       pgtype.Timestamptz
+}
+
 type GradingGraderecord struct {
 	ID              int64
 	Score           pgtype.Numeric
