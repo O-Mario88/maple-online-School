@@ -1,110 +1,14 @@
-from rest_framework import generics
 from rest_framework.permissions import AllowAny
-from rest_framework.throttling import ScopedRateThrottle
-from django.contrib.auth import get_user_model
-from .activation import consume_activation, send_activation_email
-from .serializers import UserRegistrationSerializer
-
-User = get_user_model()
-
-class UserRegistrationView(generics.CreateAPIView):
-    queryset = User.objects.all()
-    permission_classes = [AllowAny]
-    throttle_classes = [ScopedRateThrottle]
-    throttle_scope = 'registration'
-    serializer_class = UserRegistrationSerializer
-
-    def perform_create(self, serializer):
-        user = serializer.save()
-        # Fire an activation email even when REQUIRE_EMAIL_VERIFICATION is off
-        # in dev -- the console backend surfaces the link in server logs, which
-        # is the fastest way to exercise the flow end-to-end locally. In prod
-        # this goes to the real SMTP backend configured via env.
-        try:
-            send_activation_email(user)
-        except Exception:
-            # Don't block registration on mail-layer failure; admin can
-            # re-trigger via management command or the user can use forgot-password.
-            import logging
-            logging.getLogger('edify.accounts').exception(
-                'activation_email_send_failed email=%s', user.email,
-            )
-
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from django.db import transaction
-from .models import ParentProfile, StudentProfile
-from parent_portal.models import ParentStudentLink
+from django.contrib.auth import get_user_model
+from .models import StudentProfile
 
-class StudentOnboardingAPIView(APIView):
-    permission_classes = [AllowAny]
-    throttle_classes = [ScopedRateThrottle]
-    throttle_scope = 'registration'
+# Sign-up, activation, student onboarding and password reset are served by
+# the Go API (api/internal/signup).
 
-    @transaction.atomic
-    def post(self, request, *args, **kwargs):
-        student_data = request.data.get('student', {})
-        parent_data = request.data.get('parent', {})
-        payment_data = request.data.get('payment', {})
-
-        if not student_data or not parent_data or not payment_data:
-            return Response({'error': 'Missing student, parent, or payment details.'}, status=status.HTTP_400_BAD_REQUEST)
-
-        parent_phone = parent_data.get('phone')
-        if not parent_phone:
-            return Response({'error': 'Parent phone number is required.'}, status=status.HTTP_400_BAD_REQUEST)
-
-        # 1. Lookup or Create Parent
-        parent_email = parent_data.get('email')
-        if not parent_email:
-            parent_email = f"parent_{parent_phone.replace(' ', '').replace('+', '')}@edify.portal"
-
-        parent_user = User.objects.filter(phone=parent_phone, role='parent').first()
-        if not parent_user:
-            parent_user = User.objects.filter(email=parent_email).first()
-
-        if not parent_user:
-            parent_user = User.objects.create_user(
-                email=parent_email,
-                full_name=parent_data.get('full_name', 'Guardian'),
-                country_code=student_data.get('country_code', 'uganda'),
-                role='parent',
-                phone=parent_phone
-            )
-            # Parent user does not have a set password initially
-            parent_user.set_unusable_password()
-            parent_user.save()
-            ParentProfile.objects.create(user=parent_user)
-
-        parent_profile = parent_user.parent_profile
-
-        # 2. Create Student
-        # Handle case where student email might exist if re-running
-        student_email = student_data.get('email')
-        if User.objects.filter(email=student_email).exists():
-            return Response({'error': 'Student email already exists.'}, status=status.HTTP_400_BAD_REQUEST)
-
-        student_user = User.objects.create_user(
-            email=student_email,
-            full_name=student_data.get('full_name'),
-            country_code=student_data.get('country_code'),
-            password=student_data.get('password'),
-            role='student'
-        )
-        student_profile = StudentProfile.objects.create(user=student_user)
-
-        # 3. Create Parent-Student Link
-        ParentStudentLink.objects.create(
-            parent_profile=parent_profile,
-            student_profile=student_profile,
-            relationship_type=parent_data.get('relationship', 'other').lower(),
-            consent_status='approved' # Implicitly approved since onboarding together
-        )
-
-        return Response({
-            'message': 'Student and Parent created successfully. Account is active.'
-        }, status=status.HTTP_201_CREATED)
+User = get_user_model()
 
 
 from .serializers import PublicProfileSerializer
@@ -171,27 +75,6 @@ class PublicProfileView(APIView):
         serializer.is_valid(raise_exception=True)
         return Response(serializer.validated_data, status=status.HTTP_200_OK)
 
-from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from django.utils.encoding import force_bytes
-from django.utils.http import urlsafe_base64_encode
-
-class AccountActivationView(APIView):
-    """POST /api/v1/auth/activate/ with {uid, token} -> flips email_verified."""
-    permission_classes = [AllowAny]
-    throttle_classes = [ScopedRateThrottle]
-    throttle_scope = 'registration'
-
-    def post(self, request, *args, **kwargs):
-        uid = request.data.get('uid')
-        token = request.data.get('token')
-        if not uid or not token:
-            return Response({'error': 'uid and token are required.'}, status=status.HTTP_400_BAD_REQUEST)
-        user = consume_activation(uid, token)
-        if not user:
-            return Response({'error': 'Invalid or expired activation link.'}, status=status.HTTP_400_BAD_REQUEST)
-        return Response({'message': 'Email verified. You can now sign in.', 'email': user.email}, status=status.HTTP_200_OK)
-
-
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.conf import settings as dj_settings
@@ -213,28 +96,6 @@ class VerifiedEmailTokenObtainPairSerializer(TokenObtainPairSerializer):
 class VerifiedEmailTokenObtainPairView(TokenObtainPairView):
     """Drop-in replacement for the default JWT login view."""
     serializer_class = VerifiedEmailTokenObtainPairSerializer
-
-
-class ForgotPasswordView(APIView):
-    permission_classes = [AllowAny]
-
-    def post(self, request, *args, **kwargs):
-        email = request.data.get('email')
-        if not email:
-            return Response({'error': 'Email is required.'}, status=status.HTTP_400_BAD_REQUEST)
-        
-        user = User.objects.filter(email=email).first()
-        if user:
-            token_generator = PasswordResetTokenGenerator()
-            token = token_generator.make_token(user)
-            uid = urlsafe_base64_encode(force_bytes(user.pk))
-            reset_url = f"http://localhost:5173/reset-password?uid={uid}&token={token}"
-            
-            # Dispatch email asynchronously via Celery
-            from .tasks import send_password_reset_email_task
-            send_password_reset_email_task.delay(email, reset_url)
-
-        return Response({'message': 'If an account with that email exists, we have sent a password reset link.'}, status=status.HTTP_200_OK)
 
 
 from rest_framework.permissions import IsAuthenticated

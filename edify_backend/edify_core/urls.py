@@ -159,7 +159,7 @@ urlpatterns = [
     path('api/health/', HealthView.as_view(), name='health'),
     path('api/v1/', include(router.urls)),
     path('api/v1/ai/copilot/ask/', CopilotInferenceView.as_view(), name='copilot_ask'),
-    path('api/v1/auth/', include('accounts.urls')),
+    # Sign-up, activation and password reset are served by the Go API.
     path('api/v1/auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/v1/auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     

@@ -17,43 +17,6 @@ class PilotFeedbackSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('Message cannot be empty.')
         return stripped
 
-class UserRegistrationSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
-
-    class Meta:
-        model = User
-        fields = ['email', 'full_name', 'country_code', 'password', 'role']
-        extra_kwargs = {
-            'email': {'required': True},
-            'full_name': {'required': True},
-            'country_code': {'required': True},
-            'role': {'required': True},
-        }
-
-    def create(self, validated_data):
-        user = User.objects.create_user(
-            email=validated_data['email'],
-            full_name=validated_data['full_name'],
-            country_code=validated_data['country_code'],
-            password=validated_data['password'],
-            role=validated_data['role']
-        )
-        
-        # Hydrate proper role profiles guaranteeing isolated dashboards
-        if user.role == 'student':
-            StudentProfile.objects.create(user=user)
-        elif user.role == 'teacher':
-            TeacherProfile.objects.create(user=user)
-        elif user.role == 'admin':
-            # Platform administrators are typically designated manually via superuser,
-            # but we allow registration as a generic admin or map them to Institution.
-            pass
-        elif user.role == 'institution':
-            InstitutionAdminProfile.objects.create(user=user)
-            
-        return user
-
-
 class PublicProfileSerializer(serializers.Serializer):
     """Read-only serializer for public profile pages."""
     name = serializers.CharField()

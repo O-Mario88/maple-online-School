@@ -2867,6 +2867,264 @@ export interface paths {
         };
         trace?: never;
     };
+    "/api/v1/auth/register/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create a student, teacher or school-admin account
+         * @description Sends an activation link by email. Administrators are never created here; parents are added through onboard-student.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["SignUpInput"];
+                };
+            };
+            responses: {
+                /** @description The new account (email not yet verified) */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["SignUpResult"];
+                    };
+                };
+                400: components["responses"]["BadRequest"];
+                429: components["responses"]["TooManyRequests"];
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/onboard-student/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create a student together with their parent or guardian
+         * @description A parent account created here is linked at once and emailed a link to set a password. An existing parent account must approve the link.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["OnboardStudentInput"];
+                };
+            };
+            responses: {
+                /** @description Created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AuthMessage"];
+                    };
+                };
+                400: components["responses"]["BadRequest"];
+                429: components["responses"]["TooManyRequests"];
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/activate/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Verify an email address with the emailed link */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["LinkToken"];
+                };
+            };
+            responses: {
+                /** @description Verified */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AuthMessage"];
+                    };
+                };
+                400: components["responses"]["BadRequest"];
+                429: components["responses"]["TooManyRequests"];
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/resend-activation/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Send a new activation link */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["EmailOnly"];
+                };
+            };
+            responses: {
+                /** @description Always the same reply */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AuthMessage"];
+                    };
+                };
+                400: components["responses"]["BadRequest"];
+                429: components["responses"]["TooManyRequests"];
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/forgot-password/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Email a password-reset link */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["EmailOnly"];
+                };
+            };
+            responses: {
+                /** @description Always the same reply, whether or not the account exists */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AuthMessage"];
+                    };
+                };
+                400: components["responses"]["BadRequest"];
+                429: components["responses"]["TooManyRequests"];
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/reset-password/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Choose a new password with the emailed link */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ResetPasswordInput"];
+                };
+            };
+            responses: {
+                /** @description Password changed */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AuthMessage"];
+                    };
+                };
+                400: components["responses"]["BadRequest"];
+                429: components["responses"]["TooManyRequests"];
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -3400,6 +3658,56 @@ export interface components {
             next: string | null;
             previous: string | null;
             results: components["schemas"]["LiveSession"][];
+        };
+        SignUpInput: {
+            /** Format: email */
+            email: string;
+            full_name: string;
+            country_code: string;
+            password: string;
+            /** @enum {string} */
+            role: "student" | "teacher" | "institution";
+        };
+        SignUpResult: {
+            /** Format: int64 */
+            id: number;
+            email: string;
+            full_name: string;
+            role: string;
+            country_code: string;
+            email_verified: boolean;
+        };
+        OnboardStudentInput: {
+            student: {
+                /** Format: email */
+                email: string;
+                full_name: string;
+                country_code: string;
+                password: string;
+            };
+            parent: {
+                /** Format: email */
+                email: string;
+                full_name: string;
+                phone?: string;
+                /** @enum {string} */
+                relationship?: "mother" | "father" | "guardian" | "other";
+            };
+        };
+        LinkToken: {
+            token: string;
+        };
+        EmailOnly: {
+            /** Format: email */
+            email: string;
+        };
+        ResetPasswordInput: {
+            token: string;
+            password: string;
+        };
+        AuthMessage: {
+            message: string;
+            email?: string;
         };
     };
     responses: {

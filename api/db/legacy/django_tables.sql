@@ -63,7 +63,8 @@ CREATE TABLE accounts_user (
     is_superuser      boolean      NOT NULL,
     whatsapp_opt_in   boolean      NOT NULL,
     is_staff          boolean      NOT NULL,
-    date_joined       timestamptz  NOT NULL
+    date_joined       timestamptz  NOT NULL,
+    email_verified_at timestamptz
 );
 
 CREATE TABLE institutions_institution (
@@ -98,14 +99,29 @@ CREATE TABLE accounts_parentprofile (
 );
 
 CREATE TABLE accounts_studentprofile (
+    id                bigint PRIMARY KEY,
+    onboarding_status varchar(50) NOT NULL,
+    user_id           bigint NOT NULL UNIQUE
+);
+
+CREATE TABLE accounts_teacherprofile (
+    id                  bigint PRIMARY KEY,
+    verification_status varchar(50) NOT NULL,
+    bio                 text NOT NULL,
+    years_of_experience integer NOT NULL,
+    user_id             bigint NOT NULL UNIQUE
+);
+
+CREATE TABLE accounts_institutionadminprofile (
     id      bigint PRIMARY KEY,
-    user_id bigint NOT NULL
+    user_id bigint NOT NULL UNIQUE
 );
 
 CREATE TABLE parent_portal_parentstudentlink (
     id                 bigint      PRIMARY KEY,
     relationship_type  varchar(20) NOT NULL,
     consent_status     varchar(50) NOT NULL,
+    linked_at          timestamptz NOT NULL,
     parent_profile_id  bigint      NOT NULL,
     student_profile_id bigint      NOT NULL
 );

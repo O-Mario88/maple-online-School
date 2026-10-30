@@ -25,6 +25,7 @@ import (
 	"github.com/O-Mario88/maple-online-School/api/internal/resources"
 	"github.com/O-Mario88/maple-online-School/api/internal/school"
 	"github.com/O-Mario88/maple-online-School/api/internal/server"
+	"github.com/O-Mario88/maple-online-School/api/internal/signup"
 	"github.com/O-Mario88/maple-online-School/api/internal/timetable"
 )
 
@@ -67,13 +68,14 @@ func run() error {
 	library := resources.NewHandler(resources.NewPostgresStore(pool), auth.RequireUser)
 	plans := lessons.NewHandler(lessons.NewPostgresStore(pool), auth.RequireUser)
 	live := livesessions.NewHandler(livesessions.NewPostgresStore(pool), auth.RequireUser)
+	join := signup.NewHandler(signup.NewPostgresStore(pool), signup.Signer{Key: cfg.JWTSigningKey}, mailer(cfg.SMTP), cfg.AppURL)
 
 	handler, err := server.NewRouter(server.Options{
 		Pinger:            pool,
 		LegacyAPI:         cfg.LegacyAPIURL,
 		CORSOrigins:       cfg.CORSOrigins,
 		TrustProxyHeaders: cfg.TrustProxyHeaders,
-		Modules:           []func(chi.Router){auth.Mount, work.Mount, classes.Mount, cards.Mount, week.Mount, schools.Mount, catalog.Mount, library.Mount, plans.Mount, live.Mount},
+		Modules:           []func(chi.Router){auth.Mount, work.Mount, classes.Mount, cards.Mount, week.Mount, schools.Mount, catalog.Mount, library.Mount, plans.Mount, live.Mount, join.Mount},
 	})
 	if err != nil {
 		return err
@@ -104,4 +106,14 @@ func run() error {
 	shutdownCtx, cancel := context.WithTimeout(context.Background(), shutdownGrace)
 	defer cancel()
 	return srv.Shutdown(shutdownCtx)
+}
+
+// mailer sends sign-up and password emails through SMTP, or logs them when
+// no SMTP host is configured (development).
+func mailer(c config.SMTP) signup.Mailer {
+	if c.Host == "" {
+		slog.Warn("SMTP_HOST not set: sign-up and password emails are written to the log, not sent")
+		return signup.LogMailer{}
+	}
+	return signup.SMTPMailer{Host: c.Host, Port: c.Port, Username: c.Username, Password: c.Password, From: c.From}
 }

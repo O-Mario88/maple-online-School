@@ -28,7 +28,6 @@ def _clear_throttle_cache():
 class StudentSliceTests(TestCase):
     """The minimum user journey that makes the platform worth shipping."""
 
-    REGISTER_URL = '/api/v1/auth/register/'
     TOKEN_URL = '/api/v1/auth/token/'
     CONTENT_LIST_URL = '/api/v1/content/items/'
     TRACK_URL = '/api/v1/content/engagement/track/'
@@ -63,20 +62,14 @@ class StudentSliceTests(TestCase):
         return c
 
     def test_full_student_journey(self):
-        # 1) Register a fresh student
-        resp = self.client.post(
-            self.REGISTER_URL,
-            {
-                'email': self.EMAIL,
-                'full_name': 'Slice Student',
-                'country_code': 'UG',
-                'password': self.PASSWORD,
-                'role': 'student',
-            },
-            format='json',
+        # 1) A fresh student (sign-up itself is served and tested by the Go API)
+        User.objects.create_user(
+            email=self.EMAIL,
+            full_name='Slice Student',
+            country_code='UG',
+            password=self.PASSWORD,
+            role='student',
         )
-        self.assertEqual(resp.status_code, status.HTTP_201_CREATED, resp.content)
-        self.assertTrue(User.objects.filter(email=self.EMAIL, role='student').exists())
 
         # 2) Exchange creds for a JWT access token
         resp = self.client.post(
@@ -138,161 +131,6 @@ class StudentSliceTests(TestCase):
         """The auth gate must hold — anonymous requests get 401, not data."""
         resp = self.client.get(self.CONTENT_LIST_URL)
         self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
-
-    def test_registration_rejects_missing_role(self):
-        """Profile hydration keys off role; missing role must fail loudly."""
-        resp = self.client.post(
-            self.REGISTER_URL,
-            {
-                'email': 'norole@edify.test',
-                'full_name': 'No Role',
-                'country_code': 'UG',
-                'password': self.PASSWORD,
-            },
-            format='json',
-        )
-        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
-
-
-class RegistrationThrottleTests(TestCase):
-    """Verify the anon throttle on the registration scope actually trips at 429.
-
-    Guards the AllowAny endpoints against bot-driven account spam. Uses a very
-    tight rate override so the test is deterministic and fast.
-    """
-
-    REGISTER_URL = '/api/v1/auth/register/'
-
-    def setUp(self):
-        _clear_throttle_cache()
-
-    def _payload(self, n):
-        return {
-            'email': f'throttle.{n}@edify.test',
-            'full_name': f'Throttle {n}',
-            'country_code': 'UG',
-            'password': 'ThrottleTestPass!',
-            'role': 'student',
-        }
-
-    def test_registration_throttle_returns_429_after_limit(self):
-        """Patch the class-level THROTTLE_RATES so we can force a 429 quickly.
-
-        (override_settings doesn't help here: SimpleRateThrottle caches
-        THROTTLE_RATES at class body time, not per-request.)
-        """
-        tight = {'anon': '60/min', 'user': '600/min', 'registration': '2/hour'}
-        with patch.object(SimpleRateThrottle, 'THROTTLE_RATES', tight):
-            client = APIClient()
-
-            r1 = client.post(self.REGISTER_URL, self._payload(1), format='json')
-            self.assertEqual(r1.status_code, status.HTTP_201_CREATED, r1.content)
-
-            r2 = client.post(self.REGISTER_URL, self._payload(2), format='json')
-            self.assertEqual(r2.status_code, status.HTTP_201_CREATED, r2.content)
-
-            r3 = client.post(self.REGISTER_URL, self._payload(3), format='json')
-            self.assertEqual(r3.status_code, status.HTTP_429_TOO_MANY_REQUESTS, r3.content)
-            self.assertFalse(User.objects.filter(email='throttle.3@edify.test').exists())
-
-
-class EmailVerificationTests(TestCase):
-    """Phase 4.2: gate login on email verification + consume activation tokens."""
-
-    REGISTER_URL = '/api/v1/auth/register/'
-    TOKEN_URL = '/api/v1/auth/token/'
-    ACTIVATE_URL = '/api/v1/auth/activate/'
-
-    EMAIL = 'verify.me@edify.test'
-    PASSWORD = 'VerifyPass!'
-
-    def setUp(self):
-        _clear_throttle_cache()
-        self.client = APIClient()
-
-    def _register(self):
-        return self.client.post(
-            self.REGISTER_URL,
-            {
-                'email': self.EMAIL,
-                'full_name': 'Verify Me',
-                'country_code': 'UG',
-                'password': self.PASSWORD,
-                'role': 'student',
-            },
-            format='json',
-        )
-
-    def test_new_user_starts_unverified_and_receives_activation_email(self):
-        from django.core import mail
-        resp = self._register()
-        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
-        user = User.objects.get(email=self.EMAIL)
-        self.assertFalse(user.email_verified)
-        self.assertEqual(len(mail.outbox), 1)
-        self.assertIn('Activate your', mail.outbox[0].subject)
-
-    def test_activation_flips_email_verified(self):
-        self._register()
-        user = User.objects.get(email=self.EMAIL)
-        self.assertFalse(user.email_verified)
-
-        uid = urlsafe_base64_encode(force_bytes(user.pk))
-        token = default_token_generator.make_token(user)
-        resp = self.client.post(self.ACTIVATE_URL, {'uid': uid, 'token': token}, format='json')
-        self.assertEqual(resp.status_code, status.HTTP_200_OK, resp.content)
-
-        user.refresh_from_db()
-        self.assertTrue(user.email_verified)
-        self.assertIsNotNone(user.email_verified_at)
-
-    def test_activation_rejects_invalid_token(self):
-        self._register()
-        user = User.objects.get(email=self.EMAIL)
-        uid = urlsafe_base64_encode(force_bytes(user.pk))
-        resp = self.client.post(
-            self.ACTIVATE_URL, {'uid': uid, 'token': 'not-a-real-token'}, format='json'
-        )
-        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
-        user.refresh_from_db()
-        self.assertFalse(user.email_verified)
-
-    def test_login_works_when_flag_off_even_for_unverified(self):
-        """Default settings: REQUIRE_EMAIL_VERIFICATION=False — login proceeds."""
-        self._register()
-        resp = self.client.post(
-            self.TOKEN_URL, {'email': self.EMAIL, 'password': self.PASSWORD}, format='json'
-        )
-        self.assertEqual(resp.status_code, status.HTTP_200_OK)
-        self.assertIn('access', resp.data)
-
-    @override_settings(REQUIRE_EMAIL_VERIFICATION=True)
-    def test_login_blocked_when_flag_on_and_unverified(self):
-        self._register()
-        resp = self.client.post(
-            self.TOKEN_URL, {'email': self.EMAIL, 'password': self.PASSWORD}, format='json'
-        )
-        self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
-        # DRF AuthenticationFailed wraps the detail in a dict-or-string body
-        payload = resp.data if isinstance(resp.data, dict) else {}
-        self.assertIn('detail', payload)
-        # The code we set should be reachable whether it's nested or flattened.
-        flat = str(payload)
-        self.assertIn('email_not_verified', flat)
-
-    @override_settings(REQUIRE_EMAIL_VERIFICATION=True)
-    def test_activate_then_login_works_with_flag_on(self):
-        self._register()
-        user = User.objects.get(email=self.EMAIL)
-        uid = urlsafe_base64_encode(force_bytes(user.pk))
-        token = default_token_generator.make_token(user)
-        self.client.post(self.ACTIVATE_URL, {'uid': uid, 'token': token}, format='json')
-
-        resp = self.client.post(
-            self.TOKEN_URL, {'email': self.EMAIL, 'password': self.PASSWORD}, format='json'
-        )
-        self.assertEqual(resp.status_code, status.HTTP_200_OK, resp.content)
-        self.assertIn('access', resp.data)
 
 
 class PilotFeedbackTests(TestCase):

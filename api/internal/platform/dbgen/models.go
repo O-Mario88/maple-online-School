@@ -8,29 +8,44 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+type AccountsInstitutionadminprofile struct {
+	ID     int64
+	UserID int64
+}
+
 type AccountsParentprofile struct {
 	ID     int64
 	UserID int64
 }
 
 type AccountsStudentprofile struct {
-	ID     int64
-	UserID int64
+	ID               int64
+	OnboardingStatus string
+	UserID           int64
+}
+
+type AccountsTeacherprofile struct {
+	ID                 int64
+	VerificationStatus string
+	Bio                string
+	YearsOfExperience  int32
+	UserID             int64
 }
 
 type AccountsUser struct {
-	ID            int64
-	Password      string
-	Email         string
-	FullName      string
-	CountryCode   string
-	Role          string
-	IsActive      bool
-	EmailVerified bool
-	IsSuperuser   bool
-	WhatsappOptIn bool
-	IsStaff       bool
-	DateJoined    pgtype.Timestamptz
+	ID              int64
+	Password        string
+	Email           string
+	FullName        string
+	CountryCode     string
+	Role            string
+	IsActive        bool
+	EmailVerified   bool
+	IsSuperuser     bool
+	WhatsappOptIn   bool
+	IsStaff         bool
+	DateJoined      pgtype.Timestamptz
+	EmailVerifiedAt pgtype.Timestamptz
 }
 
 type AssessmentsAssessment struct {
@@ -325,6 +340,7 @@ type ParentPortalParentstudentlink struct {
 	ID               int64
 	RelationshipType string
 	ConsentStatus    string
+	LinkedAt         pgtype.Timestamptz
 	ParentProfileID  int64
 	StudentProfileID int64
 }

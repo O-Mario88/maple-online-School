@@ -44,7 +44,12 @@ function RootNavigator() {
       </Stack.Protected>
       <Stack.Protected guard={!signedIn}>
         <Stack.Screen name="sign-in" />
+        <Stack.Screen name="sign-up" />
+        <Stack.Screen name="forgot-password" />
       </Stack.Protected>
+      {/* Opened from emailed links, whether or not someone is signed in. */}
+      <Stack.Screen name="activate" />
+      <Stack.Screen name="reset-password" />
     </Stack>
   );
 }

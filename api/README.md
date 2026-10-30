@@ -17,6 +17,7 @@ forwarded to Django unchanged. Apps only ever talk to this service.
 | Resources: library and class resource links | Done (files still uploaded through Django) | `/api/v1/resources/` (+ `{id}/`), `/api/v1/resources/shared-resource-link/` (+ `{id}/`) |
 | Lessons: plans, notes, recordings, lesson attendance | Done | `/api/v1/lessons/lesson/` (+ `{id}/`), `lesson-note/`, `lesson-recording/`, `lesson-attendance/` |
 | Live sessions: sessions, reminders, missed-session recovery | Done (recording sync still a Django task) | `/api/v1/live-sessions/live-session/` (+ `{id}/`), `session-reminder/`, `missed-recovery/` |
+| Sign-up: register, activate, forgot/reset password, student onboarding | Done | `/api/v1/auth/register/`, `activate/`, `resend-activation/`, `forgot-password/`, `reset-password/`, `onboard-student/` |
 | Health   | Done         | `/api/health/` |
 | Everything else | Served by Django through the forwarder | all other `/api/v1/...` |
 
@@ -89,3 +90,11 @@ MAPLE_TEST_DATABASE_URL=postgres://localhost/maple_dev go test -race ./...
 
 After changing anything in `db/queries` or `db/migrations`, regenerate the
 query code with `go tool sqlc generate`.
+
+## Email
+
+Sign-up and password emails go through SMTP when `SMTP_HOST` is set
+(`SMTP_PORT` defaults to 587, plus `SMTP_USERNAME`, `SMTP_PASSWORD` and
+`MAIL_FROM`). Without it, emails are written to the log so links can be
+tested locally. Links open the app at `APP_URL` (default
+`http://localhost:8081`).

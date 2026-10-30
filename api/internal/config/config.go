@@ -21,6 +21,14 @@ type Config struct {
 	LegacyAPIURL      string
 	CORSOrigins       []string
 	TrustProxyHeaders bool
+	AppURL            string // where emailed links open (the app)
+	SMTP              SMTP
+}
+
+// SMTP is the mail server for sign-up and password emails. With no host,
+// emails are written to the log (development only).
+type SMTP struct {
+	Host, Port, Username, Password, From string
 }
 
 // minKeyLength guards against short, guessable signing keys.
@@ -36,6 +44,11 @@ func Load() (Config, error) {
 		LegacyAPIURL:      os.Getenv("LEGACY_API_URL"),
 		CORSOrigins:       envList("CORS_ORIGINS"),
 		TrustProxyHeaders: envBool("TRUST_PROXY_HEADERS"),
+		AppURL:            env("APP_URL", "http://localhost:8081"),
+		SMTP: SMTP{
+			Host: os.Getenv("SMTP_HOST"), Port: env("SMTP_PORT", "587"), Username: os.Getenv("SMTP_USERNAME"),
+			Password: os.Getenv("SMTP_PASSWORD"), From: env("MAIL_FROM", "no-reply@maple.school"),
+		},
 	}
 	var err error
 	if cfg.AccessTTL, err = envDuration("ACCESS_TOKEN_TTL", 15*time.Minute); err != nil {

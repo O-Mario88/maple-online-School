@@ -1,3 +1,4 @@
+import { Link } from 'expo-router';
 import { useMemo, useState } from 'react';
 import {
   ActivityIndicator,
@@ -98,6 +99,15 @@ export default function SignInScreen() {
               <Text style={styles.buttonText}>Sign in</Text>
             )}
           </Pressable>
+
+          <View style={styles.links}>
+            <Link href="/forgot-password" style={styles.link} accessibilityRole="link">
+              Forgot password?
+            </Link>
+            <Link href="/sign-up" style={styles.link} accessibilityRole="link">
+              Create an account
+            </Link>
+          </View>
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -144,5 +154,7 @@ function makeStyles(t: Theme) {
     },
     buttonDim: { opacity: 0.6 },
     buttonText: { color: t.onAccent, fontSize: 17, fontWeight: '600' },
+    links: { flexDirection: 'row', justifyContent: 'space-between', marginTop: Spacing.two },
+    link: { color: t.accent, fontSize: 15, fontWeight: '600', paddingVertical: Spacing.two },
   });
 }
