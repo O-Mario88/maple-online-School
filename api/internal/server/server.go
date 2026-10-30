@@ -45,7 +45,7 @@ func NewRouter(opts Options) (http.Handler, error) {
 	r.Use(cors.Handler(cors.Options{
 		AllowedOrigins: opts.CORSOrigins,
 		AllowedMethods: []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodPatch, http.MethodDelete, http.MethodOptions},
-		AllowedHeaders: []string{"Authorization", "Content-Type"},
+		AllowedHeaders: []string{"Authorization", "Content-Type", "Idempotency-Key"},
 		MaxAge:         300,
 	}))
 

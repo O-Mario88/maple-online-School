@@ -5,6 +5,7 @@ import (
 	"errors"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"github.com/go-chi/chi/v5"
@@ -71,6 +72,21 @@ func TestUnknownPathsWithoutDjangoAre404(t *testing.T) {
 	newTestRouter(t, fakePinger{}, "").ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/api/v1/classes/", nil))
 	if rec.Code != http.StatusNotFound {
 		t.Fatalf("want 404, got %d", rec.Code)
+	}
+}
+
+// The app sends Idempotency-Key on payments; a browser preflight must allow it.
+func TestCORSAllowsTheIdempotencyKeyHeader(t *testing.T) {
+	router := newTestRouter(t, fakePinger{}, "")
+	req := httptest.NewRequest(http.MethodOptions, "/api/v1/finance/payments/", nil)
+	req.Header.Set("Origin", "http://localhost:8081")
+	req.Header.Set("Access-Control-Request-Method", http.MethodPost)
+	req.Header.Set("Access-Control-Request-Headers", "authorization,content-type,idempotency-key")
+	rec := httptest.NewRecorder()
+	router.ServeHTTP(rec, req)
+	allowed := strings.ToLower(rec.Header().Get("Access-Control-Allow-Headers"))
+	if !strings.Contains(allowed, "idempotency-key") {
+		t.Errorf("preflight must allow Idempotency-Key, got %q", allowed)
 	}
 }
 

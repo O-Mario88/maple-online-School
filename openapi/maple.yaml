@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Maple API
-  version: 0.11.0
+  version: 0.12.0
   description: |
     The contract between the Maple apps and the Go API. Paths not listed here
     are still served by the Django API through the Go service's forwarder,
@@ -1021,6 +1021,177 @@ paths:
                 properties:
                   count: { type: integer }
                   results: { type: array, items: { $ref: "#/components/schemas/ContinueItem" } }
+  /api/v1/finance/fee-items/:
+    get:
+      summary: A school's fee items (its headteacher, deputy or registrar)
+      parameters: [{ name: school, in: query, required: true, schema: { type: integer, format: int64 } }]
+      responses:
+        "200":
+          description: "{count, results: FeeItem[]}"
+          content:
+            application/json:
+              schema: { type: object, required: [count, results], properties: { count: { type: integer }, results: { type: array, items: { $ref: "#/components/schemas/FeeItem" } } } }
+        "403": { $ref: "#/components/responses/Forbidden" }
+    post:
+      summary: Add a fee item
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/FeeItemInput" }
+      responses:
+        "201":
+          description: The fee item
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/FeeItem" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /api/v1/finance/invoices/generate/:
+    post:
+      summary: Invoice every student in a class (one open invoice per student per term)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [class, fee_items]
+              properties:
+                class: { type: integer, format: int64 }
+                term: { type: integer, format: int64 }
+                fee_items: { type: array, items: { type: integer, format: int64 } }
+                due_date: { type: string, format: date }
+      responses:
+        "201":
+          description: "{created, skipped}"
+          content:
+            application/json:
+              schema: { type: object, required: [created, skipped], properties: { created: { type: integer }, skipped: { type: integer } } }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /api/v1/finance/invoices/:
+    get:
+      summary: Invoices the user can see (finance staff their schools'; students and parents their own)
+      parameters:
+        - { $ref: "#/components/parameters/Page" }
+        - { name: student, in: query, schema: { type: integer, format: int64 } }
+        - { name: status, in: query, schema: { type: string, enum: [issued, partially_paid, paid, void] } }
+      responses:
+        "200":
+          description: A page of invoices
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/InvoicePage" }
+  /api/v1/finance/invoices/{id}/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    get:
+      summary: One invoice with its lines
+      responses:
+        "200":
+          description: The invoice
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Invoice" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /api/v1/finance/invoices/{id}/void/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    post:
+      summary: Cancel an unpaid invoice (posts a reversing journal)
+      responses:
+        "200":
+          description: The invoice
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Invoice" }
+        "409": { description: The invoice has payments }
+  /api/v1/finance/payments/:
+    post:
+      summary: Record cash or a bank deposit (finance staff)
+      parameters: [{ name: Idempotency-Key, in: header, required: true, description: "A unique key per payment attempt; a retry with the same key returns the first result", schema: { type: string, maxLength: 100 } }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/PaymentInput" }
+      responses:
+        "201":
+          description: Recorded and posted, with a receipt number
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Payment" }
+        "200":
+          description: The same Idempotency-Key was used before; this is that payment
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Payment" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /api/v1/finance/payments/checkout/:
+    post:
+      summary: Pay an invoice by mobile money or card (parents, students, finance staff)
+      description: Starts a collection with the provider. The payment completes when the provider's signed webhook confirms it.
+      parameters: [{ name: Idempotency-Key, in: header, required: true, description: "A unique key per payment attempt; a retry with the same key returns the first result", schema: { type: string, maxLength: 100 } }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/PaymentInput" }
+      responses:
+        "202":
+          description: Pending until the provider confirms
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Payment" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "503": { description: This payment method isn't connected yet }
+  /api/v1/finance/payments/{id}/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    get:
+      summary: One payment (its receipt once successful)
+      responses:
+        "200":
+          description: The payment
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Payment" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /api/v1/finance/webhooks/{provider}/:
+    parameters: [{ name: provider, in: path, required: true, schema: { type: string } }]
+    post:
+      summary: A payment provider confirms or fails a payment (signed; applied once)
+      security: []
+      description: "Header X-Maple-Signature: sha256=<hex HMAC-SHA256 of the raw body with FINANCE_WEBHOOK_SECRET>. Body {reference, status: successful|failed, amount_minor, currency, reason}."
+      responses:
+        "200": { description: Applied (or already applied) }
+        "401": { description: Bad signature }
+        "409": { description: Amount or currency doesn't match }
+  /api/v1/finance/students/{id}/statement/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }, { name: school, in: query, required: true, schema: { type: integer, format: int64 } }]
+    get:
+      summary: A student's fees statement at a school (the student, their approved parents, finance staff)
+      responses:
+        "200":
+          description: The statement
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Statement" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /api/v1/finance/summary/:
+    get:
+      summary: Billed, collected and outstanding for a school
+      parameters: [{ name: school, in: query, required: true, schema: { type: integer, format: int64 } }, { name: currency, in: query, schema: { type: string, default: UGX } }]
+      responses:
+        "200":
+          description: The summary
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/FinanceSummary" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /api/v1/finance/export.csv:
+    get:
+      summary: The school's journal as CSV for QuickBooks or Xero
+      parameters: [{ name: school, in: query, required: true, schema: { type: integer, format: int64 } }]
+      responses: { "200": { description: CSV, content: { text/csv: { schema: { type: string } } } } }
 components:
   parameters:
     Page:
@@ -1700,3 +1871,121 @@ components:
         completion_percentage: { type: string }
         last_position: { type: integer }
         last_accessed: { type: [string, "null"], format: date-time }
+    FeeItem:
+      type: object
+      required: [id, school, name, amount_minor, currency, term, class_level, created_at]
+      properties:
+        id: { type: integer, format: int64 }
+        school: { type: integer, format: int64 }
+        name: { type: string }
+        amount_minor: { type: integer, format: int64, description: Whole minor units (for UGX, shillings) }
+        currency: { type: string }
+        term: { type: [integer, "null"], format: int64 }
+        class_level: { type: [integer, "null"], format: int64 }
+        created_at: { type: string, format: date-time }
+    FeeItemInput:
+      type: object
+      required: [school, name, amount_minor]
+      properties:
+        school: { type: integer, format: int64 }
+        name: { type: string }
+        amount_minor: { type: integer, format: int64 }
+        currency: { type: string, default: UGX }
+        term: { type: integer, format: int64 }
+        class_level: { type: integer, format: int64 }
+    InvoiceLine:
+      type: object
+      required: [id, fee_item, description, amount_minor]
+      properties:
+        id: { type: integer, format: int64 }
+        fee_item: { type: [integer, "null"], format: int64 }
+        description: { type: string }
+        amount_minor: { type: integer, format: int64 }
+    Invoice:
+      type: object
+      required: [id, school, student, student_name, number, currency, total_minor, paid_minor, balance_minor, status, due_date, created_at, lines]
+      properties:
+        id: { type: integer, format: int64 }
+        school: { type: integer, format: int64 }
+        student: { type: integer, format: int64 }
+        student_name: { type: string }
+        term: { type: [integer, "null"], format: int64 }
+        class: { type: [integer, "null"], format: int64 }
+        number: { type: string }
+        currency: { type: string }
+        total_minor: { type: integer, format: int64 }
+        paid_minor: { type: integer, format: int64 }
+        balance_minor: { type: integer, format: int64 }
+        status: { type: string, enum: [issued, partially_paid, paid, void] }
+        due_date: { type: [string, "null"], format: date }
+        created_at: { type: string, format: date-time }
+        voided_at: { type: [string, "null"], format: date-time }
+        lines: { type: array, items: { $ref: "#/components/schemas/InvoiceLine" } }
+    InvoicePage:
+      type: object
+      required: [count, next, previous, results]
+      properties:
+        count: { type: integer }
+        next: { type: [string, "null"] }
+        previous: { type: [string, "null"] }
+        results: { type: array, items: { $ref: "#/components/schemas/Invoice" } }
+    PaymentInput:
+      type: object
+      required: [invoice, amount_minor, method]
+      properties:
+        invoice: { type: integer, format: int64 }
+        amount_minor: { type: integer, format: int64 }
+        method: { type: string, enum: [cash, bank, mtn_momo, airtel_money, card] }
+        phone: { type: string, description: Mobile money number, for example +256772000111 }
+    Payment:
+      type: object
+      required: [id, school, school_name, student, student_name, invoice, invoice_number, amount_minor, currency, method, status, receipt_number, created_at]
+      properties:
+        id: { type: integer, format: int64 }
+        school: { type: integer, format: int64 }
+        school_name: { type: string }
+        student: { type: integer, format: int64 }
+        student_name: { type: string }
+        invoice: { type: [integer, "null"], format: int64 }
+        invoice_number: { type: string }
+        amount_minor: { type: integer, format: int64 }
+        currency: { type: string }
+        method: { type: string }
+        status: { type: string, enum: [pending, successful, failed] }
+        payer_phone: { type: string }
+        provider: { type: string }
+        provider_reference: { type: string }
+        failure_reason: { type: string }
+        receipt_number: { type: [string, "null"] }
+        created_at: { type: string, format: date-time }
+        completed_at: { type: [string, "null"], format: date-time }
+    StatementLine:
+      type: object
+      required: [date, kind, reference, memo, currency, debit_minor, credit_minor, balance_minor]
+      properties:
+        date: { type: string, format: date-time }
+        kind: { type: string }
+        reference: { type: string }
+        memo: { type: string }
+        currency: { type: string }
+        debit_minor: { type: integer, format: int64 }
+        credit_minor: { type: integer, format: int64 }
+        balance_minor: { type: integer, format: int64 }
+    Statement:
+      type: object
+      required: [school, student, balance_minor, lines]
+      properties:
+        school: { type: integer, format: int64 }
+        student: { type: integer, format: int64 }
+        balance_minor: { type: integer, format: int64 }
+        lines: { type: array, items: { $ref: "#/components/schemas/StatementLine" } }
+    FinanceSummary:
+      type: object
+      required: [school, currency, billed_minor, collected_minor, outstanding_minor, pending_payments]
+      properties:
+        school: { type: integer, format: int64 }
+        currency: { type: string }
+        billed_minor: { type: integer, format: int64 }
+        collected_minor: { type: integer, format: int64 }
+        outstanding_minor: { type: integer, format: int64 }
+        pending_payments: { type: integer }

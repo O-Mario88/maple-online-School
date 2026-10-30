@@ -3326,6 +3326,582 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/finance/fee-items/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** A school's fee items (its headteacher, deputy or registrar) */
+        get: {
+            parameters: {
+                query: {
+                    school: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description {count, results: FeeItem[]} */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            count: number;
+                            results: components["schemas"]["FeeItem"][];
+                        };
+                    };
+                };
+                403: components["responses"]["Forbidden"];
+            };
+        };
+        put?: never;
+        /** Add a fee item */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["FeeItemInput"];
+                };
+            };
+            responses: {
+                /** @description The fee item */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["FeeItem"];
+                    };
+                };
+                400: components["responses"]["BadRequest"];
+                403: components["responses"]["Forbidden"];
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/finance/invoices/generate/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Invoice every student in a class (one open invoice per student per term) */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** Format: int64 */
+                        class: number;
+                        /** Format: int64 */
+                        term?: number;
+                        fee_items: number[];
+                        /** Format: date */
+                        due_date?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description {created, skipped} */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            created: number;
+                            skipped: number;
+                        };
+                    };
+                };
+                400: components["responses"]["BadRequest"];
+                403: components["responses"]["Forbidden"];
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/finance/invoices/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Invoices the user can see (finance staff their schools'; students and parents their own) */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description 1-based page number; 20 items per page */
+                    page?: components["parameters"]["Page"];
+                    student?: number;
+                    status?: "issued" | "partially_paid" | "paid" | "void";
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description A page of invoices */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["InvoicePage"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/finance/invoices/{id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        /** One invoice with its lines */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The invoice */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Invoice"];
+                    };
+                };
+                404: components["responses"]["NotFound"];
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/finance/invoices/{id}/void/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Cancel an unpaid invoice (posts a reversing journal) */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The invoice */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Invoice"];
+                    };
+                };
+                /** @description The invoice has payments */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/finance/payments/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Record cash or a bank deposit (finance staff) */
+        post: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description A unique key per payment attempt; a retry with the same key returns the first result */
+                    "Idempotency-Key": string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["PaymentInput"];
+                };
+            };
+            responses: {
+                /** @description The same Idempotency-Key was used before; this is that payment */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Payment"];
+                    };
+                };
+                /** @description Recorded and posted, with a receipt number */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Payment"];
+                    };
+                };
+                403: components["responses"]["Forbidden"];
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/finance/payments/checkout/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Pay an invoice by mobile money or card (parents, students, finance staff)
+         * @description Starts a collection with the provider. The payment completes when the provider's signed webhook confirms it.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description A unique key per payment attempt; a retry with the same key returns the first result */
+                    "Idempotency-Key": string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["PaymentInput"];
+                };
+            };
+            responses: {
+                /** @description Pending until the provider confirms */
+                202: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Payment"];
+                    };
+                };
+                400: components["responses"]["BadRequest"];
+                /** @description This payment method isn't connected yet */
+                503: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/finance/payments/{id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        /** One payment (its receipt once successful) */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The payment */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Payment"];
+                    };
+                };
+                404: components["responses"]["NotFound"];
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/finance/webhooks/{provider}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                provider: string;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * A payment provider confirms or fails a payment (signed; applied once)
+         * @description Header X-Maple-Signature: sha256=<hex HMAC-SHA256 of the raw body with FINANCE_WEBHOOK_SECRET>. Body {reference, status: successful|failed, amount_minor, currency, reason}.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    provider: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Applied (or already applied) */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Bad signature */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Amount or currency doesn't match */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/finance/students/{id}/statement/": {
+        parameters: {
+            query: {
+                school: number;
+            };
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        /** A student's fees statement at a school (the student, their approved parents, finance staff) */
+        get: {
+            parameters: {
+                query: {
+                    school: number;
+                };
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The statement */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Statement"];
+                    };
+                };
+                404: components["responses"]["NotFound"];
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/finance/summary/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Billed, collected and outstanding for a school */
+        get: {
+            parameters: {
+                query: {
+                    school: number;
+                    currency?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The summary */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["FinanceSummary"];
+                    };
+                };
+                403: components["responses"]["Forbidden"];
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/finance/export.csv": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** The school's journal as CSV for QuickBooks or Xero */
+        get: {
+            parameters: {
+                query: {
+                    school: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description CSV */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/csv": string;
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -3971,6 +4547,156 @@ export interface components {
             last_position: number;
             /** Format: date-time */
             last_accessed?: string | null;
+        };
+        FeeItem: {
+            /** Format: int64 */
+            id: number;
+            /** Format: int64 */
+            school: number;
+            name: string;
+            /**
+             * Format: int64
+             * @description Whole minor units (for UGX
+             */
+            amount_minor: number;
+            currency: string;
+            /** Format: int64 */
+            term: number | null;
+            /** Format: int64 */
+            class_level: number | null;
+            /** Format: date-time */
+            created_at: string;
+        };
+        FeeItemInput: {
+            /** Format: int64 */
+            school: number;
+            name: string;
+            /** Format: int64 */
+            amount_minor: number;
+            /** @default UGX */
+            currency: string;
+            /** Format: int64 */
+            term?: number;
+            /** Format: int64 */
+            class_level?: number;
+        };
+        InvoiceLine: {
+            /** Format: int64 */
+            id: number;
+            /** Format: int64 */
+            fee_item: number | null;
+            description: string;
+            /** Format: int64 */
+            amount_minor: number;
+        };
+        Invoice: {
+            /** Format: int64 */
+            id: number;
+            /** Format: int64 */
+            school: number;
+            /** Format: int64 */
+            student: number;
+            student_name: string;
+            /** Format: int64 */
+            term?: number | null;
+            /** Format: int64 */
+            class?: number | null;
+            number: string;
+            currency: string;
+            /** Format: int64 */
+            total_minor: number;
+            /** Format: int64 */
+            paid_minor: number;
+            /** Format: int64 */
+            balance_minor: number;
+            /** @enum {string} */
+            status: "issued" | "partially_paid" | "paid" | "void";
+            /** Format: date */
+            due_date: string | null;
+            /** Format: date-time */
+            created_at: string;
+            /** Format: date-time */
+            voided_at?: string | null;
+            lines: components["schemas"]["InvoiceLine"][];
+        };
+        InvoicePage: {
+            count: number;
+            next: string | null;
+            previous: string | null;
+            results: components["schemas"]["Invoice"][];
+        };
+        PaymentInput: {
+            /** Format: int64 */
+            invoice: number;
+            /** Format: int64 */
+            amount_minor: number;
+            /** @enum {string} */
+            method: "cash" | "bank" | "mtn_momo" | "airtel_money" | "card";
+            /** @description Mobile money number */
+            phone?: string;
+        };
+        Payment: {
+            /** Format: int64 */
+            id: number;
+            /** Format: int64 */
+            school: number;
+            school_name: string;
+            /** Format: int64 */
+            student: number;
+            student_name: string;
+            /** Format: int64 */
+            invoice: number | null;
+            invoice_number: string;
+            /** Format: int64 */
+            amount_minor: number;
+            currency: string;
+            method: string;
+            /** @enum {string} */
+            status: "pending" | "successful" | "failed";
+            payer_phone?: string;
+            provider?: string;
+            provider_reference?: string;
+            failure_reason?: string;
+            receipt_number: string | null;
+            /** Format: date-time */
+            created_at: string;
+            /** Format: date-time */
+            completed_at?: string | null;
+        };
+        StatementLine: {
+            /** Format: date-time */
+            date: string;
+            kind: string;
+            reference: string;
+            memo: string;
+            currency: string;
+            /** Format: int64 */
+            debit_minor: number;
+            /** Format: int64 */
+            credit_minor: number;
+            /** Format: int64 */
+            balance_minor: number;
+        };
+        Statement: {
+            /** Format: int64 */
+            school: number;
+            /** Format: int64 */
+            student: number;
+            /** Format: int64 */
+            balance_minor: number;
+            lines: components["schemas"]["StatementLine"][];
+        };
+        FinanceSummary: {
+            /** Format: int64 */
+            school: number;
+            currency: string;
+            /** Format: int64 */
+            billed_minor: number;
+            /** Format: int64 */
+            collected_minor: number;
+            /** Format: int64 */
+            outstanding_minor: number;
+            pending_payments: number;
         };
     };
     responses: {

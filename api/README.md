@@ -18,6 +18,7 @@ forwarded to Django unchanged. Apps only ever talk to this service.
 | Live sessions: sessions, reminders, missed-session recovery | Done (recording sync still a Django task) | `/api/v1/live-sessions/live-session/` (+ `{id}/`), `session-reminder/`, `missed-recovery/` |
 | Sign-up: register, activate, forgot/reset password, student onboarding | Done | `/api/v1/auth/register/`, `activate/`, `resend-activation/`, `forgot-password/`, `reset-password/`, `onboard-student/` |
 | Library (playbook §5): items, review, class reading lists, progress | Done (file uploads come with object storage) | `/api/v1/library/items/` (+ `{id}/`, `moderate/`, `share/`), `classes/{id}/reading-list/`, `assigned/`, `progress/`, `continue/` |
+| Finance (playbook §11A Tier 1): fees, invoices, payments, ledger | Done (real mobile money/card providers still to connect) | `/api/v1/finance/fee-items/`, `invoices/` (+ `generate/`, `{id}/void/`), `payments/` (+ `checkout/`, `{id}/`), `webhooks/{provider}/`, `students/{id}/statement/`, `summary/`, `export.csv` |
 | Health   | Done         | `/api/health/` |
 | Everything else | Served by Django through the forwarder | all other `/api/v1/...` |
 
@@ -98,3 +99,13 @@ Sign-up and password emails go through SMTP when `SMTP_HOST` is set
 `MAIL_FROM`). Without it, emails are written to the log so links can be
 tested locally. Links open the app at `APP_URL` (default
 `http://localhost:8081`).
+
+## Payments
+
+Fee payments post to an immutable double-entry ledger (migration 00003).
+Mobile money and card collections need a provider; `FINANCE_SANDBOX=true`
+turns on a fake one for development (refused when `APP_ENV=production`).
+Providers confirm payments by calling `/api/v1/finance/webhooks/{provider}/`
+with `X-Maple-Signature: sha256=<HMAC-SHA256 of the body>` using
+`FINANCE_WEBHOOK_SECRET` (32+ characters). Every money-moving request needs
+an `Idempotency-Key` header.
