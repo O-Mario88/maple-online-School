@@ -29,6 +29,51 @@ type AccountsUser struct {
 	EmailVerified bool
 }
 
+type AssessmentsAssessment struct {
+	ID            int64
+	Type          string
+	Source        string
+	MaxScore      pgtype.Numeric
+	CreatedAt     pgtype.Timestamptz
+	TargetGroupID pgtype.Int8
+	TermID        pgtype.Int8
+	TopicID       pgtype.Int8
+	WindowID      pgtype.Int8
+	CreatedByID   pgtype.Int8
+	Instructions  string
+	IsPublished   bool
+	Title         string
+}
+
+type AssessmentsQuestion struct {
+	ID            int64
+	Type          string
+	Content       string
+	Marks         pgtype.Numeric
+	Options       []byte
+	CorrectAnswer string
+	Order         int32
+	AssessmentID  int64
+}
+
+type AssessmentsSubmission struct {
+	ID           int64
+	Status       string
+	SubmittedAt  pgtype.Timestamptz
+	AnswersData  []byte
+	TotalScore   pgtype.Numeric
+	AssessmentID int64
+	StudentID    int64
+}
+
+type GradingGraderecord struct {
+	ID              int64
+	Score           pgtype.Numeric
+	TeacherFeedback pgtype.Text
+	GradedAt        pgtype.Timestamptz
+	SubmissionID    int64
+}
+
 type IdentityRevokedToken struct {
 	TokenID   string
 	UserID    int64

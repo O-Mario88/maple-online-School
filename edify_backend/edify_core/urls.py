@@ -29,9 +29,9 @@ from institutions.views import InstitutionViewSet, InstitutionMembershipViewSet,
 from classes.views import ClassViewSet, ClassEnrollmentViewSet
 from scheduling.views import TimetableSlotViewSet
 from attendance.views import DailyRegisterViewSet, LessonAttendanceViewSet
-from grading.views import SubjectGradeViewSet, ReportCardViewSet, GradeRecordViewSet
+from grading.views import SubjectGradeViewSet, ReportCardViewSet
 from analytics.views import AnalyticsEventViewSet, DailyPlatformMetricViewSet, DailyInstitutionMetricViewSet, SubjectPerformanceSnapshotViewSet, SystemHealthSnapshotViewSet, StudentDashboardView, TeacherDashboardView, ParentDashboardView, AdminDashboardView, InstitutionDashboardView, CustomerSuccessChurnView
-from assessments.views import AssessmentWindowViewSet, AssessmentViewSet, QuestionViewSet, SubmissionViewSet
+from assessments.views import AssessmentWindowViewSet, QuestionViewSet
 from discussions.views import ThreadViewSet, PostViewSet
 from exams.views import ExamCenterViewSet, CandidateRegistrationViewSet, SubjectSelectionViewSet, BoardSubmissionBatchViewSet
 from lessons.views import LessonViewSet, LessonNoteViewSet, LessonRecordingViewSet, LessonAttendanceViewSet
@@ -92,7 +92,7 @@ router.register(r'attendance/daily', DailyRegisterViewSet, basename='daily-regis
 router.register(r'attendance/lesson', LessonAttendanceViewSet, basename='lesson-attendance')
 router.register(r'grading/subjects', SubjectGradeViewSet, basename='subject-grade')
 router.register(r'grading/reports', ReportCardViewSet, basename='report-card')
-router.register(r'grading/records', GradeRecordViewSet, basename='grade-record')
+# grading/records is served by the Go API (api/internal/learning).
 
 # Analytics
 router.register(r'analytics/analytics-event', AnalyticsEventViewSet, basename='analytics-analytics-event')
@@ -103,9 +103,8 @@ router.register(r'analytics/system-health-snapshot', SystemHealthSnapshotViewSet
 
 # Assessments & Exams
 router.register(r'assessments/assessment-window', AssessmentWindowViewSet, basename='assessments-assessment-window')
-router.register(r'assessments/assessment', AssessmentViewSet, basename='assessments-assessment')
+# assessments/assessment and assessments/submission are served by the Go API.
 router.register(r'assessments/question', QuestionViewSet, basename='assessments-question')
-router.register(r'assessments/submission', SubmissionViewSet, basename='assessments-submission')
 router.register(r'exams/exam-center', ExamCenterViewSet, basename='exams-exam-center')
 router.register(r'exams/candidate-registration', CandidateRegistrationViewSet, basename='exams-candidate-registration')
 router.register(r'exams/subject-selection', SubjectSelectionViewSet, basename='exams-subject-selection')

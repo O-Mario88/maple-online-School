@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Maple API
-  version: 0.1.0
+  version: 0.2.0
   description: |
     The contract between the Maple apps and the Go API. Paths not listed here
     are still served by the Django API through the Go service's forwarder,
@@ -87,7 +87,126 @@ paths:
             application/json:
               schema: { $ref: "#/components/schemas/Me" }
         "401": { $ref: "#/components/responses/Unauthorized" }
+  /api/v1/assessments/assessment/:
+    get:
+      summary: Assignments the user can see
+      description: Staff see every assignment by colleagues in their schools, including drafts. Everyone else sees published ones only.
+      parameters: [{ $ref: "#/components/parameters/Page" }]
+      responses:
+        "200":
+          description: A page of assignments
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AssessmentPage" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+    post:
+      summary: Create an assignment (school staff only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/NewAssessment" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Assessment" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /api/v1/assessments/assessment/{id}/:
+    get:
+      summary: One assignment
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer, format: int64 } }
+      responses:
+        "200":
+          description: The assignment
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Assessment" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /api/v1/assessments/submission/:
+    get:
+      summary: Submissions the user can see
+      description: Students see their own. Staff see submissions from their schools.
+      parameters: [{ $ref: "#/components/parameters/Page" }]
+      responses:
+        "200":
+          description: A page of submissions
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SubmissionPage" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+    post:
+      summary: Submit work for an assignment (students only, once per assignment)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/NewSubmission" }
+      responses:
+        "201":
+          description: Submitted
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Submission" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409":
+          description: Already submitted
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+  /api/v1/grading/records/:
+    get:
+      summary: Grades the user can see
+      description: Students see their own, parents their approved children's, staff their schools'.
+      parameters:
+        - { $ref: "#/components/parameters/Page" }
+        - { name: student, in: query, required: false, description: "Parents only: one approved child's grades", schema: { type: integer, format: int64 } }
+      responses:
+        "200":
+          description: A page of grades
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/GradePage" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+    post:
+      summary: Record or update the grade for a submission (school staff only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/NewGrade" }
+      responses:
+        "200":
+          description: Grade updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Grade" }
+        "201":
+          description: Grade recorded
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Grade" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
 components:
+  parameters:
+    Page:
+      name: page
+      in: query
+      required: false
+      description: 1-based page number; 20 items per page
+      schema: { type: integer, minimum: 1 }
   securitySchemes:
     bearer:
       type: http
@@ -104,12 +223,134 @@ components:
       content:
         application/json:
           schema: { $ref: "#/components/schemas/Error" }
+    Forbidden:
+      description: Signed in, but not allowed to do this
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    NotFound:
+      description: Doesn't exist, or isn't visible to this user
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
     TooManyRequests:
       description: Rate limit reached
       content:
         application/json:
           schema: { $ref: "#/components/schemas/Error" }
   schemas:
+    Decimal:
+      type: string
+      pattern: '^-?\d+\.\d{2}$'
+      description: A decimal with two places, such as "85.00"
+    Question:
+      type: object
+      required: [id, type, content, marks, order, options]
+      properties:
+        id: { type: integer, format: int64 }
+        type: { type: string }
+        content: { type: string }
+        marks: { $ref: "#/components/schemas/Decimal" }
+        order: { type: integer }
+        options: {}
+        correct_answer: { type: string, description: Staff only }
+    Assessment:
+      type: object
+      required: [id, title, instructions, type, source, max_score, is_published, created_at, created_by, questions]
+      properties:
+        id: { type: integer, format: int64 }
+        title: { type: string }
+        instructions: { type: string }
+        type: { type: string }
+        source: { type: string }
+        max_score: { $ref: "#/components/schemas/Decimal" }
+        is_published: { type: boolean }
+        created_at: { type: string, format: date-time }
+        created_by: { type: [integer, "null"], format: int64 }
+        target_group: { type: [integer, "null"], format: int64 }
+        term: { type: [integer, "null"], format: int64 }
+        topic: { type: [integer, "null"], format: int64 }
+        window: { type: [integer, "null"], format: int64 }
+        questions:
+          type: array
+          items: { $ref: "#/components/schemas/Question" }
+    NewAssessment:
+      type: object
+      required: [title, instructions]
+      properties:
+        title: { type: string, maxLength: 255 }
+        instructions: { type: string, maxLength: 20000 }
+        type: { type: string, enum: [assignment, quiz, test, exam, exercise], default: assignment }
+        max_score: { type: string, description: "Defaults to 100" }
+        is_published: { type: boolean, default: false }
+    Submission:
+      type: object
+      required: [id, assessment, student, status, submitted_at, answers_data, total_score]
+      properties:
+        id: { type: integer, format: int64 }
+        assessment: { type: integer, format: int64 }
+        student: { type: integer, format: int64 }
+        status: { type: string, enum: [submitted, graded] }
+        submitted_at: { type: [string, "null"], format: date-time }
+        answers_data: { type: object, additionalProperties: true }
+        total_score: { oneOf: [{ $ref: "#/components/schemas/Decimal" }, { type: "null" }] }
+        assessment_title: { type: string }
+        student_name: { type: string }
+    NewSubmission:
+      type: object
+      required: [assessment]
+      properties:
+        assessment: { type: integer, format: int64 }
+        answers_data: { type: object, additionalProperties: true }
+    Grade:
+      type: object
+      required: [id, submission, score, teacher_feedback, graded_at]
+      properties:
+        id: { type: integer, format: int64 }
+        submission: { type: integer, format: int64 }
+        score: { $ref: "#/components/schemas/Decimal" }
+        teacher_feedback: { type: [string, "null"] }
+        graded_at: { type: string, format: date-time }
+        assessment: { type: integer, format: int64 }
+        assessment_title: { type: string }
+        max_score: { $ref: "#/components/schemas/Decimal" }
+        student: { type: integer, format: int64 }
+        student_name: { type: string }
+    NewGrade:
+      type: object
+      required: [submission, score]
+      properties:
+        submission: { type: integer, format: int64 }
+        score: { type: string, description: "0 up to the assignment's maximum" }
+        teacher_feedback: { type: string, maxLength: 5000 }
+    AssessmentPage:
+      allOf:
+        - { $ref: "#/components/schemas/PageMeta" }
+        - type: object
+          required: [results]
+          properties:
+            results: { type: array, items: { $ref: "#/components/schemas/Assessment" } }
+    SubmissionPage:
+      allOf:
+        - { $ref: "#/components/schemas/PageMeta" }
+        - type: object
+          required: [results]
+          properties:
+            results: { type: array, items: { $ref: "#/components/schemas/Submission" } }
+    GradePage:
+      allOf:
+        - { $ref: "#/components/schemas/PageMeta" }
+        - type: object
+          required: [results]
+          properties:
+            results: { type: array, items: { $ref: "#/components/schemas/Grade" } }
+    PageMeta:
+      type: object
+      required: [count, next, previous]
+      properties:
+        count: { type: integer }
+        next: { type: [string, "null"] }
+        previous: { type: [string, "null"] }
     Error:
       type: object
       required: [detail]

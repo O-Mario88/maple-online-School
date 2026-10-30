@@ -5,8 +5,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import type { Me } from '@/lib/api/client';
+import { ParentResultsSection } from '@/features/parent/ParentResultsSection';
+import { StudentWorkSection } from '@/features/student/StudentWorkSection';
+import { TeacherWorkSection } from '@/features/teacher/TeacherWorkSection';
 import { useAuth, useMe } from '@/lib/auth/auth-context';
-import { homeFor } from '@/lib/roles';
+import { homeFor, isStaff } from '@/lib/roles';
 
 type Theme = ReturnType<typeof useTheme>;
 type Styles = ReturnType<typeof makeStyles>;
@@ -51,6 +54,7 @@ export default function HomeScreen() {
         </Text>
         <Text style={styles.subtitle}>{home.subtitle}</Text>
 
+        <RoleWork user={user} />
         <SchoolsCard user={user} styles={styles} />
         {user.role === 'parent' ? <ChildrenCard user={user} styles={styles} /> : null}
 
@@ -64,6 +68,14 @@ export default function HomeScreen() {
       </ScrollView>
     </SafeAreaView>
   );
+}
+
+/** The main work area for the person's role. */
+function RoleWork({ user }: { user: Me }) {
+  if (isStaff(user.memberships)) return <TeacherWorkSection />;
+  if (user.role === 'student') return <StudentWorkSection />;
+  if (user.role === 'parent') return <ParentResultsSection />;
+  return null;
 }
 
 interface CardProps {

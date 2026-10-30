@@ -1,48 +1,9 @@
 from rest_framework import viewsets, permissions, exceptions
-from .models import GradeRecord, SubjectGrade, ReportCard
-from .serializers import GradeRecordSerializer, SubjectGradeSerializer, ReportCardSerializer
+from .models import SubjectGrade, ReportCard
+from .serializers import SubjectGradeSerializer, ReportCardSerializer
 from institutions.models import InstitutionMembership
 from edify_core.permissions import SCHOOL_ADMIN_ROLES, ACADEMIC_LEADER_ROLES, TEACHER_ROLES
 from django.utils import timezone
-
-
-class GradeRecordViewSet(viewsets.ModelViewSet):
-    """Grade records for Assessment submissions.
-
-    Teachers (or anyone with an institution teacher/admin role) can create
-    and list grades. Students can only see grades attached to their own
-    submissions — everything else is filtered out.
-    """
-    serializer_class = GradeRecordSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def _is_teacher_ish(self, user):
-        if getattr(user, 'role', '') in ('teacher', 'admin', 'institution'):
-            return True
-        return InstitutionMembership.objects.filter(
-            user=user,
-            role__in=TEACHER_ROLES + ACADEMIC_LEADER_ROLES + SCHOOL_ADMIN_ROLES,
-            status='active',
-        ).exists()
-
-    def get_queryset(self):
-        user = self.request.user
-        if self._is_teacher_ish(user):
-            return GradeRecord.objects.select_related('submission', 'submission__student').all()
-        # Students see only the grade attached to their own submissions.
-        return GradeRecord.objects.select_related('submission').filter(submission__student=user)
-
-    def perform_create(self, serializer):
-        user = self.request.user
-        if not self._is_teacher_ish(user):
-            raise exceptions.PermissionDenied("Only teachers can record grades.")
-        serializer.save()
-
-    def perform_update(self, serializer):
-        user = self.request.user
-        if not self._is_teacher_ish(user):
-            raise exceptions.PermissionDenied("Only teachers can update grades.")
-        serializer.save()
 
 
 class SubjectGradeViewSet(viewsets.ModelViewSet):

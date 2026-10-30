@@ -117,6 +117,26 @@ services:
       - media_data:/app/media
     command: celery -A edify_core worker --loglevel=info
 
+  # Go API. Serves the modules already moved to Go and forwards the rest to
+  # Django. Signs tokens with the same key so both accept them during the move.
+  api:
+    build:
+      context: ./api
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy   # Django has applied its migrations
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER:-maple}:${POSTGRES_PASSWORD:-maple_dev}@postgres:5432/${POSTGRES_DB:-maple}
+      JWT_SIGNING_KEY: ${DJANGO_SECRET_KEY:?DJANGO_SECRET_KEY is required}
+      LEGACY_API_URL: http://backend:8000
+      REQUIRE_EMAIL_VERIFICATION: ${REQUIRE_EMAIL_VERIFICATION:-false}
+      CORS_ORIGINS: ${API_CORS_ORIGINS:-}
+      TRUST_PROXY_HEADERS: "true"
+      MAPLE_ADDR: ":8080"
+    ports:
+      - "${API_PORT:-8081}:8080"
+
   frontend:
     build:
       context: .
@@ -130,6 +150,8 @@ services:
     depends_on:
       backend:
         condition: service_healthy
+      api:
+        condition: service_started
     ports:
       - "${FRONTEND_PORT:-8080}:80"
 

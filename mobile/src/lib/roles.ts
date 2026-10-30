@@ -17,3 +17,19 @@ const FALLBACK = HOMES.student;
 export function homeFor(role: string): RoleHome {
   return HOMES[role] ?? FALLBACK;
 }
+
+/** School roles that can set and mark work. Matches the Go API's staff roles. */
+const STAFF_ROLES = new Set([
+  'headteacher', 'deputy', 'dos', 'exam_officer', 'ict_admin', 'registrar',
+  'class_teacher', 'subject_teacher', 'librarian', 'counselor',
+]);
+
+interface MembershipLike {
+  role: string;
+  status: string;
+}
+
+/** Whether the person teaches or leads in at least one school. */
+export function isStaff(memberships: readonly MembershipLike[]): boolean {
+  return memberships.some((m) => m.status === 'active' && STAFF_ROLES.has(m.role));
+}

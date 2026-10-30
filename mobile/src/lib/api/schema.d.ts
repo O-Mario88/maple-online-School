@@ -217,10 +217,395 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/assessments/assessment/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Assignments the user can see
+         * @description Staff see every assignment by colleagues in their schools, including drafts. Everyone else sees published ones only.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description 1-based page number; 20 items per page */
+                    page?: components["parameters"]["Page"];
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description A page of assignments */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AssessmentPage"];
+                    };
+                };
+                401: components["responses"]["Unauthorized"];
+            };
+        };
+        put?: never;
+        /** Create an assignment (school staff only) */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["NewAssessment"];
+                };
+            };
+            responses: {
+                /** @description Created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Assessment"];
+                    };
+                };
+                400: components["responses"]["BadRequest"];
+                401: components["responses"]["Unauthorized"];
+                403: components["responses"]["Forbidden"];
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/assessments/assessment/{id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** One assignment */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The assignment */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Assessment"];
+                    };
+                };
+                401: components["responses"]["Unauthorized"];
+                404: components["responses"]["NotFound"];
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/assessments/submission/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Submissions the user can see
+         * @description Students see their own. Staff see submissions from their schools.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description 1-based page number; 20 items per page */
+                    page?: components["parameters"]["Page"];
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description A page of submissions */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["SubmissionPage"];
+                    };
+                };
+                401: components["responses"]["Unauthorized"];
+            };
+        };
+        put?: never;
+        /** Submit work for an assignment (students only, once per assignment) */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["NewSubmission"];
+                };
+            };
+            responses: {
+                /** @description Submitted */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Submission"];
+                    };
+                };
+                400: components["responses"]["BadRequest"];
+                401: components["responses"]["Unauthorized"];
+                403: components["responses"]["Forbidden"];
+                404: components["responses"]["NotFound"];
+                /** @description Already submitted */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/grading/records/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Grades the user can see
+         * @description Students see their own, parents their approved children's, staff their schools'.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description 1-based page number; 20 items per page */
+                    page?: components["parameters"]["Page"];
+                    /** @description Parents only: one approved child's grades */
+                    student?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description A page of grades */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["GradePage"];
+                    };
+                };
+                401: components["responses"]["Unauthorized"];
+                403: components["responses"]["Forbidden"];
+            };
+        };
+        put?: never;
+        /** Record or update the grade for a submission (school staff only) */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["NewGrade"];
+                };
+            };
+            responses: {
+                /** @description Grade updated */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Grade"];
+                    };
+                };
+                /** @description Grade recorded */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Grade"];
+                    };
+                };
+                400: components["responses"]["BadRequest"];
+                401: components["responses"]["Unauthorized"];
+                403: components["responses"]["Forbidden"];
+                404: components["responses"]["NotFound"];
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** @description A decimal with two places, such as "85.00" */
+        Decimal: string;
+        Question: {
+            /** Format: int64 */
+            id: number;
+            type: string;
+            content: string;
+            marks: components["schemas"]["Decimal"];
+            order: number;
+            options: unknown;
+            /** @description Staff only */
+            correct_answer?: string;
+        };
+        Assessment: {
+            /** Format: int64 */
+            id: number;
+            title: string;
+            instructions: string;
+            type: string;
+            source: string;
+            max_score: components["schemas"]["Decimal"];
+            is_published: boolean;
+            /** Format: date-time */
+            created_at: string;
+            /** Format: int64 */
+            created_by: number | null;
+            /** Format: int64 */
+            target_group?: number | null;
+            /** Format: int64 */
+            term?: number | null;
+            /** Format: int64 */
+            topic?: number | null;
+            /** Format: int64 */
+            window?: number | null;
+            questions: components["schemas"]["Question"][];
+        };
+        NewAssessment: {
+            title: string;
+            instructions: string;
+            /**
+             * @default assignment
+             * @enum {string}
+             */
+            type: "assignment" | "quiz" | "test" | "exam" | "exercise";
+            /** @description Defaults to 100 */
+            max_score?: string;
+            /** @default false */
+            is_published: boolean;
+        };
+        Submission: {
+            /** Format: int64 */
+            id: number;
+            /** Format: int64 */
+            assessment: number;
+            /** Format: int64 */
+            student: number;
+            /** @enum {string} */
+            status: "submitted" | "graded";
+            /** Format: date-time */
+            submitted_at: string | null;
+            answers_data: {
+                [key: string]: unknown;
+            };
+            total_score: components["schemas"]["Decimal"] | null;
+            assessment_title?: string;
+            student_name?: string;
+        };
+        NewSubmission: {
+            /** Format: int64 */
+            assessment: number;
+            answers_data?: {
+                [key: string]: unknown;
+            };
+        };
+        Grade: {
+            /** Format: int64 */
+            id: number;
+            /** Format: int64 */
+            submission: number;
+            score: components["schemas"]["Decimal"];
+            teacher_feedback: string | null;
+            /** Format: date-time */
+            graded_at: string;
+            /** Format: int64 */
+            assessment?: number;
+            assessment_title?: string;
+            max_score?: components["schemas"]["Decimal"];
+            /** Format: int64 */
+            student?: number;
+            student_name?: string;
+        };
+        NewGrade: {
+            /** Format: int64 */
+            submission: number;
+            /** @description 0 up to the assignment's maximum */
+            score: string;
+            teacher_feedback?: string;
+        };
+        AssessmentPage: components["schemas"]["PageMeta"] & {
+            results: components["schemas"]["Assessment"][];
+        };
+        SubmissionPage: components["schemas"]["PageMeta"] & {
+            results: components["schemas"]["Submission"][];
+        };
+        GradePage: components["schemas"]["PageMeta"] & {
+            results: components["schemas"]["Grade"][];
+        };
+        PageMeta: {
+            count: number;
+            next: string | null;
+            previous: string | null;
+        };
         Error: {
             detail: string;
             code?: string;
@@ -294,6 +679,24 @@ export interface components {
                 "application/json": components["schemas"]["Error"];
             };
         };
+        /** @description Signed in, but not allowed to do this */
+        Forbidden: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["Error"];
+            };
+        };
+        /** @description Doesn't exist, or isn't visible to this user */
+        NotFound: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["Error"];
+            };
+        };
         /** @description Rate limit reached */
         TooManyRequests: {
             headers: {
@@ -304,7 +707,10 @@ export interface components {
             };
         };
     };
-    parameters: never;
+    parameters: {
+        /** @description 1-based page number; 20 items per page */
+        Page: number;
+    };
     requestBodies: never;
     headers: never;
     pathItems: never;

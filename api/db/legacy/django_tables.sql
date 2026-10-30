@@ -1,7 +1,55 @@
--- Tables owned by the Django backend that the Go service reads.
--- Django's migrations create and change these; Go never writes to them.
+-- Tables created by Django's migrations that the Go service uses.
 -- This file exists only so sqlc can type-check queries. It is never applied.
--- Only the columns Go reads are listed.
+-- Only the columns Go touches are listed.
+--
+-- Write ownership: Go reads the account and school tables (Django still
+-- writes them) and owns all writes to the assessment, submission and grade
+-- tables. See api/README.md for the current split.
+
+CREATE TABLE assessments_assessment (
+    id              bigint       PRIMARY KEY,
+    type            varchar(50)  NOT NULL,
+    source          varchar(50)  NOT NULL,
+    max_score       numeric(5,2) NOT NULL,
+    created_at      timestamptz  NOT NULL,
+    target_group_id bigint,
+    term_id         bigint,
+    topic_id        bigint,
+    window_id       bigint,
+    created_by_id   bigint,
+    instructions    text         NOT NULL,
+    is_published    boolean      NOT NULL,
+    title           varchar(255) NOT NULL
+);
+
+CREATE TABLE assessments_question (
+    id             bigint       PRIMARY KEY,
+    type           varchar(50)  NOT NULL,
+    content        text         NOT NULL,
+    marks          numeric(5,2) NOT NULL,
+    options        jsonb        NOT NULL,
+    correct_answer text         NOT NULL,
+    "order"        integer      NOT NULL,
+    assessment_id  bigint       NOT NULL
+);
+
+CREATE TABLE assessments_submission (
+    id            bigint       PRIMARY KEY,
+    status        varchar(50)  NOT NULL,
+    submitted_at  timestamptz,
+    answers_data  jsonb        NOT NULL,
+    total_score   numeric(5,2),
+    assessment_id bigint       NOT NULL,
+    student_id    bigint       NOT NULL
+);
+
+CREATE TABLE grading_graderecord (
+    id               bigint       PRIMARY KEY,
+    score            numeric(5,2) NOT NULL,
+    teacher_feedback text,
+    graded_at        timestamptz  NOT NULL,
+    submission_id    bigint       NOT NULL UNIQUE
+);
 
 CREATE TABLE accounts_user (
     id                bigint       PRIMARY KEY,

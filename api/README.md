@@ -8,15 +8,25 @@ forwarded to Django unchanged. Apps only ever talk to this service.
 | Module   | Status in Go | Paths |
 | -------- | ------------ | ----- |
 | Identity | Done         | `/api/v1/auth/token/`, `token/refresh/`, `logout/`, `me/` |
+| Learning: assignments, submissions, grades | Done | `/api/v1/assessments/assessment/`, `/api/v1/assessments/submission/`, `/api/v1/grading/records/` |
 | Health   | Done         | `/api/health/` |
 | Everything else | Served by Django through the forwarder | all other `/api/v1/...` |
 
+Paths Go owns never fall through to Django: a method Go doesn't support on them
+returns 405 instead of being forwarded.
+
 ## How the two backends share data
 
-- Both use the same Postgres database.
-- Go **reads** Django's tables (for now, `accounts_user`, memberships and
-  parent links) and **writes only tables it owns** (`identity_revoked_tokens`).
-  Go's migrations live in `db/migrations` and are tracked in
+- Both use the same Postgres database. Django's migrations still create the tables.
+- Go **reads** the account and school tables (Django still writes those) and
+  **owns all writes** to `assessments_assessment`, `assessments_submission`,
+  `grading_graderecord` and its own `identity_revoked_tokens`. Django's endpoints
+  for those tables have been removed. Question writes (`assessments_question`)
+  are still Django's until quizzes move.
+- Everything is scoped to the schools where the person has an **active**
+  membership: staff see their schools' work, students their own, parents only
+  children whose guardian link is approved.
+- Go's own migrations live in `db/migrations` and are tracked in
   `go_schema_migrations`, separate from Django's history.
 - Passwords use Django's `pbkdf2_sha256` format, so existing accounts sign in
   unchanged.
