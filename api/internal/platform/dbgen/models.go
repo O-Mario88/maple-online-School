@@ -82,6 +82,11 @@ type AttendanceDailyregister struct {
 	TermID        int64
 }
 
+type AttendanceLessonattendance struct {
+	ID       int64
+	LessonID int64
+}
+
 type ClassesClass struct {
 	ID                   int64
 	Title                string
@@ -229,12 +234,73 @@ type IntelligenceStudytask struct {
 	LinkedResourceID pgtype.Int8
 }
 
+type LessonsLesson struct {
+	ID            int64
+	Title         string
+	AccessMode    string
+	ScheduledAt   pgtype.Timestamptz
+	PublishedAt   pgtype.Timestamptz
+	CreatedAt     pgtype.Timestamptz
+	ParentClassID int64
+	TopicID       pgtype.Int8
+}
+
+type LessonsLessonattendance struct {
+	ID              int64
+	Status          string
+	DurationMinutes int32
+	RecordedAt      pgtype.Timestamptz
+	LessonID        int64
+	StudentID       int64
+}
+
+type LessonsLessoninstance struct {
+	ID           int64
+	LessonPlanID pgtype.Int8
+}
+
+type LessonsLessonnote struct {
+	ID            int64
+	ContentBlocks []byte
+	CreatedAt     pgtype.Timestamptz
+	UpdatedAt     pgtype.Timestamptz
+	LessonID      int64
+}
+
+type LessonsLessonqualificationrecord struct {
+	ID       pgtype.UUID
+	LessonID int64
+}
+
+type LessonsLessonrecording struct {
+	ID        int64
+	Url       string
+	Duration  int32
+	CreatedAt pgtype.Timestamptz
+	LessonID  int64
+}
+
+type LiveSessionsLivesession struct {
+	ID       int64
+	LessonID int64
+}
+
 type ParentPortalParentstudentlink struct {
 	ID               int64
 	RelationshipType string
 	ConsentStatus    string
 	ParentProfileID  int64
 	StudentProfileID int64
+}
+
+type ResourcesContentassignment struct {
+	ID       int64
+	LessonID pgtype.Int8
+}
+
+type ResourcesContentitem struct {
+	ID       int64
+	LessonID pgtype.Int8
 }
 
 type ResourcesResource struct {
@@ -268,6 +334,7 @@ type ResourcesResourceengagementrecord struct {
 type ResourcesResourcelessonlink struct {
 	ID         int64
 	ResourceID int64
+	LessonID   int64
 }
 
 type ResourcesSharedresourcelink struct {

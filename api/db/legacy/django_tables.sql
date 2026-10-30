@@ -302,7 +302,8 @@ CREATE TABLE resources_sharedresourcelink (
 -- Rows that point at a resource; Django cascaded or nulled them in the ORM.
 CREATE TABLE resources_resourcelessonlink (
     id          bigint PRIMARY KEY,
-    resource_id bigint NOT NULL REFERENCES resources_resource(id)
+    resource_id bigint NOT NULL REFERENCES resources_resource(id),
+    lesson_id   bigint NOT NULL
 );
 
 CREATE TABLE resources_resourceengagementrecord (
@@ -314,3 +315,48 @@ CREATE TABLE intelligence_studytask (
     id                 bigint PRIMARY KEY,
     linked_resource_id bigint REFERENCES resources_resource(id)
 );
+
+-- Lessons (Go owns writes to lessons, notes, recordings and lesson attendance).
+CREATE TABLE lessons_lesson (
+    id              bigint PRIMARY KEY,
+    title           varchar(255) NOT NULL,
+    access_mode     varchar(20) NOT NULL,
+    scheduled_at    timestamptz NOT NULL,
+    published_at    timestamptz,
+    created_at      timestamptz NOT NULL,
+    parent_class_id bigint NOT NULL REFERENCES classes_class(id),
+    topic_id        bigint REFERENCES curriculum_topic(id)
+);
+
+CREATE TABLE lessons_lessonnote (
+    id             bigint PRIMARY KEY,
+    content_blocks jsonb NOT NULL,
+    created_at     timestamptz NOT NULL,
+    updated_at     timestamptz NOT NULL,
+    lesson_id      bigint NOT NULL REFERENCES lessons_lesson(id)
+);
+
+CREATE TABLE lessons_lessonrecording (
+    id         bigint PRIMARY KEY,
+    url        varchar(500) NOT NULL,
+    duration   integer NOT NULL,
+    created_at timestamptz NOT NULL,
+    lesson_id  bigint NOT NULL REFERENCES lessons_lesson(id)
+);
+
+CREATE TABLE lessons_lessonattendance (
+    id               bigint PRIMARY KEY,
+    status           varchar(20) NOT NULL,
+    duration_minutes integer NOT NULL,
+    recorded_at      timestamptz NOT NULL,
+    lesson_id        bigint NOT NULL REFERENCES lessons_lesson(id),
+    student_id       bigint NOT NULL REFERENCES accounts_user(id)
+);
+
+-- Rows elsewhere that point at a lesson; only their lesson ids are read.
+CREATE TABLE lessons_lessonqualificationrecord (id uuid PRIMARY KEY, lesson_id bigint NOT NULL);
+CREATE TABLE lessons_lessoninstance (id bigint PRIMARY KEY, lesson_plan_id bigint);
+CREATE TABLE attendance_lessonattendance (id bigint PRIMARY KEY, lesson_id bigint NOT NULL);
+CREATE TABLE live_sessions_livesession (id bigint PRIMARY KEY, lesson_id bigint NOT NULL UNIQUE);
+CREATE TABLE resources_contentitem (id bigint PRIMARY KEY, lesson_id bigint);
+CREATE TABLE resources_contentassignment (id bigint PRIMARY KEY, lesson_id bigint);

@@ -30,7 +30,6 @@ from analytics.views import AnalyticsEventViewSet, DailyPlatformMetricViewSet, D
 from assessments.views import AssessmentWindowViewSet, QuestionViewSet
 from discussions.views import ThreadViewSet, PostViewSet
 from exams.views import ExamCenterViewSet, CandidateRegistrationViewSet, SubjectSelectionViewSet, BoardSubmissionBatchViewSet
-from lessons.views import LessonViewSet, LessonNoteViewSet, LessonRecordingViewSet, LessonAttendanceViewSet
 from live_sessions.views import LiveSessionViewSet, SessionReminderViewSet
 from notifications.views import NotificationViewSet
 from parent_portal.views import ParentStudentLinkViewSet, WeeklySummaryViewSet, RiskAlertViewSet
@@ -97,10 +96,7 @@ router.register(r'exams/subject-selection', SubjectSelectionViewSet, basename='e
 router.register(r'exams/board-submission-batch', BoardSubmissionBatchViewSet, basename='exams-board-submission-batch')
 
 # Classroom & Resources
-router.register(r'lessons/lesson', LessonViewSet, basename='lessons-lesson')
-router.register(r'lessons/lesson-note', LessonNoteViewSet, basename='lessons-lesson-note')
-router.register(r'lessons/lesson-recording', LessonRecordingViewSet, basename='lessons-lesson-recording')
-router.register(r'lessons/lesson-attendance', LessonAttendanceViewSet, basename='lessons-lesson-attendance')
+# Lessons, notes, recordings and lesson attendance moved to the Go service.
 router.register(r'live-sessions/live-session', LiveSessionViewSet, basename='live_sessions-live-session')
 router.register(r'live-sessions/session-reminder', SessionReminderViewSet, basename='live_sessions-session-reminder')
 # The resource library and class resource links moved to the Go service.

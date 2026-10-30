@@ -61,6 +61,14 @@ export default function HomeScreen() {
         <Text style={styles.subtitle}>{home.subtitle}</Text>
 
         <RoleWork user={user} />
+        <Card title="Lessons">
+          <Row
+            title="Upcoming lessons"
+            detail="What's planned for your classes"
+            onPress={() => router.push('/lessons')}
+            accessibilityHint="Opens the lesson plan"
+          />
+        </Card>
         <Card title="Library">
           <Row
             title="Notes, guides and links"
