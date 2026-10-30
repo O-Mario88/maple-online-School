@@ -7,12 +7,32 @@ from .serializers import NotificationSerializer
 import time
 
 class NotificationViewSet(viewsets.ModelViewSet):
-    queryset = Notification.objects.all()
+    """A person's own notifications. They can read them and mark them read, but
+    never create notifications for anyone. Sending WhatsApp through the
+    platform's account is for Maple staff only."""
     serializer_class = NotificationSerializer
     permission_classes = [IsAuthenticated]
+    http_method_names = ['get', 'patch', 'post', 'head', 'options']
+
+    def get_queryset(self):
+        return Notification.objects.filter(user=self.request.user)
+
+    def create(self, request, *args, **kwargs):
+        return Response({'detail': 'Notifications are created by the system.'}, status=status.HTTP_403_FORBIDDEN)
+
+    def perform_update(self, serializer):
+        serializer.save(user=self.request.user)
+
+    def _staff_only(self, request):
+        if not request.user.is_staff:
+            return Response({'detail': 'Only Maple staff can send WhatsApp messages.'}, status=status.HTTP_403_FORBIDDEN)
+        return None
 
     @action(detail=False, methods=['post'], url_path='send-whatsapp')
     def send_whatsapp(self, request):
+        denied = self._staff_only(request)
+        if denied:
+            return denied
         to_number = request.data.get('to')
         template_name = request.data.get('templateName')
         variables = request.data.get('variables', {})
@@ -56,6 +76,9 @@ class NotificationViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['post'], url_path='send')
     def send_direct_whatsapp(self, request):
+        denied = self._staff_only(request)
+        if denied:
+            return denied
         from .services import TwilioWhatsAppService
         from .models import WhatsAppMessage
         from .serializers import WhatsAppMessageSerializer
