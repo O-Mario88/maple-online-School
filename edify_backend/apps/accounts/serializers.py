@@ -30,6 +30,15 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             'role': {'required': True},
         }
 
+    # Roles people may pick for themselves. Platform administrators are made
+    # by hand (createsuperuser / Django admin), never through public sign-up.
+    SELF_SERVICE_ROLES = ('student', 'teacher', 'institution')
+
+    def validate_role(self, value):
+        if value not in self.SELF_SERVICE_ROLES:
+            raise serializers.ValidationError('Choose student, teacher or institution.')
+        return value
+
     def create(self, validated_data):
         user = User.objects.create_user(
             email=validated_data['email'],
@@ -44,10 +53,6 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             StudentProfile.objects.create(user=user)
         elif user.role == 'teacher':
             TeacherProfile.objects.create(user=user)
-        elif user.role == 'admin':
-            # Platform administrators are typically designated manually via superuser,
-            # but we allow registration as a generic admin or map them to Institution.
-            pass
         elif user.role == 'institution':
             InstitutionAdminProfile.objects.create(user=user)
             
