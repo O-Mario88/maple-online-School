@@ -41,3 +41,20 @@ export function isLeader(memberships: readonly MembershipLike[]): boolean {
 export function isStaff(memberships: readonly MembershipLike[]): boolean {
   return memberships.some((m) => m.status === 'active' && STAFF_ROLES.has(m.role));
 }
+
+/** Roles that confirm who belongs to a learner. Matches the Go API's roles.Admissions. */
+const ADMISSIONS_ROLES = new Set([...LEADER_ROLES, 'registrar']);
+
+interface SchoolMembership extends MembershipLike {
+  institution_id: number;
+  institution_name: string;
+}
+
+/** Schools where the person can approve or decline parents' links to learners. */
+export function admissionsSchools(memberships: readonly SchoolMembership[]): { id: number; name: string }[] {
+  const seen = new Map<number, string>();
+  for (const m of memberships) {
+    if (m.status === 'active' && ADMISSIONS_ROLES.has(m.role)) seen.set(m.institution_id, m.institution_name);
+  }
+  return [...seen].map(([id, name]) => ({ id, name }));
+}

@@ -5,7 +5,8 @@ import { StyleSheet, View } from 'react-native';
 import { Body, Button, Card, ErrorText, Field, Screen } from '@/components/ui';
 import { api } from '@/lib/api/client';
 import { useMe } from '@/lib/auth/auth-context';
-import { isLeader } from '@/lib/roles';
+import { FamilyLinksCard } from '@/features/family/FamilyLinksCard';
+import { admissionsSchools, isLeader } from '@/lib/roles';
 import { parseEmails } from '@/lib/school/invites';
 
 const tick = (on: boolean, label: string) => (on ? `✓ ${label}` : label);
@@ -16,6 +17,7 @@ export default function SchoolScreen() {
   if (!me.data) return null;
   const led = me.data.memberships.filter((m) => m.status === 'active' && isLeader([m]));
   const canCreate = me.data.role === 'institution' || me.data.role === 'admin';
+  const admissions = admissionsSchools(me.data.memberships).length > 0;
 
   return (
     <Screen width="wide" title="Your school" subtitle="Set up your school and invite staff">
@@ -23,7 +25,8 @@ export default function SchoolScreen() {
       {led.map((m) => (
         <InviteCard key={m.institution_id} school={m.institution_id} name={m.institution_name} />
       ))}
-      {!canCreate && led.length === 0 ? <Body muted>Ask your school's headteacher to invite you.</Body> : null}
+      {admissions ? <FamilyLinksCard /> : null}
+      {!canCreate && led.length === 0 && !admissions ? <Body muted>Ask your school's headteacher to invite you.</Body> : null}
     </Screen>
   );
 }

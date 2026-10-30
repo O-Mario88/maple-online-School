@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Maple API
-  version: 0.13.0
+  version: 0.14.0
   description: |
     The contract between the Maple apps and the Go API. Paths not listed here
     are still served by the Django API through the Go service's forwarder,
@@ -555,6 +555,45 @@ paths:
     post:
       summary: Accept your own pending invitation
       responses: { "200": { description: The membership }, "404": { $ref: "#/components/responses/NotFound" } }
+  /api/v1/family/links/:
+    get:
+      summary: Parent-child links you can see
+      description: >-
+        Admissions staff (leaders and the registrar) see links for learners at
+        their schools; parents see their own. Newest first.
+      parameters:
+        - { name: status, in: query, schema: { type: string, enum: [pending, approved, declined] } }
+        - { name: page, in: query, schema: { type: integer } }
+      responses:
+        "200":
+          description: A page of links
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [count, results]
+                properties:
+                  count: { type: integer }
+                  next: { type: string, nullable: true }
+                  previous: { type: string, nullable: true }
+                  results: { type: array, items: { $ref: "#/components/schemas/FamilyLink" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+  /api/v1/family/links/{id}/approve/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    post:
+      summary: Approve a parent's link to a learner (admissions staff at the learner's school)
+      responses:
+        "200": { description: The link, content: { application/json: { schema: { $ref: "#/components/schemas/FamilyLink" } } } }
+        "403": { description: Not admissions staff at the learner's school }
+        "404": { description: No such link, or not yours to see }
+  /api/v1/family/links/{id}/decline/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    post:
+      summary: Decline or revoke a parent's link to a learner
+      responses:
+        "200": { description: The link, content: { application/json: { schema: { $ref: "#/components/schemas/FamilyLink" } } } }
+        "403": { description: Not admissions staff at the learner's school }
+        "404": { description: No such link, or not yours to see }
   /api/v1/curriculum/full-tree/:
     get:
       summary: The course catalog (levels, classes, terms, subjects, topics, lessons)
@@ -1293,6 +1332,24 @@ components:
         application/json:
           schema: { $ref: "#/components/schemas/Error" }
   schemas:
+    FamilyLink:
+      type: object
+      required: [id, relationship, status, linked_at, parent, student, school_id, school_name]
+      properties:
+        id: { type: integer, format: int64 }
+        relationship: { type: string }
+        status: { type: string, enum: [pending, approved, declined] }
+        linked_at: { type: string, format: date-time }
+        parent:
+          type: object
+          required: [id, name]
+          properties: { id: { type: integer, format: int64 }, name: { type: string }, email: { type: string } }
+        student:
+          type: object
+          required: [id, name]
+          properties: { id: { type: integer, format: int64 }, name: { type: string } }
+        school_id: { type: integer, format: int64, nullable: true }
+        school_name: { type: string }
     Programme:
       type: object
       required: [country, tracks]

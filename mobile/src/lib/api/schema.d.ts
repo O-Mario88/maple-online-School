@@ -1526,6 +1526,162 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/family/links/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Parent-child links you can see
+         * @description Admissions staff (leaders and the registrar) see links for learners at their schools; parents see their own. Newest first.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    status?: "pending" | "approved" | "declined";
+                    page?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description A page of links */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            count: number;
+                            next?: string | null;
+                            previous?: string | null;
+                            results: components["schemas"]["FamilyLink"][];
+                        };
+                    };
+                };
+                401: components["responses"]["Unauthorized"];
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/family/links/{id}/approve/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Approve a parent's link to a learner (admissions staff at the learner's school) */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The link */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["FamilyLink"];
+                    };
+                };
+                /** @description Not admissions staff at the learner's school */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description No such link */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/family/links/{id}/decline/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Decline or revoke a parent's link to a learner */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The link */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["FamilyLink"];
+                    };
+                };
+                /** @description Not admissions staff at the learner's school */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description No such link */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/curriculum/full-tree/": {
         parameters: {
             query?: never;
@@ -3990,6 +4146,29 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        FamilyLink: {
+            /** Format: int64 */
+            id: number;
+            relationship: string;
+            /** @enum {string} */
+            status: "pending" | "approved" | "declined";
+            /** Format: date-time */
+            linked_at: string;
+            parent: {
+                /** Format: int64 */
+                id: number;
+                name: string;
+                email?: string;
+            };
+            student: {
+                /** Format: int64 */
+                id: number;
+                name: string;
+            };
+            /** Format: int64 */
+            school_id: number | null;
+            school_name: string;
+        };
         Programme: {
             country: string;
             tracks: {

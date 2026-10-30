@@ -15,6 +15,7 @@ import (
 
 	"github.com/O-Mario88/maple-online-School/api/internal/config"
 	"github.com/O-Mario88/maple-online-School/api/internal/curriculum"
+	"github.com/O-Mario88/maple-online-School/api/internal/family"
 	"github.com/O-Mario88/maple-online-School/api/internal/finance"
 	"github.com/O-Mario88/maple-online-School/api/internal/identity"
 	"github.com/O-Mario88/maple-online-School/api/internal/institutions"
@@ -70,6 +71,7 @@ func run() error {
 	live := livesessions.NewHandler(livesessions.NewPostgresStore(pool), auth.RequireUser)
 	fees := finance.NewHandler(finance.NewPostgresStore(pool), auth.RequireUser, payments(cfg.Finance))
 	shelf := library.NewHandler(library.NewPostgresStore(pool), auth.RequireUser)
+	households := family.NewHandler(family.NewPostgresStore(pool), auth.RequireUser)
 	join := signup.NewHandler(signup.NewPostgresStore(pool), signup.Signer{Key: cfg.JWTSigningKey}, mailer(cfg.SMTP), cfg.AppURL)
 
 	handler, err := server.NewRouter(server.Options{
@@ -77,7 +79,7 @@ func run() error {
 		LegacyAPI:         cfg.LegacyAPIURL,
 		CORSOrigins:       cfg.CORSOrigins,
 		TrustProxyHeaders: cfg.TrustProxyHeaders,
-		Modules:           []func(chi.Router){auth.Mount, work.Mount, classes.Mount, cards.Mount, week.Mount, schools.Mount, catalog.Mount, plans.Mount, live.Mount, join.Mount, shelf.Mount, fees.Mount},
+		Modules:           []func(chi.Router){auth.Mount, work.Mount, classes.Mount, cards.Mount, week.Mount, schools.Mount, catalog.Mount, plans.Mount, live.Mount, join.Mount, shelf.Mount, fees.Mount, households.Mount},
 	})
 	if err != nil {
 		return err

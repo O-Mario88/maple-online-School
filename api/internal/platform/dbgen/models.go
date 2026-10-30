@@ -184,6 +184,15 @@ type CurriculumTopiccompetency struct {
 	TopicID             int64
 }
 
+type FamilyLinkDecision struct {
+	ID        int64
+	LinkID    int64
+	SchoolID  int64
+	DecidedBy int64
+	Decision  string
+	DecidedAt pgtype.Timestamptz
+}
+
 type FinAccount struct {
 	ID       int64
 	SchoolID int64

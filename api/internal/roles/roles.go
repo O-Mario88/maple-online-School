@@ -13,3 +13,7 @@ var Staff = append(append(append([]string{}, Leaders...), Teachers...), "registr
 
 // Finance runs a school's fees: billing, recording payments and the ledger.
 var Finance = []string{"headteacher", "deputy", "registrar"}
+
+// Admissions confirms who belongs to a learner: leaders and the registrar
+// approve or decline a parent's link to a child at their school.
+var Admissions = append(append([]string{}, Leaders...), "registrar")

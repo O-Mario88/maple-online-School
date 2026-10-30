@@ -96,16 +96,17 @@ func (w *World) Person(role, schoolRole string, school int64) int64 {
 	return id
 }
 
-// LinkParent links a parent to a student with the given consent status.
-func (w *World) LinkParent(parent, student int64, consent string) {
+// LinkParent links a parent to a student with the given consent status and
+// returns the link's id.
+func (w *World) LinkParent(parent, student int64, consent string) int64 {
 	ctx := context.Background()
 	var pp int64
 	if err := w.Pool.QueryRow(ctx, `SELECT id FROM accounts_parentprofile WHERE user_id = $1`, parent).Scan(&pp); err != nil {
 		pp = w.scalar(`INSERT INTO accounts_parentprofile (user_id) VALUES ($1) RETURNING id`, parent)
 	}
 	sp := w.scalar(`INSERT INTO accounts_studentprofile (user_id, onboarding_status) VALUES ($1, 'active') RETURNING id`, student)
-	w.exec(`INSERT INTO parent_portal_parentstudentlink (relationship_type, consent_status, linked_at, parent_profile_id, student_profile_id)
-		VALUES ('mother', $1, now(), $2, $3)`, consent, pp, sp)
+	return w.scalar(`INSERT INTO parent_portal_parentstudentlink (relationship_type, consent_status, linked_at, parent_profile_id, student_profile_id)
+		VALUES ('mother', $1, now(), $2, $3) RETURNING id`, consent, pp, sp)
 }
 
 // Term creates an active academic term covering today.
@@ -228,6 +229,7 @@ func (w *World) cleanup() {
 		`DELETE FROM grading_graderecord WHERE submission_id IN (SELECT id FROM assessments_submission WHERE student_id = ANY($1))`,
 		`DELETE FROM assessments_submission WHERE student_id = ANY($1)`,
 		`DELETE FROM assessments_assessment WHERE created_by_id = ANY($1)`,
+		`DELETE FROM family_link_decisions WHERE decided_by = ANY($1) OR link_id IN (SELECT id FROM parent_portal_parentstudentlink WHERE parent_profile_id IN (SELECT id FROM accounts_parentprofile WHERE user_id = ANY($1)))`,
 		`DELETE FROM parent_portal_parentstudentlink WHERE parent_profile_id IN (SELECT id FROM accounts_parentprofile WHERE user_id = ANY($1))`,
 		`DELETE FROM accounts_parentprofile WHERE user_id = ANY($1)`,
 		`DELETE FROM accounts_studentprofile WHERE user_id = ANY($1)`,
