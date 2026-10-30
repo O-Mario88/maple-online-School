@@ -1,5 +1,5 @@
 // Package server assembles the HTTP router: shared middleware, health check,
-// each module's routes, and the fallback to the Django API.
+// each module's routes, and JSON errors for anything else.
 package server
 
 import (
@@ -12,7 +12,6 @@ import (
 	"github.com/go-chi/cors"
 
 	"github.com/O-Mario88/maple-online-School/api/internal/httpx"
-	"github.com/O-Mario88/maple-online-School/api/internal/legacy"
 )
 
 const (
@@ -28,7 +27,6 @@ type Pinger interface {
 // Options configures the router.
 type Options struct {
 	Pinger            Pinger
-	LegacyAPI         string // Django base URL; empty means no fallback
 	CORSOrigins       []string
 	TrustProxyHeaders bool
 	Modules           []func(chi.Router)
@@ -54,19 +52,12 @@ func NewRouter(opts Options) (http.Handler, error) {
 		mount(r)
 	}
 
-	if opts.LegacyAPI == "" {
-		r.NotFound(func(w http.ResponseWriter, _ *http.Request) {
-			httpx.WriteError(w, http.StatusNotFound, "not_found", "Not found.")
-		})
-		return r, nil
-	}
-	proxy, err := legacy.NewProxy(opts.LegacyAPI)
-	if err != nil {
-		return nil, err
-	}
-	// Anything no Go module handles still works through Django.
-	r.NotFound(proxy.ServeHTTP)
-	r.MethodNotAllowed(proxy.ServeHTTP)
+	r.NotFound(func(w http.ResponseWriter, _ *http.Request) {
+		httpx.WriteError(w, http.StatusNotFound, "not_found", "Not found.")
+	})
+	r.MethodNotAllowed(func(w http.ResponseWriter, _ *http.Request) {
+		httpx.WriteError(w, http.StatusMethodNotAllowed, "method_not_allowed", "This action isn't available.")
+	})
 	return r, nil
 }
 

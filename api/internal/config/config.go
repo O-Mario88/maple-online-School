@@ -18,7 +18,6 @@ type Config struct {
 	AccessTTL         time.Duration
 	RefreshTTL        time.Duration
 	RequireVerified   bool
-	LegacyAPIURL      string
 	CORSOrigins       []string
 	TrustProxyHeaders bool
 	AppURL            string // where emailed links open (the app)
@@ -50,7 +49,6 @@ func Load() (Config, error) {
 		DatabaseURL:       os.Getenv("DATABASE_URL"),
 		JWTSigningKey:     []byte(os.Getenv("JWT_SIGNING_KEY")),
 		RequireVerified:   envBool("REQUIRE_EMAIL_VERIFICATION"),
-		LegacyAPIURL:      os.Getenv("LEGACY_API_URL"),
 		CORSOrigins:       envList("CORS_ORIGINS"),
 		TrustProxyHeaders: envBool("TRUST_PROXY_HEADERS"),
 		AppURL:            env("APP_URL", "http://localhost:8081"),
@@ -73,7 +71,7 @@ func Load() (Config, error) {
 		problems = append(problems, errors.New("DATABASE_URL is required"))
 	}
 	if len(cfg.JWTSigningKey) < minKeyLength {
-		problems = append(problems, fmt.Errorf("JWT_SIGNING_KEY must be at least %d characters (use the Django SECRET_KEY while both backends run)", minKeyLength))
+		problems = append(problems, fmt.Errorf("JWT_SIGNING_KEY must be at least %d characters (keep the old Django SECRET_KEY to keep existing sessions)", minKeyLength))
 	}
 	if cfg.Finance.Sandbox && os.Getenv("APP_ENV") == "production" {
 		problems = append(problems, errors.New("FINANCE_SANDBOX can't be on in production: it confirms payments without moving money"))

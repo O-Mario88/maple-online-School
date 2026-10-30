@@ -5,8 +5,9 @@ students get **My Learning**, teachers **My Classroom**, parents **My Children**
 school leaders the **School Command Centre** and Maple staff the **Platform
 Command Centre**.
 
-The app talks only to the Go API (`../api`). Screens for modules still served by
-Django call the same `/api/v1/...` paths, and the Go service forwards them.
+The app talks only to the Go API (`../api`), typed from `../openapi/maple.yaml`.
+Wide screens get a sidebar and phones a tab bar; people with several roles
+(a teacher who is also a parent, say) switch portals without signing out.
 
 ## What works now
 
@@ -28,12 +29,16 @@ src/app/                 routes (Expo Router)
 src/lib/api/             typed client; schema.d.ts is generated from ../openapi/maple.yaml
 src/lib/auth/            session (tokens, refresh), secure token storage, auth context
 src/lib/roles.ts         what each role sees first
-src/constants/theme.ts   colours and spacing tokens (light and dark)
+src/lib/navigation.ts    portals and their menus
+src/components/ui/       the design system (cards, rows, stats, banners, page header…)
+src/components/shell/    sidebar, tab bar, sign-in layout, notifications bell
+src/features/            screens' sections, by area
+src/constants/theme.ts   design tokens: colour (light and dark), type, spacing, radius
 ```
 
 ## Running locally
 
-Start Django and the Go API first (see `../api/README.md`), then:
+Start the Go API first (see `../api/README.md`), then:
 
 ```bash
 cd mobile

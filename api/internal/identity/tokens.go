@@ -11,9 +11,9 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-// Tokens copy SimpleJWT's claims (token_type, exp, iat, jti, user_id as a
-// string) and HS256 signing, so an access token issued here is also accepted
-// by the Django API while modules move over.
+// Tokens keep SimpleJWT's claims (token_type, exp, iat, jti, user_id as a
+// string) and HS256 signing, so sessions started before the move to Go keep
+// working.
 
 const (
 	TokenTypeAccess  = "access"

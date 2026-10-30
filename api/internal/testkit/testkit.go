@@ -1,6 +1,7 @@
 // Package testkit creates throwaway schools and people in a real Postgres
 // database for module tests, and removes them afterwards. Tests using it are
-// skipped unless MAPLE_TEST_DATABASE_URL points at a database Django has migrated.
+// skipped unless MAPLE_TEST_DATABASE_URL points at a Postgres database; Migrate
+// builds the schema.
 package testkit
 
 import (

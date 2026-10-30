@@ -21,7 +21,7 @@ import (
 
 const (
 	foreignKeyViolation = "23503"
-	mediaPrefix         = "/media/" // uploads are still stored by Django
+	mediaPrefix         = "/media/" // where files uploaded before the move were served
 )
 
 // ProgressInput is one progress report from a learner.

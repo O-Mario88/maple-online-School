@@ -1,17 +1,10 @@
-# Maple Online School — full stack in one compose file.
+# Maple Global Online School: Postgres and the Go API.
 #
-# Bring up:     docker compose up --build
-# First time:   cp .env.docker.example .env && edit DJANGO_SECRET_KEY
-# Tear down:    docker compose down         (keeps the DB volume)
-# Nuke state:   docker compose down -v      (wipes postgres_data)
+#   cp .env.example .env    # then set JWT_SIGNING_KEY and FINANCE_WEBHOOK_SECRET
+#   docker compose up --build
 #
-# Services:
-#   postgres — the real DB (not SQLite). Volume-persisted.
-#   redis    — Celery broker + Django cache backend.
-#   backend  — Django + gunicorn on :8000. Runs migrations on start.
-#   celery   — Celery worker for async tasks (activation emails etc.).
-#   frontend — nginx serving built Vite assets, proxying /api to backend on :8080.
-
+# The API creates and migrates the whole schema on start. The app (Expo, in
+# mobile/) talks to it on http://localhost:8080.
 services:
   postgres:
     image: postgres:16-alpine
@@ -19,7 +12,7 @@ services:
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-maple}
       POSTGRES_USER: ${POSTGRES_USER:-maple}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-maple_dev}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -28,133 +21,27 @@ services:
       timeout: 5s
       retries: 10
 
-  redis:
-    image: redis:7-alpine
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 5s
-      timeout: 3s
-      retries: 10
-
-  backend:
-    build:
-      context: ./edify_backend
-    restart: unless-stopped
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    environment:
-      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:?DJANGO_SECRET_KEY is required — set it in .env}
-      DJANGO_DEBUG: ${DJANGO_DEBUG:-false}
-      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-localhost,127.0.0.1,backend,frontend}
-      DJANGO_CORS_ORIGINS: ${DJANGO_CORS_ORIGINS:-}
-      DATABASE_URL: postgres://${POSTGRES_USER:-maple}:${POSTGRES_PASSWORD:-maple_dev}@postgres:5432/${POSTGRES_DB:-maple}
-      CELERY_BROKER_URL: redis://redis:6379/0
-      CELERY_RESULT_BACKEND: redis://redis:6379/0
-      REQUIRE_EMAIL_VERIFICATION: ${REQUIRE_EMAIL_VERIFICATION:-false}
-      DJANGO_EMAIL_BACKEND: ${DJANGO_EMAIL_BACKEND:-django.core.mail.backends.console.EmailBackend}
-      DJANGO_EMAIL_HOST: ${DJANGO_EMAIL_HOST:-}
-      DJANGO_EMAIL_PORT: ${DJANGO_EMAIL_PORT:-25}
-      DJANGO_EMAIL_USER: ${DJANGO_EMAIL_USER:-}
-      DJANGO_EMAIL_PASSWORD: ${DJANGO_EMAIL_PASSWORD:-}
-      DJANGO_EMAIL_USE_TLS: ${DJANGO_EMAIL_USE_TLS:-true}
-      DJANGO_FROM_EMAIL: ${DJANGO_FROM_EMAIL:-no-reply@maple.edify}
-      FRONTEND_BASE_URL: ${FRONTEND_BASE_URL:-http://localhost:8080}
-      SEED_PASSWORD: ${SEED_PASSWORD:-DemoAccount2025!}
-    volumes:
-      - media_data:/app/media
-    ports:
-      - "${BACKEND_PORT:-8000}:8000"
-    # Run migrations then start gunicorn. Keeps the first-boot experience
-    # single-command: `docker compose up` -> working app.
-    command: >
-      sh -c "python manage.py migrate --noinput &&
-             exec gunicorn edify_core.wsgi:application
-                 --bind 0.0.0.0:8000
-                 --workers 3
-                 --access-logfile -
-                 --error-logfile -
-                 --timeout 60"
-    healthcheck:
-      test: ["CMD", "curl", "-fsS", "http://localhost:8000/api/health/"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 30s
-
-  celery:
-    build:
-      context: ./edify_backend
-    restart: unless-stopped
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    environment:
-      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:?DJANGO_SECRET_KEY is required}
-      DJANGO_DEBUG: ${DJANGO_DEBUG:-false}
-      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-localhost,127.0.0.1,backend,frontend}
-      DATABASE_URL: postgres://${POSTGRES_USER:-maple}:${POSTGRES_PASSWORD:-maple_dev}@postgres:5432/${POSTGRES_DB:-maple}
-      CELERY_BROKER_URL: redis://redis:6379/0
-      CELERY_RESULT_BACKEND: redis://redis:6379/0
-      # Celery worker must run tasks (not eager). The app's default is
-      # CELERY_TASK_ALWAYS_EAGER=True; override here.
-      CELERY_TASK_ALWAYS_EAGER: "false"
-      REQUIRE_EMAIL_VERIFICATION: ${REQUIRE_EMAIL_VERIFICATION:-false}
-      DJANGO_EMAIL_BACKEND: ${DJANGO_EMAIL_BACKEND:-django.core.mail.backends.console.EmailBackend}
-      DJANGO_EMAIL_HOST: ${DJANGO_EMAIL_HOST:-}
-      DJANGO_EMAIL_PORT: ${DJANGO_EMAIL_PORT:-25}
-      DJANGO_EMAIL_USER: ${DJANGO_EMAIL_USER:-}
-      DJANGO_EMAIL_PASSWORD: ${DJANGO_EMAIL_PASSWORD:-}
-      DJANGO_EMAIL_USE_TLS: ${DJANGO_EMAIL_USE_TLS:-true}
-      DJANGO_FROM_EMAIL: ${DJANGO_FROM_EMAIL:-no-reply@maple.edify}
-      FRONTEND_BASE_URL: ${FRONTEND_BASE_URL:-http://localhost:8080}
-    volumes:
-      - media_data:/app/media
-    command: celery -A edify_core worker --loglevel=info
-
-  # Go API. Serves the modules already moved to Go and forwards the rest to
-  # Django. Signs tokens with the same key so both accept them during the move.
   api:
-    build:
-      context: ./api
+    build: ./api
     restart: unless-stopped
     depends_on:
-      backend:
-        condition: service_healthy   # Django has applied its migrations
-    environment:
-      DATABASE_URL: postgres://${POSTGRES_USER:-maple}:${POSTGRES_PASSWORD:-maple_dev}@postgres:5432/${POSTGRES_DB:-maple}
-      JWT_SIGNING_KEY: ${DJANGO_SECRET_KEY:?DJANGO_SECRET_KEY is required}
-      LEGACY_API_URL: http://backend:8000
-      REQUIRE_EMAIL_VERIFICATION: ${REQUIRE_EMAIL_VERIFICATION:-false}
-      CORS_ORIGINS: ${API_CORS_ORIGINS:-}
-      TRUST_PROXY_HEADERS: "true"
-      MAPLE_ADDR: ":8080"
-    ports:
-      - "${API_PORT:-8081}:8080"
-
-  frontend:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        # The browser hits /api on the same origin (nginx proxies to backend),
-        # so an empty base URL means "relative to current host" — which is what
-        # we want when frontend and backend are served through one nginx.
-        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-}
-    restart: unless-stopped
-    depends_on:
-      backend:
+      postgres:
         condition: service_healthy
-      api:
-        condition: service_started
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER:-maple}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-maple}?sslmode=disable
+      JWT_SIGNING_KEY: ${JWT_SIGNING_KEY:?set JWT_SIGNING_KEY in .env}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:8081}
+      APP_URL: ${APP_URL:-http://localhost:8081}
+      APP_ENV: ${APP_ENV:-development}
+      FINANCE_SANDBOX: ${FINANCE_SANDBOX:-true}
+      FINANCE_WEBHOOK_SECRET: ${FINANCE_WEBHOOK_SECRET:?set FINANCE_WEBHOOK_SECRET in .env}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USERNAME: ${SMTP_USERNAME:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      MAIL_FROM: ${MAIL_FROM:-no-reply@maple.school}
     ports:
-      - "${FRONTEND_PORT:-8080}:80"
+      - "8080:8080"
 
 volumes:
   postgres_data:
-  media_data:

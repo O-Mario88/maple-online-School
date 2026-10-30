@@ -158,8 +158,8 @@ func (f field[T]) apply(dst **T) {
 	}
 }
 
-// Input is a create or PATCH body. Files are still uploaded through Django
-// until file storage moves, so new items are links.
+// Input is a create or PATCH body. New items are links or text until file
+// storage (object storage) is added.
 type Input struct {
 	Title            *string      `json:"title"`
 	Description      *string      `json:"description"`

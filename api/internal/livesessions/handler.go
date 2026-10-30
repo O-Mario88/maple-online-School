@@ -51,8 +51,8 @@ func NewHandler(store Store, requireUser func(http.Handler) http.Handler) *Handl
 	return &Handler{store: store, requireUser: requireUser}
 }
 
-// Mount registers the routes. Everything under /api/v1/live-sessions/ is
-// Go's; other methods get 405 rather than falling through to Django.
+// Mount registers the routes. Other methods under /api/v1/live-sessions/
+// get 405.
 func (h *Handler) Mount(r chi.Router) {
 	r.Group(func(r chi.Router) {
 		r.Use(h.requireUser)

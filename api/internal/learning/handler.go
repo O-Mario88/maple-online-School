@@ -50,8 +50,7 @@ func NewHandler(store Store, family identity.ProfileReader, requireUser func(htt
 	return &Handler{store: store, family: family, requireUser: requireUser}
 }
 
-// Mount registers the routes. Methods Go doesn't support on these paths get
-// 405 here rather than falling through to Django, so Go stays the only writer.
+// Mount registers the routes. Other methods on these paths get 405.
 func (h *Handler) Mount(r chi.Router) {
 	r.Group(func(r chi.Router) {
 		r.Use(h.requireUser)

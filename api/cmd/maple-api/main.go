@@ -82,7 +82,6 @@ func run() error {
 
 	handler, err := server.NewRouter(server.Options{
 		Pinger:            pool,
-		LegacyAPI:         cfg.LegacyAPIURL,
 		CORSOrigins:       cfg.CORSOrigins,
 		TrustProxyHeaders: cfg.TrustProxyHeaders,
 		Modules:           []func(chi.Router){auth.Mount, work.Mount, classes.Mount, cards.Mount, week.Mount, schools.Mount, catalog.Mount, plans.Mount, live.Mount, join.Mount, shelf.Mount, fees.Mount, households.Mount, notes.Mount, watch.Mount, talk.Mount},
@@ -101,7 +100,7 @@ func run() error {
 	}
 	errCh := make(chan error, 1)
 	go func() {
-		slog.Info("maple-api listening", "addr", cfg.Addr, "legacy_api", cfg.LegacyAPIURL != "")
+		slog.Info("maple-api listening", "addr", cfg.Addr)
 		errCh <- srv.ListenAndServe()
 	}()
 

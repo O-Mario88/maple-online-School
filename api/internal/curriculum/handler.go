@@ -89,9 +89,7 @@ func NewHandler(store Store, requireUser func(http.Handler) http.Handler) *Handl
 	return &Handler{store: store, requireUser: requireUser}
 }
 
-// ownedPaths are read-only in Go; other methods on them get 405 rather than
-// falling through to Django. Resource quality reviews stay on Django until
-// the resources module moves.
+// ownedPaths are read-only; other methods on them get 405.
 var ownedPaths = []string{"full-tree", "programmes", "countries", "class-levels", "subjects", "topics", "topic-competencies"}
 
 // Mount registers the routes.

@@ -1,4 +1,7 @@
-# Go API image: a static binary on a minimal base.
+# syntax=docker/dockerfile:1.7
+# The Maple API: one static Go binary. It builds and migrates its own schema
+# on start, so the image needs nothing but a Postgres URL and secrets.
+
 FROM golang:1.27-alpine AS build
 WORKDIR /src
 COPY go.mod go.sum ./

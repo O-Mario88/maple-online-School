@@ -55,8 +55,7 @@ func NewHandler(store Store, requireUser func(http.Handler) http.Handler) *Handl
 	return &Handler{store: store, requireUser: requireUser}
 }
 
-// Mount registers the routes. Other /api/v1/institutions/... paths (learner
-// registration, onboarding) are still served by Django through the forwarder.
+// Mount registers the routes.
 func (h *Handler) Mount(r chi.Router) {
 	r.Group(func(r chi.Router) {
 		r.Use(h.requireUser)
