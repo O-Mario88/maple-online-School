@@ -346,13 +346,96 @@ type ParentPortalParentstudentlink struct {
 }
 
 type ResourcesContentassignment struct {
-	ID       int64
-	LessonID pgtype.Int8
+	ID             pgtype.UUID
+	AssignedByType string
+	AssignmentType string
+	Priority       string
+	Note           string
+	DueDate        pgtype.Timestamptz
+	IsActive       bool
+	CreatedAt      pgtype.Timestamptz
+	UpdatedAt      pgtype.Timestamptz
+	AssignedByID   pgtype.Int8
+	ContentItemID  pgtype.UUID
+	LessonID       pgtype.Int8
+	StudentID      int64
+	SubjectID      pgtype.Int8
+	TargetClassID  pgtype.Int8
+	TopicID        pgtype.Int8
+}
+
+type ResourcesContentauditlog struct {
+	ID            pgtype.UUID
+	Action        string
+	OldValue      []byte
+	NewValue      []byte
+	Notes         string
+	Timestamp     pgtype.Timestamptz
+	ContentItemID pgtype.UUID
+	PerformedByID pgtype.Int8
+}
+
+type ResourcesContentengagement struct {
+	ID                   pgtype.UUID
+	ViewCount            int32
+	ActiveTimeSeconds    int32
+	CompletionPercentage pgtype.Numeric
+	LastPosition         int32
+	IsCompleted          bool
+	FirstAccessed        pgtype.Timestamptz
+	LastAccessed         pgtype.Timestamptz
+	ContentItemID        pgtype.UUID
+	InstitutionID        pgtype.Int8
+	StudentID            int64
+	CompletedAt          pgtype.Timestamptz
+	Status               string
 }
 
 type ResourcesContentitem struct {
-	ID       int64
-	LessonID pgtype.Int8
+	ID                 pgtype.UUID
+	Title              string
+	Description        string
+	ContentType        string
+	OwnerType          string
+	SchoolLevel        string
+	VisibilityScope    string
+	PublicationStatus  string
+	ModerationStatus   string
+	RejectionReason    string
+	File               pgtype.Text
+	ExternalUrl        string
+	Thumbnail          pgtype.Text
+	MimeType           string
+	FileSize           pgtype.Int8
+	DurationSeconds    pgtype.Int4
+	VimeoVideoID       string
+	VimeoUploadStatus  string
+	Language           string
+	Version            int32
+	IsFeatured         bool
+	CreatedAt          pgtype.Timestamptz
+	UpdatedAt          pgtype.Timestamptz
+	PublishedAt        pgtype.Timestamptz
+	ArchivedAt         pgtype.Timestamptz
+	AssignmentID       pgtype.Int8
+	ClassLevelID       pgtype.Int8
+	CountryID          pgtype.Int8
+	CurriculumID       pgtype.Int8
+	EducationLevelID   pgtype.Int8
+	InterventionID     pgtype.Int8
+	LessonID           pgtype.Int8
+	OwnerInstitutionID pgtype.Int8
+	SubjectID          pgtype.Int8
+	TopicID            pgtype.Int8
+	UploadedByID       int64
+}
+
+type ResourcesContentvisibilityrule struct {
+	ID            int64
+	CreatedAt     pgtype.Timestamptz
+	ContentItemID pgtype.UUID
+	TargetClassID pgtype.Int8
+	TargetUserID  pgtype.Int8
 }
 
 type ResourcesResource struct {

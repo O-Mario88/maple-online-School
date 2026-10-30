@@ -373,8 +373,6 @@ CREATE TABLE lessons_lessonattendance (
 CREATE TABLE lessons_lessonqualificationrecord (id uuid PRIMARY KEY, lesson_id bigint NOT NULL);
 CREATE TABLE lessons_lessoninstance (id bigint PRIMARY KEY, lesson_plan_id bigint);
 CREATE TABLE attendance_lessonattendance (id bigint PRIMARY KEY, lesson_id bigint NOT NULL);
-CREATE TABLE resources_contentitem (id bigint PRIMARY KEY, lesson_id bigint);
-CREATE TABLE resources_contentassignment (id bigint PRIMARY KEY, lesson_id bigint);
 
 -- Live sessions (Go owns writes to sessions, reminders and missed-session recovery).
 CREATE TABLE live_sessions_livesession (
@@ -417,4 +415,100 @@ CREATE TABLE live_sessions_recoveryassignment (
     file_type   varchar(50) NOT NULL,
     file_url    varchar(500),
     recovery_id bigint NOT NULL REFERENCES live_sessions_missedsessionrecovery(id)
+);
+
+-- The library (playbook section 5). Go owns writes to these tables; ids are UUIDs.
+CREATE TABLE resources_contentitem (
+    id                   uuid PRIMARY KEY,
+    title                varchar(500) NOT NULL,
+    description          text NOT NULL,
+    content_type         varchar(30) NOT NULL,
+    owner_type           varchar(20) NOT NULL,
+    school_level         varchar(20) NOT NULL,
+    visibility_scope     varchar(30) NOT NULL,
+    publication_status   varchar(20) NOT NULL,
+    moderation_status    varchar(20) NOT NULL,
+    rejection_reason     text NOT NULL,
+    file                 varchar(100),
+    external_url         varchar(1000) NOT NULL,
+    thumbnail            varchar(100),
+    mime_type            varchar(100) NOT NULL,
+    file_size            bigint,
+    duration_seconds     integer,
+    vimeo_video_id       varchar(50) NOT NULL,
+    vimeo_upload_status  varchar(20) NOT NULL,
+    language             varchar(10) NOT NULL,
+    version              integer NOT NULL,
+    is_featured          boolean NOT NULL,
+    created_at           timestamptz NOT NULL,
+    updated_at           timestamptz NOT NULL,
+    published_at         timestamptz,
+    archived_at          timestamptz,
+    assignment_id        bigint,
+    class_level_id       bigint REFERENCES curriculum_classlevel(id),
+    country_id           bigint,
+    curriculum_id        bigint,
+    education_level_id   bigint,
+    intervention_id      bigint,
+    lesson_id            bigint REFERENCES lessons_lesson(id),
+    owner_institution_id bigint REFERENCES institutions_institution(id),
+    subject_id           bigint REFERENCES curriculum_subject(id),
+    topic_id             bigint REFERENCES curriculum_topic(id),
+    uploaded_by_id       bigint NOT NULL REFERENCES accounts_user(id)
+);
+
+CREATE TABLE resources_contentengagement (
+    id                    uuid PRIMARY KEY,
+    view_count            integer NOT NULL,
+    active_time_seconds   integer NOT NULL,
+    completion_percentage numeric(5,2) NOT NULL,
+    last_position         integer NOT NULL,
+    is_completed          boolean NOT NULL,
+    first_accessed        timestamptz,
+    last_accessed         timestamptz,
+    content_item_id       uuid NOT NULL REFERENCES resources_contentitem(id),
+    institution_id        bigint,
+    student_id            bigint NOT NULL REFERENCES accounts_user(id),
+    completed_at          timestamptz,
+    status                varchar(20) NOT NULL,
+    UNIQUE (student_id, content_item_id)
+);
+
+CREATE TABLE resources_contentassignment (
+    id               uuid PRIMARY KEY,
+    assigned_by_type varchar(20) NOT NULL,
+    assignment_type  varchar(20) NOT NULL,
+    priority         varchar(10) NOT NULL,
+    note             text NOT NULL,
+    due_date         timestamptz,
+    is_active        boolean NOT NULL,
+    created_at       timestamptz NOT NULL,
+    updated_at       timestamptz NOT NULL,
+    assigned_by_id   bigint,
+    content_item_id  uuid NOT NULL REFERENCES resources_contentitem(id),
+    lesson_id        bigint,
+    student_id       bigint NOT NULL REFERENCES accounts_user(id),
+    subject_id       bigint,
+    target_class_id  bigint REFERENCES classes_class(id),
+    topic_id         bigint,
+    UNIQUE (content_item_id, student_id, assigned_by_type)
+);
+
+CREATE TABLE resources_contentvisibilityrule (
+    id              bigint PRIMARY KEY,
+    created_at      timestamptz NOT NULL,
+    content_item_id uuid NOT NULL REFERENCES resources_contentitem(id),
+    target_class_id bigint REFERENCES classes_class(id),
+    target_user_id  bigint REFERENCES accounts_user(id)
+);
+
+CREATE TABLE resources_contentauditlog (
+    id              uuid PRIMARY KEY,
+    action          varchar(30) NOT NULL,
+    old_value       jsonb,
+    new_value       jsonb,
+    notes           text NOT NULL,
+    timestamp       timestamptz NOT NULL,
+    content_item_id uuid NOT NULL REFERENCES resources_contentitem(id),
+    performed_by_id bigint REFERENCES accounts_user(id)
 );
