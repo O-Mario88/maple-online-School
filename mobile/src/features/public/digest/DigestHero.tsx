@@ -26,7 +26,7 @@ export function DigestHeader({ validUntil, wide }: { validUntil: string; wide: b
         <Icon name="lock" size={18} color={Brand.ink} />
         <View>
           <Text style={styles.validText}>{wide ? 'This link is private and valid until' : 'Valid until'}</Text>
-          <Text style={styles.validDate}>{validUntil}</Text>
+          <Text style={styles.validDate}>{wide ? validUntil : validUntil.split(' · ')[0]}</Text>
         </View>
       </View>
     </View>
