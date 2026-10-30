@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
 
-import { Body, Button, Card, Field, Heading, Screen } from '@/components/ui';
+import { Body, Button, Card, Field, Screen } from '@/components/ui';
 import { api } from '@/lib/api/client';
 
 /** Ask for a password-reset link. The reply is the same whether or not the account exists. */
@@ -18,9 +18,8 @@ export default function ForgotPasswordScreen() {
   }
 
   return (
-    <Screen>
-      <Button label="Back to sign in" variant="secondary" onPress={() => router.replace('/sign-in')} />
-      <Heading>Reset your password</Heading>
+    <Screen title="Reset your password">
+      <Button label="Back to sign in" variant="ghost" icon="chevronLeft" compact onPress={() => router.replace('/sign-in')} />
       <Card>
         {sent ? (
           <Body>{sent}</Body>

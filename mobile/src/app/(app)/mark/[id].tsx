@@ -1,7 +1,7 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 
-import { Body, Button, Card, ErrorText, Field, Heading, Loading, Screen } from '@/components/ui';
+import { Body, Button, Card, ErrorText, Field, Loading, Screen } from '@/components/ui';
 import { useAssignment, useGradeSubmission, useSubmissions } from '@/lib/learning/queries';
 import { trimDecimal } from '@/lib/learning/work';
 
@@ -25,10 +25,8 @@ export default function MarkScreen() {
   }
   if (!submission || assignment.error || !assignment.data) {
     return (
-      <Screen>
-        <Heading>Submission not found</Heading>
+      <Screen back title="Submission not found">
         <Body muted>It may already be marked, or it belongs to another school.</Body>
-        <Button label="Back" variant="secondary" onPress={() => router.back()} />
       </Screen>
     );
   }
@@ -45,9 +43,7 @@ export default function MarkScreen() {
   }
 
   return (
-    <Screen>
-      <Button label="Back" variant="secondary" onPress={() => router.back()} />
-      <Heading>{submission.student_name ?? 'Student'}</Heading>
+    <Screen back title={submission.student_name ?? 'Student'}>
       <Body muted>{assignment.data.title}</Body>
 
       <Card title="Their answer">

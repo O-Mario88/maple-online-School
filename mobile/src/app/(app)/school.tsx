@@ -1,9 +1,8 @@
 import { useQueryClient } from '@tanstack/react-query';
-import { router } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { Body, Button, Card, ErrorText, Field, Heading, Screen } from '@/components/ui';
+import { Body, Button, Card, ErrorText, Field, Screen } from '@/components/ui';
 import { api } from '@/lib/api/client';
 import { useMe } from '@/lib/auth/auth-context';
 import { isLeader } from '@/lib/roles';
@@ -19,9 +18,7 @@ export default function SchoolScreen() {
   const canCreate = me.data.role === 'institution' || me.data.role === 'admin';
 
   return (
-    <Screen>
-      <Button label="Back" variant="secondary" onPress={() => router.back()} />
-      <Heading>Your school</Heading>
+    <Screen width="wide" title="Your school" subtitle="Set up your school and invite staff">
       {canCreate && led.length === 0 ? <SetUpCard /> : null}
       {led.map((m) => (
         <InviteCard key={m.institution_id} school={m.institution_id} name={m.institution_name} />

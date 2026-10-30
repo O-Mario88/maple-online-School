@@ -1,8 +1,8 @@
-import { router, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { Body, Button, Card, ErrorText, Field, Heading, Loading, Screen } from '@/components/ui';
+import { Body, Button, Card, ErrorText, Field, Loading, Screen } from '@/components/ui';
 import { FORMATIVE_MAX, parseMark, SUMMATIVE_MAX } from '@/lib/reports/marks';
 import { useClassMarks, useGenerateReports, useSaveMarks } from '@/lib/reports/queries';
 import { useRoster } from '@/lib/school/queries';
@@ -32,10 +32,8 @@ export default function MarksScreen() {
   }
   if (roster.error || !roster.data) {
     return (
-      <Screen>
-        <Heading>Marks unavailable</Heading>
+      <Screen back title="Marks unavailable">
         <ErrorText message={roster.error?.message} />
-        <Button label="Back" variant="secondary" onPress={() => router.back()} />
       </Screen>
     );
   }
@@ -79,9 +77,7 @@ export default function MarksScreen() {
   }
 
   return (
-    <Screen>
-      <Button label="Back" variant="secondary" onPress={() => router.back()} />
-      <Heading>{roster.data.class.title}: term marks</Heading>
+    <Screen back title={`${roster.data.class.title}: term marks`}>
       <Body muted>Classwork out of 20 plus the end-of-term exam out of 80.</Body>
 
       <Card title={`Students (${students.length})`}>

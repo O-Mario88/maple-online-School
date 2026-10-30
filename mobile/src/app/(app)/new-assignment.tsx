@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, Switch, Text, View } from 'react-native';
 
-import { Body, Button, Card, ErrorText, Field, Heading, Screen } from '@/components/ui';
+import { Body, Button, Card, ErrorText, Field, Screen } from '@/components/ui';
 import { useTheme } from '@/hooks/use-theme';
 import { useCreateAssignment } from '@/lib/learning/queries';
 
@@ -31,9 +31,7 @@ export default function NewAssignmentScreen() {
   }
 
   return (
-    <Screen>
-      <Button label="Cancel" variant="secondary" onPress={() => router.back()} />
-      <Heading>New assignment</Heading>
+    <Screen back title="New assignment">
       <Card>
         <Field label="Title" value={title} onChangeText={setTitle} maxLength={255} placeholder="e.g. Fractions homework" />
         <Field

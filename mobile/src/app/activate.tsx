@@ -1,7 +1,7 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 
-import { Body, Button, ErrorText, Field, Heading, Loading, Screen } from '@/components/ui';
+import { Body, Button, ErrorText, Field, Loading, Screen } from '@/components/ui';
 import { api } from '@/lib/api/client';
 
 type State = { kind: 'working' } | { kind: 'done'; email?: string } | { kind: 'failed'; message: string };
@@ -33,8 +33,7 @@ export default function ActivateScreen() {
   }, [token]);
 
   return (
-    <Screen>
-      <Heading>Activate your account</Heading>
+    <Screen title="Activate your account">
       {state.kind === 'working' ? <Loading label="Verifying your email" /> : null}
       {state.kind === 'done' ? (
         <>

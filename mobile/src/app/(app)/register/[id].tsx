@@ -1,7 +1,7 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 
-import { Badge, type BadgeTone, Body, Button, Card, ErrorText, Heading, Loading, Row, Screen } from '@/components/ui';
+import { Badge, type BadgeTone, Body, Button, Card, ErrorText, Loading, Row, Screen } from '@/components/ui';
 import { initialRegister, localToday, nextStatus, type Register, STATUS_LABELS } from '@/lib/school/attendance';
 import { useMarks, useRoster, useSaveRegister } from '@/lib/school/queries';
 import type { MarkStatus } from '@/lib/school/types';
@@ -32,10 +32,8 @@ export default function RegisterScreen() {
 
   if (roster.error) {
     return (
-      <Screen>
-        <Heading>Register unavailable</Heading>
+      <Screen back title="Register unavailable">
         <ErrorText message={roster.error.message} />
-        <Button label="Back" variant="secondary" onPress={() => router.back()} />
       </Screen>
     );
   }
@@ -66,9 +64,7 @@ export default function RegisterScreen() {
   }
 
   return (
-    <Screen>
-      <Button label="Back" variant="secondary" onPress={() => router.back()} />
-      <Heading>{roster.data.class.title}</Heading>
+    <Screen back title={roster.data.class.title}>
       <Body muted>
         {day} · {count(['present'])} present · {count(['late'])} late ·{' '}
         {count(['unauthorized_absent', 'authorized_absent'])} absent

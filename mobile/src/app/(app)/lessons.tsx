@@ -1,8 +1,7 @@
-import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { Badge, Body, Button, Card, ErrorText, Field, Heading, Loading, Row, Screen } from '@/components/ui';
+import { Badge, Body, Button, Card, ErrorText, Field, Loading, Row, Screen } from '@/components/ui';
 import { AddLiveLinkCard, LiveSessionsCard } from '@/features/shared/LiveSessionsCard';
 import { useMe } from '@/lib/auth/auth-context';
 import { lessonWhen, parseLessonTime, upcomingLessons, type Lesson } from '@/lib/lessons/lessons';
@@ -16,9 +15,7 @@ export default function LessonsScreen() {
   const staff = me.data ? isStaff(me.data.memberships) : false;
 
   return (
-    <Screen>
-      <Button label="Back" variant="secondary" onPress={() => router.back()} />
-      <Heading>Lessons</Heading>
+    <Screen width="wide" title="Lessons" subtitle="Planned lessons and live classes">
       <LiveSessionsCard />
       <UpcomingCard staff={staff} />
       {staff ? <PlanLessonCard /> : null}

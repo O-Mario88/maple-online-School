@@ -1,6 +1,4 @@
-import { router } from 'expo-router';
-
-import { Button, Heading, Screen } from '@/components/ui';
+import { Screen } from '@/components/ui';
 import { FamilyInvoicesCard, SchoolFeesCards } from '@/features/finance/FeesCards';
 import { useMe } from '@/lib/auth/auth-context';
 import { financeSchools } from '@/lib/finance/fees';
@@ -12,9 +10,7 @@ export default function FeesScreen() {
   const schools = me.data ? financeSchools(me.data.memberships) : [];
 
   return (
-    <Screen>
-      <Button label="Back" variant="secondary" onPress={() => router.back()} />
-      <Heading>Fees</Heading>
+    <Screen width="wide" title="Fees" subtitle="Invoices, balances and payments">
       {role === 'student' || role === 'parent' ? <FamilyInvoicesCard /> : null}
       {schools.map((s) => (
         <SchoolFeesCards key={s.id} school={s} />

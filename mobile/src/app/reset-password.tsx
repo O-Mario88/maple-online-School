@@ -1,7 +1,7 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 
-import { Body, Button, Card, ErrorText, Field, Heading, Screen } from '@/components/ui';
+import { Body, Button, Card, ErrorText, Field, Screen } from '@/components/ui';
 import { api } from '@/lib/api/client';
 import { passwordProblem } from '@/lib/auth/signup';
 
@@ -33,8 +33,7 @@ export default function ResetPasswordScreen() {
 
   if (done) {
     return (
-      <Screen>
-        <Heading>Password changed</Heading>
+      <Screen title="Password changed">
         <Body>You can sign in with your new password now.</Body>
         <Button label="Sign in" onPress={() => router.replace('/sign-in')} />
       </Screen>
@@ -42,8 +41,7 @@ export default function ResetPasswordScreen() {
   }
 
   return (
-    <Screen>
-      <Heading>Choose a new password</Heading>
+    <Screen title="Choose a new password">
       <Card>
         <Field label="New password" value={password} onChangeText={setPassword} secureTextEntry autoComplete="new-password" />
         <Field label="Confirm password" value={confirm} onChangeText={setConfirm} secureTextEntry autoComplete="new-password" />

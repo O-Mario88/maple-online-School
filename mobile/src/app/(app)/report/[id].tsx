@@ -1,7 +1,7 @@
-import { router, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 
-import { Badge, Body, Button, Card, ErrorText, Field, Heading, Loading, Row, Screen } from '@/components/ui';
+import { Badge, Body, Button, Card, ErrorText, Field, Loading, Row, Screen } from '@/components/ui';
 import { useMe } from '@/lib/auth/auth-context';
 import { trimDecimal } from '@/lib/learning/work';
 import { useReport, useUpdateReport } from '@/lib/reports/queries';
@@ -26,10 +26,8 @@ export default function ReportScreen() {
   }
   if (report.error || !report.data) {
     return (
-      <Screen>
-        <Heading>Report card not found</Heading>
+      <Screen back title="Report card not found">
         <Body muted>{report.error?.message ?? 'It may not be published yet.'}</Body>
-        <Button label="Back" variant="secondary" onPress={() => router.back()} />
       </Screen>
     );
   }
@@ -47,9 +45,7 @@ export default function ReportScreen() {
     });
 
   return (
-    <Screen>
-      <Button label="Back" variant="secondary" onPress={() => router.back()} />
-      <Heading>{r.student_name}</Heading>
+    <Screen back title={r.student_name}>
       <Body muted>
         {r.term_name} · {r.is_published ? 'Published' : 'Draft, not yet visible to the family'}
       </Body>

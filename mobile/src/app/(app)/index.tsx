@@ -1,191 +1,152 @@
 import { router } from 'expo-router';
-import { useMemo } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Card, Row } from '@/components/ui';
-import { Spacing } from '@/constants/theme';
-import { useTheme } from '@/hooks/use-theme';
-import type { Me } from '@/lib/api/client';
+import { Badge, Body, Button, Card, ErrorText, Grid, Loading, Row, Screen, Segmented, useShell } from '@/components/ui';
+import { HomeStats } from '@/features/home/HomeStats';
 import { AttendanceSection } from '@/features/learner/AttendanceSection';
 import { ParentResultsSection } from '@/features/parent/ParentResultsSection';
 import { ReportsSection } from '@/features/shared/ReportsSection';
 import { TodaySection } from '@/features/shared/TodaySection';
-import { ClassesSection } from '@/features/teacher/ClassesSection';
 import { StudentWorkSection } from '@/features/student/StudentWorkSection';
+import { ClassesSection } from '@/features/teacher/ClassesSection';
 import { TeacherWorkSection } from '@/features/teacher/TeacherWorkSection';
+import type { Me } from '@/lib/api/client';
 import { useAuth, useMe } from '@/lib/auth/auth-context';
-import { homeFor, isStaff } from '@/lib/roles';
+import { greeting } from '@/lib/home';
+import { type Portal, PORTAL_LABELS } from '@/lib/navigation';
+import { usePortal } from '@/lib/portal-context';
+import { homeFor } from '@/lib/roles';
 
-type Theme = ReturnType<typeof useTheme>;
-type Styles = ReturnType<typeof makeStyles>;
+// Each portal's home uses the matching role's title and subtitle.
+const PORTAL_ROLE: Readonly<Record<Portal, string>> = {
+  learner: 'student',
+  teacher: 'teacher',
+  parent: 'parent',
+  school: 'institution',
+  command: 'admin',
+};
 
 export default function HomeScreen() {
-  const theme = useTheme();
-  const styles = useMemo(() => makeStyles(theme), [theme]);
-  const { signOut } = useAuth();
   const me = useMe();
+  const { portal, portals, setPortal } = usePortal();
+  const { wide } = useShell();
+  const { signOut } = useAuth();
 
   if (me.isPending) {
     return (
-      <SafeAreaView style={[styles.safe, styles.center]}>
-        <ActivityIndicator color={theme.accent} accessibilityLabel="Loading your account" />
-      </SafeAreaView>
+      <Screen>
+        <Loading label="Loading your account" />
+      </Screen>
     );
   }
-
   if (me.isError) {
     return (
-      <SafeAreaView style={[styles.safe, styles.center]}>
-        <Text style={styles.body} accessibilityRole="alert">
-          {me.error.message}
-        </Text>
-        <Pressable style={styles.secondaryButton} onPress={() => me.refetch()} accessibilityRole="button">
-          <Text style={styles.secondaryButtonText}>Try again</Text>
-        </Pressable>
-      </SafeAreaView>
+      <Screen title="Something went wrong">
+        <ErrorText message={me.error.message} />
+        <Button label="Try again" variant="secondary" onPress={() => me.refetch()} />
+      </Screen>
     );
   }
 
   const user = me.data;
-  const home = homeFor(user.role);
+  const now = new Date();
   const firstName = user.full_name.split(' ')[0] || user.full_name;
+  const home = homeFor(PORTAL_ROLE[portal]);
+  const today = now.toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' });
 
   return (
-    <SafeAreaView style={styles.safe}>
-      <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.greeting}>Hello, {firstName}</Text>
-        <Text style={styles.title} accessibilityRole="header">
-          {home.title}
-        </Text>
-        <Text style={styles.subtitle}>{home.subtitle}</Text>
-
-        <RoleWork user={user} />
-        <Card title="Lessons">
-          <Row
-            title="Upcoming lessons"
-            detail="What's planned for your classes"
-            onPress={() => router.push('/lessons')}
-            accessibilityHint="Opens the lesson plan"
-          />
-        </Card>
-        <Card title="School">
-          <Row
-            title="Your school"
-            detail="Set up your school and invite staff"
-            onPress={() => router.push('/school')}
-            accessibilityHint="Opens school set-up and invitations"
-          />
-        </Card>
-        <Card title="Fees">
-          <Row
-            title="School fees"
-            detail="Invoices, balances and paying by mobile money"
-            onPress={() => router.push('/fees')}
-            accessibilityHint="Opens school fees"
-          />
-        </Card>
-        <Card title="Library">
-          <Row
-            title="Notes, guides and links"
-            detail="Your class resources and your schools' libraries"
-            onPress={() => router.push('/library')}
-            accessibilityHint="Opens the resource library"
-          />
-        </Card>
-        <SchoolsCard user={user} styles={styles} />
-        {user.role === 'parent' ? <ChildrenCard user={user} styles={styles} /> : null}
-
-        <Pressable
-          style={({ pressed }) => [styles.secondaryButton, pressed && styles.pressed]}
-          onPress={signOut}
-          accessibilityRole="button"
-          accessibilityLabel="Sign out">
-          <Text style={styles.secondaryButtonText}>Sign out</Text>
-        </Pressable>
-      </ScrollView>
-    </SafeAreaView>
+    <Screen
+      width="wide"
+      eyebrow={`${today} · ${home.title}`}
+      title={`${greeting(now)}, ${firstName}`}
+      subtitle={home.subtitle}>
+      {!wide && portals.length > 1 ? (
+        <Segmented
+          label="Switch portal"
+          options={portals.map((p) => ({ value: p, label: PORTAL_LABELS[p] }))}
+          value={portal}
+          onChange={setPortal}
+        />
+      ) : null}
+      <HomeStats portal={portal} user={user} />
+      <PortalHome portal={portal} user={user} />
+      {!wide ? <Button label="Sign out" variant="secondary" icon="logout" onPress={signOut} /> : null}
+    </Screen>
   );
 }
 
-/** The main work area for the person's role. */
-function RoleWork({ user }: { user: Me }) {
-  if (isStaff(user.memberships)) {
-    return (
-      <>
-        <TodaySection />
-        <ClassesSection />
-        <TeacherWorkSection />
-        <ReportsSection staff />
-      </>
-    );
+function PortalHome({ portal, user }: { portal: Portal; user: Me }) {
+  switch (portal) {
+    case 'school':
+      return (
+        <Grid min={380}>
+          <TodaySection />
+          <QuickActions
+            actions={[
+              { title: 'School fees', detail: 'Bill classes, record payments, export the ledger', href: '/fees', icon: 'wallet' },
+              { title: 'Staff and set-up', detail: 'Invite teachers and manage your school', href: '/school', icon: 'school' },
+              { title: 'Curriculum', detail: 'The Uganda subjects your classes follow', href: '/curriculum', icon: 'map' },
+            ]}
+          />
+          <ClassesSection />
+          <ReportsSection staff />
+          <SchoolsCard user={user} />
+        </Grid>
+      );
+    case 'teacher':
+      return (
+        <Grid min={380}>
+          <TodaySection />
+          <ClassesSection />
+          <TeacherWorkSection />
+          <ReportsSection staff />
+        </Grid>
+      );
+    case 'parent':
+      return (
+        <Grid min={380}>
+          <ChildrenCard user={user} />
+          <ParentResultsSection />
+          <AttendanceSection />
+          <ReportsSection staff={false} />
+        </Grid>
+      );
+    case 'command':
+      return (
+        <Grid min={380}>
+          <QuickActions
+            actions={[
+              { title: 'Curriculum', detail: 'National curricula schools start from', href: '/curriculum', icon: 'map' },
+              { title: 'Library moderation', detail: 'Review items shared with every school', href: '/library', icon: 'library' },
+            ]}
+          />
+        </Grid>
+      );
+    default:
+      return (
+        <Grid min={380}>
+          <TodaySection />
+          <StudentWorkSection />
+          <AttendanceSection />
+          <ReportsSection staff={false} />
+        </Grid>
+      );
   }
-  if (user.role === 'student') {
-    return (
-      <>
-        <TodaySection />
-        <StudentWorkSection />
-        <AttendanceSection />
-        <ReportsSection staff={false} />
-      </>
-    );
-  }
-  if (user.role === 'parent') {
-    return (
-      <>
-        <TodaySection />
-        <ParentResultsSection />
-        <AttendanceSection />
-        <ReportsSection staff={false} />
-      </>
-    );
-  }
-  return null;
 }
 
-interface CardProps {
-  user: Me;
-  styles: Styles;
+interface QuickAction {
+  title: string;
+  detail: string;
+  href: '/fees' | '/school' | '/curriculum' | '/library';
+  icon: 'wallet' | 'school' | 'map' | 'library';
 }
 
-function SchoolsCard({ user, styles }: CardProps) {
+function QuickActions({ actions }: { actions: readonly QuickAction[] }) {
   return (
-    <View style={styles.card} accessible accessibilityLabel="Your schools">
-      <Text style={styles.cardTitle}>Your schools</Text>
-      {user.memberships.length === 0 ? (
-        <Text style={styles.body}>You haven’t joined a school yet.</Text>
-      ) : (
-        user.memberships.map((m) => (
-          <View key={`${m.institution_id}-${m.role}`} style={styles.row}>
-            <Text style={styles.body}>{m.institution_name}</Text>
-            <Text style={styles.meta}>
-              {humanize(m.role)}
-              {m.status === 'active' ? '' : ` · ${m.status}`}
-            </Text>
-          </View>
-        ))
-      )}
-    </View>
-  );
-}
-
-function ChildrenCard({ user, styles }: CardProps) {
-  return (
-    <View style={styles.card} accessible accessibilityLabel="Your children">
-      <Text style={styles.cardTitle}>Your children</Text>
-      {user.children.length === 0 ? (
-        <Text style={styles.body}>
-          No children are linked yet. Your school confirms each link before you can see a child’s records.
-        </Text>
-      ) : (
-        user.children.map((c) => (
-          <View key={c.user_id} style={styles.row}>
-            <Text style={styles.body}>{c.full_name}</Text>
-            <Text style={styles.meta}>{humanize(c.relationship)}</Text>
-          </View>
-        ))
-      )}
-    </View>
+    <Card title="Quick actions" icon="sparkle">
+      {actions.map((a) => (
+        <Row key={a.href} icon={a.icon} title={a.title} detail={a.detail} onPress={() => router.navigate(a.href)} />
+      ))}
+    </Card>
   );
 }
 
@@ -194,37 +155,33 @@ function humanize(value: string): string {
   return words.charAt(0).toUpperCase() + words.slice(1);
 }
 
-function makeStyles(t: Theme) {
-  return StyleSheet.create({
-    safe: { flex: 1, backgroundColor: t.background },
-    center: { alignItems: 'center', justifyContent: 'center', gap: Spacing.three, padding: Spacing.four },
-    container: { padding: Spacing.four, gap: Spacing.three, maxWidth: 640, width: '100%', alignSelf: 'center' },
-    greeting: { fontSize: 17, color: t.textSecondary },
-    title: { fontSize: 32, fontWeight: '700', color: t.text, letterSpacing: -0.5 },
-    subtitle: { fontSize: 17, color: t.textSecondary, marginBottom: Spacing.two },
-    card: {
-      backgroundColor: t.backgroundElement,
-      borderColor: t.border,
-      borderWidth: 1,
-      borderRadius: 16,
-      padding: Spacing.three,
-      gap: Spacing.two,
-    },
-    cardTitle: { fontSize: 15, fontWeight: '600', color: t.textSecondary, textTransform: 'uppercase', letterSpacing: 0.5 },
-    row: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: Spacing.two, minHeight: 32 },
-    body: { fontSize: 17, color: t.text, flexShrink: 1 },
-    meta: { fontSize: 15, color: t.textSecondary },
-    secondaryButton: {
-      minHeight: 48,
-      borderRadius: 12,
-      borderWidth: 1,
-      borderColor: t.border,
-      alignItems: 'center',
-      justifyContent: 'center',
-      paddingHorizontal: Spacing.four,
-      marginTop: Spacing.two,
-    },
-    secondaryButtonText: { fontSize: 17, fontWeight: '600', color: t.text },
-    pressed: { opacity: 0.6 },
-  });
+function SchoolsCard({ user }: { user: Me }) {
+  return (
+    <Card title="Your schools" icon="school">
+      {user.memberships.length === 0 ? (
+        <Body muted>You haven’t joined a school yet.</Body>
+      ) : (
+        user.memberships.map((m) => (
+          <Row
+            key={`${m.institution_id}-${m.role}`}
+            title={m.institution_name}
+            detail={humanize(m.role)}
+            badge={m.status === 'active' ? undefined : <Badge label={humanize(m.status)} tone="warning" />}
+          />
+        ))
+      )}
+    </Card>
+  );
+}
+
+function ChildrenCard({ user }: { user: Me }) {
+  return (
+    <Card title="Your children" icon="people">
+      {user.children.length === 0 ? (
+        <Body muted>No children are linked yet. Your school confirms each link before you can see a child’s records.</Body>
+      ) : (
+        user.children.map((c) => <Row key={c.user_id} title={c.full_name} detail={humanize(c.relationship)} />)
+      )}
+    </Card>
+  );
 }

@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { Body, Button, Card, ErrorText, Field, Heading, Screen } from '@/components/ui';
+import { Body, Button, Card, ErrorText, Field, Screen } from '@/components/ui';
 import { api } from '@/lib/api/client';
 import { signUpProblem } from '@/lib/auth/signup';
 
@@ -44,8 +44,7 @@ export default function SignUpScreen() {
 
   if (sentTo) {
     return (
-      <Screen>
-        <Heading>Check your email</Heading>
+      <Screen title="Check your email">
         <Body>We sent an activation link to {sentTo}. Open it to finish, then sign in.</Body>
         <Button label="Go to sign in" onPress={() => router.replace('/sign-in')} />
       </Screen>
@@ -53,9 +52,8 @@ export default function SignUpScreen() {
   }
 
   return (
-    <Screen>
-      <Button label="Back to sign in" variant="secondary" onPress={() => router.replace('/sign-in')} />
-      <Heading>Create your Maple account</Heading>
+    <Screen title="Create your Maple account">
+      <Button label="Back to sign in" variant="ghost" icon="chevronLeft" compact onPress={() => router.replace('/sign-in')} />
       <Card>
         <View style={styles.choices}>
           {ROLES.map((r) => (

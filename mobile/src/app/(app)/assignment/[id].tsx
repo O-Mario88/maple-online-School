@@ -1,7 +1,7 @@
-import { router, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 
-import { Badge, Body, Button, Card, ErrorText, Field, Heading, Loading, Screen } from '@/components/ui';
+import { Badge, Body, Button, Card, ErrorText, Field, Loading, Screen } from '@/components/ui';
 import { useAssignment, useGrades, useSubmissions, useSubmitWork } from '@/lib/learning/queries';
 import { trimDecimal } from '@/lib/learning/work';
 
@@ -42,9 +42,7 @@ export default function AssignmentScreen() {
   }
 
   return (
-    <Screen>
-      <Button label="Back" variant="secondary" onPress={() => router.back()} />
-      <Heading>{a.title}</Heading>
+    <Screen back title={a.title}>
       <Body muted>Out of {trimDecimal(a.max_score)} marks</Body>
       <Card title="Instructions">
         <Body>{a.instructions}</Body>
@@ -71,10 +69,8 @@ export default function AssignmentScreen() {
 
 function NotFound({ message }: { message?: string }) {
   return (
-    <Screen>
-      <Heading>Assignment not found</Heading>
+    <Screen back title="Assignment not found">
       <Body muted>{message ?? 'It may have been removed, or it isn’t shared with you.'}</Body>
-      <Button label="Back" variant="secondary" onPress={() => router.back()} />
     </Screen>
   );
 }
