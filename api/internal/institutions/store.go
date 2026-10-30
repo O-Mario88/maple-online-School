@@ -113,18 +113,25 @@ func (s *PostgresStore) UpdateSchool(ctx context.Context, id int64, name, color 
 }
 
 // Invite gives each email a pending membership, creating an account (with no
-// password yet) for anyone new. It returns how many invitations were made.
-func (s *PostgresStore) Invite(ctx context.Context, school int64, emails []string, role string) (int, error) {
-	count := 0
+// password yet) for anyone new. It returns who was invited and the school's
+// name, for the invitation emails.
+func (s *PostgresStore) Invite(ctx context.Context, school int64, emails []string, role string) ([]Invitee, string, error) {
+	var invited []Invitee
+	var name string
 	err := pgx.BeginFunc(ctx, s.pool, func(tx pgx.Tx) error {
 		q := s.q.WithTx(tx)
 		country, err := q.SchoolCountry(ctx, school)
 		if err != nil {
 			return fmt.Errorf("load school: %w", err)
 		}
+		if name, err = q.SchoolName(ctx, school); err != nil {
+			return fmt.Errorf("load school name: %w", err)
+		}
 		for _, email := range emails {
+			isNew := false
 			user, err := q.UserIDByEmail(ctx, email)
 			if errors.Is(err, pgx.ErrNoRows) {
+				isNew = true
 				user, err = q.CreateInvitedUser(ctx, dbgen.CreateInvitedUserParams{
 					Email: email, FullName: strings.SplitN(email, "@", 2)[0], CountryCode: country, Role: platformRole(role),
 				})
@@ -135,11 +142,18 @@ func (s *PostgresStore) Invite(ctx context.Context, school int64, emails []strin
 			if _, err := q.AddMembership(ctx, dbgen.AddMembershipParams{UserID: user, InstitutionID: school, Role: role, Status: "pending"}); err != nil {
 				return fmt.Errorf("invite: %w", err)
 			}
-			count++
+			acct, err := q.UserByID(ctx, user)
+			if err != nil {
+				return fmt.Errorf("load invitee: %w", err)
+			}
+			invited = append(invited, Invitee{
+				ID: acct.ID, Email: acct.Email, FullName: acct.FullName, PasswordHash: acct.Password,
+				EmailVerified: acct.EmailVerified, IsActive: acct.IsActive, New: isNew,
+			})
 		}
 		return nil
 	})
-	return count, err
+	return invited, name, err
 }
 
 func (s *PostgresStore) Memberships(ctx context.Context, leader []int64, viewer int64, school *int64) ([]Membership, error) {

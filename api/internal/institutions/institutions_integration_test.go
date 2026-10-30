@@ -16,10 +16,20 @@ const (
 	membershipsURL = "/api/v1/institution-memberships/"
 )
 
+// sentInvites records invitations instead of emailing them.
+type sentInvites struct{ got []Invitee }
+
+func (s *sentInvites) SendInvite(_ context.Context, who Invitee, school, role string) {
+	s.got = append(s.got, who)
+}
+
+var invites *sentInvites
+
 func newWorld(t *testing.T) *testkit.World {
 	w := testkit.New(t)
+	invites = &sentInvites{}
 	r := chi.NewRouter()
-	NewHandler(NewPostgresStore(w.Pool), w.Auth.RequireUser).Mount(r)
+	NewHandler(NewPostgresStore(w.Pool), w.Auth.RequireUser, invites).Mount(r)
 	w.Router = r
 	return w
 }
@@ -64,8 +74,16 @@ func TestSchoolSetupAndInvitations(t *testing.T) {
 	code, invited := w.Call(founder, http.MethodPost, fmt.Sprintf("%s%d/bulk_invite/", schoolsURL, id), map[string]any{
 		"emails": []string{newEmail, existingEmail}, "role": "class_teacher",
 	})
-	if code != http.StatusOK || invited["invited"] != float64(2) {
+	if code != http.StatusOK || invited["invited"] != float64(2) || invited["detail"] != "Invited 2 people as class teachers." {
 		t.Fatalf("bulk invite: %d %v", code, invited)
+	}
+	if len(invites.got) != 2 {
+		t.Fatalf("each person gets an invitation email: %v", invites.got)
+	}
+	for _, who := range invites.got {
+		if who.New != (who.Email == newEmail) {
+			t.Errorf("only the new address needs a password: %+v", who)
+		}
 	}
 
 	// The existing person sees a pending invitation and accepts it.

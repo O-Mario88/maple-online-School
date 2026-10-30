@@ -68,7 +68,8 @@ func run() error {
 	classes := school.NewHandler(school.NewPostgresStore(pool), store, auth.RequireUser)
 	cards := reports.NewHandler(reports.NewPostgresStore(pool), store, auth.RequireUser)
 	week := timetable.NewHandler(timetable.NewPostgresStore(pool), store, auth.RequireUser)
-	schools := institutions.NewHandler(institutions.NewPostgresStore(pool), auth.RequireUser)
+	invites := staffInvites{signup.Inviter{Links: signup.Signer{Key: cfg.JWTSigningKey}, Mail: mailer(cfg.SMTP), AppURL: cfg.AppURL}}
+	schools := institutions.NewHandler(institutions.NewPostgresStore(pool), auth.RequireUser, invites)
 	catalog := curriculum.NewHandler(curriculum.NewPostgresStore(pool), auth.RequireUser)
 	plans := lessons.NewHandler(lessons.NewPostgresStore(pool), auth.RequireUser)
 	live := livesessions.NewHandler(livesessions.NewPostgresStore(pool), auth.RequireUser)
@@ -139,4 +140,14 @@ func payments(c config.Finance) finance.Payments {
 		}
 	}
 	return p
+}
+
+// staffInvites emails the people a school invites, with signup's links.
+type staffInvites struct{ signup.Inviter }
+
+func (s staffInvites) SendInvite(ctx context.Context, who institutions.Invitee, school, role string) {
+	s.Inviter.SendInvite(ctx, signup.Account{
+		ID: who.ID, Email: who.Email, FullName: who.FullName, Password: who.PasswordHash,
+		EmailVerified: who.EmailVerified, IsActive: who.IsActive,
+	}, school, role, who.New)
 }

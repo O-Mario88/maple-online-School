@@ -223,3 +223,39 @@ func TestStudentOnboardingWithAParent(t *testing.T) {
 		t.Errorf("a parent needs an email address to sign in: %d", code)
 	}
 }
+
+// An invited member of staff has no password; the invitation's link sets one
+// and confirms their email.
+func TestInvitationSetsAPasswordAndVerifiesTheEmail(t *testing.T) {
+	e := newEnv(t)
+	var id int64
+	email := "invited." + strings.ToLower(t.Name()) + "@invite.test"
+	if err := e.w.Pool.QueryRow(context.Background(), `INSERT INTO accounts_user (password, is_superuser, email, full_name, country_code, role,
+		whatsapp_opt_in, is_active, is_staff, date_joined, email_verified)
+		VALUES ('!', false, $1, 'Invited Teacher', 'UG', 'teacher', false, true, false, now(), false) RETURNING id`, email).Scan(&id); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _, _ = e.w.Pool.Exec(context.Background(), `DELETE FROM accounts_user WHERE id = $1`, id) })
+
+	inviter := Inviter{Links: Signer{Key: []byte(strings.Repeat("s", 32))}, Mail: e.mail, AppURL: "https://app.maple.test"}
+	inviter.SendInvite(context.Background(), Account{ID: id, Email: email, FullName: "Invited Teacher", Password: "!", IsActive: true}, "Invite School", "class teacher", true)
+	msgs := e.mail.to(email)
+	if len(msgs) != 1 || !strings.Contains(msgs[0].Body, "Invite School") || !strings.Contains(msgs[0].Body, "/reset-password?token=") {
+		t.Fatalf("one invitation with a set-password link: %v", msgs)
+	}
+	code, res := e.w.Call(0, http.MethodPost, "/api/v1/auth/reset-password/", map[string]any{"token": tokenFrom(t, msgs[0]), "password": strong})
+	if code != http.StatusOK {
+		t.Fatalf("set password from invitation: %d %v", code, res)
+	}
+	var verified bool
+	_ = e.w.Pool.QueryRow(context.Background(), `SELECT email_verified FROM accounts_user WHERE id = $1`, id).Scan(&verified)
+	if !verified {
+		t.Error("opening the invitation proves the email address")
+	}
+
+	// Someone who already has an account is told to open Maple and accept.
+	inviter.SendInvite(context.Background(), Account{ID: id, Email: email, FullName: "Invited Teacher", Password: "x", IsActive: true}, "Invite School", "class teacher", false)
+	if msgs := e.mail.to(email); len(msgs) != 2 || strings.Contains(msgs[1].Body, "token=") {
+		t.Errorf("existing accounts get an accept message, not a link: %v", msgs)
+	}
+}

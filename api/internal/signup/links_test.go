@@ -43,6 +43,24 @@ func TestSignedLinks(t *testing.T) {
 	}
 }
 
+// A staff invitation lets the person choose a password for a week, not the
+// two hours a reset link lasts.
+func TestInviteLinksLastAWeek(t *testing.T) {
+	s := Signer{Key: []byte(strings.Repeat("k", 32))}
+	now := time.Date(2026, 11, 2, 9, 0, 0, 0, time.UTC)
+	acct := Account{ID: 7, Password: "!", EmailVerified: false}
+	token := s.Make(Invite, acct, now)
+	if err := s.Check(token, Invite, acct, now.Add(6*24*time.Hour)); err != nil {
+		t.Errorf("six days on, the invitation still works: %v", err)
+	}
+	if err := s.Check(token, Invite, acct, now.Add(8*24*time.Hour)); err == nil {
+		t.Error("after a week it has expired")
+	}
+	if err := s.Check(token, Reset, acct, now); err == nil {
+		t.Error("an invitation isn't a reset link")
+	}
+}
+
 func TestPasswordRules(t *testing.T) {
 	cases := []struct {
 		password, email string

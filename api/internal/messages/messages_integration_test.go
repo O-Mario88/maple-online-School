@@ -1,6 +1,7 @@
 package messages
 
 import (
+	"context"
 	"net/http"
 	"strconv"
 	"testing"
@@ -142,5 +143,23 @@ func TestParentsSeeWhoTheyCanWriteTo(t *testing.T) {
 	}
 	if code, _ := s.w.Call(s.pendingParent, http.MethodGet, url, nil); code != http.StatusNotFound {
 		t.Errorf("unconfirmed parent: want 404, got %d", code)
+	}
+}
+
+// Staff who leave the school lose access to its families' conversations.
+func TestStaffWhoLeaveLoseAccess(t *testing.T) {
+	s := newSchool(t)
+	code, th := s.w.Call(s.teacher, http.MethodPost, threadsURL, map[string]any{"student": s.student, "subject": "Hello", "body": "Hi"})
+	if code != http.StatusCreated {
+		t.Fatalf("start: %d %v", code, th)
+	}
+	if _, err := s.w.Pool.Exec(context.Background(), `UPDATE institutions_institutionmembership SET status = 'suspended' WHERE user_id = $1`, s.teacher); err != nil {
+		t.Fatal(err)
+	}
+	if code, _ := s.w.Call(s.teacher, http.MethodGet, s.thread(testkit.ID(th)), nil); code != http.StatusNotFound {
+		t.Errorf("a suspended teacher can't read it: %d", code)
+	}
+	if _, list := s.w.Call(s.teacher, http.MethodGet, threadsURL, nil); len(testkit.IDs(list)) != 0 {
+		t.Errorf("or list it: %v", list)
 	}
 }

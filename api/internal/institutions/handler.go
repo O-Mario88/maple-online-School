@@ -40,19 +40,50 @@ type Store interface {
 	MySchools(ctx context.Context, userID int64) ([]School, error)
 	CreateSchool(ctx context.Context, founder int64, name, country, level string) (int64, error)
 	UpdateSchool(ctx context.Context, id int64, name, color *string) error
-	Invite(ctx context.Context, school int64, emails []string, role string) (int, error)
+	Invite(ctx context.Context, school int64, emails []string, role string) ([]Invitee, string, error)
 	Memberships(ctx context.Context, leader []int64, viewer int64, school *int64) ([]Membership, error)
 	Membership(ctx context.Context, id int64) (MembershipRef, error)
 	UpdateMembership(ctx context.Context, m MembershipRef, role, status *string) error
 }
 
+// Invitee is someone a school just invited, with what an invitation link
+// needs to be signed for them.
+type Invitee struct {
+	ID            int64
+	Email         string
+	FullName      string
+	PasswordHash  string
+	EmailVerified bool
+	IsActive      bool
+	// New is true when the invitation created their account (no password yet).
+	New bool
+}
+
+// Inviter sends the invitation emails.
+type Inviter interface {
+	SendInvite(ctx context.Context, who Invitee, school, roleLabel string)
+}
+
 type Handler struct {
 	store       Store
 	requireUser func(http.Handler) http.Handler
+	invites     Inviter
 }
 
-func NewHandler(store Store, requireUser func(http.Handler) http.Handler) *Handler {
-	return &Handler{store: store, requireUser: requireUser}
+func NewHandler(store Store, requireUser func(http.Handler) http.Handler, invites Inviter) *Handler {
+	return &Handler{store: store, requireUser: requireUser, invites: invites}
+}
+
+// roleLabel turns "class_teacher" into "class teacher".
+func roleLabel(role string) string { return strings.ReplaceAll(role, "_", " ") }
+
+// invitedSentence is the reply after inviting, such as "Invited 2 people as class teachers."
+func invitedSentence(n int, role string) string {
+	label := roleLabel(role)
+	if n == 1 {
+		return "Invited 1 person as a " + label + "."
+	}
+	return "Invited " + strconv.Itoa(n) + " people as " + label + "s."
 }
 
 // Mount registers the routes.
@@ -179,12 +210,16 @@ func (h *Handler) invite(w http.ResponseWriter, r *http.Request) {
 			emails = append(emails, lower)
 		}
 	}
-	n, err := h.store.Invite(r.Context(), id, emails, req.Role)
+	invited, school, err := h.store.Invite(r.Context(), id, emails, req.Role)
 	if err != nil {
 		serverError(w, "invite", err)
 		return
 	}
-	httpx.WriteJSON(w, http.StatusOK, map[string]any{"invited": n, "role": req.Role, "detail": "Invited " + strconv.Itoa(n) + " people as " + req.Role + "."})
+	for _, who := range invited {
+		h.invites.SendInvite(r.Context(), who, school, roleLabel(req.Role))
+	}
+	n := len(invited)
+	httpx.WriteJSON(w, http.StatusOK, map[string]any{"invited": n, "role": req.Role, "detail": invitedSentence(n, req.Role)})
 }
 
 func (h *Handler) listMemberships(w http.ResponseWriter, r *http.Request) {

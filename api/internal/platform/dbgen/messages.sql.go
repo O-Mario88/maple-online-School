@@ -35,8 +35,11 @@ func (q *Queries) AddMessage(ctx context.Context, arg AddMessageParams) (AddMess
 
 const countThreadsFor = `-- name: CountThreadsFor :one
 SELECT count(*) FROM msg_threads t
-WHERE t.staff_id = $1::bigint
-   OR t.school_id = ANY($2::bigint[])
+WHERE (t.staff_id = $1::bigint AND EXISTS (
+         SELECT 1 FROM institutions_institutionmembership sm
+         WHERE sm.user_id = t.staff_id AND sm.institution_id = t.school_id AND sm.status = 'active'
+           AND sm.role = ANY($2::text[])))
+   OR t.school_id = ANY($3::bigint[])
    OR EXISTS (SELECT 1 FROM parent_portal_parentstudentlink l
               JOIN accounts_parentprofile pp ON pp.id = l.parent_profile_id
               JOIN accounts_studentprofile sp ON sp.id = l.student_profile_id
@@ -45,11 +48,12 @@ WHERE t.staff_id = $1::bigint
 
 type CountThreadsForParams struct {
 	Viewer        int64
+	StaffRoles    []string
 	LeaderSchools []int64
 }
 
 func (q *Queries) CountThreadsFor(ctx context.Context, arg CountThreadsForParams) (int64, error) {
-	row := q.db.QueryRow(ctx, countThreadsFor, arg.Viewer, arg.LeaderSchools)
+	row := q.db.QueryRow(ctx, countThreadsFor, arg.Viewer, arg.StaffRoles, arg.LeaderSchools)
 	var count int64
 	err := row.Scan(&count)
 	return count, err
@@ -278,18 +282,22 @@ JOIN accounts_user su ON su.id = t.student_id
 JOIN accounts_user st ON st.id = t.staff_id
 LEFT JOIN LATERAL (SELECT m.body, m.author_id FROM msg_messages m WHERE m.thread_id = t.id ORDER BY m.created_at DESC, m.id DESC LIMIT 1) lm ON true
 LEFT JOIN accounts_user la ON la.id = lm.author_id
-WHERE t.staff_id = $1::bigint
-   OR t.school_id = ANY($2::bigint[])
+WHERE (t.staff_id = $1::bigint AND EXISTS (
+         SELECT 1 FROM institutions_institutionmembership sm
+         WHERE sm.user_id = t.staff_id AND sm.institution_id = t.school_id AND sm.status = 'active'
+           AND sm.role = ANY($2::text[])))
+   OR t.school_id = ANY($3::bigint[])
    OR EXISTS (SELECT 1 FROM parent_portal_parentstudentlink l
               JOIN accounts_parentprofile pp ON pp.id = l.parent_profile_id
               JOIN accounts_studentprofile sp ON sp.id = l.student_profile_id
               WHERE pp.user_id = $1::bigint AND sp.user_id = t.student_id AND l.consent_status = 'approved')
 ORDER BY t.last_message_at DESC, t.id DESC
-LIMIT $4 OFFSET $3
+LIMIT $5 OFFSET $4
 `
 
 type ThreadsForParams struct {
 	Viewer        int64
+	StaffRoles    []string
 	LeaderSchools []int64
 	PageOffset    int32
 	PageLimit     int32
@@ -313,6 +321,7 @@ type ThreadsForRow struct {
 func (q *Queries) ThreadsFor(ctx context.Context, arg ThreadsForParams) ([]ThreadsForRow, error) {
 	rows, err := q.db.Query(ctx, threadsFor,
 		arg.Viewer,
+		arg.StaffRoles,
 		arg.LeaderSchools,
 		arg.PageOffset,
 		arg.PageLimit,

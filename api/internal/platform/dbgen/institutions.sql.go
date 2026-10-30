@@ -260,6 +260,17 @@ func (q *Queries) SchoolCountry(ctx context.Context, id int64) (string, error) {
 	return country_code, err
 }
 
+const schoolName = `-- name: SchoolName :one
+SELECT name FROM institutions_institution WHERE id = $1
+`
+
+func (q *Queries) SchoolName(ctx context.Context, id int64) (string, error) {
+	row := q.db.QueryRow(ctx, schoolName, id)
+	var name string
+	err := row.Scan(&name)
+	return name, err
+}
+
 const updateMembership = `-- name: UpdateMembership :exec
 UPDATE institutions_institutionmembership
 SET role = COALESCE($1, role), status = COALESCE($2, status)

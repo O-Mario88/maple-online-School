@@ -28,6 +28,8 @@ const (
 	lookbackDays   = 30
 	maxNoteLength  = 2000
 	kindParentNote = "parent_message"
+	// Writes per minute from one network; schools share one, so it's generous.
+	writeLimit = 60
 )
 
 var (
@@ -91,14 +93,16 @@ func managedClass(ctx context.Context, q *dbgen.Queries, viewer, classID int64) 
 	if err != nil {
 		return c, fmt.Errorf("load class: %w", err)
 	}
+	// The class teacher, while they still work at the school, or its leaders.
+	role := roles.Leaders
 	if c.TeacherID == viewer {
-		return c, nil
+		role = roles.Staff
 	}
-	leads, err := q.StaffSchoolIDs(ctx, dbgen.StaffSchoolIDsParams{UserID: viewer, StaffRoles: roles.Leaders})
+	schools, err := q.StaffSchoolIDs(ctx, dbgen.StaffSchoolIDsParams{UserID: viewer, StaffRoles: role})
 	if err != nil {
 		return c, fmt.Errorf("load schools: %w", err)
 	}
-	if slices.Contains(leads, c.InstitutionID) {
+	if slices.Contains(schools, c.InstitutionID) {
 		return c, nil
 	}
 	return c, ErrNotFound
@@ -233,7 +237,7 @@ func (h *Handler) Mount(r chi.Router) {
 		r.Use(h.requireUser)
 		r.Get(prefix+"classes/{id}/learners/", h.class)
 		r.Get(prefix+"interventions/", h.list)
-		r.Post(prefix+"interventions/", h.create)
+		r.With(httpx.RateLimit(writeLimit, time.Minute)).Post(prefix+"interventions/", h.create)
 	})
 	r.HandleFunc(prefix+"*", func(w http.ResponseWriter, _ *http.Request) {
 		httpx.WriteError(w, http.StatusMethodNotAllowed, "method_not_allowed", "This action isn't available.")

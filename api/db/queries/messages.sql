@@ -51,7 +51,10 @@ JOIN accounts_user su ON su.id = t.student_id
 JOIN accounts_user st ON st.id = t.staff_id
 LEFT JOIN LATERAL (SELECT m.body, m.author_id FROM msg_messages m WHERE m.thread_id = t.id ORDER BY m.created_at DESC, m.id DESC LIMIT 1) lm ON true
 LEFT JOIN accounts_user la ON la.id = lm.author_id
-WHERE t.staff_id = sqlc.arg(viewer)::bigint
+WHERE (t.staff_id = sqlc.arg(viewer)::bigint AND EXISTS (
+         SELECT 1 FROM institutions_institutionmembership sm
+         WHERE sm.user_id = t.staff_id AND sm.institution_id = t.school_id AND sm.status = 'active'
+           AND sm.role = ANY(sqlc.arg(staff_roles)::text[])))
    OR t.school_id = ANY(sqlc.arg(leader_schools)::bigint[])
    OR EXISTS (SELECT 1 FROM parent_portal_parentstudentlink l
               JOIN accounts_parentprofile pp ON pp.id = l.parent_profile_id
@@ -62,7 +65,10 @@ LIMIT sqlc.arg(page_limit) OFFSET sqlc.arg(page_offset);
 
 -- name: CountThreadsFor :one
 SELECT count(*) FROM msg_threads t
-WHERE t.staff_id = sqlc.arg(viewer)::bigint
+WHERE (t.staff_id = sqlc.arg(viewer)::bigint AND EXISTS (
+         SELECT 1 FROM institutions_institutionmembership sm
+         WHERE sm.user_id = t.staff_id AND sm.institution_id = t.school_id AND sm.status = 'active'
+           AND sm.role = ANY(sqlc.arg(staff_roles)::text[])))
    OR t.school_id = ANY(sqlc.arg(leader_schools)::bigint[])
    OR EXISTS (SELECT 1 FROM parent_portal_parentstudentlink l
               JOIN accounts_parentprofile pp ON pp.id = l.parent_profile_id

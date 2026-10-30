@@ -19,12 +19,15 @@ type Purpose string
 const (
 	Activate Purpose = "activate"
 	Reset    Purpose = "reset"
+	// Invite lets someone a school invited choose their first password.
+	Invite Purpose = "invite"
 
 	activateTTL = 7 * 24 * time.Hour
 	resetTTL    = 2 * time.Hour
+	inviteTTL   = 7 * 24 * time.Hour
 )
 
-var ttl = map[Purpose]time.Duration{Activate: activateTTL, Reset: resetTTL}
+var ttl = map[Purpose]time.Duration{Activate: activateTTL, Reset: resetTTL, Invite: inviteTTL}
 
 var ErrBadLink = errors.New("invalid or expired link")
 

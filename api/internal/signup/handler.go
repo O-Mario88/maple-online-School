@@ -259,7 +259,12 @@ func (h *Handler) resetPassword(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "Send the token from the email and the new password.")
 		return
 	}
-	acct, ok := h.checkLink(w, r, in.Token, Reset)
+	// A reset link, or a school's invitation to choose a first password.
+	purpose := Reset
+	if _, err := h.links.Read(in.Token, Invite); err == nil {
+		purpose = Invite
+	}
+	acct, ok := h.checkLink(w, r, in.Token, purpose)
 	if !ok {
 		return
 	}
@@ -275,6 +280,13 @@ func (h *Handler) resetPassword(w http.ResponseWriter, r *http.Request) {
 	if err := h.store.SetPassword(r.Context(), acct.ID, hash); err != nil {
 		serverError(w, "set password", err)
 		return
+	}
+	// Opening the invitation proves the person reads that inbox.
+	if purpose == Invite && !acct.EmailVerified {
+		if err := h.store.MarkVerified(r.Context(), acct.ID); err != nil {
+			serverError(w, "verify email", err)
+			return
+		}
 	}
 	httpx.WriteJSON(w, http.StatusOK, map[string]any{"message": "Password changed. You can now sign in.", "email": acct.Email})
 }

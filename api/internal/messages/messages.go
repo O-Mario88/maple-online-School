@@ -33,6 +33,8 @@ const (
 	maxSubject    = 200
 	previewLength = 140
 	noteKind      = "message"
+	// Writes per minute from one network; schools share one, so it's generous.
+	writeLimit = 60
 )
 
 var (
@@ -199,7 +201,14 @@ const (
 
 func accessTo(ctx context.Context, q *dbgen.Queries, viewer int64, t dbgen.GetThreadRow) (access, error) {
 	if t.StaffID == viewer {
-		return participant, nil
+		// Only while they still work at the school.
+		works, err := q.StaffSchoolIDs(ctx, dbgen.StaffSchoolIDsParams{UserID: viewer, StaffRoles: roles.Staff})
+		if err != nil {
+			return noAccess, err
+		}
+		if slices.Contains(works, t.SchoolID) {
+			return participant, nil
+		}
 	}
 	parent, err := q.IsApprovedParent(ctx, dbgen.IsApprovedParentParams{Parent: viewer, Student: t.StudentID})
 	if err != nil {
@@ -284,11 +293,11 @@ func (s *PostgresStore) Threads(ctx context.Context, viewer int64, page httpx.Pa
 	if err != nil {
 		return nil, 0, err
 	}
-	rows, err := q.ThreadsFor(ctx, dbgen.ThreadsForParams{Viewer: viewer, LeaderSchools: leads, PageLimit: page.Limit, PageOffset: page.Offset})
+	rows, err := q.ThreadsFor(ctx, dbgen.ThreadsForParams{Viewer: viewer, StaffRoles: roles.Staff, LeaderSchools: leads, PageLimit: page.Limit, PageOffset: page.Offset})
 	if err != nil {
 		return nil, 0, fmt.Errorf("list threads: %w", err)
 	}
-	n, err := q.CountThreadsFor(ctx, dbgen.CountThreadsForParams{Viewer: viewer, LeaderSchools: leads})
+	n, err := q.CountThreadsFor(ctx, dbgen.CountThreadsForParams{Viewer: viewer, StaffRoles: roles.Staff, LeaderSchools: leads})
 	if err != nil {
 		return nil, 0, fmt.Errorf("count threads: %w", err)
 	}
@@ -354,9 +363,9 @@ func (h *Handler) Mount(r chi.Router) {
 	r.Group(func(r chi.Router) {
 		r.Use(h.requireUser)
 		r.Get(prefix, h.list)
-		r.Post(prefix, h.start)
+		r.With(httpx.RateLimit(writeLimit, time.Minute)).Post(prefix, h.start)
 		r.Get(prefix+"{id}/", h.get)
-		r.Post(prefix+"{id}/messages/", h.reply)
+		r.With(httpx.RateLimit(writeLimit, time.Minute)).Post(prefix+"{id}/messages/", h.reply)
 		r.Get("/api/v1/messages/contacts/", h.contacts)
 	})
 	r.HandleFunc("/api/v1/messages/*", func(w http.ResponseWriter, _ *http.Request) {

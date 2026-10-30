@@ -156,3 +156,14 @@ func TestInterventionsReachTheFamilyAndAreRecorded(t *testing.T) {
 		t.Errorf("the class view shows when someone last acted: %v", first)
 	}
 }
+
+// A teacher who no longer works at the school can't see their old class.
+func TestSuspendedTeachersLoseTheClassView(t *testing.T) {
+	c := newClassroom(t)
+	if _, err := c.w.Pool.Exec(context.Background(), `UPDATE institutions_institutionmembership SET status = 'suspended' WHERE user_id = $1`, c.teacher); err != nil {
+		t.Fatal(err)
+	}
+	if code, _ := c.w.Call(c.teacher, http.MethodGet, c.learnersURL(), nil); code != http.StatusNotFound {
+		t.Errorf("suspended teacher: want 404, got %d", code)
+	}
+}

@@ -41,6 +41,9 @@ RETURNING id;
 -- name: SchoolCountry :one
 SELECT country_code FROM institutions_institution WHERE id = $1;
 
+-- name: SchoolName :one
+SELECT name FROM institutions_institution WHERE id = $1;
+
 -- name: ListMemberships :many
 -- Leaders see everyone in the schools they lead; everyone sees their own.
 SELECT m.id, m.user_id, u.full_name, u.email, m.institution_id, i.name AS institution_name, m.role, m.status, m.joined_at

@@ -105,7 +105,7 @@ function InviteCard({ school, name }: { school: number; name: string }) {
       setProblem((error as { detail?: string } | undefined)?.detail ?? 'Could not send the invitations.');
       return;
     }
-    setDone(`${data.detail} They set a password with "Forgot password" on the sign-in screen.`);
+    setDone(`${data.detail} Each person gets an email: new staff choose a password from it, and people with an account accept from their school page.`);
     setText('');
   }
 
