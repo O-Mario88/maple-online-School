@@ -41,6 +41,13 @@ export const photos = {
     require('./images/short-10.jpg') as Photo,
   ],
   shortsHero: require('./images/shorts-hero.jpg') as Photo,
+  liveHero: require('./images/live-hero.jpg') as Photo,
+  liveMore: [
+    require('./images/live-more-1.jpg') as Photo,
+    require('./images/live-more-2.jpg') as Photo,
+    require('./images/live-more-3.jpg') as Photo,
+    require('./images/live-more-4.jpg') as Photo,
+  ],
   teacherBanner: require('./images/teacher-banner.jpg') as Photo,
   teacherAvatar: require('./images/teacher-avatar.jpg') as Photo,
   teacherCourses: [require('./images/teacher-course-1.jpg') as Photo, require('./images/teacher-course-2.jpg') as Photo, require('./images/teacher-course-3.jpg') as Photo],

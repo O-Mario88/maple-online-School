@@ -168,6 +168,7 @@ export const PUBLIC_PREVIEWS = [
   { href: '/explore', label: 'Catalogue', icon: 'search' },
   { href: '/shorts', label: 'Maple Shorts', icon: 'play' },
   { href: '/@sarah-kimani', route: '[handle]', label: 'Teacher storefront', icon: 'person' },
+  { href: '/live/p7-maths-revision-bootcamp', route: 'live/[slug]', label: 'Live bootcamp', icon: 'live' },
   { href: '/courses/complete-mathematics-primary-7', route: 'courses/[slug]', label: 'Course page', icon: 'book' },
   { href: '/event', label: 'Live event', icon: 'live' },
   { href: '/digest', label: 'Weekly digest', icon: 'chat' },
