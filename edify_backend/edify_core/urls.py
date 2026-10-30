@@ -24,7 +24,6 @@ from accounts.views import VerifiedEmailTokenObtainPairView as TokenObtainPairVi
 
 from marketplace.views import ListingViewSet
 from ai_services.views import CopilotInferenceView
-from institutions.views import LearnerRegistrationViewSet, AdminPinResetView
 from attendance.views import LessonAttendanceViewSet
 from analytics.views import AnalyticsEventViewSet, DailyPlatformMetricViewSet, DailyInstitutionMetricViewSet, SubjectPerformanceSnapshotViewSet, SystemHealthSnapshotViewSet, StudentDashboardView, TeacherDashboardView, ParentDashboardView, AdminDashboardView, InstitutionDashboardView, CustomerSuccessChurnView
 from assessments.views import AssessmentWindowViewSet, QuestionViewSet
@@ -69,7 +68,7 @@ router.register(r'marketplace/lesson-qualifications', LessonQualificationViewSet
 
 # School OS Endpoints
 # institutions (list, create, edit, bulk_invite) and institution-memberships are served by the Go API (api/internal/institutions).
-router.register(r'institutions/learner-registrations', LearnerRegistrationViewSet, basename='learner-registration')
+# Learner registration with payment is replaced by Go: school enrolment, student onboarding and fees.
 # classes and class-enrollments are served by the Go API (api/internal/school).
 # scheduling/timetable (and terms, rooms) are served by the Go API (api/internal/timetable).
 # attendance/daily is served by the Go API (api/internal/school).
@@ -140,7 +139,6 @@ router.register(r'interventions/plans', InterventionPlanViewSet, basename='inter
 router.register(r'interventions/actions', InterventionActionViewSet, basename='interventions-actions')
 
 
-from institutions.views import InstitutionOnboardingAPIView
 from marketplace.views import IndependentTeacherOnboardingView
 
 from accounts.views import PublicProfileView, PilotFeedbackCreateView
@@ -168,10 +166,9 @@ urlpatterns = [
     path('api/v1/analytics/admin-dashboard/', AdminDashboardView.as_view(), name='admin_dashboard_api'),
     path('api/v1/analytics/institution-dashboard/', InstitutionDashboardView.as_view(), name='institution_dashboard_api'),
     path('api/v1/analytics/churn-signals/', CustomerSuccessChurnView.as_view(), name='admin_churn_signals_api'),
-    path('api/v1/institutions/admin-pin-reset/', AdminPinResetView.as_view(), name='admin_pin_reset'),
     
     # Institution Onboarding Phase 1-3
-    path('api/v1/institutions/onboard-basic/', InstitutionOnboardingAPIView.as_view(), name='institution_onboard_basic'),
+    # School set-up is in Go: sign up as a school admin, then POST /api/v1/institutions/.
 
     # Intelligence: APIView endpoints
     path('api/v1/intelligence/passport/student/', StudentPassportView.as_view(), name='intelligence-student-passport'),
