@@ -7,6 +7,7 @@ import { useTheme } from '@/hooks/use-theme';
 import type { Me } from '@/lib/api/client';
 import { AttendanceSection } from '@/features/learner/AttendanceSection';
 import { ParentResultsSection } from '@/features/parent/ParentResultsSection';
+import { ReportsSection } from '@/features/shared/ReportsSection';
 import { ClassesSection } from '@/features/teacher/ClassesSection';
 import { StudentWorkSection } from '@/features/student/StudentWorkSection';
 import { TeacherWorkSection } from '@/features/teacher/TeacherWorkSection';
@@ -79,6 +80,7 @@ function RoleWork({ user }: { user: Me }) {
       <>
         <ClassesSection />
         <TeacherWorkSection />
+        <ReportsSection staff />
       </>
     );
   }
@@ -87,6 +89,7 @@ function RoleWork({ user }: { user: Me }) {
       <>
         <StudentWorkSection />
         <AttendanceSection />
+        <ReportsSection staff={false} />
       </>
     );
   }
@@ -95,6 +98,7 @@ function RoleWork({ user }: { user: Me }) {
       <>
         <ParentResultsSection />
         <AttendanceSection />
+        <ReportsSection staff={false} />
       </>
     );
   }

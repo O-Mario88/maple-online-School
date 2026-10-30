@@ -1,4 +1,12 @@
-import { homeFor, isStaff } from './roles';
+import { homeFor, isLeader, isStaff } from './roles';
+
+describe('isLeader', () => {
+  it('is true only for active school leadership roles', () => {
+    expect(isLeader([{ role: 'headteacher', status: 'active' }])).toBe(true);
+    expect(isLeader([{ role: 'class_teacher', status: 'active' }])).toBe(false);
+    expect(isLeader([{ role: 'dos', status: 'suspended' }])).toBe(false);
+  });
+});
 
 const membership = (role: string, status = 'active') => ({ institution_id: 1, institution_name: 'Maple', role, status });
 

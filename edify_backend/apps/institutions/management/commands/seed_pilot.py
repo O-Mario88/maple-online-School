@@ -101,6 +101,7 @@ class Command(BaseCommand):
             student_a = ensure_user('student.a@pilot.maple', 'Amina Student',   'student')
             student_b = ensure_user('student.b@pilot.maple', 'Brian Student',   'student')
             parent_a  = ensure_user('parent.a@pilot.maple',  'Parent Apio',     'parent')
+            head_a    = ensure_user('head.a@pilot.maple',    'Head Teacher Akello', 'institution')
 
             # Role profile rows (side-effect-free if they already exist).
             TeacherProfile.objects.get_or_create(user=teacher_a)
@@ -116,6 +117,7 @@ class Command(BaseCommand):
                 (student_a, 'student'),
                 (student_b, 'student'),
                 (parent_a,  'parent'),
+                (head_a,    'headteacher'),
             ):
                 InstitutionMembership.objects.update_or_create(
                     user=user, institution=inst,
@@ -191,6 +193,8 @@ class Command(BaseCommand):
         w("  Students:")
         w("    student.a@pilot.maple  (Amina — Parent Apio's child)")
         w("    student.b@pilot.maple  (Brian)")
+        w("  Head teacher:")
+        w("    head.a@pilot.maple     (Head Teacher Akello — publishes report cards)")
         w("  Parent:")
         w("    parent.a@pilot.maple   (Parent Apio — linked to Amina)")
         w("\n  Pre-seeded:")

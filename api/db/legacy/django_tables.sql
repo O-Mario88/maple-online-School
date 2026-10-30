@@ -154,3 +154,38 @@ CREATE TABLE curriculum_subject (
     id   bigint       PRIMARY KEY,
     name varchar(255) NOT NULL
 );
+
+-- Subject marks and report cards: Go owns writes.
+CREATE TABLE grading_subjectgrade (
+    id                bigint       PRIMARY KEY,
+    formative_score   numeric(5,2) NOT NULL,
+    summative_score   numeric(5,2) NOT NULL,
+    total_score       numeric(5,2),
+    grade_letter      varchar(5),
+    descriptor        text,
+    teacher_remarks   text,
+    finalized_at      timestamptz  NOT NULL,
+    assigned_class_id bigint       NOT NULL,
+    finalized_by_id   bigint,
+    student_id        bigint       NOT NULL,
+    term_id           bigint       NOT NULL,
+    UNIQUE (student_id, assigned_class_id, term_id)
+);
+
+CREATE TABLE grading_reportcard (
+    id                    bigint       PRIMARY KEY,
+    overall_score         numeric(5,2),
+    overall_grade_letter  varchar(5),
+    promotion_status      varchar(50),
+    class_teacher_remarks text,
+    headteacher_remarks   text,
+    pdf_file              varchar(100),
+    is_published          boolean      NOT NULL,
+    published_at          timestamptz,
+    generated_at          timestamptz  NOT NULL,
+    institution_id        bigint       NOT NULL,
+    student_id            bigint       NOT NULL,
+    template_id           bigint,
+    term_id               bigint       NOT NULL,
+    UNIQUE (student_id, term_id)
+);

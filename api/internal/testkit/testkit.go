@@ -114,6 +114,18 @@ func (w *World) Term(school int64) int64 {
 		VALUES (current_date - 30, current_date + 60, true, $1, 'Term 3') RETURNING id`, school)
 }
 
+// Class creates a published class in school taught by teacher.
+func (w *World) Class(school, teacher int64) int64 {
+	return w.scalar(`INSERT INTO classes_class (title, visibility, is_published, created_at, class_level_id, institution_id, teacher_id)
+		VALUES ($1, 'private', true, now(), (SELECT id FROM curriculum_classlevel ORDER BY id LIMIT 1), $2, $3) RETURNING id`,
+		"Class "+suffix(), school, teacher)
+}
+
+// Enrol puts student in class.
+func (w *World) Enrol(class, student int64) {
+	w.exec(`INSERT INTO classes_classenrollment (enrolled_class_id, student_id, status, enrolled_at) VALUES ($1, $2, 'active', now())`, class, student)
+}
+
 // ClassLevel returns any existing class level (Django's curriculum seed provides them).
 func (w *World) ClassLevel() int64 {
 	return w.scalar(`SELECT id FROM curriculum_classlevel ORDER BY id LIMIT 1`)
@@ -180,6 +192,8 @@ func Contains(list []int64, id int64) bool {
 func (w *World) cleanup() {
 	ctx := context.Background()
 	stmts := []string{
+		`DELETE FROM grading_reportcard WHERE student_id = ANY($1)`,
+		`DELETE FROM grading_subjectgrade WHERE student_id = ANY($1)`,
 		`DELETE FROM attendance_dailyregister WHERE student_id = ANY($1) OR recorded_by_id = ANY($1)`,
 		`DELETE FROM classes_classenrollment WHERE student_id = ANY($1)`,
 		`DELETE FROM classes_class WHERE teacher_id = ANY($1)`,

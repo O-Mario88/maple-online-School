@@ -29,6 +29,14 @@ interface MembershipLike {
   status: string;
 }
 
+/** Leadership roles that can publish report cards. Matches the Go API's roles.Leaders. */
+const LEADER_ROLES = new Set(['headteacher', 'deputy', 'dos', 'exam_officer', 'ict_admin']);
+
+/** Whether the person leads at least one school. */
+export function isLeader(memberships: readonly MembershipLike[]): boolean {
+  return memberships.some((m) => m.status === 'active' && LEADER_ROLES.has(m.role));
+}
+
 /** Whether the person teaches or leads in at least one school. */
 export function isStaff(memberships: readonly MembershipLike[]): boolean {
   return memberships.some((m) => m.status === 'active' && STAFF_ROLES.has(m.role));

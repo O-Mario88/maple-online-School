@@ -96,6 +96,11 @@ export default function RegisterScreen() {
       <ErrorText message={save.error?.message} />
       {saved ? <Body>Register saved. Parents can see today’s marks now.</Body> : null}
       <Button label="Save register" onPress={handleSave} disabled={students.length === 0} busy={save.isPending} />
+      <Button
+        label="Term marks and report cards"
+        variant="secondary"
+        onPress={() => router.push({ pathname: '/marks/[id]', params: { id: String(classId) } })}
+      />
     </Screen>
   );
 }

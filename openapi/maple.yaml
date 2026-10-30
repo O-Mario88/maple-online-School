@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Maple API
-  version: 0.3.0
+  version: 0.4.0
   description: |
     The contract between the Maple apps and the Go API. Paths not listed here
     are still served by the Django API through the Go service's forwarder,
@@ -308,6 +308,115 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/Error" }
+  /api/v1/grading/subjects/:
+    get:
+      summary: Subject marks the user can see
+      description: Staff see their schools'. Students and approved parents see marks only for terms whose report card is published.
+      parameters:
+        - { $ref: "#/components/parameters/Page" }
+        - { name: class, in: query, schema: { type: integer, format: int64 } }
+        - { name: term, in: query, schema: { type: integer, format: int64 } }
+        - { name: student, in: query, schema: { type: integer, format: int64 } }
+      responses:
+        "200":
+          description: A page of subject marks
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SubjectMarkPage" }
+    post:
+      summary: Enter a class's marks for a term (class teacher or school leader)
+      description: Formative out of 20 plus summative out of 80; the total and grade are worked out. Saving again updates. Marks behind a published report are locked (409).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/MarksRequest" }
+      responses:
+        "200": { description: Saved }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409":
+          description: No term, or the report is already published
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+  /api/v1/grading/reports/:
+    get:
+      summary: Report cards the user can see (families see published ones only)
+      parameters:
+        - { $ref: "#/components/parameters/Page" }
+        - { name: term, in: query, schema: { type: integer, format: int64 } }
+        - { name: student, in: query, schema: { type: integer, format: int64 } }
+      responses:
+        "200":
+          description: A page of report cards
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ReportPage" }
+  /api/v1/grading/reports/generate/:
+    post:
+      summary: Prepare draft report cards for a class (class teacher or school leader)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [class]
+              properties:
+                class: { type: integer, format: int64 }
+                term: { type: integer, format: int64 }
+      responses:
+        "200":
+          description: Drafts written; published cards are left alone
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [generated, already_published, term]
+                properties:
+                  generated: { type: integer }
+                  already_published: { type: integer }
+                  term: { type: integer, format: int64 }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409":
+          description: No term
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+  /api/v1/grading/reports/{id}/:
+    get:
+      summary: One report card with its subject marks
+      parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+      responses:
+        "200":
+          description: The report card
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Report" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    patch:
+      summary: Add remarks, or publish (head's remarks, promotion and publishing are for school leaders)
+      parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                class_teacher_remarks: { type: string, maxLength: 2000 }
+                headteacher_remarks: { type: string, maxLength: 2000 }
+                promotion_status: { type: string }
+                is_published: { type: boolean }
+      responses:
+        "200":
+          description: The updated report card
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Report" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
 components:
   parameters:
     Page:
@@ -348,6 +457,78 @@ components:
         application/json:
           schema: { $ref: "#/components/schemas/Error" }
   schemas:
+    SubjectMark:
+      type: object
+      required: [id, student, student_name, assigned_class, class_title, term, term_name, formative_score, summative_score, total_score, grade_letter, descriptor, teacher_remarks, finalized_by, finalized_at]
+      properties:
+        id: { type: integer, format: int64 }
+        student: { type: integer, format: int64 }
+        student_name: { type: string }
+        assigned_class: { type: integer, format: int64 }
+        class_title: { type: string }
+        term: { type: integer, format: int64 }
+        term_name: { type: string }
+        formative_score: { $ref: "#/components/schemas/Decimal" }
+        summative_score: { $ref: "#/components/schemas/Decimal" }
+        total_score: { oneOf: [{ $ref: "#/components/schemas/Decimal" }, { type: "null" }] }
+        grade_letter: { type: [string, "null"] }
+        descriptor: { type: [string, "null"] }
+        teacher_remarks: { type: [string, "null"] }
+        finalized_by: { type: [integer, "null"], format: int64 }
+        finalized_at: { type: string, format: date-time }
+    MarksRequest:
+      type: object
+      required: [class, entries]
+      properties:
+        class: { type: integer, format: int64 }
+        term: { type: integer, format: int64, description: Defaults to the current term }
+        entries:
+          type: array
+          minItems: 1
+          maxItems: 200
+          items:
+            type: object
+            required: [student, formative_score, summative_score]
+            properties:
+              student: { type: integer, format: int64 }
+              formative_score: { type: string, description: 0 to 20 }
+              summative_score: { type: string, description: 0 to 80 }
+              teacher_remarks: { type: string, maxLength: 2000 }
+    Report:
+      type: object
+      required: [id, institution, student, student_name, term, term_name, overall_score, overall_grade_letter, promotion_status, class_teacher_remarks, headteacher_remarks, is_published, published_at, generated_at]
+      properties:
+        id: { type: integer, format: int64 }
+        institution: { type: integer, format: int64 }
+        student: { type: integer, format: int64 }
+        student_name: { type: string }
+        term: { type: integer, format: int64 }
+        term_name: { type: string }
+        overall_score: { oneOf: [{ $ref: "#/components/schemas/Decimal" }, { type: "null" }] }
+        overall_grade_letter: { type: [string, "null"] }
+        promotion_status: { type: [string, "null"] }
+        class_teacher_remarks: { type: [string, "null"] }
+        headteacher_remarks: { type: [string, "null"] }
+        is_published: { type: boolean }
+        published_at: { type: [string, "null"], format: date-time }
+        generated_at: { type: string, format: date-time }
+        subjects:
+          type: array
+          items: { $ref: "#/components/schemas/SubjectMark" }
+    SubjectMarkPage:
+      allOf:
+        - { $ref: "#/components/schemas/PageMeta" }
+        - type: object
+          required: [results]
+          properties:
+            results: { type: array, items: { $ref: "#/components/schemas/SubjectMark" } }
+    ReportPage:
+      allOf:
+        - { $ref: "#/components/schemas/PageMeta" }
+        - type: object
+          required: [results]
+          properties:
+            results: { type: array, items: { $ref: "#/components/schemas/Report" } }
     Class:
       type: object
       required: [id, institution, subject_name, class_level, class_level_name, teacher, teacher_name, title, visibility, is_published, created_at]

@@ -772,10 +772,334 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/grading/subjects/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Subject marks the user can see
+         * @description Staff see their schools'. Students and approved parents see marks only for terms whose report card is published.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description 1-based page number; 20 items per page */
+                    page?: components["parameters"]["Page"];
+                    class?: number;
+                    term?: number;
+                    student?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description A page of subject marks */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["SubjectMarkPage"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Enter a class's marks for a term (class teacher or school leader)
+         * @description Formative out of 20 plus summative out of 80; the total and grade are worked out. Saving again updates. Marks behind a published report are locked (409).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["MarksRequest"];
+                };
+            };
+            responses: {
+                /** @description Saved */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                400: components["responses"]["BadRequest"];
+                404: components["responses"]["NotFound"];
+                /** @description No term, or the report is already published */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/grading/reports/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Report cards the user can see (families see published ones only) */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description 1-based page number; 20 items per page */
+                    page?: components["parameters"]["Page"];
+                    term?: number;
+                    student?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description A page of report cards */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ReportPage"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/grading/reports/generate/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Prepare draft report cards for a class (class teacher or school leader) */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** Format: int64 */
+                        class: number;
+                        /** Format: int64 */
+                        term?: number;
+                    };
+                };
+            };
+            responses: {
+                /** @description Drafts written; published cards are left alone */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            generated: number;
+                            already_published: number;
+                            /** Format: int64 */
+                            term: number;
+                        };
+                    };
+                };
+                404: components["responses"]["NotFound"];
+                /** @description No term */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/grading/reports/{id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** One report card with its subject marks */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The report card */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Report"];
+                    };
+                };
+                404: components["responses"]["NotFound"];
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Add remarks, or publish (head's remarks, promotion and publishing are for school leaders) */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        class_teacher_remarks?: string;
+                        headteacher_remarks?: string;
+                        promotion_status?: string;
+                        is_published?: boolean;
+                    };
+                };
+            };
+            responses: {
+                /** @description The updated report card */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Report"];
+                    };
+                };
+                403: components["responses"]["Forbidden"];
+                404: components["responses"]["NotFound"];
+            };
+        };
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        SubjectMark: {
+            /** Format: int64 */
+            id: number;
+            /** Format: int64 */
+            student: number;
+            student_name: string;
+            /** Format: int64 */
+            assigned_class: number;
+            class_title: string;
+            /** Format: int64 */
+            term: number;
+            term_name: string;
+            formative_score: components["schemas"]["Decimal"];
+            summative_score: components["schemas"]["Decimal"];
+            total_score: components["schemas"]["Decimal"] | null;
+            grade_letter: string | null;
+            descriptor: string | null;
+            teacher_remarks: string | null;
+            /** Format: int64 */
+            finalized_by: number | null;
+            /** Format: date-time */
+            finalized_at: string;
+        };
+        MarksRequest: {
+            /** Format: int64 */
+            class: number;
+            /**
+             * Format: int64
+             * @description Defaults to the current term
+             */
+            term?: number;
+            entries: {
+                /** Format: int64 */
+                student: number;
+                /** @description 0 to 20 */
+                formative_score: string;
+                /** @description 0 to 80 */
+                summative_score: string;
+                teacher_remarks?: string;
+            }[];
+        };
+        Report: {
+            /** Format: int64 */
+            id: number;
+            /** Format: int64 */
+            institution: number;
+            /** Format: int64 */
+            student: number;
+            student_name: string;
+            /** Format: int64 */
+            term: number;
+            term_name: string;
+            overall_score: components["schemas"]["Decimal"] | null;
+            overall_grade_letter: string | null;
+            promotion_status: string | null;
+            class_teacher_remarks: string | null;
+            headteacher_remarks: string | null;
+            is_published: boolean;
+            /** Format: date-time */
+            published_at: string | null;
+            /** Format: date-time */
+            generated_at: string;
+            subjects?: components["schemas"]["SubjectMark"][];
+        };
+        SubjectMarkPage: components["schemas"]["PageMeta"] & {
+            results: components["schemas"]["SubjectMark"][];
+        };
+        ReportPage: components["schemas"]["PageMeta"] & {
+            results: components["schemas"]["Report"][];
+        };
         Class: {
             /** Format: int64 */
             id: number;

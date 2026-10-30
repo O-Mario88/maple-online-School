@@ -116,6 +116,38 @@ type GradingGraderecord struct {
 	SubmissionID    int64
 }
 
+type GradingReportcard struct {
+	ID                  int64
+	OverallScore        pgtype.Numeric
+	OverallGradeLetter  pgtype.Text
+	PromotionStatus     pgtype.Text
+	ClassTeacherRemarks pgtype.Text
+	HeadteacherRemarks  pgtype.Text
+	PdfFile             pgtype.Text
+	IsPublished         bool
+	PublishedAt         pgtype.Timestamptz
+	GeneratedAt         pgtype.Timestamptz
+	InstitutionID       int64
+	StudentID           int64
+	TemplateID          pgtype.Int8
+	TermID              int64
+}
+
+type GradingSubjectgrade struct {
+	ID              int64
+	FormativeScore  pgtype.Numeric
+	SummativeScore  pgtype.Numeric
+	TotalScore      pgtype.Numeric
+	GradeLetter     pgtype.Text
+	Descriptor      pgtype.Text
+	TeacherRemarks  pgtype.Text
+	FinalizedAt     pgtype.Timestamptz
+	AssignedClassID int64
+	FinalizedByID   pgtype.Int8
+	StudentID       int64
+	TermID          int64
+}
+
 type IdentityRevokedToken struct {
 	TokenID   string
 	UserID    int64
