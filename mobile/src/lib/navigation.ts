@@ -169,6 +169,7 @@ export const PUBLIC_PREVIEWS = [
   { href: '/shorts', label: 'Maple Shorts', icon: 'play' },
   { href: '/@sarah-kimani', route: '[handle]', label: 'Teacher storefront', icon: 'person' },
   { href: '/live/p7-maths-revision-bootcamp', route: 'live/[slug]', label: 'Live bootcamp', icon: 'live' },
+  { href: '/past-papers/uneb-uce/mathematics/2025', route: 'past-papers/[board]/[subject]/[year]', label: 'Past paper (free question)', icon: 'book' },
   { href: '/courses/complete-mathematics-primary-7', route: 'courses/[slug]', label: 'Course page', icon: 'book' },
   { href: '/event', label: 'Live event', icon: 'live' },
   { href: '/digest', label: 'Weekly digest', icon: 'chat' },

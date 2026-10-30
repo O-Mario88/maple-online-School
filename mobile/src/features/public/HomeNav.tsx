@@ -5,13 +5,18 @@ import { Icon } from '@/components/icon';
 
 import { Brand } from './palette';
 
-const LINKS = ['Home', 'Courses', 'Live Classes', 'Shorts', 'Curriculums', 'For Schools', 'For Teachers', 'Pricing', 'About'] as const;
+const LINKS = ['Home', 'Courses', 'Live Classes', 'Past Papers', 'Shorts', 'Curriculums', 'For Schools', 'For Teachers', 'Pricing', 'About'] as const;
 type NavLink = (typeof LINKS)[number];
 
 // Below this width the bar drops Pricing and About so the links don't run into the buttons.
 const ALL_LINKS_WIDTH = 1280;
-const SHORT_LINKS = 7;
-const LINK_ROUTES: Partial<Record<NavLink, '/welcome' | '/explore' | '/shorts'>> = { Home: '/welcome', Courses: '/explore', Shorts: '/shorts' };
+const SHORT_LINKS = 6;
+const LINK_ROUTES: Partial<Record<NavLink, '/welcome' | '/explore' | '/shorts' | '/past-papers/uneb-uce/mathematics/2025'>> = {
+  Home: '/welcome',
+  Courses: '/explore',
+  'Past Papers': '/past-papers/uneb-uce/mathematics/2025',
+  Shorts: '/shorts',
+};
 
 /** The public site's top bar: logo, section links on wide screens, and sign-in. */
 export function HomeNav({ wide, active = 'Home' }: { wide: boolean; active?: NavLink }) {

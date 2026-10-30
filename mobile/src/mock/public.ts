@@ -414,3 +414,92 @@ export const liveSession = {
     { title: 'Past Paper Walkthrough (2020–2024)', when: 'Sun, Nov 22 · 3:00 PM', priceUGX: 50000, seats: 91, status: 'live' as LiveStatus, photo: photos.liveMore[3] },
   ],
 };
+
+export interface PastPaperEntry {
+  board: string;
+  subject: string;
+  year: string;
+  title: string;
+  boardName: string;
+  exam: string;
+  subjectName: string;
+  crest: number | null;
+  flag: string;
+  level: string;
+  totalMarks: number;
+  duration: string;
+  questions: number;
+  files: string;
+  q1: {
+    marks: number;
+    parts: readonly { label: string; text: string }[];
+    figure: number | null;
+    expected: readonly { part: string; value: number; marks: number }[];
+    solution: readonly string[];
+    hint: string;
+  };
+  formulae: readonly string[];
+}
+
+const paper = (p: PastPaperEntry): PastPaperEntry => p;
+
+export const pastPaperPages = {
+  boards: [
+    { label: 'UNEB (Uganda)', href: '/past-papers/uneb-uce/mathematics/2025' },
+    { label: 'KCSE (Kenya)', href: '/past-papers/kcse/mathematics/2024' },
+    { label: 'WAEC (West Africa)', href: '/past-papers/waec/mathematics/2024' },
+    { label: 'IGCSE (Cambridge)', href: '/past-papers/igcse/mathematics/2024' },
+    { label: "A' Level (UACE)", href: '/past-papers/uneb-uace/mathematics/2024' },
+    { label: 'Primary Leaving (PLE)', href: '/past-papers/uneb-ple/mathematics/2025' },
+  ],
+  subjects: ['Mathematics', 'English', 'Biology', 'Chemistry', 'Physics', 'Geography', 'History', 'Business Studies', 'ICT', 'Literature'],
+  benefits: ['Interactive questions (both papers)', 'Auto-marking and detailed solutions', 'Save your progress and revision history', 'Download PDF and marking scheme', 'Exam analysis and topic breakdown', 'Related video lessons for each topic'],
+  heroPhoto: photos.paperHero,
+  videos: [
+    { title: "Pythagoras' Theorem Explained", length: '12:34', meta: 'Mathematics · S4', photo: photos.paperVideos[0] },
+    { title: 'Right-Angled Triangles Past Paper Practice', length: '18:21', meta: 'Mathematics · S4', photo: photos.paperVideos[1] },
+    { title: 'Geometry Revision (Full Topic)', length: '45:12', meta: 'Mathematics · S4', photo: photos.paperVideos[2] },
+  ],
+  papers: [
+    paper({
+      board: 'uneb-uce', subject: 'mathematics', year: '2025', title: 'UNEB UCE Mathematics 2025', boardName: 'Uganda National Examinations Board', exam: 'UCE (S4)', subjectName: 'Mathematics', crest: photos.paperCrest, flag: '🇺🇬', level: 'UCE (S4)', totalMarks: 100, duration: '2 hours 30 minutes', questions: 17, files: 'Paper 1, Paper 2, Marking Scheme',
+      q1: {
+        marks: 10,
+        parts: [
+          { label: '(a)', text: 'In the figure below, triangle ABC is such that AB = 6 cm, BC = 8 cm and ∠ABC = 90°. Find the length of AC.' },
+          { label: '(b)', text: 'Use your answer in (a) to find the area of triangle ABC.' },
+        ],
+        figure: photos.paperQ1Figure,
+        expected: [{ part: '(a)', value: 10, marks: 5 }, { part: '(b)', value: 24, marks: 5 }],
+        solution: ['(a) AC² = AB² + BC² = 6² + 8² = 36 + 64 = 100, so AC = 10 cm.', '(b) Area = ½ × base × height = ½ × 8 × 6 = 24 cm².'],
+        hint: 'Angle B is a right angle, so Pythagoras applies: AC² = AB² + BC².',
+      },
+      formulae: ['Pythagoras: c² = a² + b²', 'Area of a triangle = ½ × base × height', 'Area of a circle = πr²', 'Gradient = (y₂ − y₁) ÷ (x₂ − x₁)'],
+    }),
+    paper({
+      board: 'uneb-ple', subject: 'mathematics', year: '2025', title: 'UNEB PLE Mathematics 2025', boardName: 'Uganda National Examinations Board', exam: 'PLE (P7)', subjectName: 'Mathematics', crest: photos.paperCrest, flag: '🇺🇬', level: 'PLE (P7)', totalMarks: 100, duration: '2 hours 30 minutes', questions: 32, files: 'Question paper, Marking guide',
+      q1: { marks: 2, parts: [{ label: '', text: 'Work out: 3/4 + 2/3. Give your answer as a mixed number.' }], figure: null, expected: [{ part: 'Answer', value: 1, marks: 1 }, { part: 'Fraction part', value: 5, marks: 1 }], solution: ['3/4 + 2/3 = 9/12 + 8/12 = 17/12 = 1 5/12.'], hint: 'Find a common denominator first: 12 works for 4 and 3.' },
+      formulae: ['Area of a rectangle = length × width', 'Perimeter = sum of all sides', 'Simple interest = P × R × T ÷ 100'],
+    }),
+    paper({
+      board: 'uneb-uace', subject: 'mathematics', year: '2024', title: 'UNEB UACE Mathematics 2024', boardName: 'Uganda National Examinations Board', exam: 'UACE (S6)', subjectName: 'Mathematics', crest: photos.paperCrest, flag: '🇺🇬', level: 'UACE (S6)', totalMarks: 120, duration: '3 hours', questions: 16, files: 'Paper 1, Paper 2, Marking Scheme',
+      q1: { marks: 5, parts: [{ label: '', text: 'Solve the equation 2x² − 7x + 3 = 0.' }], figure: null, expected: [{ part: 'x = 3', value: 3, marks: 3 }, { part: 'x = ½', value: 0.5, marks: 2 }], solution: ['(2x − 1)(x − 3) = 0, so x = ½ or x = 3.'], hint: 'Factorise: look for two numbers that multiply to 6 and add to −7.' },
+      formulae: ['x = (−b ± √(b² − 4ac)) ÷ 2a', 'd/dx(xⁿ) = nxⁿ⁻¹', '∫xⁿ dx = xⁿ⁺¹ ÷ (n + 1) + C'],
+    }),
+    paper({
+      board: 'kcse', subject: 'mathematics', year: '2024', title: 'KCSE Mathematics 2024', boardName: 'Kenya National Examinations Council', exam: 'KCSE (Form 4)', subjectName: 'Mathematics', crest: null, flag: '🇰🇪', level: 'KCSE (Form 4)', totalMarks: 100, duration: '2 hours 30 minutes', questions: 24, files: 'Paper 1, Paper 2, Marking Scheme',
+      q1: { marks: 3, parts: [{ label: '', text: 'Evaluate (−12 ÷ 3 + 8 × 2) ÷ (6 − 2 × 5).' }], figure: null, expected: [{ part: 'Answer', value: -3, marks: 3 }], solution: ['Top: −4 + 16 = 12. Bottom: 6 − 10 = −4. So 12 ÷ −4 = −3.'], hint: 'Work out the top and the bottom separately, using BODMAS.' },
+      formulae: ['Area of a trapezium = ½(a + b)h', 'Volume of a cylinder = πr²h', 'Compound interest: A = P(1 + r/100)ⁿ'],
+    }),
+    paper({
+      board: 'waec', subject: 'mathematics', year: '2024', title: 'WAEC Mathematics 2024', boardName: 'West African Examinations Council', exam: 'WASSCE (SS3)', subjectName: 'Mathematics', crest: null, flag: '🌍', level: 'WASSCE (SS3)', totalMarks: 100, duration: '2 hours 30 minutes', questions: 13, files: 'Objective, Theory, Marking Scheme',
+      q1: { marks: 4, parts: [{ label: '', text: 'Simplify 2⁵ × 2³ ÷ 2⁴.' }], figure: null, expected: [{ part: 'Answer', value: 16, marks: 4 }], solution: ['2⁵⁺³⁻⁴ = 2⁴ = 16.'], hint: 'When multiplying powers of the same base, add the indices; when dividing, subtract.' },
+      formulae: ['aᵐ × aⁿ = aᵐ⁺ⁿ', 'aᵐ ÷ aⁿ = aᵐ⁻ⁿ', 'Sum of angles in a triangle = 180°'],
+    }),
+    paper({
+      board: 'igcse', subject: 'mathematics', year: '2024', title: 'Cambridge IGCSE Mathematics 2024', boardName: 'Cambridge Assessment International Education', exam: 'IGCSE (Extended)', subjectName: 'Mathematics', crest: null, flag: '🇬🇧', level: 'IGCSE (Extended)', totalMarks: 130, duration: '2 hours', questions: 22, files: 'Paper 2, Paper 4, Mark Scheme',
+      q1: { marks: 2, parts: [{ label: '', text: 'Write 0.000 4507 in standard form.' }], figure: null, expected: [{ part: 'Number', value: 4.507, marks: 1 }, { part: 'Power', value: -4, marks: 1 }], solution: ['0.000 4507 = 4.507 × 10⁻⁴.'], hint: 'Move the decimal point until there is one non-zero digit before it, and count the moves.' },
+      formulae: ['Standard form: a × 10ⁿ, where 1 ≤ a < 10', 'Speed = distance ÷ time', 'sin θ = opposite ÷ hypotenuse'],
+    }),
+  ] as readonly PastPaperEntry[],
+};
