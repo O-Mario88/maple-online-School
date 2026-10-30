@@ -1,4 +1,4 @@
-import { activeKey, navFor, portalsFor, PORTALS, type Person, tabBar } from './navigation';
+import { activeKey, navFor, portalsFor, PORTALS, type Person, PUBLIC_PREVIEWS, tabBar } from './navigation';
 
 const person = (role: string, memberships: { role: string; status?: string }[] = [], children = 0): Person => ({
   role,
@@ -98,5 +98,24 @@ describe('activeKey', () => {
 
   it('is undefined for screens outside the menu', () => {
     expect(activeKey(items, '/mark/3')).toBeUndefined();
+  });
+
+  // Public pages sit at the app root, outside the signed-in group, and the
+  // root layout must not put them behind the sign-in guard.
+  it('every public preview page has a root route the guard leaves open', () => {
+    /* eslint-disable @typescript-eslint/no-require-imports */
+    const fs: { existsSync(p: string): boolean; readFileSync(p: string, e: string): string } = require('fs');
+    const path: { join(...parts: string[]): string } = require('path');
+    /* eslint-enable @typescript-eslint/no-require-imports */
+    const app = path.join(dirname, '..', 'app');
+    const layout = fs.readFileSync(path.join(app, '_layout.tsx'), 'utf8');
+    const guarded = layout.slice(layout.indexOf('<Stack.Protected'), layout.lastIndexOf('</Stack.Protected>'));
+    expect(PUBLIC_PREVIEWS.length).toBeGreaterThan(0);
+    for (const page of PUBLIC_PREVIEWS) {
+      const name = page.href.slice(1);
+      expect({ name, found: fs.existsSync(path.join(app, `${name}.tsx`)) }).toEqual({ name, found: true });
+      expect({ name, guarded: guarded.includes(`name="${name}"`) }).toEqual({ name, guarded: false });
+      expect({ name, listed: layout.includes(`name="${name}"`) }).toEqual({ name, listed: true });
+    }
   });
 });

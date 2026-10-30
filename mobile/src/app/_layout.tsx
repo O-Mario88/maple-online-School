@@ -50,6 +50,13 @@ function RootNavigator() {
       {/* Opened from emailed links, whether or not someone is signed in. */}
       <Stack.Screen name="activate" />
       <Stack.Screen name="reset-password" />
+      {/* Public pages (PUBLIC_PREVIEWS in lib/navigation): open to everyone. */}
+      <Stack.Screen name="welcome" />
+      <Stack.Screen name="event" />
+      <Stack.Screen name="digest" />
+      <Stack.Screen name="pay" />
+      <Stack.Screen name="verify" />
+      <Stack.Screen name="help" />
     </Stack>
   );
 }

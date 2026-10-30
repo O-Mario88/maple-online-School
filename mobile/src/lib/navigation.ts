@@ -158,3 +158,16 @@ export function activeKey(items: readonly NavItem[], pathname: string): string |
   if (pathname === '/') return items.find((i) => i.href === '/')?.key;
   return items.find((i) => i.href !== '/' && (pathname === i.href || pathname.startsWith(`${i.href}/`)))?.key;
 }
+
+/**
+ * Public pages anyone can open without signing in. Design builds show them
+ * on sample data; deployment builds say "Coming soon" until the API serves them.
+ */
+export const PUBLIC_PREVIEWS = [
+  { href: '/welcome', label: 'Home page', icon: 'sparkle' },
+  { href: '/event', label: 'Live event', icon: 'live' },
+  { href: '/digest', label: 'Weekly digest', icon: 'chat' },
+  { href: '/pay', label: 'Fee payment link', icon: 'wallet' },
+  { href: '/verify', label: 'Certificate check', icon: 'check' },
+  { href: '/help', label: 'Help and status', icon: 'flag' },
+] as const satisfies readonly { href: string; label: string; icon: IconName }[];

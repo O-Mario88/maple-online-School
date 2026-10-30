@@ -7,6 +7,7 @@ import { Button, ErrorText, Field } from '@/components/ui';
 import { Spacing, type Theme, Type } from '@/constants/theme';
 import { useStyles } from '@/hooks/use-styles';
 import { useAuth } from '@/lib/auth/auth-context';
+import { MOCK_DATA } from '@/lib/mock';
 
 export default function SignInScreen() {
   const { styles } = useStyles(makeStyles);
@@ -63,6 +64,11 @@ export default function SignInScreen() {
           Create an account
         </Link>
       </View>
+      {MOCK_DATA ? (
+        <Link href="/welcome" style={styles.link} accessibilityRole="link">
+          Design preview: public pages
+        </Link>
+      ) : null}
     </AuthLayout>
   );
 }
