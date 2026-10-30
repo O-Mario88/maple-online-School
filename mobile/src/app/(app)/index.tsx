@@ -3,6 +3,7 @@ import { router } from 'expo-router';
 import { Badge, Body, Button, Card, ErrorText, Grid, Loading, Row, Screen, Segmented, useShell } from '@/components/ui';
 import { InboxBell } from '@/components/shell/InboxBell';
 import { HomeStats } from '@/features/home/HomeStats';
+import { LearnersEntryCard } from '@/features/insights/LearnersEntryCard';
 import { AttendanceSection } from '@/features/learner/AttendanceSection';
 import { ParentResultsSection } from '@/features/parent/ParentResultsSection';
 import { ReportsSection } from '@/features/shared/ReportsSection';
@@ -92,6 +93,7 @@ function PortalHome({ portal, user }: { portal: Portal; user: Me }) {
             ]}
           />
           <ClassesSection />
+          <LearnersEntryCard />
           <ReportsSection staff />
           <SchoolsCard user={user} />
         </Grid>
@@ -100,6 +102,7 @@ function PortalHome({ portal, user }: { portal: Portal; user: Me }) {
       return (
         <Grid min={380}>
           <TodaySection />
+          <LearnersEntryCard />
           <ClassesSection />
           <TeacherWorkSection />
           <ReportsSection staff />

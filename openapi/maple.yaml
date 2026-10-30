@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Maple API
-  version: 0.15.0
+  version: 0.16.0
   description: |
     The contract between the Maple apps and the Go API. Paths not listed here
     are still served by the Django API through the Go service's forwarder,
@@ -634,6 +634,59 @@ paths:
       summary: Mark all your notifications read
       responses:
         "204": { description: All marked read }
+  /api/v1/insights/classes/{id}/learners/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    get:
+      summary: Which learners in a class need their teacher, most urgent first
+      description: >-
+        For the class teacher and the school's leaders. Each learner is rated
+        high, medium or ok from the last 30 days of attendance, work handed in
+        and marks, with the reasons in plain words.
+      responses:
+        "200":
+          description: The class and its learners
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [class, learners]
+                properties:
+                  class: { $ref: "#/components/schemas/NamedRef" }
+                  learners: { type: array, items: { $ref: "#/components/schemas/LearnerInsight" } }
+        "404": { description: Not a class you teach or lead }
+  /api/v1/insights/interventions/:
+    get:
+      summary: A learner's interventions (staff who teach them or lead their school)
+      parameters: [{ name: student, in: query, required: true, schema: { type: integer, format: int64 } }]
+      responses:
+        "200":
+          description: Newest first
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [count, results]
+                properties:
+                  count: { type: integer }
+                  results: { type: array, items: { $ref: "#/components/schemas/Intervention" } }
+    post:
+      summary: Record what you did about a learner; a parent message goes to their confirmed parents
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [class, student, kind, note]
+              properties:
+                class: { type: integer, format: int64 }
+                student: { type: integer, format: int64 }
+                kind: { type: string, enum: [parent_message, remedial_work, meeting, note] }
+                note: { type: string, maxLength: 2000 }
+      responses:
+        "201": { description: Recorded, content: { application/json: { schema: { $ref: "#/components/schemas/Intervention" } } } }
+        "400": { description: Unknown kind, empty message or learner not in the class }
+        "404": { description: Not a class you teach or lead }
   /api/v1/curriculum/full-tree/:
     get:
       summary: The course catalog (levels, classes, terms, subjects, topics, lessons)
@@ -1372,6 +1425,35 @@ components:
         application/json:
           schema: { $ref: "#/components/schemas/Error" }
   schemas:
+    NamedRef:
+      type: object
+      required: [id, name]
+      properties: { id: { type: integer, format: int64 }, name: { type: string } }
+    LearnerInsight:
+      type: object
+      required: [student, level, reasons, days_marked, days_attended, work_set, work_done, average_pct, last_intervention_at]
+      properties:
+        student: { $ref: "#/components/schemas/NamedRef" }
+        level: { type: string, enum: [high, medium, ok] }
+        reasons: { type: array, items: { type: string } }
+        days_marked: { type: integer }
+        days_attended: { type: integer }
+        work_set: { type: integer }
+        work_done: { type: integer }
+        average_pct: { type: number, nullable: true }
+        last_intervention_at: { type: string, format: date-time, nullable: true }
+    Intervention:
+      type: object
+      required: [id, class_id, class_title, student_id, staff, kind, note, created_at]
+      properties:
+        id: { type: integer, format: int64 }
+        class_id: { type: integer, format: int64 }
+        class_title: { type: string }
+        student_id: { type: integer, format: int64 }
+        staff: { $ref: "#/components/schemas/NamedRef" }
+        kind: { type: string, enum: [parent_message, remedial_work, meeting, note] }
+        note: { type: string }
+        created_at: { type: string, format: date-time }
     Notification:
       type: object
       required: [id, kind, title, body, link, created_at, read_at]

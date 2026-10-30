@@ -36,3 +36,12 @@ UPDATE inbox_notifications SET read_at = COALESCE(read_at, now()) WHERE id = $1 
 
 -- name: MarkAllNotificationsRead :exec
 UPDATE inbox_notifications SET read_at = now() WHERE user_id = $1 AND read_at IS NULL;
+
+-- name: AddParentsNotification :exec
+-- Every parent whose link to the learner is approved (not the learner).
+INSERT INTO inbox_notifications (user_id, kind, title, body, link)
+SELECT pp.user_id, sqlc.arg(kind)::text, sqlc.arg(title)::text, sqlc.arg(body)::text, sqlc.arg(link)::text
+FROM parent_portal_parentstudentlink l
+JOIN accounts_parentprofile pp ON pp.id = l.parent_profile_id
+JOIN accounts_studentprofile sp ON sp.id = l.student_profile_id
+WHERE sp.user_id = sqlc.arg(student)::bigint AND l.consent_status = 'approved';

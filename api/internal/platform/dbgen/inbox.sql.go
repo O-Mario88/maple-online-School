@@ -70,6 +70,35 @@ func (q *Queries) AddNotification(ctx context.Context, arg AddNotificationParams
 	return err
 }
 
+const addParentsNotification = `-- name: AddParentsNotification :exec
+INSERT INTO inbox_notifications (user_id, kind, title, body, link)
+SELECT pp.user_id, $1::text, $2::text, $3::text, $4::text
+FROM parent_portal_parentstudentlink l
+JOIN accounts_parentprofile pp ON pp.id = l.parent_profile_id
+JOIN accounts_studentprofile sp ON sp.id = l.student_profile_id
+WHERE sp.user_id = $5::bigint AND l.consent_status = 'approved'
+`
+
+type AddParentsNotificationParams struct {
+	Kind    string
+	Title   string
+	Body    string
+	Link    string
+	Student int64
+}
+
+// Every parent whose link to the learner is approved (not the learner).
+func (q *Queries) AddParentsNotification(ctx context.Context, arg AddParentsNotificationParams) error {
+	_, err := q.db.Exec(ctx, addParentsNotification,
+		arg.Kind,
+		arg.Title,
+		arg.Body,
+		arg.Link,
+		arg.Student,
+	)
+	return err
+}
+
 const countNotifications = `-- name: CountNotifications :one
 SELECT count(*) FROM inbox_notifications
 WHERE user_id = $1::bigint AND (NOT $2::boolean OR read_at IS NULL)

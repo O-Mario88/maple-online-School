@@ -337,6 +337,17 @@ type InboxNotification struct {
 	ReadAt    pgtype.Timestamptz
 }
 
+type InsightIntervention struct {
+	ID        int64
+	SchoolID  int64
+	ClassID   int64
+	StudentID int64
+	StaffID   int64
+	Kind      string
+	Note      string
+	CreatedAt pgtype.Timestamptz
+}
+
 type InstitutionsInstitution struct {
 	ID               int64
 	Name             string

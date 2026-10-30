@@ -57,6 +57,18 @@ func NotifyFamily(ctx context.Context, q *dbgen.Queries, studentID int64, n Note
 	return nil
 }
 
+// NotifyParents adds a note for every parent the school has confirmed for a
+// learner, but not the learner.
+func NotifyParents(ctx context.Context, q *dbgen.Queries, studentID int64, n Note) error {
+	err := q.AddParentsNotification(ctx, dbgen.AddParentsNotificationParams{
+		Student: studentID, Kind: n.Kind, Title: n.Title, Body: n.Body, Link: linkOr(n.Link),
+	})
+	if err != nil {
+		return fmt.Errorf("notify parents: %w", err)
+	}
+	return nil
+}
+
 type Notification struct {
 	ID        int64      `json:"id"`
 	Kind      string     `json:"kind"`

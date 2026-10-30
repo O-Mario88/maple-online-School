@@ -29,7 +29,6 @@ from analytics.views import AnalyticsEventViewSet, DailyPlatformMetricViewSet, D
 from assessments.views import AssessmentWindowViewSet, QuestionViewSet
 from discussions.views import ThreadViewSet, PostViewSet
 from exams.views import ExamCenterViewSet, CandidateRegistrationViewSet, SubjectSelectionViewSet, BoardSubmissionBatchViewSet
-from parent_portal.views import ParentStudentLinkViewSet, WeeklySummaryViewSet, RiskAlertViewSet
 # The library (items, sharing, reading lists, progress) is served by the Go
 # API at /api/v1/library/. Tags, recommendations and the content dashboards
 # move with the analytics and AI work.
@@ -103,9 +102,6 @@ router.register(r'content/recommendations', ContentRecommendationViewSet, basena
 # Community & Extensions
 router.register(r'discussions/thread', ThreadViewSet, basename='discussions-thread')
 router.register(r'discussions/post', PostViewSet, basename='discussions-post')
-router.register(r'parent-portal/parent-student-link', ParentStudentLinkViewSet, basename='parent_portal-parent-student-link')
-router.register(r'parent-portal/weekly-summary', WeeklySummaryViewSet, basename='parent_portal-weekly-summary')
-router.register(r'parent-portal/risk-alert', RiskAlertViewSet, basename='parent_portal-risk-alert')
 router.register(r'tutoring/match-request', MatchRequestViewSet, basename='tutoring-match-request')
 router.register(r'tutoring/peer-points-ledger', PeerPointsLedgerViewSet, basename='tutoring-peer-points-ledger')
 from tutoring.views import TutorProfileViewSet, TutoringBountyViewSet
@@ -131,10 +127,6 @@ router.register(r'intelligence/story-cards', StoryCardViewSet, basename='intelli
 router.register(r'intelligence/health-history', InstitutionHealthHistoryViewSet, basename='intelligence-health-history')
 router.register(r'intelligence/impact', ImpactComparisonViewSet, basename='intelligence-impact')
 
-from interventions.views import StudentRiskAlertViewSet, InterventionPlanViewSet, InterventionActionViewSet
-router.register(r'interventions/alerts', StudentRiskAlertViewSet, basename='interventions-alerts')
-router.register(r'interventions/plans', InterventionPlanViewSet, basename='interventions-plans')
-router.register(r'interventions/actions', InterventionActionViewSet, basename='interventions-actions')
 
 
 from marketplace.views import IndependentTeacherOnboardingView

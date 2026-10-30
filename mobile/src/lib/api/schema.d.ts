@@ -1846,6 +1846,146 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/insights/classes/{id}/learners/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        /**
+         * Which learners in a class need their teacher, most urgent first
+         * @description For the class teacher and the school's leaders. Each learner is rated high, medium or ok from the last 30 days of attendance, work handed in and marks, with the reasons in plain words.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The class and its learners */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            class: components["schemas"]["NamedRef"];
+                            learners: components["schemas"]["LearnerInsight"][];
+                        };
+                    };
+                };
+                /** @description Not a class you teach or lead */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/insights/interventions/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** A learner's interventions (staff who teach them or lead their school) */
+        get: {
+            parameters: {
+                query: {
+                    student: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Newest first */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            count: number;
+                            results: components["schemas"]["Intervention"][];
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** Record what you did about a learner; a parent message goes to their confirmed parents */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** Format: int64 */
+                        class: number;
+                        /** Format: int64 */
+                        student: number;
+                        /** @enum {string} */
+                        kind: "parent_message" | "remedial_work" | "meeting" | "note";
+                        note: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Recorded */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Intervention"];
+                    };
+                };
+                /** @description Unknown kind */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Not a class you teach or lead */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/curriculum/full-tree/": {
         parameters: {
             query?: never;
@@ -4310,6 +4450,39 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        NamedRef: {
+            /** Format: int64 */
+            id: number;
+            name: string;
+        };
+        LearnerInsight: {
+            student: components["schemas"]["NamedRef"];
+            /** @enum {string} */
+            level: "high" | "medium" | "ok";
+            reasons: string[];
+            days_marked: number;
+            days_attended: number;
+            work_set: number;
+            work_done: number;
+            average_pct: number | null;
+            /** Format: date-time */
+            last_intervention_at: string | null;
+        };
+        Intervention: {
+            /** Format: int64 */
+            id: number;
+            /** Format: int64 */
+            class_id: number;
+            class_title: string;
+            /** Format: int64 */
+            student_id: number;
+            staff: components["schemas"]["NamedRef"];
+            /** @enum {string} */
+            kind: "parent_message" | "remedial_work" | "meeting" | "note";
+            note: string;
+            /** Format: date-time */
+            created_at: string;
+        };
         Notification: {
             /** Format: int64 */
             id: number;
