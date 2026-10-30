@@ -153,6 +153,22 @@ class StudentSliceTests(TestCase):
         )
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
 
+    def test_nobody_can_sign_up_as_a_platform_administrator(self):
+        """Admins are made by hand, never through the public sign-up form."""
+        resp = self.client.post(
+            self.REGISTER_URL,
+            {
+                'email': 'wannabe.admin@edify.test',
+                'full_name': 'Wannabe Admin',
+                'country_code': 'UG',
+                'password': self.PASSWORD,
+                'role': 'admin',
+            },
+            format='json',
+        )
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertFalse(User.objects.filter(email='wannabe.admin@edify.test').exists())
+
 
 class RegistrationThrottleTests(TestCase):
     """Verify the anon throttle on the registration scope actually trips at 429.
