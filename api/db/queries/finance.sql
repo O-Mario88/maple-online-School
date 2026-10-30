@@ -159,11 +159,11 @@ ORDER BY j.created_at, j.id;
 
 -- name: SchoolSummary :one
 SELECT
-  COALESCE((SELECT sum(total_minor) FROM fin_invoices WHERE school_id = $1 AND status <> 'void' AND currency = $2), 0)::bigint AS billed_minor,
-  COALESCE((SELECT sum(amount_minor) FROM fin_payments WHERE school_id = $1 AND status = 'successful' AND currency = $2), 0)::bigint AS collected_minor,
+  COALESCE((SELECT sum(total_minor) FROM fin_invoices WHERE school_id = sqlc.arg(school_id)::bigint AND status <> 'void' AND currency = sqlc.arg(currency)::text), 0)::bigint AS billed_minor,
+  COALESCE((SELECT sum(amount_minor) FROM fin_payments WHERE school_id = sqlc.arg(school_id)::bigint AND status = 'successful' AND currency = sqlc.arg(currency)::text), 0)::bigint AS collected_minor,
   COALESCE((SELECT sum(e.debit_minor - e.credit_minor) FROM fin_entries e JOIN fin_accounts a ON a.id = e.account_id
-            WHERE a.school_id = $1 AND a.code = '1100' AND e.currency = $2), 0)::bigint AS outstanding_minor,
-  (SELECT count(*) FROM fin_payments WHERE school_id = $1 AND status = 'pending')::bigint AS pending_payments;
+            WHERE a.school_id = sqlc.arg(school_id)::bigint AND a.code = '1100' AND e.currency = sqlc.arg(currency)::text), 0)::bigint AS outstanding_minor,
+  (SELECT count(*) FROM fin_payments WHERE school_id = sqlc.arg(school_id)::bigint AND status = 'pending')::bigint AS pending_payments;
 
 -- name: JournalExport :many
 -- Every posted line for a school, for QuickBooks / Xero import.
