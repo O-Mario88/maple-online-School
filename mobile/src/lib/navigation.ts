@@ -176,6 +176,7 @@ export const PUBLIC_PREVIEWS = [
   { href: '/digest', label: 'Weekly digest', icon: 'chat' },
   { href: '/p/digest/eyJjaGlsZCI6ImFpc2hhLW5hbXV0ZWJpIiwid2VlayI6IjIwMjYtMTEtMDIiLCJleHAiOjE3OTQ4NjI3NDAwMDB9.demo-signature', route: 'p/digest/[token]', label: 'Parent Sunday digest', icon: 'chat' },
   { href: '/pay', label: 'Fee payment link', icon: 'wallet' },
+  { href: '/pay/eyJpbnZvaWNlIjoiSU5WLTIwMjYtMDAwNDU4IiwiZXhwIjoxNzk0ODYyNzQwMDAwfQ.demo-signature', route: 'pay/[token]', label: 'One-tap checkout', icon: 'wallet' },
   { href: '/verify', label: 'Certificate check', icon: 'check' },
   { href: '/help', label: 'Help and status', icon: 'flag' },
   { href: '/get-started', label: 'Get-started wizard', icon: 'sparkle' },

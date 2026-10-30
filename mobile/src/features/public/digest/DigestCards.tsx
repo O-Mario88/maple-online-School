@@ -13,6 +13,8 @@ import { Brand, CARD_SHADOW } from '../palette';
 type Digest = MockData['publicPages']['parentDigest'];
 
 const TICK_MS = 1000;
+// The sample invoice link this digest's Pay Now opens (from the digest's own data in a real build).
+const PAY_LINK = 'eyJpbnZvaWNlIjoiSU5WLTIwMjYtMDAwNDU4IiwiZXhwIjoxNzk0ODYyNzQwMDAwfQ.demo-signature';
 // A fixed waveform shape for the voice note (heights in pixels).
 const WAVE = [6, 10, 16, 8, 20, 12, 24, 14, 9, 18, 22, 11, 7, 15, 20, 10, 13, 24, 8, 16, 12, 6, 18, 10, 14, 9, 20, 12, 7, 11];
 
@@ -197,7 +199,7 @@ export function FeesCard({ d }: { d: Digest }) {
         </View>
       </View>
       {balance > 0 ? (
-        <Pressable style={styles.pay} onPress={() => router.push('/pay')} accessibilityRole="button">
+        <Pressable style={styles.pay} onPress={() => router.push(`/pay/${PAY_LINK}`)} accessibilityRole="button">
           <Icon name="wallet" size={18} color={Brand.surface} />
           <Text style={styles.payText}>{`Pay Now (${formatMoney(balance, 'UGX')})`}</Text>
         </Pressable>

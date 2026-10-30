@@ -639,3 +639,24 @@ export const parentDigest = {
   ],
   fees: { term: 'Term 3 Fees', totalUGX: 1_200_000, paidUGX: 600_000 },
 };
+
+/** A sample invoice payment link (valid until Sun 16 Nov 2026, 11:59 PM EAT), for design builds. */
+export const SAMPLE_PAY_TOKEN = 'eyJpbnZvaWNlIjoiSU5WLTIwMjYtMDAwNDU4IiwiZXhwIjoxNzk0ODYyNzQwMDAwfQ.demo-signature';
+
+export const invoicePage = {
+  invoice: 'INV-2026-000458',
+  validUntil: 'Sun, 16 Nov 2026 · 11:59 PM',
+  child: { name: 'Aisha Namutebi', level: 'Primary 7', school: 'Kampala Hill School', guardian: 'Sarah Namutebi', year: '2026', photo: photos.payChild },
+  items: [
+    { title: 'Term 3 School Fees', detail: 'Primary 7 · 2026', ugx: 1_200_000, icon: 'book' as const, tint: '#8B5CF6' },
+    { title: 'Mathematics Online Course', detail: 'P7 Exam Revision Bootcamp', ugx: 80_000, icon: 'school' as const, tint: '#16A34A' },
+    { title: 'Learning Materials', detail: 'Workbooks and Digital Resources', ugx: 40_000, icon: 'notes' as const, tint: '#2F6BFF' },
+  ],
+  methods: photos.payMethods,
+  promises: [
+    { title: 'Secure & Encrypted', detail: '256-bit security', icon: 'lock' as const },
+    { title: 'Instant Receipt', detail: 'Download after payment', icon: 'notes' as const },
+    { title: 'Real-time Update', detail: 'Notifies the school', icon: 'live' as const },
+    { title: 'Need Help?', detail: 'Chat on WhatsApp', icon: 'chat' as const },
+  ],
+};
