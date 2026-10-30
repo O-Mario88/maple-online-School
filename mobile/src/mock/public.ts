@@ -1,6 +1,7 @@
 /** Public web fixtures (design builds only; never bundled in deployment). */
 
 import type { CatalogueItem } from '@/lib/catalogue';
+import type { ShortClip } from '@/lib/shorts';
 
 export type LiveStatus = 'live' | 'soon';
 
@@ -238,3 +239,44 @@ export const catalogue: readonly CatalogueEntry[] = [
 
 /** The course with a full public page; other cards open it too in design builds. */
 export const catalogueCoursePage = 'complete-mathematics-primary-7';
+
+export type ShortEntry = ShortClip & {
+  meta: string;
+  caption: { lead: string; highlight: string; tail: string };
+  views: number;
+  likes: number;
+  comments: number;
+  shares: number;
+  tint: string;
+  emoji: string;
+  desc: string;
+  teacherTitle: string;
+  tags: readonly string[];
+};
+
+const s = (e: ShortEntry): ShortEntry => e;
+
+export const shortsFeed = {
+  topics: ['For You', 'Mathematics', 'Science', 'English', 'Exam Revision', 'Study Tips', 'Teacher Stories', 'Career & Life Skills', 'Motivation'],
+  promises: ['Bite-sized learning', 'Real teachers', 'Curriculum aligned', 'Free to watch'],
+  clips: [
+    s({ id: 's1', title: 'Multiply Fractions Easily', topic: 'Mathematics', board: 'UNEB', level: 'Primary', subject: 'Mathematics', type: 'Revision tip', language: 'English', teacher: 'Mr. James Kato', teacherTitle: 'Mathematics Teacher', meta: 'UNEB · P7', caption: { lead: 'Multiply', highlight: 'Fractions', tail: 'in 60 Seconds' }, views: 1200000, likes: 34000, comments: 1200, shares: 5400, tint: '#1E3A8A', emoji: '👨🏾‍🏫', desc: 'A quick and simple method to multiply fractions, with examples.', tags: ['UNEB', 'Primary 7', 'Mathematics', 'Fractions'] }),
+    s({ id: 's2', title: 'Reading Comprehension Tips', topic: 'English', board: 'KCSE', level: 'Lower secondary', subject: 'English', type: 'Teacher advice', language: 'English', teacher: 'Ms. Aisha Bello', teacherTitle: 'English Teacher', meta: 'KCSE · Form 3', caption: { lead: '5 Techniques', highlight: 'for Better', tail: 'Comprehension' }, views: 856000, likes: 21000, comments: 640, shares: 2100, tint: '#7C2D12', emoji: '👩🏽‍🏫', desc: 'Five habits that help you answer comprehension questions faster.', tags: ['KCSE', 'Form 3', 'English'] }),
+    s({ id: 's3', title: 'Parts of a Human Cell', topic: 'Science', board: 'IGCSE', level: 'Lower secondary', subject: 'Biology', type: 'Concept explanation', language: 'English', teacher: 'Dr. Grace Njeri', teacherTitle: 'Biology Teacher', meta: 'IGCSE · Grade 9', caption: { lead: 'The', highlight: 'Human Cell', tail: 'in 60 Seconds' }, views: 1800000, likes: 42000, comments: 1900, shares: 8800, tint: '#0E7490', emoji: '🧫', desc: 'Every organelle you need for the exam, in one minute.', tags: ['IGCSE', 'Grade 9', 'Biology'] }),
+    s({ id: 's4', title: 'Balance Equations Fast', topic: 'Science', board: 'WAEC', level: 'Upper secondary', subject: 'Chemistry', type: 'Concept explanation', language: 'English', teacher: 'Dr. Ahmed Hassan', teacherTitle: 'Chemistry Teacher', meta: 'WAEC · SS2', caption: { lead: 'Balancing', highlight: 'Chemical', tail: 'Equations' }, views: 920000, likes: 28000, comments: 870, shares: 3100, tint: '#334155', emoji: '🥽', desc: 'The atom-counting trick that balances any equation.', tags: ['WAEC', 'SS2', 'Chemistry'] }),
+    s({ id: 's5', title: 'Study Smarter', topic: 'Study Tips', board: 'Any', level: 'Any level', subject: 'Study skills', type: 'Teacher advice', language: 'English', teacher: 'Ms. Laila Chen', teacherTitle: 'Learning Coach', meta: 'All levels', caption: { lead: 'How to', highlight: 'Study Smarter', tail: 'Not Harder' }, views: 643000, likes: 18000, comments: 520, shares: 4200, tint: '#3F3F46', emoji: '📚', desc: 'Spaced practice and self-testing beat re-reading.', tags: ['Study tips'] }),
+    s({ id: 's6', title: "Newton's Three Laws", topic: 'Science', board: 'Cambridge', level: 'A level', subject: 'Physics', type: 'Concept explanation', language: 'English', teacher: 'Dr. Michael Tan', teacherTitle: 'Physics Teacher', meta: 'A Level', caption: { lead: "Newton's", highlight: 'Laws', tail: 'in 60s' }, views: 1100000, likes: 30000, comments: 990, shares: 3600, tint: '#1F2937', emoji: '🍎', desc: 'All three laws with everyday examples.', tags: ['A Level', 'Physics'] }),
+    s({ id: 's7', title: 'PLE 2023 Q5 Solution', topic: 'Exam Revision', board: 'UNEB', level: 'Primary', subject: 'Mathematics', type: 'Past paper solution', language: 'English', teacher: 'Mr. Daniel Okello', teacherTitle: 'Mathematics Teacher', meta: 'UNEB · P7', caption: { lead: '2023 PLE', highlight: 'Maths Q5', tail: 'Fully Solved' }, views: 2300000, likes: 55000, comments: 3100, shares: 12000, tint: '#475569', emoji: '📝', desc: 'Step-by-step marking-scheme answer to PLE 2023 question 5.', tags: ['UNEB', 'PLE', 'Past paper'] }),
+    s({ id: 's8', title: 'Map Reading Skills', topic: 'Exam Revision', board: 'KCSE', level: 'Upper secondary', subject: 'Geography', type: 'Revision tip', language: 'English', teacher: 'Ms. Sarah Kim', teacherTitle: 'Geography Teacher', meta: 'KCSE · Form 4', caption: { lead: 'Map', highlight: 'Reading', tail: 'Made Easy' }, views: 780000, likes: 19000, comments: 410, shares: 1800, tint: '#065F46', emoji: '🗺️', desc: 'Grid references and scale in under a minute.', tags: ['KCSE', 'Geography'] }),
+    s({ id: 's9', title: 'Python for Beginners', topic: 'Career & Life Skills', board: 'Any', level: 'Any level', subject: 'ICT & Coding', type: 'Concept explanation', language: 'English', teacher: 'Mr. David Ouma', teacherTitle: 'Coding Teacher', meta: 'Beginner', caption: { lead: 'Python', highlight: 'Basics', tail: 'in 60 Seconds' }, views: 1500000, likes: 41000, comments: 2200, shares: 9300, tint: '#111827', emoji: '🐍', desc: 'Your first program: variables, print and a loop.', tags: ['Coding', 'Beginner'] }),
+    s({ id: 's10', title: 'Keep Going', topic: 'Motivation', board: 'Any', level: 'Any level', subject: 'Study skills', type: 'Student story', language: 'French', teacher: 'Ms. Faith Achieng', teacherTitle: 'Counsellor', meta: 'All learners', caption: { lead: 'Your', highlight: 'Dreams', tail: 'Are Possible' }, views: 980000, likes: 27000, comments: 1500, shares: 6100, tint: '#581C87', emoji: '🌟', desc: 'A former learner on failing a mock and passing the real exam.', tags: ['Motivation'] }),
+  ],
+  trending: [
+    { title: 'Top 10 Algebra Tips', views: 1900000 },
+    { title: 'Cell Division Explained', views: 1600000 },
+    { title: 'Essay Writing Structure', views: 1400000 },
+    { title: 'Organic Chemistry Tips', views: 1200000 },
+    { title: 'Time Management for Students', views: 1100000 },
+  ],
+  courseSlug: 'complete-mathematics-primary-7',
+};

@@ -27,7 +27,14 @@ function Check({ on }: { on: boolean }) {
   return <View style={[styles.box, on && styles.boxOn]}>{on ? <Icon name="check" size={12} color={Brand.surface} /> : null}</View>;
 }
 
-function Group({ group, selected, onToggle }: { group: FilterGroup; selected: readonly string[]; onToggle: (value: string) => void }) {
+interface CheckGroupProps {
+  group: { title: string; options: readonly { value: string; label: string; count?: number }[] };
+  selected: readonly string[];
+  onToggle: (value: string) => void;
+}
+
+/** A collapsible list of tick boxes; also used by the Shorts filters. */
+export function CheckGroup({ group, selected, onToggle }: CheckGroupProps) {
   const [open, setOpen] = useState(true);
   const [all, setAll] = useState(false);
   const options = all ? group.options : group.options.slice(0, SHOWN);
@@ -43,7 +50,7 @@ function Group({ group, selected, onToggle }: { group: FilterGroup; selected: re
             return (
               <Pressable key={o.value} style={styles.option} onPress={() => onToggle(o.value)} accessibilityRole="checkbox" accessibilityState={{ checked: on }}>
                 <Check on={on} />
-                <Text style={styles.optionText}>{`${o.label} (${o.count})`}</Text>
+                <Text style={styles.optionText}>{o.count === undefined ? o.label : `${o.label} (${o.count})`}</Text>
               </Pressable>
             );
           })
@@ -82,7 +89,7 @@ export function FilterPanel({ filters, groups, onChange }: { filters: CatalogueF
         <Icon name="search" size={18} color={Brand.body} />
       </View>
       {groups.map((g) => (
-        <Group key={g.key} group={g} selected={filters[g.key]} onToggle={(v) => toggle(g.key, v)} />
+        <CheckGroup key={g.key} group={g} selected={filters[g.key]} onToggle={(v) => toggle(g.key, v)} />
       ))}
       <View style={styles.group}>
         <Text style={styles.groupTitle}>Price</Text>

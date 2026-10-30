@@ -54,6 +54,7 @@ function RootNavigator() {
       <Stack.Screen name="welcome" />
       <Stack.Screen name="courses/[slug]" />
       <Stack.Screen name="explore" />
+      <Stack.Screen name="shorts" />
       <Stack.Screen name="event" />
       <Stack.Screen name="digest" />
       <Stack.Screen name="pay" />
