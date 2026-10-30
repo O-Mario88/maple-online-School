@@ -3,6 +3,8 @@ package livesessions
 import (
 	"net/http"
 	"strconv"
+	"sync"
+	"sync/atomic"
 	"testing"
 	"time"
 
@@ -47,11 +49,20 @@ func newWorld(t *testing.T) world {
 	return w
 }
 
+// nextSlot spaces test lessons two hours apart so their live sessions never clash
+// unless a test means them to.
+var nextSlot atomic.Int32
+
 func (w world) addLesson(t *testing.T, mode string) int64 {
+	t.Helper()
+	return w.lessonAt(t, mode, w.class, time.Now().Add(48*time.Hour+time.Duration(nextSlot.Add(2))*time.Hour))
+}
+
+func (w world) lessonAt(t *testing.T, mode string, class int64, at time.Time) int64 {
 	t.Helper()
 	var id int64
 	err := w.w.Pool.QueryRow(t.Context(), `INSERT INTO lessons_lesson (title, access_mode, scheduled_at, created_at, parent_class_id)
-		VALUES ('Cells', $1, now() + interval '2 days', now(), $2) RETURNING id`, mode, w.class).Scan(&id)
+		VALUES ('Cells', $1, $3, now(), $2) RETURNING id`, mode, class, at).Scan(&id)
 	if err != nil {
 		t.Fatalf("add lesson: %v", err)
 	}
@@ -178,5 +189,67 @@ func TestMissedSessionRecovery(t *testing.T) {
 	}
 	if code, ver := w.w.Call(w.teacher, http.MethodPatch, path, map[string]any{"recovery_status": "verified"}); code != http.StatusOK || ver["recovery_status"] != "verified" {
 		t.Errorf("teacher verifies: %d %v", code, ver)
+	}
+}
+
+func TestNoDoubleBooking(t *testing.T) {
+	w := newWorld(t)
+	at := time.Now().Add(30 * 24 * time.Hour).Truncate(time.Hour)
+	post := func(lesson int64, start time.Time) (int, map[string]any) {
+		return w.w.Call(w.teacher, http.MethodPost, sessionsURL, map[string]any{
+			"lesson": lesson, "meeting_link": meet, "scheduled_start": start.Format(time.RFC3339), "duration_minutes": 60,
+		})
+	}
+
+	code, first := post(w.lessonAt(t, "published", w.class, at), at)
+	if code != http.StatusCreated {
+		t.Fatalf("first session: %d %v", code, first)
+	}
+	if code, res := post(w.lessonAt(t, "published", w.class, at), at.Add(30*time.Minute)); code != http.StatusConflict {
+		t.Errorf("the same class can't have two live sessions at once: %d %v", code, res)
+	}
+	otherClass := w.w.Class(w.school, w.teacher)
+	if code, _ := post(w.lessonAt(t, "published", otherClass, at), at.Add(45*time.Minute)); code != http.StatusConflict {
+		t.Errorf("the same teacher can't teach two live sessions at once: %d", code)
+	}
+	if code, _ := post(w.lessonAt(t, "published", w.class, at), at.Add(60*time.Minute)); code != http.StatusCreated {
+		t.Errorf("back-to-back sessions are fine: %d", code)
+	}
+
+	if code, _ := w.w.Call(w.teacher, http.MethodPatch, sessionsURL+itoa(testkit.ID(first))+"/", map[string]any{"status": "cancelled"}); code != http.StatusOK {
+		t.Fatalf("cancel: %d", code)
+	}
+	if code, _ := post(w.lessonAt(t, "published", otherClass, at), at); code != http.StatusCreated {
+		t.Errorf("a cancelled session frees its time: %d", code)
+	}
+
+	// Two requests racing for the same hour: exactly one wins.
+	raceTeacher := w.w.Person("teacher", "subject_teacher", w.school)
+	raceClass := w.w.Class(w.school, raceTeacher)
+	raceAt := at.Add(5 * time.Hour)
+	lessons := []int64{w.lessonAt(t, "published", raceClass, raceAt), w.lessonAt(t, "published", raceClass, raceAt)}
+	codes := make([]int, len(lessons))
+	var wg sync.WaitGroup
+	for i, lesson := range lessons {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			codes[i], _ = w.w.Call(raceTeacher, http.MethodPost, sessionsURL, map[string]any{
+				"lesson": lesson, "meeting_link": meet, "scheduled_start": raceAt.Format(time.RFC3339),
+			})
+		}()
+	}
+	wg.Wait()
+	created, clashed := 0, 0
+	for _, c := range codes {
+		switch c {
+		case http.StatusCreated:
+			created++
+		case http.StatusConflict:
+			clashed++
+		}
+	}
+	if created != 1 || clashed != 1 {
+		t.Errorf("racing for the same hour: want one 201 and one 409, got %v", codes)
 	}
 }

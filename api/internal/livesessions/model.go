@@ -13,6 +13,7 @@ import (
 var (
 	ErrNotFound  = errors.New("not found")
 	ErrDuplicate = errors.New("already exists")
+	ErrClash     = errors.New("time already taken")
 )
 
 const (

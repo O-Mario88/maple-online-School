@@ -498,6 +498,49 @@ func (q *Queries) RecoveryAssignments(ctx context.Context, recoveryIds []int64) 
 	return items, nil
 }
 
+const releaseLiveSlot = `-- name: ReleaseLiveSlot :exec
+DELETE FROM live_reservations WHERE session_id = $1
+`
+
+func (q *Queries) ReleaseLiveSlot(ctx context.Context, sessionID pgtype.Int8) error {
+	_, err := q.db.Exec(ctx, releaseLiveSlot, sessionID)
+	return err
+}
+
+const reserveLiveSlot = `-- name: ReserveLiveSlot :exec
+
+INSERT INTO live_reservations (session_id, teacher_id, cohort_id, slot, status)
+VALUES ($1, $2, $3,
+        tstzrange($4::timestamptz, $4::timestamptz + make_interval(mins => $5::int), '[)'),
+        $6)
+ON CONFLICT (session_id) DO UPDATE SET
+    teacher_id = EXCLUDED.teacher_id, cohort_id = EXCLUDED.cohort_id, slot = EXCLUDED.slot, status = EXCLUDED.status
+`
+
+type ReserveLiveSlotParams struct {
+	SessionID pgtype.Int8
+	TeacherID int64
+	CohortID  pgtype.Int8
+	StartsAt  pgtype.Timestamptz
+	Minutes   int32
+	Status    string
+}
+
+// ---- reservations: no double-booking (see migration 00002) -------------------
+// Fails with an exclusion violation (23P01) when the teacher or the class
+// already has a live session in that time.
+func (q *Queries) ReserveLiveSlot(ctx context.Context, arg ReserveLiveSlotParams) error {
+	_, err := q.db.Exec(ctx, reserveLiveSlot,
+		arg.SessionID,
+		arg.TeacherID,
+		arg.CohortID,
+		arg.StartsAt,
+		arg.Minutes,
+		arg.Status,
+	)
+	return err
+}
+
 const updateLiveSession = `-- name: UpdateLiveSession :exec
 UPDATE live_sessions_livesession
 SET meeting_link = $1, replay_url = $2, provider = $3,

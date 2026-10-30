@@ -17,8 +17,8 @@ import (
 
 // LessonRef is what creating a session needs to know about its lesson.
 type LessonRef struct {
-	ID, School, Teacher int64
-	ScheduledAt         time.Time
+	ID, School, Teacher, Class int64
+	ScheduledAt                time.Time
 }
 
 // PostgresStore implements Store.
@@ -105,34 +105,73 @@ func (s *PostgresStore) Lesson(ctx context.Context, v Viewer, lessonID int64) (L
 	if err != nil {
 		return LessonRef{}, fmt.Errorf("get lesson: %w", err)
 	}
-	return LessonRef{ID: r.ID, School: r.InstitutionID, Teacher: r.TeacherID, ScheduledAt: r.ScheduledAt.Time}, nil
+	return LessonRef{ID: r.ID, School: r.InstitutionID, Teacher: r.TeacherID, Class: r.ParentClassID, ScheduledAt: r.ScheduledAt.Time}, nil
 }
 
-func (s *PostgresStore) CreateSession(ctx context.Context, lessonID int64, d Draft) (int64, error) {
-	newID, err := s.q.CreateLiveSession(ctx, dbgen.CreateLiveSessionParams{
-		MeetingLink: d.MeetingLink, Provider: d.Provider, ScheduledStart: stamp(d.ScheduledStart),
-		DurationMinutes: d.DurationMinutes, Capacity: d.Capacity, LessonID: lessonID,
+// CreateSession adds the session and reserves its time for the teacher and
+// the class in one transaction, so a clash leaves nothing behind.
+func (s *PostgresStore) CreateSession(ctx context.Context, lesson LessonRef, d Draft) (int64, error) {
+	var newID int64
+	err := pgx.BeginFunc(ctx, s.pool, func(tx pgx.Tx) error {
+		q := s.q.WithTx(tx)
+		var err error
+		newID, err = q.CreateLiveSession(ctx, dbgen.CreateLiveSessionParams{
+			MeetingLink: d.MeetingLink, Provider: d.Provider, ScheduledStart: stamp(d.ScheduledStart),
+			DurationMinutes: d.DurationMinutes, Capacity: d.Capacity, LessonID: lesson.ID,
+		})
+		if errors.Is(err, pgx.ErrNoRows) {
+			return ErrDuplicate
+		}
+		if err != nil {
+			return fmt.Errorf("create session: %w", err)
+		}
+		return reserve(ctx, q, newID, lesson.Teacher, lesson.Class, d)
 	})
-	if errors.Is(err, pgx.ErrNoRows) {
-		return 0, ErrDuplicate
-	}
-	if err != nil {
-		return 0, fmt.Errorf("create session: %w", err)
-	}
-	return newID, nil
+	return newID, err
 }
 
-func (s *PostgresStore) UpdateSession(ctx context.Context, sessionID int64, d Draft) error {
-	err := s.q.UpdateLiveSession(ctx, dbgen.UpdateLiveSessionParams{
-		ID: sessionID, MeetingLink: d.MeetingLink, ReplayUrl: text(d.ReplayURL), Provider: d.Provider,
-		ScheduledStart: stamp(d.ScheduledStart), DurationMinutes: d.DurationMinutes, Capacity: d.Capacity,
-		Status: d.Status, ArtifactSyncStatus: d.SyncStatus,
+// UpdateSession saves the change and moves or frees the reserved time.
+func (s *PostgresStore) UpdateSession(ctx context.Context, sess Session, d Draft) error {
+	return pgx.BeginFunc(ctx, s.pool, func(tx pgx.Tx) error {
+		q := s.q.WithTx(tx)
+		err := q.UpdateLiveSession(ctx, dbgen.UpdateLiveSessionParams{
+			ID: sess.ID, MeetingLink: d.MeetingLink, ReplayUrl: text(d.ReplayURL), Provider: d.Provider,
+			ScheduledStart: stamp(d.ScheduledStart), DurationMinutes: d.DurationMinutes, Capacity: d.Capacity,
+			Status: d.Status, ArtifactSyncStatus: d.SyncStatus,
+		})
+		if err != nil {
+			return fmt.Errorf("update session: %w", err)
+		}
+		return reserve(ctx, q, sess.ID, sess.teacher, sess.class, d)
 	})
+}
+
+// reserve holds the session's time while it is scheduled, and frees it once
+// it is cancelled, completed or has no start time.
+func reserve(ctx context.Context, q *dbgen.Queries, sessionID, teacher, class int64, d Draft) error {
+	id := pgtype.Int8{Int64: sessionID, Valid: true}
+	if d.Status != "scheduled" || d.ScheduledStart == nil {
+		if err := q.ReleaseLiveSlot(ctx, id); err != nil {
+			return fmt.Errorf("free time: %w", err)
+		}
+		return nil
+	}
+	err := q.ReserveLiveSlot(ctx, dbgen.ReserveLiveSlotParams{
+		SessionID: id, TeacherID: teacher, CohortID: pgtype.Int8{Int64: class, Valid: true},
+		StartsAt: stamp(d.ScheduledStart), Minutes: d.DurationMinutes, Status: "confirmed",
+	})
+	var pgErr interface{ SQLState() string }
+	if errors.As(err, &pgErr) && pgErr.SQLState() == exclusionViolation {
+		return ErrClash
+	}
 	if err != nil {
-		return fmt.Errorf("update session: %w", err)
+		return fmt.Errorf("reserve time: %w", err)
 	}
 	return nil
 }
+
+// exclusionViolation is raised by live_reservations' no-overlap constraints.
+const exclusionViolation = "23P01"
 
 // ---- reminders ------------------------------------------------------------------
 

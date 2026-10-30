@@ -28,8 +28,8 @@ type Store interface {
 	ListSessions(ctx context.Context, v Viewer, status *string, page httpx.Page) ([]Session, int64, error)
 	Session(ctx context.Context, v Viewer, id int64) (Session, error)
 	Lesson(ctx context.Context, v Viewer, lessonID int64) (LessonRef, error)
-	CreateSession(ctx context.Context, lessonID int64, d Draft) (int64, error)
-	UpdateSession(ctx context.Context, id int64, d Draft) error
+	CreateSession(ctx context.Context, lesson LessonRef, d Draft) (int64, error)
+	UpdateSession(ctx context.Context, sess Session, d Draft) error
 	Reminders(ctx context.Context, sessionID int64) ([]Reminder, error)
 	CreateReminder(ctx context.Context, sessionID int64, at time.Time) (Reminder, error)
 	Reminder(ctx context.Context, id int64) (Reminder, error)
@@ -166,9 +166,13 @@ func (h *Handler) createSession(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, msg)
 		return
 	}
-	newID, err := h.store.CreateSession(r.Context(), lesson.ID, d)
+	newID, err := h.store.CreateSession(r.Context(), lesson, d)
 	if errors.Is(err, ErrDuplicate) {
 		badRequest(w, "This lesson already has a live session. Change that one instead.")
+		return
+	}
+	if errors.Is(err, ErrClash) {
+		clash(w)
 		return
 	}
 	if err != nil {
@@ -197,7 +201,12 @@ func (h *Handler) updateSession(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, msg)
 		return
 	}
-	if err := h.store.UpdateSession(r.Context(), s.ID, d); err != nil {
+	err := h.store.UpdateSession(r.Context(), s, d)
+	if errors.Is(err, ErrClash) {
+		clash(w)
+		return
+	}
+	if err != nil {
 		serverError(w, "update session", err)
 		return
 	}
@@ -238,6 +247,12 @@ func queryID(s string) *int64 {
 		return nil
 	}
 	return &n
+}
+
+// clash explains a double-booking refused by the database.
+func clash(w http.ResponseWriter) {
+	httpx.WriteError(w, http.StatusConflict, "clash",
+		"That time overlaps another live session for this teacher or class. Pick another time.")
 }
 
 func badRequest(w http.ResponseWriter, msg string) {

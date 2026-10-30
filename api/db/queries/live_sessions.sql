@@ -124,3 +124,18 @@ WHERE id = sqlc.arg(id);
 -- name: RecoveryAssignments :many
 SELECT id, title, file_type, file_url, recovery_id FROM live_sessions_recoveryassignment
 WHERE recovery_id = ANY(sqlc.arg(recovery_ids)::bigint[]) ORDER BY id;
+
+-- ---- reservations: no double-booking (see migration 00002) -------------------
+
+-- name: ReserveLiveSlot :exec
+-- Fails with an exclusion violation (23P01) when the teacher or the class
+-- already has a live session in that time.
+INSERT INTO live_reservations (session_id, teacher_id, cohort_id, slot, status)
+VALUES (sqlc.arg(session_id), sqlc.arg(teacher_id), sqlc.arg(cohort_id),
+        tstzrange(sqlc.arg(starts_at)::timestamptz, sqlc.arg(starts_at)::timestamptz + make_interval(mins => sqlc.arg(minutes)::int), '[)'),
+        sqlc.arg(status))
+ON CONFLICT (session_id) DO UPDATE SET
+    teacher_id = EXCLUDED.teacher_id, cohort_id = EXCLUDED.cohort_id, slot = EXCLUDED.slot, status = EXCLUDED.status;
+
+-- name: ReleaseLiveSlot :exec
+DELETE FROM live_reservations WHERE session_id = $1;

@@ -295,6 +295,17 @@ type LessonsLessonrecording struct {
 	LessonID  int64
 }
 
+type LiveReservation struct {
+	ID        int64
+	SessionID pgtype.Int8
+	TeacherID int64
+	CohortID  pgtype.Int8
+	Slot      pgtype.Range[pgtype.Timestamptz]
+	Source    string
+	Status    string
+	CreatedAt pgtype.Timestamptz
+}
+
 type LiveSessionsLivesession struct {
 	ID                 int64
 	MeetingLink        string
