@@ -4,6 +4,7 @@ import { api } from '@/lib/api/client';
 import type { components } from '@/lib/api/schema';
 
 import type { Lesson } from './lessons';
+import type { LiveSession } from './live';
 
 type LessonInput = components['schemas']['LessonInput'];
 
@@ -47,5 +48,32 @@ export function usePublishLesson() {
       return data;
     },
     onSuccess: () => client.invalidateQueries({ queryKey: ['lessons'] }),
+  });
+}
+
+type LiveSessionInput = components['schemas']['LiveSessionInput'];
+
+/** Live sessions for lessons the person can see. */
+export function useLiveSessions() {
+  return useQuery({
+    queryKey: ['live-sessions'],
+    queryFn: async (): Promise<LiveSession[]> => {
+      const { data, error } = await api.GET('/api/v1/live-sessions/live-session/');
+      if (error || !data) fail(error, 'Could not load live sessions.');
+      return data.results;
+    },
+  });
+}
+
+/** Staff attach a Meet or Zoom link to a lesson. */
+export function useAddLiveSession() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: async (body: LiveSessionInput): Promise<LiveSession> => {
+      const { data, error } = await api.POST('/api/v1/live-sessions/live-session/', { body });
+      if (error || !data) fail(error, 'Could not add the live session.');
+      return data;
+    },
+    onSuccess: () => client.invalidateQueries({ queryKey: ['live-sessions'] }),
   });
 }

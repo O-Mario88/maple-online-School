@@ -16,6 +16,7 @@ forwarded to Django unchanged. Apps only ever talk to this service.
 | Curriculum: countries, levels, subjects, topics, catalog | Done (read-only) | `/api/v1/curriculum/full-tree/` (public), `countries/`, `class-levels/`, `subjects/` (+ `{id}/`), `topics/` (+ `{id}/`), `topic-competencies/` |
 | Resources: library and class resource links | Done (files still uploaded through Django) | `/api/v1/resources/` (+ `{id}/`), `/api/v1/resources/shared-resource-link/` (+ `{id}/`) |
 | Lessons: plans, notes, recordings, lesson attendance | Done | `/api/v1/lessons/lesson/` (+ `{id}/`), `lesson-note/`, `lesson-recording/`, `lesson-attendance/` |
+| Live sessions: sessions, reminders, missed-session recovery | Done (recording sync still a Django task) | `/api/v1/live-sessions/live-session/` (+ `{id}/`), `session-reminder/`, `missed-recovery/` |
 | Health   | Done         | `/api/health/` |
 | Everything else | Served by Django through the forwarder | all other `/api/v1/...` |
 

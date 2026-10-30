@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { Badge, Body, Button, Card, ErrorText, Field, Heading, Loading, Row, Screen } from '@/components/ui';
+import { AddLiveLinkCard, LiveSessionsCard } from '@/features/shared/LiveSessionsCard';
 import { useMe } from '@/lib/auth/auth-context';
 import { lessonWhen, parseLessonTime, upcomingLessons, type Lesson } from '@/lib/lessons/lessons';
 import { usePlanLesson, usePublishLesson, useLessons } from '@/lib/lessons/queries';
@@ -18,8 +19,10 @@ export default function LessonsScreen() {
     <Screen>
       <Button label="Back" variant="secondary" onPress={() => router.back()} />
       <Heading>Lessons</Heading>
+      <LiveSessionsCard />
       <UpcomingCard staff={staff} />
       {staff ? <PlanLessonCard /> : null}
+      {staff ? <AddLiveLinkCard /> : null}
     </Screen>
   );
 }

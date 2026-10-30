@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Maple API
-  version: 0.8.0
+  version: 0.9.0
   description: |
     The contract between the Maple apps and the Go API. Paths not listed here
     are still served by the Django API through the Go service's forwarder,
@@ -759,6 +759,89 @@ paths:
     post:
       summary: Record one enrolled student's attendance; repeating updates the same row
       responses: { "201": { description: Recorded }, "200": { description: Updated }, "400": { $ref: "#/components/responses/BadRequest" }, "403": { $ref: "#/components/responses/Forbidden" } }
+  /api/v1/live-sessions/live-session/:
+    get:
+      summary: Live sessions for lessons the user can see
+      parameters:
+        - { $ref: "#/components/parameters/Page" }
+        - { name: status, in: query, schema: { type: string, enum: [scheduled, completed, cancelled] } }
+      responses:
+        "200":
+          description: A page of sessions, soonest first
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LiveSessionPage" }
+    post:
+      summary: Add a live session to a lesson (the class's teacher or the school's leaders)
+      description: One per lesson. The link must be Google Meet (https://meet.google.com/...) or, with provider zoom, a zoom.us link.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LiveSessionInput" }
+      responses:
+        "201":
+          description: The session
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LiveSession" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /api/v1/live-sessions/live-session/{id}/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    get:
+      summary: One live session
+      responses:
+        "200":
+          description: The session
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LiveSession" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    patch:
+      summary: Change a session; completing one without a replay queues the recording sync
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LiveSessionInput" }
+      responses:
+        "200":
+          description: The session
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LiveSession" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /api/v1/live-sessions/live-session/provision-webinar/:
+    post:
+      summary: Not available yet; paste a Meet or Zoom link instead
+      responses: { "503": { description: Automatic meeting links aren't set up } }
+  /api/v1/live-sessions/session-reminder/:
+    get:
+      summary: Reminders for a session the user runs
+      parameters: [{ name: session, in: query, required: true, schema: { type: integer, format: int64 } }]
+      responses: { "200": { description: "{count, results: [{id, send_at, status, session}]}" }, "403": { $ref: "#/components/responses/Forbidden" } }
+    post:
+      summary: Add a reminder between now and the session's start
+      responses: { "201": { description: The reminder }, "400": { $ref: "#/components/responses/BadRequest" } }
+  /api/v1/live-sessions/session-reminder/{id}/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    delete:
+      summary: Remove a reminder that hasn't been sent
+      responses: { "204": { description: Removed } }
+  /api/v1/live-sessions/missed-recovery/:
+    get:
+      summary: Catch-up work for a session; learners see only their own
+      parameters: [{ name: session, in: query, required: true, schema: { type: integer, format: int64 } }]
+      responses: { "200": { description: "{count, results: Recovery[]}" } }
+    post:
+      summary: Open catch-up work for an enrolled student who missed the session (staff)
+      responses: { "201": { description: The recovery }, "400": { $ref: "#/components/responses/BadRequest" }, "403": { $ref: "#/components/responses/Forbidden" } }
+  /api/v1/live-sessions/missed-recovery/{id}/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    patch:
+      summary: The student writes and submits; staff set the recording link and verify
+      responses: { "200": { description: The recovery }, "403": { $ref: "#/components/responses/Forbidden" } }
 components:
   parameters:
     Page:
@@ -1276,3 +1359,47 @@ components:
         results:
           type: array
           items: { $ref: "#/components/schemas/Lesson" }
+    LiveSession:
+      type: object
+      required: [id, meeting_link, replay_url, provider, scheduled_start, duration_minutes, capacity, enrolled_count, status, artifact_sync_status, lesson, title, hostName, subject]
+      properties:
+        id: { type: integer, format: int64 }
+        meeting_link: { type: string }
+        replay_url: { type: [string, "null"] }
+        provider: { type: string, enum: [google_meet, zoom] }
+        provider_event_id: { type: [string, "null"] }
+        scheduled_start: { type: [string, "null"], format: date-time }
+        duration_minutes: { type: integer }
+        capacity: { type: integer }
+        enrolled_count: { type: integer }
+        status: { type: string, enum: [scheduled, completed, cancelled] }
+        artifact_sync_status: { type: string, enum: [none, pending, syncing, completed, failed] }
+        lesson: { type: integer, format: int64 }
+        title: { type: string }
+        description: { type: [string, "null"] }
+        hostName: { type: string }
+        subject: { type: string }
+        scheduledStart: { type: [string, "null"], format: date-time }
+        durationMinutes: { type: integer }
+        enrolledCount: { type: integer }
+    LiveSessionInput:
+      type: object
+      properties:
+        lesson: { type: integer, format: int64, description: Required when creating }
+        meeting_link: { type: string }
+        replay_url: { type: [string, "null"] }
+        provider: { type: string, enum: [google_meet, zoom] }
+        scheduled_start: { type: string, format: date-time, description: Defaults to the lesson's time }
+        duration_minutes: { type: integer, minimum: 5, maximum: 480 }
+        capacity: { type: integer, minimum: 1, maximum: 10000 }
+        status: { type: string, enum: [scheduled, completed, cancelled] }
+    LiveSessionPage:
+      type: object
+      required: [count, next, previous, results]
+      properties:
+        count: { type: integer }
+        next: { type: [string, "null"] }
+        previous: { type: [string, "null"] }
+        results:
+          type: array
+          items: { $ref: "#/components/schemas/LiveSession" }

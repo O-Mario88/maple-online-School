@@ -357,6 +357,48 @@ CREATE TABLE lessons_lessonattendance (
 CREATE TABLE lessons_lessonqualificationrecord (id uuid PRIMARY KEY, lesson_id bigint NOT NULL);
 CREATE TABLE lessons_lessoninstance (id bigint PRIMARY KEY, lesson_plan_id bigint);
 CREATE TABLE attendance_lessonattendance (id bigint PRIMARY KEY, lesson_id bigint NOT NULL);
-CREATE TABLE live_sessions_livesession (id bigint PRIMARY KEY, lesson_id bigint NOT NULL UNIQUE);
 CREATE TABLE resources_contentitem (id bigint PRIMARY KEY, lesson_id bigint);
 CREATE TABLE resources_contentassignment (id bigint PRIMARY KEY, lesson_id bigint);
+
+-- Live sessions (Go owns writes to sessions, reminders and missed-session recovery).
+CREATE TABLE live_sessions_livesession (
+    id                   bigint PRIMARY KEY,
+    meeting_link         varchar(500) NOT NULL,
+    replay_url           varchar(500),
+    provider             varchar(50) NOT NULL,
+    provider_event_id    varchar(255),
+    scheduled_start      timestamptz,
+    duration_minutes     integer NOT NULL,
+    capacity             integer NOT NULL,
+    enrolled_count       integer NOT NULL,
+    status               varchar(20) NOT NULL,
+    artifact_sync_status varchar(20) NOT NULL,
+    lesson_id            bigint NOT NULL UNIQUE REFERENCES lessons_lesson(id)
+);
+
+CREATE TABLE live_sessions_sessionreminder (
+    id         bigint PRIMARY KEY,
+    send_at    timestamptz NOT NULL,
+    status     varchar(20) NOT NULL,
+    session_id bigint NOT NULL REFERENCES live_sessions_livesession(id)
+);
+
+CREATE TABLE live_sessions_missedsessionrecovery (
+    id              bigint PRIMARY KEY,
+    summary         text NOT NULL,
+    recording_url   varchar(500),
+    recovery_status varchar(20) NOT NULL,
+    submitted_at    timestamptz,
+    created_at      timestamptz NOT NULL,
+    session_id      bigint NOT NULL REFERENCES live_sessions_livesession(id),
+    student_id      bigint NOT NULL REFERENCES accounts_user(id),
+    UNIQUE (session_id, student_id)
+);
+
+CREATE TABLE live_sessions_recoveryassignment (
+    id          bigint PRIMARY KEY,
+    title       varchar(255) NOT NULL,
+    file_type   varchar(50) NOT NULL,
+    file_url    varchar(500),
+    recovery_id bigint NOT NULL REFERENCES live_sessions_missedsessionrecovery(id)
+);

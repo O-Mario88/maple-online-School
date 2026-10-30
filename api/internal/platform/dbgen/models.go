@@ -281,8 +281,44 @@ type LessonsLessonrecording struct {
 }
 
 type LiveSessionsLivesession struct {
-	ID       int64
-	LessonID int64
+	ID                 int64
+	MeetingLink        string
+	ReplayUrl          pgtype.Text
+	Provider           string
+	ProviderEventID    pgtype.Text
+	ScheduledStart     pgtype.Timestamptz
+	DurationMinutes    int32
+	Capacity           int32
+	EnrolledCount      int32
+	Status             string
+	ArtifactSyncStatus string
+	LessonID           int64
+}
+
+type LiveSessionsMissedsessionrecovery struct {
+	ID             int64
+	Summary        string
+	RecordingUrl   pgtype.Text
+	RecoveryStatus string
+	SubmittedAt    pgtype.Timestamptz
+	CreatedAt      pgtype.Timestamptz
+	SessionID      int64
+	StudentID      int64
+}
+
+type LiveSessionsRecoveryassignment struct {
+	ID         int64
+	Title      string
+	FileType   string
+	FileUrl    pgtype.Text
+	RecoveryID int64
+}
+
+type LiveSessionsSessionreminder struct {
+	ID        int64
+	SendAt    pgtype.Timestamptz
+	Status    string
+	SessionID int64
 }
 
 type ParentPortalParentstudentlink struct {

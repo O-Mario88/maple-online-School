@@ -30,7 +30,6 @@ from analytics.views import AnalyticsEventViewSet, DailyPlatformMetricViewSet, D
 from assessments.views import AssessmentWindowViewSet, QuestionViewSet
 from discussions.views import ThreadViewSet, PostViewSet
 from exams.views import ExamCenterViewSet, CandidateRegistrationViewSet, SubjectSelectionViewSet, BoardSubmissionBatchViewSet
-from live_sessions.views import LiveSessionViewSet, SessionReminderViewSet
 from notifications.views import NotificationViewSet
 from parent_portal.views import ParentStudentLinkViewSet, WeeklySummaryViewSet, RiskAlertViewSet
 from resources.upload_view import ResourceUploadViewSet
@@ -97,8 +96,7 @@ router.register(r'exams/board-submission-batch', BoardSubmissionBatchViewSet, ba
 
 # Classroom & Resources
 # Lessons, notes, recordings and lesson attendance moved to the Go service.
-router.register(r'live-sessions/live-session', LiveSessionViewSet, basename='live_sessions-live-session')
-router.register(r'live-sessions/session-reminder', SessionReminderViewSet, basename='live_sessions-session-reminder')
+# Live sessions, reminders and missed-session recovery moved to the Go service.
 # The resource library and class resource links moved to the Go service.
 router.register(r'resources-upload', ResourceUploadViewSet, basename='resources-upload')
 
@@ -125,8 +123,6 @@ from tutoring.views import TutorProfileViewSet, TutoringBountyViewSet
 router.register(r'tutoring/tutor-profiles', TutorProfileViewSet, basename='tutoring-profiles')
 router.register(r'tutoring/bounties', TutoringBountyViewSet, basename='tutoring-bounties')
 
-from live_sessions.views import MissedSessionRecoveryViewSet
-router.register(r'live-sessions/missed-recovery', MissedSessionRecoveryViewSet, basename='live_sessions-missed-recovery')
 
 # Intelligence Engine
 router.register(r'intelligence/actions', NextBestActionViewSet, basename='intelligence-actions')
