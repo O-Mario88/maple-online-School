@@ -49,7 +49,9 @@
     "lint": "expo lint",
     "test": "jest",
     "typecheck": "tsc --noEmit",
-    "api:types": "npx --yes -p openapi-typescript@7.13.0 -p typescript@5.9.3 openapi-typescript ../openapi/maple.yaml -o src/lib/api/schema.d.ts"
+    "api:types": "npx --yes -p openapi-typescript@7.13.0 -p typescript@5.9.3 openapi-typescript ../openapi/maple.yaml -o src/lib/api/schema.d.ts",
+    "web:mock": "EXPO_PUBLIC_MOCK_DATA=true expo start --web --port 8081",
+    "start:mock": "EXPO_PUBLIC_MOCK_DATA=true expo start"
   },
   "private": true,
   "jest": {

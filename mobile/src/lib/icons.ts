@@ -31,6 +31,16 @@ export const ICONS = {
   book: { ios: 'book', material: 'menu_book' },
   flag: { ios: 'flag', material: 'flag' },
   chat: { ios: 'bubble.left.and.bubble.right', material: 'forum' },
+  more: { ios: 'ellipsis.circle', material: 'more_horiz' },
+  qr: { ios: 'qrcode', material: 'qr_code_2' },
+  mic: { ios: 'mic', material: 'mic' },
+  camera: { ios: 'camera', material: 'photo_camera' },
+  download: { ios: 'arrow.down.circle', material: 'download' },
+  lock: { ios: 'lock', material: 'lock' },
+  star: { ios: 'star', material: 'star' },
+  globe: { ios: 'globe', material: 'public' },
+  hand: { ios: 'hand.raised', material: 'back_hand' },
+  clock: { ios: 'clock', material: 'schedule' },
 } as const;
 
 export type IconName = keyof typeof ICONS;

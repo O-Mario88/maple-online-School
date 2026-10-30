@@ -1,11 +1,12 @@
-import { router, usePathname } from 'expo-router';
+import { type Href, router, usePathname } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Icon } from '@/components/icon';
 import { Spacing, type Theme, Type } from '@/constants/theme';
 import { useStyles } from '@/hooks/use-styles';
-import { activeKey, navFor } from '@/lib/navigation';
+import { MOCK_DATA } from '@/lib/mock';
+import { activeKey, navFor, tabBar } from '@/lib/navigation';
 import { usePortal } from '@/lib/portal-context';
 
 /** The phone menu: up to five sections along the bottom. */
@@ -14,18 +15,21 @@ export function TabBar() {
   const insets = useSafeAreaInsets();
   const pathname = usePathname();
   const { portal } = usePortal();
-  const items = navFor(portal).filter((i) => i.primary);
-  const active = activeKey(items, pathname);
+  const all = navFor(portal, MOCK_DATA);
+  const { tabs, more } = tabBar(all);
+  const active = activeKey(all, pathname);
+  const items = more ? [...tabs, { key: 'more', label: 'More', href: '/more', icon: 'more' as const }] : tabs;
+  const moreActive = more && (pathname === '/more' || (active != null && !tabs.some((t) => t.key === active)));
 
   return (
     <View style={[styles.bar, { paddingBottom: Math.max(insets.bottom, Spacing.two) }]} accessibilityRole="tablist">
       {items.map((item) => {
-        const selected = item.key === active;
+        const selected = item.key === 'more' ? moreActive : item.key === active;
         const color = selected ? theme.accentText : theme.textMuted;
         return (
           <Pressable
             key={item.key}
-            onPress={() => router.navigate(item.href)}
+            onPress={() => router.navigate(item.href as Href)}
             style={styles.tab}
             accessibilityRole="tab"
             accessibilityState={{ selected }}

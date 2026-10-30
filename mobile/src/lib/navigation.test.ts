@@ -1,4 +1,4 @@
-import { activeKey, navFor, portalsFor, PORTALS, type Person } from './navigation';
+import { activeKey, navFor, portalsFor, PORTALS, type Person, tabBar } from './navigation';
 
 const person = (role: string, memberships: { role: string; status?: string }[] = [], children = 0): Person => ({
   role,
@@ -30,22 +30,57 @@ describe('portalsFor', () => {
 });
 
 describe('navFor', () => {
-  it.each(PORTALS)('%s keeps at most five items in the phone tab bar, starting with Home', (portal) => {
-    const items = navFor(portal);
-    expect(items[0].href).toBe('/');
-    expect(items.filter((i) => i.primary).length).toBeLessThanOrEqual(5);
-    expect(new Set(items.map((i) => i.key)).size).toBe(items.length);
+  it.each(PORTALS)('%s starts with Home and has no duplicate items', (portal) => {
+    for (const mock of [false, true]) {
+      const items = navFor(portal, mock);
+      expect(items[0].href).toBe('/');
+      expect(new Set(items.map((i) => i.key)).size).toBe(items.length);
+    }
+  });
+
+  it.each(PORTALS)('%s hides design-only screens unless mock data is on', (portal) => {
+    expect(navFor(portal, false).some((i) => i.preview)).toBe(false);
+    expect(navFor(portal, true).length).toBeGreaterThan(navFor(portal, false).length);
   });
 
   it('gives staff and families messages, but not learners', () => {
     expect(navFor('teacher').some((i) => i.href === '/messages')).toBe(true);
     expect(navFor('parent').some((i) => i.href === '/messages')).toBe(true);
-    expect(navFor('learner').some((i) => i.href === '/messages')).toBe(false);
+    expect(navFor('learner', true).some((i) => i.href === '/messages')).toBe(false);
   });
 
   it('only shows school set-up to the school portal', () => {
     expect(navFor('school').some((i) => i.href === '/school')).toBe(true);
-    expect(navFor('learner').some((i) => i.href === '/school')).toBe(false);
+    expect(navFor('learner', true).some((i) => i.href === '/school')).toBe(false);
+  });
+
+  // Every menu entry must open a real screen. (Jest runs in Node; the app has no Node types.)
+  it.each(PORTALS)('every %s menu entry has a route file', (portal) => {
+    /* eslint-disable @typescript-eslint/no-require-imports */
+    const fs: { existsSync(p: string): boolean } = require('fs');
+    const path: { join(...parts: string[]): string } = require('path');
+    /* eslint-enable @typescript-eslint/no-require-imports */
+    const app = path.join(dirname, '..', 'app', '(app)');
+    for (const item of navFor(portal, true)) {
+      const base = item.href === '/' ? 'index' : item.href.slice(1);
+      const found = [`${base}.tsx`, path.join(base, 'index.tsx')].some((f) => fs.existsSync(path.join(app, f)));
+      expect({ href: item.href, found }).toEqual({ href: item.href, found: true });
+    }
+  });
+});
+
+declare const __dirname: string;
+const dirname = __dirname;
+
+describe('tabBar', () => {
+  const items = (n: number) => navFor('school', true).slice(0, n);
+
+  it('shows every item when five or fewer fit', () => {
+    expect(tabBar(items(5))).toEqual({ tabs: items(5), more: false });
+  });
+
+  it('shows four and a More tab when there are more', () => {
+    expect(tabBar(items(7))).toEqual({ tabs: items(4), more: true });
   });
 });
 

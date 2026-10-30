@@ -1,6 +1,9 @@
 /**
  * Who sees which portal, and what each portal's menu holds. The app shell
  * draws the menu as a sidebar on wide screens and a tab bar on phones.
+ *
+ * Items marked `preview` are design screens built on mock data; they only
+ * appear in builds with EXPO_PUBLIC_MOCK_DATA=true (see lib/mock.ts).
  */
 import type { IconName } from './icons';
 
@@ -24,10 +27,11 @@ export interface Person {
 export interface NavItem {
   key: string;
   label: string;
-  href: '/' | '/lessons' | '/library' | '/curriculum' | '/fees' | '/school' | '/messages';
+  /** An app path; every one has a route file (navigation.test.ts checks). */
+  href: string;
   icon: IconName;
-  /** Shown in the phone tab bar; everything is shown in the sidebar. */
-  primary: boolean;
+  /** A design screen on mock data, hidden from deployment builds. */
+  preview?: boolean;
 }
 
 // Matches the Go API's roles: Leaders, Finance and Staff.
@@ -51,24 +55,102 @@ export function portalsFor(person: Person): Portal[] {
   return portals.length > 0 ? portals : ['learner'];
 }
 
-const home: NavItem = { key: 'home', label: 'Home', href: '/', icon: 'home', primary: true };
-const lessons: NavItem = { key: 'lessons', label: 'Lessons', href: '/lessons', icon: 'play', primary: true };
-const library: NavItem = { key: 'library', label: 'Library', href: '/library', icon: 'library', primary: true };
-const curriculum: NavItem = { key: 'curriculum', label: 'Curriculum', href: '/curriculum', icon: 'map', primary: true };
-const fees: NavItem = { key: 'fees', label: 'Fees', href: '/fees', icon: 'wallet', primary: true };
-const school: NavItem = { key: 'school', label: 'School', href: '/school', icon: 'school', primary: true };
-const messages: NavItem = { key: 'messages', label: 'Messages', href: '/messages', icon: 'chat', primary: true };
+const item = (key: string, label: string, href: string, icon: IconName, preview = false): NavItem => ({ key, label, href, icon, preview });
+const p = (key: string, label: string, href: string, icon: IconName): NavItem => item(key, label, href, icon, true);
 
+const home = item('home', 'Home', '/', 'home');
+const lessons = item('lessons', 'Lessons', '/lessons', 'play');
+const library = item('library', 'Library', '/library', 'library');
+const curriculum = item('curriculum', 'Curriculum', '/curriculum', 'map');
+const fees = item('fees', 'Fees', '/fees', 'wallet');
+const school = item('school', 'School', '/school', 'school');
+const messages = item('messages', 'Messages', '/messages', 'chat');
+
+// Order matters: on phones the first four (or five) become tabs.
 const MENUS: Readonly<Record<Portal, readonly NavItem[]>> = {
-  learner: [home, lessons, library, curriculum, fees],
-  teacher: [home, lessons, messages, library, curriculum],
-  parent: [{ ...home, label: 'Family' }, messages, fees, lessons, library],
-  school: [{ ...home, label: 'Dashboard' }, school, fees, lessons, library, { ...messages, primary: false }, { ...curriculum, primary: false }],
-  command: [{ ...home, label: 'Overview' }, curriculum, library],
+  learner: [
+    home,
+    p('explore', 'Explore', '/learn/explore', 'search'),
+    p('live', 'Live', '/learn/live', 'live'),
+    library,
+    p('passport', 'Passport', '/learn/passport', 'flag'),
+    lessons,
+    p('assignments', 'Assignments', '/learn/assignments', 'clipboard'),
+    p('past-papers', 'Past papers', '/learn/past-papers', 'book'),
+    p('shorts', 'Shorts', '/learn/shorts', 'sparkle'),
+    p('progress', 'My progress', '/learn/progress', 'chart'),
+    p('squad', 'Study squad', '/learn/squad', 'people'),
+    p('offline', 'Offline', '/learn/offline', 'cloud'),
+    curriculum,
+    fees,
+    p('billing', 'Wallet', '/learn/billing', 'wallet'),
+  ],
+  teacher: [
+    home,
+    p('calendar', 'Calendar', '/teach/calendar', 'calendar'),
+    lessons,
+    messages,
+    p('grading', 'Marking', '/teach/grading', 'check'),
+    library,
+    curriculum,
+    p('studio', 'AI studio', '/teach/studio', 'sparkle'),
+    p('course-editor', 'Course builder', '/teach/course-editor', 'book'),
+    p('host', 'Live host', '/teach/host', 'live'),
+    p('shorts-creator', 'Shorts creator', '/teach/shorts', 'play'),
+    p('class-spaces', 'Class spaces', '/teach/class-spaces', 'people'),
+    p('storefront', 'Storefront', '/teach/storefront', 'person'),
+    p('earnings', 'Earnings', '/teach/earnings', 'wallet'),
+    p('verification', 'Verification', '/teach/verification', 'check'),
+  ],
+  parent: [
+    { ...home, label: 'Family' },
+    messages,
+    fees,
+    lessons,
+    library,
+    p('attendance', 'Attendance', '/family/attendance', 'calendar'),
+    p('approvals', 'Approvals', '/family/approvals', 'check'),
+    p('family-settings', 'Settings', '/family/settings', 'person'),
+  ],
+  school: [
+    { ...home, label: 'Dashboard' },
+    school,
+    fees,
+    lessons,
+    library,
+    messages,
+    curriculum,
+    p('onboarding', 'Set-up wizard', '/admin/onboarding', 'sparkle'),
+    p('rosters', 'Rosters', '/admin/rosters', 'people'),
+    p('timetable', 'Timetable', '/admin/timetable', 'calendar'),
+    p('attendance-monitor', 'Attendance', '/admin/attendance', 'check'),
+    p('academics', 'Academic year', '/admin/academics', 'map'),
+    p('accounting', 'Accounting', '/admin/accounting', 'chart'),
+    p('admin-settings', 'Roles and audit', '/admin/settings', 'person'),
+  ],
+  command: [
+    { ...home, label: 'Overview' },
+    p('trust', 'Trust and safety', '/command/trust', 'flag'),
+    p('institutions', 'Schools', '/command/institutions', 'school'),
+    p('revenue', 'Revenue', '/command/revenue', 'chart'),
+    p('payouts', 'Payouts', '/command/payouts', 'wallet'),
+    curriculum,
+    library,
+    p('ops', 'Operations', '/command/ops', 'live'),
+    p('security', 'Security', '/command/security', 'alert'),
+  ],
 };
 
-export function navFor(portal: Portal): readonly NavItem[] {
-  return MENUS[portal];
+export function navFor(portal: Portal, mock = false): readonly NavItem[] {
+  return MENUS[portal].filter((i) => mock || !i.preview);
+}
+
+const MAX_TABS = 5;
+
+/** The phone tab bar: up to five items, or four and a More tab. */
+export function tabBar(items: readonly NavItem[]): { tabs: readonly NavItem[]; more: boolean } {
+  if (items.length <= MAX_TABS) return { tabs: items, more: false };
+  return { tabs: items.slice(0, MAX_TABS - 1), more: true };
 }
 
 /** The menu item for the current path: Home only on "/", others by prefix. */

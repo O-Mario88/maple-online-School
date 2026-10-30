@@ -1,5 +1,5 @@
-import { router, usePathname } from 'expo-router';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { type Href, router, usePathname } from 'expo-router';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Icon } from '@/components/icon';
@@ -7,6 +7,7 @@ import { Avatar } from '@/components/ui';
 import { Radius, SidebarWidth, Spacing, type Theme, Type } from '@/constants/theme';
 import { useStyles } from '@/hooks/use-styles';
 import { useAuth, useMe } from '@/lib/auth/auth-context';
+import { MOCK_DATA } from '@/lib/mock';
 import { activeKey, navFor, PORTAL_LABELS } from '@/lib/navigation';
 import { usePortal } from '@/lib/portal-context';
 
@@ -20,7 +21,7 @@ export function Sidebar() {
   const { portal, portals, setPortal } = usePortal();
   const { signOut } = useAuth();
   const me = useMe();
-  const items = navFor(portal);
+  const items = navFor(portal, MOCK_DATA);
   const active = activeKey(items, pathname);
 
   return (
@@ -57,13 +58,13 @@ export function Sidebar() {
         <Text style={styles.portalName}>{PORTAL_LABELS[portal]}</Text>
       )}
 
-      <View style={styles.nav} accessibilityRole="menu">
+      <ScrollView style={styles.navScroll} contentContainerStyle={styles.nav} accessibilityRole="menu">
         {items.map((item) => {
           const selected = item.key === active;
           return (
             <Pressable
               key={item.key}
-              onPress={() => router.navigate(item.href)}
+              onPress={() => router.navigate(item.href as Href)}
               style={({ hovered }) => [styles.item, selected && styles.itemOn, hovered && !selected && styles.itemHover]}
               accessibilityRole="menuitem"
               accessibilityState={{ selected }}
@@ -74,9 +75,9 @@ export function Sidebar() {
             </Pressable>
           );
         })}
-      </View>
+      </ScrollView>
 
-      <View style={styles.spacer} />
+      {MOCK_DATA ? <Text style={styles.mockNote}>Design preview · mock data</Text> : null}
 
       {me.data ? (
         <View style={styles.account}>
@@ -125,7 +126,9 @@ function makeStyles(t: Theme) {
     portalText: { ...Type.caption, color: t.sidebarMuted },
     portalTextOn: { color: t.onAccent },
     portalName: { ...Type.overline, color: t.sidebarMuted, paddingHorizontal: Spacing.two, marginBottom: Spacing.two },
-    nav: { gap: 2 },
+    navScroll: { flex: 1, marginHorizontal: -Spacing.one },
+    nav: { gap: 2, paddingHorizontal: Spacing.one, paddingBottom: Spacing.three },
+    mockNote: { ...Type.caption, color: t.warning, textAlign: 'center', marginBottom: Spacing.two },
     item: {
       flexDirection: 'row',
       alignItems: 'center',
