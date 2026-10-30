@@ -55,6 +55,8 @@ function RootNavigator() {
       <Stack.Screen name="courses/[slug]" />
       <Stack.Screen name="explore" />
       <Stack.Screen name="shorts" />
+      {/* Teacher storefronts at /@handle; other unknown addresses show "Page not found" there. */}
+      <Stack.Screen name="[handle]" />
       <Stack.Screen name="event" />
       <Stack.Screen name="digest" />
       <Stack.Screen name="pay" />

@@ -280,3 +280,69 @@ export const shortsFeed = {
   ],
   courseSlug: 'complete-mathematics-primary-7',
 };
+
+export const teacherStorefront = {
+  handle: 'sarah-kimani',
+  name: 'Ms. Sarah Kimani',
+  title: 'Mathematics Teacher and Curriculum Creator',
+  online: true,
+  introLength: '1:48',
+  quotes: ['Helping students build confidence in Mathematics.', 'Better students. Brighter futures.'],
+  badges: [
+    { label: 'MSc Education', icon: 'school' as const },
+    { label: 'Certified Teacher', icon: 'check' as const },
+    { label: '10+ Years Experience', icon: 'clock' as const },
+    { label: 'Verified by Maple', icon: 'check' as const },
+  ],
+  tags: ['Mathematics', 'Exam Preparation', 'Problem Solving', 'STEM', 'Mentoring'],
+  stats: [
+    { value: '25K+', label: 'Students taught', icon: 'people' as const },
+    { value: '96%', label: 'Exam pass rate', icon: 'chart' as const },
+    { value: '4.9', label: '2,340 reviews', icon: 'star' as const },
+    { value: '15+', label: 'Countries', icon: 'globe' as const },
+  ],
+  tabs: ['Overview', 'Courses (8)', 'Live Classes', 'Maple Shorts (42)', 'Reviews (2.3K)', 'Achievements', 'About'],
+  about: [
+    "Hi! I'm Sarah, a Mathematics teacher with over 10 years helping students across East Africa build strong foundations, prepare for exams and solve real problems.",
+    "My teaching is practical, engaging and focused on your success. Whether you're preparing for UNEB, KCSE or IGCSE, or just want more confidence, I'm here to help every step of the way.",
+  ],
+  highlights: ['Clear explanations', 'Step-by-step problem solving', 'Real past paper practice', 'Supportive learning community', 'Interactive lessons', 'Proven results'],
+  credentials: [
+    { title: 'MSc in Mathematics Education', detail: 'University of Nairobi', icon: 'school' as const },
+    { title: 'Certified Teacher', detail: 'Teachers Service Commission (Kenya)', icon: 'check' as const },
+    { title: 'Mathematics Specialist', detail: 'Primary and Secondary', icon: 'chart' as const },
+    { title: 'Background Checked', detail: 'Verified by Maple', icon: 'lock' as const },
+  ],
+  booking: {
+    modes: [
+      { key: 'one', label: '1:1 Tutoring', title: '1:1 Online Tutoring', priceUGX: 25000, minutes: 50 },
+      { key: 'group', label: 'Group Class', title: 'Small Group Class (up to 6)', priceUGX: 12000, minutes: 60 },
+    ],
+    days: [
+      { key: 'mon', day: 'Mon', date: 'Nov 3', slots: ['9:00 AM', '11:00 AM', '2:00 PM'] },
+      { key: 'tue', day: 'Tue', date: 'Nov 4', slots: ['9:00 AM', '10:00 AM', '11:00 AM', '1:00 PM', '2:00 PM', '3:00 PM'] },
+      { key: 'wed', day: 'Wed', date: 'Nov 5', slots: ['10:00 AM', '4:00 PM'] },
+      { key: 'thu', day: 'Thu', date: 'Nov 6', slots: [] as string[] },
+      { key: 'fri', day: 'Fri', date: 'Nov 7', slots: ['9:00 AM', '1:00 PM', '3:00 PM'] },
+    ],
+  },
+  courses: [
+    { title: 'Complete Mathematics for Primary 7 (2024 Curriculum)', meta: 'UNEB · Primary 7', rating: 4.9, reviews: '4.9K', lessons: 40, hours: 12, priceUGX: 120000, wasUGX: 160000, badge: 'Bestseller', tint: '#1E3A8A' },
+    { title: 'IGCSE Mathematics Exam Preparation', meta: 'IGCSE · Secondary', rating: 4.8, reviews: '660', lessons: 30, hours: 10, priceUGX: 100000, wasUGX: 0, badge: '', tint: '#334155' },
+    { title: 'Problem Solving Masterclass', meta: 'All levels', rating: 4.9, reviews: '540', lessons: 36, hours: 10, priceUGX: 70000, wasUGX: 0, badge: '', tint: '#065F46' },
+  ],
+  shorts: [
+    { id: 's1', lead: 'Simplify', highlight: 'Fractions', tail: 'in 60 Seconds', views: '125K', tint: '#7C2D12' },
+    { id: 's5', lead: '3 Tips', highlight: 'for Exam', tail: 'Success', views: '98K', tint: '#1E3A8A' },
+    { id: 's7', lead: 'Algebra', highlight: 'Made', tail: 'Easy', views: '87K', tint: '#581C87' },
+  ],
+  reviews: [
+    { name: 'Amina N.', where: 'Uganda · Primary 7', text: 'Her explanations are so clear. I improved from 62% to 89%!' },
+    { name: 'David O.', where: 'Kenya · IGCSE', text: 'The past paper sessions helped me so much. Highly recommend.' },
+    { name: 'Grace L.', where: 'Nigeria · SS2', text: 'I love the short revision clips. They make maths simple and fun.' },
+    { name: 'Michael T.', where: 'Ghana · A Level', text: 'Her problem-solving methods are practical and effective.' },
+  ],
+  rating: 4.9,
+  reviewCount: 2340,
+  courseSlug: 'complete-mathematics-primary-7',
+};
