@@ -14,10 +14,10 @@ forwarded to Django unchanged. Apps only ever talk to this service.
 | Timetable: terms, rooms, lessons | Done | `/api/v1/scheduling/terms/`, `/api/v1/scheduling/rooms/`, `/api/v1/scheduling/timetable/` |
 | Institutions: schools, memberships, invitations | Done | `/api/v1/institutions/` (+ `{id}/`, `{id}/bulk_invite/`), `/api/v1/institution-memberships/` (+ `{id}/`, `{id}/accept/`) |
 | Curriculum: countries, levels, subjects, topics, catalog | Done (read-only) | `/api/v1/curriculum/full-tree/` (public), `countries/`, `class-levels/`, `subjects/` (+ `{id}/`), `topics/` (+ `{id}/`), `topic-competencies/` |
-| Resources: library and class resource links | Done (files still uploaded through Django) | `/api/v1/resources/` (+ `{id}/`), `/api/v1/resources/shared-resource-link/` (+ `{id}/`) |
 | Lessons: plans, notes, recordings, lesson attendance | Done | `/api/v1/lessons/lesson/` (+ `{id}/`), `lesson-note/`, `lesson-recording/`, `lesson-attendance/` |
 | Live sessions: sessions, reminders, missed-session recovery | Done (recording sync still a Django task) | `/api/v1/live-sessions/live-session/` (+ `{id}/`), `session-reminder/`, `missed-recovery/` |
 | Sign-up: register, activate, forgot/reset password, student onboarding | Done | `/api/v1/auth/register/`, `activate/`, `resend-activation/`, `forgot-password/`, `reset-password/`, `onboard-student/` |
+| Library (playbook §5): items, review, class reading lists, progress | Done (file uploads come with object storage) | `/api/v1/library/items/` (+ `{id}/`, `moderate/`, `share/`), `classes/{id}/reading-list/`, `assigned/`, `progress/`, `continue/` |
 | Health   | Done         | `/api/health/` |
 | Everything else | Served by Django through the forwarder | all other `/api/v1/...` |
 

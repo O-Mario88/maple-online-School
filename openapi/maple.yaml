@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Maple API
-  version: 0.10.0
+  version: 0.11.0
   description: |
     The contract between the Maple apps and the Go API. Paths not listed here
     are still served by the Django API through the Go service's forwarder,
@@ -563,107 +563,6 @@ paths:
       summary: Competencies, optionally for one topic
       parameters: [{ name: topic, in: query, schema: { type: integer, format: int64 } }]
       responses: { "200": { description: "{count, results: Competency[]}" }, "401": { $ref: "#/components/responses/Unauthorized" } }
-  /api/v1/resources/:
-    get:
-      summary: Resources the user can see
-      description: Platform-shared and marketplace resources, the libraries of the user's schools, and their own private resources.
-      parameters:
-        - { $ref: "#/components/parameters/Page" }
-        - { name: search, in: query, description: Matches title, description or author, schema: { type: string } }
-        - { name: category, in: query, schema: { type: string } }
-        - { name: subject, in: query, schema: { type: integer, format: int64 } }
-        - { name: visibility, in: query, schema: { type: string, enum: [private, institution_only, platform_shared, marketplace_public] } }
-        - { name: ordering, in: query, schema: { type: string, enum: [created_at, -created_at, rating, -rating, price, -price] } }
-      responses:
-        "200":
-          description: A page of resources
-          content:
-            application/json:
-              schema: { $ref: "#/components/schemas/ResourcePage" }
-    post:
-      summary: Add a resource by link (files go to /api/v1/resources-upload/upload/)
-      description: School libraries need a staff membership there; platform sharing is for Maple administrators.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema: { $ref: "#/components/schemas/ResourceInput" }
-      responses:
-        "201":
-          description: The resource
-          content:
-            application/json:
-              schema: { $ref: "#/components/schemas/Resource" }
-        "400": { $ref: "#/components/responses/BadRequest" }
-        "403": { $ref: "#/components/responses/Forbidden" }
-  /api/v1/resources/{id}/:
-    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
-    get:
-      summary: One resource
-      responses:
-        "200":
-          description: The resource
-          content:
-            application/json:
-              schema: { $ref: "#/components/schemas/Resource" }
-        "404": { $ref: "#/components/responses/NotFound" }
-    patch:
-      summary: Change a resource (its uploader)
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema: { $ref: "#/components/schemas/ResourceInput" }
-      responses:
-        "200":
-          description: The resource
-          content:
-            application/json:
-              schema: { $ref: "#/components/schemas/Resource" }
-        "403": { $ref: "#/components/responses/Forbidden" }
-        "404": { $ref: "#/components/responses/NotFound" }
-    delete:
-      summary: Remove a resource (its uploader, or a leader of the owning school)
-      responses: { "204": { description: Removed, with its class links }, "403": { $ref: "#/components/responses/Forbidden" } }
-  /api/v1/resources/shared-resource-link/:
-    get:
-      summary: Resources shared with classes the user can see
-      parameters:
-        - { $ref: "#/components/parameters/Page" }
-        - { name: target_class, in: query, schema: { type: integer, format: int64 } }
-        - { name: resource, in: query, schema: { type: integer, format: int64 } }
-      responses:
-        "200":
-          description: A page of class links
-          content:
-            application/json:
-              schema: { $ref: "#/components/schemas/ClassResourcePage" }
-    post:
-      summary: Share a resource with a class (its teacher or the school's leaders)
-      description: The resource must be platform-shared or in that school's library.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [resource, target_class]
-              properties:
-                resource: { type: integer, format: int64 }
-                target_class: { type: integer, format: int64 }
-      responses:
-        "201":
-          description: The link
-          content:
-            application/json:
-              schema: { $ref: "#/components/schemas/ClassResource" }
-        "400": { $ref: "#/components/responses/BadRequest" }
-        "403": { $ref: "#/components/responses/Forbidden" }
-  /api/v1/resources/shared-resource-link/{id}/:
-    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
-    delete:
-      summary: Stop sharing (whoever shared it, the class's teacher, or the school's leaders)
-      responses: { "204": { description: Removed }, "403": { $ref: "#/components/responses/Forbidden" }, "404": { $ref: "#/components/responses/NotFound" } }
   /api/v1/lessons/lesson/:
     get:
       summary: Lessons the user can see
@@ -946,6 +845,182 @@ paths:
               schema: { $ref: "#/components/schemas/AuthMessage" }
         "400": { $ref: "#/components/responses/BadRequest" }
         "429": { $ref: "#/components/responses/TooManyRequests" }
+  /api/v1/library/items/:
+    get:
+      summary: Library items the user can see
+      description: Uploaders and their schools' leaders always see their items; administrators see platform-wide items (to review them); everyone else sees published platform-wide items, their schools' items, and items shared with their classes.
+      parameters:
+        - { $ref: "#/components/parameters/Page" }
+        - { name: q, in: query, description: Matches title or description, schema: { type: string } }
+        - { name: content_type, in: query, schema: { type: string } }
+        - { name: subject, in: query, schema: { type: integer, format: int64 } }
+        - { name: topic, in: query, schema: { type: integer, format: int64 } }
+        - { name: class_level, in: query, schema: { type: integer, format: int64 } }
+        - { name: status, in: query, description: For example under_review (the review queue), schema: { type: string } }
+        - { name: mine, in: query, description: "1 for only the user's own items", schema: { type: string } }
+      responses:
+        "200":
+          description: A page of items
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LibraryItemPage" }
+    post:
+      summary: Add an item by link (teachers, school staff, administrators)
+      description: Platform-wide items from anyone but an administrator wait for review (under_review).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LibraryItemInput" }
+      responses:
+        "201":
+          description: The item
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LibraryItem" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /api/v1/library/items/{id}/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+    get:
+      summary: One item
+      responses:
+        "200":
+          description: The item
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LibraryItem" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    patch:
+      summary: Change an item (its uploader); platform-wide items go back to review
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LibraryItemInput" }
+      responses:
+        "200":
+          description: The item
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LibraryItem" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+    delete:
+      summary: Archive an item (uploader, the owning school's leaders, or an administrator)
+      responses: { "204": { description: Archived }, "403": { $ref: "#/components/responses/Forbidden" } }
+  /api/v1/library/items/{id}/moderate/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+    post:
+      summary: Approve or reject a platform-wide item (administrators)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [decision]
+              properties:
+                decision: { type: string, enum: [approve, reject] }
+                reason: { type: string, description: Required when rejecting; the author sees it }
+      responses:
+        "200":
+          description: The item
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LibraryItem" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /api/v1/library/items/{id}/share/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+    post:
+      summary: Put an item on a class's reading list (the class's teacher or the school's leaders)
+      description: Assigns it to every student enrolled now. A teacher's private item becomes visible to the class.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ShareInput" }
+      responses:
+        "200":
+          description: "{item, class, assigned}"
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [item, class, assigned]
+                properties:
+                  item: { type: string, format: uuid }
+                  class: { type: integer, format: int64 }
+                  assigned: { type: integer }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /api/v1/library/items/{id}/share/{class}/:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: string, format: uuid } }
+      - { name: class, in: path, required: true, schema: { type: integer, format: int64 } }
+    delete:
+      summary: Take an item off a class's reading list (progress is kept)
+      responses: { "204": { description: Removed }, "403": { $ref: "#/components/responses/Forbidden" } }
+  /api/v1/library/classes/{class}/reading-list/:
+    parameters: [{ name: class, in: path, required: true, schema: { type: integer, format: int64 } }]
+    get:
+      summary: A class's reading list with how many have finished (staff of the class)
+      responses:
+        "200":
+          description: "{count, results: ReadingRow[]}"
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [count, results]
+                properties:
+                  count: { type: integer }
+                  results: { type: array, items: { $ref: "#/components/schemas/ReadingRow" } }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /api/v1/library/assigned/:
+    get:
+      summary: Reading assigned to the student, or to a parent's children
+      responses:
+        "200":
+          description: "{count, results: AssignedReading[]}"
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [count, results]
+                properties:
+                  count: { type: integer }
+                  results: { type: array, items: { $ref: "#/components/schemas/AssignedReading" } }
+  /api/v1/library/progress/:
+    post:
+      summary: Record a learner's progress on an item (students)
+      description: Completion never goes backwards; 95% or more counts as finished.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ProgressInput" }
+      responses:
+        "200":
+          description: The learner's progress
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LibraryProgress" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /api/v1/library/continue/:
+    get:
+      summary: The learner's unfinished items, most recent first
+      responses:
+        "200":
+          description: "{count, results: ContinueItem[]}"
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [count, results]
+                properties:
+                  count: { type: integer }
+                  results: { type: array, items: { $ref: "#/components/schemas/ContinueItem" } }
 components:
   parameters:
     Page:
@@ -1363,74 +1438,6 @@ components:
         topics:
           type: array
           items: { $ref: "#/components/schemas/CurriculumTopic" }
-    Resource:
-      type: object
-      required: [id, title, description, author, author_name, category, price, rating, is_featured, file_path, external_url, visibility, subject, class_level, topic, uploaded_by, owner_type, owner_institution, created_at, vimeo_video_id]
-      properties:
-        id: { type: integer, format: int64 }
-        title: { type: string }
-        description: { type: [string, "null"] }
-        author: { type: [string, "null"] }
-        author_name: { type: string }
-        category: { type: [string, "null"] }
-        price: { type: string, description: Two-place decimal }
-        rating: { type: string, description: Two-place decimal }
-        is_featured: { type: boolean }
-        file_path: { type: [string, "null"], description: "Path under the server's /media/ for uploaded files" }
-        external_url: { type: [string, "null"] }
-        visibility: { type: string, enum: [private, institution_only, platform_shared, marketplace_public] }
-        subject: { type: [integer, "null"], format: int64 }
-        class_level: { type: [integer, "null"], format: int64 }
-        topic: { type: [integer, "null"], format: int64 }
-        uploaded_by: { type: integer, format: int64 }
-        owner_type: { type: string, enum: [platform, institution, teacher] }
-        owner_institution: { type: [integer, "null"], format: int64 }
-        created_at: { type: string, format: date-time }
-        vimeo_video_id: { type: [string, "null"] }
-    ResourceInput:
-      type: object
-      properties:
-        title: { type: string, maxLength: 255 }
-        description: { type: [string, "null"] }
-        author: { type: [string, "null"] }
-        category: { type: [string, "null"] }
-        external_url: { type: [string, "null"], format: uri }
-        visibility: { type: string, enum: [private, institution_only, platform_shared, marketplace_public] }
-        owner_institution: { type: [integer, "null"], format: int64 }
-        subject: { type: [integer, "null"], format: int64 }
-        class_level: { type: [integer, "null"], format: int64 }
-        topic: { type: [integer, "null"], format: int64 }
-        price: { type: number, description: Marketplace resources only }
-    ResourcePage:
-      type: object
-      required: [count, next, previous, results]
-      properties:
-        count: { type: integer }
-        next: { type: [string, "null"] }
-        previous: { type: [string, "null"] }
-        results:
-          type: array
-          items: { $ref: "#/components/schemas/Resource" }
-    ClassResource:
-      type: object
-      required: [id, added_at, added_by, resource, target_class, resource_title]
-      properties:
-        id: { type: integer, format: int64 }
-        added_at: { type: string, format: date-time }
-        added_by: { type: integer, format: int64 }
-        resource: { type: integer, format: int64 }
-        target_class: { type: integer, format: int64 }
-        resource_title: { type: string }
-    ClassResourcePage:
-      type: object
-      required: [count, next, previous, results]
-      properties:
-        count: { type: integer }
-        next: { type: [string, "null"] }
-        previous: { type: [string, "null"] }
-        results:
-          type: array
-          items: { $ref: "#/components/schemas/ClassResource" }
     Lesson:
       type: object
       required: [id, title, access_mode, scheduled_at, published_at, created_at, parent_class, topic, class_title, topic_name]
@@ -1568,3 +1575,128 @@ components:
       properties:
         message: { type: string }
         email: { type: string }
+    LibraryItem:
+      type: object
+      required: [id, title, description, content_type, owner_type, visibility_scope, publication_status, moderation_status, rejection_reason, file_url, external_url, language, is_featured, created_at, updated_at, uploaded_by, uploader_name, subject_name, topic_name]
+      properties:
+        id: { type: string, format: uuid }
+        title: { type: string }
+        description: { type: string }
+        content_type: { type: string }
+        owner_type: { type: string, enum: [teacher, institution, platform_admin] }
+        visibility_scope: { type: string, enum: [private, class, institution, global, country, assigned_students] }
+        publication_status: { type: string }
+        moderation_status: { type: string }
+        rejection_reason: { type: string }
+        file_url: { type: [string, "null"] }
+        external_url: { type: string }
+        duration_seconds: { type: [integer, "null"] }
+        language: { type: string }
+        is_featured: { type: boolean }
+        created_at: { type: string, format: date-time }
+        updated_at: { type: string, format: date-time }
+        published_at: { type: [string, "null"], format: date-time }
+        class_level: { type: [integer, "null"], format: int64 }
+        owner_institution: { type: [integer, "null"], format: int64 }
+        subject: { type: [integer, "null"], format: int64 }
+        topic: { type: [integer, "null"], format: int64 }
+        uploaded_by: { type: integer, format: int64 }
+        uploader_name: { type: string }
+        subject_name: { type: string }
+        topic_name: { type: string }
+    LibraryItemInput:
+      type: object
+      properties:
+        title: { type: string, maxLength: 500 }
+        description: { type: string }
+        content_type: { type: string, description: "notes, textbook, pdf, document, video, slides, worksheet, assignment, project, activity, revision, teacher_guide, lesson_attachment, topic_resource, class_resource, library_resource, mock_exam, intervention or other" }
+        external_url: { type: string, format: uri }
+        language: { type: string }
+        visibility_scope: { type: string, enum: [private, class, institution, global] }
+        owner_institution: { type: [integer, "null"], format: int64 }
+        subject: { type: [integer, "null"], format: int64 }
+        topic: { type: [integer, "null"], format: int64 }
+        class_level: { type: [integer, "null"], format: int64 }
+    LibraryItemPage:
+      type: object
+      required: [count, next, previous, results]
+      properties:
+        count: { type: integer }
+        next: { type: [string, "null"] }
+        previous: { type: [string, "null"] }
+        results:
+          type: array
+          items: { $ref: "#/components/schemas/LibraryItem" }
+    ShareInput:
+      type: object
+      required: [class]
+      properties:
+        class: { type: integer, format: int64 }
+        due_date: { type: string, format: date-time }
+        required: { type: boolean, description: Defaults to true }
+        note: { type: string, maxLength: 1000 }
+    ReadingRow:
+      type: object
+      required: [item, title, content_type, external_url, file_url, due_date, required, assigned, completed]
+      properties:
+        item: { type: string, format: uuid }
+        title: { type: string }
+        content_type: { type: string }
+        external_url: { type: string }
+        file_url: { type: [string, "null"] }
+        due_date: { type: [string, "null"], format: date-time }
+        required: { type: boolean }
+        assigned: { type: integer }
+        completed: { type: integer }
+    AssignedReading:
+      type: object
+      required: [id, student, item, title, content_type, external_url, file_url, required, note, due_date, completion_percentage, is_completed]
+      properties:
+        id: { type: string, format: uuid }
+        student: { type: integer, format: int64 }
+        item: { type: string, format: uuid }
+        title: { type: string }
+        content_type: { type: string }
+        external_url: { type: string }
+        file_url: { type: [string, "null"] }
+        required: { type: boolean }
+        note: { type: string }
+        due_date: { type: [string, "null"], format: date-time }
+        class: { type: [integer, "null"], format: int64 }
+        completion_percentage: { type: string }
+        is_completed: { type: boolean }
+    ProgressInput:
+      type: object
+      required: [item, completion]
+      properties:
+        item: { type: string, format: uuid }
+        completion: { type: number, minimum: 0, maximum: 100 }
+        position: { type: integer, minimum: 0 }
+        active_seconds: { type: integer, minimum: 0 }
+        new_visit: { type: boolean }
+    LibraryProgress:
+      type: object
+      required: [view_count, active_time_seconds, completion_percentage, last_position, is_completed, status]
+      properties:
+        view_count: { type: integer }
+        active_time_seconds: { type: integer }
+        completion_percentage: { type: string }
+        last_position: { type: integer }
+        is_completed: { type: boolean }
+        status: { type: string, enum: [not_started, started, in_progress, completed] }
+        first_accessed: { type: [string, "null"], format: date-time }
+        last_accessed: { type: [string, "null"], format: date-time }
+        completed_at: { type: [string, "null"], format: date-time }
+    ContinueItem:
+      type: object
+      required: [item, title, content_type, external_url, file_url, completion_percentage, last_position]
+      properties:
+        item: { type: string, format: uuid }
+        title: { type: string }
+        content_type: { type: string }
+        external_url: { type: string }
+        file_url: { type: [string, "null"] }
+        duration_seconds: { type: [integer, "null"] }
+        completion_percentage: { type: string }
+        last_position: { type: integer }
+        last_accessed: { type: [string, "null"], format: date-time }

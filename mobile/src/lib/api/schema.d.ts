@@ -1789,288 +1789,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/resources/": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Resources the user can see
-         * @description Platform-shared and marketplace resources, the libraries of the user's schools, and their own private resources.
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 1-based page number; 20 items per page */
-                    page?: components["parameters"]["Page"];
-                    /** @description Matches title */
-                    search?: string;
-                    category?: string;
-                    subject?: number;
-                    visibility?: "private" | "institution_only" | "platform_shared" | "marketplace_public";
-                    ordering?: "created_at" | "-created_at" | "rating" | "-rating" | "price" | "-price";
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description A page of resources */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ResourcePage"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        /**
-         * Add a resource by link (files go to /api/v1/resources-upload/upload/)
-         * @description School libraries need a staff membership there; platform sharing is for Maple administrators.
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["ResourceInput"];
-                };
-            };
-            responses: {
-                /** @description The resource */
-                201: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Resource"];
-                    };
-                };
-                400: components["responses"]["BadRequest"];
-                403: components["responses"]["Forbidden"];
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/resources/{id}/": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: number;
-            };
-            cookie?: never;
-        };
-        /** One resource */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    id: number;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description The resource */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Resource"];
-                    };
-                };
-                404: components["responses"]["NotFound"];
-            };
-        };
-        put?: never;
-        post?: never;
-        /** Remove a resource (its uploader, or a leader of the owning school) */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    id: number;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Removed */
-                204: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                403: components["responses"]["Forbidden"];
-            };
-        };
-        options?: never;
-        head?: never;
-        /** Change a resource (its uploader) */
-        patch: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    id: number;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["ResourceInput"];
-                };
-            };
-            responses: {
-                /** @description The resource */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Resource"];
-                    };
-                };
-                403: components["responses"]["Forbidden"];
-                404: components["responses"]["NotFound"];
-            };
-        };
-        trace?: never;
-    };
-    "/api/v1/resources/shared-resource-link/": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Resources shared with classes the user can see */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 1-based page number; 20 items per page */
-                    page?: components["parameters"]["Page"];
-                    target_class?: number;
-                    resource?: number;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description A page of class links */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ClassResourcePage"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        /**
-         * Share a resource with a class (its teacher or the school's leaders)
-         * @description The resource must be platform-shared or in that school's library.
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": {
-                        /** Format: int64 */
-                        resource: number;
-                        /** Format: int64 */
-                        target_class: number;
-                    };
-                };
-            };
-            responses: {
-                /** @description The link */
-                201: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ClassResource"];
-                    };
-                };
-                400: components["responses"]["BadRequest"];
-                403: components["responses"]["Forbidden"];
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/resources/shared-resource-link/{id}/": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: number;
-            };
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /** Stop sharing (whoever shared it, the class's teacher, or the school's leaders) */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    id: number;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Removed */
-                204: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                403: components["responses"]["Forbidden"];
-                404: components["responses"]["NotFound"];
-            };
-        };
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v1/lessons/lesson/": {
         parameters: {
             query?: never;
@@ -3125,6 +2843,489 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/library/items/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Library items the user can see
+         * @description Uploaders and their schools' leaders always see their items; administrators see platform-wide items (to review them); everyone else sees published platform-wide items, their schools' items, and items shared with their classes.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description 1-based page number; 20 items per page */
+                    page?: components["parameters"]["Page"];
+                    /** @description Matches title or description */
+                    q?: string;
+                    content_type?: string;
+                    subject?: number;
+                    topic?: number;
+                    class_level?: number;
+                    /** @description For example under_review (the review queue) */
+                    status?: string;
+                    /** @description 1 for only the user's own items */
+                    mine?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description A page of items */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["LibraryItemPage"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Add an item by link (teachers, school staff, administrators)
+         * @description Platform-wide items from anyone but an administrator wait for review (under_review).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["LibraryItemInput"];
+                };
+            };
+            responses: {
+                /** @description The item */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["LibraryItem"];
+                    };
+                };
+                400: components["responses"]["BadRequest"];
+                403: components["responses"]["Forbidden"];
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/library/items/{id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        /** One item */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The item */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["LibraryItem"];
+                    };
+                };
+                404: components["responses"]["NotFound"];
+            };
+        };
+        put?: never;
+        post?: never;
+        /** Archive an item (uploader, the owning school's leaders, or an administrator) */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Archived */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                403: components["responses"]["Forbidden"];
+            };
+        };
+        options?: never;
+        head?: never;
+        /** Change an item (its uploader); platform-wide items go back to review */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["LibraryItemInput"];
+                };
+            };
+            responses: {
+                /** @description The item */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["LibraryItem"];
+                    };
+                };
+                403: components["responses"]["Forbidden"];
+            };
+        };
+        trace?: never;
+    };
+    "/api/v1/library/items/{id}/moderate/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Approve or reject a platform-wide item (administrators) */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        decision: "approve" | "reject";
+                        /** @description Required when rejecting; the author sees it */
+                        reason?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description The item */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["LibraryItem"];
+                    };
+                };
+                403: components["responses"]["Forbidden"];
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/library/items/{id}/share/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Put an item on a class's reading list (the class's teacher or the school's leaders)
+         * @description Assigns it to every student enrolled now. A teacher's private item becomes visible to the class.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ShareInput"];
+                };
+            };
+            responses: {
+                /** @description {item, class, assigned} */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** Format: uuid */
+                            item: string;
+                            /** Format: int64 */
+                            class: number;
+                            assigned: number;
+                        };
+                    };
+                };
+                400: components["responses"]["BadRequest"];
+                403: components["responses"]["Forbidden"];
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/library/items/{id}/share/{class}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                class: number;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Take an item off a class's reading list (progress is kept) */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                    class: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Removed */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                403: components["responses"]["Forbidden"];
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/library/classes/{class}/reading-list/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                class: number;
+            };
+            cookie?: never;
+        };
+        /** A class's reading list with how many have finished (staff of the class) */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    class: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description {count, results: ReadingRow[]} */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            count: number;
+                            results: components["schemas"]["ReadingRow"][];
+                        };
+                    };
+                };
+                403: components["responses"]["Forbidden"];
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/library/assigned/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Reading assigned to the student, or to a parent's children */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description {count, results: AssignedReading[]} */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            count: number;
+                            results: components["schemas"]["AssignedReading"][];
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/library/progress/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Record a learner's progress on an item (students)
+         * @description Completion never goes backwards; 95% or more counts as finished.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ProgressInput"];
+                };
+            };
+            responses: {
+                /** @description The learner's progress */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["LibraryProgress"];
+                    };
+                };
+                403: components["responses"]["Forbidden"];
+                404: components["responses"]["NotFound"];
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/library/continue/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** The learner's unfinished items, most recent first */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description {count, results: ContinueItem[]} */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            count: number;
+                            results: components["schemas"]["ContinueItem"][];
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -3487,85 +3688,6 @@ export interface components {
             category: string | null;
             topics: components["schemas"]["CurriculumTopic"][];
         };
-        Resource: {
-            /** Format: int64 */
-            id: number;
-            title: string;
-            description: string | null;
-            author: string | null;
-            author_name: string;
-            category: string | null;
-            /** @description Two-place decimal */
-            price: string;
-            /** @description Two-place decimal */
-            rating: string;
-            is_featured: boolean;
-            /** @description Path under the server's /media/ for uploaded files */
-            file_path: string | null;
-            external_url: string | null;
-            /** @enum {string} */
-            visibility: "private" | "institution_only" | "platform_shared" | "marketplace_public";
-            /** Format: int64 */
-            subject: number | null;
-            /** Format: int64 */
-            class_level: number | null;
-            /** Format: int64 */
-            topic: number | null;
-            /** Format: int64 */
-            uploaded_by: number;
-            /** @enum {string} */
-            owner_type: "platform" | "institution" | "teacher";
-            /** Format: int64 */
-            owner_institution: number | null;
-            /** Format: date-time */
-            created_at: string;
-            vimeo_video_id: string | null;
-        };
-        ResourceInput: {
-            title?: string;
-            description?: string | null;
-            author?: string | null;
-            category?: string | null;
-            /** Format: uri */
-            external_url?: string | null;
-            /** @enum {string} */
-            visibility?: "private" | "institution_only" | "platform_shared" | "marketplace_public";
-            /** Format: int64 */
-            owner_institution?: number | null;
-            /** Format: int64 */
-            subject?: number | null;
-            /** Format: int64 */
-            class_level?: number | null;
-            /** Format: int64 */
-            topic?: number | null;
-            /** @description Marketplace resources only */
-            price?: number;
-        };
-        ResourcePage: {
-            count: number;
-            next: string | null;
-            previous: string | null;
-            results: components["schemas"]["Resource"][];
-        };
-        ClassResource: {
-            /** Format: int64 */
-            id: number;
-            /** Format: date-time */
-            added_at: string;
-            /** Format: int64 */
-            added_by: number;
-            /** Format: int64 */
-            resource: number;
-            /** Format: int64 */
-            target_class: number;
-            resource_title: string;
-        };
-        ClassResourcePage: {
-            count: number;
-            next: string | null;
-            previous: string | null;
-            results: components["schemas"]["ClassResource"][];
-        };
         Lesson: {
             /** Format: int64 */
             id: number;
@@ -3708,6 +3830,147 @@ export interface components {
         AuthMessage: {
             message: string;
             email?: string;
+        };
+        LibraryItem: {
+            /** Format: uuid */
+            id: string;
+            title: string;
+            description: string;
+            content_type: string;
+            /** @enum {string} */
+            owner_type: "teacher" | "institution" | "platform_admin";
+            /** @enum {string} */
+            visibility_scope: "private" | "class" | "institution" | "global" | "country" | "assigned_students";
+            publication_status: string;
+            moderation_status: string;
+            rejection_reason: string;
+            file_url: string | null;
+            external_url: string;
+            duration_seconds?: number | null;
+            language: string;
+            is_featured: boolean;
+            /** Format: date-time */
+            created_at: string;
+            /** Format: date-time */
+            updated_at: string;
+            /** Format: date-time */
+            published_at?: string | null;
+            /** Format: int64 */
+            class_level?: number | null;
+            /** Format: int64 */
+            owner_institution?: number | null;
+            /** Format: int64 */
+            subject?: number | null;
+            /** Format: int64 */
+            topic?: number | null;
+            /** Format: int64 */
+            uploaded_by: number;
+            uploader_name: string;
+            subject_name: string;
+            topic_name: string;
+        };
+        LibraryItemInput: {
+            title?: string;
+            description?: string;
+            /** @description notes, textbook, pdf, document, video, slides, worksheet, assignment, project, activity, revision, teacher_guide, lesson_attachment, topic_resource, class_resource, library_resource, mock_exam, intervention or other */
+            content_type?: string;
+            /** Format: uri */
+            external_url?: string;
+            language?: string;
+            /** @enum {string} */
+            visibility_scope?: "private" | "class" | "institution" | "global";
+            /** Format: int64 */
+            owner_institution?: number | null;
+            /** Format: int64 */
+            subject?: number | null;
+            /** Format: int64 */
+            topic?: number | null;
+            /** Format: int64 */
+            class_level?: number | null;
+        };
+        LibraryItemPage: {
+            count: number;
+            next: string | null;
+            previous: string | null;
+            results: components["schemas"]["LibraryItem"][];
+        };
+        ShareInput: {
+            /** Format: int64 */
+            class: number;
+            /** Format: date-time */
+            due_date?: string;
+            /** @description Defaults to true */
+            required?: boolean;
+            note?: string;
+        };
+        ReadingRow: {
+            /** Format: uuid */
+            item: string;
+            title: string;
+            content_type: string;
+            external_url: string;
+            file_url: string | null;
+            /** Format: date-time */
+            due_date: string | null;
+            required: boolean;
+            assigned: number;
+            completed: number;
+        };
+        AssignedReading: {
+            /** Format: uuid */
+            id: string;
+            /** Format: int64 */
+            student: number;
+            /** Format: uuid */
+            item: string;
+            title: string;
+            content_type: string;
+            external_url: string;
+            file_url: string | null;
+            required: boolean;
+            note: string;
+            /** Format: date-time */
+            due_date: string | null;
+            /** Format: int64 */
+            class?: number | null;
+            completion_percentage: string;
+            is_completed: boolean;
+        };
+        ProgressInput: {
+            /** Format: uuid */
+            item: string;
+            completion: number;
+            position?: number;
+            active_seconds?: number;
+            new_visit?: boolean;
+        };
+        LibraryProgress: {
+            view_count: number;
+            active_time_seconds: number;
+            completion_percentage: string;
+            last_position: number;
+            is_completed: boolean;
+            /** @enum {string} */
+            status: "not_started" | "started" | "in_progress" | "completed";
+            /** Format: date-time */
+            first_accessed?: string | null;
+            /** Format: date-time */
+            last_accessed?: string | null;
+            /** Format: date-time */
+            completed_at?: string | null;
+        };
+        ContinueItem: {
+            /** Format: uuid */
+            item: string;
+            title: string;
+            content_type: string;
+            external_url: string;
+            file_url: string | null;
+            duration_seconds?: number | null;
+            completion_percentage: string;
+            last_position: number;
+            /** Format: date-time */
+            last_accessed?: string | null;
         };
     };
     responses: {
