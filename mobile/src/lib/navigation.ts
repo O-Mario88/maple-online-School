@@ -170,4 +170,8 @@ export const PUBLIC_PREVIEWS = [
   { href: '/pay', label: 'Fee payment link', icon: 'wallet' },
   { href: '/verify', label: 'Certificate check', icon: 'check' },
   { href: '/help', label: 'Help and status', icon: 'flag' },
+  { href: '/get-started', label: 'Get-started wizard', icon: 'sparkle' },
+  { href: '/qr-sign-in', label: 'Sign in with a QR code', icon: 'qr' },
+  { href: '/consent', label: 'Parent consent', icon: 'hand' },
+  { href: '/claim-child', label: 'Link your child', icon: 'people' },
 ] as const satisfies readonly { href: string; label: string; icon: IconName }[];

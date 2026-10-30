@@ -57,6 +57,10 @@ function RootNavigator() {
       <Stack.Screen name="pay" />
       <Stack.Screen name="verify" />
       <Stack.Screen name="help" />
+      <Stack.Screen name="get-started" />
+      <Stack.Screen name="qr-sign-in" />
+      <Stack.Screen name="consent" />
+      <Stack.Screen name="claim-child" />
     </Stack>
   );
 }

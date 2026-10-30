@@ -58,3 +58,34 @@ export const status = [
   { service: 'Live classes', state: 'Working' },
   { service: 'Mobile money', state: 'Airtel slow (provider)' },
 ];
+
+export const getStarted = {
+  roles: ['Learner', 'Parent', 'Teacher', 'School leader'],
+  curricula: ['Uganda NCDC (UNEB)', 'Kenya CBC (KNEC)', 'Cambridge IGCSE', 'IB Diploma'],
+  levels: ['P5', 'P6', 'P7', 'S1', 'S2', 'S3', 'S4', 'S5', 'S6'],
+  goals: ['Pass my exams', 'Catch up on missed topics', 'Get ahead of class', 'Practise past papers'],
+  subjects: ['Mathematics', 'English', 'Biology', 'Chemistry', 'Physics', 'Geography', 'History', 'CRE'],
+};
+
+export const qrSignIn = {
+  device: 'Classroom laptop · Kampala Hill School',
+  code: 'MPL-4K7Q',
+  expiresInSeconds: 90,
+};
+
+export const consent = {
+  child: 'Joseph Nakato',
+  age: 11,
+  school: 'Mengo Primary School',
+  asks: [
+    { label: 'Join live classes with video off by default', on: true },
+    { label: 'Message teachers (you can read every message)', on: true },
+    { label: 'Appear on class leaderboards', on: false },
+    { label: 'Use the AI study helper', on: true },
+  ],
+};
+
+export const claimChild = {
+  code: '7KQ2-M9XA',
+  match: { name: 'Amina Nakato', cls: 'S3 East', school: 'Kampala Hill School', adm: 'KHS/24/118' },
+};
