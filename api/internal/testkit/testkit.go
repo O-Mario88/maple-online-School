@@ -195,7 +195,9 @@ func (w *World) cleanup() {
 		`DELETE FROM grading_reportcard WHERE student_id = ANY($1)`,
 		`DELETE FROM grading_subjectgrade WHERE student_id = ANY($1)`,
 		`DELETE FROM attendance_dailyregister WHERE student_id = ANY($1) OR recorded_by_id = ANY($1)`,
-		`DELETE FROM classes_classenrollment WHERE student_id = ANY($1)`,
+		`DELETE FROM scheduling_timetableslot WHERE assigned_class_id IN (SELECT id FROM classes_class WHERE teacher_id = ANY($1))`,
+		`DELETE FROM grading_subjectgrade WHERE assigned_class_id IN (SELECT id FROM classes_class WHERE teacher_id = ANY($1))`,
+		`DELETE FROM classes_classenrollment WHERE student_id = ANY($1) OR enrolled_class_id IN (SELECT id FROM classes_class WHERE teacher_id = ANY($1))`,
 		`DELETE FROM classes_class WHERE teacher_id = ANY($1)`,
 		`DELETE FROM grading_graderecord WHERE submission_id IN (SELECT id FROM assessments_submission WHERE student_id = ANY($1))`,
 		`DELETE FROM assessments_submission WHERE student_id = ANY($1)`,
@@ -212,6 +214,10 @@ func (w *World) cleanup() {
 		}
 	}
 	for _, s := range []string{
+		`DELETE FROM grading_reportcard WHERE institution_id = ANY($1)`,
+		`DELETE FROM attendance_dailyregister WHERE institution_id = ANY($1)`,
+		`DELETE FROM scheduling_timetableslot WHERE institution_id = ANY($1)`,
+		`DELETE FROM scheduling_room WHERE institution_id = ANY($1)`,
 		`DELETE FROM scheduling_academicterm WHERE institution_id = ANY($1)`,
 		`DELETE FROM institutions_institution WHERE id = ANY($1)`,
 	} {

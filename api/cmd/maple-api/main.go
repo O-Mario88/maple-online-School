@@ -20,6 +20,7 @@ import (
 	"github.com/O-Mario88/maple-online-School/api/internal/reports"
 	"github.com/O-Mario88/maple-online-School/api/internal/school"
 	"github.com/O-Mario88/maple-online-School/api/internal/server"
+	"github.com/O-Mario88/maple-online-School/api/internal/timetable"
 )
 
 const shutdownGrace = 15 * time.Second
@@ -55,13 +56,14 @@ func run() error {
 	work := learning.NewHandler(learning.NewPostgresStore(pool), store, auth.RequireUser)
 	classes := school.NewHandler(school.NewPostgresStore(pool), store, auth.RequireUser)
 	cards := reports.NewHandler(reports.NewPostgresStore(pool), store, auth.RequireUser)
+	week := timetable.NewHandler(timetable.NewPostgresStore(pool), store, auth.RequireUser)
 
 	handler, err := server.NewRouter(server.Options{
 		Pinger:            pool,
 		LegacyAPI:         cfg.LegacyAPIURL,
 		CORSOrigins:       cfg.CORSOrigins,
 		TrustProxyHeaders: cfg.TrustProxyHeaders,
-		Modules:           []func(chi.Router){auth.Mount, work.Mount, classes.Mount, cards.Mount},
+		Modules:           []func(chi.Router){auth.Mount, work.Mount, classes.Mount, cards.Mount, week.Mount},
 	})
 	if err != nil {
 		return err

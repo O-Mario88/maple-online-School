@@ -26,7 +26,6 @@ from curriculum.views import CountryViewSet, SubjectViewSet, ClassLevelViewSet, 
 from marketplace.views import ListingViewSet
 from ai_services.views import CopilotInferenceView
 from institutions.views import InstitutionViewSet, InstitutionMembershipViewSet, LearnerRegistrationViewSet, AdminPinResetView
-from scheduling.views import TimetableSlotViewSet
 from attendance.views import LessonAttendanceViewSet
 from analytics.views import AnalyticsEventViewSet, DailyPlatformMetricViewSet, DailyInstitutionMetricViewSet, SubjectPerformanceSnapshotViewSet, SystemHealthSnapshotViewSet, StudentDashboardView, TeacherDashboardView, ParentDashboardView, AdminDashboardView, InstitutionDashboardView, CustomerSuccessChurnView
 from assessments.views import AssessmentWindowViewSet, QuestionViewSet
@@ -84,7 +83,7 @@ router.register(r'institutions', InstitutionViewSet, basename='institution')
 router.register(r'institution-memberships', InstitutionMembershipViewSet, basename='institution-membership')
 router.register(r'institutions/learner-registrations', LearnerRegistrationViewSet, basename='learner-registration')
 # classes and class-enrollments are served by the Go API (api/internal/school).
-router.register(r'scheduling/timetable', TimetableSlotViewSet, basename='timetable-slot')
+# scheduling/timetable (and terms, rooms) are served by the Go API (api/internal/timetable).
 # attendance/daily is served by the Go API (api/internal/school).
 router.register(r'attendance/lesson', LessonAttendanceViewSet, basename='lesson-attendance')
 # grading/subjects and grading/reports are served by the Go API (api/internal/reports).

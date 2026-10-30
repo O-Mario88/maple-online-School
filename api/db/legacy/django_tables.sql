@@ -189,3 +189,28 @@ CREATE TABLE grading_reportcard (
     term_id               bigint       NOT NULL,
     UNIQUE (student_id, term_id)
 );
+
+-- Rooms and timetable slots: Go owns writes (and to scheduling_academicterm above).
+CREATE TABLE scheduling_room (
+    id             bigint       PRIMARY KEY,
+    name           varchar(100) NOT NULL,
+    capacity       integer      NOT NULL,
+    is_active      boolean      NOT NULL,
+    institution_id bigint       NOT NULL,
+    UNIQUE (institution_id, name)
+);
+
+CREATE TABLE scheduling_timetableslot (
+    id                bigint  PRIMARY KEY,
+    day_of_week       integer NOT NULL,
+    start_time        time    NOT NULL,
+    end_time          time    NOT NULL,
+    is_active         boolean NOT NULL,
+    assigned_class_id bigint  NOT NULL,
+    institution_id    bigint  NOT NULL,
+    room_id           bigint,
+    teacher_id        bigint,
+    term_id           bigint  NOT NULL,
+    is_draft          boolean NOT NULL,
+    subject_id        bigint
+);

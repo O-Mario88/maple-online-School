@@ -1026,10 +1026,241 @@ export interface paths {
         };
         trace?: never;
     };
+    "/api/v1/scheduling/terms/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Terms of the user's schools */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description {count, results: Term[]} */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        /** Add a term (school leaders); making it active deactivates the others */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The term */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                403: components["responses"]["Forbidden"];
+                /** @description Name already used */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/scheduling/rooms/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Rooms of the user's schools (staff) */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description {count, results: Room[]} */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        /** Add a room (school leaders) */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The room */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                403: components["responses"]["Forbidden"];
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/scheduling/timetable/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Timetable slots the user can see
+         * @description Leaders see their schools', teachers the lessons they teach, students and approved parents their classes'.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description 0 = Monday … 6 = Sunday */
+                    day?: number;
+                    class?: number;
+                    term?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The slots */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            count: number;
+                            results: components["schemas"]["Slot"][];
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** Add a lesson to the timetable (school leaders); refuses clashes of class, teacher or room */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** Format: int64 */
+                        class: number;
+                        /** Format: int64 */
+                        term: number;
+                        day_of_week: number;
+                        /** @example 08:00 */
+                        start_time: string;
+                        /** @example 09:00 */
+                        end_time: string;
+                        /** Format: int64 */
+                        room?: number;
+                        /**
+                         * Format: int64
+                         * @description Defaults to the class teacher
+                         */
+                        teacher?: number;
+                    };
+                };
+            };
+            responses: {
+                /** @description The slot */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Slot"];
+                    };
+                };
+                400: components["responses"]["BadRequest"];
+                403: components["responses"]["Forbidden"];
+                /** @description Clash: {code: clash, detail, clashes[]} */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        Slot: {
+            /** Format: int64 */
+            id: number;
+            /** Format: int64 */
+            institution: number;
+            /** Format: int64 */
+            term: number;
+            /** Format: int64 */
+            assigned_class: number;
+            class_title: string;
+            day_of_week: number;
+            start_time: string;
+            end_time: string;
+            /** Format: int64 */
+            room: number | null;
+            room_name: string;
+            /** Format: int64 */
+            teacher: number | null;
+            teacher_name: string;
+            is_draft: boolean;
+        };
         SubjectMark: {
             /** Format: int64 */
             id: number;

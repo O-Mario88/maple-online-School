@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Maple API
-  version: 0.4.0
+  version: 0.5.0
   description: |
     The contract between the Maple apps and the Go API. Paths not listed here
     are still served by the Django API through the Go service's forwarder,
@@ -417,6 +417,65 @@ paths:
               schema: { $ref: "#/components/schemas/Report" }
         "403": { $ref: "#/components/responses/Forbidden" }
         "404": { $ref: "#/components/responses/NotFound" }
+  /api/v1/scheduling/terms/:
+    get:
+      summary: Terms of the user's schools
+      responses: { "200": { description: "{count, results: Term[]}" } }
+    post:
+      summary: Add a term (school leaders); making it active deactivates the others
+      responses: { "201": { description: The term }, "403": { $ref: "#/components/responses/Forbidden" }, "409": { description: Name already used } }
+  /api/v1/scheduling/rooms/:
+    get:
+      summary: Rooms of the user's schools (staff)
+      responses: { "200": { description: "{count, results: Room[]}" } }
+    post:
+      summary: Add a room (school leaders)
+      responses: { "201": { description: The room }, "403": { $ref: "#/components/responses/Forbidden" } }
+  /api/v1/scheduling/timetable/:
+    get:
+      summary: Timetable slots the user can see
+      description: Leaders see their schools', teachers the lessons they teach, students and approved parents their classes'.
+      parameters:
+        - { name: day, in: query, description: "0 = Monday … 6 = Sunday", schema: { type: integer, minimum: 0, maximum: 6 } }
+        - { name: class, in: query, schema: { type: integer, format: int64 } }
+        - { name: term, in: query, schema: { type: integer, format: int64 } }
+      responses:
+        "200":
+          description: The slots
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [count, results]
+                properties:
+                  count: { type: integer }
+                  results: { type: array, items: { $ref: "#/components/schemas/Slot" } }
+    post:
+      summary: Add a lesson to the timetable (school leaders); refuses clashes of class, teacher or room
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [class, term, day_of_week, start_time, end_time]
+              properties:
+                class: { type: integer, format: int64 }
+                term: { type: integer, format: int64 }
+                day_of_week: { type: integer, minimum: 0, maximum: 6 }
+                start_time: { type: string, example: "08:00" }
+                end_time: { type: string, example: "09:00" }
+                room: { type: integer, format: int64 }
+                teacher: { type: integer, format: int64, description: Defaults to the class teacher }
+      responses:
+        "201":
+          description: The slot
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Slot" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "409": { description: "Clash: {code: clash, detail, clashes[]}" }
 components:
   parameters:
     Page:
@@ -457,6 +516,23 @@ components:
         application/json:
           schema: { $ref: "#/components/schemas/Error" }
   schemas:
+    Slot:
+      type: object
+      required: [id, institution, term, assigned_class, class_title, day_of_week, start_time, end_time, room, room_name, teacher, teacher_name, is_draft]
+      properties:
+        id: { type: integer, format: int64 }
+        institution: { type: integer, format: int64 }
+        term: { type: integer, format: int64 }
+        assigned_class: { type: integer, format: int64 }
+        class_title: { type: string }
+        day_of_week: { type: integer }
+        start_time: { type: string }
+        end_time: { type: string }
+        room: { type: [integer, "null"], format: int64 }
+        room_name: { type: string }
+        teacher: { type: [integer, "null"], format: int64 }
+        teacher_name: { type: string }
+        is_draft: { type: boolean }
     SubjectMark:
       type: object
       required: [id, student, student_name, assigned_class, class_title, term, term_name, formative_score, summative_score, total_score, grade_letter, descriptor, teacher_remarks, finalized_by, finalized_at]

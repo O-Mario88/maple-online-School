@@ -8,6 +8,7 @@ import type { Me } from '@/lib/api/client';
 import { AttendanceSection } from '@/features/learner/AttendanceSection';
 import { ParentResultsSection } from '@/features/parent/ParentResultsSection';
 import { ReportsSection } from '@/features/shared/ReportsSection';
+import { TodaySection } from '@/features/shared/TodaySection';
 import { ClassesSection } from '@/features/teacher/ClassesSection';
 import { StudentWorkSection } from '@/features/student/StudentWorkSection';
 import { TeacherWorkSection } from '@/features/teacher/TeacherWorkSection';
@@ -78,6 +79,7 @@ function RoleWork({ user }: { user: Me }) {
   if (isStaff(user.memberships)) {
     return (
       <>
+        <TodaySection />
         <ClassesSection />
         <TeacherWorkSection />
         <ReportsSection staff />
@@ -87,6 +89,7 @@ function RoleWork({ user }: { user: Me }) {
   if (user.role === 'student') {
     return (
       <>
+        <TodaySection />
         <StudentWorkSection />
         <AttendanceSection />
         <ReportsSection staff={false} />
@@ -96,6 +99,7 @@ function RoleWork({ user }: { user: Me }) {
   if (user.role === 'parent') {
     return (
       <>
+        <TodaySection />
         <ParentResultsSection />
         <AttendanceSection />
         <ReportsSection staff={false} />

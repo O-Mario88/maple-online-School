@@ -11,6 +11,7 @@ forwarded to Django unchanged. Apps only ever talk to this service.
 | Learning: assignments, submissions, grades | Done | `/api/v1/assessments/assessment/`, `/api/v1/assessments/submission/`, `/api/v1/grading/records/` |
 | School: classes, enrolment, daily register | Done | `/api/v1/classes/` (+ `{id}/roster/`), `/api/v1/class-enrollments/`, `/api/v1/attendance/daily/` |
 | Reports: subject marks, report cards | Done | `/api/v1/grading/subjects/`, `/api/v1/grading/reports/` (+ `generate/`, `{id}/`) |
+| Timetable: terms, rooms, lessons | Done | `/api/v1/scheduling/terms/`, `/api/v1/scheduling/rooms/`, `/api/v1/scheduling/timetable/` |
 | Health   | Done         | `/api/health/` |
 | Everything else | Served by Django through the forwarder | all other `/api/v1/...` |
 
@@ -23,7 +24,7 @@ returns 405 instead of being forwarded.
 - Go **reads** the account and school tables (Django still writes those) and
   **owns all writes** to `assessments_assessment`, `assessments_submission`,
   `grading_graderecord`, `classes_class`, `classes_classenrollment`,
-  `attendance_dailyregister`, `grading_subjectgrade`, `grading_reportcard` and its own `identity_revoked_tokens`. Django's endpoints
+  `attendance_dailyregister`, `grading_subjectgrade`, `grading_reportcard`, `scheduling_academicterm`, `scheduling_room`, `scheduling_timetableslot` and its own `identity_revoked_tokens`. Django's endpoints
   for those tables have been removed. Question writes (`assessments_question`)
   are still Django's until quizzes move.
 - Everything is scoped to the schools where the person has an **active**

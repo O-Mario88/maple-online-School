@@ -191,3 +191,26 @@ type SchedulingAcademicterm struct {
 	InstitutionID int64
 	Name          string
 }
+
+type SchedulingRoom struct {
+	ID            int64
+	Name          string
+	Capacity      int32
+	IsActive      bool
+	InstitutionID int64
+}
+
+type SchedulingTimetableslot struct {
+	ID              int64
+	DayOfWeek       int32
+	StartTime       pgtype.Time
+	EndTime         pgtype.Time
+	IsActive        bool
+	AssignedClassID int64
+	InstitutionID   int64
+	RoomID          pgtype.Int8
+	TeacherID       pgtype.Int8
+	TermID          int64
+	IsDraft         bool
+	SubjectID       pgtype.Int8
+}
