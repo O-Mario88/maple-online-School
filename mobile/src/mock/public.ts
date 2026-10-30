@@ -1,12 +1,45 @@
 /** Public web fixtures (design builds only; never bundled in deployment). */
 
+export type LiveStatus = 'live' | 'soon';
+
 export const landing = {
-  headline: 'Learn anything your exams ask, from the best teachers in Africa',
-  sub: 'Live classes, past papers and lessons that work offline. Try a question now, no account needed.',
-  boards: ['UNEB', 'KCSE', 'WAEC', 'IGCSE', 'IB', 'Common Core'],
-  liveNow: ['S4 Chemistry with Dr. Namusoke · 112 learners', 'P7 Maths with Mr. Wasswa · 86 learners', 'S6 Economics with Ms. Kemigisha · 40 learners'],
-  stats: [{ value: '34,500', label: 'learners' }, { value: '93', label: 'schools' }, { value: '1,200+', label: 'past papers' }],
-  tryQuestion: { text: 'A boda-boda fare rises from UGX 2,000 to UGX 2,500. What is the percentage increase?', options: ['20%', '25%', '50%'], answer: 1 },
+  eyebrow: 'Learning without borders',
+  headline: { lead: 'A global online school', pre: 'for a ', accent: 'brighter future.' },
+  sub: 'World-class education. Live classes, self-paced courses, certified teachers and recognised curricula, anytime, anywhere in the world.',
+  curricula: [
+    { code: 'UNEB', region: 'Uganda', flag: '🇺🇬' },
+    { code: 'KCSE', region: 'Kenya', flag: '🇰🇪' },
+    { code: 'WAEC', region: 'West Africa', flag: '🌍' },
+    { code: 'IGCSE', region: 'Cambridge', flag: '🇬🇧' },
+    { code: 'IB', region: 'International', flag: '🌐' },
+    { code: 'Common Core', region: 'USA', flag: '🇺🇸' },
+  ],
+  trust: ['Live and recorded classes', 'Certified teachers', 'Recognised certificates', 'Learn at your own pace'],
+  stats: [
+    { value: '1M+', label: 'Active learners', icon: 'people' as const, tint: 'green' as const },
+    { value: '10K+', label: 'Expert teachers', icon: 'person' as const, tint: 'blue' as const },
+    { value: '500+', label: 'Partner schools', icon: 'school' as const, tint: 'amber' as const },
+    { value: '150+', label: 'Countries', icon: 'globe' as const, tint: 'purple' as const },
+  ],
+  teachers: ['Grace Atim', 'Daniel Okello', 'Sarah Kim', 'Ruth Namusoke'],
+  liveClasses: [
+    { id: 'lc1', subject: 'Mathematics Revision', board: 'IGCSE', level: 'Year 10', teacher: 'Mr. Daniel Okello', learners: 128, status: 'live' as LiveStatus, startsIn: '', icon: 'chart' as const },
+    { id: 'lc2', subject: 'English Literature', board: 'A Level', level: 'Cambridge', teacher: 'Ms. Sarah Kim', learners: 94, status: 'live' as LiveStatus, startsIn: '', icon: 'book' as const },
+    { id: 'lc3', subject: 'Biology: Human Systems', board: 'KCSE', level: 'Form 3', teacher: 'Dr. Grace Njeri', learners: 76, status: 'live' as LiveStatus, startsIn: '', icon: 'sparkle' as const },
+    { id: 'lc4', subject: 'Chemistry Practicals', board: 'UNEB', level: 'S5', teacher: 'Mr. Ahmed Hassan', learners: 312, status: 'soon' as LiveStatus, startsIn: '14 min', icon: 'star' as const },
+    { id: 'lc5', subject: 'Introduction to Python', board: 'Beginner', level: 'Programming', teacher: 'Ms. Laila Chen', learners: 245, status: 'soon' as LiveStatus, startsIn: '32 min', icon: 'globe' as const },
+  ],
+  sampleLesson: {
+    title: 'Introduction to the Pythagorean Theorem',
+    teacher: 'Mr. Daniel Ssempala',
+    duration: '4:32',
+    questions: [
+      { text: 'In a right triangle, if a = 3 and b = 4, what is the value of c?', options: ['5', '6', '7', '12'], answer: 0 },
+      { text: 'A ladder 13 m long reaches 12 m up a wall. How far is its foot from the wall?', options: ['1 m', '5 m', '25 m', '7 m'], answer: 1 },
+      { text: 'Which set of sides makes a right triangle?', options: ['2, 3, 4', '5, 12, 13', '4, 5, 6', '6, 7, 8'], answer: 1 },
+    ],
+    results: ['See your score', 'Find your strengths', 'Get recommended courses', 'Keep learning with a free account'],
+  },
 };
 
 export const liveEvent = {

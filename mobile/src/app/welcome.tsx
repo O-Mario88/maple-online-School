@@ -1,72 +1,61 @@
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { useMemo } from 'react';
+import { Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Banner, Body, Button, Card, Chip, ChipRow, Grid, Heading, Row, Stat } from '@/components/ui';
+import { HomeHero } from '@/features/public/HomeHero';
+import { HomeNav } from '@/features/public/HomeNav';
+import { LiveStrip } from '@/features/public/LiveStrip';
+import { Brand, PUBLIC_WIDE } from '@/features/public/palette';
+import { TryLesson } from '@/features/public/TryLesson';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
+import { mockData } from '@/lib/mock';
 import { PUBLIC_PREVIEWS } from '@/lib/navigation';
 
-/** Inventory 1, 6 and 7: the public home page, with a past-paper question to try before signing up. */
+const MAX_WIDTH = 1440;
+
+/** Inventory 1, 6 and 7: the public home page, built to the homepage reference. */
 export default function WelcomeScreen() {
-  const [picked, setPicked] = useState<number | null>(null);
+  const mock = useMemo(() => mockData(), []);
+  const { width } = useWindowDimensions();
+  const wide = width >= PUBLIC_WIDE;
+
+  if (!mock) {
+    // Deployment builds have no sample data yet; PreviewScreen says "Coming soon".
+    return <PreviewScreen title="Maple Online School">{() => null}</PreviewScreen>;
+  }
+  const landing = mock.publicPages.landing;
+
   return (
-    <PreviewScreen title="Maple Online School" eyebrow="Learn with Maple" subtitle="Live classes, past papers and lessons for every syllabus">
-      {(m) => {
-        const l = m.publicPages.landing;
-        const q = l.tryQuestion;
-        const right = picked === q.answer;
-        return (
-          <>
-            <Heading>{l.headline}</Heading>
-            <Body muted>{l.sub}</Body>
-            <ChipRow>
-              {l.boards.map((b) => (
-                <Chip key={b} label={b} />
-              ))}
-            </ChipRow>
-            <Grid min={300}>
-              <Card title="Try a question" subtitle="UCE Maths · Paper 1" icon="sparkle">
-                <Body>{q.text}</Body>
-                <ChipRow>
-                  {q.options.map((o, i) => (
-                    <Chip key={o} label={o} selected={picked === i} onPress={() => setPicked(i)} />
-                  ))}
-                </ChipRow>
-                {picked === null ? null : (
-                  <Banner
-                    tone={right ? 'good' : 'warning'}
-                    title={right ? 'Correct' : 'Not quite'}
-                    body={right ? 'UGX 500 more on UGX 2,000 is a 25% rise. Sign up to see the whole paper.' : 'Work out the rise (UGX 500) as a share of the old fare.'}
-                  />
-                )}
-              </Card>
-              <Card title="Live right now" icon="live">
-                {l.liveNow.map((s) => (
-                  <Row key={s} icon="live" title={s} />
-                ))}
-              </Card>
-            </Grid>
-            <Grid min={170}>
-              {l.stats.map((s) => (
-                <Stat key={s.label} label={s.label} value={s.value} />
-              ))}
-            </Grid>
-            <Grid min={300}>
-              <Card title="For schools" subtitle="Registers, marks, report cards and fees in one place" icon="school">
-                <Button label="Book a demo for your school" variant="secondary" compact onPress={() => undefined} />
-              </Card>
-              <Card title="Get started" icon="person">
-                <Button label="Create a free account" onPress={() => router.push('/sign-up')} />
-                <Button label="Sign in" variant="ghost" compact onPress={() => router.push('/sign-in')} />
-              </Card>
-            </Grid>
-            <Card title="More public pages" icon="globe">
+    <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
+      <HomeNav wide={wide} />
+      <ScrollView contentContainerStyle={styles.page}>
+        <View style={styles.inner}>
+          <HomeHero landing={landing} wide={wide} />
+          <LiveStrip classes={landing.liveClasses} />
+          <TryLesson lesson={landing.sampleLesson} wide={wide} />
+          <View style={styles.footer}>
+            <Text style={styles.footNote}>Design preview · sample data. More public pages:</Text>
+            <View style={styles.footLinks}>
               {PUBLIC_PREVIEWS.filter((p) => p.href !== '/welcome').map((p) => (
-                <Row key={p.href} icon={p.icon} title={p.label} onPress={() => router.push(p.href)} />
+                <Pressable key={p.href} accessibilityRole="link" onPress={() => router.push(p.href)}>
+                  <Text style={styles.footLink}>{p.label}</Text>
+                </Pressable>
               ))}
-            </Card>
-          </>
-        );
-      }}
-    </PreviewScreen>
+            </View>
+          </View>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  safe: { flex: 1, backgroundColor: Brand.surface },
+  page: { backgroundColor: Brand.canvas, paddingBottom: 40 },
+  inner: { width: '100%', maxWidth: MAX_WIDTH, alignSelf: 'center', gap: 20 },
+  footer: { marginHorizontal: 20, gap: 8, paddingTop: 8 },
+  footNote: { fontSize: 12, color: Brand.muted },
+  footLinks: { flexDirection: 'row', flexWrap: 'wrap', gap: 16 },
+  footLink: { fontSize: 13, fontWeight: '600', color: Brand.blue },
+});

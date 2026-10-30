@@ -41,6 +41,8 @@ export const ICONS = {
   globe: { ios: 'globe', material: 'public' },
   hand: { ios: 'hand.raised', material: 'back_hand' },
   clock: { ios: 'clock', material: 'schedule' },
+  arrowRight: { ios: 'arrow.right', material: 'arrow_forward' },
+  trophy: { ios: 'trophy', material: 'emoji_events' },
 } as const;
 
 export type IconName = keyof typeof ICONS;
