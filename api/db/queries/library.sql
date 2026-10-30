@@ -162,3 +162,66 @@ JOIN resources_contentitem i ON i.id = e.content_item_id
 WHERE e.student_id = $1 AND NOT e.is_completed AND i.archived_at IS NULL
 ORDER BY e.last_accessed DESC NULLS LAST
 LIMIT 20;
+
+-- ---- class reading lists (playbook: "teacher-curated class reading lists",
+-- "assign required readings with target completion dates") -----------------
+
+-- name: LibraryClassOwner :one
+SELECT institution_id, teacher_id FROM classes_class WHERE id = $1;
+
+-- name: ShareItemWithClass :exec
+INSERT INTO resources_contentvisibilityrule (created_at, content_item_id, target_class_id)
+SELECT now(), sqlc.arg(item_id), sqlc.arg(class_id)
+WHERE NOT EXISTS (SELECT 1 FROM resources_contentvisibilityrule
+                  WHERE content_item_id = sqlc.arg(item_id) AND target_class_id = sqlc.arg(class_id));
+
+-- name: AssignItemToClass :execrows
+-- One assignment per actively enrolled student; sharing again updates the
+-- due date and reactivates it.
+INSERT INTO resources_contentassignment (
+    id, assigned_by_type, assignment_type, priority, note, due_date, is_active, created_at, updated_at,
+    assigned_by_id, content_item_id, student_id, target_class_id)
+SELECT gen_random_uuid(), 'teacher', sqlc.arg(assignment_type), 'medium', sqlc.arg(note), sqlc.narg(due_date),
+       true, now(), now(), sqlc.arg(assigned_by), sqlc.arg(item_id), e.student_id, sqlc.arg(class_id)
+FROM classes_classenrollment e
+WHERE e.enrolled_class_id = sqlc.arg(class_id) AND e.status = 'active'
+ON CONFLICT (content_item_id, student_id, assigned_by_type) DO UPDATE SET
+    assignment_type = EXCLUDED.assignment_type, note = EXCLUDED.note, due_date = EXCLUDED.due_date,
+    is_active = true, target_class_id = EXCLUDED.target_class_id, updated_at = now();
+
+-- name: PromoteItemToClass :exec
+-- A teacher's private item becomes visible to the classes it is shared with.
+UPDATE resources_contentitem SET visibility_scope = 'class', updated_at = now()
+WHERE id = $1 AND visibility_scope = 'private';
+
+-- name: UnshareItemFromClass :exec
+DELETE FROM resources_contentvisibilityrule WHERE content_item_id = sqlc.arg(item_id) AND target_class_id = sqlc.arg(class_id);
+
+-- name: DeactivateClassAssignments :exec
+UPDATE resources_contentassignment SET is_active = false, updated_at = now()
+WHERE content_item_id = sqlc.arg(item_id) AND target_class_id = sqlc.arg(class_id);
+
+-- name: ClassReadingList :many
+-- Items shared with a class, with how many of its students have finished.
+SELECT i.id, i.title, i.content_type, i.external_url, i.file,
+       min(a.due_date)::timestamptz AS due_date, COALESCE(bool_or(a.assignment_type = 'required'), false)::boolean AS required,
+       count(DISTINCT a.student_id) AS assigned,
+       count(DISTINCT e.student_id) FILTER (WHERE e.is_completed) AS completed
+FROM resources_contentvisibilityrule r
+JOIN resources_contentitem i ON i.id = r.content_item_id AND i.archived_at IS NULL
+LEFT JOIN resources_contentassignment a ON a.content_item_id = i.id AND a.target_class_id = r.target_class_id AND a.is_active
+LEFT JOIN resources_contentengagement e ON e.content_item_id = i.id AND e.student_id = a.student_id
+WHERE r.target_class_id = $1
+GROUP BY i.id, i.title, i.content_type, i.external_url, i.file
+ORDER BY min(a.due_date) NULLS LAST, i.title;
+
+-- name: AssignedReading :many
+-- Active reading assigned to these learners, with each one's progress.
+SELECT a.id, a.student_id, a.assignment_type, a.note, a.due_date, a.target_class_id,
+       i.id AS item_id, i.title, i.content_type, i.external_url, i.file,
+       COALESCE(e.completion_percentage, 0)::numeric AS completion, COALESCE(e.is_completed, false)::boolean AS is_completed
+FROM resources_contentassignment a
+JOIN resources_contentitem i ON i.id = a.content_item_id AND i.archived_at IS NULL
+LEFT JOIN resources_contentengagement e ON e.content_item_id = i.id AND e.student_id = a.student_id
+WHERE a.is_active AND a.student_id = ANY(sqlc.arg(learner_ids)::bigint[])
+ORDER BY COALESCE(e.is_completed, false), a.due_date NULLS LAST, i.title;

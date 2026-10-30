@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 	"slices"
+	"strconv"
 	"testing"
 
 	"github.com/go-chi/chi/v5"
@@ -40,6 +41,7 @@ func newShelf(t *testing.T) shelf {
 		people := []int64{s.teacher, s.colleague, s.head, s.student, s.outsider, s.admin}
 		items := `(SELECT id FROM resources_contentitem WHERE uploaded_by_id = ANY($1))`
 		for _, q := range []string{
+			`DELETE FROM resources_contentassignment WHERE student_id = ANY($1) OR content_item_id IN ` + items,
 			`DELETE FROM resources_contentengagement WHERE student_id = ANY($1) OR content_item_id IN ` + items,
 			`DELETE FROM resources_contentauditlog WHERE content_item_id IN ` + items,
 			`DELETE FROM resources_contentvisibilityrule WHERE content_item_id IN ` + items,
@@ -195,3 +197,72 @@ func TestProgressAndContinue(t *testing.T) {
 		t.Errorf("completion is a percentage: %d", code)
 	}
 }
+
+func TestClassReadingLists(t *testing.T) {
+	s := newShelf(t)
+	class := s.w.Class(s.school, s.teacher)
+	classmate := s.w.Person("student", "student", s.school)
+	parent := s.w.Person("parent", "", 0)
+	s.w.Enrol(class, s.student)
+	s.w.Enrol(class, classmate)
+	s.w.LinkParent(parent, s.student, "approved")
+
+	item := idOf(s.add(t, s.teacher, map[string]any{"title": "Cell division reading", "content_type": "notes", "external_url": "https://r.org/1"}))
+	elsewhere := idOf(s.add(t, s.outsider, map[string]any{"title": "Other school notes", "content_type": "notes", "external_url": "https://r.org/2"}))
+	share := itemsURL + item + "/share/"
+	due := "2026-11-20T17:00:00+03:00"
+
+	refused := []struct {
+		name string
+		user int64
+		path string
+		want int
+	}{
+		{"a student", s.student, share, http.StatusForbidden},
+		{"a colleague who doesn't teach the class", s.colleague, share, http.StatusForbidden},
+		{"another school's teacher with their own item", s.outsider, itemsURL + elsewhere + "/share/", http.StatusForbidden},
+	}
+	for _, r := range refused {
+		if code, res := s.w.Call(r.user, http.MethodPost, r.path, map[string]any{"class": class, "due_date": due}); code != r.want {
+			t.Errorf("%s: want %d, got %d %v", r.name, r.want, code, res)
+		}
+	}
+	code, res := s.w.Call(s.teacher, http.MethodPost, share, map[string]any{"class": class, "due_date": due, "note": "Read before Friday"})
+	if code != http.StatusOK || res["assigned"] != float64(2) {
+		t.Fatalf("share: %d %v", code, res)
+	}
+
+	if code, _ := s.w.Call(s.student, http.MethodGet, itemsURL+item+"/", nil); code != http.StatusOK {
+		t.Errorf("a shared item is visible to the class: %d", code)
+	}
+	for name, user := range map[string]int64{"student": s.student, "parent": parent} {
+		_, page := s.w.Call(user, http.MethodGet, "/api/v1/library/assigned/", nil)
+		results, _ := page["results"].([]any)
+		if len(results) != 1 || results[0].(map[string]any)["due_date"] == nil {
+			t.Errorf("%s sees the assigned reading with its due date: %v", name, page)
+		}
+	}
+
+	s.w.Call(s.student, http.MethodPost, progressURL, map[string]any{"item": item, "completion": 100, "new_visit": true})
+	_, list := s.w.Call(s.teacher, http.MethodGet, "/api/v1/library/classes/"+itoa(class)+"/reading-list/", nil)
+	rows, _ := list["results"].([]any)
+	if len(rows) != 1 || rows[0].(map[string]any)["completed"] != float64(1) || rows[0].(map[string]any)["assigned"] != float64(2) {
+		t.Errorf("the teacher sees 1 of 2 finished: %v", list)
+	}
+	if code, _ := s.w.Call(s.student, http.MethodGet, "/api/v1/library/classes/"+itoa(class)+"/reading-list/", nil); code != http.StatusForbidden {
+		t.Errorf("class completion is for staff: %d", code)
+	}
+
+	if code, _ := s.w.Call(s.teacher, http.MethodDelete, share+itoa(class)+"/", nil); code != http.StatusNoContent {
+		t.Fatalf("unshare: %d", code)
+	}
+	if code, _ := s.w.Call(classmate, http.MethodGet, itemsURL+item+"/", nil); code != http.StatusNotFound {
+		t.Errorf("after unsharing the class no longer sees it: %d", code)
+	}
+	_, page := s.w.Call(classmate, http.MethodGet, "/api/v1/library/assigned/", nil)
+	if results, _ := page["results"].([]any); len(results) != 0 {
+		t.Errorf("and it leaves their assigned reading: %v", page)
+	}
+}
+
+func itoa(n int64) string { return strconv.FormatInt(n, 10) }

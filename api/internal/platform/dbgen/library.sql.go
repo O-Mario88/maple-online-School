@@ -21,6 +21,164 @@ func (q *Queries) ArchiveLibraryItem(ctx context.Context, id pgtype.UUID) error 
 	return err
 }
 
+const assignItemToClass = `-- name: AssignItemToClass :execrows
+INSERT INTO resources_contentassignment (
+    id, assigned_by_type, assignment_type, priority, note, due_date, is_active, created_at, updated_at,
+    assigned_by_id, content_item_id, student_id, target_class_id)
+SELECT gen_random_uuid(), 'teacher', $1, 'medium', $2, $3,
+       true, now(), now(), $4, $5, e.student_id, $6
+FROM classes_classenrollment e
+WHERE e.enrolled_class_id = $6 AND e.status = 'active'
+ON CONFLICT (content_item_id, student_id, assigned_by_type) DO UPDATE SET
+    assignment_type = EXCLUDED.assignment_type, note = EXCLUDED.note, due_date = EXCLUDED.due_date,
+    is_active = true, target_class_id = EXCLUDED.target_class_id, updated_at = now()
+`
+
+type AssignItemToClassParams struct {
+	AssignmentType string
+	Note           string
+	DueDate        pgtype.Timestamptz
+	AssignedBy     pgtype.Int8
+	ItemID         pgtype.UUID
+	ClassID        pgtype.Int8
+}
+
+// One assignment per actively enrolled student; sharing again updates the
+// due date and reactivates it.
+func (q *Queries) AssignItemToClass(ctx context.Context, arg AssignItemToClassParams) (int64, error) {
+	result, err := q.db.Exec(ctx, assignItemToClass,
+		arg.AssignmentType,
+		arg.Note,
+		arg.DueDate,
+		arg.AssignedBy,
+		arg.ItemID,
+		arg.ClassID,
+	)
+	if err != nil {
+		return 0, err
+	}
+	return result.RowsAffected(), nil
+}
+
+const assignedReading = `-- name: AssignedReading :many
+SELECT a.id, a.student_id, a.assignment_type, a.note, a.due_date, a.target_class_id,
+       i.id AS item_id, i.title, i.content_type, i.external_url, i.file,
+       COALESCE(e.completion_percentage, 0)::numeric AS completion, COALESCE(e.is_completed, false)::boolean AS is_completed
+FROM resources_contentassignment a
+JOIN resources_contentitem i ON i.id = a.content_item_id AND i.archived_at IS NULL
+LEFT JOIN resources_contentengagement e ON e.content_item_id = i.id AND e.student_id = a.student_id
+WHERE a.is_active AND a.student_id = ANY($1::bigint[])
+ORDER BY COALESCE(e.is_completed, false), a.due_date NULLS LAST, i.title
+`
+
+type AssignedReadingRow struct {
+	ID             pgtype.UUID
+	StudentID      int64
+	AssignmentType string
+	Note           string
+	DueDate        pgtype.Timestamptz
+	TargetClassID  pgtype.Int8
+	ItemID         pgtype.UUID
+	Title          string
+	ContentType    string
+	ExternalUrl    string
+	File           pgtype.Text
+	Completion     pgtype.Numeric
+	IsCompleted    bool
+}
+
+// Active reading assigned to these learners, with each one's progress.
+func (q *Queries) AssignedReading(ctx context.Context, learnerIds []int64) ([]AssignedReadingRow, error) {
+	rows, err := q.db.Query(ctx, assignedReading, learnerIds)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []AssignedReadingRow{}
+	for rows.Next() {
+		var i AssignedReadingRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.StudentID,
+			&i.AssignmentType,
+			&i.Note,
+			&i.DueDate,
+			&i.TargetClassID,
+			&i.ItemID,
+			&i.Title,
+			&i.ContentType,
+			&i.ExternalUrl,
+			&i.File,
+			&i.Completion,
+			&i.IsCompleted,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const classReadingList = `-- name: ClassReadingList :many
+SELECT i.id, i.title, i.content_type, i.external_url, i.file,
+       min(a.due_date)::timestamptz AS due_date, COALESCE(bool_or(a.assignment_type = 'required'), false)::boolean AS required,
+       count(DISTINCT a.student_id) AS assigned,
+       count(DISTINCT e.student_id) FILTER (WHERE e.is_completed) AS completed
+FROM resources_contentvisibilityrule r
+JOIN resources_contentitem i ON i.id = r.content_item_id AND i.archived_at IS NULL
+LEFT JOIN resources_contentassignment a ON a.content_item_id = i.id AND a.target_class_id = r.target_class_id AND a.is_active
+LEFT JOIN resources_contentengagement e ON e.content_item_id = i.id AND e.student_id = a.student_id
+WHERE r.target_class_id = $1
+GROUP BY i.id, i.title, i.content_type, i.external_url, i.file
+ORDER BY min(a.due_date) NULLS LAST, i.title
+`
+
+type ClassReadingListRow struct {
+	ID          pgtype.UUID
+	Title       string
+	ContentType string
+	ExternalUrl string
+	File        pgtype.Text
+	DueDate     pgtype.Timestamptz
+	Required    bool
+	Assigned    int64
+	Completed   int64
+}
+
+// Items shared with a class, with how many of its students have finished.
+func (q *Queries) ClassReadingList(ctx context.Context, targetClassID pgtype.Int8) ([]ClassReadingListRow, error) {
+	rows, err := q.db.Query(ctx, classReadingList, targetClassID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []ClassReadingListRow{}
+	for rows.Next() {
+		var i ClassReadingListRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.Title,
+			&i.ContentType,
+			&i.ExternalUrl,
+			&i.File,
+			&i.DueDate,
+			&i.Required,
+			&i.Assigned,
+			&i.Completed,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const continueLearning = `-- name: ContinueLearning :many
 SELECT e.content_item_id, e.completion_percentage, e.last_position, e.last_accessed,
        i.title, i.content_type, i.external_url, i.file, i.duration_seconds
@@ -186,6 +344,21 @@ func (q *Queries) CreateLibraryItem(ctx context.Context, arg CreateLibraryItemPa
 	return id, err
 }
 
+const deactivateClassAssignments = `-- name: DeactivateClassAssignments :exec
+UPDATE resources_contentassignment SET is_active = false, updated_at = now()
+WHERE content_item_id = $1 AND target_class_id = $2
+`
+
+type DeactivateClassAssignmentsParams struct {
+	ItemID  pgtype.UUID
+	ClassID pgtype.Int8
+}
+
+func (q *Queries) DeactivateClassAssignments(ctx context.Context, arg DeactivateClassAssignmentsParams) error {
+	_, err := q.db.Exec(ctx, deactivateClassAssignments, arg.ItemID, arg.ClassID)
+	return err
+}
+
 const getLibraryItem = `-- name: GetLibraryItem :one
 SELECT i.id, i.title, i.description, i.content_type, i.owner_type, i.visibility_scope, i.publication_status,
        i.moderation_status, i.rejection_reason, i.file, i.external_url, i.duration_seconds, i.language,
@@ -282,6 +455,25 @@ func (q *Queries) GetLibraryItem(ctx context.Context, arg GetLibraryItemParams) 
 		&i.SubjectName,
 		&i.TopicName,
 	)
+	return i, err
+}
+
+const libraryClassOwner = `-- name: LibraryClassOwner :one
+
+SELECT institution_id, teacher_id FROM classes_class WHERE id = $1
+`
+
+type LibraryClassOwnerRow struct {
+	InstitutionID int64
+	TeacherID     int64
+}
+
+// ---- class reading lists (playbook: "teacher-curated class reading lists",
+// "assign required readings with target completion dates") -----------------
+func (q *Queries) LibraryClassOwner(ctx context.Context, id int64) (LibraryClassOwnerRow, error) {
+	row := q.db.QueryRow(ctx, libraryClassOwner, id)
+	var i LibraryClassOwnerRow
+	err := row.Scan(&i.InstitutionID, &i.TeacherID)
 	return i, err
 }
 
@@ -449,6 +641,17 @@ func (q *Queries) LogLibraryChange(ctx context.Context, arg LogLibraryChangePara
 	return err
 }
 
+const promoteItemToClass = `-- name: PromoteItemToClass :exec
+UPDATE resources_contentitem SET visibility_scope = 'class', updated_at = now()
+WHERE id = $1 AND visibility_scope = 'private'
+`
+
+// A teacher's private item becomes visible to the classes it is shared with.
+func (q *Queries) PromoteItemToClass(ctx context.Context, id pgtype.UUID) error {
+	_, err := q.db.Exec(ctx, promoteItemToClass, id)
+	return err
+}
+
 const saveProgress = `-- name: SaveProgress :one
 
 INSERT INTO resources_contentengagement (
@@ -520,6 +723,37 @@ func (q *Queries) SaveProgress(ctx context.Context, arg SaveProgressParams) (Sav
 		&i.CompletedAt,
 	)
 	return i, err
+}
+
+const shareItemWithClass = `-- name: ShareItemWithClass :exec
+INSERT INTO resources_contentvisibilityrule (created_at, content_item_id, target_class_id)
+SELECT now(), $1, $2
+WHERE NOT EXISTS (SELECT 1 FROM resources_contentvisibilityrule
+                  WHERE content_item_id = $1 AND target_class_id = $2)
+`
+
+type ShareItemWithClassParams struct {
+	ItemID  pgtype.UUID
+	ClassID pgtype.Int8
+}
+
+func (q *Queries) ShareItemWithClass(ctx context.Context, arg ShareItemWithClassParams) error {
+	_, err := q.db.Exec(ctx, shareItemWithClass, arg.ItemID, arg.ClassID)
+	return err
+}
+
+const unshareItemFromClass = `-- name: UnshareItemFromClass :exec
+DELETE FROM resources_contentvisibilityrule WHERE content_item_id = $1 AND target_class_id = $2
+`
+
+type UnshareItemFromClassParams struct {
+	ItemID  pgtype.UUID
+	ClassID pgtype.Int8
+}
+
+func (q *Queries) UnshareItemFromClass(ctx context.Context, arg UnshareItemFromClassParams) error {
+	_, err := q.db.Exec(ctx, unshareItemFromClass, arg.ItemID, arg.ClassID)
+	return err
 }
 
 const updateLibraryItem = `-- name: UpdateLibraryItem :exec

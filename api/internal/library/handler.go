@@ -33,6 +33,11 @@ type Store interface {
 	Archive(ctx context.Context, by int64, item Item) error
 	SaveProgress(ctx context.Context, studentID int64, p ProgressInput) (Progress, error)
 	Continue(ctx context.Context, studentID int64) ([]Continue, error)
+	ClassOwner(ctx context.Context, classID int64) (school, teacher int64, err error)
+	ShareWithClass(ctx context.Context, sh Share) (int64, error)
+	UnshareFromClass(ctx context.Context, item Item, classID, by int64) error
+	ReadingList(ctx context.Context, classID int64) ([]ReadingRow, error)
+	AssignedReading(ctx context.Context, learners []int64) ([]Assigned, error)
 }
 
 // Handler serves the library.
@@ -57,6 +62,10 @@ func (h *Handler) Mount(r chi.Router) {
 		r.Post(itemsPrefix+"{id}/moderate/", h.moderate)
 		r.Post(prefix+"progress/", h.progress)
 		r.Get(prefix+"continue/", h.continueList)
+		r.Post(itemsPrefix+"{id}/share/", h.share)
+		r.Delete(itemsPrefix+"{id}/share/{class}/", h.unshare)
+		r.Get(prefix+"classes/{class}/reading-list/", h.readingList)
+		r.Get(prefix+"assigned/", h.assigned)
 	})
 	r.HandleFunc(prefix+"*", func(w http.ResponseWriter, _ *http.Request) {
 		httpx.WriteError(w, http.StatusMethodNotAllowed, "method_not_allowed", "This action isn't available.")
