@@ -5,9 +5,11 @@ export type Lesson = components['schemas']['Lesson'];
 /** Today's and later lessons, earliest first. Today's earlier lessons stay listed. */
 export function upcomingLessons<T extends { scheduled_at: string }>(lessons: readonly T[], now: Date): T[] {
   const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+  // filter() returns a fresh array, so sorting it in place leaves the input alone.
+  // (Array.toSorted is missing on the phones' JavaScript engine.)
   return lessons
     .filter((l) => new Date(l.scheduled_at).getTime() >= startOfToday)
-    .toSorted((a, b) => new Date(a.scheduled_at).getTime() - new Date(b.scheduled_at).getTime());
+    .sort((a, b) => new Date(a.scheduled_at).getTime() - new Date(b.scheduled_at).getTime());
 }
 
 export interface Parsed {

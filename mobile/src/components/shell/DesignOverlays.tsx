@@ -1,6 +1,7 @@
 import { router } from 'expo-router';
 import { useMemo } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Icon } from '@/components/icon';
 import { Elevation, Radius, Spacing, type Theme, Type } from '@/constants/theme';
@@ -14,15 +15,16 @@ import { mockData } from '@/lib/mock';
  */
 export function DesignOverlays() {
   const { styles, theme } = useStyles(makeStyles);
+  const insets = useSafeAreaInsets();
   const mock = useMemo(() => mockData(), []);
   if (!mock) return null;
   const s = mock.shared.sync;
   return (
     <>
       {s.online ? null : (
-        <View style={styles.pill} accessibilityRole="text" accessibilityLabel={`Offline. ${s.waiting} changes waiting to sync.`}>
+        <View style={[styles.pill, { top: insets.top + Spacing.two }]} accessibilityRole="text" accessibilityLabel={`Offline. ${s.waiting} changes waiting to sync.`}>
           <Icon name="download" size={14} color={theme.warning} />
-          <Text style={styles.pillText}>{`Offline · ${s.waiting} changes will sync · last ${s.lastSynced}`}</Text>
+          <Text style={styles.pillText} numberOfLines={1}>{`Offline · ${s.waiting} to sync · last ${s.lastSynced}`}</Text>
         </View>
       )}
       <Pressable
@@ -41,8 +43,8 @@ function makeStyles(t: Theme) {
   return StyleSheet.create({
     pill: {
       position: 'absolute',
-      top: Spacing.two,
       alignSelf: 'center',
+      maxWidth: '78%',
       flexDirection: 'row',
       alignItems: 'center',
       gap: Spacing.one,
