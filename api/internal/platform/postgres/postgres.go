@@ -16,6 +16,10 @@ import (
 // Go keeps its own migration history so it never touches Django's.
 const gooseTable = "go_schema_migrations"
 
+// migrateLock is the advisory lock key that lets only one caller migrate at a
+// time (API instances starting together, or test packages run in parallel).
+const migrateLock = 7_461_013_201
+
 // Open connects to Postgres and checks the connection.
 func Open(ctx context.Context, url string) (*pgxpool.Pool, error) {
 	pool, err := pgxpool.New(ctx, url)
@@ -34,6 +38,19 @@ func Open(ctx context.Context, url string) (*pgxpool.Pool, error) {
 // Migrate brings the database up to date. An empty database first gets the
 // tables Maple originally made with Django; then any pending Go migrations run.
 func Migrate(ctx context.Context, pool *pgxpool.Pool) error {
+	// The lock belongs to this connection, so it is held until we unlock or the connection ends.
+	conn, err := pool.Acquire(ctx)
+	if err != nil {
+		return fmt.Errorf("acquire migration connection: %w", err)
+	}
+	defer conn.Release()
+	if _, err := conn.Exec(ctx, "SELECT pg_advisory_lock($1)", migrateLock); err != nil {
+		return fmt.Errorf("take migration lock: %w", err)
+	}
+	defer func() {
+		_, _ = conn.Exec(context.Background(), "SELECT pg_advisory_unlock($1)", migrateLock)
+	}()
+
 	if err := applyLegacySchema(ctx, pool); err != nil {
 		return err
 	}
