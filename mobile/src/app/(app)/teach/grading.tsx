@@ -1,14 +1,22 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { Avatar, Banner, Button, Card, Chip, ChipRow, Field, Grid, Row } from '@/components/ui';
 import { Radius, Spacing, type Theme, Type } from '@/constants/theme';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
+import { LiveMarking } from '@/features/teacher/LiveMarking';
 import { useStyles } from '@/hooks/use-styles';
+import { mockData } from '@/lib/mock';
 import { toast } from '@/lib/toast';
 
 /** Inventory 45: fast marking with AI rubric hints and a held voice note. */
 export default function GradingScreen() {
+  const design = useMemo(() => mockData() != null, []);
+  // Real builds mark the API's submissions; design builds keep the reference's sample queue.
+  return design ? <DesignGrading /> : <LiveMarking />;
+}
+
+function DesignGrading() {
   const { styles } = useStyles(makeStyles);
   const [index, setIndex] = useState(0);
   const [scores, setScores] = useState<Record<string, number>>({});

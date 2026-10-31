@@ -39,7 +39,7 @@ export function TeacherWorkSection() {
               title={s.student_name ?? `Student ${s.student}`}
               detail={s.assessment_title}
               badge={<Badge label="Mark" tone="accent" />}
-              onPress={() => router.push({ pathname: '/mark/[id]', params: { id: String(s.id) } })}
+              onPress={() => router.push({ pathname: '/teach/grading', params: { id: String(s.id) } })}
               accessibilityHint="Opens the submission so you can grade it"
             />
           ))

@@ -99,7 +99,7 @@ const MENUS: Readonly<Record<Portal, readonly NavItem[]>> = {
     p('calendar', 'Calendar', '/teach/calendar', 'calendar'),
     lessons,
     messages,
-    p('grading', 'Marking', '/teach/grading', 'check'),
+    item('grading', 'Marking', '/teach/grading', 'check'),
     library,
     curriculum,
     p('studio', 'AI studio', '/teach/studio', 'sparkle'),

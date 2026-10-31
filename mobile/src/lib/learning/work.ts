@@ -62,3 +62,12 @@ export function answerProblem(answer: string): string | null {
   if (answer.length > MAX_ANSWER) return 'Your answer is too long. Please shorten it.';
   return null;
 }
+
+/** Why a mark can't be saved, or null when it is a number from 0 to the assignment's maximum. */
+export function scoreProblem(score: string, maxScore: string): string | null {
+  if (score.trim() === '') return 'Enter a mark.';
+  const value = Number(score);
+  const max = Number(maxScore);
+  if (!Number.isFinite(value) || value < 0 || value > max) return `Enter a number from 0 to ${trimDecimal(maxScore)}.`;
+  return null;
+}

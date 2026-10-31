@@ -1,5 +1,5 @@
 import type { Assessment, Grade, Submission } from './types';
-import { answerProblem, studentWork, submittedAnswer, toMark } from './work';
+import { answerProblem, scoreProblem, studentWork, submittedAnswer, toMark } from './work';
 
 const assignment = (id: number, title: string): Assessment =>
   ({
@@ -84,5 +84,20 @@ describe('answerProblem', () => {
   it('asks for an answer, and for a shorter one when it is too long', () => {
     expect(answerProblem('   ')).toBe('Write your answer first.');
     expect(answerProblem('a'.repeat(20_001))).toBe('Your answer is too long. Please shorten it.');
+  });
+});
+
+describe('scoreProblem', () => {
+  it('accepts a mark from 0 up to the maximum, decimals included', () => {
+    expect(scoreProblem('0', '10.00')).toBeNull();
+    expect(scoreProblem('7.5', '10.00')).toBeNull();
+    expect(scoreProblem('10', '10.00')).toBeNull();
+  });
+
+  it('asks for a number in range', () => {
+    expect(scoreProblem('', '10.00')).toBe('Enter a mark.');
+    expect(scoreProblem('11', '10.00')).toBe('Enter a number from 0 to 10.');
+    expect(scoreProblem('-1', '10.00')).toBe('Enter a number from 0 to 10.');
+    expect(scoreProblem('seven', '10.00')).toBe('Enter a number from 0 to 10.');
   });
 });
