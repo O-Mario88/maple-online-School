@@ -1,9 +1,10 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 
-import { Body, Button, Card, ErrorText, Field, Screen } from '@/components/ui';
+import { Button, ErrorText, Field } from '@/components/ui';
 import { api } from '@/lib/api/client';
 import { passwordProblem } from '@/lib/auth/signup';
+import { AuthPage } from '@/features/auth/AuthPage';
 
 /** Opened from the reset (or "set your password") email: choose a new password. */
 export default function ResetPasswordScreen() {
@@ -33,22 +34,19 @@ export default function ResetPasswordScreen() {
 
   if (done) {
     return (
-      <Screen title="Password changed">
-        <Body>You can sign in with your new password now.</Body>
+      <AuthPage title="Password changed" sub="You can sign in with your new password now.">
         <Button label="Sign in" onPress={() => router.replace('/sign-in')} />
-      </Screen>
+      </AuthPage>
     );
   }
 
   return (
-    <Screen title="Choose a new password">
-      <Card>
+    <AuthPage title="Choose a new password" sub="Use at least 8 characters. You’ll sign in with it from now on.">
         <Field label="New password" value={password} onChangeText={setPassword} secureTextEntry autoComplete="new-password" />
         <Field label="Confirm password" value={confirm} onChangeText={setConfirm} secureTextEntry autoComplete="new-password" />
         <ErrorText message={problem} />
         <Button label="Save password" onPress={submit} busy={busy} />
-      </Card>
       <Button label="Ask for a new link" variant="secondary" onPress={() => router.replace('/forgot-password')} />
-    </Screen>
+    </AuthPage>
   );
 }
