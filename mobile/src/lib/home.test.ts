@@ -1,4 +1,4 @@
-import { collectionRate, familyBalance, greeting } from './home';
+import { collectionRate, familyBalance, greeting, humanize } from './home';
 
 describe('greeting', () => {
   it('follows the time of day', () => {
@@ -34,5 +34,12 @@ describe('familyBalance', () => {
 
   it('keeps currencies apart and drops settled ones', () => {
     expect(familyBalance([invoice(100, 100), invoice(500, 200, 'issued', 'KES')])).toEqual([{ currency: 'KES', minor: 300 }]);
+  });
+});
+
+describe('humanize', () => {
+  it('turns an API word into a label', () => {
+    expect(humanize('subject_teacher')).toBe('Subject teacher');
+    expect(humanize('mother')).toBe('Mother');
   });
 });

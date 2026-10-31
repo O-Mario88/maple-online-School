@@ -35,3 +35,9 @@ export function familyBalance(invoices: readonly InvoiceLike[]): Balance[] {
   }
   return [...owed].filter(([, minor]) => minor > 0).map(([currency, minor]) => ({ currency, minor }));
 }
+
+/** An API word as a label: "subject_teacher" -> "Subject teacher". */
+export function humanize(value: string): string {
+  const words = value.replace(/_/g, ' ');
+  return words.charAt(0).toUpperCase() + words.slice(1);
+}

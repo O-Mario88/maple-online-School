@@ -119,7 +119,7 @@ const MENUS: Readonly<Record<Portal, readonly NavItem[]>> = {
     library,
     item('attendance', 'Attendance', '/family/attendance', 'calendar'),
     p('approvals', 'Approvals', '/family/approvals', 'check'),
-    p('family-settings', 'Settings', '/family/settings', 'person'),
+    item('family-settings', 'Settings', '/family/settings', 'person'),
   ],
   school: [
     { ...home, label: 'Dashboard' },
