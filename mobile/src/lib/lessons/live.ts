@@ -41,3 +41,26 @@ export function providerFor(link: string): 'google_meet' | 'zoom' | null {
   if (host === 'zoom.us' || host.endsWith('.zoom.us')) return 'zoom';
   return null;
 }
+
+export interface SessionGroups<T> {
+  /** Joinable now. */
+  live: T[];
+  /** Not open yet, soonest first. */
+  upcoming: T[];
+  /** Over, with or without a replay. Cancelled sessions are left out. */
+  past: T[];
+}
+
+/** Sorts sessions into what's live now, what's coming up and what's over. */
+export function groupSessions<T extends SessionLike>(sessions: readonly T[], now: Date): SessionGroups<T> {
+  const groups: SessionGroups<T> = { live: [], upcoming: [], past: [] };
+  for (const s of sessions) {
+    const kind = liveAction(s, now).kind;
+    if (kind === 'join') groups.live.push(s);
+    else if (kind === 'wait') groups.upcoming.push(s);
+    else if (kind !== 'cancelled') groups.past.push(s);
+  }
+  const startOf = (s: T) => (s.scheduled_start ? new Date(s.scheduled_start).getTime() : Number.MAX_SAFE_INTEGER);
+  groups.upcoming.sort((a, b) => startOf(a) - startOf(b));
+  return groups;
+}

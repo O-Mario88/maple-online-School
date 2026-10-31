@@ -59,6 +59,7 @@ describe('navFor', () => {
     for (const mock of [true, false]) {
       expect(href(mock, 'assignments')).toBe('/learn/assignments');
       expect(href(mock, 'library')).toBe('/learn/library');
+      expect(href(mock, 'lessons')).toBe('/learn/live');
     }
   });
 
@@ -66,7 +67,6 @@ describe('navFor', () => {
     const href = (mock: boolean, key: string) => navFor('learner', mock).find((i) => i.key === key)?.href;
     expect(href(true, 'lessons')).toBe('/learn/live');
     expect(href(true, 'library')).toBe('/learn/library');
-    expect(href(false, 'lessons')).toBe('/lessons');
     expect(href(true, 'projects')).toBe('/learn/projects');
     expect(href(true, 'exam')).toBe('/learn/paper');
   });

@@ -8,10 +8,10 @@ import { Icon } from '@/components/icon';
 import { useShell } from '@/components/ui';
 import { LearnerPhoneTop } from '@/features/learner/dashboard/DashPhone';
 import { BookingSheet, BootcampRow, Head, LiveClassCard, LiveClassRow, TutorCard, WeekRow } from '@/features/learner/live/HubCards';
+import { LiveClasses } from '@/features/learner/live/LiveClasses';
 import { BODY, CalendarHeader, DayStrip, dayTitle, INK, MonthGrid, ScheduleRow } from '@/features/learner/live/HubSchedule';
 import { type Hub, type HubState, TABS, useLiveHub } from '@/features/learner/live/useLiveHub';
 import { RefScale } from '@/features/public/home/RefScale';
-import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { mockData } from '@/lib/mock';
 
 /** The live hub reference's page (x 18–1168 at 1536 wide); the desktop layout uses its pixels. */
@@ -205,7 +205,8 @@ function Phone({ hub, s, avatar }: { hub: Hub; s: HubState; avatar: number }) {
 /** Inventory 24: the learner's live schedule and booking hub: calendar, bootcamps and 15-minute homework rescue. */
 export default function LiveScreen() {
   const mock = useMemo(() => mockData(), []);
-  if (!mock) return <PreviewScreen title="Live classes">{() => null}</PreviewScreen>;
+  // Real builds list the API's live sessions and lessons; design builds keep the reference's sample hub.
+  if (!mock) return <LiveClasses />;
   return <HubView hub={mock.learner.liveHub} avatar={mock.learner.dashboard.avatar} />;
 }
 

@@ -1,4 +1,4 @@
-import { liveAction, providerFor } from './live';
+import { groupSessions, liveAction, providerFor } from './live';
 
 const start = new Date(2026, 10, 2, 9, 0);
 const session = (over: Partial<Parameters<typeof liveAction>[0]> = {}) => ({
@@ -36,5 +36,23 @@ describe('providerFor', () => {
     expect(providerFor('https://us02web.zoom.us/j/123')).toBe('zoom');
     expect(providerFor('https://evil.example/meet')).toBeNull();
     expect(providerFor('http://meet.google.com/abc')).toBeNull();
+  });
+});
+
+describe('groupSessions', () => {
+  it('splits sessions into live now, coming up (soonest first) and past', () => {
+    const later = new Date(2026, 10, 3, 9, 0).toISOString();
+    const soon = new Date(2026, 10, 2, 14, 0).toISOString();
+    const sessions = [
+      { id: 1, ...session() },
+      { id: 2, ...session({ scheduled_start: later }) },
+      { id: 3, ...session({ scheduled_start: soon }) },
+      { id: 4, ...session({ status: 'completed', replay_url: 'https://vimeo.com/1' }) },
+      { id: 5, ...session({ status: 'cancelled', scheduled_start: later }) },
+    ];
+    const g = groupSessions(sessions, at(9, 10));
+    expect(g.live.map((s) => s.id)).toEqual([1]);
+    expect(g.upcoming.map((s) => s.id)).toEqual([3, 2]);
+    expect(g.past.map((s) => s.id)).toEqual([4]);
   });
 });
