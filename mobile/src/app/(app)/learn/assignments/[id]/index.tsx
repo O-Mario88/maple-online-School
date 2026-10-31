@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 
@@ -9,9 +9,9 @@ import { ScannerCard, ScannerPanel, VivaCard, VivaPanel } from '@/features/learn
 import { BLUE, BODY, INK } from '@/features/learner/work/MathText';
 import { WorkEditor } from '@/features/learner/work/WorkEditor';
 import { ChecklistCard, Crumbs, DetailsCard, DueChip, FilesCard, InstructionsCard, ProgressCard, ResourcesCard, SubmitButton } from '@/features/learner/work/WorkSide';
+import { LiveWork } from '@/features/learner/work/LiveWork';
 import { useWork, type Work, type WorkState } from '@/features/learner/work/useWork';
 import { RefScale } from '@/features/public/home/RefScale';
-import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import type { IconName } from '@/lib/icons';
 import { mockData } from '@/lib/mock';
 
@@ -168,7 +168,9 @@ function Toast({ text }: { text: string | null }) {
 /** Inventory 27: the assignment workspace: maths editor, code and files, camera scanner and 60-second viva. */
 export default function AssignmentWorkScreen() {
   const mock = useMemo(() => mockData(), []);
-  if (!mock) return <PreviewScreen back title="Assignment">{() => null}</PreviewScreen>;
+  const { id } = useLocalSearchParams<{ id: string }>();
+  // Real builds work on the API's assignment; design builds keep the reference's sample.
+  if (!mock) return <LiveWork id={Number(id)} />;
   return <WorkView w={mock.learner.assignmentWork} avatar={mock.learner.dashboard.avatar} />;
 }
 

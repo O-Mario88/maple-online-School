@@ -39,7 +39,7 @@ export function StudentWorkSection() {
 }
 
 function WorkRow({ item }: { item: WorkItem }) {
-  const open = () => router.push({ pathname: '/assignment/[id]', params: { id: String(item.assessmentId) } });
+  const open = () => router.push({ pathname: '/learn/assignments/[id]', params: { id: String(item.assessmentId) } });
   switch (item.state) {
     case 'todo':
       return (

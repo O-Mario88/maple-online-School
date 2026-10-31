@@ -1,5 +1,5 @@
 import type { Assessment, Grade, Submission } from './types';
-import { studentWork, toMark } from './work';
+import { answerProblem, studentWork, submittedAnswer, toMark } from './work';
 
 const assignment = (id: number, title: string): Assessment =>
   ({
@@ -62,5 +62,27 @@ describe('toMark', () => {
     ];
     const pending = toMark(subs, [grade(1, 12, '5.00')]);
     expect(pending.map((s) => s.id)).toEqual([11, 10]);
+  });
+});
+
+describe('submittedAnswer', () => {
+  it('reads the written answer a learner sent', () => {
+    expect(submittedAnswer({ ...submission(10, 1), answers_data: { essay: 'x = 2 or x = 3' } })).toBe('x = 2 or x = 3');
+  });
+
+  it('says so when the answer has no written part', () => {
+    expect(submittedAnswer({ ...submission(10, 1), answers_data: {} })).toBe('');
+    expect(submittedAnswer({ ...submission(10, 1), answers_data: { essay: 42 } })).toBe('');
+  });
+});
+
+describe('answerProblem', () => {
+  it('accepts an answer with some words in it', () => {
+    expect(answerProblem('Half of 6 is 3, so add 9.')).toBeNull();
+  });
+
+  it('asks for an answer, and for a shorter one when it is too long', () => {
+    expect(answerProblem('   ')).toBe('Write your answer first.');
+    expect(answerProblem('a'.repeat(20_001))).toBe('Your answer is too long. Please shorten it.');
   });
 });

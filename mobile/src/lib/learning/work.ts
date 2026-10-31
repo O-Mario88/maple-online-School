@@ -46,3 +46,19 @@ export function toMark(submissions: Submission[], grades: Grade[]): Submission[]
     .filter((s) => !graded.has(s.id))
     .sort((a, b) => (a.submitted_at ?? '').localeCompare(b.submitted_at ?? ''));
 }
+
+/** The longest written answer the API accepts. */
+export const MAX_ANSWER = 20_000;
+
+/** The written answer a learner sent, or '' when the submission has none. */
+export function submittedAnswer(submission: Submission): string {
+  const essay = (submission.answers_data as { essay?: unknown }).essay;
+  return typeof essay === 'string' ? essay : '';
+}
+
+/** Why an answer can't be sent yet, or null when it can. */
+export function answerProblem(answer: string): string | null {
+  if (answer.trim() === '') return 'Write your answer first.';
+  if (answer.length > MAX_ANSWER) return 'Your answer is too long. Please shorten it.';
+  return null;
+}

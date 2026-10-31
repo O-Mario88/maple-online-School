@@ -1,5 +1,5 @@
 import { Image } from 'expo-image';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 
@@ -11,9 +11,9 @@ import { AnnotatedStrip, AnnotatedViewer, VideoFeedback } from '@/features/learn
 import { raceSummary } from '@/features/learner/cbc/CbcParts';
 import { type Feedback, GradedChip, PracticeSheet, RaceBreakdown, ScoreCard, TeacherCard } from '@/features/learner/feedback/FeedbackParts';
 import { BLUE, BODY, GREEN, INK } from '@/features/learner/work/MathText';
+import { LiveFeedback } from '@/features/learner/work/LiveWork';
 import { Crumbs } from '@/features/learner/work/WorkSide';
 import { RefScale } from '@/features/public/home/RefScale';
-import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { identifierFor } from '@/lib/cbc';
 import { mockData } from '@/lib/mock';
 
@@ -202,7 +202,9 @@ function Phone({ f, a, avatar }: { f: Feedback; a: Actions; avatar: number }) {
 /** Inventory 28: marked work: rubric, annotated pages, the teacher's voice and video feedback, and one-tap practice. */
 export default function FeedbackScreen() {
   const mock = useMemo(() => mockData(), []);
-  if (!mock) return <PreviewScreen back title="Feedback">{() => null}</PreviewScreen>;
+  const { id } = useLocalSearchParams<{ id: string }>();
+  // Real builds show the teacher's mark and comment from the API; design builds keep the reference's sample.
+  if (!mock) return <LiveFeedback id={Number(id)} />;
   return <FeedbackView f={mock.learner.assignmentFeedback} avatar={mock.learner.dashboard.avatar} />;
 }
 

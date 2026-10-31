@@ -46,7 +46,13 @@ function LiveAssignments() {
               title={w.title}
               detail={w.state === 'graded' && w.feedback ? w.feedback : `Out of ${w.maxScore} marks`}
               badge={<Badge label={w.state === 'graded' ? `${w.score}/${w.maxScore}` : LIVE_LABEL[w.state]} tone={LIVE_TONE[w.state]} />}
-              onPress={() => router.push({ pathname: '/assignment/[id]', params: { id: String(w.assessmentId) } })}
+              onPress={() =>
+                router.push(
+                  w.state === 'graded'
+                    ? { pathname: '/learn/assignments/[id]/feedback', params: { id: String(w.assessmentId) } }
+                    : { pathname: '/learn/assignments/[id]', params: { id: String(w.assessmentId) } },
+                )
+              }
             />
           ))}
         </Card>
