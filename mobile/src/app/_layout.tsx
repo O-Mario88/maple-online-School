@@ -1,0 +1,92 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
+import * as SplashScreen from 'expo-splash-screen';
+import { useEffect, useState } from 'react';
+import { useColorScheme } from 'react-native';
+
+import { ToastHost } from '@/components/ui/ToastHost';
+import { AuthProvider, useAuth } from '@/lib/auth/auth-context';
+
+// Signed-out visitors who open a signed-in address (such as /) land on sign-in,
+// not on whichever public page happens to be first.
+export const unstable_settings = { anchor: 'sign-in' };
+
+SplashScreen.preventAutoHideAsync();
+
+export default function RootLayout() {
+  const colorScheme = useColorScheme();
+  const [queryClient] = useState(() => new QueryClient({ defaultOptions: { queries: { retry: 1 } } }));
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+          <RootNavigator />
+          <ToastHost />
+        </ThemeProvider>
+      </AuthProvider>
+    </QueryClientProvider>
+  );
+}
+
+function RootNavigator() {
+  const { status } = useAuth();
+
+  useEffect(() => {
+    if (status !== 'restoring') {
+      SplashScreen.hideAsync();
+    }
+  }, [status]);
+
+  if (status === 'restoring') {
+    return null; // The splash screen stays up while the saved session is checked.
+  }
+
+  const signedIn = status === 'signedIn';
+  return (
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Protected guard={signedIn}>
+        <Stack.Screen name="(app)" />
+        {/* The live classroom takes the whole screen, outside the app shell. */}
+        <Stack.Screen name="classroom/[slug]" />
+      </Stack.Protected>
+      <Stack.Protected guard={!signedIn}>
+        <Stack.Screen name="sign-in" />
+        <Stack.Screen name="sign-up" />
+        <Stack.Screen name="forgot-password" />
+      </Stack.Protected>
+      {/* Opened from emailed links, whether or not someone is signed in. */}
+      <Stack.Screen name="activate" />
+      <Stack.Screen name="reset-password" />
+      {/* Public pages (PUBLIC_PREVIEWS in lib/navigation): open to everyone. */}
+      <Stack.Screen name="welcome" />
+      <Stack.Screen name="courses/[slug]" />
+      <Stack.Screen name="explore" />
+      <Stack.Screen name="schools" />
+      <Stack.Screen name="p/digest/[token]" />
+      <Stack.Screen name="pay/[token]" />
+      <Stack.Screen name="shorts" />
+      <Stack.Screen name="live/[slug]" />
+      <Stack.Screen name="past-papers/[board]/[subject]/[year]" />
+      {/* Teacher storefronts at /@handle; other unknown addresses show "Page not found" there. */}
+      <Stack.Screen name="[handle]" />
+      <Stack.Screen name="event" />
+      <Stack.Screen name="digest" />
+      <Stack.Screen name="pay" />
+      <Stack.Screen name="verify" />
+      <Stack.Screen name="help" />
+      <Stack.Screen name="get-started" />
+      <Stack.Screen name="qr-sign-in" />
+      <Stack.Screen name="qr-login" />
+      <Stack.Screen name="consent" />
+      <Stack.Screen name="guardian-consent" />
+      <Stack.Screen name="claim-child" />
+      <Stack.Screen name="pricing" />
+      <Stack.Screen name="curriculums" />
+      <Stack.Screen name="teachers" />
+      <Stack.Screen name="about" />
+      <Stack.Screen name="terms" />
+      <Stack.Screen name="privacy" />
+    </Stack>
+  );
+}

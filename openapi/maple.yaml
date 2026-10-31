@@ -1,0 +1,2400 @@
+openapi: 3.1.0
+info:
+  title: Maple API
+  version: 0.17.0
+  description: |
+    The contract between the Maple apps and the Go API. Paths not listed here
+    are still served by the Django API through the Go service's forwarder,
+    under the same /api/v1/ prefix. Each module moved to Go is added here first.
+servers:
+  - url: http://localhost:8080
+    description: Local Go API
+security:
+  - bearer: []
+paths:
+  /api/health/:
+    get:
+      summary: Service and database health
+      security: []
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Health" }
+        "503":
+          description: The database is unreachable
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Health" }
+  /api/v1/auth/token/:
+    post:
+      summary: Sign in with email and password
+      description: Limited to 10 attempts per minute per IP address.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LoginRequest" }
+      responses:
+        "200":
+          description: Signed in
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/TokenPair" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+  /api/v1/auth/token/refresh/:
+    post:
+      summary: Swap a refresh token for a new token pair
+      description: Each refresh token works once. Reusing one returns 401.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/RefreshRequest" }
+      responses:
+        "200":
+          description: New tokens
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/TokenPair" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+  /api/v1/auth/logout/:
+    post:
+      summary: Sign out by revoking the refresh token
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/RefreshRequest" }
+      responses:
+        "204": { description: Signed out }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+  /api/v1/auth/me/:
+    get:
+      summary: The signed-in user, their school memberships and approved children
+      responses:
+        "200":
+          description: Current user
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Me" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+  /api/v1/assessments/assessment/:
+    get:
+      summary: Assignments the user can see
+      description: Staff see every assignment by colleagues in their schools, including drafts. Everyone else sees published ones only.
+      parameters: [{ $ref: "#/components/parameters/Page" }]
+      responses:
+        "200":
+          description: A page of assignments
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AssessmentPage" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+    post:
+      summary: Create an assignment (school staff only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/NewAssessment" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Assessment" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /api/v1/assessments/assessment/{id}/:
+    get:
+      summary: One assignment
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer, format: int64 } }
+      responses:
+        "200":
+          description: The assignment
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Assessment" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /api/v1/assessments/submission/:
+    get:
+      summary: Submissions the user can see
+      description: Students see their own. Staff see submissions from their schools.
+      parameters: [{ $ref: "#/components/parameters/Page" }]
+      responses:
+        "200":
+          description: A page of submissions
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SubmissionPage" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+    post:
+      summary: Submit work for an assignment (students only, once per assignment)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/NewSubmission" }
+      responses:
+        "201":
+          description: Submitted
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Submission" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409":
+          description: Already submitted
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+  /api/v1/grading/records/:
+    get:
+      summary: Grades the user can see
+      description: Students see their own, parents their approved children's, staff their schools'.
+      parameters:
+        - { $ref: "#/components/parameters/Page" }
+        - { name: student, in: query, required: false, description: "Parents only: one approved child's grades", schema: { type: integer, format: int64 } }
+      responses:
+        "200":
+          description: A page of grades
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/GradePage" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+    post:
+      summary: Record or update the grade for a submission (school staff only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/NewGrade" }
+      responses:
+        "200":
+          description: Grade updated
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Grade" }
+        "201":
+          description: Grade recorded
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Grade" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /api/v1/classes/:
+    get:
+      summary: Classes the user can see
+      description: Leaders see their schools' classes, teachers the classes they teach, students (and approved parents) enrolled classes.
+      parameters: [{ $ref: "#/components/parameters/Page" }]
+      responses:
+        "200":
+          description: A page of classes
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ClassPage" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+    post:
+      summary: Create a class (school leaders only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/NewClass" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Class" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /api/v1/classes/{id}/:
+    get:
+      summary: One class
+      parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+      responses:
+        "200":
+          description: The class
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Class" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /api/v1/classes/{id}/roster/:
+    get:
+      summary: Students enrolled in a class (its teacher and school leaders only)
+      parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+      responses:
+        "200":
+          description: The class and its students
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Roster" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /api/v1/class-enrollments/:
+    post:
+      summary: Enrol a student of the school in a class (school leaders only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [enrolled_class, student]
+              properties:
+                enrolled_class: { type: integer, format: int64 }
+                student: { type: integer, format: int64 }
+      responses:
+        "201": { description: Enrolled }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /api/v1/attendance/daily/:
+    get:
+      summary: Register marks the user can see
+      description: Staff see their schools' registers, students their own, parents their approved children's.
+      parameters:
+        - { $ref: "#/components/parameters/Page" }
+        - { name: record_date, in: query, schema: { type: string, format: date } }
+        - { name: class, in: query, schema: { type: integer, format: int64 } }
+        - { name: student, in: query, schema: { type: integer, format: int64 } }
+      responses:
+        "200":
+          description: A page of marks
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/MarkPage" }
+    post:
+      summary: Save a class register for a day (the class teacher or a school leader)
+      description: Saving again for the same students and date updates their marks, so retries are safe.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/RegisterRequest" }
+      responses:
+        "200":
+          description: Saved
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [saved, class, record_date]
+                properties:
+                  saved: { type: integer }
+                  class: { type: integer, format: int64 }
+                  record_date: { type: string, format: date }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409":
+          description: No school term covers the date
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+  /api/v1/grading/subjects/:
+    get:
+      summary: Subject marks the user can see
+      description: Staff see their schools'. Students and approved parents see marks only for terms whose report card is published.
+      parameters:
+        - { $ref: "#/components/parameters/Page" }
+        - { name: class, in: query, schema: { type: integer, format: int64 } }
+        - { name: term, in: query, schema: { type: integer, format: int64 } }
+        - { name: student, in: query, schema: { type: integer, format: int64 } }
+      responses:
+        "200":
+          description: A page of subject marks
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SubjectMarkPage" }
+    post:
+      summary: Enter a class's marks for a term (class teacher or school leader)
+      description: Formative out of 20 plus summative out of 80; the total and grade are worked out. Saving again updates. Marks behind a published report are locked (409).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/MarksRequest" }
+      responses:
+        "200": { description: Saved }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409":
+          description: No term, or the report is already published
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+  /api/v1/grading/reports/:
+    get:
+      summary: Report cards the user can see (families see published ones only)
+      parameters:
+        - { $ref: "#/components/parameters/Page" }
+        - { name: term, in: query, schema: { type: integer, format: int64 } }
+        - { name: student, in: query, schema: { type: integer, format: int64 } }
+      responses:
+        "200":
+          description: A page of report cards
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ReportPage" }
+  /api/v1/grading/reports/generate/:
+    post:
+      summary: Prepare draft report cards for a class (class teacher or school leader)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [class]
+              properties:
+                class: { type: integer, format: int64 }
+                term: { type: integer, format: int64 }
+      responses:
+        "200":
+          description: Drafts written; published cards are left alone
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [generated, already_published, term]
+                properties:
+                  generated: { type: integer }
+                  already_published: { type: integer }
+                  term: { type: integer, format: int64 }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409":
+          description: No term
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+  /api/v1/grading/reports/{id}/:
+    get:
+      summary: One report card with its subject marks
+      parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+      responses:
+        "200":
+          description: The report card
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Report" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    patch:
+      summary: Add remarks, or publish (head's remarks, promotion and publishing are for school leaders)
+      parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                class_teacher_remarks: { type: string, maxLength: 2000 }
+                headteacher_remarks: { type: string, maxLength: 2000 }
+                promotion_status: { type: string }
+                is_published: { type: boolean }
+      responses:
+        "200":
+          description: The updated report card
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Report" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /api/v1/scheduling/terms/:
+    get:
+      summary: Terms of the user's schools
+      responses: { "200": { description: "{count, results: Term[]}" } }
+    post:
+      summary: Add a term (school leaders); making it active deactivates the others
+      responses: { "201": { description: The term }, "403": { $ref: "#/components/responses/Forbidden" }, "409": { description: Name already used } }
+  /api/v1/scheduling/rooms/:
+    get:
+      summary: Rooms of the user's schools (staff)
+      responses: { "200": { description: "{count, results: Room[]}" } }
+    post:
+      summary: Add a room (school leaders)
+      responses: { "201": { description: The room }, "403": { $ref: "#/components/responses/Forbidden" } }
+  /api/v1/scheduling/timetable/:
+    get:
+      summary: Timetable slots the user can see
+      description: Leaders see their schools', teachers the lessons they teach, students and approved parents their classes'.
+      parameters:
+        - { name: day, in: query, description: "0 = Monday … 6 = Sunday", schema: { type: integer, minimum: 0, maximum: 6 } }
+        - { name: class, in: query, schema: { type: integer, format: int64 } }
+        - { name: term, in: query, schema: { type: integer, format: int64 } }
+      responses:
+        "200":
+          description: The slots
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [count, results]
+                properties:
+                  count: { type: integer }
+                  results: { type: array, items: { $ref: "#/components/schemas/Slot" } }
+    post:
+      summary: Add a lesson to the timetable (school leaders); refuses clashes of class, teacher or room
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [class, term, day_of_week, start_time, end_time]
+              properties:
+                class: { type: integer, format: int64 }
+                term: { type: integer, format: int64 }
+                day_of_week: { type: integer, minimum: 0, maximum: 6 }
+                start_time: { type: string, example: "08:00" }
+                end_time: { type: string, example: "09:00" }
+                room: { type: integer, format: int64 }
+                teacher: { type: integer, format: int64, description: Defaults to the class teacher }
+      responses:
+        "201":
+          description: The slot
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Slot" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "409": { description: "Clash: {code: clash, detail, clashes[]}" }
+  /api/v1/institutions/:
+    get:
+      summary: Schools the user belongs to
+      responses: { "200": { description: "{count, results: Institution[]}" } }
+    post:
+      summary: Register a school; the caller (a school-admin or Maple admin account) becomes its headteacher
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, country_code]
+              properties:
+                name: { type: string, maxLength: 255 }
+                country_code: { type: string, enum: [UG, KE, RW] }
+                school_level: { type: string, enum: [primary, secondary], default: secondary }
+      responses:
+        "201":
+          description: The school
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [id, name, country_code, school_level]
+                properties:
+                  id: { type: integer, format: int64 }
+                  name: { type: string }
+                  country_code: { type: string }
+                  school_level: { type: string }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /api/v1/institutions/{id}/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    patch:
+      summary: Update a school's details (school leaders)
+      responses: { "200": { description: The school }, "403": { $ref: "#/components/responses/Forbidden" }, "404": { $ref: "#/components/responses/NotFound" } }
+  /api/v1/institutions/{id}/bulk_invite/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    post:
+      summary: Invite staff or students by email (school leaders)
+      description: New people get an account with no usable password and a pending membership; they set a password with "Forgot password".
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [emails, role]
+              properties:
+                emails: { type: array, items: { type: string, format: email } }
+                role: { type: string, description: "headteacher, deputy, registrar, dos, class_teacher, subject_teacher, librarian, counselor, exam_officer, ict_admin or student" }
+      responses:
+        "200":
+          description: "{invited, role, detail}"
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [invited, role, detail]
+                properties:
+                  invited: { type: integer }
+                  role: { type: string }
+                  detail: { type: string }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /api/v1/institution-memberships/:
+    get:
+      summary: Memberships the user can see (their own, plus their schools' for leaders)
+      responses: { "200": { description: "{count, results: InstitutionMembership[]}" } }
+  /api/v1/institution-memberships/{id}/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    patch:
+      summary: Change a member's role or status (school leaders)
+      responses: { "200": { description: The membership }, "403": { $ref: "#/components/responses/Forbidden" }, "409": { description: Would remove the school's last active leader } }
+  /api/v1/institution-memberships/{id}/accept/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    post:
+      summary: Accept your own pending invitation
+      responses: { "200": { description: The membership }, "404": { $ref: "#/components/responses/NotFound" } }
+  /api/v1/family/links/:
+    get:
+      summary: Parent-child links you can see
+      description: >-
+        Admissions staff (leaders and the registrar) see links for learners at
+        their schools; parents see their own. Newest first.
+      parameters:
+        - { name: status, in: query, schema: { type: string, enum: [pending, approved, declined] } }
+        - { name: page, in: query, schema: { type: integer } }
+      responses:
+        "200":
+          description: A page of links
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [count, results]
+                properties:
+                  count: { type: integer }
+                  next: { type: string, nullable: true }
+                  previous: { type: string, nullable: true }
+                  results: { type: array, items: { $ref: "#/components/schemas/FamilyLink" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+  /api/v1/family/links/{id}/approve/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    post:
+      summary: Approve a parent's link to a learner (admissions staff at the learner's school)
+      responses:
+        "200": { description: The link, content: { application/json: { schema: { $ref: "#/components/schemas/FamilyLink" } } } }
+        "403": { description: Not admissions staff at the learner's school }
+        "404": { description: No such link, or not yours to see }
+  /api/v1/family/links/{id}/decline/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    post:
+      summary: Decline or revoke a parent's link to a learner
+      responses:
+        "200": { description: The link, content: { application/json: { schema: { $ref: "#/components/schemas/FamilyLink" } } } }
+        "403": { description: Not admissions staff at the learner's school }
+        "404": { description: No such link, or not yours to see }
+  /api/v1/inbox/:
+    get:
+      summary: Your notifications, newest first
+      parameters:
+        - { name: unread, in: query, description: "1 for unread only", schema: { type: string, enum: ["1"] } }
+        - { name: page, in: query, schema: { type: integer } }
+      responses:
+        "200":
+          description: A page of notifications
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [count, results]
+                properties:
+                  count: { type: integer }
+                  next: { type: string, nullable: true }
+                  previous: { type: string, nullable: true }
+                  results: { type: array, items: { $ref: "#/components/schemas/Notification" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+  /api/v1/inbox/summary/:
+    get:
+      summary: How many notifications are unread
+      responses:
+        "200":
+          description: The unread count
+          content: { application/json: { schema: { type: object, required: [unread], properties: { unread: { type: integer } } } } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+  /api/v1/inbox/{id}/read/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    post:
+      summary: Mark one of your notifications read
+      responses:
+        "204": { description: Marked read }
+        "404": { description: Not one of yours }
+  /api/v1/inbox/read-all/:
+    post:
+      summary: Mark all your notifications read
+      responses:
+        "204": { description: All marked read }
+  /api/v1/insights/classes/{id}/learners/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    get:
+      summary: Which learners in a class need their teacher, most urgent first
+      description: >-
+        For the class teacher and the school's leaders. Each learner is rated
+        high, medium or ok from the last 30 days of attendance, work handed in
+        and marks, with the reasons in plain words.
+      responses:
+        "200":
+          description: The class and its learners
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [class, learners]
+                properties:
+                  class: { $ref: "#/components/schemas/NamedRef" }
+                  learners: { type: array, items: { $ref: "#/components/schemas/LearnerInsight" } }
+        "404": { description: Not a class you teach or lead }
+  /api/v1/insights/interventions/:
+    get:
+      summary: A learner's interventions (staff who teach them or lead their school)
+      parameters: [{ name: student, in: query, required: true, schema: { type: integer, format: int64 } }]
+      responses:
+        "200":
+          description: Newest first
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [count, results]
+                properties:
+                  count: { type: integer }
+                  results: { type: array, items: { $ref: "#/components/schemas/Intervention" } }
+    post:
+      summary: Record what you did about a learner; a parent message goes to their confirmed parents
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [class, student, kind, note]
+              properties:
+                class: { type: integer, format: int64 }
+                student: { type: integer, format: int64 }
+                kind: { type: string, enum: [parent_message, remedial_work, meeting, note] }
+                note: { type: string, maxLength: 2000 }
+      responses:
+        "201": { description: Recorded, content: { application/json: { schema: { $ref: "#/components/schemas/Intervention" } } } }
+        "400": { description: Unknown kind, empty message or learner not in the class }
+        "404": { description: Not a class you teach or lead }
+  /api/v1/messages/contacts/:
+    get:
+      summary: Staff a confirmed parent can write to about their child
+      parameters: [{ name: student, in: query, required: true, schema: { type: integer, format: int64 } }]
+      responses:
+        "200":
+          description: The child's teachers and the school's leaders
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [count, results]
+                properties:
+                  count: { type: integer }
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      required: [id, name, role]
+                      properties: { id: { type: integer, format: int64 }, name: { type: string }, role: { type: string } }
+        "404": { description: Not your confirmed child }
+  /api/v1/messages/threads/:
+    get:
+      summary: Conversations you take part in, or can read as a school leader
+      parameters: [{ name: page, in: query, schema: { type: integer } }]
+      responses:
+        "200":
+          description: Most recent first
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [count, results]
+                properties:
+                  count: { type: integer }
+                  next: { type: string, nullable: true }
+                  previous: { type: string, nullable: true }
+                  results: { type: array, items: { $ref: "#/components/schemas/ThreadSummary" } }
+    post:
+      summary: Start a conversation about a learner
+      description: >-
+        Staff who teach the learner or lead their school write to the
+        learner's confirmed parents. A confirmed parent names the staff member
+        (one of the child's teachers or the school's leaders).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [student, subject, body]
+              properties:
+                student: { type: integer, format: int64 }
+                staff: { type: integer, format: int64, description: Required for parents }
+                subject: { type: string, maxLength: 200 }
+                body: { type: string, maxLength: 4000 }
+      responses:
+        "201": { description: The conversation, content: { application/json: { schema: { $ref: "#/components/schemas/Thread" } } } }
+        "400": { description: Missing subject or body, or a staff member the parent can't write to }
+        "404": { description: Not a learner you teach, lead or parent }
+  /api/v1/messages/threads/{id}/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    get:
+      summary: A conversation with its messages, oldest first
+      responses:
+        "200": { description: The conversation, content: { application/json: { schema: { $ref: "#/components/schemas/Thread" } } } }
+        "404": { description: Not yours to see }
+  /api/v1/messages/threads/{id}/messages/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    post:
+      summary: Reply (the staff member and confirmed parents only)
+      requestBody:
+        required: true
+        content: { application/json: { schema: { type: object, required: [body], properties: { body: { type: string, maxLength: 4000 } } } } }
+      responses:
+        "201": { description: The conversation, content: { application/json: { schema: { $ref: "#/components/schemas/Thread" } } } }
+        "403": { description: School leaders read but don't write }
+        "404": { description: Not yours to see }
+  /api/v1/curriculum/full-tree/:
+    get:
+      summary: The course catalog (levels, classes, terms, subjects, topics, lessons)
+      description: Public and cached for ten minutes. Same JSON shape as the Django catalog.
+      security: []
+      responses: { "200": { description: "{version, updatedAt, levels[]}" } }
+  /api/v1/curriculum/programmes/{country}/:
+    get:
+      summary: A country's national curriculum
+      description: >-
+        Public and cacheable. Levels in grade order, each class level's offered
+        subjects (compulsory first), and the track's selection rules (elective
+        limits, alternatives, components, exams, A-Level groups and combinations).
+      security: []
+      parameters: [{ name: country, in: path, required: true, schema: { type: string, example: UG } }]
+      responses:
+        "200":
+          description: The programme
+          content: { application/json: { schema: { $ref: "#/components/schemas/Programme" } } }
+        "404": { description: No curriculum for that country }
+  /api/v1/curriculum/countries/:
+    get:
+      summary: Countries
+      responses: { "200": { description: "{count, results: Country[]}" }, "401": { $ref: "#/components/responses/Unauthorized" } }
+  /api/v1/curriculum/class-levels/:
+    get:
+      summary: Class levels (S1, S2 …)
+      responses: { "200": { description: "{count, results: ClassLevel[]}" }, "401": { $ref: "#/components/responses/Unauthorized" } }
+  /api/v1/curriculum/subjects/:
+    get:
+      summary: Subjects with their topics
+      responses:
+        "200":
+          description: "{count, results: CurriculumSubject[]}"
+        "401": { $ref: "#/components/responses/Unauthorized" }
+  /api/v1/curriculum/subjects/{id}/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    get:
+      summary: One subject with its topics
+      responses:
+        "200":
+          description: The subject
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CurriculumSubject" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /api/v1/curriculum/topics/:
+    get:
+      summary: Topics, optionally for one subject or class level
+      parameters:
+        - { name: subject, in: query, schema: { type: integer, format: int64 } }
+        - { name: class_level, in: query, schema: { type: integer, format: int64 } }
+      responses: { "200": { description: "{count, results: CurriculumTopic[]}" }, "401": { $ref: "#/components/responses/Unauthorized" } }
+  /api/v1/curriculum/topics/{id}/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    get:
+      summary: One topic
+      responses:
+        "200":
+          description: The topic
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CurriculumTopic" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /api/v1/curriculum/topic-competencies/:
+    get:
+      summary: Competencies, optionally for one topic
+      parameters: [{ name: topic, in: query, schema: { type: integer, format: int64 } }]
+      responses: { "200": { description: "{count, results: Competency[]}" }, "401": { $ref: "#/components/responses/Unauthorized" } }
+  /api/v1/lessons/lesson/:
+    get:
+      summary: Lessons the user can see
+      description: Class teachers and school leaders see every lesson; enrolled students and approved parents see lessons that aren't drafts.
+      parameters:
+        - { $ref: "#/components/parameters/Page" }
+        - { name: parent_class, in: query, schema: { type: integer, format: int64 } }
+        - { name: topic, in: query, schema: { type: integer, format: int64 } }
+        - { name: access_mode, in: query, schema: { type: string, enum: [draft, published, premium] } }
+      responses:
+        "200":
+          description: A page of lessons, earliest first
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LessonPage" }
+    post:
+      summary: Plan a lesson (the class's teacher or the school's leaders)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LessonInput" }
+      responses:
+        "201":
+          description: The lesson
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Lesson" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /api/v1/lessons/lesson/{id}/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    get:
+      summary: One lesson
+      responses:
+        "200":
+          description: The lesson
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Lesson" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    patch:
+      summary: Change a lesson; leaving draft sets published_at
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LessonInput" }
+      responses:
+        "200":
+          description: The lesson
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Lesson" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+    delete:
+      summary: Delete a lesson nobody has attended
+      responses: { "204": { description: Deleted with its notes and recordings }, "409": { description: Has attendance or other history; set it to draft instead } }
+  /api/v1/lessons/lesson-note/:
+    get:
+      summary: Notes for a lesson the user can see
+      parameters: [{ name: lesson, in: query, required: true, schema: { type: integer, format: int64 } }]
+      responses: { "200": { description: "{count, results: [{id, content_blocks, created_at, updated_at, lesson}]}" }, "404": { $ref: "#/components/responses/NotFound" } }
+    post:
+      summary: Add notes (content_blocks is a JSON object or list)
+      responses: { "201": { description: The note }, "403": { $ref: "#/components/responses/Forbidden" } }
+  /api/v1/lessons/lesson-note/{id}/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    patch:
+      summary: Replace a note's content_blocks
+      responses: { "200": { description: The note } }
+    delete:
+      summary: Delete a note
+      responses: { "204": { description: Deleted } }
+  /api/v1/lessons/lesson-recording/:
+    get:
+      summary: Recordings for a lesson the user can see
+      parameters: [{ name: lesson, in: query, required: true, schema: { type: integer, format: int64 } }]
+      responses: { "200": { description: "{count, results: [{id, url, duration, created_at, lesson}]}" } }
+    post:
+      summary: Add a recording link (http or https; duration in seconds)
+      responses: { "201": { description: The recording }, "403": { $ref: "#/components/responses/Forbidden" } }
+  /api/v1/lessons/lesson-recording/{id}/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    delete:
+      summary: Delete a recording
+      responses: { "204": { description: Deleted } }
+  /api/v1/lessons/lesson-attendance/:
+    get:
+      summary: Attendance for a lesson; learners see only their own rows
+      parameters: [{ name: lesson, in: query, required: true, schema: { type: integer, format: int64 } }]
+      responses: { "200": { description: "{count, results: [{id, status, duration_minutes, recorded_at, lesson, student, student_name}]}" } }
+    post:
+      summary: Record one enrolled student's attendance; repeating updates the same row
+      responses: { "201": { description: Recorded }, "200": { description: Updated }, "400": { $ref: "#/components/responses/BadRequest" }, "403": { $ref: "#/components/responses/Forbidden" } }
+  /api/v1/live-sessions/live-session/:
+    get:
+      summary: Live sessions for lessons the user can see
+      parameters:
+        - { $ref: "#/components/parameters/Page" }
+        - { name: status, in: query, schema: { type: string, enum: [scheduled, completed, cancelled] } }
+      responses:
+        "200":
+          description: A page of sessions, soonest first
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LiveSessionPage" }
+    post:
+      summary: Add a live session to a lesson (the class's teacher or the school's leaders)
+      description: One per lesson. The link must be Google Meet (https://meet.google.com/...) or, with provider zoom, a zoom.us link.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LiveSessionInput" }
+      responses:
+        "201":
+          description: The session
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LiveSession" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /api/v1/live-sessions/live-session/{id}/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    get:
+      summary: One live session
+      responses:
+        "200":
+          description: The session
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LiveSession" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    patch:
+      summary: Change a session; completing one without a replay queues the recording sync
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LiveSessionInput" }
+      responses:
+        "200":
+          description: The session
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LiveSession" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /api/v1/live-sessions/live-session/provision-webinar/:
+    post:
+      summary: Not available yet; paste a Meet or Zoom link instead
+      responses: { "503": { description: Automatic meeting links aren't set up } }
+  /api/v1/live-sessions/session-reminder/:
+    get:
+      summary: Reminders for a session the user runs
+      parameters: [{ name: session, in: query, required: true, schema: { type: integer, format: int64 } }]
+      responses: { "200": { description: "{count, results: [{id, send_at, status, session}]}" }, "403": { $ref: "#/components/responses/Forbidden" } }
+    post:
+      summary: Add a reminder between now and the session's start
+      responses: { "201": { description: The reminder }, "400": { $ref: "#/components/responses/BadRequest" } }
+  /api/v1/live-sessions/session-reminder/{id}/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    delete:
+      summary: Remove a reminder that hasn't been sent
+      responses: { "204": { description: Removed } }
+  /api/v1/live-sessions/missed-recovery/:
+    get:
+      summary: Catch-up work for a session; learners see only their own
+      parameters: [{ name: session, in: query, required: true, schema: { type: integer, format: int64 } }]
+      responses: { "200": { description: "{count, results: Recovery[]}" } }
+    post:
+      summary: Open catch-up work for an enrolled student who missed the session (staff)
+      responses: { "201": { description: The recovery }, "400": { $ref: "#/components/responses/BadRequest" }, "403": { $ref: "#/components/responses/Forbidden" } }
+  /api/v1/live-sessions/missed-recovery/{id}/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    patch:
+      summary: The student writes and submits; staff set the recording link and verify
+      responses: { "200": { description: The recovery }, "403": { $ref: "#/components/responses/Forbidden" } }
+  /api/v1/auth/register/:
+    post:
+      summary: Create a student, teacher or school-admin account
+      description: Sends an activation link by email. Administrators are never created here; parents are added through onboard-student.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/SignUpInput" }
+      responses:
+        "201":
+          description: The new account (email not yet verified)
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SignUpResult" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+  /api/v1/auth/onboard-student/:
+    post:
+      summary: Create a student together with their parent or guardian
+      description: A parent account created here is linked at once and emailed a link to set a password. An existing parent account must approve the link.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/OnboardStudentInput" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AuthMessage" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+  /api/v1/auth/activate/:
+    post:
+      summary: Verify an email address with the emailed link
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LinkToken" }
+      responses:
+        "200":
+          description: Verified
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AuthMessage" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+  /api/v1/auth/resend-activation/:
+    post:
+      summary: Send a new activation link
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/EmailOnly" }
+      responses:
+        "200":
+          description: Always the same reply
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AuthMessage" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+  /api/v1/auth/forgot-password/:
+    post:
+      summary: Email a password-reset link
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/EmailOnly" }
+      responses:
+        "200":
+          description: Always the same reply, whether or not the account exists
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AuthMessage" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+  /api/v1/auth/reset-password/:
+    post:
+      summary: Choose a new password with the emailed link
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ResetPasswordInput" }
+      responses:
+        "200":
+          description: Password changed
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AuthMessage" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+  /api/v1/library/items/:
+    get:
+      summary: Library items the user can see
+      description: Uploaders and their schools' leaders always see their items; administrators see platform-wide items (to review them); everyone else sees published platform-wide items, their schools' items, and items shared with their classes.
+      parameters:
+        - { $ref: "#/components/parameters/Page" }
+        - { name: q, in: query, description: Matches title or description, schema: { type: string } }
+        - { name: content_type, in: query, schema: { type: string } }
+        - { name: subject, in: query, schema: { type: integer, format: int64 } }
+        - { name: topic, in: query, schema: { type: integer, format: int64 } }
+        - { name: class_level, in: query, schema: { type: integer, format: int64 } }
+        - { name: status, in: query, description: For example under_review (the review queue), schema: { type: string } }
+        - { name: mine, in: query, description: "1 for only the user's own items", schema: { type: string } }
+      responses:
+        "200":
+          description: A page of items
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LibraryItemPage" }
+    post:
+      summary: Add an item by link (teachers, school staff, administrators)
+      description: Platform-wide items from anyone but an administrator wait for review (under_review).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LibraryItemInput" }
+      responses:
+        "201":
+          description: The item
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LibraryItem" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /api/v1/library/items/{id}/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+    get:
+      summary: One item
+      responses:
+        "200":
+          description: The item
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LibraryItem" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    patch:
+      summary: Change an item (its uploader); platform-wide items go back to review
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LibraryItemInput" }
+      responses:
+        "200":
+          description: The item
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LibraryItem" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+    delete:
+      summary: Archive an item (uploader, the owning school's leaders, or an administrator)
+      responses: { "204": { description: Archived }, "403": { $ref: "#/components/responses/Forbidden" } }
+  /api/v1/library/items/{id}/moderate/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+    post:
+      summary: Approve or reject a platform-wide item (administrators)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [decision]
+              properties:
+                decision: { type: string, enum: [approve, reject] }
+                reason: { type: string, description: Required when rejecting; the author sees it }
+      responses:
+        "200":
+          description: The item
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LibraryItem" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /api/v1/library/items/{id}/share/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+    post:
+      summary: Put an item on a class's reading list (the class's teacher or the school's leaders)
+      description: Assigns it to every student enrolled now. A teacher's private item becomes visible to the class.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ShareInput" }
+      responses:
+        "200":
+          description: "{item, class, assigned}"
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [item, class, assigned]
+                properties:
+                  item: { type: string, format: uuid }
+                  class: { type: integer, format: int64 }
+                  assigned: { type: integer }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /api/v1/library/items/{id}/share/{class}/:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: string, format: uuid } }
+      - { name: class, in: path, required: true, schema: { type: integer, format: int64 } }
+    delete:
+      summary: Take an item off a class's reading list (progress is kept)
+      responses: { "204": { description: Removed }, "403": { $ref: "#/components/responses/Forbidden" } }
+  /api/v1/library/classes/{class}/reading-list/:
+    parameters: [{ name: class, in: path, required: true, schema: { type: integer, format: int64 } }]
+    get:
+      summary: A class's reading list with how many have finished (staff of the class)
+      responses:
+        "200":
+          description: "{count, results: ReadingRow[]}"
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [count, results]
+                properties:
+                  count: { type: integer }
+                  results: { type: array, items: { $ref: "#/components/schemas/ReadingRow" } }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /api/v1/library/assigned/:
+    get:
+      summary: Reading assigned to the student, or to a parent's children
+      responses:
+        "200":
+          description: "{count, results: AssignedReading[]}"
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [count, results]
+                properties:
+                  count: { type: integer }
+                  results: { type: array, items: { $ref: "#/components/schemas/AssignedReading" } }
+  /api/v1/library/progress/:
+    post:
+      summary: Record a learner's progress on an item (students)
+      description: Completion never goes backwards; 95% or more counts as finished.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ProgressInput" }
+      responses:
+        "200":
+          description: The learner's progress
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LibraryProgress" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /api/v1/library/continue/:
+    get:
+      summary: The learner's unfinished items, most recent first
+      responses:
+        "200":
+          description: "{count, results: ContinueItem[]}"
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [count, results]
+                properties:
+                  count: { type: integer }
+                  results: { type: array, items: { $ref: "#/components/schemas/ContinueItem" } }
+  /api/v1/finance/fee-items/:
+    get:
+      summary: A school's fee items (its headteacher, deputy or registrar)
+      parameters: [{ name: school, in: query, required: true, schema: { type: integer, format: int64 } }]
+      responses:
+        "200":
+          description: "{count, results: FeeItem[]}"
+          content:
+            application/json:
+              schema: { type: object, required: [count, results], properties: { count: { type: integer }, results: { type: array, items: { $ref: "#/components/schemas/FeeItem" } } } }
+        "403": { $ref: "#/components/responses/Forbidden" }
+    post:
+      summary: Add a fee item
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/FeeItemInput" }
+      responses:
+        "201":
+          description: The fee item
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/FeeItem" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /api/v1/finance/invoices/generate/:
+    post:
+      summary: Invoice every student in a class (one open invoice per student per term)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [class, fee_items]
+              properties:
+                class: { type: integer, format: int64 }
+                term: { type: integer, format: int64 }
+                fee_items: { type: array, items: { type: integer, format: int64 } }
+                due_date: { type: string, format: date }
+      responses:
+        "201":
+          description: "{created, skipped}"
+          content:
+            application/json:
+              schema: { type: object, required: [created, skipped], properties: { created: { type: integer }, skipped: { type: integer } } }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /api/v1/finance/invoices/:
+    get:
+      summary: Invoices the user can see (finance staff their schools'; students and parents their own)
+      parameters:
+        - { $ref: "#/components/parameters/Page" }
+        - { name: student, in: query, schema: { type: integer, format: int64 } }
+        - { name: status, in: query, schema: { type: string, enum: [issued, partially_paid, paid, void] } }
+      responses:
+        "200":
+          description: A page of invoices
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/InvoicePage" }
+  /api/v1/finance/invoices/{id}/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    get:
+      summary: One invoice with its lines
+      responses:
+        "200":
+          description: The invoice
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Invoice" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /api/v1/finance/invoices/{id}/void/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    post:
+      summary: Cancel an unpaid invoice (posts a reversing journal)
+      responses:
+        "200":
+          description: The invoice
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Invoice" }
+        "409": { description: The invoice has payments }
+  /api/v1/finance/payments/:
+    post:
+      summary: Record cash or a bank deposit (finance staff)
+      parameters: [{ name: Idempotency-Key, in: header, required: true, description: "A unique key per payment attempt; a retry with the same key returns the first result", schema: { type: string, maxLength: 100 } }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/PaymentInput" }
+      responses:
+        "201":
+          description: Recorded and posted, with a receipt number
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Payment" }
+        "200":
+          description: The same Idempotency-Key was used before; this is that payment
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Payment" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /api/v1/finance/payments/checkout/:
+    post:
+      summary: Pay an invoice by mobile money or card (parents, students, finance staff)
+      description: Starts a collection with the provider. The payment completes when the provider's signed webhook confirms it.
+      parameters: [{ name: Idempotency-Key, in: header, required: true, description: "A unique key per payment attempt; a retry with the same key returns the first result", schema: { type: string, maxLength: 100 } }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/PaymentInput" }
+      responses:
+        "202":
+          description: Pending until the provider confirms
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Payment" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "503": { description: This payment method isn't connected yet }
+  /api/v1/finance/payments/{id}/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    get:
+      summary: One payment (its receipt once successful)
+      responses:
+        "200":
+          description: The payment
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Payment" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /api/v1/finance/webhooks/{provider}/:
+    parameters: [{ name: provider, in: path, required: true, schema: { type: string } }]
+    post:
+      summary: A payment provider confirms or fails a payment (signed; applied once)
+      security: []
+      description: "Header X-Maple-Signature: sha256=<hex HMAC-SHA256 of the raw body with FINANCE_WEBHOOK_SECRET>. Body {reference, status: successful|failed, amount_minor, currency, reason}."
+      responses:
+        "200": { description: Applied (or already applied) }
+        "401": { description: Bad signature }
+        "409": { description: Amount or currency doesn't match }
+  /api/v1/finance/students/{id}/statement/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }, { name: school, in: query, required: true, schema: { type: integer, format: int64 } }]
+    get:
+      summary: A student's fees statement at a school (the student, their approved parents, finance staff)
+      responses:
+        "200":
+          description: The statement
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Statement" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /api/v1/finance/summary/:
+    get:
+      summary: Billed, collected and outstanding for a school
+      parameters: [{ name: school, in: query, required: true, schema: { type: integer, format: int64 } }, { name: currency, in: query, schema: { type: string, default: UGX } }]
+      responses:
+        "200":
+          description: The summary
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/FinanceSummary" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /api/v1/finance/export.csv:
+    get:
+      summary: The school's journal as CSV for QuickBooks or Xero
+      parameters: [{ name: school, in: query, required: true, schema: { type: integer, format: int64 } }]
+      responses: { "200": { description: CSV, content: { text/csv: { schema: { type: string } } } } }
+components:
+  parameters:
+    Page:
+      name: page
+      in: query
+      required: false
+      description: 1-based page number; 20 items per page
+      schema: { type: integer, minimum: 1 }
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses:
+    BadRequest:
+      description: The request body is missing fields or is not valid JSON
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    Unauthorized:
+      description: Wrong credentials, or a missing, invalid or expired token
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    Forbidden:
+      description: Signed in, but not allowed to do this
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    NotFound:
+      description: Doesn't exist, or isn't visible to this user
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    TooManyRequests:
+      description: Rate limit reached
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+  schemas:
+    ThreadSummary:
+      type: object
+      required: [id, subject, student, staff, last_message_at, last_body, last_author]
+      properties:
+        id: { type: integer, format: int64 }
+        subject: { type: string }
+        student: { $ref: "#/components/schemas/NamedRef" }
+        staff: { $ref: "#/components/schemas/NamedRef" }
+        last_message_at: { type: string, format: date-time }
+        last_body: { type: string }
+        last_author: { type: string }
+    Thread:
+      type: object
+      required: [id, subject, student, staff, can_reply, messages]
+      properties:
+        id: { type: integer, format: int64 }
+        subject: { type: string }
+        student: { $ref: "#/components/schemas/NamedRef" }
+        staff: { $ref: "#/components/schemas/NamedRef" }
+        can_reply: { type: boolean }
+        messages:
+          type: array
+          items:
+            type: object
+            required: [id, author, body, created_at]
+            properties:
+              id: { type: integer, format: int64 }
+              author: { $ref: "#/components/schemas/NamedRef" }
+              body: { type: string }
+              created_at: { type: string, format: date-time }
+    NamedRef:
+      type: object
+      required: [id, name]
+      properties: { id: { type: integer, format: int64 }, name: { type: string } }
+    LearnerInsight:
+      type: object
+      required: [student, level, reasons, days_marked, days_attended, work_set, work_done, average_pct, last_intervention_at]
+      properties:
+        student: { $ref: "#/components/schemas/NamedRef" }
+        level: { type: string, enum: [high, medium, ok] }
+        reasons: { type: array, items: { type: string } }
+        days_marked: { type: integer }
+        days_attended: { type: integer }
+        work_set: { type: integer }
+        work_done: { type: integer }
+        average_pct: { type: number, nullable: true }
+        last_intervention_at: { type: string, format: date-time, nullable: true }
+    Intervention:
+      type: object
+      required: [id, class_id, class_title, student_id, staff, kind, note, created_at]
+      properties:
+        id: { type: integer, format: int64 }
+        class_id: { type: integer, format: int64 }
+        class_title: { type: string }
+        student_id: { type: integer, format: int64 }
+        staff: { $ref: "#/components/schemas/NamedRef" }
+        kind: { type: string, enum: [parent_message, remedial_work, meeting, note] }
+        note: { type: string }
+        created_at: { type: string, format: date-time }
+    Notification:
+      type: object
+      required: [id, kind, title, body, link, created_at, read_at]
+      properties:
+        id: { type: integer, format: int64 }
+        kind: { type: string, description: "invoice, payment, family_link, …" }
+        title: { type: string }
+        body: { type: string }
+        link: { type: string, description: App path to act on it, such as /fees }
+        created_at: { type: string, format: date-time }
+        read_at: { type: string, format: date-time, nullable: true }
+    FamilyLink:
+      type: object
+      required: [id, relationship, status, linked_at, parent, student, school_id, school_name]
+      properties:
+        id: { type: integer, format: int64 }
+        relationship: { type: string }
+        status: { type: string, enum: [pending, approved, declined] }
+        linked_at: { type: string, format: date-time }
+        parent:
+          type: object
+          required: [id, name]
+          properties: { id: { type: integer, format: int64 }, name: { type: string }, email: { type: string } }
+        student:
+          type: object
+          required: [id, name]
+          properties: { id: { type: integer, format: int64 }, name: { type: string } }
+        school_id: { type: integer, format: int64, nullable: true }
+        school_name: { type: string }
+    Programme:
+      type: object
+      required: [country, tracks]
+      properties:
+        country: { type: string }
+        tracks:
+          type: array
+          items:
+            type: object
+            required: [id, name, levels, rules]
+            properties:
+              id: { type: integer, format: int64 }
+              name: { type: string }
+              rules: { type: array, items: { $ref: "#/components/schemas/ProgrammeRule" } }
+              levels:
+                type: array
+                items:
+                  type: object
+                  required: [id, name, classes]
+                  properties:
+                    id: { type: integer, format: int64 }
+                    name: { type: string }
+                    classes:
+                      type: array
+                      items:
+                        type: object
+                        required: [id, name, grade, subjects]
+                        properties:
+                          id: { type: integer, format: int64 }
+                          name: { type: string }
+                          grade: { type: integer }
+                          subjects:
+                            type: array
+                            items:
+                              type: object
+                              required: [id, code, name, compulsory]
+                              properties:
+                                id: { type: integer, format: int64 }
+                                code: { type: string }
+                                name: { type: string }
+                                compulsory: { type: boolean }
+    ProgrammeRule:
+      type: object
+      required: [key, kind, classes]
+      additionalProperties: true
+      properties:
+        key: { type: string }
+        kind: { type: string, enum: [approach, components, exam, alternative, elective_limit, principal_subjects, subject_groups, combinations] }
+        classes: { type: array, items: { type: string } }
+        note: { type: string }
+    Slot:
+      type: object
+      required: [id, institution, term, assigned_class, class_title, day_of_week, start_time, end_time, room, room_name, teacher, teacher_name, is_draft]
+      properties:
+        id: { type: integer, format: int64 }
+        institution: { type: integer, format: int64 }
+        term: { type: integer, format: int64 }
+        assigned_class: { type: integer, format: int64 }
+        class_title: { type: string }
+        day_of_week: { type: integer }
+        start_time: { type: string }
+        end_time: { type: string }
+        room: { type: [integer, "null"], format: int64 }
+        room_name: { type: string }
+        teacher: { type: [integer, "null"], format: int64 }
+        teacher_name: { type: string }
+        is_draft: { type: boolean }
+    SubjectMark:
+      type: object
+      required: [id, student, student_name, assigned_class, class_title, term, term_name, formative_score, summative_score, total_score, grade_letter, descriptor, teacher_remarks, finalized_by, finalized_at]
+      properties:
+        id: { type: integer, format: int64 }
+        student: { type: integer, format: int64 }
+        student_name: { type: string }
+        assigned_class: { type: integer, format: int64 }
+        class_title: { type: string }
+        term: { type: integer, format: int64 }
+        term_name: { type: string }
+        formative_score: { $ref: "#/components/schemas/Decimal" }
+        summative_score: { $ref: "#/components/schemas/Decimal" }
+        total_score: { oneOf: [{ $ref: "#/components/schemas/Decimal" }, { type: "null" }] }
+        grade_letter: { type: [string, "null"] }
+        descriptor: { type: [string, "null"] }
+        teacher_remarks: { type: [string, "null"] }
+        finalized_by: { type: [integer, "null"], format: int64 }
+        finalized_at: { type: string, format: date-time }
+    MarksRequest:
+      type: object
+      required: [class, entries]
+      properties:
+        class: { type: integer, format: int64 }
+        term: { type: integer, format: int64, description: Defaults to the current term }
+        entries:
+          type: array
+          minItems: 1
+          maxItems: 200
+          items:
+            type: object
+            required: [student, formative_score, summative_score]
+            properties:
+              student: { type: integer, format: int64 }
+              formative_score: { type: string, description: 0 to 20 }
+              summative_score: { type: string, description: 0 to 80 }
+              teacher_remarks: { type: string, maxLength: 2000 }
+    Report:
+      type: object
+      required: [id, institution, student, student_name, term, term_name, overall_score, overall_grade_letter, promotion_status, class_teacher_remarks, headteacher_remarks, is_published, published_at, generated_at]
+      properties:
+        id: { type: integer, format: int64 }
+        institution: { type: integer, format: int64 }
+        student: { type: integer, format: int64 }
+        student_name: { type: string }
+        term: { type: integer, format: int64 }
+        term_name: { type: string }
+        overall_score: { oneOf: [{ $ref: "#/components/schemas/Decimal" }, { type: "null" }] }
+        overall_grade_letter: { type: [string, "null"] }
+        promotion_status: { type: [string, "null"] }
+        class_teacher_remarks: { type: [string, "null"] }
+        headteacher_remarks: { type: [string, "null"] }
+        is_published: { type: boolean }
+        published_at: { type: [string, "null"], format: date-time }
+        generated_at: { type: string, format: date-time }
+        subjects:
+          type: array
+          items: { $ref: "#/components/schemas/SubjectMark" }
+    SubjectMarkPage:
+      allOf:
+        - { $ref: "#/components/schemas/PageMeta" }
+        - type: object
+          required: [results]
+          properties:
+            results: { type: array, items: { $ref: "#/components/schemas/SubjectMark" } }
+    ReportPage:
+      allOf:
+        - { $ref: "#/components/schemas/PageMeta" }
+        - type: object
+          required: [results]
+          properties:
+            results: { type: array, items: { $ref: "#/components/schemas/Report" } }
+    Class:
+      type: object
+      required: [id, institution, subject_name, class_level, class_level_name, teacher, teacher_name, title, visibility, is_published, created_at]
+      properties:
+        id: { type: integer, format: int64 }
+        institution: { type: integer, format: int64 }
+        subject: { type: [integer, "null"], format: int64 }
+        subject_name: { type: string }
+        class_level: { type: integer, format: int64 }
+        class_level_name: { type: string }
+        teacher: { type: integer, format: int64 }
+        teacher_name: { type: string }
+        title: { type: string }
+        visibility: { type: string }
+        is_published: { type: boolean }
+        created_at: { type: string, format: date-time }
+    NewClass:
+      type: object
+      required: [title, institution, class_level, teacher]
+      properties:
+        title: { type: string, maxLength: 255 }
+        institution: { type: integer, format: int64 }
+        class_level: { type: integer, format: int64 }
+        teacher: { type: integer, format: int64 }
+        is_published: { type: boolean }
+    Roster:
+      type: object
+      required: [class, students]
+      properties:
+        class: { $ref: "#/components/schemas/Class" }
+        students:
+          type: array
+          items:
+            type: object
+            required: [enrollment, student, student_name, enrolled_at]
+            properties:
+              enrollment: { type: integer, format: int64 }
+              student: { type: integer, format: int64 }
+              student_name: { type: string }
+              enrolled_at: { type: string, format: date-time }
+    MarkStatus:
+      type: string
+      enum: [present, late, authorized_absent, unauthorized_absent]
+    Mark:
+      type: object
+      required: [id, institution, term, term_name, student, student_name, record_date, status, recorded_by, recorder_name, notes, created_at]
+      properties:
+        id: { type: integer, format: int64 }
+        institution: { type: integer, format: int64 }
+        term: { type: integer, format: int64 }
+        term_name: { type: string }
+        student: { type: integer, format: int64 }
+        student_name: { type: string }
+        record_date: { type: string, format: date }
+        status: { $ref: "#/components/schemas/MarkStatus" }
+        recorded_by: { type: [integer, "null"], format: int64 }
+        recorder_name: { type: [string, "null"] }
+        notes: { type: [string, "null"] }
+        created_at: { type: string, format: date-time }
+    RegisterRequest:
+      type: object
+      required: [class, record_date, entries]
+      properties:
+        class: { type: integer, format: int64 }
+        record_date: { type: string, format: date }
+        entries:
+          type: array
+          minItems: 1
+          maxItems: 200
+          items:
+            type: object
+            required: [student, status]
+            properties:
+              student: { type: integer, format: int64 }
+              status: { $ref: "#/components/schemas/MarkStatus" }
+              notes: { type: string, maxLength: 1000 }
+    ClassPage:
+      allOf:
+        - { $ref: "#/components/schemas/PageMeta" }
+        - type: object
+          required: [results]
+          properties:
+            results: { type: array, items: { $ref: "#/components/schemas/Class" } }
+    MarkPage:
+      allOf:
+        - { $ref: "#/components/schemas/PageMeta" }
+        - type: object
+          required: [results]
+          properties:
+            results: { type: array, items: { $ref: "#/components/schemas/Mark" } }
+    Decimal:
+      type: string
+      pattern: '^-?\d+\.\d{2}$'
+      description: A decimal with two places, such as "85.00"
+    Question:
+      type: object
+      required: [id, type, content, marks, order, options]
+      properties:
+        id: { type: integer, format: int64 }
+        type: { type: string }
+        content: { type: string }
+        marks: { $ref: "#/components/schemas/Decimal" }
+        order: { type: integer }
+        options: {}
+        correct_answer: { type: string, description: Staff only }
+    Assessment:
+      type: object
+      required: [id, title, instructions, type, source, max_score, is_published, created_at, created_by, questions]
+      properties:
+        id: { type: integer, format: int64 }
+        title: { type: string }
+        instructions: { type: string }
+        type: { type: string }
+        source: { type: string }
+        max_score: { $ref: "#/components/schemas/Decimal" }
+        is_published: { type: boolean }
+        created_at: { type: string, format: date-time }
+        created_by: { type: [integer, "null"], format: int64 }
+        target_group: { type: [integer, "null"], format: int64 }
+        term: { type: [integer, "null"], format: int64 }
+        topic: { type: [integer, "null"], format: int64 }
+        window: { type: [integer, "null"], format: int64 }
+        questions:
+          type: array
+          items: { $ref: "#/components/schemas/Question" }
+    NewAssessment:
+      type: object
+      required: [title, instructions]
+      properties:
+        title: { type: string, maxLength: 255 }
+        instructions: { type: string, maxLength: 20000 }
+        type: { type: string, enum: [assignment, quiz, test, exam, exercise], default: assignment }
+        max_score: { type: string, description: "Defaults to 100" }
+        is_published: { type: boolean, default: false }
+    Submission:
+      type: object
+      required: [id, assessment, student, status, submitted_at, answers_data, total_score]
+      properties:
+        id: { type: integer, format: int64 }
+        assessment: { type: integer, format: int64 }
+        student: { type: integer, format: int64 }
+        status: { type: string, enum: [submitted, graded] }
+        submitted_at: { type: [string, "null"], format: date-time }
+        answers_data: { type: object, additionalProperties: true }
+        total_score: { oneOf: [{ $ref: "#/components/schemas/Decimal" }, { type: "null" }] }
+        assessment_title: { type: string }
+        student_name: { type: string }
+    NewSubmission:
+      type: object
+      required: [assessment]
+      properties:
+        assessment: { type: integer, format: int64 }
+        answers_data: { type: object, additionalProperties: true }
+    Grade:
+      type: object
+      required: [id, submission, score, teacher_feedback, graded_at]
+      properties:
+        id: { type: integer, format: int64 }
+        submission: { type: integer, format: int64 }
+        score: { $ref: "#/components/schemas/Decimal" }
+        teacher_feedback: { type: [string, "null"] }
+        graded_at: { type: string, format: date-time }
+        assessment: { type: integer, format: int64 }
+        assessment_title: { type: string }
+        max_score: { $ref: "#/components/schemas/Decimal" }
+        student: { type: integer, format: int64 }
+        student_name: { type: string }
+    NewGrade:
+      type: object
+      required: [submission, score]
+      properties:
+        submission: { type: integer, format: int64 }
+        score: { type: string, description: "0 up to the assignment's maximum" }
+        teacher_feedback: { type: string, maxLength: 5000 }
+    AssessmentPage:
+      allOf:
+        - { $ref: "#/components/schemas/PageMeta" }
+        - type: object
+          required: [results]
+          properties:
+            results: { type: array, items: { $ref: "#/components/schemas/Assessment" } }
+    SubmissionPage:
+      allOf:
+        - { $ref: "#/components/schemas/PageMeta" }
+        - type: object
+          required: [results]
+          properties:
+            results: { type: array, items: { $ref: "#/components/schemas/Submission" } }
+    GradePage:
+      allOf:
+        - { $ref: "#/components/schemas/PageMeta" }
+        - type: object
+          required: [results]
+          properties:
+            results: { type: array, items: { $ref: "#/components/schemas/Grade" } }
+    PageMeta:
+      type: object
+      required: [count, next, previous]
+      properties:
+        count: { type: integer }
+        next: { type: [string, "null"] }
+        previous: { type: [string, "null"] }
+    Error:
+      type: object
+      required: [detail]
+      properties:
+        detail: { type: string }
+        code: { type: string }
+    Health:
+      type: object
+      required: [status, database]
+      properties:
+        status: { type: string, enum: [ok, degraded] }
+        database: { type: string, enum: [ok, unreachable] }
+    LoginRequest:
+      type: object
+      required: [email, password]
+      additionalProperties: false
+      properties:
+        email: { type: string, format: email }
+        password: { type: string }
+    RefreshRequest:
+      type: object
+      required: [refresh]
+      additionalProperties: false
+      properties:
+        refresh: { type: string }
+    TokenPair:
+      type: object
+      required: [access, refresh]
+      properties:
+        access: { type: string, description: "Short-lived access token (15 minutes by default)" }
+        refresh: { type: string, description: "Refresh token (7 days by default)" }
+    Role:
+      type: string
+      enum: [student, teacher, parent, admin, institution]
+    Membership:
+      type: object
+      required: [institution_id, institution_name, role, status]
+      properties:
+        institution_id: { type: integer, format: int64 }
+        institution_name: { type: string }
+        role: { type: string, description: "Role inside the school, such as headteacher or class_teacher" }
+        status: { type: string, enum: [pending, active, suspended] }
+    Child:
+      type: object
+      required: [user_id, full_name, relationship]
+      properties:
+        user_id: { type: integer, format: int64 }
+        full_name: { type: string }
+        relationship: { type: string }
+    Me:
+      type: object
+      required: [id, email, full_name, role, country_code, memberships, children]
+      properties:
+        id: { type: integer, format: int64 }
+        email: { type: string, format: email }
+        full_name: { type: string }
+        role: { $ref: "#/components/schemas/Role" }
+        country_code: { type: string }
+        memberships:
+          type: array
+          items: { $ref: "#/components/schemas/Membership" }
+        children:
+          type: array
+          description: Only children linked through an approved guardian link
+          items: { $ref: "#/components/schemas/Child" }
+    CurriculumTopic:
+      type: object
+      required: [id, name, order, class_level_name, subject, class_level]
+      properties:
+        id: { type: integer, format: int64 }
+        name: { type: string }
+        order: { type: integer }
+        class_level_name: { type: string }
+        subject: { type: integer, format: int64 }
+        class_level: { type: integer, format: int64 }
+    CurriculumSubject:
+      type: object
+      required: [id, name, code, category, topics]
+      properties:
+        id: { type: integer, format: int64 }
+        name: { type: string }
+        code: { type: [string, "null"] }
+        category: { type: [string, "null"] }
+        topics:
+          type: array
+          items: { $ref: "#/components/schemas/CurriculumTopic" }
+    Lesson:
+      type: object
+      required: [id, title, access_mode, scheduled_at, published_at, created_at, parent_class, topic, class_title, topic_name]
+      properties:
+        id: { type: integer, format: int64 }
+        title: { type: string }
+        access_mode: { type: string, enum: [draft, published, premium] }
+        scheduled_at: { type: string, format: date-time }
+        published_at: { type: [string, "null"], format: date-time }
+        created_at: { type: string, format: date-time }
+        parent_class: { type: integer, format: int64 }
+        topic: { type: [integer, "null"], format: int64 }
+        class_title: { type: string }
+        topic_name: { type: string }
+    LessonInput:
+      type: object
+      properties:
+        parent_class: { type: integer, format: int64, description: Required when creating }
+        title: { type: string, maxLength: 255 }
+        access_mode: { type: string, enum: [draft, published, premium] }
+        scheduled_at: { type: string, format: date-time }
+        topic: { type: [integer, "null"], format: int64 }
+    LessonPage:
+      type: object
+      required: [count, next, previous, results]
+      properties:
+        count: { type: integer }
+        next: { type: [string, "null"] }
+        previous: { type: [string, "null"] }
+        results:
+          type: array
+          items: { $ref: "#/components/schemas/Lesson" }
+    LiveSession:
+      type: object
+      required: [id, meeting_link, replay_url, provider, scheduled_start, duration_minutes, capacity, enrolled_count, status, artifact_sync_status, lesson, title, hostName, subject]
+      properties:
+        id: { type: integer, format: int64 }
+        meeting_link: { type: string }
+        replay_url: { type: [string, "null"] }
+        provider: { type: string, enum: [google_meet, zoom] }
+        provider_event_id: { type: [string, "null"] }
+        scheduled_start: { type: [string, "null"], format: date-time }
+        duration_minutes: { type: integer }
+        capacity: { type: integer }
+        enrolled_count: { type: integer }
+        status: { type: string, enum: [scheduled, completed, cancelled] }
+        artifact_sync_status: { type: string, enum: [none, pending, syncing, completed, failed] }
+        lesson: { type: integer, format: int64 }
+        title: { type: string }
+        description: { type: [string, "null"] }
+        hostName: { type: string }
+        subject: { type: string }
+        scheduledStart: { type: [string, "null"], format: date-time }
+        durationMinutes: { type: integer }
+        enrolledCount: { type: integer }
+    LiveSessionInput:
+      type: object
+      properties:
+        lesson: { type: integer, format: int64, description: Required when creating }
+        meeting_link: { type: string }
+        replay_url: { type: [string, "null"] }
+        provider: { type: string, enum: [google_meet, zoom] }
+        scheduled_start: { type: string, format: date-time, description: Defaults to the lesson's time }
+        duration_minutes: { type: integer, minimum: 5, maximum: 480 }
+        capacity: { type: integer, minimum: 1, maximum: 10000 }
+        status: { type: string, enum: [scheduled, completed, cancelled] }
+    LiveSessionPage:
+      type: object
+      required: [count, next, previous, results]
+      properties:
+        count: { type: integer }
+        next: { type: [string, "null"] }
+        previous: { type: [string, "null"] }
+        results:
+          type: array
+          items: { $ref: "#/components/schemas/LiveSession" }
+    SignUpInput:
+      type: object
+      required: [email, full_name, country_code, password, role]
+      properties:
+        email: { type: string, format: email }
+        full_name: { type: string, maxLength: 255 }
+        country_code: { type: string, minLength: 2, maxLength: 10 }
+        password: { type: string, minLength: 8, maxLength: 128 }
+        role: { type: string, enum: [student, teacher, institution] }
+    SignUpResult:
+      type: object
+      required: [id, email, full_name, role, country_code, email_verified]
+      properties:
+        id: { type: integer, format: int64 }
+        email: { type: string }
+        full_name: { type: string }
+        role: { type: string }
+        country_code: { type: string }
+        email_verified: { type: boolean }
+    OnboardStudentInput:
+      type: object
+      required: [student, parent]
+      properties:
+        student:
+          type: object
+          required: [email, full_name, country_code, password]
+          properties:
+            email: { type: string, format: email }
+            full_name: { type: string }
+            country_code: { type: string }
+            password: { type: string }
+        parent:
+          type: object
+          required: [email, full_name]
+          properties:
+            email: { type: string, format: email }
+            full_name: { type: string }
+            phone: { type: string }
+            relationship: { type: string, enum: [mother, father, guardian, other] }
+    LinkToken:
+      type: object
+      required: [token]
+      properties:
+        token: { type: string }
+    EmailOnly:
+      type: object
+      required: [email]
+      properties:
+        email: { type: string, format: email }
+    ResetPasswordInput:
+      type: object
+      required: [token, password]
+      properties:
+        token: { type: string }
+        password: { type: string, minLength: 8, maxLength: 128 }
+    AuthMessage:
+      type: object
+      required: [message]
+      properties:
+        message: { type: string }
+        email: { type: string }
+    LibraryItem:
+      type: object
+      required: [id, title, description, content_type, owner_type, visibility_scope, publication_status, moderation_status, rejection_reason, file_url, external_url, language, is_featured, created_at, updated_at, uploaded_by, uploader_name, subject_name, topic_name]
+      properties:
+        id: { type: string, format: uuid }
+        title: { type: string }
+        description: { type: string }
+        content_type: { type: string }
+        owner_type: { type: string, enum: [teacher, institution, platform_admin] }
+        visibility_scope: { type: string, enum: [private, class, institution, global, country, assigned_students] }
+        publication_status: { type: string }
+        moderation_status: { type: string }
+        rejection_reason: { type: string }
+        file_url: { type: [string, "null"] }
+        external_url: { type: string }
+        duration_seconds: { type: [integer, "null"] }
+        language: { type: string }
+        is_featured: { type: boolean }
+        created_at: { type: string, format: date-time }
+        updated_at: { type: string, format: date-time }
+        published_at: { type: [string, "null"], format: date-time }
+        class_level: { type: [integer, "null"], format: int64 }
+        owner_institution: { type: [integer, "null"], format: int64 }
+        subject: { type: [integer, "null"], format: int64 }
+        topic: { type: [integer, "null"], format: int64 }
+        uploaded_by: { type: integer, format: int64 }
+        uploader_name: { type: string }
+        subject_name: { type: string }
+        topic_name: { type: string }
+    LibraryItemInput:
+      type: object
+      properties:
+        title: { type: string, maxLength: 500 }
+        description: { type: string }
+        content_type: { type: string, description: "notes, textbook, pdf, document, video, slides, worksheet, assignment, project, activity, revision, teacher_guide, lesson_attachment, topic_resource, class_resource, library_resource, mock_exam, intervention or other" }
+        external_url: { type: string, format: uri }
+        language: { type: string }
+        visibility_scope: { type: string, enum: [private, class, institution, global] }
+        owner_institution: { type: [integer, "null"], format: int64 }
+        subject: { type: [integer, "null"], format: int64 }
+        topic: { type: [integer, "null"], format: int64 }
+        class_level: { type: [integer, "null"], format: int64 }
+    LibraryItemPage:
+      type: object
+      required: [count, next, previous, results]
+      properties:
+        count: { type: integer }
+        next: { type: [string, "null"] }
+        previous: { type: [string, "null"] }
+        results:
+          type: array
+          items: { $ref: "#/components/schemas/LibraryItem" }
+    ShareInput:
+      type: object
+      required: [class]
+      properties:
+        class: { type: integer, format: int64 }
+        due_date: { type: string, format: date-time }
+        required: { type: boolean, description: Defaults to true }
+        note: { type: string, maxLength: 1000 }
+    ReadingRow:
+      type: object
+      required: [item, title, content_type, external_url, file_url, due_date, required, assigned, completed]
+      properties:
+        item: { type: string, format: uuid }
+        title: { type: string }
+        content_type: { type: string }
+        external_url: { type: string }
+        file_url: { type: [string, "null"] }
+        due_date: { type: [string, "null"], format: date-time }
+        required: { type: boolean }
+        assigned: { type: integer }
+        completed: { type: integer }
+    AssignedReading:
+      type: object
+      required: [id, student, item, title, content_type, external_url, file_url, required, note, due_date, completion_percentage, is_completed]
+      properties:
+        id: { type: string, format: uuid }
+        student: { type: integer, format: int64 }
+        item: { type: string, format: uuid }
+        title: { type: string }
+        content_type: { type: string }
+        external_url: { type: string }
+        file_url: { type: [string, "null"] }
+        required: { type: boolean }
+        note: { type: string }
+        due_date: { type: [string, "null"], format: date-time }
+        class: { type: [integer, "null"], format: int64 }
+        completion_percentage: { type: string }
+        is_completed: { type: boolean }
+    ProgressInput:
+      type: object
+      required: [item, completion]
+      properties:
+        item: { type: string, format: uuid }
+        completion: { type: number, minimum: 0, maximum: 100 }
+        position: { type: integer, minimum: 0 }
+        active_seconds: { type: integer, minimum: 0 }
+        new_visit: { type: boolean }
+    LibraryProgress:
+      type: object
+      required: [view_count, active_time_seconds, completion_percentage, last_position, is_completed, status]
+      properties:
+        view_count: { type: integer }
+        active_time_seconds: { type: integer }
+        completion_percentage: { type: string }
+        last_position: { type: integer }
+        is_completed: { type: boolean }
+        status: { type: string, enum: [not_started, started, in_progress, completed] }
+        first_accessed: { type: [string, "null"], format: date-time }
+        last_accessed: { type: [string, "null"], format: date-time }
+        completed_at: { type: [string, "null"], format: date-time }
+    ContinueItem:
+      type: object
+      required: [item, title, content_type, external_url, file_url, completion_percentage, last_position]
+      properties:
+        item: { type: string, format: uuid }
+        title: { type: string }
+        content_type: { type: string }
+        external_url: { type: string }
+        file_url: { type: [string, "null"] }
+        duration_seconds: { type: [integer, "null"] }
+        completion_percentage: { type: string }
+        last_position: { type: integer }
+        last_accessed: { type: [string, "null"], format: date-time }
+    FeeItem:
+      type: object
+      required: [id, school, name, amount_minor, currency, term, class_level, created_at]
+      properties:
+        id: { type: integer, format: int64 }
+        school: { type: integer, format: int64 }
+        name: { type: string }
+        amount_minor: { type: integer, format: int64, description: Whole minor units (for UGX, shillings) }
+        currency: { type: string }
+        term: { type: [integer, "null"], format: int64 }
+        class_level: { type: [integer, "null"], format: int64 }
+        created_at: { type: string, format: date-time }
+    FeeItemInput:
+      type: object
+      required: [school, name, amount_minor]
+      properties:
+        school: { type: integer, format: int64 }
+        name: { type: string }
+        amount_minor: { type: integer, format: int64 }
+        currency: { type: string, default: UGX }
+        term: { type: integer, format: int64 }
+        class_level: { type: integer, format: int64 }
+    InvoiceLine:
+      type: object
+      required: [id, fee_item, description, amount_minor]
+      properties:
+        id: { type: integer, format: int64 }
+        fee_item: { type: [integer, "null"], format: int64 }
+        description: { type: string }
+        amount_minor: { type: integer, format: int64 }
+    Invoice:
+      type: object
+      required: [id, school, student, student_name, number, currency, total_minor, paid_minor, balance_minor, status, due_date, created_at, lines]
+      properties:
+        id: { type: integer, format: int64 }
+        school: { type: integer, format: int64 }
+        student: { type: integer, format: int64 }
+        student_name: { type: string }
+        term: { type: [integer, "null"], format: int64 }
+        class: { type: [integer, "null"], format: int64 }
+        number: { type: string }
+        currency: { type: string }
+        total_minor: { type: integer, format: int64 }
+        paid_minor: { type: integer, format: int64 }
+        balance_minor: { type: integer, format: int64 }
+        status: { type: string, enum: [issued, partially_paid, paid, void] }
+        due_date: { type: [string, "null"], format: date }
+        created_at: { type: string, format: date-time }
+        voided_at: { type: [string, "null"], format: date-time }
+        lines: { type: array, items: { $ref: "#/components/schemas/InvoiceLine" } }
+    InvoicePage:
+      type: object
+      required: [count, next, previous, results]
+      properties:
+        count: { type: integer }
+        next: { type: [string, "null"] }
+        previous: { type: [string, "null"] }
+        results: { type: array, items: { $ref: "#/components/schemas/Invoice" } }
+    PaymentInput:
+      type: object
+      required: [invoice, amount_minor, method]
+      properties:
+        invoice: { type: integer, format: int64 }
+        amount_minor: { type: integer, format: int64 }
+        method: { type: string, enum: [cash, bank, mtn_momo, airtel_money, card] }
+        phone: { type: string, description: Mobile money number, for example +256772000111 }
+    Payment:
+      type: object
+      required: [id, school, school_name, student, student_name, invoice, invoice_number, amount_minor, currency, method, status, receipt_number, created_at]
+      properties:
+        id: { type: integer, format: int64 }
+        school: { type: integer, format: int64 }
+        school_name: { type: string }
+        student: { type: integer, format: int64 }
+        student_name: { type: string }
+        invoice: { type: [integer, "null"], format: int64 }
+        invoice_number: { type: string }
+        amount_minor: { type: integer, format: int64 }
+        currency: { type: string }
+        method: { type: string }
+        status: { type: string, enum: [pending, successful, failed] }
+        payer_phone: { type: string }
+        provider: { type: string }
+        provider_reference: { type: string }
+        failure_reason: { type: string }
+        receipt_number: { type: [string, "null"] }
+        created_at: { type: string, format: date-time }
+        completed_at: { type: [string, "null"], format: date-time }
+    StatementLine:
+      type: object
+      required: [date, kind, reference, memo, currency, debit_minor, credit_minor, balance_minor]
+      properties:
+        date: { type: string, format: date-time }
+        kind: { type: string }
+        reference: { type: string }
+        memo: { type: string }
+        currency: { type: string }
+        debit_minor: { type: integer, format: int64 }
+        credit_minor: { type: integer, format: int64 }
+        balance_minor: { type: integer, format: int64 }
+    Statement:
+      type: object
+      required: [school, student, balance_minor, lines]
+      properties:
+        school: { type: integer, format: int64 }
+        student: { type: integer, format: int64 }
+        balance_minor: { type: integer, format: int64 }
+        lines: { type: array, items: { $ref: "#/components/schemas/StatementLine" } }
+    FinanceSummary:
+      type: object
+      required: [school, currency, billed_minor, collected_minor, outstanding_minor, pending_payments]
+      properties:
+        school: { type: integer, format: int64 }
+        currency: { type: string }
+        billed_minor: { type: integer, format: int64 }
+        collected_minor: { type: integer, format: int64 }
+        outstanding_minor: { type: integer, format: int64 }
+        pending_payments: { type: integer }
