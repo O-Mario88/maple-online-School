@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { Button, Card, Chip, ChipRow, Field, KeyValue, Table } from '@/components/ui';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { formatMoney } from '@/lib/finance/fees';
+import { router } from 'expo-router';
+import { SAMPLE_CHECKOUT } from '@/lib/navigation';
 
 const METHODS = ['MTN MoMo', 'Airtel Money', 'Card'] as const;
 type Method = (typeof METHODS)[number];
@@ -41,7 +43,7 @@ export default function PayLinkScreen() {
                 ))}
               </ChipRow>
               {method === 'Card' ? null : <Field label="Phone number" placeholder="07XX XXX XXX" keyboardType="phone-pad" />}
-              <Button label={`Pay ${formatMoney(due, 'UGX')}`} icon="lock" onPress={() => undefined} />
+              <Button label={`Pay ${formatMoney(due, 'UGX')}`} icon="lock" onPress={() => router.push(SAMPLE_CHECKOUT)} />
             </Card>
           </>
         );

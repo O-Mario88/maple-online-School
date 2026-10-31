@@ -122,6 +122,14 @@ export function ToggleRow({ label, detail, initial }: { label: string; detail?: 
 /** A small selectable pill, such as a filter. */
 export function Chip({ label, selected = false, onPress }: { label: string; selected?: boolean; onPress?: () => void }) {
   const { styles } = useStyles(makeStyles);
+  // A chip with nothing to do is a label, not a button: no hover and nothing for a screen reader to press.
+  if (!onPress) {
+    return (
+      <View style={[styles.chip, selected && styles.chipOn]}>
+        <Text style={[styles.chipText, selected && styles.chipTextOn]}>{label}</Text>
+      </View>
+    );
+  }
   return (
     <Pressable
       onPress={onPress}

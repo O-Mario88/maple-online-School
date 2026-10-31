@@ -5,6 +5,8 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Icon } from '@/components/icon';
+import { VideoSheet } from '@/features/shared/VideoSheet';
+import { sharePage } from '@/lib/save-text';
 
 import { Brand } from '../palette';
 import { LiveBooking, register, type Session } from './LiveBooking';
@@ -33,7 +35,7 @@ function TopBar() {
         <Pressable onPress={() => setSaved((v) => !v)} accessibilityRole="button" accessibilityLabel={saved ? 'Remove from saved' : 'Save'} hitSlop={8}>
           <Icon name="heart" size={21} color={saved ? '#FF4D5E' : Brand.ink} />
         </Pressable>
-        <Pressable accessibilityRole="button" accessibilityLabel="Share" hitSlop={8}>
+        <Pressable onPress={() => sharePage('Join this live class on Maple Global Online School.')} accessibilityRole="button" accessibilityLabel="Share" hitSlop={8}>
           <Icon name="share" size={20} color={Brand.ink} />
         </Pressable>
       </View>
@@ -46,6 +48,7 @@ export function LivePhone({ s }: { s: Session }) {
   const insets = useSafeAreaInsets();
   const [tab, setTab] = useState<Tab>('Overview');
   const [expanded, setExpanded] = useState(false);
+  const [playing, setPlaying] = useState(false);
   const info = [
     { icon: 'calendar' as const, lines: [s.when.day.replace('Saturday', 'Sat'), s.when.time] },
     { icon: 'people' as const, lines: [s.where.title, s.where.detail] },
@@ -62,9 +65,10 @@ export function LivePhone({ s }: { s: Session }) {
           <View style={styles.badge}>
             <Text style={styles.badgeText}>{`(•) ${s.badge.toUpperCase()}`}</Text>
           </View>
-          <Pressable style={styles.play} accessibilityRole="button" accessibilityLabel="Play the introduction">
+          <Pressable style={styles.play} onPress={() => setPlaying(true)} accessibilityRole="button" accessibilityLabel="Play the introduction">
             <Text style={styles.playIcon}>▶</Text>
           </Pressable>
+          <VideoSheet visible={playing} poster={s.photo} title={`${s.title.lead} ${s.title.accent}: introduction`} onClose={() => setPlaying(false)} />
         </View>
 
         <View style={styles.pad}>

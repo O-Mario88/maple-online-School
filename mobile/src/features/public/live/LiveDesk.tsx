@@ -1,13 +1,16 @@
+import { router } from 'expo-router';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
+import { sharePage } from '@/lib/save-text';
 
 import { Brand } from '../palette';
 import { LiveBooking, type Session } from './LiveBooking';
 import { AboutLive, card, LearnList, MoreLive, TeacherCard } from './LiveCards';
+import { crumbHref } from '@/features/public/HomeNav';
 
 /** The live class reference's desktop width; this layout uses its pixels (render inside RefScale). */
 export const LIVE_REF_WIDTH = 1252;
@@ -45,7 +48,7 @@ function Hero({ s }: { s: Session }) {
         ))}
       </View>
       {/* Drawn over the copies printed in the photo, so they stay sharp and tappable. */}
-      <Pressable style={styles.share} accessibilityRole="button" accessibilityLabel="Share this live class">
+      <Pressable style={styles.share} onPress={() => sharePage(`Join "${s.title.lead} ${s.title.accent}" live on Maple Global Online School.`)} accessibilityRole="button" accessibilityLabel="Share this live class">
         <Icon name="share" size={12} color={Brand.ink} />
         <Text style={styles.shareText}>Share</Text>
       </Pressable>
@@ -79,7 +82,17 @@ export function LiveDesk({ s }: { s: Session }) {
   const [tab, setTab] = useState<(typeof TABS)[number]>('Overview');
   return (
     <View style={styles.canvas}>
-      <Text style={styles.crumbs}>{`${s.breadcrumb.join('  ›  ')}  ›  ${s.title.lead} ${s.title.accent}`}</Text>
+      <Text style={styles.crumbs}>
+        {s.breadcrumb.map((c) => (
+          <Text key={c}>
+            <Text onPress={() => router.push(crumbHref(c))} accessibilityRole="link">
+              {c}
+            </Text>
+            {'  ›  '}
+          </Text>
+        ))}
+        {`${s.title.lead} ${s.title.accent}`}
+      </Text>
       <Hero s={s} />
       <View style={[styles.featuresWrap]}>
         <Features s={s} />

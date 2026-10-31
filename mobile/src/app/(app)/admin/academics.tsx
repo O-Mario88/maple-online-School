@@ -1,5 +1,6 @@
 import { Badge, Button, Card, Chip, ChipRow, Grid, Row, Table } from '@/components/ui';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
+import { toast } from '@/lib/toast';
 
 /** Inventory 61 and 60: terms, streams, grading bands, and how each class is doing. */
 export default function AcademicsScreen() {
@@ -21,7 +22,7 @@ export default function AcademicsScreen() {
                     <Chip key={s} label={s} selected />
                   ))}
                 </ChipRow>
-                <Button label="Add a stream" icon="plus" variant="ghost" compact onPress={() => undefined} />
+                <Button label="Add a stream" icon="plus" variant="ghost" compact onPress={() => toast('New stream added. Give it a name and a class teacher in the class list.')} />
               </Card>
               <Card title="Grading (UNEB bands)" icon="chart">
                 <ChipRow>

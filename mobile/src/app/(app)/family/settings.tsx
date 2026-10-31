@@ -1,5 +1,6 @@
 import { Button, Card, Field, Grid, KeyValue, Row, ToggleRow } from '@/components/ui';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
+import { router } from 'expo-router';
 
 /** Inventory 58 and 52: children, the Sunday digest and privacy. */
 export default function FamilySettingsScreen() {
@@ -13,8 +14,8 @@ export default function FamilySettingsScreen() {
               {m.family.children.map((c) => (
                 <Row key={c.id} icon="person" title={c.name} detail={`${c.class} · ${c.school}`} />
               ))}
-              <Button label="Add a child with the school's QR code" icon="qr" variant="secondary" onPress={() => undefined} />
-              <Field label="Or enter the 8-character claim code" value="" placeholder="e.g. 7KQ2-M9XA" />
+              <Button label="Add a child with the school's QR code" icon="qr" variant="secondary" onPress={() => router.push('/claim-child')} />
+              <Field label="Or enter the 8-character claim code" placeholder="e.g. 7KQ2-M9XA" autoCapitalize="characters" />
             </Card>
             <Card title="Sunday digest" subtitle="A weekly summary on WhatsApp" icon="bell">
               <KeyValue

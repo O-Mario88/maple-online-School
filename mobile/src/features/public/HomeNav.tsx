@@ -1,8 +1,9 @@
 import { Image } from 'expo-image';
-import { router } from 'expo-router';
+import { type Href, router } from 'expo-router';
 import { Pressable, StyleSheet, Text, TextInput, useWindowDimensions, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
+import { LanguageMenu } from '@/components/shell/LanguageMenu';
 
 import { Brand } from './palette';
 
@@ -18,12 +19,26 @@ type NavLink = (typeof LINKS)[number] | (typeof EXPLORE_LINKS)[number] | 'Past P
 // Below this width the bar drops Pricing and About so the links don't run into the buttons.
 const ALL_LINKS_WIDTH = 1280;
 const SHORT_LINKS = 6;
-const LINK_ROUTES: Partial<Record<NavLink, '/welcome' | '/explore' | '/schools'>> = {
+const LINK_ROUTES: Readonly<Record<NavLink, Href>> = {
   Home: '/welcome',
   Courses: '/explore',
   Explore: '/explore',
+  'Live Classes': { pathname: '/explore', params: { kind: 'live' } },
+  'Past Papers': { pathname: '/explore', params: { kind: 'paper' } },
+  Shorts: '/shorts',
+  Curriculums: '/curriculums',
   'For Schools': '/schools',
+  'For Teachers': '/teachers',
+  Pricing: '/pricing',
+  About: '/about',
 };
+/** Every section of the public site with where it goes: the phone menu lists these. */
+export const PUBLIC_MENU: readonly { label: NavLink; href: Href }[] = (['Home', 'Explore', 'Live Classes', 'Past Papers', 'Shorts', 'Curriculums', 'For Schools', 'For Teachers', 'Pricing', 'About'] as const).map((label) => ({ label, href: LINK_ROUTES[label] }));
+/** Where a breadcrumb goes: a section of the site by name, otherwise a catalogue search for its first word. */
+export function crumbHref(label: string): Href {
+  const section = (LINK_ROUTES as Readonly<Record<string, Href>>)[label];
+  return section ?? { pathname: '/explore', params: { q: label.split(' ')[0] } };
+}
 const LEAF = require('@/assets/images/maple-leaf.png') as number;
 
 interface HomeNavProps {
@@ -64,7 +79,7 @@ export function HomeNav({ wide, active = 'Home', fullWidth = false, links: own, 
             const route = LINK_ROUTES[l];
             const on = l === active;
             return (
-              <Pressable key={l} accessibilityRole="link" style={[styles.link, t && styles.linkTall]} onPress={route ? () => router.push(route) : undefined}>
+              <Pressable key={l} accessibilityRole="link" style={[styles.link, t && styles.linkTall]} onPress={() => router.push(route)}>
                 <Text style={[styles.linkText, t && styles.linkTextTall, t && searchPlaceholder ? styles.linkTextSearch : null, dense && styles.linkTextDense, on && styles.linkActive]}>{l}</Text>
                 {on ? <View style={[styles.underline, t && styles.underlineTall]} /> : null}
               </Pressable>
@@ -79,18 +94,25 @@ export function HomeNav({ wide, active = 'Home', fullWidth = false, links: own, 
             {searchPlaceholder ? (
               <View style={[styles.searchBox, dense && styles.searchBoxDense]}>
                 <Icon name="search" size={17} color={Brand.body} />
-                <TextInput style={styles.searchInput} placeholder={searchPlaceholder} placeholderTextColor="#8A92A3" accessibilityLabel="Search" />
+                <TextInput
+                  style={styles.searchInput}
+                  placeholder={searchPlaceholder}
+                  placeholderTextColor="#8A92A3"
+                  accessibilityLabel="Search"
+                  returnKeyType="search"
+                  onSubmitEditing={(e) => router.push({ pathname: '/explore', params: { q: e.nativeEvent.text } })}
+                />
               </View>
             ) : (
-              <Pressable accessibilityRole="button" accessibilityLabel="Search" hitSlop={8} style={[styles.searchBtn, t && styles.searchBtnTall]}>
+              <Pressable accessibilityRole="button" accessibilityLabel="Search" hitSlop={8} style={[styles.searchBtn, t && styles.searchBtnTall]} onPress={() => router.push('/explore')}>
                 <Icon name="search" size={t ? 21 : 19} color={Brand.ink} />
               </Pressable>
             )}
-            <Pressable style={[styles.lang, t && styles.langTall]} accessibilityRole="button" accessibilityLabel="Language: English">
+            <LanguageMenu style={[styles.lang, t && styles.langTall]}>
               <Icon name="globe" size={t ? 18 : 17} color={Brand.ink} />
               <Text style={[styles.linkText, t && styles.linkTextTall]}>English</Text>
               <Icon name="chevronDown" size={13} color={Brand.ink} />
-            </Pressable>
+            </LanguageMenu>
           </>
         ) : null}
         <Pressable style={[styles.signIn, t && styles.signInTall, !wide && styles.btnNarrow]} accessibilityRole="button" onPress={() => router.push('/sign-in')}>

@@ -5,9 +5,11 @@ import { useState } from 'react';
 import { Platform, Pressable, Share, StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
+import { lengthSeconds, VideoSheet } from '@/features/shared/VideoSheet';
 import type { MockData } from '@/mock';
 
 import { Brand } from '../palette';
+import { MessageSheet } from './MessageSheet';
 
 type Storefront = MockData['publicPages']['teacherStorefront'];
 
@@ -17,6 +19,8 @@ const SCRIPT_FONT = Platform.select({ web: '"Segoe Print", "Bradley Hand", cursi
 export function TeacherHeader({ t, wide }: { t: Storefront; wide: boolean }) {
   const [following, setFollowing] = useState(false);
   const [shared, setShared] = useState(false);
+  const [watching, setWatching] = useState(false);
+  const [writing, setWriting] = useState(false);
 
   // Sharing always sends the direct link, so bookings through it are commission-free.
   const share = async () => {
@@ -31,9 +35,11 @@ export function TeacherHeader({ t, wide }: { t: Storefront; wide: boolean }) {
 
   return (
     <View>
+      <VideoSheet visible={watching} poster={t.bannerPhoto} title={`${t.name}: introduction`} seconds={lengthSeconds(t.introLength)} onClose={() => setWatching(false)} />
+      <MessageSheet teacher={t.name} visible={writing} onClose={() => setWriting(false)} />
       {t.bannerPhoto ? (
         // The reference banner already shows her quotes and the "Watch my introduction" button.
-        <Pressable style={[styles.banner, wide && styles.bannerPhotoWide]} accessibilityRole="button" accessibilityLabel={`Watch ${t.name}'s introduction, ${t.introLength}`}>
+        <Pressable style={[styles.banner, wide && styles.bannerPhotoWide]} accessibilityRole="button" accessibilityLabel={`Watch ${t.name}'s introduction, ${t.introLength}`} onPress={() => setWatching(true)}>
           <Image source={t.bannerPhoto} style={StyleSheet.absoluteFill} contentFit="cover" contentPosition={wide ? 'center' : 'left'} />
         </Pressable>
       ) : (
@@ -42,7 +48,7 @@ export function TeacherHeader({ t, wide }: { t: Storefront; wide: boolean }) {
         <Text style={styles.bannerFace} accessibilityElementsHidden>
           👩🏾‍🏫
         </Text>
-        <Pressable style={styles.intro} accessibilityRole="button" accessibilityLabel={`Watch ${t.name}'s introduction, ${t.introLength}`}>
+        <Pressable style={styles.intro} accessibilityRole="button" accessibilityLabel={`Watch ${t.name}'s introduction, ${t.introLength}`} onPress={() => setWatching(true)}>
           <View style={styles.introPlay}>
             <Icon name="play" size={18} color={Brand.surface} />
           </View>
@@ -105,7 +111,7 @@ export function TeacherHeader({ t, wide }: { t: Storefront; wide: boolean }) {
             <Pressable style={styles.ghost} onPress={share} accessibilityRole="button" accessibilityLabel="Share this page">
               <Text style={styles.ghostTextDark}>{shared ? 'Link shared' : '↗ Share'}</Text>
             </Pressable>
-            <Pressable style={styles.primary} accessibilityRole="button">
+            <Pressable style={styles.primary} accessibilityRole="button" onPress={() => setWriting(true)}>
               <Icon name="chat" size={16} color={Brand.surface} />
               <Text style={styles.primaryText}>Message</Text>
             </Pressable>

@@ -1,5 +1,7 @@
 import { Banner, Button, Card, ToggleRow } from '@/components/ui';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
+import { router } from 'expo-router';
+import { toast } from '@/lib/toast';
 
 /** Inventory 5: a parent approves what a child under 13 can do before the account opens. */
 export default function ConsentScreen() {
@@ -15,8 +17,8 @@ export default function ConsentScreen() {
                 <ToggleRow key={a.label} label={a.label} initial={a.on} />
               ))}
             </Card>
-            <Button label="I agree, open the account" icon="check" onPress={() => undefined} />
-            <Button label="Not now" variant="ghost" compact onPress={() => undefined} />
+            <Button label="I agree, open the account" icon="check" onPress={() => { toast('Thank you. The account is open, so your child can sign in now.'); router.replace('/sign-in'); }} />
+            <Button label="Not now" variant="ghost" compact onPress={() => router.replace('/welcome')} />
           </>
         );
       }}

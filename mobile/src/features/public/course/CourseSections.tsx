@@ -1,4 +1,6 @@
 import { Image } from 'expo-image';
+import { router } from 'expo-router';
+import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
@@ -6,6 +8,7 @@ import { formatMoney } from '@/lib/finance/fees';
 import type { MockData } from '@/mock';
 
 import { Brand } from '../palette';
+import { type NewReview, ReviewSheet, TeacherSheet } from './CourseSheets';
 
 type Course = MockData['publicPages']['coursePage'];
 
@@ -83,8 +86,10 @@ export function Outcomes({ course, wide }: { course: Course; wide: boolean }) {
 /** The teacher's profile card. */
 export function TeacherCard({ course }: { course: Course }) {
   const t = course.teacher;
+  const [open, setOpen] = useState(false);
   return (
     <View style={styles.card}>
+      <TeacherSheet course={course} visible={open} onClose={() => setOpen(false)} />
       <Text style={styles.cardTitle} accessibilityRole="header">
         Meet your teacher
       </Text>
@@ -106,7 +111,7 @@ export function TeacherCard({ course }: { course: Course }) {
         </View>
       </View>
       <Text style={styles.body}>{t.bio}</Text>
-      <Pressable style={styles.outline} accessibilityRole="button">
+      <Pressable style={styles.outline} accessibilityRole="button" onPress={() => setOpen(true)}>
         <Text style={styles.link}>View full profile →</Text>
       </Pressable>
     </View>
@@ -115,13 +120,16 @@ export function TeacherCard({ course }: { course: Course }) {
 
 /** Rating summary, the star breakdown and recent reviews. */
 export function Reviews({ course }: { course: Course }) {
+  const [writing, setWriting] = useState(false);
+  const [mine, setMine] = useState<readonly NewReview[]>([]);
   return (
     <View style={styles.card}>
+      <ReviewSheet visible={writing} onClose={() => setWriting(false)} onPosted={(r) => setMine((m) => [r, ...m])} />
       <View style={styles.between}>
         <Text style={styles.cardTitle} accessibilityRole="header">
           Student reviews
         </Text>
-        <Pressable style={styles.outlineSmall} accessibilityRole="button">
+        <Pressable style={styles.outlineSmall} accessibilityRole="button" onPress={() => setWriting(true)}>
           <Text style={styles.link}>Write a review</Text>
         </Pressable>
       </View>
@@ -140,7 +148,7 @@ export function Reviews({ course }: { course: Course }) {
           <Text style={styles.barPct}>{`${Math.round(share * 100)}%`}</Text>
         </View>
       ))}
-      {course.reviewList.map((r) => (
+      {[...mine, ...course.reviewList].map((r) => (
         <View key={r.name} style={styles.review}>
           <Text style={styles.strong}>{`${r.name} · ${'★'.repeat(r.stars)}`}</Text>
           <Text style={styles.body}>{r.text}</Text>
@@ -159,10 +167,12 @@ export function Related({ course }: { course: Course }) {
         <Text style={styles.cardTitle} accessibilityRole="header">
           Related courses
         </Text>
-        <Text style={styles.link}>View all →</Text>
+        <Pressable accessibilityRole="link" hitSlop={8} onPress={() => router.push({ pathname: '/explore', params: { q: course.breadcrumb[course.breadcrumb.length - 1] } })}>
+          <Text style={styles.link}>View all →</Text>
+        </Pressable>
       </View>
       {course.related.map((r) => (
-        <View key={r.title} style={styles.related}>
+        <Pressable key={r.title} style={styles.related} accessibilityRole="link" onPress={() => router.push({ pathname: '/explore', params: { q: r.title.split(' ')[0] } })}>
           <View style={styles.relatedThumb}>
             {r.photo ? <Image source={r.photo} style={styles.fill} contentFit="cover" /> : <Icon name={r.icon} size={26} color={Brand.surface} />}
           </View>
@@ -172,7 +182,7 @@ export function Related({ course }: { course: Course }) {
             <Text style={styles.body}>{`★ ${r.rating} (${r.reviews})`}</Text>
             <Text style={styles.strong}>{formatMoney(r.priceUGX, 'UGX')}</Text>
           </View>
-        </View>
+        </Pressable>
       ))}
     </View>
   );

@@ -83,7 +83,14 @@ function EnterBlock({ c, f, phone = false }: { c: Claim; f: Form; phone?: boolea
       {f.tab === 'scan' ? (
         <>
           <Image source={c.art.scanner} style={phone ? styles.scannerP : styles.scanner} contentFit="cover" accessibilityLabel="Hold the Parent Claim card inside the frame" />
-          <Pressable style={[styles.primary, phone && styles.primaryP]} accessibilityRole="button">
+          <Pressable
+            style={[styles.primary, phone && styles.primaryP]}
+            accessibilityRole="button"
+            onPress={() => {
+              // Sample data has no camera: reading the sample card's code stands in for a scan.
+              f.setCode(c.code);
+              f.setStage('verify');
+            }}>
             <Icon name="camera" size={18} color={Brand.surface} />
             <Text style={styles.primaryText}>Open Camera and Scan QR Code</Text>
           </Pressable>

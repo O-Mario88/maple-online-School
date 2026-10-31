@@ -6,6 +6,7 @@ import { Radius, Spacing, type Theme, Type } from '@/constants/theme';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { CLASSROOM } from '@/lib/navigation';
 import { useStyles } from '@/hooks/use-styles';
+import { toast } from '@/lib/toast';
 
 /** Inventory 42 and 43: the live host console and the class's understanding at a glance. */
 export default function HostScreen() {
@@ -24,10 +25,10 @@ export default function HostScreen() {
               <Badge label={`Live · ${h.elapsed}`} tone="danger" />
             </View>
             <View style={styles.controls}>
-              <Button label="Launch 15-second pulse quiz" icon="sparkle" compact onPress={() => undefined} />
-              <Button label="Breakout rooms" icon="people" variant="secondary" compact onPress={() => undefined} />
-              <Button label="Mute all" icon="mic" variant="secondary" compact onPress={() => undefined} />
-              <Button label="End class" variant="danger" compact onPress={() => undefined} />
+              <Button label="Launch 15-second pulse quiz" icon="sparkle" compact onPress={() => toast('Pulse quiz sent. Answers come in for 15 seconds.')} />
+              <Button label="Breakout rooms" icon="people" variant="secondary" compact onPress={() => toast('Learners split into rooms of 6. They return in 10 minutes.')} />
+              <Button label="Mute all" icon="mic" variant="secondary" compact onPress={() => toast('Everyone is muted. Learners can still raise a hand.')} />
+              <Button label="End class" variant="danger" compact onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))} />
             </View>
             <Grid min={320}>
               <Card title="Understanding right now" subtitle="From the last pulse quiz" icon="chart">
@@ -42,7 +43,7 @@ export default function HostScreen() {
               </Card>
               <Card title="Hands up" icon="hand">
                 {h.hands.map((n) => (
-                  <Row key={n} icon="hand" title={n} badge={<Button label="Unmute" compact variant="secondary" onPress={() => undefined} />} />
+                  <Row key={n} icon="hand" title={n} badge={<Button label="Unmute" compact variant="secondary" onPress={() => toast('Asked the learner to unmute.')} />} />
                 ))}
                 {h.breakouts.map((b) => (
                   <Row key={b.name} icon="people" title={b.name} detail={`${b.members} learners`} />

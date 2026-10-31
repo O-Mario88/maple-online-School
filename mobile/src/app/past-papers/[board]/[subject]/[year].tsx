@@ -9,7 +9,7 @@ import { Icon } from '@/components/icon';
 import { Button, EmptyState } from '@/components/ui';
 import { RefScale } from '@/features/public/home/RefScale';
 import { PhoneBar } from '@/features/public/PhoneBar';
-import { HomeNav, PAPER_LINKS } from '@/features/public/HomeNav';
+import { crumbHref, HomeNav, PAPER_LINKS } from '@/features/public/HomeNav';
 import { Brand, CARD_SHADOW, PUBLIC_WIDE } from '@/features/public/palette';
 import { CompletePaper, PaperInfo, RelatedResources } from '@/features/public/paper/PaperAside';
 import { PaperSidebar } from '@/features/public/paper/PaperSidebar';
@@ -97,7 +97,20 @@ export default function PastPaperScreen() {
 
   const main = (
     <View style={styles.main}>
-      <Text style={styles.crumbs}>{crumbs.join('  ›  ')}</Text>
+      <Text style={styles.crumbs}>
+        {crumbs.map((c, i) =>
+          i === crumbs.length - 1 ? (
+            <Text key={c}>{c}</Text>
+          ) : (
+            <Text key={c}>
+              <Text onPress={() => router.push(crumbHref(c))} accessibilityRole="link">
+                {c}
+              </Text>
+              {'  ›  '}
+            </Text>
+          ),
+        )}
+      </Text>
       <View style={styles.hero}>
         {wide ? (
           <>

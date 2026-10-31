@@ -1,9 +1,11 @@
 import { Image } from 'expo-image';
+import { router } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
 import { DomainChip } from '@/features/learner/cbc/CbcParts';
 import { Bar, panel } from '@/features/learner/dashboard/DashParts';
+import { toast } from '@/lib/toast';
 import type { MockData } from '@/mock';
 
 export type Course = MockData['learner']['courseOverview'];
@@ -72,7 +74,7 @@ export function LessonRow({ l }: { l: Lesson }) {
       </View>
       {l.status === 'done' ? <Tick size={22} /> : null}
       {current ? (
-        <Pressable style={styles.cont} accessibilityRole="button">
+        <Pressable style={styles.cont} accessibilityRole="button" onPress={() => router.push('/learn/lesson')}>
           <Text style={styles.contText}>Continue</Text>
           <Icon name="arrowRight" size={15} color="#FFFFFF" />
         </Pressable>
@@ -168,7 +170,7 @@ export function ResourcesCard({ c }: { c: Course }) {
       <Text style={styles.sideTitle}>Module Resources</Text>
       <View style={styles.files}>
         {c.resources.map((r) => (
-          <Pressable key={r.title} style={styles.file} accessibilityRole="button" accessibilityLabel={`Download ${r.title}`}>
+          <Pressable key={r.title} style={styles.file} accessibilityRole="button" accessibilityLabel={`Download ${r.title}`} onPress={() => toast(`${r.title} saved for offline study`)}>
             <View style={styles.fileTop}>
               <Image source={r.icon} style={styles.fileIcon} />
               <View style={styles.flex}>

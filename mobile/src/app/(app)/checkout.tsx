@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { Banner, Button, Card, Chip, ChipRow, Field, KeyValue } from '@/components/ui';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { formatMoney } from '@/lib/finance/fees';
+import { router } from 'expo-router';
+import { SAMPLE_CHECKOUT } from '@/lib/navigation';
 
 /** Inventory 17: one checkout for courses, lessons and events, with mobile money first. */
 export default function CheckoutScreen() {
@@ -35,7 +37,7 @@ export default function CheckoutScreen() {
                   ))}
               </ChipRow>
               {method === 'Card' ? null : <Field label="Phone number" placeholder="07XX XXX XXX" keyboardType="phone-pad" />}
-              <Button label={`Pay ${formatMoney(due, 'UGX')}`} icon="lock" onPress={() => undefined} />
+              <Button label={`Pay ${formatMoney(due, 'UGX')}`} icon="lock" onPress={() => router.push(SAMPLE_CHECKOUT)} />
             </Card>
             <Banner tone="good" title="Protected payment" body={c.guarantee} />
           </>

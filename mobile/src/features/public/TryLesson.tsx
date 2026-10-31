@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
+import { VideoSheet } from '@/features/shared/VideoSheet';
 import { scoreQuiz } from '@/lib/quiz';
 
 import type { SampleLesson } from './home/types';
@@ -90,6 +91,7 @@ function Quiz({ lesson, phone }: { lesson: SampleLesson; phone: boolean }) {
 
 /** "Try before you sign up": a short lesson and three questions with instant results. */
 export function TryLesson({ lesson, phone = false }: { lesson: SampleLesson; phone?: boolean }) {
+  const [playing, setPlaying] = useState(false);
   return (
     <View style={[styles.wrap, phone && styles.wrapPhone]}>
       <View style={[styles.copy, phone && styles.copyPhone]}>
@@ -109,20 +111,21 @@ export function TryLesson({ lesson, phone = false }: { lesson: SampleLesson; pho
           ))}
         </View>
         <View style={styles.ctas}>
-          <Pressable style={[styles.primary, phone && styles.ctaPhone]} accessibilityRole="button">
+          <Pressable style={[styles.primary, phone && styles.ctaPhone]} onPress={() => setPlaying(true)} accessibilityRole="button">
             <Text style={[styles.primaryText, phone && styles.ctaTextPhone]}>Start 3-Question Lesson</Text>
             <Icon name="arrowRight" size={14} color={Brand.surface} />
           </Pressable>
-          <Pressable style={[styles.secondary, phone && styles.ctaPhone]} accessibilityRole="button">
+          <Pressable style={[styles.secondary, phone && styles.ctaPhone]} onPress={() => router.push('/explore')} accessibilityRole="button">
             <Icon name="book" size={15} color={Brand.ink} />
             <Text style={styles.secondaryText}>Browse Sample Lessons</Text>
           </Pressable>
         </View>
       </View>
 
-      <Pressable style={[styles.video, phone && styles.videoPhone]} accessibilityRole="button" accessibilityLabel={`Play the sample lesson: ${lesson.title}`}>
+      <Pressable style={[styles.video, phone && styles.videoPhone]} onPress={() => setPlaying(true)} accessibilityRole="button" accessibilityLabel={`Play the sample lesson: ${lesson.title}`}>
         <Image source={lesson.photo} style={StyleSheet.absoluteFill} contentFit="cover" />
       </Pressable>
+      <VideoSheet visible={playing} poster={lesson.photo} title={lesson.title} seconds={180} onClose={() => setPlaying(false)} />
 
       <Quiz lesson={lesson} phone={phone} />
 

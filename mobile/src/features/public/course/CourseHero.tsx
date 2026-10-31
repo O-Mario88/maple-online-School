@@ -1,19 +1,26 @@
+import { router } from 'expo-router';
 import { Image } from 'expo-image';
+import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
+import { lengthSeconds, VideoSheet } from '@/features/shared/VideoSheet';
 import type { MockData } from '@/mock';
 
 import { Brand } from '../palette';
+import { crumbHref } from '@/features/public/HomeNav';
 
 type Course = MockData['publicPages']['coursePage'];
 
 function Trailer({ course, wide }: { course: Course; wide: boolean }) {
+  const [playing, setPlaying] = useState(false);
+  const sheet = <VideoSheet visible={playing} poster={course.trailer.photo} title={`${course.title}: course trailer`} seconds={lengthSeconds(course.trailer.length)} onClose={() => setPlaying(false)} />;
   if (course.trailer.photo) {
     // The reference frame already shows the trailer label and play button.
     return (
-      <Pressable style={styles.video} accessibilityRole="button" accessibilityLabel={`Play the course trailer, ${course.trailer.length}`}>
+      <Pressable style={styles.video} onPress={() => setPlaying(true)} accessibilityRole="button" accessibilityLabel={`Play the course trailer, ${course.trailer.length}`}>
         <Image source={course.trailer.photo} style={StyleSheet.absoluteFill} contentFit="cover" />
+        {sheet}
       </Pressable>
     );
   }
@@ -27,9 +34,10 @@ function Trailer({ course, wide }: { course: Course; wide: boolean }) {
         👨🏾‍🏫
       </Text>
       <Text style={styles.board}>{course.trailer.board.join('\n')}</Text>
-      <Pressable style={styles.play} accessibilityRole="button" accessibilityLabel="Play the course trailer">
+      <Pressable style={styles.play} onPress={() => setPlaying(true)} accessibilityRole="button" accessibilityLabel="Play the course trailer">
         <Icon name="play" size={30} color={Brand.surface} />
       </Pressable>
+      {sheet}
     </View>
   );
 }
@@ -40,7 +48,12 @@ export function CourseHero({ course, wide }: { course: Course; wide: boolean }) 
     <View style={styles.wrap}>
       <View style={styles.crumbs}>
         {course.breadcrumb.map((c) => (
-          <Text key={c} style={styles.crumb}>{`${c}  ›  `}</Text>
+          <Text key={c} style={styles.crumb}>
+            <Text onPress={() => router.push(crumbHref(c))} accessibilityRole="link">
+              {c}
+            </Text>
+            {'  ›  '}
+          </Text>
         ))}
         <Text style={styles.crumbHere} numberOfLines={1}>
           {course.title.split(' (')[0]}

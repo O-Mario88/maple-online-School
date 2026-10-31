@@ -1,5 +1,6 @@
 import { Badge, Banner, Button, Card, Row } from '@/components/ui';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
+import { toast } from '@/lib/toast';
 
 const PRIORITY = {
   urgent: { label: 'Urgent', tone: 'danger' },
@@ -23,7 +24,7 @@ export default function TrustScreen() {
               return (
                 <Card key={t.id} title={t.subject} subtitle={t.kind} icon={t.kind.startsWith('Safeguarding') ? 'alert' : 'flag'}>
                   <Row icon="sparkle" title="AI first read" detail={t.ai} badge={<Badge label={p.label} tone={p.tone} />} />
-                  <Button label="Open case" compact onPress={() => undefined} />
+                  <Button label="Open case" compact onPress={() => toast('Case opened and assigned to you.')} />
                 </Card>
               );
             })}

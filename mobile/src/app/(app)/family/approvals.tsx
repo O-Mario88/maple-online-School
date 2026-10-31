@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Badge, Banner, Button, Card, Row } from '@/components/ui';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { formatMoney } from '@/lib/finance/fees';
+import { toast } from '@/lib/toast';
 
 /** Inventory 56 (and 57's meeting booker): approve what your child asks to book; book a teacher's office hour. */
 export default function ApprovalsScreen() {
@@ -36,7 +37,7 @@ export default function ApprovalsScreen() {
           ))}
           <Card title="Teacher office hours" subtitle="Book a meeting" icon="calendar">
             {m.family.officeHours.map((o) => (
-              <Row key={o.slot} icon="calendar" title={o.teacher} detail={`${o.slot} · ${o.place}`} badge={<Button label="Book" compact variant="secondary" onPress={() => undefined} />} />
+              <Row key={o.slot} icon="calendar" title={o.teacher} detail={`${o.slot} · ${o.place}`} badge={<Button label="Book" compact variant="secondary" onPress={() => toast('Booked. We’ve told the teacher and added it to your calendar.')} />} />
             ))}
           </Card>
         </>

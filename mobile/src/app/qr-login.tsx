@@ -11,6 +11,7 @@ import { Brand } from '@/features/public/palette';
 import { LightOnly } from '@/hooks/use-theme';
 import type { IconName } from '@/lib/icons';
 import { mockData } from '@/lib/mock';
+import { toast } from '@/lib/toast';
 import type { MockData } from '@/mock';
 
 type Qr = MockData['publicPages']['qrLogin'];
@@ -96,7 +97,7 @@ function ClassCode({ q, open, onOpen, phone = false }: { q: Qr; open: boolean; o
           <Text style={styles.codeLabel}>Or enter your class code</Text>
           <View style={styles.codeRow}>
             <TextInput style={styles.codeInput} value={code} onChangeText={(v) => setCode(v.slice(0, q.classCodeLength))} placeholder={`Enter ${q.classCodeLength}-digit class code`} placeholderTextColor="#9AA3B2" autoCapitalize="characters" accessibilityLabel="Class code" />
-            <Pressable style={[styles.codeGo, code.length === q.classCodeLength && styles.codeGoOn]} disabled={code.length !== q.classCodeLength} accessibilityRole="button" accessibilityLabel="Use class code">
+            <Pressable style={[styles.codeGo, code.length === q.classCodeLength && styles.codeGoOn]} disabled={code.length !== q.classCodeLength} onPress={() => toast(`Class ${code.toUpperCase()} found. Now enter your PIN to sign in.`)} accessibilityRole="button" accessibilityLabel="Use class code">
               <Icon name="chevronRight" size={16} color={Brand.surface} />
             </Pressable>
           </View>

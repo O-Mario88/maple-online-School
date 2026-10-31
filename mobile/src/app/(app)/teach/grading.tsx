@@ -5,6 +5,7 @@ import { Avatar, Banner, Button, Card, Chip, ChipRow, Field, Grid, Row } from '@
 import { Radius, Spacing, type Theme, Type } from '@/constants/theme';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { useStyles } from '@/hooks/use-styles';
+import { toast } from '@/lib/toast';
 
 /** Inventory 45: fast marking with AI rubric hints and a held voice note. */
 export default function GradingScreen() {
@@ -40,7 +41,7 @@ export default function GradingScreen() {
                 </View>
               ))}
               <Field label="Comment" value={comment} onChangeText={setComment} multiline placeholder="What went well, and one thing to fix" />
-              <Button label="Hold to record a 30-second voice note" icon="mic" variant="secondary" onPress={() => undefined} />
+              <Button label="Hold to record a 30-second voice note" icon="mic" variant="secondary" onPress={() => toast('Hold the button and speak. Release to attach the voice note.')} />
               <View style={styles.actions}>
                 <Button label="Save and next" icon="check" onPress={() => setIndex(index + 1)} />
               </View>

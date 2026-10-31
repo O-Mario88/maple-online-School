@@ -50,6 +50,8 @@ function ClassCard({ c }: { c: LiveClass }) {
 }
 
 /** "Live Classes Happening Now": a scrolling row of open and upcoming classes. */
+const openLive = () => router.push({ pathname: '/explore', params: { kind: 'live' } });
+
 export function LiveStrip({ classes, phone = false }: { classes: readonly LiveClass[]; phone?: boolean }) {
   const scroller = useRef<ComponentRef<typeof ScrollView>>(null);
   return (
@@ -67,7 +69,7 @@ export function LiveStrip({ classes, phone = false }: { classes: readonly LiveCl
           </View>
         </View>
         {phone ? null : (
-          <Pressable accessibilityRole="link" style={styles.viewAll}>
+          <Pressable accessibilityRole="link" style={styles.viewAll} onPress={openLive}>
             <Text style={styles.viewAllText}>View all live classes</Text>
             <Icon name="arrowRight" size={14} color={Brand.blue} />
           </Pressable>
@@ -79,7 +81,7 @@ export function LiveStrip({ classes, phone = false }: { classes: readonly LiveCl
         ))}
       </ScrollView>
       {phone ? (
-        <Pressable accessibilityRole="link" style={styles.viewAllPhone}>
+        <Pressable accessibilityRole="link" style={styles.viewAllPhone} onPress={openLive}>
           <Text style={styles.viewAllText}>View all live classes</Text>
           <Icon name="arrowRight" size={14} color={Brand.blue} />
         </Pressable>

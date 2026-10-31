@@ -13,6 +13,7 @@ import { useStyles } from '@/hooks/use-styles';
 export default function LiveRoomScreen() {
   const { theme, styles } = useStyles(makeStyles);
   const [hand, setHand] = useState(false);
+  const [muted, setMuted] = useState(false);
   const [message, setMessage] = useState('');
   return (
     <PreviewScreen back title="Live class">
@@ -33,8 +34,8 @@ export default function LiveRoomScreen() {
             </View>
             <View style={styles.controls}>
               <Button label={hand ? 'Lower hand' : 'Raise hand'} icon="hand" variant={hand ? 'primary' : 'secondary'} compact onPress={() => setHand(!hand)} />
-              <Button label="Mute" icon="mic" variant="secondary" compact onPress={() => undefined} />
-              <Button label="Leave" variant="danger" compact onPress={() => undefined} />
+              <Button label={muted ? 'Unmute' : 'Mute'} icon="mic" variant={muted ? 'primary' : 'secondary'} compact onPress={() => setMuted(!muted)} />
+              <Button label="Leave" variant="danger" compact onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))} />
             </View>
             <ToggleRow label="Low-data mode" detail="Audio and whiteboard only, no video" initial />
             <Grid min={320}>

@@ -75,7 +75,7 @@ function Stats({ c, phone = false }: { c: Course; phone?: boolean }) {
 
 function ContinueButton({ style }: { style?: object }) {
   return (
-    <Pressable style={[styles.continue, style]} accessibilityRole="button">
+    <Pressable style={[styles.continue, style]} accessibilityRole="button" onPress={() => router.push('/learn/lesson')}>
       <Text style={styles.continueText}>Continue Lesson</Text>
       <Icon name="arrowRight" size={18} color="#FFFFFF" />
     </Pressable>

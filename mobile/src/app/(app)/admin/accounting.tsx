@@ -1,6 +1,7 @@
 import { Banner, Button, Card, Table } from '@/components/ui';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { formatMoney } from '@/lib/finance/fees';
+import { toast } from '@/lib/toast';
 
 /** Inventory 69 (Phase 6): the full accounting suite; here, the trial balance. */
 export default function AccountingScreen() {
@@ -25,7 +26,7 @@ export default function AccountingScreen() {
                 ]}
               />
             </Card>
-            <Button label="Export to QuickBooks or Xero" icon="download" variant="secondary" onPress={() => undefined} />
+            <Button label="Export to QuickBooks or Xero" icon="download" variant="secondary" onPress={() => toast('Ledger exported. QuickBooks or Xero will import it on its next sync.')} />
           </>
         );
       }}

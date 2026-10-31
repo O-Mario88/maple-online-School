@@ -5,7 +5,9 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Icon } from '@/components/icon';
 import { Banner, Button, Card, Chip, ChipRow, Field, Grid, Row } from '@/components/ui';
 import { Radius, Spacing, type Theme, Type } from '@/constants/theme';
+import { PlayerControls, usePlayback } from '@/features/learner/exam/Walkthrough';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
+import { lengthSeconds } from '@/features/shared/VideoSheet';
 import { useStyles } from '@/hooks/use-styles';
 
 const QUALITIES = ['144p', '360p', '720p', '1080p'];
@@ -15,32 +17,54 @@ const TRANSCRIPT = [
   { at: '03:05', text: 'So x² + 6x + 9 is (x + 3)². That is the whole trick.' },
   { at: '05:30', text: 'Now solve x² + 6x − 7 = 0 by completing the square.' },
 ];
-const CHAPTERS = ['Why complete the square', 'Half and square', 'Solving equations', 'Market problem'];
+const CHAPTERS = [
+  { title: 'Why complete the square', at: '00:00' },
+  { title: 'Half and square', at: '01:40' },
+  { title: 'Solving equations', at: '05:30' },
+  { title: 'Market problem', at: '11:20' },
+];
+
+/** A request to move the player to a moment; n makes a second tap on the same line count. */
+type Jump = { to: number; n: number };
+
+/** The lesson video with working play, seek, speed and captions (simulated playback on sample data). */
+function LessonPlayer({ title, seconds, quality, at }: { title: string; seconds: number; quality: string; at: Jump | null }) {
+  const { theme, styles } = useStyles(makeStyles);
+  const p = usePlayback(seconds);
+  const [muted, setMuted] = useState(false);
+  const [cc, setCc] = useState(true);
+  const [seen, setSeen] = useState<Jump | null>(null);
+  if (at && at !== seen) {
+    setSeen(at);
+    p.seek(at.to / seconds);
+  }
+  return (
+    <View style={styles.player}>
+      <Pressable style={styles.video} onPress={p.toggle} accessibilityRole="button" accessibilityLabel={p.running ? 'Pause' : `Play ${title}`}>
+        {p.running ? null : <Icon name="play" size={56} color={theme.sidebarText} />}
+        <Text style={styles.playerText}>{`${quality} · uses about 6 MB`}</Text>
+      </Pressable>
+      <PlayerControls total={seconds} p={p} muted={muted} onMute={() => setMuted(!muted)} cc={cc} onCc={() => setCc(!cc)} />
+    </View>
+  );
+}
 
 /** Inventory 21: the lesson player with transcript, chapters, a check and the AI study buddy. */
 export default function LessonScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { theme, styles } = useStyles(makeStyles);
+  const { styles } = useStyles(makeStyles);
   const [quality, setQuality] = useState('360p');
   const [answer, setAnswer] = useState<number | null>(null);
   const [buddyOpen, setBuddyOpen] = useState(true);
   const [question, setQuestion] = useState('');
+  const [jump, setJump] = useState<Jump | null>(null);
   return (
     <PreviewScreen back title="Lesson">
       {(m) => {
         const lesson = m.learner.courses.flatMap((c) => c.modules.flatMap((mod) => mod.lessons)).find((l) => l.id === id) ?? { title: m.learner.nextUp.title, minutes: 18 };
         return (
           <>
-            <View style={styles.player} accessibilityLabel={`Video: ${lesson.title}`}>
-              <Icon name="play" size={56} color={theme.sidebarText} />
-              <View style={styles.playerBar}>
-                <Text style={styles.playerText}>03:05 / {lesson.minutes}:00</Text>
-                <View style={styles.track}>
-                  <View style={[styles.fill, { width: '28%' }]} />
-                </View>
-                <Text style={styles.playerText}>{quality} · uses about 6 MB</Text>
-              </View>
-            </View>
+            <LessonPlayer title={lesson.title} seconds={lesson.minutes * 60} quality={quality} at={jump} />
             <Text style={styles.title}>{lesson.title}</Text>
             <ChipRow>
               {QUALITIES.map((q) => (
@@ -50,12 +74,12 @@ export default function LessonScreen() {
             <Grid min={320}>
               <Card title="Chapters" subtitle="Made by AI from the recording" icon="sparkle">
                 {CHAPTERS.map((c, i) => (
-                  <Row key={c} icon="play" title={c} detail={`Part ${i + 1}`} onPress={() => undefined} />
+                  <Row key={c.title} icon="play" title={c.title} detail={`Part ${i + 1} · ${c.at}`} onPress={() => setJump({ to: lengthSeconds(c.at), n: Date.now() })} />
                 ))}
               </Card>
               <Card title="Transcript" subtitle="Tap a line to jump there" icon="book">
                 {TRANSCRIPT.map((t) => (
-                  <Pressable key={t.at} style={styles.line} onPress={() => undefined} accessibilityRole="button">
+                  <Pressable key={t.at} style={styles.line} onPress={() => setJump({ to: lengthSeconds(t.at), n: Date.now() })} accessibilityRole="button" accessibilityLabel={`Jump to ${t.at}`}>
                     <Text style={styles.at}>{t.at}</Text>
                     <Text style={styles.lineText}>{t.text}</Text>
                   </Pressable>
@@ -102,11 +126,9 @@ export default function LessonScreen() {
 
 function makeStyles(t: Theme) {
   return StyleSheet.create({
-    player: { aspectRatio: 16 / 9, borderRadius: Radius.lg, backgroundColor: t.sidebar, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
-    playerBar: { position: 'absolute', left: 0, right: 0, bottom: 0, padding: Spacing.three, gap: Spacing.one, backgroundColor: 'rgba(0,0,0,0.35)' },
+    player: { borderRadius: Radius.lg, backgroundColor: t.sidebar, overflow: 'hidden' },
+    video: { aspectRatio: 16 / 9, alignItems: 'center', justifyContent: 'center', gap: Spacing.two },
     playerText: { ...Type.caption, color: t.sidebarText },
-    track: { height: 4, borderRadius: 2, backgroundColor: t.sidebarElement },
-    fill: { height: 4, borderRadius: 2, backgroundColor: t.accent },
     title: { ...Type.title, color: t.text },
     line: { flexDirection: 'row', gap: Spacing.three, paddingVertical: Spacing.two },
     at: { ...Type.caption, color: t.accentText, width: 44 },

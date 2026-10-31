@@ -1,6 +1,7 @@
 import { Badge, Banner, Button, Card, Grid, Row, Table } from '@/components/ui';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import type { RosterIssue } from '@/mock/school';
+import { toast } from '@/lib/toast';
 
 const ISSUE = {
   ok: { label: 'Ready', tone: 'good' },
@@ -17,7 +18,7 @@ export default function RostersScreen() {
         const problems = r.rows.filter((x) => x.issue !== 'ok').length;
         return (
           <>
-            <Button label="Upload a spreadsheet" icon="download" onPress={() => undefined} />
+            <Button label="Upload a spreadsheet" icon="download" onPress={() => toast('Choose a CSV or Excel file of learners to upload.')} />
             <Grid min={320}>
               <Card title="Columns matched" subtitle={r.file} icon="check">
                 {r.mapping.map((c) => (
@@ -27,7 +28,7 @@ export default function RostersScreen() {
               <Card title="What happens next" icon="qr">
                 <Row icon="people" title={`${r.total} learners`} detail="Accounts created as pending" />
                 <Row icon="qr" title="Parent claim codes" detail="Print the QR sheet, or send by SMS" />
-                <Button label="Send claim codes by SMS" variant="secondary" compact onPress={() => undefined} />
+                <Button label="Send claim codes by SMS" variant="secondary" compact onPress={() => toast('Claim codes sent by SMS to every parent with a phone number.')} />
               </Card>
             </Grid>
             <Banner tone="warning" title={`${problems} rows need you`} body="Fix them here, or import the rest and come back." />
@@ -42,7 +43,7 @@ export default function RostersScreen() {
                 { key: 'issue', label: 'Status', align: 'right', render: (x) => <Badge label={ISSUE[x.issue].label} tone={ISSUE[x.issue].tone} /> },
               ]}
             />
-            <Button label={`Import ${r.total - problems} learners`} icon="check" onPress={() => undefined} />
+            <Button label={`Import ${r.total - problems} learners`} icon="check" onPress={() => toast(`${r.total - problems} learners imported. Fix the rest and import again.`)} />
           </>
         );
       }}

@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import { Badge, Banner, Button, Card, Field, Grid, Row, Stat } from '@/components/ui';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
+import { router } from 'expo-router';
 
 /** Inventory 37: turn a syllabus, worksheet or playlist into a course in about a minute. */
 export default function StudioScreen() {
@@ -33,7 +34,7 @@ export default function StudioScreen() {
                     ))}
                   </Card>
                 ))}
-                <Button label="Open in course builder" icon="book" onPress={() => undefined} />
+                <Button label="Open in course builder" icon="book" onPress={() => router.push('/teach/course-editor')} />
               </>
             ) : null}
           </>

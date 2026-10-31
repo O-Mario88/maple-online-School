@@ -4,6 +4,7 @@ import { Banner, Button } from '@/components/ui';
 import { Radius, Spacing, type Theme, Type } from '@/constants/theme';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { useStyles } from '@/hooks/use-styles';
+import { toast } from '@/lib/toast';
 
 /** Inventory 63: the week for a class, with clash checks and substitutes. */
 export default function TimetableScreen() {
@@ -46,8 +47,8 @@ export default function TimetableScreen() {
               </View>
             </ScrollView>
             <View style={styles.actions}>
-              <Button label="Find a substitute" icon="people" variant="secondary" compact onPress={() => undefined} />
-              <Button label="Publish timetable" icon="check" compact onPress={() => undefined} />
+              <Button label="Find a substitute" icon="people" variant="secondary" compact onPress={() => toast('Free teachers for that period have been asked to cover.')} />
+              <Button label="Publish timetable" icon="check" compact onPress={() => toast('Timetable published. Teachers, learners and parents can see it now.')} />
             </View>
           </>
         );

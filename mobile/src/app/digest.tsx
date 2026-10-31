@@ -1,6 +1,9 @@
 import { Banner, Button, Card, KeyValue, Row } from '@/components/ui';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { formatMoney } from '@/lib/finance/fees';
+import { router } from 'expo-router';
+import { SAMPLE_CHECKOUT } from '@/lib/navigation';
+import { toast } from '@/lib/toast';
 
 /** Inventory 11: the weekly family digest, opened from WhatsApp or SMS without signing in. */
 export default function DigestScreen() {
@@ -24,9 +27,9 @@ export default function DigestScreen() {
               ))}
             </Card>
             <Card title={`A voice note from ${d.voiceFrom}`} icon="mic">
-              <Button label="Play (0:42)" icon="mic" variant="secondary" compact onPress={() => undefined} />
+              <Button label="Play (0:42)" icon="mic" variant="secondary" compact onPress={() => toast('Playing the voice note…')} />
             </Card>
-            <Button label="Pay fees" icon="wallet" onPress={() => undefined} />
+            <Button label="Pay fees" icon="wallet" onPress={() => router.push(SAMPLE_CHECKOUT)} />
             <Banner tone="info" title="Private link" body={`${d.expires}. Sign in to see everything.`} />
           </>
         );

@@ -1,7 +1,9 @@
 import { Image } from 'expo-image';
+import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
+import { VideoSheet } from '@/features/shared/VideoSheet';
 
 import { Brand, CARD_SHADOW } from '../palette';
 import type { Landing } from './types';
@@ -36,8 +38,10 @@ function StatCard({ stat, style }: { stat: Stat; style?: object }) {
 }
 
 function StoryButton({ style }: { style?: object }) {
+  const [playing, setPlaying] = useState(false);
   return (
-    <Pressable style={[styles.story, style]} accessibilityRole="button" accessibilityLabel="Watch our story, 2 minutes">
+    <Pressable style={[styles.story, style]} onPress={() => setPlaying(true)} accessibilityRole="button" accessibilityLabel="Watch our story, 2 minutes">
+      <VideoSheet visible={playing} title="Maple Global Online School: our story" seconds={120} onClose={() => setPlaying(false)} />
       <View style={styles.storyPlay}>
         <Icon name="play" size={13} color={Brand.surface} />
       </View>

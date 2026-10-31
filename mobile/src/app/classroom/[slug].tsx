@@ -5,10 +5,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Button, EmptyState } from '@/components/ui';
 import { ClassRail, type RailItem, type RailKey } from '@/features/classroom/ClassRail';
+import { type ClassLayout, isSheetRail, RailSheet, type SheetRail } from '@/features/classroom/ClassSheets';
 import { ClassroomTopBar } from '@/features/classroom/ClassroomTopBar';
+import { NotesPanel } from '@/features/classroom/NotesPanel';
 import { AssignmentsBody, type ChatMessage, ChatBody, NotesBody, Panel, ParticipantsBody, TranscriptBody } from '@/features/classroom/Panels';
 import { Stage } from '@/features/classroom/Stage';
-import { Icon } from '@/components/icon';
 import { Brand } from '@/features/public/palette';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { LightOnly } from '@/hooks/use-theme';
@@ -31,6 +32,9 @@ export default function ClassroomScreen() {
   const [hand, setHand] = useState(false);
   const [rail, setRail] = useState<RailKey>('class');
   const [tab, setTab] = useState<SideTab>('notes');
+  const [layout, setLayout] = useState<ClassLayout>('full');
+  const [sheet, setSheet] = useState<SheetRail | null>(null);
+  const [teacherOnly, setTeacherOnly] = useState(false);
 
   if (!mock || !room) return <PreviewScreen title="Live class">{() => null}</PreviewScreen>;
   if (slug !== room.slug) {
@@ -60,6 +64,8 @@ export default function ClassroomScreen() {
   ];
   const selectRail = (key: RailKey) => {
     setRail(key);
+    if (isSheetRail(key)) setSheet(key);
+    if (key === 'class') setLayout('full');
     if (key === 'chat' || key === 'notes' || key === 'transcript' || key === 'assignments') setTab(key);
     if (key === 'participants') setTab('people');
   };
@@ -96,9 +102,19 @@ export default function ClassroomScreen() {
   return (
     <LightOnly>
       <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
-        <ClassroomTopBar title={room.title} board={room.board} students={room.students} teacher={room.teacher} startSeconds={room.elapsedSeconds} lengthSeconds={room.lengthSeconds} wide={wide} />
+        <ClassroomTopBar title={room.title} board={room.board} students={room.students} teacher={room.teacher} startSeconds={room.elapsedSeconds} lengthSeconds={room.lengthSeconds} wide={wide} layout={layout} onLayout={setLayout} />
+        <RailSheet
+          rail={sheet}
+          room={room}
+          onClose={() => {
+            setSheet(null);
+            setRail('class');
+          }}
+        />
         <ScrollView style={styles.flex} contentContainerStyle={styles.page}>
-          {wide ? (
+          {layout === 'focus' ? (
+            <View style={styles.focus}>{stage}</View>
+          ) : wide ? (
             <>
               <View style={styles.top}>
                 <ClassRail items={railItems} active={rail} onSelect={selectRail} />
@@ -106,28 +122,7 @@ export default function ClassroomScreen() {
                 <View style={styles.side}>
                   {sideTabs}
                   <View style={styles.sideBody}>
-                    {tab === 'notes' ? (
-                      <>
-                        <View style={styles.notesHead}>
-                          <Text style={styles.notesHeading}>Lesson Notes</Text>
-                          <View style={styles.notesActions}>
-                            <Text style={styles.myNotes}>My Notes ⌄</Text>
-                            <Text style={styles.moreBtn}>•••</Text>
-                          </View>
-                        </View>
-                        <View style={styles.toolbar} accessibilityRole="toolbar">
-                          <Text style={[styles.tool, styles.toolBold]}>B</Text>
-                          <Text style={[styles.tool, styles.toolItalic]}>I</Text>
-                          <Text style={[styles.tool, styles.toolUnderline]}>U</Text>
-                          <Icon name="list" size={17} color={Brand.ink} />
-                          <Icon name="notes" size={17} color={Brand.ink} />
-                          <Icon name="grid" size={17} color={Brand.ink} />
-                          <View style={styles.flex} />
-                          <Icon name="expand" size={15} color={Brand.ink} />
-                        </View>
-                      </>
-                    ) : null}
-                    {body[tab]}
+                    {tab === 'notes' ? <NotesPanel room={room} /> : body[tab]}
                   </View>
                 </View>
               </View>
@@ -138,7 +133,11 @@ export default function ClassroomScreen() {
                   </Panel>
                 </View>
                 <View style={styles.flex}>
-                  <Panel title="Chat" count={chatCount} expand action={<Text style={styles.everyone}>Everyone ⌄</Text>}>
+                  <Panel title="Chat" count={chatCount} expand action={
+                      <Pressable onPress={() => setTeacherOnly(!teacherOnly)} accessibilityRole="button" accessibilityLabel={`Send to ${teacherOnly ? 'the teacher only' : 'everyone'}. Change`}>
+                        <Text style={styles.everyone}>{teacherOnly ? 'Teacher only ⌄' : 'Everyone ⌄'}</Text>
+                      </Pressable>
+                    }>
                     <ChatBody messages={messages} onSend={send} />
                   </Panel>
                 </View>
@@ -148,7 +147,11 @@ export default function ClassroomScreen() {
                   </Panel>
                 </View>
                 <View style={styles.flex}>
-                  <Panel title="Assignments" count={room.assignments.length} action={<Text style={styles.newBtn}>＋ New</Text>}>
+                  <Panel title="Assignments" count={room.assignments.length} action={
+                      <Pressable onPress={() => router.push('/learn/assignments')} accessibilityRole="button" accessibilityLabel="All my assignments">
+                        <Text style={styles.newBtn}>＋ New</Text>
+                      </Pressable>
+                    }>
                     <AssignmentsBody room={room} />
                   </Panel>
                 </View>
@@ -175,17 +178,7 @@ const styles = StyleSheet.create({
   center: { flex: 1, paddingVertical: 10 },
   side: { width: SIDE, marginVertical: 10, marginRight: 10, borderRadius: 14, backgroundColor: Brand.surface, overflow: 'hidden' },
   sideBody: { padding: 18, gap: 12 },
-  notesHead: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  notesHeading: { fontSize: 17, fontWeight: '800', color: Brand.ink },
-  notesActions: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  moreBtn: { fontSize: 11, fontWeight: '800', color: Brand.ink, paddingHorizontal: 9, paddingVertical: 7, borderRadius: 8, borderWidth: 1, borderColor: Brand.line },
-  toolbar: { flexDirection: 'row', alignItems: 'center', gap: 22, marginTop: 14, marginBottom: 4, paddingHorizontal: 12, paddingVertical: 10, borderRadius: 8, borderWidth: 1, borderColor: Brand.line },
-  tool: { fontSize: 16, color: Brand.ink },
-  toolBold: { fontWeight: '800' },
-  toolItalic: { fontStyle: 'italic', fontFamily: 'Georgia' },
-  toolUnderline: { textDecorationLine: 'underline' },
   everyone: { fontSize: 12, fontWeight: '600', color: Brand.ink, paddingHorizontal: 10, paddingVertical: 6, borderRadius: 8, borderWidth: 1, borderColor: Brand.line },
-  myNotes: { fontSize: 12, fontWeight: '600', color: Brand.ink, paddingHorizontal: 10, paddingVertical: 6, borderRadius: 8, borderWidth: 1, borderColor: Brand.line },
   tabs: { flexDirection: 'row', flexWrap: 'wrap', borderBottomWidth: 1, borderBottomColor: Brand.line, paddingHorizontal: 8 },
   tab: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 10, paddingVertical: 14, borderBottomWidth: 2, borderBottomColor: 'transparent', marginBottom: -1 },
   tabOn: { borderBottomColor: Brand.blue },
@@ -195,5 +188,6 @@ const styles = StyleSheet.create({
   bottom: { flexDirection: 'row', alignItems: 'flex-start', gap: 12, paddingHorizontal: 10, paddingTop: 2 },
   newBtn: { fontSize: 13, fontWeight: '700', color: Brand.surface, backgroundColor: Brand.blue, paddingHorizontal: 12, paddingVertical: 6, borderRadius: 8, overflow: 'hidden' },
   narrow: { gap: 12, padding: 12 },
+  focus: { padding: 12 },
   narrowBody: { padding: 14, borderRadius: 14, backgroundColor: Brand.surface },
 });

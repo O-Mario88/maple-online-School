@@ -4,6 +4,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
 import { useColorScheme } from 'react-native';
 
+import { ToastHost } from '@/components/ui/ToastHost';
 import { AuthProvider, useAuth } from '@/lib/auth/auth-context';
 
 // Signed-out visitors who open a signed-in address (such as /) land on sign-in,
@@ -21,6 +22,7 @@ export default function RootLayout() {
       <AuthProvider>
         <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
           <RootNavigator />
+          <ToastHost />
         </ThemeProvider>
       </AuthProvider>
     </QueryClientProvider>
@@ -79,6 +81,12 @@ function RootNavigator() {
       <Stack.Screen name="consent" />
       <Stack.Screen name="guardian-consent" />
       <Stack.Screen name="claim-child" />
+      <Stack.Screen name="pricing" />
+      <Stack.Screen name="curriculums" />
+      <Stack.Screen name="teachers" />
+      <Stack.Screen name="about" />
+      <Stack.Screen name="terms" />
+      <Stack.Screen name="privacy" />
     </Stack>
   );
 }

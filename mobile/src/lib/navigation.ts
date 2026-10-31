@@ -89,6 +89,7 @@ const MENUS: Readonly<Record<Portal, readonly NavItem[]>> = {
     curriculum,
     fees,
     p('billing', 'Billing', '/learn/billing', 'wallet'),
+    p('account', 'My account', '/learn/account', 'person'),
   ],
   teacher: [
     home,
@@ -192,6 +193,12 @@ export const PUBLIC_PREVIEWS = [
   { href: '/consent', label: 'Parent consent', icon: 'hand' },
   { href: '/guardian-consent', label: 'Ask a guardian (age gate)', icon: 'people' },
   { href: '/claim-child', label: 'Link your child', icon: 'people' },
+  { href: '/pricing', label: 'Pricing', icon: 'wallet' },
+  { href: '/curriculums', label: 'Curriculums', icon: 'map' },
+  { href: '/teachers', label: 'For teachers', icon: 'cap' },
+  { href: '/about', label: 'About Maple', icon: 'sparkle' },
+  { href: '/terms', label: 'Terms of Service', icon: 'clipboard' },
+  { href: '/privacy', label: 'Privacy Policy', icon: 'lock' },
 ] as const satisfies readonly { href: string; route?: string; label: string; icon: IconName }[];
 
 /** Screens that open over any portal: reached from buttons, not a menu. */
@@ -203,3 +210,6 @@ export const SHARED_PREVIEWS = [
 
 /** The full-screen live classroom: signed-in only, outside the app shell so the lesson gets the whole screen. */
 export const CLASSROOM = { href: '/classroom/p7-maths-revision-bootcamp', route: 'classroom/[slug]' } as const;
+
+/** The sample one-tap checkout link that pay buttons open while the app runs on sample data. */
+export const SAMPLE_CHECKOUT = PUBLIC_PREVIEWS.find((p) => p.label === 'One-tap checkout')?.href ?? '/pay';

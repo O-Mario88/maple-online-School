@@ -1,6 +1,7 @@
 import { Badge, Banner, Button, Card, Row } from '@/components/ui';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import type { DocState } from '@/mock/teacher';
+import { toast } from '@/lib/toast';
 
 const STATE = {
   verified: { label: 'Verified', tone: 'good' },
@@ -26,7 +27,7 @@ export default function VerificationScreen() {
               />
             ))}
           </Card>
-          <Button label="Upload police clearance" icon="camera" onPress={() => undefined} />
+          <Button label="Upload police clearance" icon="camera" onPress={() => toast('Choose a photo or PDF of your police clearance certificate.')} />
         </>
       )}
     </PreviewScreen>

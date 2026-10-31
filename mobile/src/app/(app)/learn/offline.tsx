@@ -1,6 +1,7 @@
 import { Badge, Button, Card, ProgressBar, Row } from '@/components/ui';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import type { SyncState } from '@/mock/learner';
+import { toast } from '@/lib/toast';
 
 const STATE = {
   saved: { label: 'Saved on device', tone: 'warning' },
@@ -18,7 +19,7 @@ export default function OfflineScreen() {
           <>
             <Card title="Storage" icon="download">
               <ProgressBar label={`${o.usedMB} MB of ${o.limitMB} MB used`} value={o.usedMB / o.limitMB} showValue={false} />
-              <Button label="Download this week's lessons on Wi-Fi" icon="download" variant="secondary" compact onPress={() => undefined} />
+              <Button label="Download this week's lessons on Wi-Fi" icon="download" variant="secondary" compact onPress={() => toast('This week’s lessons will download the next time you’re on Wi-Fi.')} />
             </Card>
             <Card title="On this phone" icon="lock">
               {o.items.map((it) => (

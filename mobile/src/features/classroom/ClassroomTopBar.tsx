@@ -1,8 +1,9 @@
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
+import { type ClassLayout, LayoutSheet, SettingsSheet } from '@/features/classroom/ClassSheets';
 import { Brand } from '@/features/public/palette';
 import { clockOf } from '@/lib/classroom';
 
@@ -16,11 +17,24 @@ interface Props {
   startSeconds: number;
   lengthSeconds: number;
   wide: boolean;
+  layout: ClassLayout;
+  onLayout: (l: ClassLayout) => void;
+}
+
+/** On the web, full screen is the browser's; in the app it is the board-focus layout. */
+function toggleFullScreen(layout: ClassLayout, onLayout: (l: ClassLayout) => void) {
+  if (Platform.OS === 'web' && typeof document !== 'undefined') {
+    if (document.fullscreenElement) document.exitFullscreen().catch(() => undefined);
+    else document.documentElement.requestFullscreen().catch(() => onLayout('focus'));
+    return;
+  }
+  onLayout(layout === 'focus' ? 'full' : 'focus');
 }
 
 /** Lesson title, LIVE badge, running clock, class facts and the Layout, Settings and Leave buttons. */
-export function ClassroomTopBar({ title, board, students, teacher, startSeconds, lengthSeconds, wide }: Props) {
+export function ClassroomTopBar({ title, board, students, teacher, startSeconds, lengthSeconds, wide, layout, onLayout }: Props) {
   const [elapsed, setElapsed] = useState(startSeconds);
+  const [sheet, setSheet] = useState<'layout' | 'settings' | null>(null);
   useEffect(() => {
     const id = setInterval(() => setElapsed((e) => Math.min(e + 1, lengthSeconds)), TICK_MS);
     return () => clearInterval(id);
@@ -28,6 +42,8 @@ export function ClassroomTopBar({ title, board, students, teacher, startSeconds,
 
   return (
     <View style={[styles.bar, !wide && styles.barNarrow]}>
+      <LayoutSheet visible={sheet === 'layout'} layout={layout} onPick={onLayout} onClose={() => setSheet(null)} />
+      <SettingsSheet visible={sheet === 'settings'} onClose={() => setSheet(null)} />
       {wide ? (
         <View style={styles.brand}>
           <Text style={styles.leaf}>🍁</Text>
@@ -54,11 +70,11 @@ export function ClassroomTopBar({ title, board, students, teacher, startSeconds,
       <View style={styles.actions}>
         {wide ? (
           <>
-            <Pressable style={styles.ghost} accessibilityRole="button">
+            <Pressable style={styles.ghost} onPress={() => setSheet('layout')} accessibilityRole="button">
               <Icon name="grid" size={16} color={Brand.ink} />
               <Text style={styles.ghostText}>Layout</Text>
             </Pressable>
-            <Pressable style={styles.ghost} accessibilityRole="button">
+            <Pressable style={styles.ghost} onPress={() => setSheet('settings')} accessibilityRole="button">
               <Icon name="settings" size={16} color={Brand.ink} />
               <Text style={styles.ghostText}>Settings</Text>
             </Pressable>
@@ -69,7 +85,7 @@ export function ClassroomTopBar({ title, board, students, teacher, startSeconds,
           <Text style={styles.leaveText}>{wide ? 'Leave Class' : 'Leave'}</Text>
         </Pressable>
         {wide ? (
-          <Pressable style={styles.square} accessibilityRole="button" accessibilityLabel="Full screen">
+          <Pressable style={styles.square} onPress={() => toggleFullScreen(layout, onLayout)} accessibilityRole="button" accessibilityLabel="Full screen">
             <Icon name="expand" size={16} color={Brand.ink} />
           </Pressable>
         ) : null}

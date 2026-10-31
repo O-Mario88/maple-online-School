@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Icon } from '@/components/icon';
@@ -10,7 +11,7 @@ import { RefScale } from '@/features/public/home/RefScale';
 import { EXPLORE_LINKS, HomeNav } from '@/features/public/HomeNav';
 import { Brand } from '@/features/public/palette';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
-import { type CatalogueFilters, type CatalogueSort, EMPTY_FILTERS, facetCounts, filterCatalogue, sortCatalogue } from '@/lib/catalogue';
+import { type CatalogueFilters, type CatalogueSort, facetCounts, filterCatalogue, filtersFromLink, sortCatalogue } from '@/lib/catalogue';
 import { mockData } from '@/lib/mock';
 import type { CatalogueEntry, catalogueFacets } from '@/mock/public';
 import { LightOnly } from '@/hooks/use-theme';
@@ -90,7 +91,8 @@ export default function ExploreScreen() {
   const mock = useMemo(() => mockData(), []);
   const { width } = useWindowDimensions();
   const desktop = width >= DESKTOP_MIN;
-  const [filters, setFilters] = useState<CatalogueFilters>(EMPTY_FILTERS);
+  const link = useLocalSearchParams<{ q?: string; kind?: string }>();
+  const [filters, setFilters] = useState<CatalogueFilters>(() => filtersFromLink(link));
   const [sort, setSort] = useState<CatalogueSort>('popular');
   const [list, setList] = useState(false);
   const [showFilters, setShowFilters] = useState(false);

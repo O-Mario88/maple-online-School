@@ -4,6 +4,7 @@ import { Body, Button, Card, Row } from '@/components/ui';
 import { Radius, Spacing, type Theme, Type } from '@/constants/theme';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { useStyles } from '@/hooks/use-styles';
+import { router } from 'expo-router';
 
 const GRID = 11;
 const CELL = 18;
@@ -40,7 +41,7 @@ export default function QrSignInScreen() {
             </Card>
             <Card title="Signing in on a phone?" icon="lock">
               <Row icon="person" title="Use your email and password instead" />
-              <Button label="Back to sign in" variant="secondary" compact onPress={() => undefined} />
+              <Button label="Back to sign in" variant="secondary" compact onPress={() => router.replace('/sign-in')} />
             </Card>
           </>
         );

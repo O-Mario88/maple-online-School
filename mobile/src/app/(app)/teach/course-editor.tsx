@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Button, Card, Field, Grid, KeyValue, Row } from '@/components/ui';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { formatMoney } from '@/lib/finance/fees';
+import { toast } from '@/lib/toast';
 
 /** Inventory 38: build modules and lessons, set price, access and completion. */
 export default function CourseEditorScreen() {
@@ -27,17 +28,17 @@ export default function CourseEditorScreen() {
               <Card title="Publishing" icon="globe">
                 <Row icon="check" title="Teacher verified" detail="You can sell courses" />
                 <Row icon="alert" title="2 lessons have no notes" detail="Learners like a PDF to keep" />
-                <Button label="Publish course" icon="check" onPress={() => undefined} />
+                <Button label="Publish course" icon="check" onPress={() => toast('Course sent for a quick quality check. It goes live once approved.')} />
               </Card>
             </Grid>
             {c.modules.map((mod, i) => (
-              <Card key={mod.title} title={`Module ${i + 1}: ${mod.title}`} action={<Button label="Add lesson" icon="plus" compact variant="ghost" onPress={() => undefined} />}>
+              <Card key={mod.title} title={`Module ${i + 1}: ${mod.title}`} action={<Button label="Add lesson" icon="plus" compact variant="ghost" onPress={() => toast('New lesson added at the end of this module.')} />}>
                 {mod.lessons.map((l) => (
-                  <Row key={l} icon="play" title={l} detail="Video · notes · 5 questions" onPress={() => undefined} />
+                  <Row key={l} icon="play" title={l} detail="Video · notes · 5 questions" onPress={() => toast(`Opening ${l} to edit`)} />
                 ))}
               </Card>
             ))}
-            <Button label="Add module" icon="plus" variant="secondary" onPress={() => undefined} />
+            <Button label="Add module" icon="plus" variant="secondary" onPress={() => toast('New module added.')} />
           </>
         );
       }}

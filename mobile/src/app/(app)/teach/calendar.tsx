@@ -6,6 +6,7 @@ import { Radius, Spacing, type Theme, Type } from '@/constants/theme';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { useStyles } from '@/hooks/use-styles';
 import type { EventKind } from '@/mock/teacher';
+import { toast } from '@/lib/toast';
 
 const HOUR = 44;
 const LEGEND: { kind: EventKind; label: string }[] = [
@@ -96,7 +97,7 @@ export default function CalendarScreen() {
                   ))}
                 </View>
                 <Field label="Capacity" value="40 learners" editable={false} />
-                <Button label="Schedule at Thu 13:00" icon="check" onPress={() => undefined} />
+                <Button label="Schedule at Thu 13:00" icon="check" onPress={() => toast('Scheduled for Thursday at 13:00. Learners have been told.')} />
               </Card>
             )}
           </>

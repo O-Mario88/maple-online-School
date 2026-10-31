@@ -32,12 +32,12 @@ export function Card({ title, right, children, style }: { title?: string; right?
 }
 
 const ACCOUNT: readonly { label: string; icon: IconName; href: Href | null }[] = [
-  { label: 'Profile', icon: 'person', href: '/more' },
-  { label: 'Learning Preferences', icon: 'settings', href: '/more' },
+  { label: 'Profile', icon: 'person', href: { pathname: '/learn/account', params: { section: 'profile' } } },
+  { label: 'Learning Preferences', icon: 'settings', href: { pathname: '/learn/account', params: { section: 'preferences' } } },
   { label: 'Notifications', icon: 'bell', href: '/inbox' },
   { label: 'Billing & Subscriptions', icon: 'wallet', href: null },
   { label: 'Rewards & Referrals', icon: 'trophy', href: '/learn/passport' },
-  { label: 'Settings', icon: 'settings', href: '/more' },
+  { label: 'Settings', icon: 'settings', href: { pathname: '/learn/account', params: { section: 'settings' } } },
 ];
 
 export const inviteFriends = (s: BillingState) =>

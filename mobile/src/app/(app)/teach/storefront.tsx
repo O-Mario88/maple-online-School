@@ -7,6 +7,7 @@ import { Radius, Spacing, type Theme, Type } from '@/constants/theme';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { useStyles } from '@/hooks/use-styles';
 import { formatMoney } from '@/lib/finance/fees';
+import { toast } from '@/lib/toast';
 
 /** Inventory 48 (and 5, the public view): your @teacher page, rates and promotions. */
 export default function StorefrontScreen() {
@@ -26,7 +27,7 @@ export default function StorefrontScreen() {
               {s.vouchers.map((v) => (
                 <Row key={v.code} icon="star" title={v.code} detail={`${v.detail} · used ${v.uses} times`} />
               ))}
-              <Button label="Save" icon="check" onPress={() => undefined} />
+              <Button label="Save" icon="check" onPress={() => toast('Storefront saved.')} />
             </Card>
             <Card title="How learners see it" icon="globe">
               <View style={styles.preview}>

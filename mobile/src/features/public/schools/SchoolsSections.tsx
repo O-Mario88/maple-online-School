@@ -95,7 +95,9 @@ export function TrustedRow({ page, wide = false }: { page: Page; wide?: boolean 
     <View style={[styles.card, wide && styles.trustedWide]}>
       <View style={styles.trustedHead}>
         <Text style={styles.strong}>Trusted by Schools Worldwide</Text>
-        <Text style={styles.link}>View all →</Text>
+        <Pressable onPress={() => router.push('/about')} accessibilityRole="link" hitSlop={6}>
+          <Text style={styles.link}>View all →</Text>
+        </Pressable>
       </View>
       <View style={[styles.trusted, wide && styles.trustedRow]}>
         {page.trusted.map((t) => (

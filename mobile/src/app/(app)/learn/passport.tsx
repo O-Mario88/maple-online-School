@@ -5,6 +5,7 @@ import { Badge, Button, Card, Grid, Row, Table } from '@/components/ui';
 import { Radius, Spacing, type Theme, Type } from '@/constants/theme';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { useStyles } from '@/hooks/use-styles';
+import { saveText, sharePage } from '@/lib/save-text';
 
 /** Inventory 33: the lifetime learning passport, verified records apart from self-study. */
 export default function PassportScreen() {
@@ -26,8 +27,8 @@ export default function PassportScreen() {
               </View>
             </View>
             <View style={styles.actions}>
-              <Button label="Share with QR" icon="qr" compact onPress={() => undefined} />
-              <Button label="Download PDF" icon="download" variant="secondary" compact onPress={() => undefined} />
+              <Button label="Share with QR" icon="qr" compact onPress={() => sharePage('My Maple Learning Passport')} />
+              <Button label="Download PDF" icon="download" variant="secondary" compact onPress={() => saveText(`learning-passport-${p.id}.txt`, `Maple Learning Passport\n${p.learner}\n${p.id}`)} />
             </View>
             <Card title="Verified school records" subtitle="Signed by the school; can't be edited" icon="check">
               <Table

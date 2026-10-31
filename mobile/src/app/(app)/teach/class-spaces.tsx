@@ -4,6 +4,8 @@ import { Badge, Banner, Button, Card, Grid } from '@/components/ui';
 import { Radius, Spacing, type Theme, Type } from '@/constants/theme';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { useStyles } from '@/hooks/use-styles';
+import { toast } from '@/lib/toast';
+import { shareText } from '@/lib/save-text';
 
 /** Inventory 47: free class spaces a teacher sets up with a 6-digit code. */
 export default function ClassSpacesScreen() {
@@ -12,7 +14,7 @@ export default function ClassSpacesScreen() {
     <PreviewScreen
       title="Class spaces"
       subtitle="Set up a free class in two minutes and invite learners with a code"
-      actions={<Button label="New class space" icon="plus" compact onPress={() => undefined} />}>
+      actions={<Button label="New class space" icon="plus" compact onPress={() => toast('New class space created. Add learners with a code or QR.')} />}>
       {(m) => (
         <>
           <Grid min={300}>
@@ -24,8 +26,8 @@ export default function ClassSpacesScreen() {
                 </View>
                 <Text style={styles.members}>{c.members} learners</Text>
                 <View style={styles.actions}>
-                  <Button label="Share on WhatsApp" compact onPress={() => undefined} />
-                  <Button label="Show QR" icon="qr" compact variant="secondary" onPress={() => undefined} />
+                  <Button label="Share on WhatsApp" compact onPress={() => shareText('Join my class on Maple')} />
+                  <Button label="Show QR" icon="qr" compact variant="secondary" onPress={() => toast('Showing the join QR full screen for learners to scan.')} />
                 </View>
               </Card>
             ))}

@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
+import { LanguageMenu } from '@/components/shell/LanguageMenu';
 import { Brand } from '@/features/public/palette';
 
 const LEAF = require('@/assets/images/maple-leaf.png') as number;
@@ -24,11 +25,11 @@ function Logo({ small = false }: { small?: boolean }) {
 
 function Language({ small = false }: { small?: boolean }) {
   return (
-    <Pressable style={styles.action} accessibilityRole="button" accessibilityLabel="Language: English">
+    <LanguageMenu style={styles.action}>
       <Icon name="globe" size={small ? 19 : 21} color={Brand.ink} />
       <Text style={[styles.actionText, small && styles.actionTextSmall]}>English</Text>
       <Icon name="chevronDown" size={14} color={Brand.ink} />
-    </Pressable>
+    </LanguageMenu>
   );
 }
 

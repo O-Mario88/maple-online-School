@@ -109,4 +109,16 @@ export const classroom = {
     { title: 'Past Paper Section A', kind: 'Past Paper', due: 'Due: Nov 10, 2026 · 11:59 PM', tint: '#F97316', soft: '#FFEDD5', status: 'todo' as const },
     { title: 'Fractions Mini Quiz', kind: 'Quiz', due: 'Due: Nov 8, 2026 · 5:00 PM', tint: '#8B5CF6', soft: '#EFEBFF', status: 'todo' as const },
   ],
+  resources: [
+    { title: 'Fractions revision notes', meta: 'PDF · 1.2 MB' },
+    { title: 'PLE 2025 Paper 1', meta: 'PDF · 860 KB' },
+    { title: 'Today’s whiteboard', meta: 'Image · 420 KB' },
+  ],
+  poll: { question: 'Which is bigger: 3/4 or 2/3?', options: ['3/4', '2/3', 'They are equal'], votes: [41, 18, 6] },
+  rooms: [
+    { name: 'Room 1 · Adding fractions', members: 6 },
+    { name: 'Room 2 · Mixed numbers', members: 6 },
+    { name: 'Room 3 · Word problems', members: 5 },
+  ],
+  recording: 'This class is being recorded. The recording and transcript appear in your Library about an hour after class.',
 };

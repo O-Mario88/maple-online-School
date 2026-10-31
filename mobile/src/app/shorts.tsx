@@ -13,6 +13,8 @@ import { ShortPlayer } from '@/features/public/shorts/ShortPlayer';
 import { ShortsViewer } from '@/features/public/shorts/ShortsViewer';
 import { ShortsHero } from '@/features/public/shorts/ShortsHero';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
+import { VideoSheet } from '@/features/shared/VideoSheet';
+import { useAuth } from '@/lib/auth/auth-context';
 import { mockData } from '@/lib/mock';
 import { EMPTY_SHORT_FILTERS, filterShorts, formatCount, type ShortFilters } from '@/lib/shorts';
 import type { ShortEntry } from '@/mock/public';
@@ -35,6 +37,9 @@ const SHELF = [
   { label: 'Watched', icon: 'clock' },
   { label: 'My Learning', icon: 'book' },
 ] as const;
+type Shelf = (typeof SHELF)[number]['label'];
+/** Shelves that list the visitor's own activity, so they need an account. */
+const PERSONAL: readonly Shelf[] = ['My Bookmarks', 'Watched', 'My Learning'];
 const SIDEBAR = 240;
 const NO_CLIPS: readonly ShortEntry[] = [];
 
@@ -54,7 +59,22 @@ export default function ShortsScreen() {
   const [showFilters, setShowFilters] = useState(false);
   const feed = mock?.publicPages.shortsFeed;
   const clips = feed?.clips ?? NO_CLIPS;
-  const shown = useMemo(() => filterShorts(clips, filters), [clips, filters]);
+  const [shelf, setShelf] = useState<Shelf>('Shorts Home');
+  const [trend, setTrend] = useState<string | null>(null);
+  const { status } = useAuth();
+  const shown = useMemo(() => {
+    const found = filterShorts(clips, filters);
+    if (shelf === 'Trending') return [...found].sort((a, b) => b.views - a.views);
+    // Sample clips are listed oldest first.
+    if (shelf === 'New') return [...found].reverse();
+    if (shelf === 'My Bookmarks' || shelf === 'Watched') return [];
+    return found;
+  }, [clips, filters, shelf]);
+  const openShelf = (label: Shelf) => {
+    if (PERSONAL.includes(label) && status !== 'signedIn') return router.push('/sign-in');
+    if (label === 'My Learning') return router.push('/');
+    setShelf(label);
+  };
 
   if (!mock || !feed) {
     return <PreviewScreen title="Maple Shorts">{() => null}</PreviewScreen>;
@@ -95,12 +115,15 @@ export default function ShortsScreen() {
       <View style={[styles.body, wide && styles.bodyWide]}>
         {wide ? (
           <ScrollView style={styles.sidebar} contentContainerStyle={styles.sidebarInner}>
-            {SHELF.map((s, i) => (
-              <Pressable key={s.label} style={[styles.shelf, i === 0 && styles.shelfOn]} accessibilityRole="link">
-                <Icon name={s.icon} size={18} color={i === 0 ? Brand.blue : Brand.body} />
-                <Text style={[styles.shelfText, i === 0 && styles.shelfTextOn]}>{s.label}</Text>
-              </Pressable>
-            ))}
+            {SHELF.map((s) => {
+              const on = s.label === shelf;
+              return (
+                <Pressable key={s.label} style={[styles.shelf, on && styles.shelfOn]} onPress={() => openShelf(s.label)} accessibilityRole="link" accessibilityState={{ selected: on }}>
+                  <Icon name={s.icon} size={18} color={on ? Brand.blue : Brand.body} />
+                  <Text style={[styles.shelfText, on && styles.shelfTextOn]}>{s.label}</Text>
+                </Pressable>
+              );
+            })}
             <View style={styles.rule} />
             {filterPanel}
           </ScrollView>
@@ -125,7 +148,15 @@ export default function ShortsScreen() {
           )}
           {!wide && showFilters ? <View style={styles.mobilePanel}>{filterPanel}</View> : null}
           {shown.length === 0 ? (
-            <EmptyState icon="search" title="No shorts match" body="Try another topic or fewer filters." />
+            shelf === 'My Bookmarks' || shelf === 'Watched' ? (
+              <EmptyState
+                icon={shelf === 'Watched' ? 'clock' : 'star'}
+                title={shelf === 'Watched' ? 'Nothing watched yet' : 'No bookmarks yet'}
+                body={shelf === 'Watched' ? 'Shorts you watch appear here so you can find them again.' : 'Tap Save on any Short to keep it here.'}
+              />
+            ) : (
+              <EmptyState icon="search" title="No shorts match" body="Try another topic or fewer filters." />
+            )
           ) : (
             <View style={styles.grid}>
               {shown.map((c) => (
@@ -133,12 +164,14 @@ export default function ShortsScreen() {
               ))}
             </View>
           )}
-          <Text style={styles.trendingTitle} accessibilityRole="header">
-            Trending This Week ›
-          </Text>
+          <Pressable onPress={() => setShelf('Trending')} accessibilityRole="link" accessibilityLabel="Show trending shorts">
+            <Text style={styles.trendingTitle} accessibilityRole="header">
+              Trending This Week ›
+            </Text>
+          </Pressable>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.trending}>
             {feed.trending.map((t) => (
-              <View key={t.title} style={styles.trend}>
+              <Pressable key={t.title} style={styles.trend} onPress={() => setTrend(t.title)} accessibilityRole="button" accessibilityLabel={`Play ${t.title}`}>
                 <View style={styles.trendThumb}>
                   <Icon name="play" size={18} color={Brand.surface} />
                 </View>
@@ -146,11 +179,12 @@ export default function ShortsScreen() {
                   <Text style={styles.trendText}>{t.title}</Text>
                   <Text style={styles.muted}>{`${formatCount(t.views)} views`}</Text>
                 </View>
-              </View>
+              </Pressable>
             ))}
           </ScrollView>
         </ScrollView>
       </View>
+      <VideoSheet visible={trend != null} title={trend ?? ''} seconds={60} onClose={() => setTrend(null)} />
       {/* An opened short plays full screen, YouTube Shorts style; no side player on the web. */}
       {opened && focused ? (
         <ShortsViewer

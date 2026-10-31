@@ -242,11 +242,11 @@ export function SignUpCard({ art, phone = false }: { art?: Art; phone?: boolean 
       ) : null}
       <Text style={[styles.terms, p && styles.termsP]}>
         {'By creating an account, you agree to our '}
-        <Text style={styles.link} onPress={() => router.push('/help')} accessibilityRole="link">
+        <Text style={styles.link} onPress={() => router.push('/terms')} accessibilityRole="link">
           Terms of Service
         </Text>
         {' and '}
-        <Text style={styles.link} onPress={() => router.push('/help')} accessibilityRole="link">
+        <Text style={styles.link} onPress={() => router.push('/privacy')} accessibilityRole="link">
           Privacy Policy
         </Text>
         .

@@ -5,6 +5,8 @@ import { Button, Grid } from '@/components/ui';
 import { Radius, Spacing, type Theme, Type } from '@/constants/theme';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { useStyles } from '@/hooks/use-styles';
+import { toast } from '@/lib/toast';
+import { router } from 'expo-router';
 
 /** Inventory 23: 60-second revision clips from verified teachers. */
 export default function ShortsScreen() {
@@ -26,8 +28,8 @@ export default function ShortsScreen() {
                   {s.teacher} · {s.likes.toLocaleString()} likes
                 </Text>
                 <View style={styles.actions}>
-                  <Button label="Save to flashcards" compact variant="secondary" onPress={() => undefined} />
-                  <Button label="Full course" compact variant="ghost" onPress={() => undefined} />
+                  <Button label="Save to flashcards" compact variant="secondary" onPress={() => toast(`${s.title} saved to your flashcards.`)} />
+                  <Button label="Full course" compact variant="ghost" onPress={() => router.push('/courses/complete-mathematics-primary-7')} />
                 </View>
               </View>
             </View>

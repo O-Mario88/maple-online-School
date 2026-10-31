@@ -5,6 +5,7 @@ import { Badge, Banner, Button, Card, Chip, ChipRow, Field, Row } from '@/compon
 import { Spacing, type Theme, Type } from '@/constants/theme';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { useStyles } from '@/hooks/use-styles';
+import { router } from 'expo-router';
 
 /** Inventory 59: a 15-minute self-service set-up for a whole school. */
 export default function OnboardingWizardScreen() {
@@ -47,7 +48,7 @@ export default function OnboardingWizardScreen() {
             {step === 2 ? (
               <Card title="Rosters" subtitle="Upload learners, teachers and parents from Excel" icon="people">
                 <Row icon="download" title="S1 intake 2027.xlsx" detail="184 learners found" badge={<Badge label="2 to fix" tone="warning" />} />
-                <Button label="Review the import" variant="secondary" onPress={() => undefined} />
+                <Button label="Review the import" variant="secondary" onPress={() => router.push('/admin/rosters')} />
               </Card>
             ) : null}
             {step === 3 ? (

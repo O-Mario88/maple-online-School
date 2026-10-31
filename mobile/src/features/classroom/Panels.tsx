@@ -4,6 +4,7 @@ import { type ReactNode, useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
+import { Sheet } from '@/components/ui/Sheet';
 import { Brand, CARD_SHADOW } from '@/features/public/palette';
 import { filterParticipants, type ParticipantFilter, searchTranscript } from '@/lib/classroom';
 import type { MockData } from '@/mock';
@@ -17,17 +18,23 @@ function Count({ n, blue = false }: { n: number; blue?: boolean }) {
 
 /** A white panel with a title row; used for every classroom panel. */
 /** The reference's small square expand button on panel headers. */
-export function ExpandButton({ boxed = false }: { boxed?: boolean }) {
+export function ExpandButton({ boxed = false, onPress }: { boxed?: boolean; onPress: () => void }) {
   return (
-    <Pressable style={[styles.expand, boxed && styles.expandBoxed]} accessibilityRole="button" accessibilityLabel="Expand" hitSlop={6}>
+    <Pressable style={[styles.expand, boxed && styles.expandBoxed]} onPress={onPress} accessibilityRole="button" accessibilityLabel="Expand" hitSlop={6}>
       <Icon name="expand" size={14} color={Brand.ink} />
     </Pressable>
   );
 }
 
 export function Panel({ title, count, action, children, flat = false, expand = false }: { title: string; count?: number; action?: ReactNode; children: ReactNode; flat?: boolean; expand?: boolean }) {
+  const [big, setBig] = useState(false);
   return (
     <View style={[styles.panel, flat && styles.flat]}>
+      {expand ? (
+        <Sheet visible={big} title={title} onClose={() => setBig(false)}>
+          {children}
+        </Sheet>
+      ) : null}
       <View style={styles.head}>
         <Text style={styles.title} accessibilityRole="header">
           {title}
@@ -35,7 +42,7 @@ export function Panel({ title, count, action, children, flat = false, expand = f
         {count ? <Count n={count} /> : null}
         <View style={styles.flex} />
         {action}
-        {expand ? <ExpandButton boxed={action !== undefined} /> : null}
+        {expand ? <ExpandButton boxed={action !== undefined} onPress={() => setBig(true)} /> : null}
       </View>
       {children}
     </View>

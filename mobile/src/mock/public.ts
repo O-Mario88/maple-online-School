@@ -94,9 +94,30 @@ export const credential = {
 };
 
 export const help = [
-  { topic: 'Getting started', articles: ['Set up Maple on a low-cost phone', 'Use Maple with very little data', 'Join your school’s class'] },
-  { topic: 'Paying', articles: ['Pay school fees with MTN or Airtel', 'Get a receipt', 'Refunds'] },
-  { topic: 'Safety', articles: ['Report a concern', 'How we protect children', 'Privacy for parents'] },
+  {
+    topic: 'Getting started',
+    articles: [
+      { title: 'Set up Maple on a low-cost phone', answer: 'Install Maple from the Play Store or open maple.school in Chrome. It runs on Android 8 and newer with 1 GB of memory. Sign in once and your lessons stay on the phone.' },
+      { title: 'Use Maple with very little data', answer: 'Turn on Low-data mode in Settings. Live classes then send audio and the whiteboard only, about 24 MB an hour, and lessons download on Wi-Fi for offline study.' },
+      { title: 'Join your school’s class', answer: 'Ask your teacher for the class code or QR badge. Open Classroom QR login, scan the badge or type the code, then enter your PIN.', href: '/qr-login' },
+    ],
+  },
+  {
+    topic: 'Paying',
+    articles: [
+      { title: 'Pay school fees with MTN or Airtel', answer: 'Open the fee link your school sent, choose MTN MoMo or Airtel Money and approve the prompt on your phone. You do not need to sign in.', href: '/pay' },
+      { title: 'Get a receipt', answer: 'Every payment sends a receipt by SMS straight away. Signed-in families can download any receipt from Billing.' },
+      { title: 'Refunds', answer: 'A first study pass can be refunded in full within 7 days. Money for a cancelled live class goes back to your Maple wallet automatically.' },
+    ],
+  },
+  {
+    topic: 'Safety',
+    articles: [
+      { title: 'Report a concern', answer: 'Signed-in users can report a message, a person or content from the flag button. A trained person reads every report within 24 hours, and safety reports go first.' },
+      { title: 'How we protect children', answer: 'Chats are moderated, phone numbers and emails are hidden, and learners under 18 need a parent or guardian to approve their account.', href: '/guardian-consent' },
+      { title: 'Privacy for parents', answer: 'Parents can see, download or delete their child’s data at any time. We never sell personal data.', href: '/privacy' },
+    ],
+  },
 ];
 
 export const status = [
@@ -747,3 +768,4 @@ export const invoicePage = {
     { title: 'Need Help?', detail: 'Chat on WhatsApp', icon: 'chat' as const },
   ],
 };
+export { infoPages, pricingPlans } from './public-info';

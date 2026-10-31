@@ -1,6 +1,8 @@
 import { Banner, Button, Card, Grid, KeyValue, ProgressBar, Row } from '@/components/ui';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { formatMoney } from '@/lib/finance/fees';
+import { router } from 'expo-router';
+import { SAMPLE_CHECKOUT } from '@/lib/navigation';
 
 /** Inventory 9: a public page for one live event, with seats and booking. */
 export default function EventScreen() {
@@ -27,7 +29,7 @@ export default function EventScreen() {
                     { label: 'Recording', value: 'Included for 30 days' },
                   ]}
                 />
-                <Button label={`Book for ${formatMoney(e.priceUGX, 'UGX')}`} icon="wallet" onPress={() => undefined} />
+                <Button label={`Book for ${formatMoney(e.priceUGX, 'UGX')}`} icon="wallet" onPress={() => router.push(SAMPLE_CHECKOUT)} />
               </Card>
             </Grid>
           </>

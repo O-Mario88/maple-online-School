@@ -5,6 +5,7 @@ import { Radius, Spacing, type Theme, Type } from '@/constants/theme';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { useStyles } from '@/hooks/use-styles';
 import { formatMoney } from '@/lib/finance/fees';
+import { toast } from '@/lib/toast';
 
 /** Inventory 50: earnings, escrow, and payouts to mobile money. */
 export default function EarningsScreen() {
@@ -22,7 +23,7 @@ export default function EarningsScreen() {
               <Stat label="Your own links (0% fee)" value={formatMoney(e.byosUGX, 'UGX')} icon="globe" tone="accent" />
               <Stat label="Marketplace sales" value={formatMoney(e.marketplaceUGX, 'UGX')} icon="chart" />
             </Grid>
-            <Button label={`Pay ${formatMoney(e.availableUGX, 'UGX')} to MTN MoMo now`} icon="wallet" onPress={() => undefined} />
+            <Button label={`Pay ${formatMoney(e.availableUGX, 'UGX')} to MTN MoMo now`} icon="wallet" onPress={() => toast(`${formatMoney(e.availableUGX, 'UGX')} is on its way to your MTN MoMo.`)} />
             <Card title="Monthly earnings" subtitle="Last five months" icon="chart">
               <View style={styles.chart} accessibilityLabel="Bar chart of monthly earnings">
                 {e.months.map((x) => (

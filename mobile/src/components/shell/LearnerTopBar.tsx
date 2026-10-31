@@ -3,6 +3,7 @@ import { type Href, router, usePathname } from 'expo-router';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
+import { LanguageMenu } from './LanguageMenu';
 import type { IconName } from '@/lib/icons';
 import { mockData } from '@/lib/mock';
 import { useSwitcher } from '@/lib/switcher-context';
@@ -60,11 +61,11 @@ export function LearnerTopBar({ name }: { name: string }) {
         <TextInput style={styles.searchInput} placeholder="Search lessons, topics, or anything..." placeholderTextColor="#6B7385" accessibilityLabel="Search" />
         <Text style={styles.kbd}>⌘K</Text>
       </View>
-      <Pressable style={styles.lang} accessibilityRole="button" accessibilityLabel="Language: English">
+      <LanguageMenu style={styles.lang}>
         <Icon name="globe" size={19} color={INK} />
         <Text style={styles.langText}>English</Text>
         <Icon name="chevronDown" size={13} color={INK} />
-      </Pressable>
+      </LanguageMenu>
       <Pressable onPress={() => router.push('/inbox')} accessibilityRole="button" accessibilityLabel="Notifications" hitSlop={8}>
         <Icon name="bell" size={21} color="#E5484D" />
         <View style={styles.redDot} />

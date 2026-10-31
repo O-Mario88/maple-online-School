@@ -32,6 +32,17 @@ export interface CatalogueFilters {
 
 export const EMPTY_FILTERS: CatalogueFilters = { query: '', kinds: [], boards: [], levels: [], subjects: [], countries: [], price: 'any' };
 
+const KINDS: readonly CatalogueKind[] = ['course', 'live', 'paper', 'bootcamp', 'short'];
+/** The longest search a link can start Explore with. */
+export const LINK_QUERY_MAX = 80;
+
+/** Explore's starting filters from a link like /explore?q=fractions&kind=live; anything unexpected is ignored. */
+export function filtersFromLink(params: { q?: unknown; kind?: unknown }): CatalogueFilters {
+  const query = typeof params.q === 'string' ? params.q.trim().slice(0, LINK_QUERY_MAX) : '';
+  const kind = KINDS.find((k) => k === params.kind);
+  return { ...EMPTY_FILTERS, query, kinds: kind ? [kind] : [] };
+}
+
 const PRICE_CEILING: Readonly<Record<PriceBand, number>> = { any: Infinity, free: 0, under50k: 50000, under100k: 100000 };
 
 function matchesAny(selected: readonly string[], value: string): boolean {

@@ -14,6 +14,13 @@ export function QuestionCard({ paper }: { paper: PastPaperEntry }) {
   const [answer, setAnswer] = useState('');
   const [mark, setMark] = useState<Mark | null>(null);
   const [showSolution, setShowSolution] = useState(false);
+  const [bold, setBold] = useState(false);
+  const [italic, setItalic] = useState(false);
+  const [maths, setMaths] = useState(false);
+  const insert = (sym: string) => {
+    setAnswer((a) => a + sym);
+    setMark(null);
+  };
 
   const submit = () => {
     if (!answer.trim()) return;
@@ -38,14 +45,24 @@ export function QuestionCard({ paper }: { paper: PastPaperEntry }) {
       ))}
       <View style={styles.editor}>
         <View style={styles.toolbar}>
-          <Text style={styles.tool}>Normal text ⌄</Text>
-          <Text style={[styles.tool, styles.bold]}>B</Text>
-          <Text style={[styles.tool, styles.italic]}>I</Text>
-          <Text style={styles.tool}>Σ</Text>
-          <Text style={styles.tool}>√</Text>
+          <Pressable onPress={() => setMaths(!maths)} accessibilityRole="button" accessibilityLabel={maths ? 'Switch to normal text' : 'Switch to maths symbols'}>
+            <Text style={styles.tool}>{maths ? 'Maths ⌄' : 'Normal text ⌄'}</Text>
+          </Pressable>
+          <Pressable onPress={() => setBold(!bold)} accessibilityRole="button" accessibilityLabel="Bold" accessibilityState={{ selected: bold }}>
+            <Text style={[styles.tool, styles.bold, bold && styles.toolOn]}>B</Text>
+          </Pressable>
+          <Pressable onPress={() => setItalic(!italic)} accessibilityRole="button" accessibilityLabel="Italic" accessibilityState={{ selected: italic }}>
+            <Text style={[styles.tool, styles.italic, italic && styles.toolOn]}>I</Text>
+          </Pressable>
+          <Pressable onPress={() => insert('Σ')} accessibilityRole="button" accessibilityLabel="Insert sum sign">
+            <Text style={styles.tool}>Σ</Text>
+          </Pressable>
+          <Pressable onPress={() => insert('√')} accessibilityRole="button" accessibilityLabel="Insert square root">
+            <Text style={styles.tool}>√</Text>
+          </Pressable>
         </View>
         <TextInput
-          style={styles.input}
+          style={[styles.input, bold && styles.bold, italic && styles.italic]}
           value={answer}
           onChangeText={(t) => {
             setAnswer(t);
@@ -57,7 +74,16 @@ export function QuestionCard({ paper }: { paper: PastPaperEntry }) {
           accessibilityLabel="Your answer to question 1"
         />
         <View style={styles.editorFoot}>
-          <Text style={styles.mathInput}>⊕ Math input</Text>
+          <Pressable onPress={() => setMaths(!maths)} accessibilityRole="button" accessibilityState={{ expanded: maths }}>
+            <Text style={styles.mathInput}>⊕ Math input</Text>
+          </Pressable>
+          {maths
+            ? ['²', '³', '√', 'π', '×', '÷', '='].map((sym) => (
+                <Pressable key={sym} onPress={() => insert(sym)} style={styles.sym} accessibilityRole="button" accessibilityLabel={`Insert ${sym}`}>
+                  <Text style={styles.tool}>{sym}</Text>
+                </Pressable>
+              ))
+            : null}
           <View style={styles.flex} />
           <Pressable style={[styles.submit, !answer.trim() && styles.disabled]} disabled={!answer.trim()} onPress={submit} accessibilityRole="button">
             <Text style={styles.submitText}>Submit Answer</Text>
@@ -105,6 +131,8 @@ export function HintCard({ hint }: { hint: string }) {
 }
 
 const styles = StyleSheet.create({
+  toolOn: { color: Brand.blue },
+  sym: { paddingHorizontal: 6, paddingVertical: 2, borderRadius: 6, borderWidth: 1, borderColor: Brand.line },
   flex: { flex: 1 },
   gap: { gap: 10 },
   card: { gap: 14, padding: 20, borderRadius: 14, backgroundColor: Brand.surface, ...CARD_SHADOW },

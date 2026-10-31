@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
@@ -31,7 +32,7 @@ export function ClassRail({ items, active, onSelect }: { items: readonly RailIte
         );
       })}
       <View style={styles.spacer} />
-      <Pressable style={styles.item} accessibilityRole="menuitem">
+      <Pressable style={styles.item} onPress={() => router.push('/help')} accessibilityRole="menuitem">
         <Icon name="help" size={20} color={Brand.surface} />
         <Text style={styles.label}>Help</Text>
       </Pressable>

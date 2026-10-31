@@ -1,4 +1,4 @@
-import { type CatalogueItem, EMPTY_FILTERS, facetCounts, filterCatalogue, sortCatalogue } from './catalogue';
+import { type CatalogueItem, EMPTY_FILTERS, facetCounts, filterCatalogue, filtersFromLink, sortCatalogue } from './catalogue';
 
 const item = (over: Partial<CatalogueItem>): CatalogueItem => ({
   id: 'x',
@@ -64,5 +64,17 @@ describe('sortCatalogue', () => {
 describe('facetCounts', () => {
   it('counts items per value', () => {
     expect(facetCounts(items, 'kind')).toEqual({ course: 1, paper: 1, live: 1 });
+  });
+});
+
+describe('filtersFromLink', () => {
+  it('starts Explore with the search and kind a link carries', () => {
+    expect(filtersFromLink({ q: '  fractions ', kind: 'live' })).toEqual({ ...EMPTY_FILTERS, query: 'fractions', kinds: ['live'] });
+  });
+
+  it('ignores unknown kinds, other types and very long searches', () => {
+    expect(filtersFromLink({ kind: 'banana' })).toEqual(EMPTY_FILTERS);
+    expect(filtersFromLink({ q: ['a', 'b'] })).toEqual(EMPTY_FILTERS);
+    expect(filtersFromLink({ q: 'x'.repeat(200) }).query).toHaveLength(80);
   });
 });
