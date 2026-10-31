@@ -8,9 +8,9 @@ import { useShell } from '@/components/ui';
 import { LearnerPhoneTop } from '@/features/learner/dashboard/DashPhone';
 import { type Home, HomeHeader, HomeSidebar } from '@/features/learner/home/HomeFrame';
 import { BookCard, CompletedItem, ContinueItem, DoneMark, Filters, Head, Hero, Levels, MyLibrary, MySubjects, Shelf, SidePanel, Subjects } from '@/features/learner/library/ShelfParts';
+import { LiveLibrary } from '@/features/learner/library/LiveLibrary';
 import { type Hub, type ShelfState, useShelf } from '@/features/learner/library/useShelf';
 import { RefScale } from '@/features/public/home/RefScale';
-import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { mockData } from '@/lib/mock';
 
 /** The library reference's desktop (x 0–1276 of 1536, sidebar included), laid out in its pixels. */
@@ -195,7 +195,8 @@ function Phone({ hub, h, s, onFilters }: { hub: Hub; h: Home; s: ShelfState; onF
 
 export default function LibraryHubScreen() {
   const mock = useMemo(() => mockData(), []);
-  if (!mock) return <PreviewScreen title="Library">{() => null}</PreviewScreen>;
+  // Real builds read the API's library; design builds keep the reference's sample shelves.
+  if (!mock) return <LiveLibrary />;
   return <LibraryView hub={mock.learner.libraryHub} h={mock.learner.learnerHome} />;
 }
 

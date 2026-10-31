@@ -54,12 +54,19 @@ describe('navFor', () => {
     expect(navFor('learner', true).some((i) => i.href === '/school')).toBe(false);
   });
 
+  it('sends learners to the designed pages once they run on the API, in every build', () => {
+    const href = (mock: boolean, key: string) => navFor('learner', mock).find((i) => i.key === key)?.href;
+    for (const mock of [true, false]) {
+      expect(href(mock, 'assignments')).toBe('/learn/assignments');
+      expect(href(mock, 'library')).toBe('/learn/library');
+    }
+  });
+
   it('sends learners to the designed pages when mock data is on, and to the live pages otherwise', () => {
     const href = (mock: boolean, key: string) => navFor('learner', mock).find((i) => i.key === key)?.href;
     expect(href(true, 'lessons')).toBe('/learn/live');
     expect(href(true, 'library')).toBe('/learn/library');
     expect(href(false, 'lessons')).toBe('/lessons');
-    expect(href(false, 'library')).toBe('/library');
     expect(href(true, 'projects')).toBe('/learn/projects');
     expect(href(true, 'exam')).toBe('/learn/paper');
   });

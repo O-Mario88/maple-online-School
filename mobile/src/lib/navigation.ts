@@ -76,8 +76,9 @@ const MENUS: Readonly<Record<Portal, readonly NavItem[]>> = {
     home,
     p('explore', 'Learn', '/learn/explore', 'book'),
     { ...lessons, label: 'Classes', icon: 'person', designHref: '/learn/live', also: ['/learn/live', '/lessons'] },
-    p('assignments', 'Assignments', '/learn/assignments', 'clipboard'),
-    { ...library, designHref: '/learn/library', also: ['/learn/library', '/library'] },
+    // Ported to the API: the designed page in every build.
+    { key: 'assignments', label: 'Assignments', href: '/learn/assignments', icon: 'clipboard' },
+    { ...library, href: '/learn/library', also: ['/learn/library', '/library'] },
     p('progress', 'My progress', '/learn/progress', 'chart'),
     p('projects', 'Projects', '/learn/projects', 'folder'),
     p('exam', 'Exam practice', '/learn/paper', 'timer'),

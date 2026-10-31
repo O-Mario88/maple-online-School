@@ -8,6 +8,9 @@ export type ReadingRow = components['schemas']['ReadingRow'];
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
+/** Where uploaded files are served from. */
+export const MEDIA_URL = process.env.EXPO_PUBLIC_MEDIA_URL ?? 'http://localhost:8000';
+
 const TYPE_LABEL: Readonly<Record<string, string>> = {
   notes: 'Notes',
   textbook: 'Textbook',
@@ -35,9 +38,14 @@ export function itemHref(item: Pick<LibraryItem, 'external_url' | 'file_url'>, m
   return null;
 }
 
+/** What kind of item it is, in words ("Past paper"); anything unknown is a "Resource". */
+export function typeLabel(contentType: string): string {
+  return TYPE_LABEL[contentType] ?? 'Resource';
+}
+
 /** One line under the title: type, author, and where it is (or its review state). */
 export function itemDetail(item: LibraryItem): string {
-  const type = TYPE_LABEL[item.content_type] ?? 'Resource';
+  const type = typeLabel(item.content_type);
   let where = WHERE[item.visibility_scope] ?? '';
   if (item.publication_status === 'under_review') where = 'Waiting for review';
   if (item.publication_status === 'rejected') where = 'Not approved';

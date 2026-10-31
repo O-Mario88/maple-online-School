@@ -3,12 +3,10 @@ import { Linking, StyleSheet, View } from 'react-native';
 
 import { Badge, Body, Button, Card, ErrorText, Field, Loading, Row } from '@/components/ui';
 import { parseLessonTime } from '@/lib/lessons/lessons';
-import { checkNewLink, dueLabel, itemDetail, itemHref, type LibraryChoice, type LibraryItem } from '@/lib/library/library';
+import { checkNewLink, dueLabel, itemDetail, itemHref, type LibraryChoice, type LibraryItem, MEDIA_URL } from '@/lib/library/library';
 import { useAddItem, useAssignedReading, useContinue, useLibrary, useRecordProgress, useShareWithClass } from '@/lib/library/queries';
 import { useClasses } from '@/lib/school/queries';
 
-/** Uploaded files are still served by the Django media server. */
-const MEDIA_URL = process.env.EXPO_PUBLIC_MEDIA_URL ?? 'http://localhost:8000';
 
 type OnError = (message: string) => void;
 

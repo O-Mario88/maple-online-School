@@ -1,4 +1,4 @@
-import { checkNewLink, dueLabel, itemDetail, itemHref, libraryChoices, type LibraryItem } from './library';
+import { checkNewLink, dueLabel, itemDetail, itemHref, libraryChoices, type LibraryItem, typeLabel } from './library';
 
 const base: LibraryItem = {
   id: '6f1c2b1e-0000-4000-8000-000000000001',
@@ -69,5 +69,13 @@ describe('libraryChoices', () => {
       { institution_id: 11, institution_name: 'Kid School', role: 'student', status: 'active' },
     ];
     expect(libraryChoices(memberships)).toEqual([{ id: 9, name: 'Hill School' }]);
+  });
+});
+
+describe('typeLabel', () => {
+  it('names each kind of item, and calls anything else a resource', () => {
+    expect(typeLabel('mock_exam')).toBe('Past paper');
+    expect(typeLabel('video')).toBe('Video');
+    expect(typeLabel('hologram')).toBe('Resource');
   });
 });
