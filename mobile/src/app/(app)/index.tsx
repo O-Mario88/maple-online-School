@@ -7,13 +7,12 @@ import { LearnersEntryCard } from '@/features/insights/LearnersEntryCard';
 import { AttendanceSection } from '@/features/learner/AttendanceSection';
 import { ParentResultsSection } from '@/features/parent/ParentResultsSection';
 import { HOME_REF_WIDTH, HomeDesk, HomePhone } from '@/features/learner/home/HomeViews';
+import { LiveHome } from '@/features/learner/home/LiveHome';
 import { RefScale } from '@/features/public/home/RefScale';
-import { NextUpHero } from '@/features/preview/NextUpHero';
 import { mockData } from '@/lib/mock';
 import { ScrollView, useWindowDimensions } from 'react-native';
 import { ReportsSection } from '@/features/shared/ReportsSection';
 import { TodaySection } from '@/features/shared/TodaySection';
-import { StudentWorkSection } from '@/features/student/StudentWorkSection';
 import { ClassesSection } from '@/features/teacher/ClassesSection';
 import { TeacherWorkSection } from '@/features/teacher/TeacherWorkSection';
 import type { Me } from '@/lib/api/client';
@@ -73,6 +72,8 @@ export default function HomeScreen() {
       </ScrollView>
     );
   }
+  // Real builds: the learner home in the design's look, on the API.
+  if (portal === 'learner') return <LiveHome firstName={firstName} />;
   const today = now.toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' });
 
   return (
@@ -90,7 +91,6 @@ export default function HomeScreen() {
           onChange={setPortal}
         />
       ) : null}
-      {portal === 'learner' ? <NextUpHero /> : null}
       <HomeStats portal={portal} user={user} />
       <PortalHome portal={portal} user={user} />
       {!wide ? <Button label="Sign out" variant="secondary" icon="logout" onPress={signOut} /> : null}
@@ -149,14 +149,7 @@ function PortalHome({ portal, user }: { portal: Portal; user: Me }) {
         </Grid>
       );
     default:
-      return (
-        <Grid min={380}>
-          <TodaySection />
-          <StudentWorkSection />
-          <AttendanceSection />
-          <ReportsSection staff={false} />
-        </Grid>
-      );
+      return null;
   }
 }
 

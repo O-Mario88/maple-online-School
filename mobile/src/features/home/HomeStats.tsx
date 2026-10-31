@@ -8,7 +8,7 @@ import { formatMoney, financeSchools } from '@/lib/finance/fees';
 import { useInvoices, useSummary } from '@/lib/finance/queries';
 import { collectionRate, familyBalance } from '@/lib/home';
 import { useAssignments, useGrades, useSubmissions } from '@/lib/learning/queries';
-import { studentWork, toMark } from '@/lib/learning/work';
+import { toMark } from '@/lib/learning/work';
 import { upcomingLessons } from '@/lib/lessons/lessons';
 import { useLessons } from '@/lib/lessons/queries';
 import type { Portal } from '@/lib/navigation';
@@ -24,8 +24,6 @@ export function HomeStats({ portal, user }: { portal: Portal; user: Me }) {
       return <TeacherStats />;
     case 'parent':
       return <FamilyStats user={user} />;
-    case 'learner':
-      return <LearnerStats />;
     default:
       return null;
   }
@@ -83,24 +81,6 @@ function TeacherStats() {
       />
       <Stat label="Assignments" value={assignments.data ? String(assignments.data.length) : DASH} icon="book" tone="accent" />
       <Stat label="Upcoming lessons" value={upcoming} icon="calendar" tone="good" />
-    </Grid>
-  );
-}
-
-function LearnerStats() {
-  const assignments = useAssignments();
-  const submissions = useSubmissions();
-  const grades = useGrades();
-  const upcoming = useUpcomingCount();
-  const work =
-    assignments.data && submissions.data && grades.data ? studentWork(assignments.data, submissions.data, grades.data) : null;
-  const todo = work?.filter((w) => w.state === 'todo').length;
-  const graded = work?.filter((w) => w.state === 'graded').length;
-  return (
-    <Grid min={150}>
-      <Stat label="To do" value={todo == null ? DASH : String(todo)} icon="clipboard" tone={todo ? 'warning' : 'neutral'} />
-      <Stat label="Marked" value={graded == null ? DASH : String(graded)} detail="With feedback" icon="check" tone="good" />
-      <Stat label="Upcoming lessons" value={upcoming} icon="calendar" tone="accent" />
     </Grid>
   );
 }
