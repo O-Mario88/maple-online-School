@@ -1,4 +1,4 @@
-import { EMPTY_SHORT_FILTERS, filterShorts, formatCount, type ShortClip } from './shorts';
+import { EMPTY_SHORT_FILTERS, filterShorts, formatCount, ncdcDomain, stepClip, type ShortClip } from './shorts';
 
 const clip = (over: Partial<ShortClip>): ShortClip => ({
   id: 'x',
@@ -41,5 +41,32 @@ describe('formatCount', () => {
     expect(formatCount(1200)).toBe('1.2K');
     expect(formatCount(1200000)).toBe('1.2M');
     expect(formatCount(2000000)).toBe('2M');
+  });
+});
+
+describe('stepClip', () => {
+  it('moves to the next or previous short', () => {
+    expect(stepClip(2, 1, 5)).toBe(3);
+    expect(stepClip(2, -1, 5)).toBe(1);
+  });
+
+  it('stops at the first and last short instead of wrapping', () => {
+    expect(stepClip(0, -1, 5)).toBe(0);
+    expect(stepClip(4, 1, 5)).toBe(4);
+  });
+
+  it('stays at 0 when there are no shorts', () => {
+    expect(stepClip(0, 1, 0)).toBe(0);
+  });
+});
+
+describe('ncdcDomain', () => {
+  it('tags UNEB clips with their NCDC learning domain', () => {
+    expect(ncdcDomain({ board: 'UNEB', type: 'Concept explanation' })).toBe('knowledge');
+    expect(ncdcDomain({ board: 'UNEB', type: 'Revision tip' })).toBe('skills');
+  });
+
+  it('leaves other exam boards untagged', () => {
+    expect(ncdcDomain({ board: 'KCSE', type: 'Concept explanation' })).toBeNull();
   });
 });

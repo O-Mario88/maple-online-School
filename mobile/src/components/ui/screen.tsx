@@ -10,6 +10,7 @@ import { type Edge, SafeAreaView } from 'react-native-safe-area-context';
 import { Icon } from '@/components/icon';
 import { MaxContentWidth, Spacing, type Theme, Type } from '@/constants/theme';
 import { useStyles } from '@/hooks/use-styles';
+import { useSwitcher } from '@/lib/switcher-context';
 
 export interface ShellState {
   /** True inside the signed-in app shell (sidebar or tab bar). */
@@ -65,6 +66,25 @@ interface PageHeaderProps {
   actions?: ReactNode;
 }
 
+/** The current mode with a swap arrow; opens the role and school switcher. Renders nothing outside the app shell. */
+export function ModeButton({ onDark = false }: { onDark?: boolean }) {
+  const { theme, styles } = useStyles(makeStyles);
+  const switcher = useSwitcher();
+  if (!switcher) return null;
+  return (
+    <Pressable
+      onPress={switcher.open}
+      style={({ hovered }) => [styles.mode, onDark && styles.modeDark, hovered && styles.modeHover]}
+      accessibilityRole="button"
+      accessibilityLabel={`${switcher.label}. Switch mode`}>
+      <Text style={[styles.modeText, onDark && styles.modeTextDark]} numberOfLines={1}>
+        {switcher.label}
+      </Text>
+      <Icon name="swap" size={15} color={onDark ? theme.sidebarText : theme.accentText} />
+    </Pressable>
+  );
+}
+
 export function PageHeader({ title, subtitle, eyebrow, back, actions }: PageHeaderProps) {
   const { theme, styles } = useStyles(makeStyles);
   const goBack = () => (router.canGoBack() ? router.back() : router.replace('/'));
@@ -91,7 +111,10 @@ export function PageHeader({ title, subtitle, eyebrow, back, actions }: PageHead
           ) : null}
           {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
         </View>
-        {actions ? <View style={styles.actions}>{actions}</View> : null}
+        <View style={styles.actions}>
+          <ModeButton />
+          {actions}
+        </View>
       </View>
     </View>
   );
@@ -125,6 +148,11 @@ function makeStyles(t: Theme) {
     eyebrow: { ...Type.overline, color: t.accentText },
     title: { ...Type.display, color: t.text },
     subtitle: { ...Type.body, color: t.textSecondary },
-    actions: { flexDirection: 'row', flexWrap: 'wrap', gap: Spacing.two },
+    actions: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: Spacing.two },
+    mode: { flexDirection: 'row', alignItems: 'center', gap: Spacing.two, maxWidth: 240, minHeight: 36, paddingHorizontal: Spacing.three, borderRadius: 999, borderWidth: 1, borderColor: t.border, backgroundColor: t.backgroundElement },
+    modeDark: { alignSelf: 'stretch', justifyContent: 'space-between', borderRadius: 10, borderColor: t.sidebarElement, backgroundColor: t.sidebarElement },
+    modeHover: { opacity: 0.85 },
+    modeText: { ...Type.small, fontWeight: '600', color: t.accentText, flexShrink: 1 },
+    modeTextDark: { color: t.sidebarText },
   });
 }

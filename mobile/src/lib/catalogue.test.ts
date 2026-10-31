@@ -50,6 +50,15 @@ describe('sortCatalogue', () => {
     expect(sortCatalogue(items, 'priceLow').map((i) => i.id)).toEqual(['c', 'b', 'a']);
     expect(items).toEqual(copy);
   });
+
+  it('ranks by the popularity score when items carry one, not by review count', () => {
+    const ranked = [
+      { ...items[0], id: 'x', reviews: 10, popularity: 3 },
+      { ...items[0], id: 'y', reviews: 900, popularity: 1 },
+      { ...items[0], id: 'z', reviews: 50, popularity: 2 },
+    ];
+    expect(sortCatalogue(ranked, 'popular').map((i) => i.id)).toEqual(['x', 'z', 'y']);
+  });
 });
 
 describe('facetCounts', () => {

@@ -16,6 +16,8 @@ export interface CatalogueItem {
   rating: number;
   reviews: number;
   priceUGX: number;
+  /** A ranking score for "Popularity"; higher comes first. Without one, review count is used. */
+  popularity?: number;
 }
 
 export interface CatalogueFilters {
@@ -59,7 +61,7 @@ export function filterCatalogue<T extends CatalogueItem>(items: readonly T[], f:
 }
 
 const COMPARE: Readonly<Record<CatalogueSort, (a: CatalogueItem, b: CatalogueItem) => number>> = {
-  popular: (a, b) => b.reviews - a.reviews,
+  popular: (a, b) => (b.popularity ?? b.reviews) - (a.popularity ?? a.reviews),
   rating: (a, b) => b.rating - a.rating,
   priceLow: (a, b) => a.priceUGX - b.priceUGX,
   priceHigh: (a, b) => b.priceUGX - a.priceUGX,

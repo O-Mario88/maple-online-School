@@ -75,7 +75,9 @@ function RootNavigator() {
       <Stack.Screen name="help" />
       <Stack.Screen name="get-started" />
       <Stack.Screen name="qr-sign-in" />
+      <Stack.Screen name="qr-login" />
       <Stack.Screen name="consent" />
+      <Stack.Screen name="guardian-consent" />
       <Stack.Screen name="claim-child" />
     </Stack>
   );

@@ -16,6 +16,24 @@ export const copilot = {
   note: 'Maple guides you to the answer rather than giving it. Teachers can see what you asked.',
 };
 
+function role(name: string): number {
+  return photos.roles[name];
+}
+
+/** The role and school switcher's modes (design builds; real builds list the person's portals). */
+export const contexts = [
+  { key: 'learner', portal: 'learner' as const, title: 'Learner Mode', tagline: 'Personal Learning', detail: 'Access your lessons, classes, practice, and progress. Continue your personalized learning journey.', short: 'Access your lessons, classes, practice, and progress.', icon: 'cap' as const, tint: '#1463F3', tile: role('icon-learner'), photo: role('learner') },
+  { key: 'tutor', portal: 'teacher' as const, title: 'Independent Tutor Mode', tagline: 'Teach & Earn', detail: 'Create and manage your own classes, students, and learning resources.', short: 'Create and manage your own classes and students.', icon: 'person' as const, tint: '#8B5CF6', tile: role('icon-tutor'), photo: role('tutor') },
+  { key: 'school-teacher', portal: 'teacher' as const, title: 'School Teacher Mode', tagline: 'Green Valley School', detail: 'Access your school classes, curriculum, students, assignments, and school resources.', short: 'Access your school classes and curriculum.', icon: 'school' as const, tint: '#16A34A', tile: role('icon-teacher'), photo: role('teacher') },
+  { key: 'parent', portal: 'parent' as const, title: 'Parent Mode', tagline: 'Support Your Child', detail: "Track your child's progress, attendance, assignments, and learning activities.", short: "Track your child's progress and learning activities.", icon: 'people' as const, tint: '#EC4899', tile: role('icon-parent'), photo: role('parent') },
+];
+
+/** Accounts signed in on this device, for the switcher's "Your Accounts" list. */
+export const accounts = [
+  { name: 'Daniel Okello', role: 'Learner • Green Valley School', photo: role('daniel'), current: true },
+  { name: 'Sarah Okello', role: 'Teacher • Green Valley School', photo: role('sarah'), current: false },
+];
+
 export const sync = {
   online: false,
   waiting: 3,

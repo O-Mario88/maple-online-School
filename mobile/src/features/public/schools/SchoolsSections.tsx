@@ -10,34 +10,45 @@ import { Brand, CARD_SHADOW } from '../palette';
 type Page = MockData['publicPages']['schoolsPage'];
 
 /** The hero: badge, three-line promise, ticks, the two calls to action, and the students photo with results. */
-export function SchoolsHero({ page, wide }: { page: Page; wide: boolean }) {
+export function SchoolsHero({ page, wide, phone = false }: { page: Page; wide: boolean; phone?: boolean }) {
   return (
     <View style={[styles.hero, wide && styles.heroWide]}>
+      {wide ? <Image source={page.heroPhoto} style={styles.heroPhotoWide} contentFit="fill" accessibilityLabel="A teacher and three learners smiling at a laptop" /> : null}
       <View style={[styles.copy, wide && styles.copyWide]}>
         <Text style={styles.badge}>◎ FOR SCHOOLS & INSTITUTIONS</Text>
         <Text style={[styles.title, wide && styles.titleWide]} accessibilityRole="header">
           {'Better Learning.\nHigher '}
           <Text style={styles.accent}>Results.</Text>
-          {'\nHappier Teachers.'}
+          {phone ? '' : '\nHappier Teachers.'}
         </Text>
-        <Text style={styles.sub}>MAPLE helps schools deliver world-class academic support with live classes, structured curricula, past papers, AI-powered practice, and real-time progress tracking.</Text>
+        <Text style={[styles.sub, wide && styles.subWide]}>
+          {phone
+            ? 'Live classes, past papers, curriculum support and real-time progress tracking for your school.'
+            : 'MAPLE helps schools deliver world-class academic support with live classes, structured curricula, past papers, AI-powered practice, and real-time progress tracking.'}
+        </Text>
+        {phone ? (
+          <View style={styles.phonePhoto}>
+            <Image source={page.heroPhotoPhone} style={styles.phonePhotoImg} contentFit="cover" accessibilityLabel="A teacher and three learners smiling at a laptop" />
+          </View>
+        ) : null}
         {page.promises.map((p) => (
           <View key={p} style={styles.point}>
             <Icon name="check" size={16} color={Brand.blue} />
             <Text style={styles.body}>{p}</Text>
           </View>
         ))}
-        <View style={styles.ctas}>
-          <Pressable style={styles.primary} onPress={() => router.push('/get-started')} accessibilityRole="button">
+        <View style={[styles.ctas, wide && styles.ctasWide]}>
+          <Pressable style={[styles.primary, phone && styles.ctaPhone]} onPress={() => router.push('/get-started')} accessibilityRole="button">
             <Text style={styles.primaryText}>Start 15-Minute School Setup →</Text>
           </Pressable>
-          <Pressable style={styles.secondary} onPress={() => router.push('/help')} accessibilityRole="button">
+          <Pressable style={[styles.secondary, phone && styles.ctaPhone]} onPress={() => router.push('/help')} accessibilityRole="button">
             <Text style={styles.secondaryText}>Book a Demo</Text>
           </Pressable>
         </View>
       </View>
+      {phone ? null : (
       <View style={[styles.art, wide && styles.artWide]}>
-        <Image source={page.heroPhoto} style={styles.photo} contentFit="cover" accessibilityLabel="A teacher and three learners smiling at a laptop" />
+        {wide ? null : <Image source={page.heroPhoto} style={styles.photo} contentFit="cover" accessibilityLabel="A teacher and three learners smiling at a laptop" />}
         <View style={[styles.results, wide && styles.resultsWide]}>
           <Text style={styles.resultsTitle}>Real Results for Schools</Text>
           <View style={styles.resultsGrid}>
@@ -53,19 +64,40 @@ export function SchoolsHero({ page, wide }: { page: Page; wide: boolean }) {
           </View>
         </View>
       </View>
+      )}
+    </View>
+  );
+}
+
+/** Phones: the four results as a row of tiles under the hero, as the reference phone screen shows. */
+export function ResultsStrip({ page }: { page: Page }) {
+  return (
+    <View style={styles.card}>
+      <Text style={styles.strong}>Real Results for Schools</Text>
+      <View style={styles.strip}>
+        {page.results.map((r) => (
+          <View key={r.label} style={styles.stripItem}>
+            <View style={[styles.stripIcon, { backgroundColor: `${r.tint}1A` }]}>
+              <Icon name={r.icon} size={18} color={r.tint} />
+            </View>
+            <Text style={styles.stripValue}>{r.value}</Text>
+            <Text style={styles.stripLabel}>{r.label}</Text>
+          </View>
+        ))}
+      </View>
     </View>
   );
 }
 
 /** "Trusted by schools worldwide": board and school crests. */
-export function TrustedRow({ page }: { page: Page }) {
+export function TrustedRow({ page, wide = false }: { page: Page; wide?: boolean }) {
   return (
-    <View style={styles.card}>
+    <View style={[styles.card, wide && styles.trustedWide]}>
       <View style={styles.trustedHead}>
         <Text style={styles.strong}>Trusted by Schools Worldwide</Text>
         <Text style={styles.link}>View all →</Text>
       </View>
-      <View style={styles.trusted}>
+      <View style={[styles.trusted, wide && styles.trustedRow]}>
         {page.trusted.map((t) => (
           <View key={t.name} style={styles.trust}>
             <Image source={t.crest} style={styles.crest} contentFit="contain" accessibilityLabel={`${t.name} crest`} />
@@ -81,11 +113,11 @@ export function TrustedRow({ page }: { page: Page }) {
 }
 
 /** Six things Maple gives a school. */
-export function FeatureTiles({ page }: { page: Page }) {
+export function FeatureTiles({ page, wide = false }: { page: Page; wide?: boolean }) {
   return (
-    <View style={styles.features}>
-      {page.features.map((f) => (
-        <View key={f.title} style={styles.feature}>
+    <View style={[styles.features, wide && styles.featuresWide]}>
+      {page.features.map((f, i) => (
+        <View key={f.title} style={[styles.feature, wide && styles.featureWide, wide && i > 0 && styles.featureRule]}>
           <View style={[styles.featureIcon, { backgroundColor: `${f.tint}1A` }]}>
             <Icon name={f.icon} size={22} color={f.tint} />
           </View>
@@ -134,12 +166,30 @@ const styles = StyleSheet.create({
   flexShrink: { flexShrink: 1 },
   card: { gap: 12, padding: 18, borderRadius: 16, backgroundColor: Brand.surface, ...CARD_SHADOW },
   hero: { gap: 20 },
-  heroWide: { flexDirection: 'row', alignItems: 'stretch' },
+  // Desktop: the reference's hero, 960×402, photo bleeding in from the right.
+  heroWide: { height: 402, flexDirection: 'row', alignItems: 'stretch', marginTop: 0 },
+  heroPhotoWide: { position: 'absolute', left: 386, top: 0, width: 572, height: 402 },
+  subWide: { width: 380, fontSize: 13.5, lineHeight: 19 },
+  // The cut's right third holds the printed results card; phones show the real tiles instead.
+  phonePhoto: { aspectRatio: 335 / 310, marginHorizontal: -16, marginVertical: 6, overflow: 'hidden' },
+  phonePhotoImg: { width: '100%', height: '100%' },
+  ctaPhone: { flexBasis: '100%' },
+  ctasWide: { flexWrap: 'nowrap', marginTop: 12 },
+  strip: { flexDirection: 'row', justifyContent: 'space-between' },
+  stripItem: { flex: 1, alignItems: 'center', gap: 3 },
+  stripIcon: { width: 34, height: 34, borderRadius: 9, alignItems: 'center', justifyContent: 'center' },
+  stripValue: { fontSize: 13, fontWeight: '800', color: Brand.ink },
+  stripLabel: { fontSize: 9, color: Brand.body, textAlign: 'center' },
+  trustedWide: { paddingVertical: 14, marginRight: 12 },
+  trustedRow: { flexWrap: 'nowrap', justifyContent: 'space-between', columnGap: 8 },
+  featuresWide: { flexWrap: 'nowrap', gap: 0, paddingVertical: 14, borderRadius: 14, backgroundColor: 'rgba(255,255,255,0.6)' },
+  featureWide: { flexBasis: 0, flexGrow: 1, paddingVertical: 4 },
+  featureRule: { borderLeftWidth: 1, borderLeftColor: '#E6EAF1' },
   copy: { gap: 12 },
-  copyWide: { flex: 1, paddingTop: 8 },
+  copyWide: { width: 410, paddingTop: 22, paddingLeft: 30, gap: 9 },
   badge: { alignSelf: 'flex-start', fontSize: 11, fontWeight: '800', letterSpacing: 0.4, color: Brand.surface, backgroundColor: Brand.blue, paddingHorizontal: 12, paddingVertical: 6, borderRadius: 6, overflow: 'hidden' },
   title: { fontSize: 34, lineHeight: 38, fontWeight: '900', color: Brand.ink, letterSpacing: -1 },
-  titleWide: { fontSize: 46, lineHeight: 50, letterSpacing: -1.4 },
+  titleWide: { fontSize: 40, lineHeight: 41, letterSpacing: -1.2 },
   accent: { color: Brand.blue },
   sub: { fontSize: 15, lineHeight: 23, color: Brand.body },
   point: { flexDirection: 'row', alignItems: 'center', gap: 8 },
@@ -150,23 +200,23 @@ const styles = StyleSheet.create({
   secondary: { alignItems: 'center', justifyContent: 'center', minHeight: 46, paddingHorizontal: 22, borderRadius: 8, borderWidth: 1, borderColor: Brand.blue, backgroundColor: Brand.surface },
   secondaryText: { fontSize: 14, fontWeight: '700', color: Brand.blue },
   art: { minHeight: 300 },
-  artWide: { flex: 1.1 },
+  artWide: { flex: 1 },
   photo: { width: '100%', height: '100%', minHeight: 300, borderRadius: 16 },
   results: { gap: 8, padding: 12, borderRadius: 12, backgroundColor: Brand.surface, marginTop: -60, marginHorizontal: 12, ...CARD_SHADOW },
-  resultsWide: { position: 'absolute', right: 10, bottom: 14, width: 190, marginTop: 0, marginHorizontal: 0 },
+  resultsWide: { position: 'absolute', left: 806, top: 258, width: 176, marginTop: 0, marginHorizontal: 0 },
   resultsTitle: { fontSize: 12, fontWeight: '700', color: Brand.ink },
   resultsGrid: { flexDirection: 'row', flexWrap: 'wrap', rowGap: 10 },
   result: { width: '50%', flexDirection: 'row', alignItems: 'flex-start', gap: 6 },
-  resultValue: { fontSize: 15, fontWeight: '800' },
-  resultLabel: { fontSize: 9, color: Brand.muted },
+  resultValue: { fontSize: 13, fontWeight: '800' },
+  resultLabel: { fontSize: 7.5, color: Brand.muted },
   trustedHead: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   strong: { fontSize: 14, fontWeight: '700', color: Brand.ink },
   link: { fontSize: 12, fontWeight: '600', color: Brand.blue },
   muted: { fontSize: 11, color: Brand.muted },
   trusted: { flexDirection: 'row', flexWrap: 'wrap', columnGap: 16, rowGap: 14 },
   trust: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  crest: { width: 34, height: 36 },
-  trustName: { fontSize: 13, fontWeight: '700', color: Brand.ink },
+  crest: { width: 30, height: 32 },
+  trustName: { fontSize: 11.5, fontWeight: '700', color: Brand.ink },
   features: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
   feature: { flexGrow: 1, flexBasis: 140, alignItems: 'center', gap: 6, paddingVertical: 14, paddingHorizontal: 8 },
   featureIcon: { width: 46, height: 46, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },

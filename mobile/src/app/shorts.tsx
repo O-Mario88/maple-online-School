@@ -1,4 +1,4 @@
-import { router, useLocalSearchParams } from 'expo-router';
+import { router, useIsFocused, useLocalSearchParams } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -10,6 +10,7 @@ import { HomeNav } from '@/features/public/HomeNav';
 import { Brand, PUBLIC_WIDE } from '@/features/public/palette';
 import { ShortCard } from '@/features/public/shorts/ShortCard';
 import { ShortPlayer } from '@/features/public/shorts/ShortPlayer';
+import { ShortsViewer } from '@/features/public/shorts/ShortsViewer';
 import { ShortsHero } from '@/features/public/shorts/ShortsHero';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { mockData } from '@/lib/mock';
@@ -35,7 +36,6 @@ const SHELF = [
   { label: 'My Learning', icon: 'book' },
 ] as const;
 const SIDEBAR = 240;
-const PLAYER = 400;
 const NO_CLIPS: readonly ShortEntry[] = [];
 
 function valuesOf(clips: readonly ShortEntry[], field: keyof ShortEntry): string[] {
@@ -46,6 +46,8 @@ function valuesOf(clips: readonly ShortEntry[], field: keyof ShortEntry): string
 export default function ShortsScreen() {
   const { id } = useLocalSearchParams<{ id?: string }>();
   const mock = useMemo(() => mockData(), []);
+  // A native Modal sits above every screen, so only show the viewer while this page is in front.
+  const focused = useIsFocused();
   const { width } = useWindowDimensions();
   const wide = width >= PUBLIC_WIDE;
   const [filters, setFilters] = useState<ShortFilters>(EMPTY_SHORT_FILTERS);
@@ -60,7 +62,10 @@ export default function ShortsScreen() {
 
   // The clip in the link (?id=) plays; otherwise the first one.
   const current = clips.find((c) => c.id === id) ?? clips[0];
+  // The short in the link opens full screen.
+  const opened = id ? clips.find((c) => c.id === id) : undefined;
   const select = (clipId: string) => router.setParams({ id: clipId });
+  const close = () => router.setParams({ id: undefined });
   const toggle = (key: ListKey, value: string) =>
     setFilters((f) => ({ ...f, [key]: f[key].includes(value) ? f[key].filter((v) => v !== value) : [...f[key], value] }));
 
@@ -124,7 +129,7 @@ export default function ShortsScreen() {
           ) : (
             <View style={styles.grid}>
               {shown.map((c) => (
-                <ShortCard key={c.id} clip={c} active={c.id === current.id} onPress={() => select(c.id)} />
+                <ShortCard key={c.id} clip={c} active={c.id === (wide ? opened?.id : current.id)} onPress={() => select(c.id)} />
               ))}
             </View>
           )}
@@ -145,12 +150,17 @@ export default function ShortsScreen() {
             ))}
           </ScrollView>
         </ScrollView>
-        {wide ? (
-          <ScrollView style={styles.player} contentContainerStyle={styles.playerInner}>
-            <ShortPlayer clip={current} courseSlug={feed.courseSlug} />
-          </ScrollView>
-        ) : null}
       </View>
+      {/* An opened short plays full screen, YouTube Shorts style; no side player on the web. */}
+      {opened && focused ? (
+        <ShortsViewer
+          clips={shown.some((c) => c.id === opened.id) ? shown : clips}
+          startId={opened.id}
+          courseSlug={feed.courseSlug}
+          onChange={select}
+          onClose={close}
+        />
+      ) : null}
     </SafeAreaView>
     </LightOnly>
   );
@@ -187,6 +197,4 @@ const styles = StyleSheet.create({
   trendThumb: { width: 64, height: 44, borderRadius: 6, backgroundColor: '#1E3A8A', alignItems: 'center', justifyContent: 'center' },
   trendText: { fontSize: 13, fontWeight: '600', color: Brand.ink },
   muted: { fontSize: 12, color: Brand.muted },
-  player: { width: PLAYER, flexGrow: 0, backgroundColor: Brand.surface, borderLeftWidth: 1, borderLeftColor: Brand.line },
-  playerInner: { padding: 20 },
 });

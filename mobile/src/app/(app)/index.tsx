@@ -6,7 +6,11 @@ import { HomeStats } from '@/features/home/HomeStats';
 import { LearnersEntryCard } from '@/features/insights/LearnersEntryCard';
 import { AttendanceSection } from '@/features/learner/AttendanceSection';
 import { ParentResultsSection } from '@/features/parent/ParentResultsSection';
+import { HOME_REF_WIDTH, HomeDesk, HomePhone } from '@/features/learner/home/HomeViews';
+import { RefScale } from '@/features/public/home/RefScale';
 import { NextUpHero } from '@/features/preview/NextUpHero';
+import { mockData } from '@/lib/mock';
+import { ScrollView, useWindowDimensions } from 'react-native';
 import { ReportsSection } from '@/features/shared/ReportsSection';
 import { TodaySection } from '@/features/shared/TodaySection';
 import { StudentWorkSection } from '@/features/student/StudentWorkSection';
@@ -35,6 +39,7 @@ export default function HomeScreen() {
   const { portal, portals, setPortal } = usePortal();
   const { wide } = useShell();
   const { signOut } = useAuth();
+  const { width } = useWindowDimensions();
 
   if (me.isPending) {
     return (
@@ -56,6 +61,18 @@ export default function HomeScreen() {
   const now = new Date();
   const firstName = user.full_name.split(' ')[0] || user.full_name;
   const home = homeFor(PORTAL_ROLE[portal]);
+  const learnerHome = portal === 'learner' ? mockData()?.learner.learnerHome : undefined;
+  if (learnerHome) {
+    // Design build: the learner home is its reference, sidebar included (drawn at its pixels, then scaled).
+    if (!wide) return <HomePhone h={learnerHome} now={now} />;
+    return (
+      <ScrollView style={{ backgroundColor: '#EEF3FA' }}>
+        <RefScale width={width} refWidth={HOME_REF_WIDTH}>
+          <HomeDesk h={learnerHome} now={now} />
+        </RefScale>
+      </ScrollView>
+    );
+  }
   const today = now.toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' });
 
   return (

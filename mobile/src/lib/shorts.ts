@@ -64,3 +64,18 @@ export function formatCount(n: number): string {
   const shown = value >= 10 ? Math.round(value) : Math.round(value * 10) / 10;
   return `${shown}${unit.suffix}`;
 }
+
+/** The short after (+1) or before (-1) the current one; stops at either end, like YouTube Shorts. */
+export function stepClip(index: number, delta: number, total: number): number {
+  if (total <= 0) return 0;
+  return Math.min(total - 1, Math.max(0, index + delta));
+}
+
+/**
+ * The NCDC learning domain a UNEB clip serves: explanations build knowledge, tips and
+ * worked methods build skills. Other boards follow other curricula, so they get none.
+ */
+export function ncdcDomain(clip: { board: string; type: string }): 'knowledge' | 'skills' | null {
+  if (clip.board !== 'UNEB') return null;
+  return clip.type === 'Concept explanation' ? 'knowledge' : 'skills';
+}

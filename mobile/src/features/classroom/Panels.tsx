@@ -16,7 +16,16 @@ function Count({ n, blue = false }: { n: number; blue?: boolean }) {
 }
 
 /** A white panel with a title row; used for every classroom panel. */
-export function Panel({ title, count, action, children, flat = false }: { title: string; count?: number; action?: ReactNode; children: ReactNode; flat?: boolean }) {
+/** The reference's small square expand button on panel headers. */
+export function ExpandButton({ boxed = false }: { boxed?: boolean }) {
+  return (
+    <Pressable style={[styles.expand, boxed && styles.expandBoxed]} accessibilityRole="button" accessibilityLabel="Expand" hitSlop={6}>
+      <Icon name="expand" size={14} color={Brand.ink} />
+    </Pressable>
+  );
+}
+
+export function Panel({ title, count, action, children, flat = false, expand = false }: { title: string; count?: number; action?: ReactNode; children: ReactNode; flat?: boolean; expand?: boolean }) {
   return (
     <View style={[styles.panel, flat && styles.flat]}>
       <View style={styles.head}>
@@ -26,6 +35,7 @@ export function Panel({ title, count, action, children, flat = false }: { title:
         {count ? <Count n={count} /> : null}
         <View style={styles.flex} />
         {action}
+        {expand ? <ExpandButton boxed={action !== undefined} /> : null}
       </View>
       {children}
     </View>
@@ -248,4 +258,6 @@ const styles = StyleSheet.create({
   start: { paddingHorizontal: 18, paddingVertical: 8, borderRadius: 8, backgroundColor: Brand.blue },
   startText: { fontSize: 13, fontWeight: '700', color: Brand.surface },
   person: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  expand: { width: 28, height: 28, marginLeft: 8, alignItems: 'center', justifyContent: 'center' },
+  expandBoxed: { borderRadius: 7, borderWidth: 1, borderColor: Brand.line },
 });

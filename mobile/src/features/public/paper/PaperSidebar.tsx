@@ -48,11 +48,12 @@ export function PaperSidebar({ boards, subjects, activeBoardHref, activeSubject 
 }
 
 const styles = StyleSheet.create({
-  side: { width: 220, flexGrow: 0, backgroundColor: NAVY },
-  inner: { padding: 10, gap: 2 },
-  heading: { fontSize: 16, fontWeight: '800', color: Brand.surface, paddingHorizontal: 10, paddingVertical: 10 },
-  subjectsHeading: { marginTop: 10, fontSize: 14 },
-  item: { flexDirection: 'row', alignItems: 'center', gap: 12, minHeight: 38, paddingHorizontal: 12, borderRadius: 8 },
+  // The reference's sidebar is 162px wide at its 1252px page width.
+  side: { width: 162, flexGrow: 0, backgroundColor: NAVY },
+  inner: { paddingVertical: 10, paddingHorizontal: 7, gap: 2 },
+  heading: { fontSize: 14, fontWeight: '800', color: Brand.surface, paddingHorizontal: 10, paddingVertical: 10 },
+  subjectsHeading: { marginTop: 10, fontSize: 12 },
+  item: { flexDirection: 'row', alignItems: 'center', gap: 9, minHeight: 32, paddingHorizontal: 9, borderRadius: 7 },
   itemOn: { backgroundColor: NAVY_ON },
-  label: { flex: 1, fontSize: 13, color: Brand.surface },
+  label: { flex: 1, fontSize: 10, color: Brand.surface },
 });

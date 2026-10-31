@@ -5,142 +5,229 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Icon } from '@/components/icon';
 import { EmptyState } from '@/components/ui';
 import { CatalogueCard } from '@/features/public/explore/CatalogueCard';
-import { type FilterGroup, FilterPanel } from '@/features/public/explore/FilterPanel';
-import { HomeNav } from '@/features/public/HomeNav';
-import { Brand, PUBLIC_WIDE } from '@/features/public/palette';
+import { type ExploreGroup, ExploreFilters, SearchBox } from '@/features/public/explore/ExploreFilters';
+import { RefScale } from '@/features/public/home/RefScale';
+import { EXPLORE_LINKS, HomeNav } from '@/features/public/HomeNav';
+import { Brand } from '@/features/public/palette';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { type CatalogueFilters, type CatalogueSort, EMPTY_FILTERS, facetCounts, filterCatalogue, sortCatalogue } from '@/lib/catalogue';
 import { mockData } from '@/lib/mock';
-import type { CatalogueEntry } from '@/mock/public';
+import type { CatalogueEntry, catalogueFacets } from '@/mock/public';
 import { LightOnly } from '@/hooks/use-theme';
 
-const KIND_LABELS: Readonly<Record<string, string>> = { course: 'Courses', live: 'Live classes', paper: 'Past papers', bootcamp: 'Exam bootcamps', short: 'Short lessons' };
 const SORTS: readonly { value: CatalogueSort; label: string }[] = [
   { value: 'popular', label: 'Popularity' },
   { value: 'rating', label: 'Rating' },
   { value: 'priceLow', label: 'Price: low to high' },
   { value: 'priceHigh', label: 'Price: high to low' },
 ];
-const SIDEBAR = 260;
-const MAX_WIDTH = 1440;
+/** From this width the page is the reference itself, scaled to fit. */
+const DESKTOP_MIN = 1200;
+/** Below this width the two-per-row cards use the compact size. */
+const TWO_COLUMNS = 600;
+const PHONE_GAP = 14;
+// The reference's grid: 4 columns of 262.5px with 26px gaps inside the 1128px results column.
+const DESK_COLUMNS = 4;
+const DESK_CARD = 262.5;
 const NO_ITEMS: readonly CatalogueEntry[] = [];
 
-function groupsFor(items: readonly CatalogueEntry[]): FilterGroup[] {
-  const make = (key: FilterGroup['key'], field: 'kind' | 'board' | 'level' | 'subject' | 'country', title: string, label = (v: string) => v): FilterGroup => {
-    const counts = facetCounts(items, field);
-    return { key, title, options: Object.keys(counts).map((value) => ({ value, label: label(value), count: counts[value] })) };
-  };
+type Facets = typeof catalogueFacets;
+
+function groupsFor(facets: Facets, items: readonly CatalogueEntry[]): ExploreGroup[] {
+  const subjects = facetCounts(items, 'subject');
   return [
-    make('kinds', 'kind', 'Content type', (v) => KIND_LABELS[v] ?? v),
-    make('boards', 'board', 'Curriculum and exam board'),
-    make('levels', 'level', 'Grade / level'),
-    make('subjects', 'subject', 'Subject'),
-    make('countries', 'country', 'Country'),
+    { key: 'kinds', title: 'Content Type', options: facets.kinds, shown: 5, toggle: 'minus' },
+    { key: 'boards', title: 'Curriculum', options: facets.boards, shown: 6, toggle: 'minus' },
+    { key: 'levels', title: 'Grade / Level', options: facets.levels, shown: 4, toggle: 'chevron' },
+    { key: 'subjects', title: 'Subject', options: Object.keys(subjects).map((s) => ({ value: s, label: s })), shown: 5, toggle: 'chevron' },
   ];
 }
 
-/** Inventory 7: search and filter courses, live classes, past papers and bootcamps. */
+function isUnfiltered(f: CatalogueFilters): boolean {
+  return f.query === '' && f.kinds.length + f.boards.length + f.levels.length + f.subjects.length + f.countries.length === 0 && f.price === 'any';
+}
+
+function countLine(facets: Facets, filters: CatalogueFilters, found: number): string {
+  // With no filters, the reference's whole-catalogue line; once filtered, what is actually shown.
+  if (isUnfiltered(filters)) return `Showing 1–${facets.perPage} of ${facets.total.toLocaleString('en-US')} results`;
+  return `Showing ${found} ${found === 1 ? 'result' : 'results'}`;
+}
+
+interface ControlsProps {
+  list: boolean;
+  setList: (v: boolean) => void;
+  sort: CatalogueSort;
+  setSort: (s: CatalogueSort) => void;
+}
+
+/** Grid/List switch and the sort menu (each tap moves to the next sort). */
+function Controls({ list, setList, sort, setSort }: ControlsProps) {
+  const i = SORTS.findIndex((s) => s.value === sort);
+  return (
+    <View style={styles.controls}>
+      <View style={styles.views} accessibilityRole="tablist">
+        {(['Grid', 'List'] as const).map((v) => {
+          const on = (v === 'List') === list;
+          return (
+            <Pressable key={v} style={[styles.view, on && styles.viewOn]} onPress={() => setList(v === 'List')} accessibilityRole="tab" accessibilityState={{ selected: on }}>
+              <Icon name={v === 'Grid' ? 'grid' : 'list'} size={13} color={on ? Brand.surface : '#4A5263'} />
+              <Text style={[styles.viewText, on && styles.viewTextOn]}>{v}</Text>
+            </Pressable>
+          );
+        })}
+      </View>
+      <Text style={styles.sortLabel}>Sort by</Text>
+      <Pressable style={styles.sort} onPress={() => setSort(SORTS[(i + 1) % SORTS.length].value)} accessibilityRole="button" accessibilityLabel={`Sort by ${SORTS[i].label}. Tap to change.`}>
+        <Text style={styles.sortText}>{SORTS[i].label}</Text>
+        <Icon name="chevronDown" size={15} color={Brand.ink} />
+      </Pressable>
+    </View>
+  );
+}
+
+/** Inventory 7: search and filter courses, live classes, past papers and bootcamps (the Explore reference, option 3). */
 export default function ExploreScreen() {
   const mock = useMemo(() => mockData(), []);
   const { width } = useWindowDimensions();
-  const wide = width >= PUBLIC_WIDE;
+  const desktop = width >= DESKTOP_MIN;
   const [filters, setFilters] = useState<CatalogueFilters>(EMPTY_FILTERS);
   const [sort, setSort] = useState<CatalogueSort>('popular');
   const [list, setList] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const items = mock?.publicPages.catalogue ?? NO_ITEMS;
-  const groups = useMemo(() => groupsFor(items), [items]);
   const results = useMemo(() => sortCatalogue(filterCatalogue(items, filters), sort), [items, filters, sort]);
 
   if (!mock) {
     return <PreviewScreen title="Explore">{() => null}</PreviewScreen>;
   }
+  const facets = mock.publicPages.catalogueFacets;
+  const groups = groupsFor(facets, items);
+  const coursePage = mock.publicPages.catalogueCoursePage;
+  const count = countLine(facets, filters, results.length);
+  const empty = <EmptyState icon="search" title="Nothing matches those filters" body="Try fewer filters or a shorter search." />;
 
-  const panel = <FilterPanel filters={filters} groups={groups} onChange={setFilters} />;
-  const sortIndex = SORTS.findIndex((s) => s.value === sort);
+  if (desktop) {
+    return (
+      <LightOnly>
+        <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
+          <RefScale width={width}>
+            <HomeNav wide tall fullWidth links={EXPLORE_LINKS} active="Explore" />
+          </RefScale>
+          <ScrollView style={styles.scroll}>
+            <RefScale width={width}>
+              <View style={styles.deskBody}>
+                <View style={styles.sidebar}>
+                  <ExploreFilters filters={filters} groups={groups} onChange={setFilters} />
+                </View>
+                <View style={styles.main}>
+                  <View style={styles.head}>
+                    <Text style={styles.title} accessibilityRole="header">
+                      Explore Courses, Live Classes & Past Papers
+                    </Text>
+                    <Text style={styles.sub}>Find the right learning resources for your goals.</Text>
+                    <Text style={styles.count} accessibilityLiveRegion="polite">
+                      {count}
+                    </Text>
+                    <View style={styles.deskControls}>
+                      <Controls list={list} setList={setList} sort={sort} setSort={setSort} />
+                    </View>
+                  </View>
+                  {results.length === 0 ? (
+                    empty
+                  ) : (
+                    <View style={[styles.grid, list && styles.gridList]}>
+                      {results.map((i) => (
+                        <CatalogueCard key={i.id} item={i} coursePage={coursePage} width={list ? undefined : DESK_CARD} list={list} />
+                      ))}
+                    </View>
+                  )}
+                </View>
+              </View>
+            </RefScale>
+          </ScrollView>
+        </SafeAreaView>
+      </LightOnly>
+    );
+  }
 
+  // Two cards per row like the reference's grid (compact on phones); List shows one per row.
+  const columns = list ? 1 : 2;
+  const cardWidth = columns === 1 ? undefined : (width - 2 * PHONE_GAP - PHONE_GAP) / 2;
+  const compact = columns === 2 && width < TWO_COLUMNS;
   return (
     <LightOnly>
-    <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
-      <HomeNav wide={wide} active="Courses" />
-      <View style={[styles.body, wide && styles.bodyWide]}>
-        {wide ? (
-          <ScrollView style={styles.sidebar} contentContainerStyle={styles.sidebarInner}>
-            {panel}
-          </ScrollView>
-        ) : null}
-        <ScrollView style={styles.flex} contentContainerStyle={styles.main}>
-          <View style={styles.head}>
-            <View style={styles.flexShrink}>
-              <Text style={styles.title} accessibilityRole="header">
-                Explore Courses, Live Classes & Past Papers
-              </Text>
-              <Text style={styles.sub}>Find the right learning resources for your goals.</Text>
-            </View>
-            <Text style={styles.count} accessibilityLiveRegion="polite">{`Showing ${results.length} of ${items.length} results`}</Text>
-          </View>
-          <View style={styles.controls}>
-            {wide ? null : (
-              <Pressable style={styles.control} onPress={() => setShowFilters((s) => !s)} accessibilityRole="button" accessibilityState={{ expanded: showFilters }}>
-                <Icon name="search" size={14} color={Brand.ink} />
-                <Text style={styles.controlText}>{showFilters ? 'Hide filters' : 'Filters'}</Text>
-              </Pressable>
-            )}
-            <View style={styles.toggle} accessibilityRole="tablist">
-              {(['Grid', 'List'] as const).map((v) => {
-                const on = (v === 'List') === list;
-                return (
-                  <Pressable key={v} style={[styles.toggleBtn, on && styles.toggleOn]} onPress={() => setList(v === 'List')} accessibilityRole="tab" accessibilityState={{ selected: on }}>
-                    <Text style={[styles.controlText, on && styles.toggleTextOn]}>{v}</Text>
-                  </Pressable>
-                );
-              })}
-            </View>
-            <Pressable style={styles.control} onPress={() => setSort(SORTS[(sortIndex + 1) % SORTS.length].value)} accessibilityRole="button" accessibilityLabel={`Sort by ${SORTS[sortIndex].label}. Tap to change.`}>
-              <Text style={styles.muted}>Sort by</Text>
-              <Text style={styles.controlText}>{SORTS[sortIndex].label}</Text>
-              <Icon name="chevronDown" size={14} color={Brand.body} />
+      <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
+        <HomeNav wide={false} active="Explore" />
+        <ScrollView style={styles.scroll} contentContainerStyle={styles.phone}>
+          <Text style={styles.titlePhone} accessibilityRole="header">
+            Explore Courses, Live Classes & Past Papers
+          </Text>
+          <Text style={styles.subPhone}>Find the right learning resources for your goals.</Text>
+          <SearchBox filters={filters} onChange={setFilters} style={styles.searchPhone} />
+          <View style={styles.phoneBar}>
+            <Pressable style={[styles.filtersBtn, showFilters && styles.viewOn]} onPress={() => setShowFilters((s) => !s)} accessibilityRole="button" accessibilityState={{ expanded: showFilters }}>
+              <Icon name="settings" size={14} color={showFilters ? Brand.surface : Brand.ink} />
+              <Text style={[styles.viewText, showFilters && styles.viewTextOn]}>Filters</Text>
             </Pressable>
+            <Controls list={list} setList={setList} sort={sort} setSort={setSort} />
           </View>
-          {!wide && showFilters ? <View style={styles.mobilePanel}>{panel}</View> : null}
+          {showFilters ? (
+            <View style={styles.drawer}>
+              <ExploreFilters filters={filters} groups={groups} onChange={setFilters} hideSearch />
+            </View>
+          ) : null}
+          <Text style={styles.countPhone} accessibilityLiveRegion="polite">
+            {count}
+          </Text>
           {results.length === 0 ? (
-            <EmptyState icon="search" title="Nothing matches those filters" body="Try fewer filters or a shorter search." />
+            empty
           ) : (
-            <View style={[styles.grid, list && styles.listGrid]}>
+            <View style={styles.gridPhone}>
               {results.map((i) => (
-                <CatalogueCard key={i.id} item={i} coursePage={mock.publicPages.catalogueCoursePage} list={list} />
+                <CatalogueCard key={i.id} item={i} coursePage={coursePage} width={cardWidth} compact={compact} />
               ))}
             </View>
           )}
         </ScrollView>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
     </LightOnly>
   );
 }
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: Brand.surface },
-  body: { flex: 1, backgroundColor: Brand.canvas },
-  bodyWide: { flexDirection: 'row', width: '100%', maxWidth: MAX_WIDTH, alignSelf: 'center' },
-  flex: { flex: 1 },
-  flexShrink: { flexShrink: 1 },
-  sidebar: { width: SIDEBAR, flexGrow: 0, backgroundColor: Brand.surface, borderRightWidth: 1, borderRightColor: Brand.line },
-  sidebarInner: { padding: 20 },
-  main: { padding: 20, gap: 16 },
-  head: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 },
-  title: { fontSize: 26, fontWeight: '800', color: Brand.ink, letterSpacing: -0.5 },
-  sub: { fontSize: 14, color: Brand.body, marginTop: 4 },
-  count: { fontSize: 12, color: Brand.muted },
-  controls: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'flex-end', gap: 10 },
-  control: { flexDirection: 'row', alignItems: 'center', gap: 6, minHeight: 38, paddingHorizontal: 12, borderRadius: 8, borderWidth: 1, borderColor: Brand.line, backgroundColor: Brand.surface },
-  controlText: { fontSize: 13, fontWeight: '600', color: Brand.ink },
-  muted: { fontSize: 12, color: Brand.muted },
-  toggle: { flexDirection: 'row', padding: 3, borderRadius: 8, backgroundColor: Brand.surface, borderWidth: 1, borderColor: Brand.line },
-  toggleBtn: { paddingHorizontal: 14, paddingVertical: 6, borderRadius: 6 },
-  toggleOn: { backgroundColor: Brand.blue },
-  toggleTextOn: { color: Brand.surface },
-  mobilePanel: { padding: 16, borderRadius: 12, backgroundColor: Brand.surface, borderWidth: 1, borderColor: Brand.line },
-  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 16 },
-  listGrid: { flexDirection: 'column' },
+  scroll: { backgroundColor: '#FAFBFD' },
+
+  // Desktop, in the reference's pixels (body starts under the 80px bar).
+  deskBody: { flexDirection: 'row', minHeight: 900 },
+  sidebar: { width: 332, paddingTop: 32, paddingLeft: 35, paddingRight: 26, paddingBottom: 40, backgroundColor: Brand.surface, borderRightWidth: 1, borderRightColor: '#EDF0F5' },
+  main: { width: 1204, paddingTop: 33, paddingLeft: 34, paddingRight: 42, paddingBottom: 48 },
+  head: { height: 111.4 },
+  title: { fontSize: 26, lineHeight: 32, fontWeight: '700', color: Brand.ink, letterSpacing: -0.3 },
+  sub: { marginTop: 12, fontSize: 16, lineHeight: 22, color: '#4A5263' },
+  count: { position: 'absolute', right: 0, top: -2, fontSize: 14, lineHeight: 18, color: '#6B7385' },
+  deskControls: { position: 'absolute', right: 0, top: 45 },
+  grid: { flexDirection: 'row', flexWrap: 'wrap', columnGap: 26, rowGap: 20, width: DESK_COLUMNS * DESK_CARD + 3 * 26 },
+  gridList: { flexDirection: 'column' },
+
+  controls: { flexDirection: 'row', alignItems: 'center' },
+  views: { flexDirection: 'row', gap: 5 },
+  view: { height: 36, flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 13, borderRadius: 7, backgroundColor: '#F1F3F7' },
+  viewOn: { backgroundColor: Brand.blue },
+  viewText: { fontSize: 13.5, fontWeight: '500', color: '#4A5263' },
+  viewTextOn: { color: Brand.surface },
+  sortLabel: { marginLeft: 19, fontSize: 13.5, color: '#4A5263' },
+  sort: { width: 143, height: 42, marginLeft: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 13, borderRadius: 8, borderWidth: 1, borderColor: '#DFE4EC', backgroundColor: Brand.surface },
+  sortText: { fontSize: 13.5, fontWeight: '500', color: Brand.ink },
+
+  // Phones and tablets.
+  phone: { padding: PHONE_GAP, paddingBottom: 40 },
+  titlePhone: { fontSize: 24, lineHeight: 29, fontWeight: '700', color: Brand.ink, letterSpacing: -0.3 },
+  subPhone: { marginTop: 6, fontSize: 15, lineHeight: 21, color: '#4A5263' },
+  searchPhone: { marginTop: 14 },
+  phoneBar: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 8, marginTop: 10 },
+  filtersBtn: { height: 36, flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 12, borderRadius: 7, backgroundColor: '#F1F3F7' },
+  drawer: { marginTop: 12, padding: 14, paddingTop: 0, borderRadius: 10, backgroundColor: Brand.surface, borderWidth: 1, borderColor: '#EDF0F5' },
+  countPhone: { marginTop: 12, marginBottom: 10, fontSize: 13, color: '#6B7385' },
+  gridPhone: { flexDirection: 'row', flexWrap: 'wrap', gap: PHONE_GAP },
 });

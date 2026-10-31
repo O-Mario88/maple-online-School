@@ -68,6 +68,11 @@ export function ClassroomTopBar({ title, board, students, teacher, startSeconds,
           <Icon name="logout" size={16} color={Brand.surface} />
           <Text style={styles.leaveText}>{wide ? 'Leave Class' : 'Leave'}</Text>
         </Pressable>
+        {wide ? (
+          <Pressable style={styles.square} accessibilityRole="button" accessibilityLabel="Full screen">
+            <Icon name="expand" size={16} color={Brand.ink} />
+          </Pressable>
+        ) : null}
       </View>
     </View>
   );
@@ -90,6 +95,7 @@ const styles = StyleSheet.create({
   actions: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   ghost: { flexDirection: 'row', alignItems: 'center', gap: 6, height: 38, paddingHorizontal: 14, borderRadius: 8, borderWidth: 1, borderColor: Brand.line },
   ghostText: { fontSize: 13, fontWeight: '600', color: Brand.ink },
+  square: { width: 38, height: 38, alignItems: 'center', justifyContent: 'center', borderRadius: 8, borderWidth: 1, borderColor: Brand.line },
   leave: { flexDirection: 'row', alignItems: 'center', gap: 6, height: 38, paddingHorizontal: 16, borderRadius: 8, backgroundColor: Brand.live },
   leaveText: { fontSize: 13, fontWeight: '700', color: Brand.surface },
 });

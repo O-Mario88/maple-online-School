@@ -1,81 +1,74 @@
-import { Link } from 'expo-router';
-import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Image } from 'expo-image';
+import { useMemo } from 'react';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { AuthLayout } from '@/components/shell/AuthLayout';
-import { Button, ErrorText, Field } from '@/components/ui';
-import { Spacing, type Theme, Type } from '@/constants/theme';
-import { useStyles } from '@/hooks/use-styles';
-import { useAuth } from '@/lib/auth/auth-context';
-import { MOCK_DATA } from '@/lib/mock';
+import { AUTH_SKY, AuthPhoneTop, AuthTopBar, FitScale } from '@/features/auth/AuthChrome';
+import { SignInCard } from '@/features/auth/SignInCard';
+import { SignInPanel } from '@/features/auth/SignInPanel';
+import { Brand } from '@/features/public/palette';
+import { LightOnly } from '@/hooks/use-theme';
+import { mockData } from '@/lib/mock';
 
+/** From this width the page is the reference's desktop layout, scaled to fit the window. */
+const DESKTOP_MIN = 900;
+// The reference's desktop frame: 1158 × 1020, with the bar at (18, 15), the photo panel at (18, 82) and the card at (563, 108).
+const REF_W = 1158;
+const REF_H = 1020;
+const FRAME_W = 1122;
+const PHONE_PHOTO_RATIO = 349 / 175;
+
+/** Inventory 2: one sign-in and sign-up gateway, built to the sign-in reference. */
 export default function SignInScreen() {
-  const { styles } = useStyles(makeStyles);
-  const { signIn } = useAuth();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { width } = useWindowDimensions();
+  const art = useMemo(() => mockData()?.publicPages.signInArt, []);
 
-  const canSubmit = email.trim() !== '' && password !== '' && !isSubmitting;
-
-  async function handleSubmit() {
-    if (!canSubmit) return;
-    setError(null);
-    setIsSubmitting(true);
-    try {
-      await signIn(email, password);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Could not sign in. Please try again.');
-      setIsSubmitting(false);
-    }
+  if (width >= DESKTOP_MIN) {
+    return (
+      <LightOnly>
+        <SafeAreaView style={styles.sky}>
+          <FitScale refWidth={REF_W} refHeight={REF_H}>
+            <View style={styles.bar}>
+              <AuthTopBar width={FRAME_W} />
+            </View>
+            <View style={styles.panel}>
+              <SignInPanel art={art} width={FRAME_W} height={923} />
+            </View>
+            <View style={styles.card}>
+              <SignInCard art={art} />
+            </View>
+          </FitScale>
+        </SafeAreaView>
+      </LightOnly>
+    );
   }
 
   return (
-    <AuthLayout title="Welcome back" subtitle="Sign in to your school, classes and family account.">
-      <Field
-        label="Email"
-        value={email}
-        onChangeText={setEmail}
-        autoCapitalize="none"
-        autoComplete="email"
-        keyboardType="email-address"
-        textContentType="username"
-        placeholder="you@school.org"
-        returnKeyType="next"
-      />
-      <Field
-        label="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        autoComplete="current-password"
-        textContentType="password"
-        returnKeyType="go"
-        onSubmitEditing={handleSubmit}
-      />
-      <ErrorText message={error} />
-      <Button label="Sign in" onPress={handleSubmit} disabled={!canSubmit} busy={isSubmitting} />
-      <View style={styles.links}>
-        <Link href="/forgot-password" style={styles.link} accessibilityRole="link">
-          Forgot password?
-        </Link>
-        <Link href="/sign-up" style={styles.link} accessibilityRole="link">
-          Create an account
-        </Link>
-      </View>
-      {MOCK_DATA ? (
-        <Link href="/welcome" style={styles.link} accessibilityRole="link">
-          Design preview: public pages
-        </Link>
-      ) : null}
-    </AuthLayout>
+    <LightOnly>
+      <SafeAreaView style={styles.phoneSafe} edges={['top', 'left', 'right']}>
+        <AuthPhoneTop />
+        <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+          <ScrollView contentContainerStyle={styles.phoneScroll} keyboardShouldPersistTaps="handled">
+            {art ? <Image source={art.phone} style={styles.phonePhoto} contentFit="cover" accessibilityLabel="A smiling learner in school uniform" /> : null}
+            <View style={[styles.phoneCard, art ? styles.phoneCardOverlap : null]}>
+              <SignInCard art={art} phone />
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </LightOnly>
   );
 }
 
-function makeStyles(t: Theme) {
-  return StyleSheet.create({
-    links: { flexDirection: 'row', justifyContent: 'space-between', marginTop: Spacing.one },
-    link: { ...Type.small, fontWeight: '600', color: t.accentText, paddingVertical: Spacing.two },
-  });
-}
+const styles = StyleSheet.create({
+  flex: { flex: 1 },
+  sky: { flex: 1, backgroundColor: AUTH_SKY },
+  bar: { position: 'absolute', left: 18, top: 15 },
+  panel: { position: 'absolute', left: 18, top: 82 },
+  card: { position: 'absolute', left: 563, top: 108 },
+  phoneSafe: { flex: 1, backgroundColor: Brand.surface },
+  phoneScroll: { paddingBottom: 28, backgroundColor: '#F4F7FC' },
+  phonePhoto: { width: '100%', aspectRatio: PHONE_PHOTO_RATIO },
+  phoneCard: { marginHorizontal: 10, marginTop: 10 },
+  phoneCardOverlap: { marginTop: -22 },
+});

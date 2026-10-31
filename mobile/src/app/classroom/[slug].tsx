@@ -8,6 +8,7 @@ import { ClassRail, type RailItem, type RailKey } from '@/features/classroom/Cla
 import { ClassroomTopBar } from '@/features/classroom/ClassroomTopBar';
 import { AssignmentsBody, type ChatMessage, ChatBody, NotesBody, Panel, ParticipantsBody, TranscriptBody } from '@/features/classroom/Panels';
 import { Stage } from '@/features/classroom/Stage';
+import { Icon } from '@/components/icon';
 import { Brand } from '@/features/public/palette';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { LightOnly } from '@/hooks/use-theme';
@@ -106,10 +107,25 @@ export default function ClassroomScreen() {
                   {sideTabs}
                   <View style={styles.sideBody}>
                     {tab === 'notes' ? (
-                      <View style={styles.notesHead}>
-                        <Text style={styles.notesHeading}>Lesson Notes</Text>
-                        <Text style={styles.myNotes}>My Notes ⌄</Text>
-                      </View>
+                      <>
+                        <View style={styles.notesHead}>
+                          <Text style={styles.notesHeading}>Lesson Notes</Text>
+                          <View style={styles.notesActions}>
+                            <Text style={styles.myNotes}>My Notes ⌄</Text>
+                            <Text style={styles.moreBtn}>•••</Text>
+                          </View>
+                        </View>
+                        <View style={styles.toolbar} accessibilityRole="toolbar">
+                          <Text style={[styles.tool, styles.toolBold]}>B</Text>
+                          <Text style={[styles.tool, styles.toolItalic]}>I</Text>
+                          <Text style={[styles.tool, styles.toolUnderline]}>U</Text>
+                          <Icon name="list" size={17} color={Brand.ink} />
+                          <Icon name="notes" size={17} color={Brand.ink} />
+                          <Icon name="grid" size={17} color={Brand.ink} />
+                          <View style={styles.flex} />
+                          <Icon name="expand" size={15} color={Brand.ink} />
+                        </View>
+                      </>
                     ) : null}
                     {body[tab]}
                   </View>
@@ -117,17 +133,17 @@ export default function ClassroomScreen() {
               </View>
               <View style={styles.bottom}>
                 <View style={styles.flex}>
-                  <Panel title={`Participants (${room.students})`}>
+                  <Panel title={`Participants (${room.students})`} expand>
                     <ParticipantsBody room={room} myHand={hand} />
                   </Panel>
                 </View>
                 <View style={styles.flex}>
-                  <Panel title="Chat" count={chatCount}>
+                  <Panel title="Chat" count={chatCount} expand action={<Text style={styles.everyone}>Everyone ⌄</Text>}>
                     <ChatBody messages={messages} onSend={send} />
                   </Panel>
                 </View>
                 <View style={styles.flex}>
-                  <Panel title="Transcript">
+                  <Panel title="Transcript" expand>
                     <TranscriptBody room={room} />
                   </Panel>
                 </View>
@@ -161,6 +177,14 @@ const styles = StyleSheet.create({
   sideBody: { padding: 18, gap: 12 },
   notesHead: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   notesHeading: { fontSize: 17, fontWeight: '800', color: Brand.ink },
+  notesActions: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  moreBtn: { fontSize: 11, fontWeight: '800', color: Brand.ink, paddingHorizontal: 9, paddingVertical: 7, borderRadius: 8, borderWidth: 1, borderColor: Brand.line },
+  toolbar: { flexDirection: 'row', alignItems: 'center', gap: 22, marginTop: 14, marginBottom: 4, paddingHorizontal: 12, paddingVertical: 10, borderRadius: 8, borderWidth: 1, borderColor: Brand.line },
+  tool: { fontSize: 16, color: Brand.ink },
+  toolBold: { fontWeight: '800' },
+  toolItalic: { fontStyle: 'italic', fontFamily: 'Georgia' },
+  toolUnderline: { textDecorationLine: 'underline' },
+  everyone: { fontSize: 12, fontWeight: '600', color: Brand.ink, paddingHorizontal: 10, paddingVertical: 6, borderRadius: 8, borderWidth: 1, borderColor: Brand.line },
   myNotes: { fontSize: 12, fontWeight: '600', color: Brand.ink, paddingHorizontal: 10, paddingVertical: 6, borderRadius: 8, borderWidth: 1, borderColor: Brand.line },
   tabs: { flexDirection: 'row', flexWrap: 'wrap', borderBottomWidth: 1, borderBottomColor: Brand.line, paddingHorizontal: 8 },
   tab: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 10, paddingVertical: 14, borderBottomWidth: 2, borderBottomColor: 'transparent', marginBottom: -1 },

@@ -11,29 +11,34 @@ export const landing = {
   eyebrow: 'Learning without borders',
   heroPhoto: photos.homeHero,
   headline: { lead: 'A global online school', pre: 'for a ', accent: 'brighter future.' },
-  sub: 'World-class education. Live classes, self-paced courses, certified teachers and recognised curricula, anytime, anywhere in the world.',
+  sub: 'World-class education. Live classes, self-paced courses, certified teachers and recognized curriculums — anytime, anywhere in the world.',
   curricula: [
-    { code: 'UNEB', region: 'Uganda', flag: '🇺🇬' },
-    { code: 'KCSE', region: 'Kenya', flag: '🇰🇪' },
-    { code: 'WAEC', region: 'West Africa', flag: '🌍' },
-    { code: 'IGCSE', region: 'Cambridge', flag: '🇬🇧' },
-    { code: 'IB', region: 'International', flag: '🌐' },
-    { code: 'Common Core', region: 'USA', flag: '🇺🇸' },
+    { code: 'UNEB', region: 'Uganda', badge: photos.homeBadges.uneb },
+    { code: 'KCSE', region: 'Kenya', badge: photos.homeBadges.kcse },
+    { code: 'WAEC', region: 'West Africa', badge: photos.homeBadges.waec },
+    { code: 'IGCSE', region: 'Cambridge', badge: photos.homeBadges.igcse },
+    { code: 'IB', region: 'International', badge: photos.homeBadges.ib },
+    { code: 'Common Core', region: 'USA', badge: photos.homeBadges.commonCore },
   ],
-  trust: ['Live and recorded classes', 'Certified teachers', 'Recognised certificates', 'Learn at your own pace'],
+  trust: [
+    { label: 'Live & recorded classes', icon: 'check' as const, color: '#22A35F' },
+    { label: 'Certified teachers', icon: 'person' as const, color: '#1D5A6E' },
+    { label: 'Globally recognized certificates', icon: 'star' as const, color: '#3B82F6' },
+    { label: 'Learn at your own pace', icon: 'check' as const, color: '#173F5C' },
+  ],
   stats: [
-    { value: '1M+', label: 'Active learners', icon: 'people' as const, tint: 'green' as const },
-    { value: '10K+', label: 'Expert teachers', icon: 'person' as const, tint: 'blue' as const },
-    { value: '500+', label: 'Partner schools', icon: 'school' as const, tint: 'amber' as const },
-    { value: '150+', label: 'Countries', icon: 'globe' as const, tint: 'purple' as const },
+    { value: '1M+', label: 'Active Learners', icon: 'person' as const, color: '#3FCF9B' },
+    { value: '10K+', label: 'Expert Teachers', icon: 'people' as const, color: '#8DAAF9' },
+    { value: '500+', label: 'Schools & Institutions', icon: 'school' as const, color: '#FBBB2C' },
+    { value: '150+', label: 'Countries', icon: 'globe' as const, color: '#9C7CF1' },
   ],
-  teachers: ['Grace Atim', 'Daniel Okello', 'Sarah Kim', 'Ruth Namusoke'],
+  stickyNote: photos.homeSticky,
   liveClasses: [
-    { id: 'lc1', photo: photos.homeLive[0], subject: 'Mathematics Revision', board: 'IGCSE', level: 'Year 10', teacher: 'Mr. Daniel Okello', learners: 128, status: 'live' as LiveStatus, startsIn: '', icon: 'chart' as const },
-    { id: 'lc2', photo: photos.homeLive[1], subject: 'English Literature', board: 'A Level', level: 'Cambridge', teacher: 'Ms. Sarah Kim', learners: 94, status: 'live' as LiveStatus, startsIn: '', icon: 'book' as const },
-    { id: 'lc3', photo: photos.homeLive[2], subject: 'Biology: Human Systems', board: 'KCSE', level: 'Form 3', teacher: 'Dr. Grace Njeri', learners: 76, status: 'live' as LiveStatus, startsIn: '', icon: 'sparkle' as const },
-    { id: 'lc4', photo: photos.homeLive[3], subject: 'Chemistry Practicals', board: 'UNEB', level: 'S5', teacher: 'Mr. Ahmed Hassan', learners: 312, status: 'soon' as LiveStatus, startsIn: '14 min', icon: 'star' as const },
-    { id: 'lc5', photo: photos.homeLive[4], subject: 'Introduction to Python', board: 'Beginner', level: 'Programming', teacher: 'Ms. Laila Chen', learners: 245, status: 'soon' as LiveStatus, startsIn: '32 min', icon: 'globe' as const },
+    { id: 'lc1', photo: photos.homeLive[0], face: photos.homeTeachers[0], subject: 'Mathematics Revision', board: 'IGCSE', level: 'Year 10', teacher: 'Mr. Daniel Okello', learners: 128, status: 'live' as LiveStatus, startsIn: '' },
+    { id: 'lc2', photo: photos.homeLive[1], face: photos.homeTeachers[1], subject: 'English Literature', board: 'A Level', level: 'Cambridge', teacher: 'Ms. Sarah Kim', learners: 94, status: 'live' as LiveStatus, startsIn: '' },
+    { id: 'lc3', photo: photos.homeLive[2], face: photos.homeTeachers[2], subject: 'Biology – Human Systems', board: 'KCSE', level: 'Form 3', teacher: 'Dr. Grace Njeri', learners: 76, status: 'live' as LiveStatus, startsIn: '' },
+    { id: 'lc4', photo: photos.homeLive[3], face: photos.homeTeachers[3], subject: 'Chemistry Practicals', board: 'WAEC', level: 'SS2', teacher: 'Mr. Ahmed Hassan', learners: 312, status: 'soon' as LiveStatus, startsIn: '14 min' },
+    { id: 'lc5', photo: photos.homeLive[4], face: photos.homeTeachers[4], subject: 'Introduction to Python', board: 'Beginner', level: 'Programming', teacher: 'Ms. Laila Chen', learners: 245, status: 'soon' as LiveStatus, startsIn: '32 min' },
   ],
   sampleLesson: {
     title: 'Introduction to the Pythagorean Theorem',
@@ -45,7 +50,8 @@ export const landing = {
       { text: 'A ladder 13 m long reaches 12 m up a wall. How far is its foot from the wall?', options: ['1 m', '5 m', '25 m', '7 m'], answer: 1 },
       { text: 'Which set of sides makes a right triangle?', options: ['2, 3, 4', '5, 12, 13', '4, 5, 6', '6, 7, 8'], answer: 1 },
     ],
-    results: ['See your score', 'Find your strengths', 'Get recommended courses', 'Keep learning with a free account'],
+    trophy: photos.homeTrophy,
+    results: ['See your score', 'Identify your strengths', 'Get recommended courses', 'Continue learning with a free account'],
   },
 };
 
@@ -126,6 +132,8 @@ export const consent = {
 };
 
 export const claimChild = {
+  art: photos.claimChild,
+  codeLength: 8,
   code: '7KQ2-M9XA',
   match: { name: 'Amina Nakato', cls: 'S3 East', school: 'Kampala Hill School', adm: 'KHS/24/118' },
 };
@@ -219,6 +227,7 @@ const c = (item: CatalogueEntry): CatalogueEntry => item;
 
 export type CatalogueEntry = CatalogueItem & {
   photo?: number;
+  face?: number;
   meta: string;
   badge: string;
   hours: string;
@@ -228,23 +237,51 @@ export type CatalogueEntry = CatalogueItem & {
   icon: 'chart' | 'book' | 'sparkle' | 'star' | 'globe' | 'live';
 };
 
+// Cards follow the Explore reference's order (its "Popularity" sort), highest score first.
 export const catalogue: readonly CatalogueEntry[] = [
-  c({ id: 'k1', photo: photos.explore[0], kind: 'course', title: 'Mathematics Complete Course', board: 'UNEB', country: 'Uganda', level: 'Upper secondary', subject: 'Mathematics', teacher: 'Mr. James Kato', rating: 4.8, reviews: 2100, priceUGX: 120000, wasUGX: 160000, meta: 'UNEB · S4–S6', badge: 'Bestseller', hours: '32 hours', tint: '#1E3A8A', icon: 'chart' }),
-  c({ id: 'k2', photo: photos.explore[1], kind: 'live', title: 'English Literature Analysis', board: 'IGCSE', country: 'International', level: 'Upper secondary', subject: 'English', teacher: 'Ms. Aisha Bello', rating: 4.9, reviews: 980, priceUGX: 45000, meta: 'IGCSE · Paper 1', badge: 'Live', hours: '1.5 hours', startsIn: '1 day', tint: '#7C2D12', icon: 'book' }),
-  c({ id: 'k3', photo: photos.explore[2], kind: 'paper', title: 'KCSE Past Papers (2010–2024)', board: 'KCSE', country: 'Kenya', level: 'Upper secondary', subject: 'Mathematics', teacher: 'Maple Editorial Team', rating: 4.7, reviews: 3200, priceUGX: 30000, meta: 'Form 4', badge: 'Past papers', hours: '50 papers', tint: '#475569', icon: 'book' }),
-  c({ id: 'k4', photo: photos.explore[3], kind: 'course', title: 'Biology: Human Systems', board: 'WAEC', country: 'West Africa', level: 'Upper secondary', subject: 'Biology', teacher: 'Dr. Grace Njeri', rating: 4.8, reviews: 1100, priceUGX: 90000, meta: 'WAEC · SS2', badge: 'Course', hours: '40 hours', tint: '#0E7490', icon: 'sparkle' }),
-  c({ id: 'k5', photo: photos.explore[4], kind: 'bootcamp', title: 'Chemistry Revision Bootcamp', board: 'Cambridge', country: 'International', level: 'A level', subject: 'Chemistry', teacher: 'Dr. Michael Tan', rating: 4.8, reviews: 740, priceUGX: 70000, meta: 'A Level · Cambridge', badge: 'Bootcamp', hours: '30 hours', tint: '#334155', icon: 'star' }),
-  c({ id: 'k6', photo: photos.explore[5], kind: 'short', title: 'Introduction to Python', board: 'Any', country: 'International', level: 'Any level', subject: 'Computer Studies', teacher: 'Mr. Daniel Okello', rating: 4.6, reviews: 3400, priceUGX: 0, meta: 'Beginner · All curricula', badge: 'Free', hours: '6 hours', tint: '#111827', icon: 'globe' }),
-  c({ id: 'k7', photo: photos.explore[6], kind: 'course', title: 'Physics for Beginners', board: 'KCSE', country: 'Kenya', level: 'Lower secondary', subject: 'Physics', teacher: 'Ms. Linda Akello', rating: 4.7, reviews: 820, priceUGX: 60000, meta: 'KCSE · Form 3', badge: 'Course', hours: '50 hours', tint: '#1F2937', icon: 'sparkle' }),
-  c({ id: 'k8', photo: photos.explore[7], kind: 'live', title: 'Maths Problem Solving Class', board: 'UNEB', country: 'Uganda', level: 'Upper secondary', subject: 'Mathematics', teacher: 'Mr. Kato', rating: 4.9, reviews: 810, priceUGX: 35000, meta: 'UNEB · S5', badge: 'Live', hours: '30 hours', tint: '#7F1D1D', icon: 'live' }),
-  c({ id: 'k9', photo: photos.explore[2], kind: 'paper', title: 'PLE Mathematics Papers (2015–2025)', board: 'UNEB', country: 'Uganda', level: 'Primary', subject: 'Mathematics', teacher: 'Maple Editorial Team', rating: 4.8, reviews: 2600, priceUGX: 20000, meta: 'Primary 7 · with marking guides', badge: 'Past papers', hours: '11 papers', tint: '#475569', icon: 'book' }),
-  c({ id: 'k10', photo: photos.explore[0], kind: 'course', title: 'Complete Mathematics for Primary 7', board: 'UNEB', country: 'Uganda', level: 'Primary', subject: 'Mathematics', teacher: 'Mr. James Kato', rating: 4.8, reviews: 2340, priceUGX: 120000, wasUGX: 160000, meta: 'UNEB · Primary 7', badge: 'Bestseller', hours: '40 hours', tint: '#1E40AF', icon: 'chart' }),
-  c({ id: 'k11', photo: photos.explore[4], kind: 'bootcamp', title: 'UCE Biology Revision Bootcamp', board: 'UNEB', country: 'Uganda', level: 'Lower secondary', subject: 'Biology', teacher: 'Ms. Grace Atim', rating: 4.9, reviews: 430, priceUGX: 35000, meta: 'UNEB · S4', badge: 'Bootcamp', hours: '3 hours', startsIn: '8 days', tint: '#065F46', icon: 'sparkle' }),
-  c({ id: 'k12', photo: photos.explore[2], kind: 'paper', title: 'WAEC English Past Papers', board: 'WAEC', country: 'West Africa', level: 'Upper secondary', subject: 'English', teacher: 'Maple Editorial Team', rating: 4.6, reviews: 1500, priceUGX: 25000, meta: 'SS3 · with answers', badge: 'Past papers', hours: '30 papers', tint: '#475569', icon: 'book' }),
+  c({ id: 'k1', popularity: 12, photo: photos.explore[0], face: photos.exploreTeachers[0], kind: 'course', title: 'Mathematics Complete Course', board: 'UNEB', country: 'Uganda', level: 'Upper secondary', subject: 'Mathematics', teacher: 'Mr. James Kato', rating: 4.8, reviews: 2100, priceUGX: 120000, wasUGX: 160000, meta: 'UNEB • S4–S6', badge: 'Bestseller', hours: '32 hours', tint: '#1E3A8A', icon: 'chart' }),
+  c({ id: 'k2', popularity: 11, photo: photos.explore[1], face: photos.exploreTeachers[1], kind: 'live', title: 'English Literature Analysis', board: 'IGCSE', country: 'International', level: 'Upper secondary', subject: 'English', teacher: 'Ms. Aisha Bello', rating: 4.9, reviews: 980, priceUGX: 45000, meta: 'IGCSE • Paper 1', badge: 'Live', hours: '1.5 hours', startsIn: '1 day', tint: '#7C2D12', icon: 'book' }),
+  c({ id: 'k3', popularity: 10, photo: photos.explore[2], face: photos.exploreTeachers[2], kind: 'paper', title: 'KCSE Past Papers (2010–2024)', board: 'KCSE', country: 'Kenya', level: 'Upper secondary', subject: 'Mathematics', teacher: 'Maple Editorial Team', rating: 4.7, reviews: 3200, priceUGX: 30000, meta: 'Form 4', badge: 'Past papers', hours: '50 papers', tint: '#475569', icon: 'book' }),
+  c({ id: 'k4', popularity: 9, photo: photos.explore[3], face: photos.exploreTeachers[3], kind: 'course', title: 'Biology – Human Systems', board: 'WAEC', country: 'West Africa', level: 'Upper secondary', subject: 'Biology', teacher: 'Dr. Grace Njeri', rating: 4.8, reviews: 1100, priceUGX: 90000, meta: 'WAEC • SS2', badge: 'Course', hours: '40 hours', tint: '#0E7490', icon: 'sparkle' }),
+  c({ id: 'k5', popularity: 8, photo: photos.explore[4], face: photos.exploreTeachers[4], kind: 'bootcamp', title: 'Chemistry Revision Bootcamp', board: 'Cambridge', country: 'International', level: 'A level', subject: 'Chemistry', teacher: 'Dr. Michael Tan', rating: 4.8, reviews: 740, priceUGX: 70000, meta: 'A Level • Cambridge', badge: 'Bootcamp', hours: '30 hours', tint: '#334155', icon: 'star' }),
+  c({ id: 'k6', popularity: 7, photo: photos.explore[5], face: photos.exploreTeachers[5], kind: 'short', title: 'Introduction to Python', board: 'Any', country: 'International', level: 'Any level', subject: 'Computer Studies', teacher: 'Mr. Daniel Okello', rating: 4.6, reviews: 3400, priceUGX: 0, meta: 'Beginner • All Curricula', badge: 'Free', hours: '6 hours', tint: '#111827', icon: 'globe' }),
+  c({ id: 'k7', popularity: 6, photo: photos.explore[6], face: photos.exploreTeachers[6], kind: 'course', title: 'Physics for Beginners', board: 'KCSE', country: 'Kenya', level: 'Lower secondary', subject: 'Physics', teacher: 'Ms. Linda Akello', rating: 4.7, reviews: 820, priceUGX: 60000, meta: 'KCSE • Form 3', badge: 'Course', hours: '50 hours', tint: '#1F2937', icon: 'sparkle' }),
+  c({ id: 'k8', popularity: 5, photo: photos.explore[7], face: photos.exploreTeachers[7], kind: 'live', title: 'Maths Problem Solving Class', board: 'UNEB', country: 'Uganda', level: 'Upper secondary', subject: 'Mathematics', teacher: 'Mr. Kato', rating: 4.9, reviews: 810, priceUGX: 35000, meta: 'UNEB • S5', badge: 'Live', hours: '30 hours', tint: '#7F1D1D', icon: 'live' }),
+  c({ id: 'k9', popularity: 4, photo: photos.explore[2], face: photos.exploreTeachers[2], kind: 'paper', title: 'PLE Mathematics Papers (2015–2025)', board: 'UNEB', country: 'Uganda', level: 'Primary', subject: 'Mathematics', teacher: 'Maple Editorial Team', rating: 4.8, reviews: 2600, priceUGX: 20000, meta: 'Primary 7 • With marking guides', badge: 'Past papers', hours: '11 papers', tint: '#475569', icon: 'book' }),
+  c({ id: 'k10', popularity: 3, photo: photos.explore[0], face: photos.exploreTeachers[0], kind: 'course', title: 'Complete Mathematics for Primary 7', board: 'UNEB', country: 'Uganda', level: 'Primary', subject: 'Mathematics', teacher: 'Mr. James Kato', rating: 4.8, reviews: 2340, priceUGX: 120000, wasUGX: 160000, meta: 'UNEB • Primary 7', badge: 'Bestseller', hours: '40 hours', tint: '#1E40AF', icon: 'chart' }),
+  c({ id: 'k11', popularity: 2, photo: photos.explore[4], face: photos.exploreTeachers[3], kind: 'bootcamp', title: 'UCE Biology Revision Bootcamp', board: 'UNEB', country: 'Uganda', level: 'Lower secondary', subject: 'Biology', teacher: 'Ms. Grace Atim', rating: 4.9, reviews: 430, priceUGX: 35000, meta: 'UNEB • S4', badge: 'Bootcamp', hours: '3 hours', startsIn: '8 days', tint: '#065F46', icon: 'sparkle' }),
+  c({ id: 'k12', popularity: 1, photo: photos.explore[2], face: photos.exploreTeachers[2], kind: 'paper', title: 'WAEC English Past Papers', board: 'WAEC', country: 'West Africa', level: 'Upper secondary', subject: 'English', teacher: 'Maple Editorial Team', rating: 4.6, reviews: 1500, priceUGX: 25000, meta: 'SS3 • With answers', badge: 'Past papers', hours: '30 papers', tint: '#475569', icon: 'book' }),
 ];
-
-/** The course with a full public page; other cards open it too in design builds. */
 export const catalogueCoursePage = 'complete-mathematics-primary-7';
+
+/** The Explore sidebar as the reference shows it: labels and the whole catalogue's counts. */
+export const catalogueFacets = {
+  total: 3482,
+  perPage: 24,
+  kinds: [
+    { value: 'course', label: 'Courses', count: 1230 },
+    { value: 'live', label: 'Live Classes', count: 430 },
+    { value: 'paper', label: 'Past Papers', count: 980 },
+    { value: 'bootcamp', label: 'Exam Bootcamps', count: 320 },
+    { value: 'short', label: 'Short Lessons', count: 520 },
+  ],
+  boards: [
+    { value: 'UNEB', label: 'UNEB (Uganda)' },
+    { value: 'KCSE', label: 'KCSE (Kenya)' },
+    { value: 'WAEC', label: 'WAEC (West Africa)' },
+    { value: 'IGCSE', label: 'IGCSE (Cambridge)' },
+    { value: 'IB', label: 'IB (International)' },
+    { value: 'Common Core', label: 'Common Core (USA)' },
+    { value: 'Cambridge', label: 'Cambridge A Level' },
+    { value: 'Any', label: 'All curricula' },
+  ],
+  levels: [
+    { value: 'Primary', label: 'Primary (P1–P7)' },
+    { value: 'Lower secondary', label: 'Lower Secondary (S1–S3)' },
+    { value: 'Upper secondary', label: 'Upper Secondary (S4–S6)' },
+    { value: 'A level', label: 'A Level / High School' },
+  ],
+};
 
 export type ShortEntry = ShortClip & {
   photo?: number;
@@ -359,7 +396,7 @@ export const teacherStorefront = {
 
 export const liveSession = {
   slug: 'p7-maths-revision-bootcamp',
-  photo: photos.liveHero,
+  photo: photos.liveHeroWide,
   badge: 'Live bootcamp',
   breadcrumb: ['Live Classes', 'UNEB (Uganda)', 'Mathematics'],
   title: { lead: 'Primary 7 Mathematics', accent: 'Revision Bootcamp' },
@@ -376,42 +413,46 @@ export const liveSession = {
   wasUGX: 60000,
   access: 'One-time access · Includes recording + materials',
   perks: [
-    { label: '30-day access to recording', icon: 'clock' as const },
-    { label: 'Downloadable study notes', icon: 'download' as const },
-    { label: 'Certificate of participation', icon: 'star' as const },
+    { label: '30-day access\nto recording', short: '30-day\nrecording', icon: 'clock' as const },
+    { label: 'Downloadable\nstudy notes', short: 'Study\nnotes', icon: 'download' as const },
+    { label: 'Certificate\nof participation', short: 'Certificate', icon: 'trophy' as const },
   ],
   features: [
-    { title: 'Past paper practice', detail: 'With marking guidance', icon: 'book' as const },
-    { title: 'Exam techniques', detail: 'Tips from expert teachers', icon: 'sparkle' as const },
-    { title: 'Live Q&A', detail: 'Ask questions in real time', icon: 'chat' as const },
-    { title: 'Lesson recording', detail: 'Available for 30 days', icon: 'play' as const },
-    { title: 'Revision materials', detail: 'Downloadable resources', icon: 'download' as const },
+    { title: 'Past paper practice', detail: 'With marking guidance', icon: 'clipboard' as const, fg: '#16A34A', bg: '#E5F6EC' },
+    { title: 'Exam techniques', detail: 'Tips from expert teachers', icon: 'sparkle' as const, fg: '#E5484D', bg: '#FDECEC' },
+    { title: 'Live Q&A', detail: 'Ask questions in real time', icon: 'chat' as const, fg: '#4F5BD5', bg: '#ECEEFF' },
+    { title: 'Lesson recording', detail: 'Available for 30 days', icon: 'play' as const, fg: '#16A34A', bg: '#E5F6EC' },
+    { title: 'Revision materials', detail: 'Downloadable resources', icon: 'notes' as const, fg: '#4F5BD5', bg: '#ECEEFF' },
   ],
-  about: 'This intensive 2-hour revision bootcamp helps Primary 7 learners master the most important Mathematics topics, using real UNEB past paper questions, step-by-step solutions and exam strategies.',
+  about: 'This intensive 2-hour revision bootcamp will help Primary 7 learners master the most important Mathematics topics, using real UNEB past paper questions, step-by-step solutions and exam strategies.',
   aboutPoints: ['Focus on frequently tested topics', 'Work through real past paper questions', 'Learn simple and effective exam techniques', 'Get your questions answered live', 'Receive downloadable revision notes', 'Session recording available for 30 days'],
-  forWho: 'Primary 7 learners preparing for PLE, teachers supporting revision, and parents who want their children to succeed.',
+  forWho: 'Primary 7 learners preparing for UNEB, teachers supporting revision, and parents who want their children to succeed.',
   syllabus: [
-    { title: 'Number operations and problem solving', detail: 'Master key methods and avoid common mistakes.', icon: 'chart' as const, minutes: 20 },
-    { title: 'Fractions, decimals and percentages', detail: 'Simplify, compare and solve exam-style questions.', icon: 'star' as const, minutes: 20 },
-    { title: 'Measurement and geometry', detail: 'Understand shapes, units and practical questions.', icon: 'map' as const, minutes: 20 },
-    { title: 'Data handling', detail: 'Read graphs, tables and charts with confidence.', icon: 'chart' as const, minutes: 15 },
-    { title: 'UNEB past paper practice', detail: 'Work through real questions with full solutions.', icon: 'book' as const, minutes: 30 },
-    { title: 'Exam tips and time management', detail: 'Proven strategies to score higher.', icon: 'clock' as const, minutes: 15 },
+    { title: 'Number operations and problem solving', detail: 'Master key methods and avoid common mistakes.', icon: 'grid' as const, fg: '#1463F3', bg: '#EAF1FF', minutes: 20 },
+    { title: 'Fractions, decimals and percentages', detail: 'Simplify, compare and solve exam-style questions.', icon: 'sparkle' as const, fg: '#F97316', bg: '#FFF1E6', minutes: 20 },
+    { title: 'Measurement and geometry', detail: 'Understand common shapes, units and practical questions.', icon: 'map' as const, fg: '#F97316', bg: '#FFF1E6', minutes: 20 },
+    { title: 'Data handling', detail: 'Interpret graphs, tables and charts with confidence.', icon: 'chart' as const, fg: '#1463F3', bg: '#EAF1FF', minutes: 15 },
+    { title: 'UNEB past paper practice', detail: 'Work through real questions with full solutions.', icon: 'notes' as const, fg: '#8B5CF6', bg: '#F1EBFF', minutes: 30 },
+    { title: 'Exam tips and time management', detail: 'Learn proven strategies to score higher.', icon: 'clock' as const, fg: '#E5484D', bg: '#FDECEC', minutes: 15 },
   ],
   teacher: {
     name: 'Ms. Sarah Kimani',
     handle: 'sarah-kimani',
     photo: photos.teacherAvatar,
-    title: 'Mathematics Teacher and Curriculum Specialist',
+    title: 'Mathematics Teacher & Curriculum Specialist',
     badges: ['MSc Education', '10+ Years Experience', 'Verified by Maple'],
-    stats: [{ value: '25K+', label: 'Students taught' }, { value: '96%', label: 'Average pass rate' }, { value: '4.9', label: '1,240 reviews' }],
-    bio: 'Ms. Sarah is a Mathematics teacher with over 10 years helping learners excel in UNEB examinations. Her teaching is practical, engaging and focused on real exam success.',
+    stats: [
+      { value: '25K+', label: 'Students Taught', icon: 'people' as const, color: '#4F5BD5' },
+      { value: '96%', label: 'Average Pass Rate', icon: 'trophy' as const, color: '#1463F3' },
+      { value: '4.9', label: '(1,240 reviews)', icon: 'star' as const, color: '#F59E0B' },
+    ],
+    bio: 'Ms. Sarah is a passionate Mathematics teacher with over 10 years of experience helping learners excel in UNEB examinations. Her teaching is practical, engaging and focused on real exam success.',
   },
   more: [
-    { title: 'English P7 Revision Bootcamp', when: 'Sat, Nov 14 · 10:00 AM', priceUGX: 40000, seats: 88, status: 'live' as LiveStatus, photo: photos.liveMore[0] },
-    { title: 'Science P7 Masterclass', when: 'Sun, Nov 15 · 2:00 PM', priceUGX: 40000, seats: 72, status: 'live' as LiveStatus, photo: photos.liveMore[1] },
-    { title: 'Mathematics Exam Techniques', when: 'Sat, Nov 21 · 10:00 AM', priceUGX: 30000, seats: 53, status: 'soon' as LiveStatus, photo: photos.liveMore[2] },
-    { title: 'Past Paper Walkthrough (2020–2024)', when: 'Sun, Nov 22 · 3:00 PM', priceUGX: 50000, seats: 91, status: 'live' as LiveStatus, photo: photos.liveMore[3] },
+    { title: 'English P7 Revision Bootcamp', when: 'Sat, Nov 14 • 10:00 AM', priceUGX: 40000, seats: 88, status: 'live' as LiveStatus, photo: photos.liveMore[0] },
+    { title: 'Science P7 Masterclass', when: 'Sun, Nov 15 • 2:00 PM', priceUGX: 40000, seats: 72, status: 'live' as LiveStatus, photo: photos.liveMore[1] },
+    { title: 'Mathematics Exam Techniques', when: 'Sat, Nov 21 • 10:00 AM', priceUGX: 30000, seats: 53, status: 'soon' as LiveStatus, photo: photos.liveMore[2] },
+    { title: 'Past Paper Walkthrough (2020–2024)', when: 'Sun, Nov 22 • 3:00 PM', priceUGX: 50000, seats: 91, status: 'live' as LiveStatus, photo: photos.liveMore[3] },
   ],
 };
 
@@ -508,8 +549,54 @@ type Week = { week: number; topic: string; objectives: string; resources: string
 
 const weeks = (rows: readonly [string, string, string][]): Week[] => rows.map(([topic, objectives, resources], i) => ({ week: i + 1, topic, objectives, resources }));
 
+/** Young learners sign in by showing their school QR badge, then a 4-digit PIN. */
+export const qrLogin = { art: photos.qrLogin, pinLength: 4, classCodeLength: 6 };
+
+/** A young learner asks a parent or guardian to approve their account. */
+export const guardianConsent = {
+  art: photos.guardianConsent,
+  country: 'Uganda',
+  dialCode: '+256',
+  defaultMessage: "Hi! I'm creating my Maple account for online learning. Please approve it so I can start learning.",
+  expiresDays: 7,
+};
+
+/** The 3-step onboarding wizard (persona, country and curriculum, grade and subjects). */
+export const onboardingWizard = {
+  note: photos.onboarding.note,
+  roles: [
+    { key: 'learner', title: 'Learner', body: 'Study, practice, take past papers and track my progress.', photo: photos.onboarding.learner, icon: 'cap' as const, tint: '#3B82F6' },
+    { key: 'teacher', title: 'Teacher', body: 'Create classes, teach, assign work and track learner progress.', photo: photos.onboarding.teacher, icon: 'people' as const, tint: '#8B5CF6' },
+    { key: 'parent', title: 'Parent', body: "Support my child's learning and track their progress.", photo: photos.onboarding.parent, icon: 'people' as const, tint: '#EC4899' },
+    { key: 'admin', title: 'School Admin', body: 'Set up school, manage teachers and learners, and monitor performance.', photo: photos.onboarding.admin, icon: 'school' as const, tint: '#16A34A' },
+  ],
+  countries: [
+    { name: 'Uganda', flag: photos.onboarding.flagUg, curricula: [{ code: 'UNEB', name: 'Uganda National Examinations Board', crest: photos.onboarding.uneb }, { code: 'Cambridge', name: 'Cambridge International', crest: photos.crests.igcse }] },
+    { name: 'Kenya', flagEmoji: '🇰🇪', curricula: [{ code: 'KNEC', name: 'Kenya National Examinations Council', crest: photos.crests.kcse }] },
+    { name: 'Nigeria', flagEmoji: '🇳🇬', curricula: [{ code: 'WAEC', name: 'West African Examinations Council', crest: photos.crests.waec }] },
+    { name: 'Ghana', flagEmoji: '🇬🇭', curricula: [{ code: 'WAEC', name: 'West African Examinations Council', crest: photos.crests.waec }] },
+  ],
+  grades: ['Primary 5', 'Primary 6', 'Primary 7', 'Senior 1', 'Senior 2', 'Senior 3', 'Senior 4', 'Senior 5', 'Senior 6'],
+  defaultGrade: 'Primary 7',
+  subjects: [
+    { name: 'Mathematics', icon: 'grid' as const },
+    { name: 'English', icon: 'book' as const },
+    { name: 'Science', icon: 'sparkle' as const },
+    { name: 'Social Studies', icon: 'globe' as const },
+    { name: 'CRE', icon: 'plus' as const },
+    { name: 'ICT', icon: 'screen' as const },
+    { name: 'Local Language', icon: 'book' as const },
+    { name: 'Others', icon: 'more' as const },
+  ],
+};
+
+/** Sign-in artwork from the reference (design builds only; real builds draw plain icons instead). */
+export const signInArt = photos.signIn;
+export const signUpArt = photos.signUp;
+
 export const schoolsPage = {
   heroPhoto: photos.schoolsHero,
+  heroPhotoPhone: photos.schoolsHeroPhone,
   promises: ['UNEB, KCSE, WAEC, IGCSE and more', 'Supports in-class and after-school learning', 'Trusted by schools across Africa and beyond'],
   results: [
     { value: '+32%', label: 'Average exam improvement', icon: 'chart' as const, tint: '#16A34A' },

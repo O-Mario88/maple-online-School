@@ -1,77 +1,65 @@
-import { router } from 'expo-router';
-import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { useMemo } from 'react';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Body, Button, Card, ErrorText, Field, Screen } from '@/components/ui';
-import { api } from '@/lib/api/client';
-import { signUpProblem } from '@/lib/auth/signup';
+import { AUTH_SKY, AuthPhoneTop, AuthTopBar, FitScale } from '@/features/auth/AuthChrome';
+import { SignInLink, SignUpCard } from '@/features/auth/SignUpCard';
+import { SignUpPanel } from '@/features/auth/SignUpPanel';
+import { LightOnly } from '@/hooks/use-theme';
+import { mockData } from '@/lib/mock';
 
-type Role = 'student' | 'teacher' | 'institution';
+/** From this width the page is the reference's desktop layout, scaled to fit the window. */
+const DESKTOP_MIN = 900;
+// The sign-up reference's desktop frame: 1198 × 1020, with the bar at (18, 12), the photo panel at (18, 78) and the card at (625, 90).
+const REF_W = 1198;
+const REF_H = 1020;
+const FRAME_W = 1162;
 
-const ROLES: readonly { value: Role; label: string }[] = [
-  { value: 'student', label: 'I am a student' },
-  { value: 'teacher', label: 'I am a teacher' },
-  { value: 'institution', label: 'I run a school' },
-];
-
-/** Create an account. An activation link is emailed before first sign-in. */
+/** Create an account: the sign-up reference, sharing the sign-in page's frame. "Sign In" goes straight back to it. */
 export default function SignUpScreen() {
-  const [role, setRole] = useState<Role>('student');
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
-  const [country, setCountry] = useState('UG');
-  const [password, setPassword] = useState('');
-  const [confirm, setConfirm] = useState('');
-  const [problem, setProblem] = useState<string | null>(null);
-  const [busy, setBusy] = useState(false);
-  const [sentTo, setSentTo] = useState<string | null>(null);
+  const { width } = useWindowDimensions();
+  const art = useMemo(() => mockData()?.publicPages.signUpArt, []);
 
-  async function submit() {
-    const message = signUpProblem({ email, fullName, password, confirm });
-    setProblem(message);
-    if (message) return;
-    setBusy(true);
-    const { data, error } = await api.POST('/api/v1/auth/register/', {
-      body: { email: email.trim(), full_name: fullName.trim(), country_code: country.trim(), password, role },
-    });
-    setBusy(false);
-    if (error || !data) {
-      setProblem((error as { detail?: string } | undefined)?.detail ?? 'Could not create the account. Please try again.');
-      return;
-    }
-    setSentTo(data.email);
-  }
-
-  if (sentTo) {
+  if (width >= DESKTOP_MIN) {
     return (
-      <Screen title="Check your email">
-        <Body>We sent an activation link to {sentTo}. Open it to finish, then sign in.</Body>
-        <Button label="Go to sign in" onPress={() => router.replace('/sign-in')} />
-      </Screen>
+      <LightOnly>
+        <SafeAreaView style={styles.sky}>
+          <FitScale refWidth={REF_W} refHeight={REF_H}>
+            <View style={styles.bar}>
+              <AuthTopBar width={FRAME_W} trailing={<SignInLink />} />
+            </View>
+            <View style={styles.panel}>
+              <SignUpPanel art={art} width={FRAME_W} height={927} />
+            </View>
+            <View style={styles.card}>
+              <SignUpCard art={art} />
+            </View>
+          </FitScale>
+        </SafeAreaView>
+      </LightOnly>
     );
   }
 
   return (
-    <Screen title="Create your Maple account">
-      <Button label="Back to sign in" variant="ghost" icon="chevronLeft" compact onPress={() => router.replace('/sign-in')} />
-      <Card>
-        <View style={styles.choices}>
-          {ROLES.map((r) => (
-            <Button key={r.value} label={r.value === role ? `✓ ${r.label}` : r.label} variant="secondary" onPress={() => setRole(r.value)} />
-          ))}
-        </View>
-        <Field label="Full name" value={fullName} onChangeText={setFullName} autoComplete="name" maxLength={255} />
-        <Field label="Email" value={email} onChangeText={setEmail} autoCapitalize="none" autoComplete="email" keyboardType="email-address" />
-        <Field label="Country code" value={country} onChangeText={setCountry} autoCapitalize="characters" maxLength={10} />
-        <Field label="Password" value={password} onChangeText={setPassword} secureTextEntry autoComplete="new-password" />
-        <Field label="Confirm password" value={confirm} onChangeText={setConfirm} secureTextEntry autoComplete="new-password" />
-        <ErrorText message={problem} />
-        <Button label="Create account" onPress={submit} busy={busy} />
-      </Card>
-    </Screen>
+    <LightOnly>
+      <SafeAreaView style={styles.phoneSafe} edges={['top', 'left', 'right']}>
+        <AuthPhoneTop />
+        <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+          <ScrollView contentContainerStyle={styles.phoneScroll} keyboardShouldPersistTaps="handled">
+            <SignUpCard art={art} phone />
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </LightOnly>
   );
 }
 
 const styles = StyleSheet.create({
-  choices: { gap: 8 },
+  flex: { flex: 1 },
+  sky: { flex: 1, backgroundColor: AUTH_SKY },
+  bar: { position: 'absolute', left: 18, top: 12 },
+  panel: { position: 'absolute', left: 18, top: 78 },
+  card: { position: 'absolute', left: 625, top: 90 },
+  phoneSafe: { flex: 1, backgroundColor: '#FFFFFF' },
+  phoneScroll: { paddingBottom: 28, backgroundColor: '#FFFFFF' },
 });

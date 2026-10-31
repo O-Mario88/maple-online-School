@@ -1,5 +1,6 @@
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
+import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
@@ -77,7 +78,10 @@ export function PaperInfo({ paper }: { paper: PastPaperEntry }) {
 }
 
 /** Video lessons and revision linked to the paper's topics. */
+const RELATED_TABS = ['Video Lessons', 'Topic Revision', 'Similar Papers'] as const;
+
 export function RelatedResources({ videos }: { videos: Pages['videos'] }) {
+  const [tab, setTab] = useState<(typeof RELATED_TABS)[number]>('Video Lessons');
   return (
     <View style={styles.card}>
       <View style={styles.between}>
@@ -87,6 +91,16 @@ export function RelatedResources({ videos }: { videos: Pages['videos'] }) {
         <Pressable onPress={() => router.push('/explore')} accessibilityRole="link">
           <Text style={styles.link}>View all →</Text>
         </Pressable>
+      </View>
+      <View style={styles.relTabs} accessibilityRole="tablist">
+        {RELATED_TABS.map((t) => {
+          const on = t === tab;
+          return (
+            <Pressable key={t} style={[styles.relTab, on && styles.relTabOn]} onPress={() => setTab(t)} accessibilityRole="tab" accessibilityState={{ selected: on }}>
+              <Text style={[styles.relTabText, on && styles.relTabTextOn]}>{t}</Text>
+            </Pressable>
+          );
+        })}
       </View>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.videos}>
         {videos.map((v) => (
@@ -107,21 +121,26 @@ const styles = StyleSheet.create({
   flex: { flex: 1 },
   between: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   card: { gap: 10, padding: 18, borderRadius: 14, backgroundColor: Brand.surface, ...CARD_SHADOW },
-  title: { fontSize: 17, fontWeight: '800', color: Brand.ink },
+  title: { fontSize: 14.5, fontWeight: '800', color: Brand.ink },
   row: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  body: { fontSize: 13, color: Brand.body, flexShrink: 1 },
-  muted: { fontSize: 11, color: Brand.muted },
-  strong: { fontSize: 13, fontWeight: '700', color: Brand.ink },
-  link: { fontSize: 13, fontWeight: '600', color: Brand.blue },
+  body: { fontSize: 11, color: Brand.body, flexShrink: 1 },
+  muted: { fontSize: 9.5, color: Brand.muted },
+  strong: { fontSize: 11.5, fontWeight: '700', color: Brand.ink },
+  link: { fontSize: 11, fontWeight: '600', color: Brand.blue },
   primary: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, minHeight: 46, borderRadius: 10, backgroundColor: Brand.blue, marginTop: 6 },
-  primaryText: { fontSize: 15, fontWeight: '700', color: Brand.surface },
-  note: { fontSize: 12, color: Brand.muted, textAlign: 'center' },
+  primaryText: { fontSize: 13, fontWeight: '700', color: Brand.surface },
+  note: { fontSize: 10, color: Brand.muted, textAlign: 'center' },
   secondary: { alignItems: 'center', minHeight: 42, justifyContent: 'center', borderRadius: 10, borderWidth: 1, borderColor: Brand.blue },
   facts: { flexDirection: 'row', flexWrap: 'wrap', rowGap: 12 },
-  fact: { width: '50%', flexDirection: 'row', alignItems: 'center', gap: 10 },
-  factIcon: { width: 36, height: 36, borderRadius: 8, alignItems: 'center', justifyContent: 'center' },
+  fact: { width: '50%', flexDirection: 'row', alignItems: 'center', gap: 8 },
+  factIcon: { width: 30, height: 30, borderRadius: 7, alignItems: 'center', justifyContent: 'center' },
   videos: { gap: 10 },
   video: { width: 100, gap: 4 },
   thumb: { width: 100, height: 92, borderRadius: 8 },
-  videoTitle: { fontSize: 12, fontWeight: '700', color: Brand.ink },
+  videoTitle: { fontSize: 10.5, fontWeight: '700', color: Brand.ink },
+  relTabs: { flexDirection: 'row', gap: 6, marginTop: 10, marginBottom: 2 },
+  relTab: { paddingHorizontal: 6, paddingVertical: 6, borderRadius: 6, borderBottomWidth: 2, borderBottomColor: 'transparent' },
+  relTabOn: { backgroundColor: '#EAF1FE', borderBottomColor: Brand.blue },
+  relTabText: { fontSize: 10, color: '#2A3242' },
+  relTabTextOn: { color: Brand.blue, fontWeight: '600' },
 });

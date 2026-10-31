@@ -1,5 +1,7 @@
 /** Learner fixtures (design builds only; never bundled in deployment). */
 
+import { photos } from './photos';
+
 export type LessonKind = 'video' | 'notes' | 'quiz' | 'live';
 
 export interface MockCourse {
@@ -184,6 +186,7 @@ export const classroom = {
 export type AssignmentState = 'due' | 'draft' | 'submitted' | 'graded';
 
 export const assignments = [
+  { id: 'a5', title: 'Assignment 3: Fraction Word Problems', subject: 'Mathematics', due: 'Fri 24 Oct · 23:59', state: 'due' as AssignmentState, max: 20 },
   { id: 'a1', title: 'Quadratics practice set', subject: 'Mathematics', due: 'Tomorrow · 08:00', state: 'due' as AssignmentState, max: 20 },
   { id: 'a2', title: 'Genetics crosses worksheet', subject: 'Biology', due: 'Fri', state: 'draft' as AssignmentState, max: 30 },
   { id: 'a3', title: 'Formal letter to the headteacher', subject: 'English', due: 'Submitted Mon', state: 'submitted' as AssignmentState, max: 25 },
@@ -225,22 +228,6 @@ export const offline = {
   ],
 };
 
-export const squad = {
-  name: 'Kampala Hill Algebra Squad',
-  goal: { label: '6 hours of maths this week', done: 4.5, target: 6 },
-  members: [
-    { name: 'Amina Nakato', streak: 12, minutes: 95 },
-    { name: 'Brian Okello', streak: 9, minutes: 80 },
-    { name: 'Joan Nalwoga', streak: 15, minutes: 70 },
-    { name: 'Peter Kato', streak: 3, minutes: 30 },
-    { name: 'Ruth Achieng', streak: 6, minutes: 25 },
-  ],
-  chat: [
-    { name: 'Joan', text: 'Who wants to do the past paper together at 7?' },
-    { name: 'Brian', text: 'Me! Question 2 was tricky.' },
-  ],
-};
-
 export const passport = {
   learner: 'Amina Nakato',
   id: 'MLP-UG-2026-004812',
@@ -259,12 +246,116 @@ export const passport = {
   ],
 };
 
-export const billing = {
-  passes: [{ name: 'S3 Mathematics course', renews: 'Lifetime access', priceUGX: 45000 }],
-  creditsMinutes: 45,
-  methods: [{ label: 'MTN Mobile Money · 0772 *** 481', primary: true }, { label: 'Airtel Money · 0752 *** 220', primary: false }],
-  receipts: [
-    { id: 'RCT-000412', item: 'S3 Mathematics course', amountUGX: 45000, date: '12 Oct 2026' },
-    { id: 'RCT-000388', item: 'Homework rescue · 30 min', amountUGX: 10000, date: '28 Sep 2026' },
+const dash = (n: string): number => photos.dashboard[n];
+
+/** The learner home dashboard ("Your Next 20 Minutes"), built to its reference. */
+export const dashboard = {
+  name: 'Daniel',
+  hero: dash('hero'),
+  avatar: dash('avatar'),
+  resume: { title: 'Fractions and Decimals', meta: 'Mathematics • Primary 7', progress: 0.6, course: 'fractions-and-decimals' },
+  stats: [
+    { icon: dash('fire'), value: '12', label: 'Day Streak', note: 'Keep going!', sub: 'You’re on fire! 🔥', phoneNote: 'Keep going!' },
+    { icon: dash('target'), value: '3/5', label: 'Tasks Today', note: '2 remaining', sub: 'You can do it!', phoneNote: '' },
+    { icon: dash('trophy'), value: '75%', label: 'Weekly Goal', note: 'Great progress', sub: 'You’re ahead! 🎉', phoneNote: '' },
+  ],
+  subjects: [
+    { name: 'Mathematics', short: 'Maths', detail: 'Continue learning', icon: dash('subj-maths') },
+    { name: 'English', short: 'English', detail: 'Read & practice', icon: dash('subj-english') },
+    { name: 'Science', short: 'Science', detail: 'Explore & discover', icon: dash('subj-science') },
+    { name: 'Social Studies', short: 'Social', detail: 'Learn about the world', icon: dash('subj-social') },
+  ],
+  plan: [
+    { at: '10:00 AM', title: 'Live Class', detail: 'Mathematics with Ms. Achieng', tag: 'Live in 5 min', live: true, icon: dash('plan-1') },
+    { at: '11:30 AM', title: 'Fractions Practice', detail: 'Complete 10 questions', tag: '20 min', live: false, icon: dash('plan-2') },
+    { at: '2:00 PM', title: 'Read Chapter 3', detail: 'English', tag: '15 min', live: false, icon: dash('plan-3') },
+    { at: '4:00 PM', title: 'Science Video', detail: 'Watch and take notes', tag: '20 min', live: false, icon: dash('plan-4') },
+    { at: '6:00 PM', title: 'Daily Reflection', detail: 'How did you do today?', tag: '5 min', live: false, icon: dash('plan-5') },
+  ],
+  live: { subject: 'Mathematics', when: 'Today • 10:00 AM – 10:40 AM', phoneWhen: 'Today • 10:00 AM', teacher: 'Ms. Achieng', photo: dash('teacher'), art: dash('laptop'), slug: 'p7-maths-revision-bootcamp' },
+  urgent: [
+    { title: 'Fractions Quiz', due: 'Due today • 11:59 PM', action: 'Start', primary: true, icon: dash('assign-1') },
+    { title: 'English Essay', due: 'Due tomorrow', action: 'View', primary: false, icon: dash('assign-2') },
+  ],
+  continue: [
+    { title: 'Fractions and Decimals', meta: 'Mathematics • Primary 7', progress: 0.6, color: '#16A34A', photo: dash('thumb-1') },
+    { title: 'Reading Comprehension', meta: 'English • Primary 7', progress: 0.3, color: '#16A34A', photo: dash('thumb-2') },
+    { title: 'Living Things', meta: 'Science • Primary 7', progress: 0.25, color: '#1463F3', photo: dash('thumb-3') },
+  ],
+  activity: [
+    { title: 'Completed: Ecosystems Video', at: '2 hours ago', icon: dash('activity-1') },
+    { title: 'Scored 90% in English Practice', at: '1 day ago', icon: dash('activity-2') },
+    { title: 'Joined Science Live Class', at: '1 day ago', icon: dash('activity-3') },
   ],
 };
+
+const co = (n: string): number => photos.courseOverview[n];
+
+/** Course overview and 3-tap module map (Fractions and Decimals), built to its reference. */
+export const courseOverview = {
+  id: 'fractions-and-decimals',
+  subject: 'Mathematics',
+  level: 'Primary 7',
+  subjectIcon: co('subject'),
+  title: 'Fractions and Decimals',
+  sub: 'Build a strong understanding of fractions and decimals and learn how to use them in real life.',
+  progress: 0.6,
+  hero: co('hero'),
+  heroPhone: co('hero-phone'),
+  stats: [
+    { icon: co('stat-lessons'), value: '12', label: 'Lessons' },
+    { icon: co('stat-time'), value: '3h 20m', label: 'Total time' },
+    { icon: co('stat-trophy'), value: '75%', label: 'Class average' },
+    { icon: co('stat-ends'), value: 'Ends in', label: '6 weeks' },
+  ],
+  modules: [
+    { n: 1, title: 'Understanding Fractions', progress: 1, icon: co('module-1') },
+    { n: 2, title: 'Equivalent Fractions', progress: 0.6, icon: co('module-2') },
+    { n: 3, title: 'Adding and Subtracting Fractions', progress: 0, icon: co('module-3') },
+    { n: 4, title: 'Decimals and Place Value', progress: 0, icon: co('module-4') },
+    { n: 5, title: 'Operations with Decimals', progress: 0, icon: co('module-5') },
+    { n: 6, title: 'Real-Life Problem Solving', progress: 0, icon: co('module-6') },
+  ],
+  current: {
+    title: 'Module 2: Equivalent Fractions',
+    sub: 'Learn how to identify, create, and compare equivalent fractions. This helps you simplify fractions and solve real-life problems.',
+    size: '120 MB • 4 lessons',
+    // NCDC learning outcomes, written with the syllabus verbs (know/understand, able to, appreciate).
+    outcomes: [
+      'Understand that equivalent fractions name the same amount of a whole',
+      'Be able to find, compare and simplify equivalent fractions',
+      'Appreciate fair sharing when dividing things into equal parts',
+    ],
+    skills: ['computation', 'critical'] as const,
+    lessons: [
+      { title: '1. What are Equivalent Fractions?', kind: 'Video lesson', length: '12 min', status: 'done' as const, thumb: co('lesson-1'), domain: 'knowledge' as const },
+      { title: '2. Finding Equivalent Fractions', kind: 'Video lesson', length: '15 min', status: 'current' as const, thumb: co('lesson-2'), domain: 'skills' as const },
+      { title: '3. Simplifying Fractions', kind: 'Video lesson', length: '14 min', status: 'todo' as const, thumb: co('lesson-3'), domain: 'skills' as const },
+      { title: '4. Practice and Real-Life Examples', kind: 'Practice', length: '10 questions', status: 'todo' as const, thumb: co('lesson-4'), domain: 'values' as const },
+    ],
+  },
+  resources: [
+    { title: 'Module Notes', meta: 'PDF • 2 MB', icon: co('file-1') },
+    { title: 'Workbook', meta: 'PDF • 4 MB', icon: co('file-2') },
+    { title: 'Practice Questions', meta: 'PDF • 1 MB', icon: co('file-3') },
+    { title: 'Key Points', meta: 'PDF • 1 MB', icon: co('file-4') },
+  ],
+  progressBreakdown: { completed: 4, inProgress: 2, notStarted: 6 },
+  squad: { learners: 12, faces: co('squad'), more: 7 },
+  badges: [
+    { title: 'Lesson Streak', detail: '3 days', icon: co('badge-1') },
+    { title: 'Quick Learner', detail: 'Completed 2 lessons', icon: co('badge-2') },
+    { title: 'Top Performer', detail: 'Top 20%', icon: co('badge-3') },
+  ],
+};
+
+export { examSimulator } from './exam';
+export { liveHub } from './live-hub';
+export { assignmentWork } from './assignment-work';
+export { assignmentFeedback } from './assignment-feedback';
+export { learnerHome } from './learner-home';
+export { projectsPage } from './projects';
+export { libraryHub } from './library-hub';
+export { progressMap } from './progress-map';
+export { squadRoom } from './squad-room';
+export { billingHub } from './billing-hub';

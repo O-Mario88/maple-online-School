@@ -3,12 +3,12 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Icon } from '@/components/icon';
-import { Avatar } from '@/components/ui';
+import { Avatar, ModeButton } from '@/components/ui';
 import { Radius, SidebarWidth, Spacing, type Theme, Type } from '@/constants/theme';
 import { useStyles } from '@/hooks/use-styles';
 import { useAuth, useMe } from '@/lib/auth/auth-context';
 import { MOCK_DATA } from '@/lib/mock';
-import { activeKey, navFor, PORTAL_LABELS } from '@/lib/navigation';
+import { activeKey, navFor } from '@/lib/navigation';
 import { usePortal } from '@/lib/portal-context';
 
 import { BrandMark } from './BrandMark';
@@ -18,7 +18,7 @@ import { InboxBell } from './InboxBell';
 export function Sidebar() {
   const { theme, styles } = useStyles(makeStyles);
   const pathname = usePathname();
-  const { portal, portals, setPortal } = usePortal();
+  const { portal } = usePortal();
   const { signOut } = useAuth();
   const me = useMe();
   const items = navFor(portal, MOCK_DATA);
@@ -35,28 +35,9 @@ export function Sidebar() {
         <InboxBell onDark />
       </View>
 
-      {portals.length > 1 ? (
-        <View style={styles.portals} accessibilityRole="tablist" accessibilityLabel="Switch portal">
-          {portals.map((p) => {
-            const selected = p === portal;
-            return (
-              <Pressable
-                key={p}
-                onPress={() => {
-                  setPortal(p);
-                  router.replace('/');
-                }}
-                style={({ hovered }) => [styles.portal, selected && styles.portalOn, hovered && !selected && styles.portalHover]}
-                accessibilityRole="tab"
-                accessibilityState={{ selected }}>
-                <Text style={[styles.portalText, selected && styles.portalTextOn]}>{PORTAL_LABELS[p]}</Text>
-              </Pressable>
-            );
-          })}
-        </View>
-      ) : (
-        <Text style={styles.portalName}>{PORTAL_LABELS[portal]}</Text>
-      )}
+      <View style={styles.modeWrap}>
+        <ModeButton onDark />
+      </View>
 
       <ScrollView style={styles.navScroll} contentContainerStyle={styles.nav} accessibilityRole="menu">
         {items.map((item) => {
@@ -132,6 +113,7 @@ function makeStyles(t: Theme) {
     portalHover: { backgroundColor: t.sidebar },
     portalText: { ...Type.caption, color: t.sidebarMuted },
     portalTextOn: { color: t.onAccent },
+    modeWrap: { marginBottom: Spacing.two },
     portalName: { ...Type.overline, color: t.sidebarMuted, paddingHorizontal: Spacing.two, marginBottom: Spacing.two },
     navScroll: { flex: 1, marginHorizontal: -Spacing.one },
     nav: { gap: 2, paddingHorizontal: Spacing.one, paddingBottom: Spacing.three },

@@ -32,6 +32,10 @@ export interface NavItem {
   icon: IconName;
   /** A design screen on mock data, hidden from deployment builds. */
   preview?: boolean;
+  /** Other paths that light this item, such as the live hub for Classes. */
+  also?: readonly string[];
+  /** Where the item opens on mock data, when a designed page stands in for the live one. */
+  designHref?: string;
 }
 
 // Matches the Go API's roles: Leaders, Finance and Staff.
@@ -70,20 +74,21 @@ const messages = item('messages', 'Messages', '/messages', 'chat');
 const MENUS: Readonly<Record<Portal, readonly NavItem[]>> = {
   learner: [
     home,
-    p('explore', 'Explore', '/learn/explore', 'search'),
-    p('live', 'Live', '/learn/live', 'live'),
-    library,
-    p('passport', 'Passport', '/learn/passport', 'flag'),
-    lessons,
+    p('explore', 'Learn', '/learn/explore', 'book'),
+    { ...lessons, label: 'Classes', icon: 'person', designHref: '/learn/live', also: ['/learn/live', '/lessons'] },
     p('assignments', 'Assignments', '/learn/assignments', 'clipboard'),
+    { ...library, designHref: '/learn/library', also: ['/learn/library', '/library'] },
+    p('progress', 'My progress', '/learn/progress', 'chart'),
+    p('projects', 'Projects', '/learn/projects', 'folder'),
+    p('exam', 'Exam practice', '/learn/paper', 'timer'),
     p('past-papers', 'Past papers', '/learn/past-papers', 'book'),
     p('shorts', 'Shorts', '/learn/shorts', 'sparkle'),
-    p('progress', 'My progress', '/learn/progress', 'chart'),
-    p('squad', 'Study squad', '/learn/squad', 'people'),
+    p('squad', 'Study squads', '/learn/squads', 'people'),
+    p('passport', 'Passport', '/learn/passport', 'flag'),
     p('offline', 'Offline', '/learn/offline', 'cloud'),
     curriculum,
     fees,
-    p('billing', 'Wallet', '/learn/billing', 'wallet'),
+    p('billing', 'Billing', '/learn/billing', 'wallet'),
   ],
   teacher: [
     home,
@@ -142,7 +147,8 @@ const MENUS: Readonly<Record<Portal, readonly NavItem[]>> = {
 };
 
 export function navFor(portal: Portal, mock = false): readonly NavItem[] {
-  return MENUS[portal].filter((i) => mock || !i.preview);
+  const shown = MENUS[portal].filter((i) => mock || !i.preview);
+  return mock ? shown.map((i) => (i.designHref ? { ...i, href: i.designHref } : i)) : shown;
 }
 
 const MAX_TABS = 5;
@@ -156,7 +162,8 @@ export function tabBar(items: readonly NavItem[]): { tabs: readonly NavItem[]; m
 /** The menu item for the current path: Home only on "/", others by prefix. */
 export function activeKey(items: readonly NavItem[], pathname: string): string | undefined {
   if (pathname === '/') return items.find((i) => i.href === '/')?.key;
-  return items.find((i) => i.href !== '/' && (pathname === i.href || pathname.startsWith(`${i.href}/`)))?.key;
+  const under = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
+  return items.find((i) => i.href !== '/' && [i.href, ...(i.also ?? [])].some(under))?.key;
 }
 
 /**
@@ -181,7 +188,9 @@ export const PUBLIC_PREVIEWS = [
   { href: '/help', label: 'Help and status', icon: 'flag' },
   { href: '/get-started', label: 'Get-started wizard', icon: 'sparkle' },
   { href: '/qr-sign-in', label: 'Sign in with a QR code', icon: 'qr' },
+  { href: '/qr-login', label: 'Classroom QR badge login', icon: 'qr' },
   { href: '/consent', label: 'Parent consent', icon: 'hand' },
+  { href: '/guardian-consent', label: 'Ask a guardian (age gate)', icon: 'people' },
   { href: '/claim-child', label: 'Link your child', icon: 'people' },
 ] as const satisfies readonly { href: string; route?: string; label: string; icon: IconName }[];
 

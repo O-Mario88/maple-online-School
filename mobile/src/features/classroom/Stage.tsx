@@ -44,8 +44,8 @@ export function Stage({ photo, teacher, tiles, others, hand, onHand, compact = f
 
   return (
     <View style={styles.wrap}>
-      <View style={styles.video} accessibilityLabel={`${teacher} teaching: Fractions, adding and subtracting`}>
-        <Image source={photo} style={StyleSheet.absoluteFill} contentFit="cover" />
+      <View style={[styles.video, compact && styles.videoCompact]} accessibilityLabel={`${teacher} teaching: Fractions, adding and subtracting`}>
+        <Image source={photo} style={StyleSheet.absoluteFill} contentFit="cover" contentPosition="top" />
         {reaction ? <Text style={styles.reaction}>{reaction}</Text> : null}
         {picker ? (
           <View style={styles.picker}>
@@ -83,12 +83,15 @@ export function Stage({ photo, teacher, tiles, others, hand, onHand, compact = f
 
 const styles = StyleSheet.create({
   wrap: { gap: 8 },
-  video: { aspectRatio: 932 / 410, borderRadius: 12, overflow: 'hidden', backgroundColor: Brand.video, justifyContent: 'flex-end', alignItems: 'center' },
-  controls: { flexDirection: 'row', gap: 4, padding: 6, marginBottom: 10, borderRadius: 12, backgroundColor: 'rgba(17, 24, 39, 0.82)' },
-  control: { alignItems: 'center', gap: 2, minWidth: 64, paddingVertical: 6, paddingHorizontal: 8, borderRadius: 8 },
+  // The photo is the reference's whole stage, control bar included; ours is drawn over that bar.
+  video: { aspectRatio: 932 / 476, borderRadius: 12, overflow: 'hidden', backgroundColor: Brand.video, justifyContent: 'flex-end', alignItems: 'center' },
+  controls: { position: 'absolute', left: '26.2%', width: '51.6%', bottom: '1.7%', height: '11.8%', flexDirection: 'row', alignItems: 'center', gap: 2, paddingHorizontal: 6, borderRadius: 12, backgroundColor: '#1B2230' },
+  // Phones put the bar under the video and crop the printed one away.
+  videoCompact: { aspectRatio: 932 / 410 },
+  control: { flex: 1, alignItems: 'center', gap: 2, paddingVertical: 6, borderRadius: 8 },
   controlOn: { backgroundColor: 'rgba(255,255,255,0.16)' },
   controlCompact: { flex: 1, minWidth: 0, paddingHorizontal: 2 },
-  controlsCompact: { marginBottom: 0, justifyContent: 'space-between', backgroundColor: '#111827' },
+  controlsCompact: { position: 'relative', left: 0, width: '100%', bottom: 0, height: undefined, paddingVertical: 6, justifyContent: 'space-between', backgroundColor: '#111827' },
   controlText: { fontSize: 11, color: Brand.surface },
   reaction: { position: 'absolute', right: 30, bottom: 90, fontSize: 48 },
   picker: { position: 'absolute', bottom: 82, flexDirection: 'row', gap: 10, paddingHorizontal: 14, paddingVertical: 8, borderRadius: 999, backgroundColor: 'rgba(17, 24, 39, 0.9)' },

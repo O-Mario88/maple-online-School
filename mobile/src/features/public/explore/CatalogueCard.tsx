@@ -1,90 +1,72 @@
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
-import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
 import { formatMoney } from '@/lib/finance/fees';
 import type { CatalogueEntry } from '@/mock/public';
 
-import { Brand } from '../palette';
+import { Brand, CARD_SHADOW } from '../palette';
 
-const BADGE_COLOURS: Readonly<Record<string, string>> = {
-  Bestseller: '#F5C542',
-  Live: Brand.live,
-  'Past papers': '#C7D7FE',
-  Course: Brand.purple,
-  Bootcamp: '#8B5CF6',
-  Free: Brand.green,
-};
-const DARK_BADGE_TEXT = new Set(['Bestseller', 'Past papers']);
+/** The thumbnail's height on a 263px-wide card in the reference. */
+export const THUMB_HEIGHT = 139;
+const THUMB_RATIO = 263 / THUMB_HEIGHT;
 
-function initials(name: string): string {
-  return name
-    .replace(/^(Mr|Ms|Mrs|Dr)\.\s*/, '')
-    .split(' ')
-    .map((p) => p[0])
-    .join('')
-    .slice(0, 2);
+function reviewCount(n: number): string {
+  return n >= 1000 ? `${(n / 1000).toFixed(1)}K` : String(n);
 }
 
-/** Badge, save heart and duration drawn over a thumbnail that has no photo. */
-function ThumbOverlay({ item, saved, onSave, badgeText }: { item: CatalogueEntry; saved: boolean; onSave: () => void; badgeText: string }) {
-  return (
-    <>
-      <Icon name={item.icon} size={36} color="rgba(255,255,255,0.85)" />
-      <Text style={[styles.badge, { backgroundColor: BADGE_COLOURS[item.badge] ?? Brand.blue, color: badgeText }]}>{item.badge.toUpperCase()}</Text>
-      <Pressable style={styles.heart} onPress={onSave} accessibilityRole="button" accessibilityLabel={saved ? 'Remove from saved' : 'Save for later'} hitSlop={8}>
-        <Text style={styles.heartText}>{saved ? '♥' : '♡'}</Text>
-      </Pressable>
-      {item.startsIn ? <Text style={styles.starts}>{`Starts in ${item.startsIn}`}</Text> : <Text style={styles.hours}>{`◷ ${item.hours}`}</Text>}
-    </>
-  );
+/**
+ * One Explore result as the reference draws it: photo (its badge, heart and
+ * duration are part of the photo), title, level, teacher, rating, price and cart.
+ */
+interface CardProps {
+  item: CatalogueEntry;
+  coursePage: string;
+  width?: number;
+  list?: boolean;
+  /** Phones: two narrow cards per row, with smaller type. */
+  compact?: boolean;
 }
 
-/** One catalogue result: thumbnail with badge, title, teacher, rating, price and add-to-cart. */
-export function CatalogueCard({ item, coursePage, list }: { item: CatalogueEntry; coursePage: string; list: boolean }) {
-  const [saved, setSaved] = useState(false);
+export function CatalogueCard({ item, coursePage, width, list = false, compact = false }: CardProps) {
   const free = item.priceUGX === 0;
-  const badgeText = DARK_BADGE_TEXT.has(item.badge) ? Brand.ink : Brand.surface;
+  const c = compact;
   return (
     <Pressable
-      style={[styles.card, list && styles.cardList]}
+      style={[styles.card, width === undefined ? styles.cardFull : { width }, list && styles.cardList]}
       onPress={() => router.push(`/courses/${coursePage}`)}
       accessibilityRole="link"
       accessibilityLabel={`${item.title}, ${item.meta}, ${free ? 'free' : formatMoney(item.priceUGX, 'UGX')}`}>
-      <View style={[styles.thumb, list && styles.thumbList, { backgroundColor: item.tint }]}>
-        {item.photo ? (
-          // The reference photo already carries its badge, heart and duration.
-          <Image source={item.photo} style={StyleSheet.absoluteFill} contentFit="cover" accessibilityLabel={`${item.teacher}, ${item.title}`} />
-        ) : (
-          <ThumbOverlay item={item} saved={saved} onSave={() => setSaved((s) => !s)} badgeText={badgeText} />
-        )}
+      <View style={[styles.thumb, (width === undefined || c) && !list ? styles.thumbFluid : null, list && styles.thumbList, { backgroundColor: item.tint }]}>
+        {item.photo ? <Image source={item.photo} style={StyleSheet.absoluteFill} contentFit="cover" accessibilityLabel={`${item.teacher}, ${item.title}`} /> : null}
       </View>
-      <View style={styles.info}>
-        <Text style={styles.title} numberOfLines={2}>
+      <View style={[styles.info, c && styles.infoC, list && styles.infoList]}>
+        <Text style={[styles.title, c && styles.titleC]} numberOfLines={c ? 2 : 1}>
           {item.title}
         </Text>
-        <Text style={styles.meta}>{item.meta}</Text>
-        <View style={styles.teacher}>
-          <View style={styles.avatar}>
-            <Text style={styles.avatarText}>{initials(item.teacher)}</Text>
-          </View>
-          <Text style={styles.teacherName} numberOfLines={1}>
+        <Text style={[styles.meta, c && styles.metaC]} numberOfLines={1}>
+          {item.meta}
+        </Text>
+        <View style={[styles.teacher, c && styles.rowC]}>
+          {item.face ? <Image source={item.face} style={[styles.face, c && styles.faceC]} /> : <View style={[styles.face, c && styles.faceC]} />}
+          <Text style={[styles.teacherName, c && styles.smallC]} numberOfLines={1}>
             {item.teacher}
           </Text>
         </View>
-        <Text style={styles.rating}>
-          <Text style={styles.star}>★ </Text>
-          {`${item.rating} (${item.reviews >= 1000 ? `${(item.reviews / 1000).toFixed(1)}K` : item.reviews})`}
-        </Text>
-        <View style={styles.footer}>
-          <View style={styles.prices}>
-            <Text style={[styles.price, item.wasUGX ? styles.priceSale : null]}>{free ? 'Free' : formatMoney(item.priceUGX, 'UGX')}</Text>
-            {item.wasUGX ? <Text style={styles.was}>{formatMoney(item.wasUGX, 'UGX')}</Text> : null}
+        <View style={[styles.rating, c && styles.rowC]}>
+          <Text style={[styles.stars, c && styles.smallC]}>
+            ★ <Text style={styles.starSoft}>★</Text>
+          </Text>
+          <Text style={[styles.ratingText, c && styles.smallC]}>{`${item.rating} (${reviewCount(item.reviews)})`}</Text>
+        </View>
+        <View style={[styles.footer, c && styles.footerC]}>
+          <View style={[styles.prices, c && styles.pricesC]}>
+            <Text style={[styles.price, c && styles.priceC, item.wasUGX ? styles.priceSale : null]}>{free ? 'Free' : formatMoney(item.priceUGX, 'UGX')}</Text>
+            {item.wasUGX ? <Text style={[styles.was, c && styles.wasC]}>{formatMoney(item.wasUGX, 'UGX')}</Text> : null}
           </View>
-          <Pressable style={styles.cart} onPress={() => router.push('/checkout')} accessibilityRole="button" accessibilityLabel={`Add ${item.title} to cart`}>
-            <Icon name="wallet" size={16} color={Brand.blue} />
+          <Pressable style={[styles.cart, c && styles.cartC]} onPress={() => router.push('/checkout')} accessibilityRole="button" accessibilityLabel={`Add ${item.title} to cart`}>
+            <Icon name="cart" size={16} color={Brand.blue} />
           </Pressable>
         </View>
       </View>
@@ -93,28 +75,38 @@ export function CatalogueCard({ item, coursePage, list }: { item: CatalogueEntry
 }
 
 const styles = StyleSheet.create({
-  card: { flexGrow: 1, flexBasis: 220, maxWidth: 360, borderRadius: 14, backgroundColor: Brand.surface, borderWidth: 1, borderColor: Brand.line, overflow: 'hidden' },
-  cardList: { flexDirection: 'row', maxWidth: undefined, flexBasis: '100%' },
-  thumb: { height: 128, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
-  thumbList: { width: 200, height: undefined },
-  badge: { position: 'absolute', top: 10, left: 10, fontSize: 10, fontWeight: '800', letterSpacing: 0.6, paddingHorizontal: 8, paddingVertical: 3, borderRadius: 4, overflow: 'hidden' },
-  heart: { position: 'absolute', top: 6, right: 8 },
-  heartText: { fontSize: 22, color: Brand.surface },
-  hours: { position: 'absolute', left: 10, bottom: 8, fontSize: 11, fontWeight: '600', color: Brand.surface },
-  starts: { position: 'absolute', left: 10, bottom: 8, fontSize: 11, fontWeight: '700', color: Brand.ink, backgroundColor: Brand.surface, paddingHorizontal: 8, paddingVertical: 3, borderRadius: 999, overflow: 'hidden' },
-  info: { flex: 1, gap: 4, padding: 12 },
-  title: { fontSize: 14, fontWeight: '700', color: Brand.ink },
-  meta: { fontSize: 12, color: Brand.muted },
-  teacher: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 4 },
-  avatar: { width: 22, height: 22, borderRadius: 11, backgroundColor: '#8D5524', alignItems: 'center', justifyContent: 'center' },
-  avatarText: { fontSize: 9, fontWeight: '700', color: Brand.surface },
-  teacherName: { flex: 1, fontSize: 12, color: Brand.body },
-  rating: { fontSize: 12, color: Brand.body },
-  star: { color: Brand.amber },
-  footer: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 6 },
-  prices: { flexDirection: 'row', alignItems: 'baseline', gap: 6, flexShrink: 1, flexWrap: 'wrap' },
-  price: { fontSize: 15, fontWeight: '800', color: Brand.ink },
-  priceSale: { color: Brand.live },
-  was: { fontSize: 11, color: Brand.muted, textDecorationLine: 'line-through' },
-  cart: { width: 34, height: 34, borderRadius: 8, borderWidth: 1, borderColor: Brand.line, alignItems: 'center', justifyContent: 'center' },
+  card: { borderRadius: 10, backgroundColor: Brand.surface, overflow: 'hidden', ...CARD_SHADOW },
+  cardFull: { width: '100%' },
+  infoC: { paddingTop: 9, paddingHorizontal: 10, paddingBottom: 11 },
+  titleC: { fontSize: 13.5, lineHeight: 17, minHeight: 34, letterSpacing: 0 },
+  metaC: { marginTop: 3, fontSize: 11.5, lineHeight: 15 },
+  rowC: { marginTop: 7, gap: 6 },
+  faceC: { width: 20, height: 20, borderRadius: 10 },
+  smallC: { fontSize: 11.5 },
+  footerC: { marginTop: 7, alignItems: 'flex-end' },
+  pricesC: { flexDirection: 'column', alignItems: 'flex-start', gap: 0 },
+  priceC: { fontSize: 14.5 },
+  wasC: { fontSize: 10 },
+  cartC: { width: 30, height: 30 },
+  cardList: { flexDirection: 'row' },
+  thumb: { height: THUMB_HEIGHT, overflow: 'hidden' },
+  thumbFluid: { height: undefined, aspectRatio: THUMB_RATIO },
+  thumbList: { width: 263, height: undefined },
+  info: { paddingTop: 11, paddingHorizontal: 13, paddingBottom: 16 },
+  infoList: { flex: 1 },
+  title: { fontSize: 15, lineHeight: 20, fontWeight: '700', color: Brand.ink, letterSpacing: -0.2 },
+  meta: { marginTop: 5, fontSize: 13.5, lineHeight: 18, color: '#4A5263' },
+  teacher: { flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 11 },
+  face: { width: 24, height: 24, borderRadius: 12, backgroundColor: '#D9DEE7' },
+  teacherName: { flex: 1, fontSize: 13.5, color: '#2A3242' },
+  rating: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 11, height: 17 },
+  stars: { fontSize: 13, color: '#F59E0B', letterSpacing: 1 },
+  starSoft: { color: '#FBBF5A' },
+  ratingText: { fontSize: 12.5, color: '#4A5263' },
+  footer: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 8 },
+  prices: { flexDirection: 'row', alignItems: 'baseline', gap: 7, flexShrink: 1 },
+  price: { fontSize: 17, fontWeight: '700', color: Brand.ink },
+  priceSale: { color: '#E5484D' },
+  was: { fontSize: 11, color: '#8A92A3', textDecorationLine: 'line-through' },
+  cart: { width: 32, height: 32, borderRadius: 7, borderWidth: 1, borderColor: '#CFE0FD', backgroundColor: Brand.surface, alignItems: 'center', justifyContent: 'center' },
 });

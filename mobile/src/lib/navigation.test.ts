@@ -54,6 +54,28 @@ describe('navFor', () => {
     expect(navFor('learner', true).some((i) => i.href === '/school')).toBe(false);
   });
 
+  it('sends learners to the designed pages when mock data is on, and to the live pages otherwise', () => {
+    const href = (mock: boolean, key: string) => navFor('learner', mock).find((i) => i.key === key)?.href;
+    expect(href(true, 'lessons')).toBe('/learn/live');
+    expect(href(true, 'library')).toBe('/learn/library');
+    expect(href(false, 'lessons')).toBe('/lessons');
+    expect(href(false, 'library')).toBe('/library');
+    expect(href(true, 'projects')).toBe('/learn/projects');
+    expect(href(true, 'exam')).toBe('/learn/paper');
+  });
+
+  it('keeps the learner phone tabs to Home, Learn, Classes and Assignments', () => {
+    expect(tabBar(navFor('learner', true)).tabs.map((i) => i.label)).toEqual(['Home', 'Learn', 'Classes', 'Assignments']);
+  });
+
+  it('lights Classes and Library on both their designed and live pages', () => {
+    const items = navFor('learner', true);
+    expect(activeKey(items, '/lessons')).toBe('lessons');
+    expect(activeKey(items, '/learn/live')).toBe('lessons');
+    expect(activeKey(items, '/library')).toBe('library');
+    expect(activeKey(items, '/learn/library/maths-olevel')).toBe('library');
+  });
+
   // Every menu entry must open a real screen. (Jest runs in Node; the app has no Node types.)
   it.each(PORTALS)('every %s menu entry has a route file', (portal) => {
     /* eslint-disable @typescript-eslint/no-require-imports */
@@ -94,6 +116,10 @@ describe('activeKey', () => {
 
   it('matches nested paths to their section', () => {
     expect(activeKey(items, '/library/items/4')).toBe('library');
+  });
+
+  it('lights Classes on the learner live hub, as the reference shows', () => {
+    expect(activeKey(navFor('learner', true), '/learn/live')).toBe('lessons');
   });
 
   it('is undefined for screens outside the menu', () => {
