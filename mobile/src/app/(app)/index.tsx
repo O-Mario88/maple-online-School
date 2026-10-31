@@ -143,7 +143,7 @@ function PortalHome({ portal, user }: { portal: Portal; user: Me }) {
           <QuickActions
             actions={[
               { title: 'Curriculum', detail: 'National curricula schools start from', href: '/curriculum', icon: 'map' },
-              { title: 'Library moderation', detail: 'Review items shared with every school', href: '/library', icon: 'library' },
+              { title: 'Library moderation', detail: 'Review items shared with every school', href: '/learn/library', icon: 'library' },
             ]}
           />
         </Grid>
@@ -156,7 +156,7 @@ function PortalHome({ portal, user }: { portal: Portal; user: Me }) {
 interface QuickAction {
   title: string;
   detail: string;
-  href: '/fees' | '/school' | '/curriculum' | '/library' | '/messages';
+  href: '/fees' | '/school' | '/curriculum' | '/learn/library' | '/messages';
   icon: 'wallet' | 'school' | 'map' | 'library' | 'chat';
 }
 

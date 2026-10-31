@@ -78,7 +78,7 @@ describe('navFor', () => {
   it('lights Classes and Library on both their designed and live pages', () => {
     const items = navFor('learner', true);
     expect(activeKey(items, '/learn/live')).toBe('lessons');
-    expect(activeKey(items, '/library')).toBe('library');
+    expect(activeKey(items, '/learn/library')).toBe('library');
     expect(activeKey(items, '/learn/library/maths-olevel')).toBe('library');
   });
 
@@ -121,7 +121,7 @@ describe('activeKey', () => {
   });
 
   it('matches nested paths to their section', () => {
-    expect(activeKey(items, '/library/items/4')).toBe('library');
+    expect(activeKey(items, '/learn/library/maths-olevel')).toBe('library');
   });
 
   it('lights Classes on the learner live hub, as the reference shows', () => {

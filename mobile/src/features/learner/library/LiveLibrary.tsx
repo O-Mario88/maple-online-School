@@ -3,10 +3,14 @@ import { ActivityIndicator, Linking, Pressable, ScrollView, StyleSheet, Text, Te
 
 import { Icon } from '@/components/icon';
 import { useShell } from '@/components/ui';
+import { useMe } from '@/lib/auth/auth-context';
 import type { IconName } from '@/lib/icons';
-import { dueLabel, itemDetail, itemHref, type LibraryItem, MEDIA_URL, typeLabel } from '@/lib/library/library';
+import { dueLabel, itemDetail, itemHref, libraryChoices, type LibraryItem, MEDIA_URL, typeLabel } from '@/lib/library/library';
 import { useAssignedReading, useContinue, useLibrary, useRecordProgress } from '@/lib/library/queries';
+import { isStaff } from '@/lib/roles';
 import { toast } from '@/lib/toast';
+
+import { LibraryStaff } from './LibraryStaff';
 
 const INK = '#0B1424';
 const BODY = '#4A5263';
@@ -96,7 +100,7 @@ function ContinueRow() {
 }
 
 /** Reading the learner's teachers set, soonest due first, with a way to mark it done. */
-function AssignedList() {
+function AssignedList({ learner }: { learner: boolean }) {
   const assigned = useAssignedReading();
   const progress = useRecordProgress();
   if (assigned.isPending) return <ActivityIndicator color={BLUE} accessibilityLabel="Loading assigned reading" />;
@@ -104,7 +108,7 @@ function AssignedList() {
   if (assigned.data.length === 0) return null;
   const now = new Date();
   return (
-    <Section title="Assigned by your teachers">
+    <Section title={learner ? 'Assigned by your teachers' : 'Reading set for your children'}>
       <View style={styles.panel}>
         {assigned.data.map((a, i) => {
           const pct = a.is_completed ? 100 : Math.round(Number(a.completion_percentage));
@@ -120,7 +124,7 @@ function AssignedList() {
                 <Pressable
                   style={styles.open}
                   onPress={() => {
-                    progress.mutate({ item: a.item, completion: 0, new_visit: true });
+                    if (learner) progress.mutate({ item: a.item, completion: 0, new_visit: true });
                     openItem(a);
                   }}
                   accessibilityRole="button"
@@ -129,7 +133,7 @@ function AssignedList() {
                 </Pressable>
                 {a.is_completed ? (
                   <Text style={styles.done}>✓ Done</Text>
-                ) : (
+                ) : !learner ? null : (
                   <Pressable onPress={() => progress.mutate({ item: a.item, completion: 100 })} accessibilityRole="button" accessibilityLabel={`Mark ${a.title} as done`} hitSlop={6}>
                     <Text style={styles.link}>Mark as done</Text>
                   </Pressable>
@@ -165,6 +169,10 @@ function ItemCard({ item, wide }: { item: LibraryItem; wide: boolean }) {
 /** The library on the real API: continue reading, assigned reading, and search across everything the learner can see. */
 export function LiveLibrary() {
   const { wide } = useShell();
+  const me = useMe();
+  const role = me.data?.role;
+  const learner = role === 'student';
+  const staff = me.data ? isStaff(me.data.memberships) || role === 'teacher' || role === 'admin' : false;
   const [search, setSearch] = useState('');
   const items = useLibrary(search);
   const searching = search.trim() !== '';
@@ -180,8 +188,8 @@ export function LiveLibrary() {
           <TextInput style={styles.searchInput} value={search} onChangeText={setSearch} placeholder="Search by title or topic" placeholderTextColor="#8A92A3" autoCorrect={false} accessibilityLabel="Search the library" />
         </View>
       </View>
-      {searching ? null : <ContinueRow />}
-      {searching ? null : <AssignedList />}
+      {searching || !learner ? null : <ContinueRow />}
+      {searching || !(learner || role === 'parent') ? null : <AssignedList learner={learner} />}
       <Section title={searching ? `Results for “${search.trim()}”` : 'Browse the Library'}>
         {items.isPending ? <ActivityIndicator color={BLUE} accessibilityLabel="Searching the library" /> : null}
         {items.error ? <Text style={styles.error}>{items.error.message}</Text> : null}
@@ -192,6 +200,7 @@ export function LiveLibrary() {
           ))}
         </View>
       </Section>
+      {staff && me.data ? <LibraryStaff choices={libraryChoices(me.data.memberships)} /> : null}
     </ScrollView>
   );
 }
