@@ -63,7 +63,8 @@ const item = (key: string, label: string, href: string, icon: IconName, preview 
 const p = (key: string, label: string, href: string, icon: IconName): NavItem => item(key, label, href, icon, true);
 
 const home = item('home', 'Home', '/', 'home');
-const lessons = item('lessons', 'Lessons', '/lessons', 'play');
+// Lessons and live classes live on the Classes page for everyone; staff plan and publish there.
+const lessons: NavItem = { ...item('lessons', 'Lessons', '/learn/live', 'play'), also: ['/learn/live'] };
 const library = item('library', 'Library', '/library', 'library');
 const curriculum = item('curriculum', 'Curriculum', '/curriculum', 'map');
 const fees = item('fees', 'Fees', '/fees', 'wallet');
@@ -75,7 +76,7 @@ const MENUS: Readonly<Record<Portal, readonly NavItem[]>> = {
   learner: [
     home,
     p('explore', 'Learn', '/learn/explore', 'book'),
-    { ...lessons, label: 'Classes', icon: 'person', href: '/learn/live', also: ['/learn/live', '/lessons'] },
+    { ...lessons, label: 'Classes', icon: 'person' },
     // Ported to the API: the designed page in every build.
     { key: 'assignments', label: 'Assignments', href: '/learn/assignments', icon: 'clipboard' },
     { ...library, href: '/learn/library', also: ['/learn/library', '/library'] },

@@ -77,7 +77,6 @@ describe('navFor', () => {
 
   it('lights Classes and Library on both their designed and live pages', () => {
     const items = navFor('learner', true);
-    expect(activeKey(items, '/lessons')).toBe('lessons');
     expect(activeKey(items, '/learn/live')).toBe('lessons');
     expect(activeKey(items, '/library')).toBe('library');
     expect(activeKey(items, '/learn/library/maths-olevel')).toBe('library');
@@ -118,7 +117,7 @@ describe('activeKey', () => {
 
   it('matches Home only on the root path', () => {
     expect(activeKey(items, '/')).toBe('home');
-    expect(activeKey(items, '/lessons')).toBe('lessons');
+    expect(activeKey(items, '/learn/live')).toBe('lessons');
   });
 
   it('matches nested paths to their section', () => {

@@ -3,10 +3,14 @@ import { ActivityIndicator, Linking, Pressable, ScrollView, StyleSheet, Text, Vi
 
 import { Icon } from '@/components/icon';
 import { useShell } from '@/components/ui';
+import { useMe } from '@/lib/auth/auth-context';
 import { lessonWhen, upcomingLessons } from '@/lib/lessons/lessons';
 import { groupSessions, type LiveSession } from '@/lib/lessons/live';
 import { useLessons, useLiveSessions } from '@/lib/lessons/queries';
+import { isStaff } from '@/lib/roles';
 import { toast } from '@/lib/toast';
+
+import { TeachPanel } from './TeachPanel';
 
 const INK = '#0B1424';
 const BODY = '#4A5263';
@@ -77,6 +81,8 @@ function SessionRow({ s, replay }: { s: LiveSession; replay?: string }) {
 /** Classes on the real API: live sessions to join now, what's coming up, planned lessons and replays. */
 export function LiveClasses() {
   const { wide } = useShell();
+  const me = useMe();
+  const staff = me.data ? isStaff(me.data.memberships) : false;
   const sessions = useLiveSessions();
   const lessons = useLessons();
   const now = useMemo(() => new Date(), []);
@@ -97,6 +103,7 @@ export function LiveClasses() {
       </View>
       {pending ? <ActivityIndicator color={BLUE} accessibilityLabel="Loading your classes" /> : null}
       {error ? <Text style={styles.error}>{error.message}</Text> : null}
+      {staff ? <TeachPanel /> : null}
       {nothing ? (
         <View style={[styles.panel, styles.empty]}>
           <Text style={styles.rowTitle}>Nothing scheduled yet</Text>
