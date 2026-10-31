@@ -117,7 +117,7 @@ const MENUS: Readonly<Record<Portal, readonly NavItem[]>> = {
     fees,
     lessons,
     library,
-    p('attendance', 'Attendance', '/family/attendance', 'calendar'),
+    item('attendance', 'Attendance', '/family/attendance', 'calendar'),
     p('approvals', 'Approvals', '/family/approvals', 'check'),
     p('family-settings', 'Settings', '/family/settings', 'person'),
   ],

@@ -1,12 +1,20 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { Badge, Banner, Button, Card, Chip, ChipRow, Field, Row, Segmented } from '@/components/ui';
+import { LiveAttendance } from '@/features/parent/LiveAttendance';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
+import { mockData } from '@/lib/mock';
 
 const TONE = { present: 'good', late: 'warning', excused: 'info', absent: 'danger' } as const;
 
 /** Inventory 53: a child's attendance and a one-tap excused absence. */
 export default function FamilyAttendanceScreen() {
+  const design = useMemo(() => mockData() != null, []);
+  // Real builds read the register from the API; design builds keep the sample week and the excuse form.
+  return design ? <DesignAttendance /> : <LiveAttendance />;
+}
+
+function DesignAttendance() {
   const [child, setChild] = useState('k1');
   const [reason, setReason] = useState<'Sick' | 'Offline' | 'Family'>('Sick');
   const [note, setNote] = useState('');
