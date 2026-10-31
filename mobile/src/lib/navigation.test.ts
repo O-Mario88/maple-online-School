@@ -50,8 +50,8 @@ describe('navFor', () => {
   });
 
   it('only shows school set-up to the school portal', () => {
-    expect(navFor('school').some((i) => i.href === '/school')).toBe(true);
-    expect(navFor('learner', true).some((i) => i.href === '/school')).toBe(false);
+    expect(navFor('school').some((i) => i.href === '/admin/onboarding')).toBe(true);
+    expect(navFor('learner', true).some((i) => i.href === '/admin/onboarding')).toBe(false);
   });
 
   it('sends learners to the designed pages once they run on the API, in every build', () => {

@@ -1,14 +1,22 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { Badge, Banner, Button, Card, Chip, ChipRow, Field, Row } from '@/components/ui';
 import { Spacing, type Theme, Type } from '@/constants/theme';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
+import { LiveSetup } from '@/features/school/LiveSetup';
 import { useStyles } from '@/hooks/use-styles';
+import { mockData } from '@/lib/mock';
 import { router } from 'expo-router';
 
 /** Inventory 59: a 15-minute self-service set-up for a whole school. */
 export default function OnboardingWizardScreen() {
+  const design = useMemo(() => mockData() != null, []);
+  // Real builds create the school and invite people through the API; design builds keep the sample wizard.
+  return design ? <DesignWizard /> : <LiveSetup />;
+}
+
+function DesignWizard() {
   const { styles } = useStyles(makeStyles);
   const [step, setStep] = useState(1);
   const [curriculum, setCurriculum] = useState('Uganda NCDC (UNEB)');

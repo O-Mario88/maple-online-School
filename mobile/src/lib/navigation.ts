@@ -69,7 +69,7 @@ const lessons: NavItem = { ...item('lessons', 'Lessons', '/learn/live', 'play'),
 const library: NavItem = { ...item('library', 'Library', '/learn/library', 'library'), also: ['/learn/library'] };
 const curriculum = item('curriculum', 'Curriculum', '/curriculum', 'map');
 const fees = item('fees', 'Fees', '/fees', 'wallet');
-const school = item('school', 'School', '/school', 'school');
+const school = item('school', 'School set-up', '/admin/onboarding', 'school');
 const messages = item('messages', 'Messages', '/messages', 'chat');
 
 // Order matters: on phones the first four (or five) become tabs.
@@ -129,7 +129,6 @@ const MENUS: Readonly<Record<Portal, readonly NavItem[]>> = {
     library,
     messages,
     curriculum,
-    p('onboarding', 'Set-up wizard', '/admin/onboarding', 'sparkle'),
     p('rosters', 'Rosters', '/admin/rosters', 'people'),
     p('timetable', 'Timetable', '/admin/timetable', 'calendar'),
     p('attendance-monitor', 'Attendance', '/admin/attendance', 'check'),
