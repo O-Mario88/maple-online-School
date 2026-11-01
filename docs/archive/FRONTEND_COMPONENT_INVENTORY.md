@@ -1,4 +1,4 @@
-# Edify Frontend Codebase Inventory
+# Maple Frontend Codebase Inventory
 
 **Last Updated:** April 5, 2026  
 **Total Pages:** 39  

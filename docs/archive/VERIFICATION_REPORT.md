@@ -39,22 +39,22 @@
 ## 2. ⭐ DATABASE MIGRATION TO REAL DATA
 
 ### Seed Data Implementation
-**File**: `edify_backend/seed_test_data.py`  
+**File**: `maple_backend/seed_test_data.py`  
 **Fix Quality**: ⭐⭐⭐⭐⭐ (Excellent)
 
 ### Database Verification Results:
 
 #### 👥 User Accounts (9 total)
 ```
-✓ testuser@edify.local (student)          [legacy test data]
-✓ teacher@edify.local (teacher)            [legacy test data]
-✓ phase1test@edify.local (student)         [legacy test data]
-✓ verification@edify.local (student)       [legacy test data]
-✓ student1@edify.local (student)           [NEW - seeded]
-✓ student2@edify.local (student)           [NEW - seeded]
-✓ teacher1@edify.local (teacher)           [NEW - seeded]
-✓ teacher2@edify.local (teacher)           [NEW - seeded]
-✓ admin@edify.local (admin)                [NEW - seeded]
+✓ testuser@maple.local (student)          [legacy test data]
+✓ teacher@maple.local (teacher)            [legacy test data]
+✓ phase1test@maple.local (student)         [legacy test data]
+✓ verification@maple.local (student)       [legacy test data]
+✓ student1@maple.local (student)           [NEW - seeded]
+✓ student2@maple.local (student)           [NEW - seeded]
+✓ teacher1@maple.local (teacher)           [NEW - seeded]
+✓ teacher2@maple.local (teacher)           [NEW - seeded]
+✓ admin@maple.local (admin)                [NEW - seeded]
 ```
 
 **Why this is good:**
@@ -126,7 +126,7 @@
 - ✅ Removed "Makerere Educators" → "Educators From Top Institutions" (inclusive)
 - ✅ Removed "Makerere Certified" → "Trained & Certified Experts" (broader appeal)
 - ✅ Removed "Makerere Educators" from verification badge
-- ✅ Removed "Edify Online School" from headline (placeholder cleanup)
+- ✅ Removed "Maple Online School" from headline (placeholder cleanup)
 
 **Visual Improvements**:
 - ✅ CTA button background color matched footer: `bg-blue-900` → `bg-[#0f2a45]`
@@ -260,7 +260,7 @@ Based on verification, suggested next steps are:
 
 1. **Test user authentication** with new accounts:
    ```
-   Email: student1@edify.local
+   Email: student1@maple.local
    Password: TestPass123!
    ```
 

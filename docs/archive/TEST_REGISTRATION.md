@@ -4,7 +4,7 @@
 
 ### Terminal 1: Start Django Backend
 ```bash
-cd edify_backend
+cd maple_backend
 python manage.py runserver
 ```
 
@@ -69,7 +69,7 @@ python manage.py migrate
 ```
 
 **3. CORS error in browser console**
-- Check `edify_backend/edify_core/settings.py`
+- Check `maple_backend/maple_core/settings.py`
 - Ensure `CORS_ALLOWED_ORIGINS` includes `http://localhost:5173`
 
 ---

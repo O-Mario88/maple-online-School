@@ -39,7 +39,7 @@
 #### Step 1.1: Expand Database Seeding (Backend)
 Create comprehensive seed data for all resource types:
 
-**File**: `edify_backend/expand_seed_data.py`
+**File**: `maple_backend/expand_seed_data.py`
 
 ```python
 # Add to existing seed_test_data.py or create new file
@@ -281,7 +281,7 @@ Replace `fetch('/data/*.json')` with apiClient:
 
 ## 🗄️ Required Database Seeding
 
-Expand `edify_backend/expand_seed_data.py`:
+Expand `maple_backend/expand_seed_data.py`:
 
 ```python
 SEED_DATA = {
@@ -457,12 +457,12 @@ Week 3 (Apr 19-26):
 ## 📝 Files to Create/Modify
 
 ### Backend (Django)
-- [ ] `edify_backend/expand_seed_data.py` - Comprehensive seeding
+- [ ] `maple_backend/expand_seed_data.py` - Comprehensive seeding
 - [ ] `apps/resources/` - New app for resource management
 - [ ] `apps/discussions/` - New app for discussion threads
 - [ ] `apps/projects/` - New app for student projects
 - [ ] `apps/scheduling/` - Timetable endpoints
-- [ ] `edify_core/urls.py` - Register new endpoints
+- [ ] `maple_core/urls.py` - Register new endpoints
 
 ### Frontend (React)
 - [ ] `src/lib/apiClient.ts` - Add 10+ new endpoints

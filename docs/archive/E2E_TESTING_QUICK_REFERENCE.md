@@ -85,14 +85,14 @@ Use these accounts for manual testing:
 
 **Student Account**
 ```
-Email:    student1@edify.local
+Email:    student1@maple.local
 Password: TestPass123!
 Role:     Student
 ```
 
 **Teacher Account**
 ```
-Email:    teacher1@edify.local
+Email:    teacher1@maple.local
 Password: TestPass123!
 Role:     Teacher
 Wallet:   0.00 UGX (initialized)
@@ -100,7 +100,7 @@ Wallet:   0.00 UGX (initialized)
 
 **Admin Account**
 ```
-Email:    admin@edify.local
+Email:    admin@maple.local
 Password: AdminPass123!
 Role:     Admin
 Institution: Makerere High School
@@ -192,7 +192,7 @@ python3 comprehensive_integration_test.py
 # Get authentication token
 curl -X POST http://localhost:8000/api/v1/auth/token/ \
   -H "Content-Type: application/json" \
-  -d '{"email":"student1@edify.local","password":"TestPass123!"}'
+  -d '{"email":"student1@maple.local","password":"TestPass123!"}'
 
 # Use token to fetch data
 curl -H "Authorization: Bearer <token_here>" \
@@ -202,7 +202,7 @@ curl -H "Authorization: Bearer <token_here>" \
 ### Method 3: Browser Testing
 1. Navigate to http://localhost:5173
 2. Click Login
-3. Enter: student1@edify.local / TestPass123!
+3. Enter: student1@maple.local / TestPass123!
 4. Verify you can see marketplace listings
 
 ---
@@ -243,7 +243,7 @@ curl http://localhost:5173
 **Solution**: Database is already initialized
 ```bash
 # Only if needed:
-cd edify_backend
+cd maple_backend
 python manage.py migrate
 ```
 
@@ -343,7 +343,7 @@ jobs:
 
 ### Scenario 3: Access User Institutions
 ```
-1. Login as student1@edify.local
+1. Login as student1@maple.local
 2. GET /api/v1/institutions/
    → See 1 institution (Makerere High School)
    → Proves scoping by membership works
@@ -386,7 +386,7 @@ Before considering E2E testing complete:
 
 - [ ] Both frontend and backend servers running
 - [ ] comprehensive_integration_test.py shows 19/22 tests passing
-- [ ] Can login with student1@edify.local
+- [ ] Can login with student1@maple.local
 - [ ] Can see 4 marketplace listings in API response
 - [ ] Can see curriculum data (countries, subjects, levels)
 - [ ] Can refresh JWT token without re-login

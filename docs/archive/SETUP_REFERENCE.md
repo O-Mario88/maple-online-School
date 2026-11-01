@@ -76,7 +76,7 @@ Edit `src/pages/RegisterPage.tsx` to use real API instead of mock.
 
 ### Backend startup (Terminal A)
 ```
-🚀 Starting Edify Backend...
+🚀 Starting Maple Backend...
 📦 Running database migrations...
 ✅ Backend starting on http://localhost:8000
 
@@ -86,7 +86,7 @@ Quit the server with CONTROL-C.
 
 ### Frontend startup (Terminal B)
 ```
-🎨 Starting Edify Frontend...
+🎨 Starting Maple Frontend...
 VITE v5.x.x ready in xxx ms
 
 ➜  Local:   http://localhost:5173/
@@ -96,14 +96,14 @@ VITE v5.x.x ready in xxx ms
 ### Test script success (Terminal C)
 ```
 ============================================================
-🎯 Edify Backend Registration Test
+🎯 Maple Backend Registration Test
 ============================================================
 
 📝 Testing Registration Endpoint
 ✅ Status Code: 201
 ✨ SUCCESS! User registered:
    ID: 1
-   Email: test-xxxxx@edify.local
+   Email: test-xxxxx@maple.local
    Role: student
 
 ✅ Backend is working! Proceed to frontend integration.
@@ -119,14 +119,14 @@ VITE v5.x.x ready in xxx ms
 **Frontend CORS error?**
 → Check Django settings:
 ```bash
-grep -n "CORS_ALLOW_ALL_ORIGINS" edify_backend/edify_core/settings.py
+grep -n "CORS_ALLOW_ALL_ORIGINS" maple_backend/maple_core/settings.py
 # Should show: CORS_ALLOW_ALL_ORIGINS = True
 ```
 
 **Database locked?**
 → Run migrations fresh:
 ```bash
-cd edify_backend
+cd maple_backend
 source venv/bin/activate
 python manage.py migrate --run-syncdb
 ```

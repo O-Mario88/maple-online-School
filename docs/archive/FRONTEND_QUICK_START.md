@@ -19,7 +19,7 @@ curl http://localhost:8000/api/v1/curriculum/countries/
 
 ### If Backend is NOT Running
 ```bash
-cd edify_backend
+cd maple_backend
 python manage.py runserver 0.0.0.0:8000
 ```
 
@@ -28,7 +28,7 @@ python manage.py runserver 0.0.0.0:8000
 ## Step 2: Start Frontend Development Server
 
 ```bash
-# From the root directory (Edify Online School)
+# From the root directory (Maple Online School)
 npm run dev
 
 # Expected output:
@@ -69,7 +69,7 @@ const response = await fetch(`${API_BASE_URL}${API_V1}/auth/token/`, {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
-    email: 'user@edify.local',
+    email: 'user@maple.local',
     password: 'password123'
   })
 });
@@ -85,7 +85,7 @@ const response = await fetch(`${API_BASE_URL}${API_V1}/auth/register/`, {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
-    email: 'newuser@edify.local',
+    email: 'newuser@maple.local',
     full_name: 'New User',
     password: 'SecurePass123!',
     country_code: 'uganda',
@@ -114,13 +114,13 @@ const response = await fetch(`${API_BASE_URL}${API_V1}/curriculum/countries/`, {
 ### Test Data
 ```javascript
 const testUser = {
-  email: 'test@edify.local',
+  email: 'test@maple.local',
   password: 'TestPass123!'
 };
 
 // Or create new user with:
 {
-  email: 'newuser@edify.local',
+  email: 'newuser@maple.local',
   full_name: 'Test User',
   password: 'NewPass123!',
   country_code: 'uganda',
@@ -358,7 +358,7 @@ setAccessToken(access);
 
 **Terminal 1 - Backend:**
 ```bash
-cd edify_backend
+cd maple_backend
 python manage.py runserver 0.0.0.0:8000
 ```
 
@@ -369,7 +369,7 @@ npm run dev
 
 **Terminal 3 - Create superuser (optional):**
 ```bash
-cd edify_backend
+cd maple_backend
 python manage.py createsuperuser
 # Access admin at http://localhost:8000/admin
 ```
@@ -380,7 +380,7 @@ python manage.py createsuperuser
 
 - [Backend API Documentation](./PHASE_1_BUILD_REPORT.md)
 - [Integration Roadmap](./INTEGRATION_ROADMAP.md)
-- [Backend README](./edify_backend/README.md)
+- [Backend README](./maple_backend/README.md)
 
 ---
 

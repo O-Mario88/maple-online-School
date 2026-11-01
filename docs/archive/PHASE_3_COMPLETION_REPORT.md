@@ -9,7 +9,7 @@
 
 ## Executive Summary
 
-The Edify platform has been successfully integrated from a mock-data development state to a fully functional REST API-driven system. The automated end-to-end test suite confirms all critical components are working correctly.
+The Maple platform has been successfully integrated from a mock-data development state to a fully functional REST API-driven system. The automated end-to-end test suite confirms all critical components are working correctly.
 
 **Key Achievement**: Frontend React application is now fetching real data from Django REST API with JWT authentication, automatic token refresh, and comprehensive error handling.
 
@@ -193,7 +193,7 @@ Automatic token refresh mechanism fully functional.
 ```json
 {
   "user": {
-    "email": "student1@edify.local",
+    "email": "student1@maple.local",
     "role": "Student"
   },
   "tokens": {
@@ -269,10 +269,10 @@ function HomePage() {
 
 | Email | Password | Role | Status |
 |-------|----------|------|--------|
-| student1@edify.local | TestPass123! | Student | ✅ Tested |
-| student2@edify.local | TestPass123! | Student | ✅ Available |
-| teacher1@edify.local | TestPass123! | Teacher | ✅ Available |
-| admin@edify.local | TestPass123! | Admin | ✅ Available |
+| student1@maple.local | TestPass123! | Student | ✅ Tested |
+| student2@maple.local | TestPass123! | Student | ✅ Available |
+| teacher1@maple.local | TestPass123! | Teacher | ✅ Available |
+| admin@maple.local | TestPass123! | Admin | ✅ Available |
 
 ---
 
@@ -280,7 +280,7 @@ function HomePage() {
 
 ### 🌐 Browser Testing
 1. Open http://localhost:5174 in your browser
-2. Login with `student1@edify.local` / `TestPass123!`
+2. Login with `student1@maple.local` / `TestPass123!`
 3. Verify you see 4 marketplace listings from the API
 4. Check browser DevTools (F12):
    - **Console**: Should be clean (no red errors)
@@ -327,7 +327,7 @@ python3 phase3_e2e_test.py
 | File | Purpose | Status |
 |------|---------|--------|
 | [src/lib/apiClient.ts](src/lib/apiClient.ts) | API client with JWT management | ✅ Complete |
-| [edify_backend/seed_test_data.py](edify_backend/seed_test_data.py) | Database seeding script | ✅ Complete |
+| [maple_backend/seed_test_data.py](maple_backend/seed_test_data.py) | Database seeding script | ✅ Complete |
 | [PHASE_1_BUILD_REPORT.md](PHASE_1_BUILD_REPORT.md) | Phase 1 documentation | ✅ Complete |
 | [PHASE_2_INTEGRATION_REPORT.md](PHASE_2_INTEGRATION_REPORT.md) | Phase 2 documentation | ✅ Complete |
 | [PHASE_3_BROWSER_TEST_PLAN.md](PHASE_3_BROWSER_TEST_PLAN.md) | Manual testing guide | ✅ Complete |
@@ -338,7 +338,7 @@ python3 phase3_e2e_test.py
 
 ## Conclusion
 
-**The Edify platform is now fully integrated and ready for development!**
+**The Maple platform is now fully integrated and ready for development!**
 
 - ✅ All backend APIs are running
 - ✅ Frontend is fetching real data from APIs

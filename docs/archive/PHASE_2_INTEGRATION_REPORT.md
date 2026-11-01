@@ -85,7 +85,7 @@ const response = await apiGet(API_ENDPOINTS.LISTINGS);
 
 ### 4. Database Seeding Script ✅
 
-Created `edify_backend/seed_test_data.py` to populate database with:
+Created `maple_backend/seed_test_data.py` to populate database with:
 
 **Data Created:**
 - ✅ 3 Countries (Uganda, Kenya, Tanzania)
@@ -98,9 +98,9 @@ Created `edify_backend/seed_test_data.py` to populate database with:
 
 **Test Credentials:**
 ```
-Student:  student1@edify.local / TestPass123!
-Teacher:  teacher1@edify.local / TestPass123!
-Admin:    admin@edify.local / AdminPass123!
+Student:  student1@maple.local / TestPass123!
+Teacher:  teacher1@maple.local / TestPass123!
+Admin:    admin@maple.local / AdminPass123!
 ```
 
 ---
@@ -226,7 +226,7 @@ aeea991 Phase 1: Database initialized, migrations, API verification
 
 ### Created:
 - ✅ `src/lib/apiClient.ts` (300+ lines)
-- ✅ `edify_backend/seed_test_data.py` (300+ lines)
+- ✅ `maple_backend/seed_test_data.py` (300+ lines)
 
 ### Modified:
 - ✅ `src/pages/HomePage.tsx` - Real data integration
@@ -248,7 +248,7 @@ aeea991 Phase 1: Database initialized, migrations, API verification
 
 2. **Test Login Flow:**
    - Go to http://localhost:5173
-   - Click log in with: `student1@edify.local` / `TestPass123!`
+   - Click log in with: `student1@maple.local` / `TestPass123!`
    - Should get JWT token and be authenticated
 
 3. **Test HomePage:**
@@ -321,25 +321,25 @@ aeea991 Phase 1: Database initialized, migrations, API verification
 
 ```
 === STUDENTS ===
-Email:    student1@edify.local
+Email:    student1@maple.local
 Password: TestPass123!
 Role:     student
 
-Email:    student2@edify.local
+Email:    student2@maple.local
 Password: TestPass123!
 Role:     student
 
 === TEACHERS ===
-Email:    teacher1@edify.local
+Email:    teacher1@maple.local
 Password: TestPass123!
 Role:     teacher
 
-Email:    teacher2@edify.local
+Email:    teacher2@maple.local
 Password: TestPass123!
 Role:     teacher
 
 === ADMIN ===
-Email:    admin@edify.local
+Email:    admin@maple.local
 Password: AdminPass123!
 Role:     admin
 ```

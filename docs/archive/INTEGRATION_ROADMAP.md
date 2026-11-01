@@ -116,7 +116,7 @@ POST   /resources/resource/               → Upload resource
 
 Quick check to see what's in the database:
 ```bash
-# From edify_backend directory
+# From maple_backend directory
 python manage.py shell
 >>> from accounts.models import User
 >>> User.objects.all().values('email', 'role', 'date_joined')

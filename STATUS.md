@@ -1,6 +1,6 @@
 # STATUS.md — Single source of truth
 
-> This file is the **only** authoritative inventory of what exists in the Edify platform.
+> This file is the **only** authoritative inventory of what exists in the Maple Online School platform.
 > It supersedes every `PHASE_*.md`, `*_AUDIT*.md`, `*_TESTING_*.md`, and other report file that used to live at the repo root.
 > Those files are stale marketing; this file is reality.
 >
@@ -15,7 +15,7 @@
 - `dead` — file exists but is not referenced by any router or parent; unreachable.
 
 **Backend**
-- `live` — app is in `INSTALLED_APPS`, has models + views + serializers, URLs are wired into `edify_core/urls.py`, and migrations exist.
+- `live` — app is in `INSTALLED_APPS`, has models + views + serializers, URLs are wired into `maple_core/urls.py`, and migrations exist.
 - `skeleton` — models only; views missing, stubbed, or not reachable over HTTP.
 - `empty` — scaffolding only, no substantive code.
 - `—` — no backend exists for this feature.
@@ -111,13 +111,13 @@
 
 **End-to-end status:**
 - `verified` (HTTP-level e2e via Playwright + backend unit-level coverage): **2** — Academic library content loop; Grading loop (teacher assigns → student submits → teacher grades → student reads grade).
-- `api-verified` (backend path locked by a test, no browser coverage yet): **2** — Auth-Login, Auth-Register. Covered by [accounts.tests.StudentSliceTests](edify_backend/apps/accounts/tests.py).
+- `api-verified` (backend path locked by a test, no browser coverage yet): **2** — Auth-Login, Auth-Register. Covered by [accounts.tests.StudentSliceTests](maple_backend/apps/accounts/tests.py).
 - `unverified`: all the rest.
 
 Run everything:
 
 ```sh
-cd edify_backend && ./venv/bin/python manage.py test accounts.tests lessons.tests resources.tests edify_core.test_health
+cd maple_backend && ./venv/bin/python manage.py test accounts.tests lessons.tests resources.tests maple_core.test_health
 npm test
 npm run test:e2e
 ```

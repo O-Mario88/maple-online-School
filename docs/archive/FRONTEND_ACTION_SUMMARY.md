@@ -50,7 +50,7 @@
 
 **Seed database with realistic data:**
 ```python
-# Run: python edify_backend/expand_seed_data.py
+# Run: python maple_backend/expand_seed_data.py
 
 Data to create:
 - 20+ unique textbooks/guides/past papers
@@ -157,13 +157,13 @@ After integrating with real data, each component must have:
 
 ## 💾 Database Seeding Script
 
-**File**: `edify_backend/expand_seed_data.py`
+**File**: `maple_backend/expand_seed_data.py`
 
 ```python
 import os
 import django
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'edify_core.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'maple_core.settings')
 django.setup()
 
 from apps.resources.models import Resource, ResourceCategory

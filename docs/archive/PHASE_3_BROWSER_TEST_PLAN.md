@@ -11,9 +11,9 @@
 
 | User Type | Email | Password | Purpose |
 |-----------|-------|----------|---------|
-| Student 1 | student1@edify.local | TestPass123! | Primary test user |
-| Student 2 | student2@edify.local | TestPass123! | Secondary test user |
-| Teacher | teacher1@edify.local | TestPass123! | Teacher role testing |
+| Student 1 | student1@maple.local | TestPass123! | Primary test user |
+| Student 2 | student2@maple.local | TestPass123! | Secondary test user |
+| Teacher | teacher1@maple.local | TestPass123! | Teacher role testing |
 
 ---
 
@@ -27,7 +27,7 @@
 - [ ] Responsive design works (try resizing window)
 
 ### Test 2: Authentication Flow
-- [ ] Enter "student1@edify.local" in email field
+- [ ] Enter "student1@maple.local" in email field
 - [ ] Enter "TestPass123!" in password field
 - [ ] Click Login button
 - [ ] Page redirects to dashboard/home
@@ -173,7 +173,7 @@ http://localhost:5174
 
 **Step 2: Login**
 ```
-Email: student1@edify.local
+Email: student1@maple.local
 Password: TestPass123!
 ```
 

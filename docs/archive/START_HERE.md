@@ -18,7 +18,7 @@
 
 **Expected output:**
 ```
-🚀 Starting Edify Backend...
+🚀 Starting Maple Backend...
 📦 Running database migrations...
 ✅ Backend starting on http://localhost:8000
 ```
@@ -97,7 +97,7 @@ Once registration works:
 | Problem | Solution |
 |---------|----------|
 | Port 8000 in use | `lsof -i :8000` then `kill -9 <PID>` |
-| `venv not found` | Run from project root: `cd "edify online school"` |
+| `venv not found` | Run from project root: `cd "maple online school"` |
 | Database locked | Delete `db.sqlite3` and run migrations fresh |
 | CORS error | Check that `CORS_ALLOWED_ORIGINS` in settings includes `http://localhost:5173` |
 

@@ -1,4 +1,4 @@
-# Edify Online School — Comprehensive Page & Routing Audit
+# Maple Online School — Comprehensive Page & Routing Audit
 
 ## Table of Contents
 1. [Global Architecture Summary](#global-architecture-summary)

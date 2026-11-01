@@ -51,15 +51,15 @@
 ## 🔐 Test Credentials Available
 
 **Student**
-- Email: `student1@edify.local`
+- Email: `student1@maple.local`
 - Password: `TestPass123!`
 
 **Teacher**
-- Email: `teacher1@edify.local`
+- Email: `teacher1@maple.local`
 - Password: `TestPass123!`
 
 **Admin**
-- Email: `admin@edify.local`
+- Email: `admin@maple.local`
 - Password: `AdminPass123!`
 
 ---
@@ -160,7 +160,7 @@ Backend:  http://localhost:8000/api/v1/
 
 ### Login Test
 ```
-Email: student1@edify.local
+Email: student1@maple.local
 Password: TestPass123!
 ```
 

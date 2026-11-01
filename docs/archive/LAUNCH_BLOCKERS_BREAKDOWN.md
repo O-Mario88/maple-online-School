@@ -1,4 +1,4 @@
-# Edify Online School: Detailed Launch Blockers & Solutions (April 2026)
+# Maple Online School: Detailed Launch Blockers & Solutions (April 2026)
 
 ## 1. Broken Dashboard Action Links
 - **Problem:** 30+ dashboard intelligence/action card links point to non-existent routes (e.g., `/dashboard/library`, `/dashboard/analytics`, `/dashboard/interventions`, `/dashboard/earnings`).

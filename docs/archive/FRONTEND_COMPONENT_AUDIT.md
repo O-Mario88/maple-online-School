@@ -1,4 +1,4 @@
-# Edify Online School — Comprehensive Frontend Component Audit
+# Maple Online School — Comprehensive Frontend Component Audit
 
 > **Generated**: Read-only audit of every component, hook, context, lib utility, schema, and type in the React/TypeScript codebase.  
 > **Stack**: React 18 + TypeScript + Vite + Tailwind CSS + Shadcn/UI + Recharts + React Router v6  
