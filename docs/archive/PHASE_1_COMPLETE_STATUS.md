@@ -96,19 +96,19 @@ DiscountRule                     ├─ Discount configuration
 
 ### Step 1: Register Finance App (2 minutes)
 
-**File:** `edify_backend/edify_core/settings.py`
+**File:** `maple_backend/maple_core/settings.py`
 
 ```python
 INSTALLED_APPS = [
     # ... existing apps ...
-    'edify_backend.apps.finance',  # Add this line
+    'maple_backend.apps.finance',  # Add this line
     # ... rest of apps ...
 ]
 ```
 
 ### Step 2: Create ViewSets (1 hour)
 
-**New File:** `edify_backend/apps/finance/views.py`
+**New File:** `maple_backend/apps/finance/views.py`
 
 ```python
 from rest_framework import viewsets
@@ -139,7 +139,7 @@ class InvoiceViewSet(viewsets.ModelViewSet):
 
 ### Step 3: Create URL Routing (30 minutes)
 
-**New File:** `edify_backend/apps/finance/urls.py`
+**New File:** `maple_backend/apps/finance/urls.py`
 
 ```python
 from django.urls import path, include
@@ -155,19 +155,19 @@ router.register(r'payments', PaymentViewSet)
 urlpatterns = [path('', include(router.urls))]
 ```
 
-**Update:** `edify_backend/edify_core/urls.py`
+**Update:** `maple_backend/maple_core/urls.py`
 
 ```python
 urlpatterns = [
     # ... existing ...
-    path('api/v1/finance/', include('edify_backend.apps.finance.urls')),
+    path('api/v1/finance/', include('maple_backend.apps.finance.urls')),
 ]
 ```
 
 ### Step 4: Run Migrations (15 minutes)
 
 ```bash
-cd /Users/omario/Desktop/Notebook\ LM/edify\ online\ school
+cd /Users/omario/Desktop/Notebook\ LM/maple\ online\ school
 
 # Generate migrations
 python manage.py makemigrations finance
@@ -347,7 +347,7 @@ POST   /api/v1/finance/invoices/generate/     (custom action)
 
 ```bash
 # Setup
-cd /Users/omario/Desktop/Notebook\ LM/edify\ online\ school
+cd /Users/omario/Desktop/Notebook\ LM/maple\ online\ school
 
 # Register app in settings (manual)
 # Then run migrations
@@ -363,7 +363,7 @@ python manage.py test apps.finance
 
 # Create initial data
 python manage.py shell
->>> from edify_backend.apps.finance.models import *
+>>> from maple_backend.apps.finance.models import *
 >>> # Create initial accounts, periods, fee categories
 ```
 
@@ -432,7 +432,7 @@ ETA Phase 1 Complete: 1-2 weeks
 ## ✨ NEXT ACTIONS
 
 **IMMEDIATE (Today):**
-1. Add `'edify_backend.apps.finance'` to INSTALLED_APPS
+1. Add `'maple_backend.apps.finance'` to INSTALLED_APPS
 2. Run migrations: `python manage.py makemigrations finance && python manage.py migrate`
 3. Test admin interface
 
@@ -445,7 +445,7 @@ ETA Phase 1 Complete: 1-2 weeks
 1. Create `services.py` with business logic
 2. Create management commands
 3. Build React components
-4. Integrate with existing Edify frontend
+4. Integrate with existing Maple frontend
 
 The entire infrastructure is ready! The system is now production-grade at the model layer and ready for API and frontend integration.
 

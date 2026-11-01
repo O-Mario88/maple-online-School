@@ -14,7 +14,7 @@ Your project now has:
   └─ test_registration.py       ← Automated endpoint test
 
 📦 BACKEND (COMPLETE)
-  └─ edify_backend/
+  └─ maple_backend/
      ├─ 22 Django apps (accounts, resources, live_sessions, etc.)
      ├─ PostgreSQL via SQLite (dev) with migrations ready
      ├─ DRF API endpoints routed and configured
@@ -84,7 +84,7 @@ WHAT'S IMPORTANT TO REMEMBER
 
 2. Authentication uses JWT tokens
    - Stored in localStorage['maple-access-token']
-   - See: edify_backend/edify_core/settings.py -> SIMPLE_JWT
+   - See: maple_backend/maple_core/settings.py -> SIMPLE_JWT
 
 3. Mock data is intentional scaffolding
    - It stays in place during real API development

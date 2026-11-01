@@ -14,7 +14,7 @@
 DATABASE RECORD:
   ID: 4
   Title: "Advanced Chemistry: Organic Synthesis"
-  Teacher: teacher1@edify.local
+  Teacher: teacher1@maple.local
   Content Type: assessment
   Price: 75000.00 UGX
   Status: published
@@ -116,7 +116,7 @@ DATABASE RECORDS:
   Institution 3: Kampala International School
 
 USER MEMBERSHIP:
-  student1@edify.local → Makerere High School (active)
+  student1@maple.local → Makerere High School (active)
 
 API ENDPOINT: GET /api/v1/institutions/
 API RESPONSE (200 OK) - Scope Applied by User Membership:
@@ -157,7 +157,7 @@ FRONTEND DISPLAY:
 **Database Layer** → **API Layer** → **Frontend Display**
 
 ```
-TEACHER: teacher1@edify.local
+TEACHER: teacher1@maple.local
 
 DATABASE RECORDS FOR TEACHER:
   Classes Assigned: 3 classes
@@ -193,7 +193,7 @@ TEACHER DASHBOARD DATA ASSEMBLY:
 **Database Layer** → **API Layer** → **Frontend Display**
 
 ```
-STUDENT: student1@edify.local
+STUDENT: student1@maple.local
 
 API ENDPOINTS CALLED:
   1. GET /api/v1/marketplace/listings/ (200 OK)
@@ -230,12 +230,12 @@ STUDENT DASHBOARD DATA ASSEMBLY:
 
 ```
 USER LOGIN:
-  Input: student1@edify.local / TestPass123!
+  Input: student1@maple.local / TestPass123!
   
 API ENDPOINT: POST /api/v1/auth/token/
 REQUEST:
 {
-  "email": "student1@edify.local",
+  "email": "student1@maple.local",
   "password": "TestPass123!"
 }
 
@@ -322,7 +322,7 @@ FRONTEND DISPLAY:
 LESSON SCENARIO:
   Class: O-Level Mathematics
   Date: April 6, 2026
-  Teacher: teacher1@edify.local
+  Teacher: teacher1@maple.local
   Students Enrolled: 25
 
 ATTENDANCE RECORDING:
@@ -371,7 +371,7 @@ TEACHER DASHBOARD:
 
 ```
 TEACHER WALLET STATE:
-  teacher1@edify.local
+  teacher1@maple.local
   ├─ Current Balance: 0.00 UGX
   ├─ Pending Payouts: None
   ├─ Total Earnings: 0.00 UGX (zero because no purchases yet)
@@ -406,7 +406,7 @@ TEACHER DASHBOARD - WALLET WIDGET:
 **System Events** → **Database** → **Analytics Endpoint** → **Admin Dashboard**
 
 ```
-ADMIN: admin@edify.local
+ADMIN: admin@maple.local
 
 SYSTEM ACTIVITY TRACKED:
   ├─ User Logins: 15 today

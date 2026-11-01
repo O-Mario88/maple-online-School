@@ -18,7 +18,7 @@ Each phase should ship as its own PR. Test matrix (Django + Vitest + Playwright)
 These are broken today. Any pilot user will hit them.
 
 ### 1.1 Fix the `resources/` endpoint 500
-- **File:** `edify_backend/apps/resources/serializers.py:21`
+- **File:** `maple_backend/apps/resources/serializers.py:21`
 - **Change:** `obj.uploaded_by.get_full_name()` → `obj.uploaded_by.full_name`
 - **Effort:** 5 min (including a Django test that `GET /api/v1/resources/` returns 200 for a teacher)
 
@@ -51,14 +51,14 @@ These are broken today. Any pilot user will hit them.
 
 ### 2.1 Gate the three AllowAny tutoring / recovery viewsets
 - **Files:**
-  - `edify_backend/apps/tutoring/views.py:24, 30, 50` — `TutorProfileViewSet`, `TutoringBountyViewSet`, `PeerTutoringDashboardView`
-  - `edify_backend/apps/live_sessions/views.py:107` — `MissedSessionRecoveryViewSet`
+  - `maple_backend/apps/tutoring/views.py:24, 30, 50` — `TutorProfileViewSet`, `TutoringBountyViewSet`, `PeerTutoringDashboardView`
+  - `maple_backend/apps/live_sessions/views.py:107` — `MissedSessionRecoveryViewSet`
 - **Change:** `[AllowAny]` → `[IsAuthenticated]` (keep `PeerTutoringDashboardView` as `IsAuthenticated` — a user's reputation isn't public).
 - **Add tests:** one per viewset asserting anonymous = 401.
 - **Effort:** 30 min
 
 ### 2.2 Expose token-blacklist on logout
-- **File:** `edify_backend/edify_core/urls.py`
+- **File:** `maple_backend/maple_core/urls.py`
 - **Change:** add `path('api/v1/auth/token/blacklist/', TokenBlacklistView.as_view())` from `rest_framework_simplejwt.views`; update `src/lib/apiClient.ts::logoutUser` to POST the stored refresh token to it before clearing localStorage.
 - **Effort:** 30 min (incl. one test)
 
@@ -173,7 +173,7 @@ Once Phases 1–4 are done, these compound small wins.
 - **Effort:** 3–6 hours total, spread across many small PRs during normal feature work.
 
 ### 5.5 Rename to Maple
-- Repo rename + npm package name + any remaining user-facing "Edify" strings.
+- Repo rename + npm package name + any remaining user-facing "Maple" strings.
 - **Effort:** 30 min
 - **Do when:** there's an actual user who's been told the product is called Maple.
 

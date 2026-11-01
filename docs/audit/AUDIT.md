@@ -32,7 +32,7 @@
 ### 2.1 500 Server Error — `/api/v1/resources/`
 
 **Severity:** critical
-**Where:** `edify_backend/apps/resources/serializers.py:21`
+**Where:** `maple_backend/apps/resources/serializers.py:21`
 **Cause:** `get_author_name` calls `obj.uploaded_by.get_full_name()`, but the custom `accounts.User` model has no `get_full_name` method — it has a `full_name` field.
 **Impact:** every time the frontend calls `GET /api/v1/resources/` it crashes. Any page that hits this endpoint shows a broken state to the user.
 **Repro:** `curl -H 'Authorization: Bearer $TOKEN' http://127.0.0.1:8000/api/v1/resources/` → 500.

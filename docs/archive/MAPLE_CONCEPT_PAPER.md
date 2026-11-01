@@ -1,4 +1,4 @@
-# Edify — A Complete Digital School Platform for Africa
+# Maple — A Complete Digital School Platform for Africa
 
 ---
 
@@ -12,9 +12,9 @@ Meanwhile, millions of students preparing for national exams like Uganda's UNEB,
 
 ---
 
-## What Is Edify?
+## What Is Maple?
 
-Edify is an all-in-one digital school platform built specifically for East African schools. It gives every person in the school community — students, teachers, parents, and administrators — a personalised dashboard and the tools they need, all in one place.
+Maple is an all-in-one digital school platform built specifically for East African schools. It gives every person in the school community — students, teachers, parents, and administrators — a personalised dashboard and the tools they need, all in one place.
 
 Think of it as **a school operating system**: learning, teaching, administration, finance, and communication — unified under one roof.
 
@@ -73,7 +73,7 @@ An AI copilot that lives inside the platform and helps teachers:
 - Draft parent letters and reports
 
 ### 9. Primary & Secondary Coverage
-Edify covers the full school journey:
+Maple covers the full school journey:
 - **Primary school** (P4–P7) with PLE readiness tracking, age-appropriate dashboards, and parent home-support guides
 - **Secondary school** (S1–S6 / Form 1–4) with full subject management, exam readiness, and career guidance
 
@@ -82,9 +82,9 @@ Designed with African connectivity in mind. The platform works even when the int
 
 ---
 
-## What Makes Edify Different?
+## What Makes Maple Different?
 
-| | Traditional School Software | Edify |
+| | Traditional School Software | Maple |
 |---|---|---|
 | **Scope** | Usually just admin OR learning — never both | Complete platform: learning + teaching + admin + finance |
 | **Curriculum** | Generic or Western-focused | Built for East African curricula (Uganda, Kenya, Rwanda) |
@@ -126,7 +126,7 @@ The platform is designed to expand to additional East African and African countr
 
 ## Revenue Model
 
-Edify operates on a sustainable hybrid model:
+Maple operates on a sustainable hybrid model:
 
 1. **School Subscriptions** — Schools pay a termly or annual fee for the full platform
 2. **Marketplace Commission** — The platform earns a percentage on course sales by independent teachers
@@ -143,7 +143,7 @@ Edify operates on a sustainable hybrid model:
 - **Mobile money penetration** above 50% across the region — parents can pay fees from their phones
 - **Young, tech-ready population** — median age under 20 in all three countries
 
-Edify is not competing with Western EdTech platforms that don't understand African school operations. It is built from the ground up for how schools in this region actually work — including the financial realities, exam systems, curriculum structures, and connectivity challenges.
+Maple is not competing with Western EdTech platforms that don't understand African school operations. It is built from the ground up for how schools in this region actually work — including the financial realities, exam systems, curriculum structures, and connectivity challenges.
 
 ---
 
@@ -164,10 +164,10 @@ The platform is fully built and functional, covering:
 
 ## Contact
 
-**Platform:** Edify (Maple Online School)
-**Website:** [edify.africa]
+**Platform:** Maple Online School
+**Website:** [maple.africa]
 **Email:** [contact information]
 
 ---
 
-*Edify — Every student seen. Every school empowered.*
+*Maple — Every student seen. Every school empowered.*

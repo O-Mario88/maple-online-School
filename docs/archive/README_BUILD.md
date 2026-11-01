@@ -1,4 +1,4 @@
-# Edify Platform - Complete Integration Guide
+# Maple Platform - Complete Integration Guide
 
 **Status**: ✅ FULLY INTEGRATED & TESTED  
 **Build Date**: April 5, 2026  
@@ -13,7 +13,7 @@
 
 ### 2️⃣ Login with Test Credentials
 ```
-Email:    student1@edify.local
+Email:    student1@maple.local
 Password: TestPass123!
 ```
 
@@ -142,10 +142,10 @@ python3 phase3_e2e_test.py
 
 **Test Accounts Available:**
 ```
-student1@edify.local  / TestPass123!
-student2@edify.local  / TestPass123!
-teacher1@edify.local  / TestPass123!
-admin@edify.local     / TestPass123!
+student1@maple.local  / TestPass123!
+student2@maple.local  / TestPass123!
+teacher1@maple.local  / TestPass123!
+admin@maple.local     / TestPass123!
 ```
 
 ---
@@ -181,7 +181,7 @@ admin@edify.local     / TestPass123!
 - Error handling with fallback
 - Type-safe API calls
 
-**Seeding Script** → [edify_backend/seed_test_data.py](edify_backend/seed_test_data.py)
+**Seeding Script** → [maple_backend/seed_test_data.py](maple_backend/seed_test_data.py)
 - Creates test users, institutions, listings
 - Generates realistic seed data
 - Idempotent (safe to run multiple times)
@@ -212,7 +212,7 @@ python manage.py runserver    # Running on :8000
 
 **Database Seeding:**
 ```bash
-python edify_backend/seed_test_data.py
+python maple_backend/seed_test_data.py
 ```
 
 **Tests:**
@@ -228,7 +228,7 @@ python3 phase3_e2e_test.py
 Check browser console (F12) for errors. Verify backend running on :8000. Check Network tab for failed requests.
 
 ### Can't Login?
-Verify credentials: `student1@edify.local` / `TestPass123!`. Check if database exists. Run migrations if needed.
+Verify credentials: `student1@maple.local` / `TestPass123!`. Check if database exists. Run migrations if needed.
 
 ### API Returns 500?
 Check Django terminal for error messages. Verify database integrity. Run migrations again.
@@ -298,14 +298,14 @@ Already fixed! Frontend auto-switched to port 5174. Edit `vite.config.ts` if nee
 **System Components:**
 - Frontend: http://localhost:5174
 - API: http://localhost:8000
-- Database: edify_backend/db.sqlite3
+- Database: maple_backend/db.sqlite3
 
 **Common Commands:**
 ```bash
 # Reset database
-rm edify_backend/db.sqlite3
+rm maple_backend/db.sqlite3
 python manage.py migrate
-python edify_backend/seed_test_data.py
+python maple_backend/seed_test_data.py
 
 # Check frontend build
 npm run build
@@ -350,7 +350,7 @@ npm run dev
 **Restart Services:**
 ```bash
 # Terminal 1: Backend
-cd edify_backend
+cd maple_backend
 python manage.py runserver
 
 # Terminal 2: Frontend  
@@ -365,9 +365,9 @@ python3 phase3_e2e_test.py
 **Reset Everything:**
 ```bash
 # Kill both servers first (Ctrl+C)
-rm edify_backend/db.sqlite3
+rm maple_backend/db.sqlite3
 python manage.py migrate
-python edify_backend/seed_test_data.py
+python maple_backend/seed_test_data.py
 python manage.py runserver &
 npm run dev
 ```

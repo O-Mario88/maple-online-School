@@ -1,6 +1,6 @@
-# Edify Build Summary - All Phases Complete ✅
+# Maple Build Summary - All Phases Complete ✅
 
-**Project**: Edify Online School Platform  
+**Project**: Maple Online School Platform  
 **Completion Date**: April 5, 2026  
 **Overall Status**: ✅ FULLY INTEGRATED, TESTED & COMPONENTS FIXED  
 **Test Success Rate**: 100% (16/16 automated tests passing + all components verified)
@@ -9,7 +9,7 @@
 
 ## 🎯 Mission Accomplished
 
-Successfully transformed Edify from a development system with hardcoded mock data into a fully functional REST API-driven platform with real data integration, JWT authentication, comprehensive error handling, and all major components now syntactically correct and rendering properly.
+Successfully transformed Maple from a development system with hardcoded mock data into a fully functional REST API-driven platform with real data integration, JWT authentication, comprehensive error handling, and all major components now syntactically correct and rendering properly.
 
 ---
 
@@ -47,7 +47,7 @@ Successfully transformed Edify from a development system with hardcoded mock dat
   - `HomePage.tsx` → Fetches 4 real marketplace listings from `/api/v1/marketplace/listings/`
   - `StudentActionCenter.tsx` → Fetches assessments from `/api/v1/assessments/assessment/`
   
-- Created `edify_backend/seed_test_data.py`:
+- Created `maple_backend/seed_test_data.py`:
   - 5 user accounts (student1, student2, teacher1, admin)
   - 3 institutions
   - 4 marketplace listings
@@ -158,10 +158,10 @@ Successfully transformed Edify from a development system with hardcoded mock dat
 
 ### Available Test Credentials
 ```
-Student 1: student1@edify.local / TestPass123!
-Student 2: student2@edify.local / TestPass123!
-Teacher:   teacher1@edify.local / TestPass123!
-Admin:     admin@edify.local / TestPass123!
+Student 1: student1@maple.local / TestPass123!
+Student 2: student2@maple.local / TestPass123!
+Teacher:   teacher1@maple.local / TestPass123!
+Admin:     admin@maple.local / TestPass123!
 ```
 
 ---
@@ -171,7 +171,7 @@ Admin:     admin@edify.local / TestPass123!
 | File | Lines | Purpose |
 |------|-------|---------|
 | `src/lib/apiClient.ts` | 400+ | Production-ready API client with JWT mgmt |
-| `edify_backend/seed_test_data.py` | 300+ | Database seeding with realistic data |
+| `maple_backend/seed_test_data.py` | 300+ | Database seeding with realistic data |
 | `phase3_e2e_test.py` | 370+ | Automated integration testing |
 | `PHASE_1_BUILD_REPORT.md` | 200+ | Phase 1 detailed documentation |
 | `PHASE_2_INTEGRATION_REPORT.md` | 250+ | Phase 2 detailed documentation |
@@ -263,7 +263,7 @@ Admin:     admin@edify.local / TestPass123!
 
 ### Option 1: Manual Browser Testing (Component Features)
 1. Open http://localhost:5175
-2. Login with `student1@edify.local` / `TestPass123!`
+2. Login with `student1@maple.local` / `TestPass123!`
 3. Navigate to different components:
    - **Academic Library**: View resources from API with fallback to mock data
    - **Teacher Lesson Studio**: Create live sessions with WebRTC provisioning
@@ -274,7 +274,7 @@ Admin:     admin@edify.local / TestPass123!
 
 ### Option 2: Automated Testing
 ```bash
-cd "/Users/omario/Desktop/Notebook LM/edify online school"
+cd "/Users/omario/Desktop/Notebook LM/maple online school"
 python3 phase3_e2e_test.py
 ```
 
@@ -391,7 +391,7 @@ The system is now ready for:
 **Issue: Cannot login?**
 - Verify database is initialized: `python manage.py migrate`
 - Verify seed data exists: `python manage.py shell`
-- Check credentials: `student1@edify.local` / `TestPass123!`
+- Check credentials: `student1@maple.local` / `TestPass123!`
 
 **Issue: API returns 500 error?**
 - Check Django error logs in terminal
@@ -407,7 +407,7 @@ The system is now ready for:
 
 ## 🎉 Conclusion
 
-**The Edify platform is now fully functional with real API integration AND all components tested and validated!**
+**The Maple platform is now fully functional with real API integration AND all components tested and validated!**
 
 - ✅ Migration from mock data to real APIs: **COMPLETE**
 - ✅ JWT authentication with auto-refresh: **WORKING**

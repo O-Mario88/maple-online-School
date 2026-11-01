@@ -1156,164 +1156,164 @@
   ],
   "permission_findings": [
     {
-      "file": "edify_backend/apps/institutions/views.py",
+      "file": "maple_backend/apps/institutions/views.py",
       "line": 614,
       "class": "AdminPinResetView",
       "kind": "AllowAny"
     },
     {
-      "file": "edify_backend/apps/tutoring/views.py",
+      "file": "maple_backend/apps/tutoring/views.py",
       "line": 12,
       "class": "MatchRequestViewSet",
       "kind": "AllowAny"
     },
     {
-      "file": "edify_backend/apps/tutoring/views.py",
+      "file": "maple_backend/apps/tutoring/views.py",
       "line": 30,
       "class": "TutoringBountyViewSet",
       "kind": "AllowAny"
     },
     {
-      "file": "edify_backend/apps/tutoring/views.py",
+      "file": "maple_backend/apps/tutoring/views.py",
       "line": 45,
       "class": "PeerTutoringDashboardView",
       "kind": "AllowAny"
     },
     {
-      "file": "edify_backend/apps/intelligence/views.py",
+      "file": "maple_backend/apps/intelligence/views.py",
       "line": 35,
       "class": "NextBestActionViewSet",
       "model": "InterventionPack",
       "kind": "open_queryset"
     },
     {
-      "file": "edify_backend/apps/intelligence/views.py",
+      "file": "maple_backend/apps/intelligence/views.py",
       "line": 132,
       "class": "InterventionPackAssignmentViewSet",
       "model": "InterventionPackAssignment",
       "kind": "open_queryset"
     },
     {
-      "file": "edify_backend/apps/intelligence/views.py",
+      "file": "maple_backend/apps/intelligence/views.py",
       "line": 191,
       "class": "ParentActionViewSet",
       "model": "HouseTeam",
       "kind": "open_queryset"
     },
     {
-      "file": "edify_backend/apps/intelligence/views.py",
+      "file": "maple_backend/apps/intelligence/views.py",
       "line": 311,
       "class": "LearningProgressViewSet",
       "model": "NationalExamResult",
       "kind": "open_queryset"
     },
     {
-      "file": "edify_backend/apps/intelligence/views.py",
+      "file": "maple_backend/apps/intelligence/views.py",
       "line": 363,
       "class": "StoryCardViewSet",
       "model": "ImpactComparison",
       "kind": "open_queryset"
     },
     {
-      "file": "edify_backend/apps/live_sessions/views.py",
+      "file": "maple_backend/apps/live_sessions/views.py",
       "line": 92,
       "class": "SessionReminderViewSet",
       "kind": "AllowAny"
     },
     {
-      "file": "edify_backend/apps/resources/content_views.py",
+      "file": "maple_backend/apps/resources/content_views.py",
       "line": 57,
       "class": "ContentItemViewSet",
       "model": "ContentItem",
       "kind": "open_queryset"
     },
     {
-      "file": "edify_backend/apps/resources/content_views.py",
+      "file": "maple_backend/apps/resources/content_views.py",
       "line": 278,
       "class": "InstitutionContentViewSet",
       "model": "ContentItem",
       "kind": "open_queryset"
     },
     {
-      "file": "edify_backend/apps/resources/content_views.py",
+      "file": "maple_backend/apps/resources/content_views.py",
       "line": 479,
       "class": "ContentEngagementViewSet",
       "model": "ContentEngagement",
       "kind": "open_queryset"
     },
     {
-      "file": "edify_backend/apps/resources/content_views.py",
+      "file": "maple_backend/apps/resources/content_views.py",
       "line": 646,
       "class": "ContentTagViewSet",
       "model": "ContentAssignment",
       "kind": "open_queryset"
     },
     {
-      "file": "edify_backend/apps/resources/content_views.py",
+      "file": "maple_backend/apps/resources/content_views.py",
       "line": 824,
       "class": "ContentRecommendationViewSet",
       "model": "ContentRecommendation",
       "kind": "open_queryset"
     },
     {
-      "file": "edify_backend/apps/marketplace/views.py",
+      "file": "maple_backend/apps/marketplace/views.py",
       "line": 123,
       "class": "PayoutBatchViewSet",
       "kind": "AllowAny"
     },
     {
-      "file": "edify_backend/apps/marketplace/views.py",
+      "file": "maple_backend/apps/marketplace/views.py",
       "line": 11,
       "class": "ListingViewSet",
       "model": "PayoutRequest",
       "kind": "open_queryset"
     },
     {
-      "file": "edify_backend/apps/accounts/views.py",
+      "file": "maple_backend/apps/accounts/views.py",
       "line": 10,
       "class": "UserRegistrationView",
       "kind": "AllowAny"
     },
     {
-      "file": "edify_backend/apps/accounts/views.py",
+      "file": "maple_backend/apps/accounts/views.py",
       "line": 40,
       "class": "StudentOnboardingAPIView",
       "kind": "AllowAny"
     },
     {
-      "file": "edify_backend/apps/accounts/views.py",
+      "file": "maple_backend/apps/accounts/views.py",
       "line": 114,
       "class": "PublicProfileView",
       "kind": "AllowAny"
     },
     {
-      "file": "edify_backend/apps/accounts/views.py",
+      "file": "maple_backend/apps/accounts/views.py",
       "line": 178,
       "class": "AccountActivationView",
       "kind": "AllowAny"
     },
     {
-      "file": "edify_backend/apps/accounts/views.py",
+      "file": "maple_backend/apps/accounts/views.py",
       "line": 201,
       "class": "VerifiedEmailTokenObtainPairSerializer",
       "kind": "AllowAny"
     },
     {
-      "file": "edify_backend/apps/analytics/views.py",
+      "file": "maple_backend/apps/analytics/views.py",
       "line": 26,
       "class": "AnalyticsEventViewSet",
       "model": "AnalyticsEvent",
       "kind": "open_queryset"
     },
     {
-      "file": "edify_backend/apps/analytics/views.py",
+      "file": "maple_backend/apps/analytics/views.py",
       "line": 35,
       "class": "DailyPlatformMetricViewSet",
       "model": "DailyInstitutionMetric",
       "kind": "open_queryset"
     },
     {
-      "file": "edify_backend/apps/analytics/views.py",
+      "file": "maple_backend/apps/analytics/views.py",
       "line": 49,
       "class": "SubjectPerformanceSnapshotViewSet",
       "model": "SubjectPerformanceSnapshot",

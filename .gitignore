@@ -47,15 +47,15 @@ env/
 .env.*
 !.env.example
 
-# Django local state
-edify_backend/db.sqlite3
-edify_backend/db.sqlite3-journal
-edify_backend/staticfiles/
-edify_backend/backend.log
+# Local state
+maple_backend/db.sqlite3
+maple_backend/db.sqlite3-journal
+maple_backend/staticfiles/
+maple_backend/backend.log
 # User-uploaded media is local state; curriculum seed PDFs under resources/ are tracked.
-edify_backend/media/*
-!edify_backend/media/resources/
-!edify_backend/media/resources/**
+maple_backend/media/*
+!maple_backend/media/resources/
+!maple_backend/media/resources/**
 
 # Office temp / lock files
 ~$*

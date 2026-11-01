@@ -1,4 +1,4 @@
-# EDIFY ONLINE SCHOOL — COMPLETE PLATFORM AUDIT & FEATURE INVENTORY
+# MAPLE ONLINE SCHOOL — COMPLETE PLATFORM AUDIT & FEATURE INVENTORY
 
 **Date**: 8 April 2026  
 **Scope**: Full-stack product audit — backend, frontend, features, roles, workflows, maturity  
@@ -23,7 +23,7 @@
 
 ## What This Platform Is
 
-Edify Online School (branded "Maple Online School" in some frontend strings) is a **full-stack EdTech operating system** designed for the East African education market (Uganda, Kenya, Rwanda). It serves multiple user roles across institutional and independent learning contexts, with deep curriculum alignment to UNEB (Uganda National Examinations Board) standards.
+Maple Online School is a **full-stack EdTech operating system** designed for the East African education market (Uganda, Kenya, Rwanda). It serves multiple user roles across institutional and independent learning contexts, with deep curriculum alignment to UNEB (Uganda National Examinations Board) standards.
 
 The platform attempts to be an all-in-one solution covering: learning management, live sessions, assessments, marketplace, finance/ERP, analytics, AI tutoring, gamification, parent engagement, institutional management, and teacher monetization.
 

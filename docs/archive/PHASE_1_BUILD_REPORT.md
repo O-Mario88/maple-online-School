@@ -9,7 +9,7 @@
 
 ## Executive Summary
 
-Phase 1 Verification Build has been **successfully completed**. The Edify backend is now fully initialized with:
+Phase 1 Verification Build has been **successfully completed**. The Maple backend is now fully initialized with:
 - ✅ Complete database with 22 Django apps
 - ✅ User authentication (JWT tokens)
 - ✅ 6/6 core API endpoints responding
@@ -25,7 +25,7 @@ Phase 1 Verification Build has been **successfully completed**. The Edify backen
 - **Size:** 1.55 MB
 - **Status:** All 22 apps migrated successfully
 - **Tables Created:** 150+
-- **Location:** `edify_backend/db.sqlite3`
+- **Location:** `maple_backend/db.sqlite3`
 
 ### 2. Backend Server ✅
 - **Framework:** Django 4.2 + Django REST Framework
@@ -41,7 +41,7 @@ Phase 1 Verification Build has been **successfully completed**. The Edify backen
 - **Registration Endpoint:** POST `/api/v1/auth/register/`
 - **Token Duration:** ~24 hours (configurable)
 - **Test Credentials:** 
-  - Email: `verification@edify.local`
+  - Email: `verification@maple.local`
   - Password: `Verify123!`
   - Role: `student`
 
@@ -101,10 +101,10 @@ Phase 1 Verification Build has been **successfully completed**. The Edify backen
 - ✅ redis (caching)
 
 ### Configuration Files
-- ✅ `edify_backend/edify_core/settings.py` - Complete configuration
-- ✅ `edify_backend/edify_core/urls.py` - All 50+ endpoints registered
-- ✅ `edify_backend/edify_core/backends.py` - Custom authentication
-- ✅ `edify_backend/edify_core/permissions.py` - Role-based permissions
+- ✅ `maple_backend/maple_core/settings.py` - Complete configuration
+- ✅ `maple_backend/maple_core/urls.py` - All 50+ endpoints registered
+- ✅ `maple_backend/maple_core/backends.py` - Custom authentication
+- ✅ `maple_backend/maple_core/permissions.py` - Role-based permissions
 
 ---
 
@@ -159,8 +159,8 @@ Phase 1 Verification Build has been **successfully completed**. The Edify backen
 
 3. **Celery & Redis Setup**
    - Configure Redis connection string
-   - Run Celery worker: `celery -A edify_core worker -l info`
-   - Run Celery beat: `celery -A edify_core beat`
+   - Run Celery worker: `celery -A maple_core worker -l info`
+   - Run Celery beat: `celery -A maple_core beat`
 
 4. **Email Configuration**
    - Configure SMTP for notifications
@@ -244,7 +244,7 @@ VITE_REGISTER_ENDPOINT=/auth/register/
 curl -X POST http://localhost:8000/api/v1/auth/register/ \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "test@edify.local",
+    "email": "test@maple.local",
     "full_name": "Test User",
     "password": "TestPass123!",
     "country_code": "uganda",
@@ -257,7 +257,7 @@ curl -X POST http://localhost:8000/api/v1/auth/register/ \
 curl -X POST http://localhost:8000/api/v1/auth/token/ \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "test@edify.local",
+    "email": "test@maple.local",
     "password": "TestPass123!"
   }'
 ```
@@ -275,7 +275,7 @@ curl -X GET http://localhost:8000/api/v1/curriculum/countries/ \
 - [Django Documentation](https://docs.djangoproject.com/en/4.2/)
 - [Django REST Framework](https://www.django-rest-framework.org/)
 - [Simple JWT Documentation](https://django-rest-framework-simplejwt.readthedocs.io/)
-- [Edify Backend README](./edify_backend/README.md)
+- [Maple Backend README](./maple_backend/README.md)
 
 ---
 
@@ -283,20 +283,20 @@ curl -X GET http://localhost:8000/api/v1/curriculum/countries/ \
 
 ### Backend won't start
 ```bash
-cd edify_backend
+cd maple_backend
 python manage.py runserver 0.0.0.0:8000
 ```
 
 ### Database issues
 ```bash
-cd edify_backend
+cd maple_backend
 python manage.py migrate
 python manage.py createsuperuser  # Optional: for admin panel
 ```
 
 ### Clear database and restart
 ```bash
-cd edify_backend
+cd maple_backend
 rm db.sqlite3
 python manage.py migrate
 ```

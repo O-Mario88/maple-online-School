@@ -4,7 +4,7 @@
 > **Prepared for:** potential institutions, strategic partners, and investors
 > **Date:** April 2026
 >
-> This is the authoritative concept document. The older [EDIFY_CONCEPT_PAPER.md](archive/EDIFY_CONCEPT_PAPER.md) in the archive predates this one and reflects the earlier "Edify" brand; treat this file as canonical and that archive file as historical.
+> This is the authoritative concept document. The older [MAPLE_CONCEPT_PAPER.md](archive/MAPLE_CONCEPT_PAPER.md) in the archive predates this one; treat this file as canonical and that archive file as historical.
 
 ---
 
@@ -152,4 +152,4 @@ Maple Online School is ready for pilot partnerships, institutional deployment di
 
 ## Naming note (for engineering)
 
-The repo is currently called `Edify-online-classes` and the npm package is `react_repo`. This concept paper canonically names the product **Maple Online School**. Renaming the repo and package is a low-risk rebrand that should happen whenever the team is ready — it does not change any runtime behavior. Until then, treat "Maple" and "Edify" as the same product; new user-facing strings should say "Maple Online School."
+This concept paper canonically names the product **Maple Online School** (repository `maple-online-School`). All user-facing strings should say "Maple Online School" or "Maple".
