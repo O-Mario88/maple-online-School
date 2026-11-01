@@ -1,47 +1,31 @@
-import { useState } from 'react';
+import { useMemo } from 'react';
+import { ScrollView, StyleSheet, useWindowDimensions } from 'react-native';
 
-import { Button, Card, Field, Grid, KeyValue, Row } from '@/components/ui';
+import { useShell } from '@/components/ui';
+import { RefScale } from '@/features/public/home/RefScale';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
-import { formatMoney } from '@/lib/finance/fees';
-import { toast } from '@/lib/toast';
+import { COURSE_REF_WIDTH, CourseDesk, CoursePhone } from '@/features/teacher/course/CourseViews';
+import { CANVAS } from '@/features/teacher/frame/TeacherParts';
+import { mockData } from '@/lib/mock';
 
-/** Inventory 38: build modules and lessons, set price, access and completion. */
+/** Inventory 38: build modules and lessons, with video, timestamps, notes, completion and access settings. */
 export default function CourseEditorScreen() {
-  const [title, setTitle] = useState('');
+  const mock = useMemo(() => mockData(), []);
+  const { wide } = useShell();
+  const { width } = useWindowDimensions();
+  if (!mock) return <PreviewScreen title="Course builder">{() => null}</PreviewScreen>;
+  const me = mock.teacher.teacherHome.me;
+  const c = mock.teacher.courseBuilder;
+  if (!wide) return <CoursePhone c={c} me={me} />;
   return (
-    <PreviewScreen title="Course builder" subtitle="Modules, lessons, notes and how learners get access">
-      {(m) => {
-        const c = m.teacher.courseEditor;
-        return (
-          <>
-            <Field label="Course title" value={title || c.title} onChangeText={setTitle} />
-            <Grid min={320}>
-              <Card title="Access and price" icon="wallet">
-                <KeyValue
-                  items={[
-                    { label: 'Price', value: formatMoney(c.priceUGX, 'UGX') },
-                    { label: 'Access', value: c.access },
-                    { label: 'Complete at', value: `${c.completion}% watched` },
-                  ]}
-                />
-              </Card>
-              <Card title="Publishing" icon="globe">
-                <Row icon="check" title="Teacher verified" detail="You can sell courses" />
-                <Row icon="alert" title="2 lessons have no notes" detail="Learners like a PDF to keep" />
-                <Button label="Publish course" icon="check" onPress={() => toast('Course sent for a quick quality check. It goes live once approved.')} />
-              </Card>
-            </Grid>
-            {c.modules.map((mod, i) => (
-              <Card key={mod.title} title={`Module ${i + 1}: ${mod.title}`} action={<Button label="Add lesson" icon="plus" compact variant="ghost" onPress={() => toast('New lesson added at the end of this module.')} />}>
-                {mod.lessons.map((l) => (
-                  <Row key={l} icon="play" title={l} detail="Video · notes · 5 questions" onPress={() => toast(`Opening ${l} to edit`)} />
-                ))}
-              </Card>
-            ))}
-            <Button label="Add module" icon="plus" variant="secondary" onPress={() => toast('New module added.')} />
-          </>
-        );
-      }}
-    </PreviewScreen>
+    <ScrollView style={styles.bg}>
+      <RefScale width={width} refWidth={COURSE_REF_WIDTH}>
+        <CourseDesk c={c} me={me} />
+      </RefScale>
+    </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  bg: { backgroundColor: CANVAS },
+});

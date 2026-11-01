@@ -102,6 +102,8 @@ export const ICONS = {
   trash: { ios: 'trash', material: 'delete' },
   edit: { ios: 'pencil', material: 'edit' },
   arrowLeft: { ios: 'arrow.left', material: 'arrow_back' },
+  coffee: { ios: 'cup.and.saucer', material: 'coffee' },
+  sync: { ios: 'arrow.triangle.2.circlepath', material: 'sync' },
 } as const;
 
 export type IconName = keyof typeof ICONS;

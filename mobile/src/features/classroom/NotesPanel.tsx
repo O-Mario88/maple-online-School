@@ -4,6 +4,7 @@ import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Icon } from '@/components/icon';
 import { Sheet, SheetButton } from '@/components/ui/Sheet';
 import { Brand } from '@/features/public/palette';
+import type { BoardSnapshot } from '@/lib/excalidraw-livekit';
 import type { IconName } from '@/lib/icons';
 import { saveText } from '@/lib/save-text';
 import type { MockData } from '@/mock';
@@ -14,8 +15,18 @@ type Room = MockData['shared']['classroom'];
 type Style = 'bold' | 'italic' | 'underline';
 
 /** The teacher's notes as plain text, for downloading. */
-function notesText(n: Room['notes']): string {
-  return [n.title, '', ...n.steps.map((s) => `• ${s}`), '', `Key point: ${n.keyPoint}`, '', 'Examples from today', ...n.examples.map((e) => `• ${e}`)].join('\n');
+function notesText(n: Room['notes'], snapshots: readonly BoardSnapshot[] = []): string {
+  const extra = snapshots.flatMap((s) => s.workedExamples);
+  return [
+    n.title,
+    '',
+    ...n.steps.map((s) => `• ${s}`),
+    '',
+    `Key point: ${n.keyPoint}`,
+    '',
+    'Examples from today',
+    ...[...n.examples, ...extra].map((e) => `• ${e}`),
+  ].join('\n');
 }
 
 const INSERTS: readonly { icon: IconName; label: string; text: string }[] = [
@@ -25,7 +36,15 @@ const INSERTS: readonly { icon: IconName; label: string; text: string }[] = [
 ];
 
 /** The side panel's notes: the teacher's Lesson Notes, or the learner's own notes with a small formatting toolbar. */
-export function NotesPanel({ room }: { room: Room }) {
+export function NotesPanel({
+  room,
+  snapshots = [],
+  onSaveBoard,
+}: {
+  room: Room;
+  snapshots?: readonly BoardSnapshot[];
+  onSaveBoard?: () => void;
+}) {
   const [mine, setMine] = useState(false);
   const [text, setText] = useState('');
   const [style, setStyle] = useState<Readonly<Record<Style, boolean>>>({ bold: false, italic: false, underline: false });
@@ -34,7 +53,7 @@ export function NotesPanel({ room }: { room: Room }) {
   const flip = (k: Style) => setStyle((s) => ({ ...s, [k]: !s[k] }));
   const download = () => {
     setMenu(false);
-    saveText(mine ? 'my-class-notes.txt' : 'lesson-notes.txt', mine ? text : notesText(room.notes));
+    saveText(mine ? 'my-class-notes.txt' : 'lesson-notes.txt', mine ? text : notesText(room.notes, snapshots));
   };
 
   const editor = (
@@ -78,9 +97,9 @@ export function NotesPanel({ room }: { room: Room }) {
           <Icon name="expand" size={15} color={Brand.ink} />
         </Pressable>
       </View>
-      {mine ? editor : <NotesBody room={room} />}
+      {mine ? editor : <NotesBody room={room} snapshots={snapshots} onSaveBoard={onSaveBoard} />}
       <Sheet visible={big} title={mine ? 'My Notes' : 'Lesson Notes'} onClose={() => setBig(false)}>
-        {mine ? editor : <NotesBody room={room} />}
+        {mine ? editor : <NotesBody room={room} snapshots={snapshots} onSaveBoard={onSaveBoard} />}
       </Sheet>
       <Sheet visible={menu} title="Notes" onClose={() => setMenu(false)}>
         <SheetButton primary label={mine ? 'Download my notes' : 'Download lesson notes'} onPress={download} />

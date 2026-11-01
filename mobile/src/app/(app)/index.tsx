@@ -15,6 +15,8 @@ import { ScrollView, useWindowDimensions } from 'react-native';
 import { ReportsSection } from '@/features/shared/ReportsSection';
 import { TodaySection } from '@/features/shared/TodaySection';
 import { ClassesSection } from '@/features/teacher/ClassesSection';
+import { CANVAS } from '@/features/teacher/frame/TeacherParts';
+import { TEACHER_REF_WIDTH, TeacherHomeDesk, TeacherHomePhone } from '@/features/teacher/home/TeacherHomeViews';
 import { TeacherWorkSection } from '@/features/teacher/TeacherWorkSection';
 import type { Me } from '@/lib/api/client';
 import { useAuth, useMe } from '@/lib/auth/auth-context';
@@ -22,6 +24,8 @@ import { greeting, humanize } from '@/lib/home';
 import { type Portal, PORTAL_LABELS } from '@/lib/navigation';
 import { usePortal } from '@/lib/portal-context';
 import { homeFor } from '@/lib/roles';
+
+const TEACHER_BG = { backgroundColor: CANVAS };
 
 // Each portal's home uses the matching role's title and subtitle.
 const PORTAL_ROLE: Readonly<Record<Portal, string>> = {
@@ -67,6 +71,18 @@ export default function HomeScreen() {
       <ScrollView style={{ backgroundColor: '#EEF3FA' }}>
         <RefScale width={width} refWidth={HOME_REF_WIDTH}>
           <HomeDesk h={learnerHome} now={now} />
+        </RefScale>
+      </ScrollView>
+    );
+  }
+  const teacherHome = portal === 'teacher' ? mockData()?.teacher.teacherHome : undefined;
+  if (teacherHome) {
+    // Design build: the teacher home reference, top bar and sidebar included (drawn at its pixels, then scaled).
+    if (!wide) return <TeacherHomePhone h={teacherHome} now={now} />;
+    return (
+      <ScrollView style={TEACHER_BG}>
+        <RefScale width={width} refWidth={TEACHER_REF_WIDTH}>
+          <TeacherHomeDesk h={teacherHome} now={now} />
         </RefScale>
       </ScrollView>
     );

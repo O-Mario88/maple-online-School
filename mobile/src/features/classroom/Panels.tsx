@@ -7,6 +7,7 @@ import { Icon } from '@/components/icon';
 import { Sheet } from '@/components/ui/Sheet';
 import { Brand, CARD_SHADOW } from '@/features/public/palette';
 import { filterParticipants, type ParticipantFilter, searchTranscript } from '@/lib/classroom';
+import type { BoardSnapshot } from '@/lib/excalidraw-livekit';
 import type { MockData } from '@/mock';
 
 type Room = MockData['shared']['classroom'];
@@ -42,18 +43,19 @@ export function Panel({ title, count, action, children, flat = false, expand = f
         {count ? <Count n={count} /> : null}
         <View style={styles.flex} />
         {action}
-        {expand ? <ExpandButton boxed={action !== undefined} onPress={() => setBig(true)} /> : null}
+        {expand ? <ExpandButton boxed onPress={() => setBig(true)} /> : null}
       </View>
       {children}
     </View>
   );
 }
 
-function Search({ value, onChange, placeholder }: { value: string; onChange: (v: string) => void; placeholder: string }) {
+function Search({ value, onChange, placeholder, trailingIcon }: { value: string; onChange: (v: string) => void; placeholder: string; trailingIcon?: 'swap' }) {
   return (
     <View style={styles.search}>
       <Icon name="search" size={16} color={Brand.muted} />
       <TextInput style={styles.searchInput} value={value} onChangeText={onChange} placeholder={placeholder} placeholderTextColor={Brand.muted} accessibilityLabel={placeholder} />
+      {trailingIcon ? <Icon name={trailingIcon} size={15} color={Brand.muted} /> : null}
     </View>
   );
 }
@@ -73,9 +75,18 @@ function Chips<T extends string>({ options, value, onChange }: { options: readon
   );
 }
 
-/** The lesson notes: steps, the key point and today's worked examples. */
-export function NotesBody({ room }: { room: Room }) {
+/** The lesson notes: steps, the key point and today's worked examples (including saved board snapshots). */
+export function NotesBody({
+  room,
+  snapshots = [],
+  onSaveBoard,
+}: {
+  room: Room;
+  snapshots?: readonly BoardSnapshot[];
+  onSaveBoard?: () => void;
+}) {
   const n = room.notes;
+  const extraExamples = snapshots.flatMap((s) => s.workedExamples);
   return (
     <View style={styles.notes}>
       <Text style={styles.notesTitle}>{n.title}</Text>
@@ -89,9 +100,36 @@ export function NotesBody({ room }: { room: Room }) {
           <Text style={styles.body}>{n.keyPoint}</Text>
         </View>
       </View>
-      <Text style={styles.notesSub}>Examples from Today</Text>
+      <View style={styles.examplesHeadRow}>
+        <Text style={styles.notesSub}>Examples from Today</Text>
+        {onSaveBoard ? (
+          <Pressable
+            style={styles.saveBoardChip}
+            onPress={onSaveBoard}
+            accessibilityRole="button"
+            accessibilityLabel="Save Board to Notes">
+            <Icon name="download" size={12} color={Brand.blue} />
+            <Text style={styles.saveBoardChipText}>Save Board to Notes</Text>
+          </Pressable>
+        ) : null}
+      </View>
       {n.examples.map((e) => (
         <Text key={e} style={styles.bullet}>{`•  ${e}`}</Text>
+      ))}
+      {extraExamples.map((e, idx) => (
+        <Text key={`ex-${idx}-${e}`} style={[styles.bullet, styles.savedExampleBullet]}>{`•  ${e}`}</Text>
+      ))}
+      {snapshots.map((snap) => (
+        <View key={snap.id} style={styles.snapshotCard}>
+          <View style={styles.snapshotRow}>
+            <Icon name="gallery" size={14} color={Brand.blue} />
+            <Text style={styles.snapshotTitle}>{snap.title}</Text>
+            <Text style={styles.muted}>{snap.createdAt}</Text>
+          </View>
+          <Text style={styles.snapshotSub}>
+            Saved from the board ({snap.author}) · {snap.workedExamples[0]}
+          </Text>
+        </View>
       ))}
     </View>
   );
@@ -112,16 +150,25 @@ export function ChatBody({ messages, onSend }: { messages: readonly ChatMessage[
         <View key={`${m.at}-${i}`} style={styles.message}>
           <Image source={m.photo} style={styles.face} contentFit="cover" />
           <View style={styles.flex}>
-            <Text style={styles.strong}>
-              {`${m.who}${m.teacher ? ' ✓' : ''}  `}
+            <View style={styles.nameRow}>
+              <Text style={styles.strong}>{m.who}</Text>
+              {m.teacher ? (
+                <View style={styles.verifiedDot}>
+                  <Text style={styles.verifiedTick}>✓</Text>
+                </View>
+              ) : null}
               <Text style={styles.muted}>{m.at}</Text>
-            </Text>
+            </View>
             <Text style={styles.body}>{m.text}</Text>
           </View>
         </View>
       ))}
-      <View style={styles.compose}>
-        <TextInput style={styles.composeInput} value={draft} onChangeText={setDraft} onSubmitEditing={send} placeholder="Type a message..." placeholderTextColor={Brand.muted} accessibilityLabel="Message the class" />
+      <View style={styles.composeRow}>
+        <View style={styles.compose}>
+          <Icon name="plus" size={16} color={Brand.muted} />
+          <TextInput style={styles.composeInput} value={draft} onChangeText={setDraft} onSubmitEditing={send} placeholder="Type a message..." placeholderTextColor={Brand.muted} accessibilityLabel="Message the class" />
+          <Icon name="smile" size={17} color={Brand.muted} />
+        </View>
         <Pressable style={styles.sendBtn} onPress={send} accessibilityRole="button" accessibilityLabel="Send">
           <Icon name="send" size={16} color={Brand.surface} />
         </Pressable>
@@ -136,14 +183,21 @@ export function TranscriptBody({ room }: { room: Room }) {
   const lines = searchTranscript(room.transcript, query);
   return (
     <View style={styles.gap}>
-      <Search value={query} onChange={setQuery} placeholder="Search transcript..." />
+      <Search value={query} onChange={setQuery} placeholder="Search transcript..." trailingIcon="swap" />
       {lines.length === 0 ? <Text style={styles.muted}>No lines match.</Text> : null}
       {lines.map((l) => (
         <View key={l.at} style={styles.line}>
           <Text style={styles.time}>{l.at}</Text>
           <Text style={[styles.body, styles.flex]}>
             {l.who ? <Text style={styles.strong}>{`${l.who}  `}</Text> : null}
-            {l.text}
+            {l.text.startsWith('For example, ') ? (
+              <>
+                <Text style={styles.strong}>For example, </Text>
+                {l.text.slice('For example, '.length)}
+              </>
+            ) : (
+              l.text
+            )}
           </Text>
         </View>
       ))}
@@ -192,8 +246,18 @@ export function AssignmentsBody({ room }: { room: Room }) {
 
 const MIC_ICON = { on: { icon: 'mic' as const, color: Brand.green }, off: { icon: 'mic' as const, color: Brand.muted }, muted: { icon: 'micOff' as const, color: Brand.live } };
 
-/** Everyone in the class, searchable, filtered by All, Raised hand or Teachers. */
-export function ParticipantsBody({ room, myHand }: { room: Room; myHand: boolean }) {
+/** Everyone in the class, searchable, filtered by All, Raised hand or Teachers, with per-student Allow Draw toggle. */
+export function ParticipantsBody({
+  room,
+  myHand,
+  allowedDrawers = [],
+  onToggleAllowDraw,
+}: {
+  room: Room;
+  myHand: boolean;
+  allowedDrawers?: readonly string[];
+  onToggleAllowDraw?: (studentName: string) => void;
+}) {
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<ParticipantFilter>('all');
   const people = filterParticipants(room.participants, query, filter);
@@ -211,18 +275,43 @@ export function ParticipantsBody({ room, myHand }: { room: Room; myHand: boolean
         value={filter}
         onChange={setFilter}
       />
-      {people.map((p) => (
-        <View key={p.name} style={styles.person}>
-          <Image source={p.photo} style={styles.face} contentFit="cover" />
-          <View style={styles.flex}>
-            <Text style={styles.strong}>{`${p.name}${p.role === 'teacher' ? ' ✓' : ''}`}</Text>
-            <Text style={styles.muted}>{p.note}</Text>
+      {people.map((p) => {
+        const canDraw =
+          p.role === 'student' &&
+          allowedDrawers.some((n) => n.toLowerCase() === p.name.toLowerCase());
+        return (
+          <View key={p.name} style={styles.person}>
+            <Image source={p.photo} style={styles.face} contentFit="cover" />
+            <View style={styles.flex}>
+              <View style={styles.nameRow}>
+                <Text style={styles.strong}>{p.name}</Text>
+                {p.role === 'teacher' ? (
+                  <View style={styles.verifiedDot}>
+                    <Text style={styles.verifiedTick}>✓</Text>
+                  </View>
+                ) : null}
+              </View>
+              <Text style={styles.muted}>
+                {canDraw ? `${p.note} · Drawing on Board` : p.note}
+              </Text>
+            </View>
+            {p.role === 'student' && onToggleAllowDraw ? (
+              <Pressable
+                style={[styles.allowDrawBtn, canDraw && styles.allowDrawBtnOn]}
+                onPress={() => onToggleAllowDraw(p.name)}
+                accessibilityRole="button"
+                accessibilityLabel={`Allow Draw for ${p.name}`}>
+                <Text style={[styles.allowDrawText, canDraw && styles.allowDrawTextOn]}>
+                  {canDraw ? 'Drawing ✏️' : 'Allow Draw'}
+                </Text>
+              </Pressable>
+            ) : null}
+            {p.hand ? <Text accessibilityLabel="Hand raised">✋</Text> : null}
+            <Icon name={MIC_ICON[p.mic].icon} size={18} color={MIC_ICON[p.mic].color} />
+            <Icon name="more" size={18} color={Brand.body} />
           </View>
-          {p.hand ? <Text accessibilityLabel="Hand raised">✋</Text> : null}
-          <Icon name={MIC_ICON[p.mic].icon} size={18} color={MIC_ICON[p.mic].color} />
-          <Icon name="more" size={18} color={Brand.body} />
-        </View>
-      ))}
+        );
+      })}
     </View>
   );
 }
@@ -253,10 +342,14 @@ const styles = StyleSheet.create({
   keyPoint: { flexDirection: 'row', gap: 10, padding: 14, borderRadius: 10, backgroundColor: '#FFF7E6', marginTop: 6 },
   keyIcon: { fontSize: 22 },
   message: { flexDirection: 'row', gap: 10 },
+  nameRow: { flexDirection: 'row', alignItems: 'center', gap: 5 },
+  verifiedDot: { width: 14, height: 14, borderRadius: 7, backgroundColor: Brand.blue, alignItems: 'center', justifyContent: 'center' },
+  verifiedTick: { fontSize: 9, fontWeight: '800', color: Brand.surface },
   face: { width: 32, height: 32, borderRadius: 16 },
-  compose: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingLeft: 12, paddingRight: 4, minHeight: 42, borderRadius: 10, borderWidth: 1, borderColor: Brand.line },
-  composeInput: { flex: 1, fontSize: 13, color: Brand.ink, minHeight: 40 },
-  sendBtn: { width: 32, height: 32, borderRadius: 16, backgroundColor: Brand.blue, alignItems: 'center', justifyContent: 'center' },
+  composeRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  compose: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 10, minHeight: 40, borderRadius: 10, borderWidth: 1, borderColor: Brand.line },
+  composeInput: { flex: 1, fontSize: 13, color: Brand.ink, minHeight: 38 },
+  sendBtn: { width: 34, height: 34, borderRadius: 17, backgroundColor: Brand.blue, alignItems: 'center', justifyContent: 'center' },
   line: { flexDirection: 'row', gap: 12 },
   time: { width: 40, fontSize: 12, color: Brand.muted, fontVariant: ['tabular-nums'] },
   assignment: { flexDirection: 'row', alignItems: 'center', gap: 12 },
@@ -265,6 +358,75 @@ const styles = StyleSheet.create({
   start: { paddingHorizontal: 18, paddingVertical: 8, borderRadius: 8, backgroundColor: Brand.blue },
   startText: { fontSize: 13, fontWeight: '700', color: Brand.surface },
   person: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  examplesHeadRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 6,
+  },
+  saveBoardChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    paddingHorizontal: 9,
+    paddingVertical: 4,
+    borderRadius: 7,
+    backgroundColor: Brand.blueSoft,
+  },
+  saveBoardChipText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: Brand.blue,
+  },
+  savedExampleBullet: {
+    color: Brand.blue,
+    fontWeight: '600',
+  },
+  snapshotCard: {
+    padding: 10,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#BFDBFE',
+    backgroundColor: '#F0F6FF',
+    gap: 3,
+    marginTop: 4,
+  },
+  snapshotRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  snapshotTitle: {
+    flex: 1,
+    fontSize: 12,
+    fontWeight: '700',
+    color: Brand.ink,
+  },
+  snapshotSub: {
+    fontSize: 11.5,
+    color: Brand.body,
+  },
+  allowDrawBtn: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: Brand.line,
+    backgroundColor: Brand.canvas,
+  },
+  allowDrawBtnOn: {
+    borderColor: '#86EFAC',
+    backgroundColor: '#DCFCE7',
+  },
+  allowDrawText: {
+    fontSize: 10.5,
+    fontWeight: '600',
+    color: Brand.ink,
+  },
+  allowDrawTextOn: {
+    color: '#15803D',
+    fontWeight: '700',
+  },
   expand: { width: 28, height: 28, marginLeft: 8, alignItems: 'center', justifyContent: 'center' },
   expandBoxed: { borderRadius: 7, borderWidth: 1, borderColor: Brand.line },
 });

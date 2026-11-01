@@ -1,14 +1,10 @@
 /** Teacher fixtures (design builds only; never bundled in deployment). */
 
-export const studio = {
-  source: 'UNEB UCE Mathematics syllabus (S3, Term 3).pdf',
-  generated: [
-    { module: 'Algebraic fractions', lessons: ['Simplifying', 'Adding and subtracting', 'Equations with fractions'], quizzes: 3, competencies: ['M3.4.1', 'M3.4.2'] },
-    { module: 'Matrices', lessons: ['What a matrix is', 'Adding and multiplying', 'Determinants and inverses'], quizzes: 3, competencies: ['M3.5.1', 'M3.5.3'] },
-    { module: 'Statistics', lessons: ['Mean, median, mode', 'Grouped data', 'Cumulative frequency'], quizzes: 2, competencies: ['M3.6.2'] },
-  ],
-  seconds: 54,
-};
+export { teacherHome } from './teacher-home';
+export { studioNew } from './teacher-studio';
+export { courseBuilder } from './teacher-course';
+export { teacherCalendar } from './teacher-calendar';
+export { teacherHost } from './teacher-host';
 
 export type EventKind = 'school' | 'tutoring' | 'busy' | 'live';
 
@@ -111,18 +107,6 @@ export const earnings = {
   payouts: [
     { id: 'PO-2291', to: 'MTN MoMo · 0772 *** 481', amountUGX: 1500000, date: '1 Oct 2026', status: 'Paid' },
     { id: 'PO-2104', to: 'MTN MoMo · 0772 *** 481', amountUGX: 1200000, date: '1 Sep 2026', status: 'Paid' },
-  ],
-};
-
-export const courseEditor = {
-  title: 'S3 Mathematics: Algebra and Functions',
-  priceUGX: 45000,
-  access: 'Paid · lifetime',
-  completion: 80,
-  modules: [
-    { title: 'Expressions and factorisation', lessons: ['Expanding brackets', 'Common factors and grouping', 'Check your understanding'] },
-    { title: 'Quadratic equations', lessons: ['Solving by factorising', 'Completing the square', 'The quadratic formula'] },
-    { title: 'Simultaneous equations', lessons: ['Elimination', 'Substitution', 'Word problems from the market'] },
   ],
 };
 
