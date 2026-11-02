@@ -194,5 +194,5 @@ const styles = StyleSheet.create({
   lineText: { flex: 1, fontSize: 12.5, color: INK },
   lineMeta: { fontSize: 11.5, color: MUTED },
   addRow: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 6 },
-  input: { flex: 1, height: 34, paddingHorizontal: 10, borderRadius: 8, borderWidth: 1, borderColor: LINE, fontSize: 12.5, color: INK },
+  input: { flex: 1, height: 34, paddingVertical: 0, paddingHorizontal: 10, borderRadius: 8, borderWidth: 1, borderColor: LINE, fontSize: 12.5, color: INK },
 });

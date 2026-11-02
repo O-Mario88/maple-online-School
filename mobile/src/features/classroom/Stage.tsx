@@ -134,7 +134,7 @@ export function Stage({
           accessibilityLabel={c.label}>
           <Icon name={c.icon} size={20} color={c.danger ? '#FF6B6B' : Brand.surface} />
           <Text style={styles.controlText} numberOfLines={1}>
-            {compact ? c.label.split(' ')[0] : c.label}
+            {compact ? (SHORT_LABELS[c.label] ?? c.label.split(' ')[0]) : c.label}
           </Text>
         </Pressable>
       ))}
@@ -211,6 +211,7 @@ export function Stage({
       {compact ? controlBar : null}
       <ScrollView
         horizontal
+        style={styles.strip}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.tiles}>
         {whiteboardOpen && !pipInCorner ? (
@@ -247,6 +248,10 @@ export function Stage({
   );
 }
 
+const TILE_HEIGHT = 94;
+// Phone control labels that would not fit in a sixth of the bar.
+const SHORT_LABELS: Readonly<Record<string, string>> = { Reactions: 'React' };
+
 const styles = StyleSheet.create({
   wrap: { gap: 8 },
   // The photo is the reference's whole stage, control bar included; ours is drawn over that bar.
@@ -281,7 +286,8 @@ const styles = StyleSheet.create({
     left: 0,
     width: '100%',
     bottom: 0,
-    height: undefined,
+    // 'auto', not undefined: on the web undefined leaves the desktop bar's percentage height in place.
+    height: 'auto',
     paddingVertical: 6,
     justifyContent: 'space-between',
     backgroundColor: '#111827',
@@ -302,10 +308,12 @@ const styles = StyleSheet.create({
   moreMenu: { position: 'absolute', right: 24, bottom: 82, paddingVertical: 6, borderRadius: 12, backgroundColor: 'rgba(17, 24, 39, 0.94)' },
   moreRow: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 14, paddingVertical: 9 },
   moreLabel: { fontSize: 13, color: Brand.surface },
+  // The strip is exactly one tile tall (a horizontal scroll view otherwise grows and leaves a gap).
+  strip: { flexGrow: 0, height: TILE_HEIGHT },
   tiles: { gap: 8 },
   tile: {
     width: 150,
-    height: 94,
+    height: TILE_HEIGHT,
     borderRadius: 8,
     overflow: 'hidden',
     backgroundColor: Brand.video,

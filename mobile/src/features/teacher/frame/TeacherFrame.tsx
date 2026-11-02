@@ -32,14 +32,14 @@ export function useTeacherGo(): (dest: TeacherDest) => void {
   );
 }
 
-export type TopTab = 'Home' | 'Classes' | 'Students' | 'Assignments' | 'Resources' | 'Analytics' | 'Earnings' | 'Studio' | 'Calendar';
+export type TopTab = 'Home' | 'Classes' | 'Students' | 'Assignments' | 'Resources' | 'Analytics' | 'Earnings' | 'Studio' | 'Calendar' | 'Live';
 
 const TABS: readonly { label: TopTab; icon: IconName; go: TeacherDest }[] = [
   { label: 'Home', icon: 'home', go: '/' },
   { label: 'Classes', icon: 'book', go: '/learn/live' },
-  { label: 'Students', icon: 'people', go: '/teach/class-spaces' },
-  { label: 'Assignments', icon: 'clipboard', go: '/teach/grading' },
-  { label: 'Resources', icon: 'folder', go: '/learn/library' },
+  { label: 'Students', icon: 'people', go: '/teach/learners' as TeacherDest },
+  { label: 'Assignments', icon: 'clipboard', go: '/teach/assignments/new' as TeacherDest },
+  { label: 'Resources', icon: 'folder', go: '/teach/library' as TeacherDest },
   { label: 'Analytics', icon: 'chart', go: 'analytics' },
   { label: 'Earnings', icon: 'wallet', go: '/teach/earnings' },
   { label: 'Studio', icon: 'sparkle', go: '/teach/studio' },
@@ -48,11 +48,23 @@ const TABS: readonly { label: TopTab; icon: IconName; go: TeacherDest }[] = [
 const CALENDAR_TABS: readonly { label: TopTab; icon: IconName; go: TeacherDest }[] = [
   { label: 'Home', icon: 'home', go: '/' },
   { label: 'Classes', icon: 'book', go: '/learn/live' },
-  { label: 'Students', icon: 'people', go: '/teach/class-spaces' },
-  { label: 'Assignments', icon: 'clipboard', go: '/teach/grading' },
+  { label: 'Students', icon: 'people', go: '/teach/learners' as TeacherDest },
+  { label: 'Assignments', icon: 'clipboard', go: '/teach/assignments/new' as TeacherDest },
   { label: 'Studio', icon: 'sparkle', go: '/teach/studio' },
   { label: 'Calendar', icon: 'calendar', go: '/teach/calendar' },
-  { label: 'Resources', icon: 'folder', go: '/learn/library' },
+  { label: 'Resources', icon: 'folder', go: '/teach/library' as TeacherDest },
+  { label: 'Analytics', icon: 'chart', go: 'analytics' },
+  { label: 'Earnings', icon: 'wallet', go: '/teach/earnings' },
+];
+
+const LIVE_TABS: readonly { label: TopTab; icon: IconName; go: TeacherDest }[] = [
+  { label: 'Home', icon: 'home', go: '/' },
+  { label: 'Classes', icon: 'book', go: '/teach/class-spaces' },
+  { label: 'Students', icon: 'people', go: '/teach/learners' as TeacherDest },
+  { label: 'Assignments', icon: 'clipboard', go: '/teach/assignments/new' as TeacherDest },
+  { label: 'Studio', icon: 'sparkle', go: '/teach/studio' },
+  { label: 'Calendar', icon: 'calendar', go: '/teach/calendar' },
+  { label: 'Live', icon: 'screen', go: '/teach/host' },
   { label: 'Analytics', icon: 'chart', go: 'analytics' },
   { label: 'Earnings', icon: 'wallet', go: '/teach/earnings' },
 ];
@@ -91,10 +103,25 @@ function Logo({ small = false }: { small?: boolean }) {
 }
 
 /** The teacher references' top bar: logo, section tabs, search, language, alerts and the mode switcher. */
-export function TeacherTopBar({ active, me, placeholder }: { active: TopTab; me: TeacherMe; placeholder: string }) {
+export function TeacherTopBar({
+  active,
+  me,
+  placeholder,
+  tabsVariant,
+}: {
+  active: TopTab | null;
+  me: TeacherMe;
+  placeholder: string;
+  tabsVariant?: 'default' | 'calendar' | 'live';
+}) {
   const go = useTeacherGo();
   const switcher = useSwitcher();
-  const tabs = active === 'Calendar' ? CALENDAR_TABS : TABS;
+  const tabs =
+    tabsVariant === 'live'
+      ? LIVE_TABS
+      : tabsVariant === 'calendar' || active === 'Calendar'
+        ? CALENDAR_TABS
+        : TABS;
   return (
     <View style={styles.bar}>
       <Logo />
@@ -113,7 +140,7 @@ export function TeacherTopBar({ active, me, placeholder }: { active: TopTab; me:
       <View style={styles.search}>
         <Icon name="search" size={15} color={BODY} />
         <TextInput style={styles.searchInput} placeholder={placeholder} placeholderTextColor="#6B7385" accessibilityLabel="Search" />
-        <Text style={styles.kbd}>⌘K</Text>
+        {tabsVariant === 'live' ? null : <Text style={styles.kbd}>⌘K</Text>}
       </View>
       <LanguageMenu style={styles.lang}>
         <Icon name="globe" size={18} color={INK} />
@@ -194,6 +221,68 @@ export function TeacherSideNav({ title, items, active, onItem, dense = false, ch
   );
 }
 
+const TEACHER_MAIN_NAV: readonly SideItem[] = [
+  { label: 'Dashboard', icon: 'home', go: '/' },
+  { label: 'Classes', icon: 'book', go: '/teach/class-spaces' },
+  { label: 'Students', icon: 'people', go: '/teach/learners' as TeacherDest },
+  { label: 'Assignments', icon: 'clipboard', go: '/teach/assignments/new' as TeacherDest },
+  { label: 'Calendar', icon: 'calendar', go: '/teach/calendar' },
+  { label: 'Live', icon: 'screen', go: '/teach/host' },
+  { label: 'Analytics', icon: 'chart', go: 'analytics' },
+  { label: 'Earnings', icon: 'shield', go: '/teach/earnings' },
+];
+
+const DEFAULT_GROW_NAV: readonly SideItem[] = [
+  { label: 'Storefront', icon: 'grid', go: '/teach/storefront' },
+  { label: 'Promotions', icon: 'send', go: '/teach/storefront' },
+  { label: 'Reviews', icon: 'star', go: '/teach/storefront' },
+  { label: 'Resources', icon: 'book', go: '/teach/library' as TeacherDest },
+  { label: 'Verification', icon: 'shield', go: '/teach/verification' },
+  { label: 'Settings', icon: 'settings', go: '/teach/storefront' },
+];
+
+/** Two-section sidebar ("Teacher" + "Grow & Share") used by Storefront, Verification, Earnings, and Resource Library. */
+export function TeacherGrowSideNav({
+  active,
+  growItems = DEFAULT_GROW_NAV,
+  children,
+}: {
+  active: string;
+  growItems?: readonly SideItem[];
+  children?: ReactNode;
+}) {
+  const go = useTeacherGo();
+  const renderList = (items: readonly SideItem[]) =>
+    items.map((n) => {
+      const on = n.label === active;
+      return (
+        <Pressable
+          key={n.label}
+          style={[styles.growSideItem, on && styles.sideOn]}
+          onPress={() => go(n.go)}
+          accessibilityRole="link"
+          accessibilityState={{ selected: on }}>
+          <Icon name={n.icon} size={15} color={on ? BLUE : '#3D4656'} />
+          <Text style={[styles.growSideText, on && styles.sideTextOn]} numberOfLines={1}>
+            {n.label}
+          </Text>
+        </Pressable>
+      );
+    });
+
+  return (
+    <View style={styles.growSide}>
+      <Text style={styles.growHeading}>Teacher</Text>
+      <View style={styles.growList}>{renderList(TEACHER_MAIN_NAV)}</View>
+      <View style={styles.growDivider} />
+      <Text style={styles.growHeading}>Grow & Share</Text>
+      <View style={styles.growList}>{renderList(growItems)}</View>
+      <View style={styles.flex} />
+      {children}
+    </View>
+  );
+}
+
 /** The phone header from the references: menu, logo, alerts and the teacher's name. */
 export function TeacherPhoneTop({ me }: { me: TeacherMe }) {
   const switcher = useSwitcher();
@@ -234,7 +323,7 @@ const styles = StyleSheet.create({
   tabTextOn: { color: BLUE, fontWeight: '600' },
   tabLine: { position: 'absolute', left: 8, right: 8, bottom: 0, height: 2.5, borderRadius: 2, backgroundColor: BLUE },
   search: { flex: 1, minWidth: 120, height: 34, flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 9, borderRadius: 8, backgroundColor: '#F2F6FC', borderWidth: 1, borderColor: LINE },
-  searchInput: { flex: 1, minWidth: 0, height: 32, fontSize: 11, color: INK },
+  searchInput: { flex: 1, minWidth: 0, height: 32, paddingVertical: 0, fontSize: 11, color: INK },
   kbd: { fontSize: 10, fontWeight: '600', color: BODY, paddingHorizontal: 5, paddingVertical: 2, borderRadius: 4, backgroundColor: '#E3EAF5' },
   lang: { flexDirection: 'row', alignItems: 'center', gap: 5 },
   langText: { fontSize: 12.5, fontWeight: '600', color: INK },
@@ -258,6 +347,12 @@ const styles = StyleSheet.create({
   sideDense: { paddingHorizontal: 6 },
   sideItemDense: { gap: 8, paddingHorizontal: 7 },
   sideBadge: { minWidth: 18, height: 18, alignItems: 'center', justifyContent: 'center', borderRadius: 9, backgroundColor: RED },
+  growSide: { width: 158, paddingVertical: 12, paddingHorizontal: 8, borderRadius: 10, backgroundColor: 'rgba(255,255,255,0.75)', borderWidth: 1, borderColor: LINE },
+  growHeading: { fontSize: 12.5, fontWeight: '800', color: INK, marginLeft: 8, marginBottom: 6 },
+  growList: { gap: 2 },
+  growSideItem: { height: 31, flexDirection: 'row', alignItems: 'center', gap: 9, paddingHorizontal: 8, borderRadius: 7 },
+  growSideText: { flex: 1, fontSize: 11.5, color: '#2B3445', letterSpacing: -0.1 },
+  growDivider: { height: 1, backgroundColor: LINE, marginVertical: 9 },
   phoneTop: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 14, backgroundColor: '#FFFFFF', borderBottomWidth: 1, borderColor: LINE },
   phoneMe: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   phoneAvatar: { width: 32, height: 32, borderRadius: 16 },

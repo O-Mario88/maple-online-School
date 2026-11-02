@@ -293,7 +293,7 @@ const styles = StyleSheet.create({
   links: { gap: 8, marginTop: 8 },
   linkBox: { height: 30, flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 8, borderRadius: 8, borderWidth: 1, borderColor: LINE, backgroundColor: '#FFFFFF' },
   linkBoxBad: { borderColor: RED },
-  linkInput: { flex: 1, minWidth: 0, height: 28, fontSize: 11.5, color: INK },
+  linkInput: { flex: 1, minWidth: 0, height: 28, paddingVertical: 0, fontSize: 11.5, color: INK },
   error: { marginTop: 4, fontSize: 11, color: RED },
   sources: { flexDirection: 'row', flexWrap: 'wrap', rowGap: 8, marginTop: 8 },
   source: { width: '20%', alignItems: 'center', gap: 3 },

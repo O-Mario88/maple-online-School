@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
   tabTextOn: { color: BLUE, fontWeight: '500' },
   tabLine: { position: 'absolute', left: 16, right: 16, bottom: -6, height: 3, borderRadius: 2, backgroundColor: BLUE },
   search: { flex: 1, maxWidth: 280, height: 38, flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 12, borderRadius: 9, backgroundColor: '#F2F5FA' },
-  searchInput: { flex: 1, height: 36, fontSize: 12, color: INK },
+  searchInput: { flex: 1, height: 36, paddingVertical: 0, fontSize: 12, color: INK },
   kbd: { paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4, backgroundColor: '#E3E8F0', fontSize: 10.5, color: '#4A5263', overflow: 'hidden' },
   lang: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   langText: { fontSize: 14, color: INK },

@@ -1,4 +1,4 @@
-import { financeSchools, formatMoney, invoiceStatusLabel, newIdempotencyKey } from './fees';
+import { financeSchools, formatMoney, formatMoneyCompact, invoiceStatusLabel, newIdempotencyKey } from './fees';
 
 describe('formatMoney', () => {
   it('shows whole shillings with separators', () => {
@@ -34,5 +34,17 @@ describe('invoiceStatusLabel', () => {
   it('reads plainly', () => {
     expect(invoiceStatusLabel('partially_paid')).toBe('Part paid');
     expect(invoiceStatusLabel('void')).toBe('Cancelled');
+  });
+});
+
+describe('formatMoneyCompact', () => {
+  test('shortens billions, millions and thousands', () => {
+    expect(formatMoneyCompact(7_100_000_000, 'UGX')).toBe('UGX 7.1B');
+    expect(formatMoneyCompact(2_900_000_000, 'UGX')).toBe('UGX 2.9B');
+    expect(formatMoneyCompact(4_830_000, 'UGX')).toBe('UGX 4.83M');
+    expect(formatMoneyCompact(420_000, 'UGX')).toBe('UGX 420K');
+  });
+  test('keeps small amounts exact', () => {
+    expect(formatMoneyCompact(9_500, 'UGX')).toBe('UGX 9,500');
   });
 });

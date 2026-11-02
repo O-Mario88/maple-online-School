@@ -1,6 +1,6 @@
 import { Image } from 'expo-image';
 import { useState } from 'react';
-import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import { Modal, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
 import { BLUE, BODY, INK, MUTED, StepBadge } from '@/features/teacher/frame/TeacherParts';
@@ -9,7 +9,8 @@ import { toast } from '@/lib/toast';
 import type { TeacherCalendar } from '@/mock/teacher-calendar';
 
 import type { CalendarController } from './useTeacherCalendar';
-import { styles } from './ScheduleLiveModal.styles';
+import { phoneStyles } from './ScheduleLiveModal.phoneStyles';
+import { styles as deskStyles } from './ScheduleLiveModal.styles';
 
 const THUMB = require('@/mock/images/builder-thumb.jpg') as number;
 const JAMES = require('@/mock/images/teacher-home-daniel.png') as number;
@@ -71,6 +72,7 @@ export function ScheduleLiveModal({
   onClose: () => void;
   phone?: boolean;
 }) {
+  const styles = phone ? phoneStyles : deskStyles;
   const [cohortIdx, setCohortIdx] = useState(0);
   const [cohortOpen, setCohortOpen] = useState(false);
   const [title, setTitle] = useState('Quadratic Equations – Solving by Factorization');
@@ -719,10 +721,16 @@ export function ScheduleLiveModal({
   );
 
   if (phone) {
+    // A full-screen sheet over the calendar and the app's bars. iOS shows it as a page sheet and Android places it
+    // between the status and navigation bars, so it needs no safe-area padding of its own.
     return (
-      <View style={styles.phoneOverlay}>
-        <ScrollView contentContainerStyle={styles.phoneOverlayScroll}>{content}</ScrollView>
-      </View>
+      <Modal visible animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
+        <View style={phoneStyles.phoneSheet}>
+          <ScrollView style={phoneStyles.phoneScroll} contentContainerStyle={phoneStyles.phoneOverlayScroll} keyboardShouldPersistTaps="handled">
+            {content}
+          </ScrollView>
+        </View>
+      </Modal>
     );
   }
 

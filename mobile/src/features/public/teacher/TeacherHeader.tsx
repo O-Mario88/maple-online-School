@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
   banner: { height: 220, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
   bannerWide: { height: 300, borderRadius: 20 },
   // The reference banner keeps its own shape on wide screens so its quotes aren't cut off.
-  bannerPhotoWide: { height: undefined, aspectRatio: 2045 / 319, borderRadius: 20 },
+  bannerPhotoWide: { height: 'auto', aspectRatio: 2045 / 319, borderRadius: 20 },
   bannerFace: { fontSize: 170, position: 'absolute', bottom: 34 },
   quote: { position: 'absolute', top: 30, width: 260, fontSize: 24, lineHeight: 32, color: Brand.surface },
   quoteLeft: { left: 40, transform: [{ rotate: '-6deg' }] },

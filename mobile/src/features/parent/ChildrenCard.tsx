@@ -1,22 +1,47 @@
-import { Badge, Body, Card, Row } from '@/components/ui';
+import { router } from 'expo-router';
+import { useState } from 'react';
+
+import { Badge, Body, Button, Card, Row, Segmented } from '@/components/ui';
 import type { Me } from '@/lib/api/client';
 import { linkStatus, relationshipLabel } from '@/lib/family/links';
 import { useFamilyLinks } from '@/lib/family/queries';
 import { humanize } from '@/lib/home';
 
-/** A parent's children: confirmed ones, and links still waiting for the school. */
+/** A parent's children across all Maple-powered schools: toggle between profiles or claim via QR / platform login. */
 export function ChildrenCard({ user }: { user: Me }) {
   const links = useFamilyLinks();
-  // Confirmed children come from the account; the rest show where they stand.
+  const [selectedId, setSelectedId] = useState<string>(user.children[0] ? String(user.children[0].user_id) : '');
+  // Confirmed children come from the account; the rest show where they stand across schools.
   const waiting = (links.data ?? []).filter((l) => l.status !== 'approved' && l.parent.id === user.id);
+  const activeChild = user.children.find((c) => String(c.user_id) === selectedId) ?? user.children[0];
+
   return (
-    <Card title="Your children" icon="people">
-      {user.children.length === 0 && waiting.length === 0 ? (
-        <Body muted>No children are linked yet. Your school confirms each link before you can see a child’s records.</Body>
+    <Card
+      title="My Children"
+      subtitle="Switch between your children across all Maple-powered schools or claim a profile via QR code"
+      icon="people">
+      {user.children.length > 1 ? (
+        <Segmented
+          label="Active child profile"
+          options={user.children.map((c) => ({
+            value: String(c.user_id),
+            label: c.full_name,
+          }))}
+          value={selectedId || String(user.children[0].user_id)}
+          onChange={setSelectedId}
+        />
       ) : null}
-      {user.children.map((c) => (
-        <Row key={c.user_id} title={c.full_name} detail={humanize(c.relationship)} badge={<Badge label="Confirmed" tone="good" />} />
-      ))}
+      {user.children.length === 0 && waiting.length === 0 ? (
+        <Body muted>No children are linked yet. Scan a school QR code or enter a platform claim code to link your child.</Body>
+      ) : null}
+      {activeChild ? (
+        <Row
+          key={activeChild.user_id}
+          title={activeChild.full_name}
+          detail={`${humanize(activeChild.relationship)} · Active student profile`}
+          badge={<Badge label="Active Learner" tone="good" />}
+        />
+      ) : null}
       {waiting.map((l) => {
         const status = linkStatus(l.status);
         return (
@@ -28,6 +53,7 @@ export function ChildrenCard({ user }: { user: Me }) {
           />
         );
       })}
+      <Button label="Add Child via QR Code or Claim Code" variant="secondary" icon="qr" onPress={() => router.push('/claim-child')} />
     </Card>
   );
 }

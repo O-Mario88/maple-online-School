@@ -100,7 +100,7 @@ export function LiveStrip({ classes, phone = false }: { classes: readonly LiveCl
 
 const styles = StyleSheet.create({
   wrap: { marginHorizontal: 50, marginRight: 40, height: 156, paddingTop: 20, paddingHorizontal: 20, borderRadius: 16, backgroundColor: Brand.surface, ...CARD_SHADOW },
-  wrapPhone: { marginHorizontal: 10, marginRight: 10, height: undefined, paddingHorizontal: 0, paddingBottom: 16 },
+  wrapPhone: { marginHorizontal: 10, marginRight: 10, height: 'auto', paddingHorizontal: 0, paddingBottom: 16 },
   head: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 2 },
   headPhone: { paddingHorizontal: 14 },
   headLeft: { flexDirection: 'row', alignItems: 'center', gap: 9, paddingLeft: 0 },

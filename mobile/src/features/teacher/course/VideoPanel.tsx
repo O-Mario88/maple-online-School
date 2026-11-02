@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
   addText: { fontSize: 8.5, fontWeight: '600', color: BLUE },
   form: { gap: 6, marginBottom: 8, padding: 8, borderRadius: 8, backgroundColor: '#F4F8FF' },
   formRow: { flexDirection: 'row', gap: 6 },
-  input: { height: 28, paddingHorizontal: 8, borderRadius: 6, borderWidth: 1, borderColor: LINE, backgroundColor: '#FFFFFF', fontSize: 11, color: INK },
+  input: { height: 28, paddingVertical: 0, paddingHorizontal: 8, borderRadius: 6, borderWidth: 1, borderColor: LINE, backgroundColor: '#FFFFFF', fontSize: 11, color: INK },
   timeInput: { width: 58 },
   error: { fontSize: 10.5, color: RED },
   empty: { fontSize: 11, color: MUTED, paddingVertical: 8 },

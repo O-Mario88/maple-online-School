@@ -1,50 +1,43 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { useMemo } from 'react';
+import { ScrollView, StyleSheet, useWindowDimensions } from 'react-native';
 
-import { Badge, Banner, Button, Card, Grid } from '@/components/ui';
-import { Radius, Spacing, type Theme, Type } from '@/constants/theme';
+import { useShell } from '@/components/ui';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
-import { useStyles } from '@/hooks/use-styles';
-import { toast } from '@/lib/toast';
-import { shareText } from '@/lib/save-text';
+import { RefScale } from '@/features/public/home/RefScale';
+import {
+  CLASS_SPACES_REF_WIDTH,
+  ClassSpacesDesk,
+  ClassSpacesPhone,
+} from '@/features/teacher/class-spaces/ClassSpacesViews';
+import { CANVAS } from '@/features/teacher/frame/TeacherParts';
+import { mockData } from '@/lib/mock';
 
-/** Inventory 47: free class spaces a teacher sets up with a 6-digit code. */
+/** Inventory 47: "Bottom-Up" Free School Class Space Manager (`/(teacher)/class-spaces`). */
 export default function ClassSpacesScreen() {
-  const { styles } = useStyles(makeStyles);
+  const mock = useMemo(() => mockData(), []);
+  const { wide } = useShell();
+  const { width } = useWindowDimensions();
+  if (!mock) {
+    return (
+      <PreviewScreen
+        title="Class Spaces"
+        subtitle="Create a class roster in 2 minutes via a 6-digit join code or WhatsApp invite link, and invite your principal to upgrade the school">
+        {() => null}
+      </PreviewScreen>
+    );
+  }
+  const me = mock.teacher.teacherHome.me;
+  const c = mock.teacher.classSpacesManager;
+  if (!wide) return <ClassSpacesPhone c={c} me={me} />;
   return (
-    <PreviewScreen
-      title="Class spaces"
-      subtitle="Set up a free class in two minutes and invite learners with a code"
-      actions={<Button label="New class space" icon="plus" compact onPress={() => toast('New class space created. Add learners with a code or QR.')} />}>
-      {(m) => (
-        <>
-          <Grid min={300}>
-            {m.teacher.classSpaces.map((c) => (
-              <Card key={c.id} title={c.name} subtitle={c.school} icon="people" action={c.pending ? <Badge label={`${c.pending} to approve`} tone="warning" /> : undefined}>
-                <View style={styles.code}>
-                  <Text style={styles.codeLabel}>Join code</Text>
-                  <Text style={styles.codeValue}>{c.code}</Text>
-                </View>
-                <Text style={styles.members}>{c.members} learners</Text>
-                <View style={styles.actions}>
-                  <Button label="Share on WhatsApp" compact onPress={() => shareText('Join my class on Maple')} />
-                  <Button label="Show QR" icon="qr" compact variant="secondary" onPress={() => toast('Showing the join QR full screen for learners to scan.')} />
-                </View>
-              </Card>
-            ))}
-          </Grid>
-          <Banner tone="info" title="Invite your headteacher" body="When three teachers at a school use class spaces, the school can upgrade and keep every class." />
-        </>
-      )}
-    </PreviewScreen>
+    <ScrollView style={styles.bg}>
+      <RefScale width={width} refWidth={CLASS_SPACES_REF_WIDTH}>
+        <ClassSpacesDesk c={c} me={me} />
+      </RefScale>
+    </ScrollView>
   );
 }
 
-function makeStyles(t: Theme) {
-  return StyleSheet.create({
-    code: { padding: Spacing.three, borderRadius: Radius.md, backgroundColor: t.backgroundSelected, alignItems: 'center', gap: 2 },
-    codeLabel: { ...Type.caption, color: t.textMuted },
-    codeValue: { ...Type.display, color: t.text, letterSpacing: 4, fontVariant: ['tabular-nums'] },
-    members: { ...Type.small, color: t.textSecondary },
-    actions: { flexDirection: 'row', flexWrap: 'wrap', gap: Spacing.two },
-  });
-}
+const styles = StyleSheet.create({
+  bg: { backgroundColor: CANVAS },
+});

@@ -1,6 +1,7 @@
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Icon } from '@/components/icon';
 import type { IconName } from '@/lib/icons';
@@ -442,52 +443,103 @@ function DockItem({
  * Compact mobile view of the Maple Live Teacher Host Console for narrow viewports.
  */
 export function HostPhone({ h }: { h: TeacherHost }) {
+  const router = useRouter();
   const quiz = usePulseQuizTimer(h.pulseQuiz.durationSeconds);
   const [mutedIds, setMutedIds] = useState<Record<string, boolean>>({ s7: true });
   const [lockMics, setLockMics] = useState(false);
+  const [micOn, setMicOn] = useState(true);
+  const [camOn, setCamOn] = useState(true);
+  const [recording, setRecording] = useState(true);
+  const [endAsk, setEndAsk] = useState(false);
+  // The page holds still while a stroke is drawn: on Android the scroll view would otherwise take the drag over.
+  const [stroking, setStroking] = useState(false);
+  const [elapsed, setElapsed] = useState(h.elapsedSeconds);
+  const insets = useSafeAreaInsets();
+
+  useEffect(() => {
+    const id = setInterval(() => setElapsed((s) => s + 1), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  const dock: { key: string; icon: IconName; label: string; on: boolean; onPress: () => void }[] = [
+    { key: 'mic', icon: micOn ? 'mic' : 'micOff', label: 'Mic', on: micOn, onPress: () => setMicOn((v) => !v) },
+    { key: 'cam', icon: camOn ? 'video' : 'videoOff', label: 'Camera', on: camOn, onPress: () => setCamOn((v) => !v) },
+    { key: 'rec', icon: 'record', label: recording ? 'Recording' : 'Record', on: recording, onPress: () => setRecording((v) => !v) },
+    { key: 'lock', icon: lockMics ? 'micOff' : 'lock', label: lockMics ? 'Mics locked' : 'Lock mics', on: lockMics, onPress: () => setLockMics((v) => !v) },
+    { key: 'quiz', icon: 'bolt', label: 'Pulse Quiz', on: quiz.running, onPress: quiz.launch },
+  ];
 
   return (
-    <ScrollView style={p.scroll} contentContainerStyle={p.content}>
-      <View style={p.header}>
+    <View style={p.root}>
+      <View style={[p.header, { paddingTop: insets.top + 8 }]}>
         <View style={p.headerTop}>
-          <Text style={p.leaf}>🍁</Text>
-          <View style={{ flex: 1 }}>
-            <Text style={p.title}>{h.course}</Text>
-            <Text style={p.sub}>{h.topic}</Text>
+          <View style={p.flex}>
+            <Text style={p.title} numberOfLines={1}>
+              {h.course}
+            </Text>
+            <Text style={p.sub} numberOfLines={1}>
+              {h.topic}
+            </Text>
           </View>
           <View style={p.liveBadge}>
-            <Text style={p.liveText}>● LIVE 00:32:15</Text>
+            <Text style={p.liveText}>{`● LIVE ${formatHMS(elapsed)}`}</Text>
           </View>
-        </View>
-        <View style={p.lockRow}>
-          <Pressable
-            style={[p.lockBtn, lockMics && p.lockBtnActive]}
-            onPress={() => setLockMics((v) => !v)}>
-            <Icon name={lockMics ? 'micOff' : 'mic'} size={12} color="#FFFFFF" />
-            <Text style={p.lockBtnText}>
-              {lockMics ? 'Mics Locked (28)' : 'Lock Student Mics'}
-            </Text>
+          <Pressable style={p.endBtn} onPress={() => setEndAsk(true)} accessibilityRole="button" accessibilityLabel="End class">
+            <Text style={p.endText}>End</Text>
           </Pressable>
         </View>
       </View>
 
-      <WhiteboardStage
-        h={h}
-        studentsMutedAll={lockMics}
-        onToggleStudentMute={(id) =>
-          setMutedIds((prev) => ({ ...prev, [id]: !prev[id] }))
-        }
-        mutedIds={mutedIds}
-      />
-
-      <View style={{ width: '100%', alignItems: 'center' }}>
-        <HostRightPanels
+      <ScrollView style={p.scroll} contentContainerStyle={p.content} scrollEnabled={!stroking}>
+        <WhiteboardStage
           h={h}
-          quizTimer={quiz.seconds}
-          quizRunning={quiz.running}
-          onLaunchQuiz={quiz.launch}
+          phone
+          onStroke={setStroking}
+          studentsMutedAll={lockMics}
+          onToggleStudentMute={(id) => setMutedIds((prev) => ({ ...prev, [id]: !prev[id] }))}
+          mutedIds={mutedIds}
         />
+        <HostRightPanels h={h} phone quizTimer={quiz.seconds} quizRunning={quiz.running} onLaunchQuiz={quiz.launch} />
+      </ScrollView>
+
+      <View style={[p.dock, { paddingBottom: Math.max(insets.bottom, 8) }]}>
+        {dock.map((d) => (
+          <Pressable key={d.key} style={p.dockItem} onPress={d.onPress} accessibilityRole="button" accessibilityState={{ selected: d.on }} accessibilityLabel={d.label}>
+            <View style={[p.dockIcon, d.on && p.dockIconOn, d.key === 'rec' && d.on && p.dockIconRec]}>
+              <Icon name={d.icon} size={17} color={d.on ? '#FFFFFF' : '#334155'} />
+            </View>
+            <Text style={p.dockLabel} numberOfLines={1}>
+              {d.label}
+            </Text>
+          </Pressable>
+        ))}
       </View>
-    </ScrollView>
+
+      {endAsk ? (
+        <View style={d.confirmScrim}>
+          <View style={[d.confirmCard, p.confirmCard]} accessibilityRole="alert">
+            <Text style={d.confirmTitle}>End the class for everyone?</Text>
+            <Text style={d.confirmBody}>
+              All {h.studentsCount} students leave the room. The recording, chat and transcript are saved to Class Materials.
+            </Text>
+            <View style={d.confirmRow}>
+              <Pressable style={d.confirmKeep} onPress={() => setEndAsk(false)} accessibilityRole="button">
+                <Text style={d.confirmKeepText}>Keep teaching</Text>
+              </Pressable>
+              <Pressable
+                style={d.confirmEnd}
+                onPress={() => {
+                  setEndAsk(false);
+                  toast('Class ended. The recording and transcript are in Class Materials.');
+                  router.push('/teach/calendar' as never);
+                }}
+                accessibilityRole="button">
+                <Text style={d.confirmEndText}>End for everyone</Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      ) : null}
+    </View>
   );
 }

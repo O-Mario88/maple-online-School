@@ -5,6 +5,15 @@ export { studioNew } from './teacher-studio';
 export { courseBuilder } from './teacher-course';
 export { teacherCalendar } from './teacher-calendar';
 export { teacherHost } from './teacher-host';
+export { assignmentBuilder } from './teacher-assignment-new';
+export { attendanceRegister } from './teacher-attendance';
+export { speedGrader } from './teacher-speed-grader';
+export { masteryHeatmap } from './teacher-learners';
+export { classSpacesManager } from './teacher-class-spaces';
+export { storefrontEditor } from './teacher-storefront';
+export { verificationKyc } from './teacher-verification';
+export { earningsLedger } from './teacher-earnings';
+export { teacherLibrary } from './teacher-library';
 
 export type EventKind = 'school' | 'tutoring' | 'busy' | 'live';
 

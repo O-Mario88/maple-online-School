@@ -10,8 +10,8 @@ import { BLUE, LINE, MUTED } from './TeacherParts';
 const TABS: readonly { label: string; icon: IconName; href: Href }[] = [
   { label: 'Home', icon: 'home', href: '/' },
   { label: 'Classes', icon: 'book', href: '/learn/live' },
-  { label: 'Students', icon: 'people', href: '/teach/class-spaces' },
-  { label: 'Assignments', icon: 'clipboard', href: '/teach/grading' },
+  { label: 'Students', icon: 'people', href: '/teach/learners' as Href },
+  { label: 'Assignments', icon: 'clipboard', href: '/teach/assignments/new' as Href },
   { label: 'More', icon: 'more', href: '/more' },
 ];
 
@@ -37,7 +37,7 @@ export function TeacherTabBar() {
         return (
           <Pressable key={t.label} style={styles.tab} onPress={() => router.navigate(t.href)} accessibilityRole="tab" accessibilityState={{ selected: on }} accessibilityLabel={t.label}>
             <Icon name={t.icon} size={22} color={color} />
-            <Text style={[styles.label, { color }, on && styles.labelOn]} numberOfLines={1}>
+            <Text style={[styles.label, { color }, on && styles.labelOn]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.85}>
               {t.label}
             </Text>
           </Pressable>

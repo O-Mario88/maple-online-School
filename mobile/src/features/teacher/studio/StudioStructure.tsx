@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
   objective: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingVertical: 3 },
   tick: { width: 15, height: 15, alignItems: 'center', justifyContent: 'center', borderRadius: 8, backgroundColor: GREEN },
   objectiveText: { flex: 1, fontSize: 11, color: INK },
-  objectiveInput: { flex: 1, height: 28, paddingHorizontal: 6, borderRadius: 6, borderWidth: 1, borderColor: LINE, fontSize: 12, color: INK },
+  objectiveInput: { flex: 1, height: 28, paddingVertical: 0, paddingHorizontal: 6, borderRadius: 6, borderWidth: 1, borderColor: LINE, fontSize: 12, color: INK },
   level: { marginTop: 8, borderRadius: 10, borderWidth: 1, borderColor: LINE, overflow: 'hidden' },
   levelHead: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 8, paddingVertical: 8, backgroundColor: '#F7FAFE' },
   levelIcon: { width: 18, height: 18, alignItems: 'center', justifyContent: 'center', borderRadius: 5 },

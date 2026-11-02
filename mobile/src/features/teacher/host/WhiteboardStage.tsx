@@ -1,11 +1,12 @@
 import { Image } from 'expo-image';
-import { useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { type ReactNode, useState } from 'react';
+import { Pressable, ScrollView, Text, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
 import { toast } from '@/lib/toast';
 import type { HostStudentTile, TeacherHost } from '@/mock/teacher-host';
 
+import { FitWidth } from './FitWidth';
 import { InkLayer, type InkTool, useInk } from './InkLayer';
 import { s } from './WhiteboardStage.styles';
 
@@ -17,30 +18,44 @@ interface Props {
   studentsMutedAll: boolean;
   onToggleStudentMute: (id: string) => void;
   mutedIds: Record<string, boolean>;
+  /** Phone layout: the board scaled to fit, the PDF hidden until Expand, tiles in a scrolling row. */
+  phone?: boolean;
+  /** Passed to the ink layer: true while a stroke is being drawn. */
+  onStroke?: (drawing: boolean) => void;
 }
+
+/** The board's width before it is scaled down to a phone. */
+const PHONE_BOARD_WIDTH = 520;
+const PHONE_BOARD_HEIGHT = 480;
 
 /**
  * Center presenter stage of the Maple Live Teacher Host Console:
  * 1) Top card with vector whiteboard toolbar + split Interactive Vector Whiteboard & Synchronized PDF stage
  * 2) Bottom video strip with large Teacher video tile + 2-row student video grid
  */
-export function WhiteboardStage({ h, studentsMutedAll, onToggleStudentMute, mutedIds }: Props) {
+/** On phones the board is drawn at its desktop size and scaled to fit; on desktop it fills the stage. */
+function BoardFrame({ phone, children }: { phone: boolean; children: ReactNode }) {
+  return phone ? <FitWidth refWidth={PHONE_BOARD_WIDTH} refHeight={PHONE_BOARD_HEIGHT}>{children}</FitWidth> : <>{children}</>;
+}
+
+export function WhiteboardStage({ h, studentsMutedAll, onToggleStudentMute, mutedIds, phone = false, onStroke }: Props) {
   const [activeTool, setActiveTool] = useState<DrawTool>('select');
   const [activeColor, setActiveColor] = useState<string>(COLORS[0]);
   const [zoom, setZoom] = useState(100);
   const [pdfPage, setPdfPage] = useState(h.pdf.page);
   const ink = useInk();
-  const [focus, setFocus] = useState(false);
+  // On phones the board starts on its own; Expand brings the PDF back.
+  const [focus, setFocus] = useState(phone);
 
   const row1 = h.studentTiles.slice(0, 4);
   const row2 = h.studentTiles.slice(4, 8);
 
   return (
-    <View style={s.col}>
+    <View style={phone ? s.colPhone : s.col}>
       {/* Top Whiteboard + PDF Card */}
-      <View style={s.stageCard}>
+      <View style={phone ? s.stageCardPhone : s.stageCard}>
         {/* Whiteboard Toolbar */}
-        <View style={s.toolbar}>
+        <View style={[s.toolbar, phone && s.toolbarPhone]}>
           <View style={s.toolGroup}>
             <Pressable style={[s.toolBtn, !ink.canUndo && s.toolOff]} disabled={!ink.canUndo} onPress={() => ink.dispatch({ type: 'undo' })} accessibilityRole="button" accessibilityLabel="Undo">
               <Icon name="undo" size={13} color="#475569" />
@@ -180,7 +195,8 @@ export function WhiteboardStage({ h, studentsMutedAll, onToggleStudentMute, mute
         </View>
 
         {/* Split Whiteboard + PDF Stage */}
-        <View style={s.stageBody}>
+        <BoardFrame phone={phone}>
+        <View style={phone ? s.stageBodyPhone : s.stageBody}>
           {/* Left: Interactive Vector Whiteboard */}
           <View style={s.whiteboardPane}>
             {/* Left column of handwritten steps */}
@@ -276,7 +292,7 @@ export function WhiteboardStage({ h, studentsMutedAll, onToggleStudentMute, mute
               </View>
 
             </View>
-            <InkLayer tool={activeTool} color={activeColor} ink={ink} />
+            <InkLayer tool={activeTool} color={activeColor} ink={ink} onStroke={onStroke} />
           </View>
 
           {/* Right: Synchronized PDF Stage */}
@@ -339,59 +355,91 @@ export function WhiteboardStage({ h, studentsMutedAll, onToggleStudentMute, mute
             </View>
           </View>
         </View>
+        </BoardFrame>
       </View>
 
-      {/* Bottom Video Gallery Strip */}
-      <View style={s.videoStrip}>
-        {/* Left: Large Teacher Tile */}
-        <View style={s.teacherTile}>
-          <Image source={h.teacherVideo} style={s.tileImg} contentFit="cover" />
-          <View style={s.tileTopMenu}>
-            <Text style={s.tileDots}>⋮</Text>
-          </View>
-          <View style={s.teacherTileBar}>
-            <View style={s.micBadgeGreen}>
-              <Icon name="mic" size={10} color="#FFFFFF" />
-            </View>
-            <Text style={s.teacherTileName}>You (Teacher)</Text>
-            <View style={{ flex: 1 }} />
-            <Text style={s.tileMoreDots}>•••</Text>
-          </View>
-        </View>
-
-        {/* Right: 2-row Student Video Grid */}
-        <View style={s.studentGrid}>
-          {/* Row 1: 4 student tiles */}
-          <View style={s.studentRow}>
-            {row1.map((st) => (
-              <StudentVideoTile
-                key={st.id}
-                tile={st}
-                muted={Boolean(studentsMutedAll || st.muted || mutedIds[st.id])}
-                onPress={() => onToggleStudentMute(st.id)}
-              />
-            ))}
-          </View>
-
-          {/* Row 2: 4 student tiles + "+19 others" card */}
-          <View style={s.studentRow}>
-            {row2.map((st) => (
-              <StudentVideoTile
-                key={st.id}
-                tile={st}
-                muted={Boolean(studentsMutedAll || st.muted || mutedIds[st.id])}
-                onPress={() => onToggleStudentMute(st.id)}
-              />
-            ))}
-            <View style={s.othersTile}>
-              <View style={s.othersIconCircle}>
-                <Icon name="people" size={15} color="#E2E8F0" />
+      {phone ? (
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={s.phoneStrip}>
+          <View style={[s.teacherTile, s.phoneTeacherTile]}>
+            <Image source={h.teacherVideo} style={s.tileImg} contentFit="cover" />
+            <View style={s.teacherTileBar}>
+              <View style={s.micBadgeGreen}>
+                <Icon name="mic" size={10} color="#FFFFFF" />
               </View>
-              <Text style={s.othersText}>+{h.othersCount} others</Text>
+              <Text style={s.teacherTileName}>You (Teacher)</Text>
             </View>
           </View>
-        </View>
-      </View>
+          {h.studentTiles.map((st) => (
+            <View key={st.id} style={s.phoneStudentTile}>
+              <StudentVideoTile
+                tile={st}
+                muted={Boolean(studentsMutedAll || st.muted || mutedIds[st.id])}
+                onPress={() => onToggleStudentMute(st.id)}
+              />
+            </View>
+          ))}
+          <View style={[s.othersTile, s.phoneStudentTile]}>
+            <View style={s.othersIconCircle}>
+              <Icon name="people" size={15} color="#E2E8F0" />
+            </View>
+            <Text style={s.othersText}>+{h.othersCount} others</Text>
+          </View>
+        </ScrollView>
+      ) : (
+        <>
+          {/* Bottom Video Gallery Strip */}
+          <View style={s.videoStrip}>
+            {/* Left: Large Teacher Tile */}
+            <View style={s.teacherTile}>
+              <Image source={h.teacherVideo} style={s.tileImg} contentFit="cover" />
+              <View style={s.tileTopMenu}>
+                <Text style={s.tileDots}>⋮</Text>
+              </View>
+              <View style={s.teacherTileBar}>
+                <View style={s.micBadgeGreen}>
+                  <Icon name="mic" size={10} color="#FFFFFF" />
+                </View>
+                <Text style={s.teacherTileName}>You (Teacher)</Text>
+                <View style={{ flex: 1 }} />
+                <Text style={s.tileMoreDots}>•••</Text>
+              </View>
+            </View>
+
+            {/* Right: 2-row Student Video Grid */}
+            <View style={s.studentGrid}>
+              {/* Row 1: 4 student tiles */}
+              <View style={s.studentRow}>
+                {row1.map((st) => (
+                  <StudentVideoTile
+                    key={st.id}
+                    tile={st}
+                    muted={Boolean(studentsMutedAll || st.muted || mutedIds[st.id])}
+                    onPress={() => onToggleStudentMute(st.id)}
+                  />
+                ))}
+              </View>
+
+              {/* Row 2: 4 student tiles + "+19 others" card */}
+              <View style={s.studentRow}>
+                {row2.map((st) => (
+                  <StudentVideoTile
+                    key={st.id}
+                    tile={st}
+                    muted={Boolean(studentsMutedAll || st.muted || mutedIds[st.id])}
+                    onPress={() => onToggleStudentMute(st.id)}
+                  />
+                ))}
+                <View style={s.othersTile}>
+                  <View style={s.othersIconCircle}>
+                    <Icon name="people" size={15} color="#E2E8F0" />
+                  </View>
+                  <Text style={s.othersText}>+{h.othersCount} others</Text>
+                </View>
+              </View>
+            </View>
+          </View>
+        </>
+      )}
     </View>
   );
 }

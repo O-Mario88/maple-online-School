@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
   held: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 10, padding: 8, borderRadius: 6, backgroundColor: '#FEF3C7' },
   heldText: { flex: 1, fontSize: 11.5, color: '#92400E' },
   composer: { flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 12, paddingLeft: 14, borderRadius: 8, borderWidth: 1, borderColor: '#E1E7F0', backgroundColor: '#FFFFFF' },
-  input: { flex: 1, height: 44, fontSize: 12.5, color: INK },
+  input: { flex: 1, height: 44, paddingVertical: 0, fontSize: 12.5, color: INK },
   emoji: { fontSize: 17 },
   send: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center', borderRadius: 8, backgroundColor: '#0B6BFF' },
   note: { marginTop: 6, fontSize: 10, color: BODY },

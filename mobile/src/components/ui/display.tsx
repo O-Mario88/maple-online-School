@@ -52,9 +52,22 @@ export function Stat({ label, value, detail, icon, tone = 'neutral' }: StatProps
           </View>
         ) : null}
       </View>
-      <Text style={styles.statValue}>{value}</Text>
+      <StatValue value={value} style={styles.statValue} unitStyle={styles.statUnit} />
       {detail ? <Text style={[styles.statDetail, tone !== 'neutral' && { color: colors.strong }]}>{detail}</Text> : null}
     </View>
+  );
+}
+
+// A value that starts with a currency code ("UGX 7.1B") shows the code small, so the figure fits on one line.
+const CURRENCY_VALUE = /^([A-Z]{3}) (.+)$/;
+
+function StatValue({ value, style, unitStyle }: { value: string; style: object; unitStyle: object }) {
+  const money = CURRENCY_VALUE.exec(value);
+  return (
+    <Text style={style} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.7}>
+      {money ? <Text style={unitStyle}>{`${money[1]} `}</Text> : null}
+      {money ? money[2] : value}
+    </Text>
   );
 }
 
@@ -235,6 +248,7 @@ function makeStyles(t: Theme) {
     statLabel: { ...Type.small, fontWeight: '500', color: t.textSecondary, flex: 1 },
     statIcon: { width: 28, height: 28, borderRadius: Radius.sm, alignItems: 'center', justifyContent: 'center' },
     statValue: { ...Type.metric, color: t.text, marginTop: Spacing.two },
+    statUnit: { ...Type.small, fontWeight: '700', color: t.textMuted },
     statDetail: { ...Type.caption, color: t.textMuted },
     progress: { gap: Spacing.two },
     progressTop: { flexDirection: 'row', justifyContent: 'space-between' },

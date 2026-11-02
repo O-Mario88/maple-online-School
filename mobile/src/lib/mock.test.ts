@@ -9,3 +9,18 @@ describe('mockEnabled', () => {
     expect(mockEnabled('1')).toBe(false);
   });
 });
+
+describe('demoPortalFromSearch', () => {
+  // Imported lazily so the fixtures only load for this test.
+  const { demoPortalFromSearch } = jest.requireActual<typeof import('@/mock/shared')>('@/mock/shared');
+
+  it('reads the portal from ?as= in a design-build address', () => {
+    expect(demoPortalFromSearch('?as=parent')).toBe('parent');
+    expect(demoPortalFromSearch('?x=1&as=command')).toBe('command');
+  });
+
+  it('ignores a missing or unknown portal', () => {
+    expect(demoPortalFromSearch('')).toBeNull();
+    expect(demoPortalFromSearch('?as=hacker')).toBeNull();
+  });
+});

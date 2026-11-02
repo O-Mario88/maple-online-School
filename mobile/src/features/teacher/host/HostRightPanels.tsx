@@ -10,6 +10,8 @@ interface Props {
   quizTimer: number;
   quizRunning: boolean;
   onLaunchQuiz: () => void;
+  /** Full width, stacked under the stage on phones. */
+  phone?: boolean;
 }
 
 /**
@@ -19,7 +21,7 @@ interface Props {
  * 3) Breakout Room Manager
  * 4) Class Chat
  */
-export function HostRightPanels({ h, quizTimer, quizRunning, onLaunchQuiz }: Props) {
+export function HostRightPanels({ h, quizTimer, quizRunning, onLaunchQuiz, phone = false }: Props) {
   const [selectedOpt, setSelectedOpt] = useState<'A' | 'B' | 'C' | 'D'>('B');
   const [joinedRoomId, setJoinedRoomId] = useState<string | null>(null);
   const [messages, setMessages] = useState<HostChatMsg[]>(h.chat);
@@ -44,7 +46,7 @@ export function HostRightPanels({ h, quizTimer, quizRunning, onLaunchQuiz }: Pro
   const formattedQuizTime = `00:${String(quizTimer).padStart(2, '0')}`;
 
   return (
-    <View style={s.col}>
+    <View style={[s.col, phone && s.colPhone]}>
       {/* 1. Pulse Quiz Card */}
       <View style={s.card}>
         <View style={s.cardHeader}>
@@ -278,6 +280,7 @@ const s = StyleSheet.create({
     width: 266,
     gap: 8,
   },
+  colPhone: { width: '100%' },
   card: {
     backgroundColor: '#FFFFFF',
     borderRadius: 11,
@@ -675,6 +678,7 @@ const s = StyleSheet.create({
   chatInputBox: {
     flex: 1,
     height: 28,
+    paddingVertical: 0,
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#F8FAFC',

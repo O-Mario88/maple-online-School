@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
   error: { fontSize: 13, color: '#B42318' },
   link: { fontSize: 13, fontWeight: '600', color: BLUE },
   search: { maxWidth: 520, height: 44, flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 14, borderRadius: 10, borderWidth: 1, borderColor: LINE, backgroundColor: '#FFFFFF' },
-  searchInput: { flex: 1, height: 42, fontSize: 14, color: INK },
+  searchInput: { flex: 1, height: 42, paddingVertical: 0, fontSize: 14, color: INK },
   section: { gap: 12 },
   row: { gap: 12 },
   continueCard: { width: 280, flexDirection: 'row', gap: 12, padding: 12, borderRadius: 10, borderWidth: 1, borderColor: LINE, backgroundColor: '#FFFFFF' },

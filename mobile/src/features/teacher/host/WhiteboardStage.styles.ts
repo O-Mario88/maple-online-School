@@ -575,10 +575,23 @@ export const s = StyleSheet.create({
     backgroundColor: '#0F172A',
     position: 'relative',
   },
+  // Pinned to the tile's edges: a 100% height does not resolve inside flex-stretched tiles on iOS and Android.
   tileImg: {
-    width: '100%',
-    height: '100%',
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
   },
+  // Phone versions are whole styles, not overrides of `flex: 1`: inside a scroll view the web reads a
+  // `flex: 0` override as zero height, which hid the board.
+  colPhone: { gap: 8 },
+  stageCardPhone: { backgroundColor: '#FFFFFF', borderRadius: 12, borderWidth: 1, borderColor: '#E2E8F0', overflow: 'hidden' },
+  toolbarPhone: { height: 'auto', flexWrap: 'wrap', rowGap: 6, paddingVertical: 6 },
+  stageBodyPhone: { flexDirection: 'row', flex: 1 },
+  phoneStrip: { gap: 8, paddingVertical: 2 },
+  phoneTeacherTile: { width: 170, height: 120 },
+  phoneStudentTile: { width: 100, height: 120 },
   tileTopMenu: {
     position: 'absolute',
     top: 6,

@@ -459,12 +459,23 @@ export const d = StyleSheet.create({
 });
 
 export const p = StyleSheet.create({
+  root: { flex: 1, backgroundColor: '#EEF2F8' },
+  flex: { flex: 1, minWidth: 0 },
   scroll: { flex: 1, backgroundColor: '#EEF2F8' },
+  endBtn: { paddingHorizontal: 12, paddingVertical: 7, borderRadius: 8, backgroundColor: '#E5484D' },
+  endText: { fontSize: 12, fontWeight: '700', color: '#FFFFFF' },
+  dock: { flexDirection: 'row', justifyContent: 'space-around', paddingTop: 8, backgroundColor: '#FFFFFF', borderTopWidth: 1, borderColor: '#E2E8F0' },
+  dockItem: { alignItems: 'center', gap: 3, minWidth: 56 },
+  dockIcon: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center', borderRadius: 20, backgroundColor: '#EEF2F8' },
+  dockIconOn: { backgroundColor: '#16A34A' },
+  dockIconRec: { backgroundColor: '#E5484D' },
+  dockLabel: { fontSize: 10.5, color: '#334155' },
+  confirmCard: { width: '86%' },
   content: { padding: 12, gap: 12, paddingBottom: 32 },
   header: {
     backgroundColor: '#162137',
-    borderRadius: 12,
-    padding: 12,
+    paddingHorizontal: 12,
+    paddingBottom: 10,
     gap: 8,
   },
   headerTop: {

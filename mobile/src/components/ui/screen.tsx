@@ -87,6 +87,7 @@ export function ModeButton({ onDark = false }: { onDark?: boolean }) {
 
 export function PageHeader({ title, subtitle, eyebrow, back, actions }: PageHeaderProps) {
   const { theme, styles } = useStyles(makeStyles);
+  const { wide } = useShell();
   const goBack = () => (router.canGoBack() ? router.back() : router.replace('/'));
   return (
     <View style={styles.header}>
@@ -101,8 +102,9 @@ export function PageHeader({ title, subtitle, eyebrow, back, actions }: PageHead
           <Text style={styles.backText}>Back</Text>
         </Pressable>
       ) : null}
-      <View style={styles.titleRow}>
-        <View style={styles.titleBlock}>
+      {/* Phones put the title first and the mode button and actions on their own row under it. */}
+      <View style={wide ? styles.titleRow : styles.titleStack}>
+        <View style={wide ? styles.titleBlock : styles.titleBlockStack}>
           {eyebrow ? <Text style={styles.eyebrow}>{eyebrow}</Text> : null}
           {title ? (
             <Text style={styles.title} accessibilityRole="header">
@@ -144,6 +146,9 @@ function makeStyles(t: Theme) {
     backHover: { backgroundColor: t.backgroundSelected },
     backText: { ...Type.small, fontWeight: '600', color: t.textSecondary },
     titleRow: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'flex-end', gap: Spacing.three },
+    titleStack: { gap: Spacing.three },
+    // In the phone column the title block sizes to its text (the row's flex-basis would collapse it on iOS).
+    titleBlockStack: { gap: Spacing.one },
     titleBlock: { flexGrow: 1, flexShrink: 1, flexBasis: 280, gap: Spacing.one },
     eyebrow: { ...Type.overline, color: t.accentText },
     title: { ...Type.display, color: t.text },

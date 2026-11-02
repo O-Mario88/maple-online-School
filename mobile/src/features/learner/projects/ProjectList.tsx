@@ -1,5 +1,5 @@
 import { Image } from 'expo-image';
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
 import { Bar } from '@/features/learner/dashboard/DashParts';
@@ -112,7 +112,8 @@ export function ProjectList({ s, onOpen }: { s: ProjectsState; onOpen?: () => vo
   const counts: Record<'all' | ProjectStatus, number> = { all: s.stats.total, in_progress: s.stats.in_progress.count, completed: s.stats.completed.count, upcoming: s.stats.upcoming.count, attention: s.stats.attention.count };
   return (
     <View>
-      <View style={styles.tabs} accessibilityRole="tablist">
+      {/* The tabs scroll sideways when they don't fit, instead of widening the page. */}
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.tabsScroll} contentContainerStyle={styles.tabs} accessibilityRole="tablist">
         {TABS.map((t) => {
           const on = t.key === s.status && !s.attentionOnly;
           return (
@@ -122,7 +123,7 @@ export function ProjectList({ s, onOpen }: { s: ProjectsState; onOpen?: () => vo
             </Pressable>
           );
         })}
-      </View>
+      </ScrollView>
       <View style={styles.searchRow}>
         <View style={styles.search}>
           <Icon name="search" size={15} color={INK} />
@@ -172,14 +173,15 @@ const styles = StyleSheet.create({
   statLabel: { marginTop: 1, fontSize: 11.5, color: BODY },
   statBar: { flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 9 },
   statPct: { fontSize: 12, color: INK },
-  tabs: { flexDirection: 'row', gap: 12, paddingHorizontal: 6, borderBottomWidth: 1, borderBottomColor: '#E3E8F0' },
+  tabsScroll: { flexGrow: 0, borderBottomWidth: 1, borderBottomColor: '#E3E8F0' },
+  tabs: { flexDirection: 'row', gap: 12, paddingHorizontal: 6 },
   tab: { paddingVertical: 8 },
   tabText: { fontSize: 11.5, color: BODY },
   tabOn: { color: BLUE, fontWeight: '700' },
   tabLine: { position: 'absolute', left: 0, right: 0, bottom: -1, height: 2.5, backgroundColor: BLUE },
   searchRow: { flexDirection: 'row', gap: 12, marginTop: 18 },
   search: { flex: 1, height: 32, flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 10, borderRadius: 5, borderWidth: 1, borderColor: '#DCE3EE', backgroundColor: '#FFFFFF' },
-  searchInput: { flex: 1, height: 30, fontSize: 12, color: INK },
+  searchInput: { flex: 1, height: 30, paddingVertical: 0, fontSize: 12, color: INK },
   filter: { height: 32, flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 9, borderRadius: 5, borderWidth: 1, borderColor: '#DCE3EE', backgroundColor: '#FFFFFF' },
   filterOn: { borderColor: BLUE, backgroundColor: '#EEF4FF' },
   filterText: { fontSize: 12, color: BLUE },

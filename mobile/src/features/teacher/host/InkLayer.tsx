@@ -36,7 +36,15 @@ let nextId = 1;
  * Draws over the whiteboard with the chosen tool and colour: pen and highlighter strokes, rectangles,
  * circles, and text you can type where you tap. With the select tool it lets taps through.
  */
-export function InkLayer({ tool, color, ink }: { tool: InkTool; color: string; ink: Ink }) {
+interface InkLayerProps {
+  tool: InkTool;
+  color: string;
+  ink: Ink;
+  /** Called with true when a stroke starts and false when it ends, so a scrolling page can hold still meanwhile. */
+  onStroke?: (drawing: boolean) => void;
+}
+
+export function InkLayer({ tool, color, ink, onStroke }: InkLayerProps) {
   const ref = useRef<ComponentRef<typeof View>>(null);
   const width = useRef(0);
   const box = useRef<BoardBox>({ left: 0, top: 0, scale: 1 });
@@ -80,8 +88,15 @@ export function InkLayer({ tool, color, ink }: { tool: InkTool; color: string; i
       onLayout={(e) => (width.current = e.nativeEvent.layout.width)}
       onStartShouldSetResponder={() => drawing && tool !== 'image'}
       onMoveShouldSetResponder={() => drawing}
-      onResponderGrant={start}
+      onResponderGrant={(e) => {
+        onStroke?.(true);
+        start(e);
+      }}
+      // A stroke is never handed to the page's scroll view mid-draw.
+      onResponderTerminationRequest={() => !drawing}
       onResponderMove={move}
+      onResponderRelease={() => onStroke?.(false)}
+      onResponderTerminate={() => onStroke?.(false)}
       accessibilityLabel={drawing ? 'Whiteboard: drag to draw' : undefined}>
       <Svg width="100%" height="100%" style={StyleSheet.absoluteFill} pointerEvents="none">
         {ink.marks.map((m) => {

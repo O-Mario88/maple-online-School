@@ -17,12 +17,6 @@ export const styles = StyleSheet.create({
     paddingTop: 56,
     zIndex: 100,
   },
-  phoneOverlay: {
-    marginVertical: 6,
-  },
-  phoneOverlayScroll: {
-    paddingBottom: 16,
-  },
   modalCard: {
     width: 792,
     // The reference's pop-up is 87% of this size relative to the page; scale it from the top so it fits the screen.
@@ -180,6 +174,7 @@ export const styles = StyleSheet.create({
   },
   textInput: {
     height: 33,
+    paddingVertical: 0,
     paddingHorizontal: 10,
     borderRadius: 7,
     borderWidth: 1,

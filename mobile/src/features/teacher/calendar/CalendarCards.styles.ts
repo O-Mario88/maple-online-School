@@ -412,6 +412,7 @@ export const styles = StyleSheet.create({
   },
   textInput: {
     height: 32,
+    paddingVertical: 0,
     paddingHorizontal: 10,
     borderRadius: 7,
     borderWidth: 1,

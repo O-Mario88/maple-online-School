@@ -126,7 +126,7 @@ export function ExploreFilters({ filters, groups, onChange, hideSearch = false }
 
 const styles = StyleSheet.create({
   search: { flexDirection: 'row', alignItems: 'center', height: 45, marginTop: 16, borderRadius: 8, borderWidth: 1, borderColor: '#DFE4EC', backgroundColor: Brand.surface },
-  input: { flex: 1, height: 43, paddingHorizontal: 15, fontSize: 13.5, color: Brand.ink },
+  input: { flex: 1, height: 43, paddingVertical: 0, paddingHorizontal: 15, fontSize: 13.5, color: Brand.ink },
   searchBtn: { width: 45, height: 43, alignItems: 'center', justifyContent: 'center', borderLeftWidth: 1, borderLeftColor: '#DFE4EC' },
   group: { marginTop: 22 },
   groupHead: { height: 22, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingRight: 2 },

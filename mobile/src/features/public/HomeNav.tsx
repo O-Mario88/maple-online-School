@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
   searchBtn: { marginRight: 28 },
   searchBtnTall: { marginRight: 33 },
   searchBox: { width: 285, height: 37, flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 14, marginRight: 24, borderRadius: 9, borderWidth: 1, borderColor: '#E3E8F0', backgroundColor: '#FAFBFD' },
-  searchInput: { flex: 1, height: 35, fontSize: 13, color: Brand.ink },
+  searchInput: { flex: 1, height: 35, paddingVertical: 0, fontSize: 13, color: Brand.ink },
   lang: { flexDirection: 'row', alignItems: 'center', gap: 7, marginRight: 23 },
   langTall: { marginRight: 14 },
   signIn: { width: 86, height: 38, alignItems: 'center', justifyContent: 'center', borderRadius: 6, borderWidth: 1, borderColor: '#DCE3EE', marginRight: 11 },
@@ -180,5 +180,5 @@ const styles = StyleSheet.create({
   startTall: { width: 120, height: 46, borderRadius: 8 },
   startText: { fontSize: 13.5, fontWeight: '600', color: Brand.surface },
   btnTextTall: { fontSize: 14.5 },
-  btnNarrow: { width: undefined, height: 36, paddingHorizontal: 12, marginRight: 0 },
+  btnNarrow: { width: 'auto', height: 36, paddingHorizontal: 12, marginRight: 0 },
 });

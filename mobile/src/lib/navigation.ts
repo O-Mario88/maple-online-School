@@ -27,6 +27,8 @@ export interface Person {
 export interface NavItem {
   key: string;
   label: string;
+  /** A shorter label for the phone tab bar, where a fifth of the screen is all there is. */
+  short?: string;
   /** An app path; every one has a route file (navigation.test.ts checks). */
   href: string;
   icon: IconName;
@@ -69,7 +71,7 @@ const lessons: NavItem = { ...item('lessons', 'Lessons', '/learn/live', 'play'),
 const library: NavItem = { ...item('library', 'Library', '/learn/library', 'library'), also: ['/learn/library'] };
 const curriculum = item('curriculum', 'Curriculum', '/curriculum', 'map');
 const fees = item('fees', 'Fees', '/fees', 'wallet');
-const school = item('school', 'School set-up', '/admin/onboarding', 'school');
+const school = item('school', 'Set-up', '/admin/onboarding', 'school');
 const messages = item('messages', 'Messages', '/messages', 'chat');
 
 // Order matters: on phones the first four (or five) become tabs.
@@ -100,6 +102,9 @@ const MENUS: Readonly<Record<Portal, readonly NavItem[]>> = {
     lessons,
     messages,
     item('grading', 'Marking', '/teach/grading', 'check'),
+    p('assignments-new', 'Create assignment', '/teach/assignments/new', 'clipboard'),
+    p('attendance-register', 'Attendance register', '/teach/attendance', 'calendar'),
+    p('learners-heatmap', 'Mastery heatmap', '/teach/learners', 'chart'),
     library,
     curriculum,
     p('studio', 'AI studio', '/teach/studio', 'sparkle'),
@@ -110,6 +115,7 @@ const MENUS: Readonly<Record<Portal, readonly NavItem[]>> = {
     p('storefront', 'Storefront', '/teach/storefront', 'person'),
     p('earnings', 'Earnings', '/teach/earnings', 'wallet'),
     p('verification', 'Verification', '/teach/verification', 'check'),
+    p('teacher-library', 'Resource library', '/teach/library', 'folder'),
   ],
   parent: [
     { ...home, label: 'Family' },
@@ -138,7 +144,7 @@ const MENUS: Readonly<Record<Portal, readonly NavItem[]>> = {
   ],
   command: [
     { ...home, label: 'Overview' },
-    p('trust', 'Trust and safety', '/command/trust', 'flag'),
+    { ...p('trust', 'Trust and safety', '/command/trust', 'flag'), short: 'Trust' },
     p('institutions', 'Schools', '/command/institutions', 'school'),
     p('revenue', 'Revenue', '/command/revenue', 'chart'),
     p('payouts', 'Payouts', '/command/payouts', 'wallet'),

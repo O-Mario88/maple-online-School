@@ -150,16 +150,16 @@ export function TryLesson({ lesson, phone = false }: { lesson: SampleLesson; pho
 const styles = StyleSheet.create({
   // Desktop: the reference's own pixels (x 50–1488, y 745–1020).
   wrap: { flexDirection: 'row', marginLeft: 50, width: 1438, height: 275, paddingLeft: 32, paddingRight: 16, borderRadius: 16, backgroundColor: '#EEF5FE' },
-  wrapPhone: { flexDirection: 'column', width: undefined, height: undefined, marginLeft: 10, marginRight: 10, paddingLeft: 14, paddingRight: 14, paddingVertical: 18, gap: 14 },
+  wrapPhone: { flexDirection: 'column', width: 'auto', height: 'auto', marginLeft: 10, marginRight: 10, paddingLeft: 14, paddingRight: 14, paddingVertical: 18, gap: 14 },
   ctaPhone: { width: '100%', height: 46 },
   ctaTextPhone: { fontSize: 15 },
   copy: { width: 459, paddingTop: 23 },
-  copyPhone: { width: undefined, paddingTop: 0 },
+  copyPhone: { width: 'auto', paddingTop: 0 },
   eyebrow: { alignSelf: 'flex-start', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4, backgroundColor: Brand.surface, fontSize: 9.5, fontWeight: '600', letterSpacing: 1, color: '#4A5263' },
   title: { marginTop: 9, fontSize: 30, lineHeight: 32, fontWeight: '700', color: Brand.ink, letterSpacing: -0.6 },
   titlePhone: { fontSize: 27, lineHeight: 31 },
   body: { marginTop: 11, width: 360, fontSize: 14, lineHeight: 17.5, color: '#3D4656' },
-  bodyPhone: { width: undefined, fontSize: 14.5, lineHeight: 20 },
+  bodyPhone: { width: 'auto', fontSize: 14.5, lineHeight: 20 },
   points: { flexDirection: 'row', flexWrap: 'wrap', columnGap: 32, rowGap: 8, marginTop: 14 },
   point: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   pointIcon: { width: 14, height: 14, borderRadius: 7, alignItems: 'center', justifyContent: 'center' },
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
   secondaryText: { fontSize: 12.5, color: '#2A3242' },
 
   video: { width: 454, height: 243, marginTop: 12, borderRadius: 10, overflow: 'hidden', backgroundColor: Brand.video },
-  videoPhone: { width: '100%', height: undefined, aspectRatio: 454 / 243, marginTop: 0 },
+  videoPhone: { width: '100%', height: 'auto', aspectRatio: 454 / 243, marginTop: 0 },
 
   quizCol: { width: 248, marginLeft: 27, paddingTop: 22 },
   stepper: { flexDirection: 'row', alignItems: 'center', height: 24, paddingLeft: 5 },
@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
   next: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, height: 30, marginTop: 8, borderRadius: 5, backgroundColor: Brand.blue },
   nextText: { fontSize: 10.5, fontWeight: '500', color: Brand.surface },
   disabled: { opacity: 0.45 },
-  quizColPhone: { width: undefined, marginLeft: 0, paddingTop: 0 },
+  quizColPhone: { width: 'auto', marginLeft: 0, paddingTop: 0 },
   quizCardPhone: { padding: 10, paddingTop: 10 },
   questionPhone: { fontSize: 15, lineHeight: 21 },
   optionsPhone: { gap: 6, marginTop: 12 },
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
   score: { fontSize: 32, fontWeight: '800', color: Brand.blue },
 
   results: { width: 182, height: 205, marginLeft: 20, marginTop: 50, paddingTop: 8, paddingHorizontal: 11, borderRadius: 10, borderWidth: 1, borderColor: '#E7ECF5', backgroundColor: '#F6F8FE', alignItems: 'center' },
-  resultsPhone: { width: undefined, height: undefined, marginLeft: 0, marginTop: 0, paddingBottom: 16 },
+  resultsPhone: { width: 'auto', height: 'auto', marginLeft: 0, marginTop: 0, paddingBottom: 16 },
   trophy: { width: 52, height: 48 },
   resultsTitle: { marginTop: 7, fontSize: 12, fontWeight: '700', color: Brand.ink },
   resultList: { alignSelf: 'stretch', gap: 9, marginTop: 13 },

@@ -2,6 +2,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { createContext, type ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import { api, type Me, onSignedOut, session } from '@/lib/api/client';
+import { mockData } from '@/lib/mock';
 
 type AuthStatus = 'restoring' | 'signedOut' | 'signedIn';
 
@@ -23,7 +24,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   useEffect(() => {
     let active = true;
-    session.restore().then((ok) => {
+    session.restore().then(async (ok) => {
+      if (!ok) {
+        const mock = mockData();
+        if (mock) {
+          await session.signIn(mock.shared.getActiveDemoAccount().email, 'demo1234');
+          if (active) setStatus('signedIn');
+          return;
+        }
+      }
       if (active) setStatus(ok ? 'signedIn' : 'signedOut');
     });
     const unsubscribe = onSignedOut(() => {
@@ -38,8 +47,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const signIn = useCallback(async (email: string, password: string) => {
     await session.signIn(email.trim(), password);
+    await queryClient.invalidateQueries({ queryKey: ['me'] });
     setStatus('signedIn');
-  }, []);
+  }, [queryClient]);
 
   const signOut = useCallback(async () => {
     await session.signOut();

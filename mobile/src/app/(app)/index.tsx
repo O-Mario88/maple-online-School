@@ -1,11 +1,16 @@
 import { router } from 'expo-router';
 
-import { Badge, Body, Button, Card, ErrorText, Grid, Loading, Row, Screen, Segmented, useShell } from '@/components/ui';
+import { Badge, Body, Button, Card, ErrorText, Grid, Loading, ProgressBar, Row, Screen, Segmented, Stat, useShell } from '@/components/ui';
 import { InboxBell } from '@/components/shell/InboxBell';
 import { HomeStats } from '@/features/home/HomeStats';
 import { LearnersEntryCard } from '@/features/insights/LearnersEntryCard';
 import { AttendanceSection } from '@/features/learner/AttendanceSection';
 import { ChildrenCard } from '@/features/parent/ChildrenCard';
+import {
+  PARENT_HOME_REF_WIDTH,
+  ParentHomeDesk,
+  ParentHomePhone,
+} from '@/features/parent/ParentHomeViews';
 import { ParentResultsSection } from '@/features/parent/ParentResultsSection';
 import { HOME_REF_WIDTH, HomeDesk, HomePhone } from '@/features/learner/home/HomeViews';
 import { LiveHome } from '@/features/learner/home/LiveHome';
@@ -20,7 +25,7 @@ import { TEACHER_REF_WIDTH, TeacherHomeDesk, TeacherHomePhone } from '@/features
 import { TeacherWorkSection } from '@/features/teacher/TeacherWorkSection';
 import type { Me } from '@/lib/api/client';
 import { useAuth, useMe } from '@/lib/auth/auth-context';
-import { greeting, humanize } from '@/lib/home';
+import { addressName, greeting, humanize } from '@/lib/home';
 import { type Portal, PORTAL_LABELS } from '@/lib/navigation';
 import { usePortal } from '@/lib/portal-context';
 import { homeFor } from '@/lib/roles';
@@ -61,7 +66,7 @@ export default function HomeScreen() {
 
   const user = me.data;
   const now = new Date();
-  const firstName = user.full_name.split(' ')[0] || user.full_name;
+  const firstName = addressName(user.full_name);
   const home = homeFor(PORTAL_ROLE[portal]);
   const learnerHome = portal === 'learner' ? mockData()?.learner.learnerHome : undefined;
   if (learnerHome) {
@@ -87,6 +92,18 @@ export default function HomeScreen() {
       </ScrollView>
     );
   }
+  const parentHome = portal === 'parent' ? mockData()?.family.parentHome : undefined;
+  if (parentHome) {
+    // Design build: the parent dashboard reference (Image 2), with multi-child switcher and cross-school QR/login claiming.
+    if (!wide) return <ParentHomePhone p={parentHome} />;
+    return (
+      <ScrollView style={{ backgroundColor: '#EEF3FA' }}>
+        <RefScale width={width} refWidth={PARENT_HOME_REF_WIDTH}>
+          <ParentHomeDesk p={parentHome} />
+        </RefScale>
+      </ScrollView>
+    );
+  }
   // Real builds: the learner home in the design's look, on the API.
   if (portal === 'learner') return <LiveHome firstName={firstName} />;
   const today = now.toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' });
@@ -98,7 +115,8 @@ export default function HomeScreen() {
       title={`${greeting(now)}, ${firstName}`}
       subtitle={home.subtitle}
       actions={wide ? undefined : <InboxBell />}>
-      {!wide && portals.length > 1 ? (
+      {/* Design builds switch modes with the mode button in the header, so the chips would repeat it. */}
+      {!wide && portals.length > 1 && !mockData() ? (
         <Segmented
           label="Switch portal"
           options={portals.map((p) => ({ value: p, label: PORTAL_LABELS[p] }))}
@@ -114,25 +132,58 @@ export default function HomeScreen() {
 }
 
 function PortalHome({ portal, user }: { portal: Portal; user: Me }) {
+  const mock = mockData();
   switch (portal) {
-    case 'school':
+    case 'school': {
+      const lead = mock?.school.leadership;
+      const audit = mock?.school.audit;
       return (
-        <Grid min={380}>
-          <TodaySection />
-          <QuickActions
-            actions={[
-              { title: 'School fees', detail: 'Bill classes, record payments, export the ledger', href: '/fees', icon: 'wallet' },
-              { title: 'Staff and set-up', detail: 'Invite teachers and manage your school', href: '/admin/onboarding', icon: 'school' },
-              { title: 'Curriculum', detail: 'The Uganda subjects your classes follow', href: '/curriculum', icon: 'map' },
-              { title: 'Messages', detail: 'Every conversation between staff and families', href: '/messages', icon: 'chat' },
-            ]}
-          />
-          <ClassesSection />
-          <LearnersEntryCard />
-          <ReportsSection staff />
-          <SchoolsCard user={user} />
-        </Grid>
+        <>
+          {lead ? (
+            <Grid min={180}>
+              <Stat label="Student attendance" value={`${Math.round(lead.studentAttendance * 100)}%`} detail="Across 6 streams" icon="check" tone="good" />
+              <Stat label="Teacher attendance" value={`${Math.round(lead.teacherAttendance * 100)}%`} detail="Active today" icon="people" tone="info" />
+              <Stat label="Syllabus coverage" value={`${Math.round(lead.syllabusCoverage * 100)}%`} detail="Term 3 target: 75%" icon="book" tone="accent" />
+              <Stat label="Fee collection" value={`${Math.round(lead.feeCollection * 100)}%`} detail="Term 3 invoices" icon="wallet" tone="good" />
+            </Grid>
+          ) : null}
+          <Grid min={380}>
+            <TodaySection />
+            <QuickActions
+              actions={[
+                { title: 'School fees', detail: 'Bill classes, record payments, export the ledger', href: '/fees', icon: 'wallet' },
+                { title: 'Staff and set-up', detail: 'Invite teachers and manage your school', href: '/admin/onboarding', icon: 'school' },
+                { title: 'Curriculum', detail: 'The Uganda subjects your classes follow', href: '/curriculum', icon: 'map' },
+                { title: 'Messages', detail: 'Every conversation between staff and families', href: '/messages', icon: 'chat' },
+              ]}
+            />
+            {lead ? (
+              <Card title="Class mastery & syllabus coverage" icon="chart">
+                {lead.byClass.map((c) => (
+                  <ProgressBar
+                    key={c.class}
+                    label={`${c.class} · Attendance ${Math.round(c.attendance * 100)}% · Mastery ${Math.round(c.mastery * 100)}%`}
+                    value={c.coverage}
+                    tone={c.coverage >= 0.7 ? 'good' : 'warning'}
+                  />
+                ))}
+              </Card>
+            ) : null}
+            <ClassesSection />
+            <LearnersEntryCard />
+            <ReportsSection staff />
+            <SchoolsCard user={user} />
+            {audit ? (
+              <Card title="Recent school audit log" icon="shield">
+                {audit.map((a) => (
+                  <Row key={`${a.when}-${a.action}`} title={a.action} detail={`${a.who} · ${a.when}`} />
+                ))}
+              </Card>
+            ) : null}
+          </Grid>
+        </>
       );
+    }
     case 'teacher':
       return (
         <Grid min={380}>
@@ -152,17 +203,65 @@ function PortalHome({ portal, user }: { portal: Portal; user: Me }) {
           <ReportsSection staff={false} />
         </Grid>
       );
-    case 'command':
+    case 'command': {
+      const cmd = mock?.command;
       return (
-        <Grid min={380}>
-          <QuickActions
-            actions={[
-              { title: 'Curriculum', detail: 'National curricula schools start from', href: '/curriculum', icon: 'map' },
-              { title: 'Library moderation', detail: 'Review items shared with every school', href: '/learn/library', icon: 'library' },
-            ]}
-          />
-        </Grid>
+        <>
+          {cmd ? (
+            <Grid min={180}>
+              {cmd.northStar.map((n) => (
+                <Stat key={n.label} label={n.label} value={n.value} detail={n.delta || undefined} icon="chart" tone="accent" />
+              ))}
+            </Grid>
+          ) : null}
+          <Grid min={380}>
+            {cmd ? (
+              <>
+                <Card title="Trust & safety queue" icon="flag">
+                  {cmd.trustQueue.map((t) => (
+                    <Row
+                      key={t.id}
+                      title={`${t.kind} · ${t.subject}`}
+                      detail={t.ai}
+                      badge={<Badge label={t.priority} tone={t.priority === 'urgent' || t.priority === 'high' ? 'warning' : 'neutral'} />}
+                      onPress={() => router.navigate('/command/trust')}
+                    />
+                  ))}
+                </Card>
+                <Card title="School adoption pipeline" icon="school">
+                  {cmd.pipeline.map((p) => (
+                    <Row
+                      key={p.school}
+                      title={p.school}
+                      detail={`${p.teachersActive} active teachers · ${p.learners} learners`}
+                      badge={<Badge label={p.stage} tone={p.stage === 'Contract' ? 'good' : 'accent'} />}
+                      onPress={() => router.navigate('/command/institutions')}
+                    />
+                  ))}
+                </Card>
+                <Card title="Platform operations health" icon="live">
+                  {cmd.ops.map((o) => (
+                    <Row
+                      key={o.label}
+                      title={o.label}
+                      detail={o.value}
+                      badge={<Badge label={o.ok ? 'Healthy' : 'Attention'} tone={o.ok ? 'good' : 'warning'} />}
+                      onPress={() => router.navigate('/command/ops')}
+                    />
+                  ))}
+                </Card>
+              </>
+            ) : null}
+            <QuickActions
+              actions={[
+                { title: 'Curriculum', detail: 'National curricula schools start from', href: '/curriculum', icon: 'map' },
+                { title: 'Library moderation', detail: 'Review items shared with every school', href: '/learn/library', icon: 'library' },
+              ]}
+            />
+          </Grid>
+        </>
       );
+    }
     default:
       return null;
   }

@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
   headlinePhone: { marginTop: 10, fontSize: 38, lineHeight: 42, letterSpacing: -1 },
   accent: { color: Brand.blue },
   sub: { marginTop: 14, maxWidth: 480, fontSize: 18.5, lineHeight: 23.5, color: '#3D4656' },
-  subPhone: { marginTop: 12, maxWidth: undefined, fontSize: 16.5, lineHeight: 23 },
+  subPhone: { marginTop: 12, maxWidth: '100%', fontSize: 16.5, lineHeight: 23 },
 
   actions: { width: 680 },
   actionsPhone: { gap: 0 },
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
   tick: { position: 'absolute', top: -5, right: -5, width: 15, height: 15, borderRadius: 8, borderWidth: 1.5, borderColor: Brand.surface, backgroundColor: Brand.blue, alignItems: 'center', justifyContent: 'center' },
 
   searchRow: { flexDirection: 'row', gap: 10, marginTop: 15, width: 661 },
-  searchRowPhone: { flexDirection: 'column', width: undefined, marginTop: 12, paddingHorizontal: 16 },
+  searchRowPhone: { flexDirection: 'column', width: 'auto', marginTop: 12, paddingHorizontal: 16 },
   search: {
     width: 464,
     height: 51,
@@ -138,10 +138,10 @@ const styles = StyleSheet.create({
     backgroundColor: Brand.surface,
     ...CARD_SHADOW,
   },
-  searchPhone: { width: undefined },
-  searchInput: { flex: 1, height: 48, fontSize: 13.5, color: Brand.ink },
+  searchPhone: { width: 'auto' },
+  searchInput: { flex: 1, height: 48, paddingVertical: 0, fontSize: 13.5, color: Brand.ink },
   explore: { width: 187, height: 51, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, borderRadius: 7, backgroundColor: Brand.blue },
-  explorePhone: { width: undefined },
+  explorePhone: { width: 'auto' },
   exploreText: { fontSize: 14.5, fontWeight: '600', color: Brand.surface },
 
   trust: { flexDirection: 'row', gap: 19, marginTop: 24 },

@@ -127,8 +127,8 @@ export function ClassroomView({ room }: { room: Room }) {
     ),
   };
 
-  const sideTabs = (
-    <View style={styles.tabs} accessibilityRole="tablist">
+  const tabRow = (
+    <View style={[styles.tabs, !wide && styles.tabsNarrow]} accessibilityRole="tablist">
       {tabs.map((t) => {
         const on = t.key === tab;
         return (
@@ -144,6 +144,14 @@ export function ClassroomView({ room }: { room: Room }) {
         );
       })}
     </View>
+  );
+  // On phones and tablets the tabs scroll sideways instead of wrapping onto a second row.
+  const sideTabs = wide ? (
+    tabRow
+  ) : (
+    <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.tabScroll} contentContainerStyle={styles.flexGrow}>
+      {tabRow}
+    </ScrollView>
   );
 
   const stage = (
@@ -324,6 +332,9 @@ const styles = StyleSheet.create({
     borderBottomColor: 'transparent',
     marginBottom: -1,
   },
+  tabsNarrow: { flexWrap: 'nowrap', flexGrow: 1, paddingHorizontal: 0 },
+  tabScroll: { flexGrow: 0 },
+  flexGrow: { flexGrow: 1 },
   tabOn: { borderBottomColor: Brand.blue },
   tabText: { fontSize: 14, fontWeight: '600', color: Brand.ink },
   tabTextOn: { color: Brand.blue },

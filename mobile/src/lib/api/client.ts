@@ -2,6 +2,7 @@ import createClient from 'openapi-fetch';
 
 import { SessionManager } from '@/lib/auth/session';
 import { tokenStore } from '@/lib/auth/token-store';
+import { mockData } from '@/lib/mock';
 
 import type { components, paths } from './schema';
 
@@ -19,9 +20,16 @@ export function onSignedOut(listener: SignedOutListener): () => void {
   return () => signedOutListeners.delete(listener);
 }
 
+const clientFetch = (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
+  const mock = mockData();
+  if (mock) return mock.shared.mockApiFetch(input, init);
+  return fetch(input, init);
+};
+
 export const session = new SessionManager({
   baseUrl: API_URL,
   store: tokenStore,
+  fetchFn: clientFetch,
   onSignedOut: () => signedOutListeners.forEach((listener) => listener()),
 });
 

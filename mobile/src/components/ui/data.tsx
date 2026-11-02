@@ -168,9 +168,10 @@ function makeStyles(t: Theme) {
     cards: { gap: Spacing.two },
     card: { borderRadius: Radius.md, borderWidth: 1, borderColor: t.border, padding: Spacing.three, gap: Spacing.one, backgroundColor: t.backgroundElement },
     cardHead: { marginBottom: Spacing.one },
-    cardLine: { flexDirection: 'row', justifyContent: 'space-between', gap: Spacing.three },
-    cardLabel: { ...Type.caption, color: t.textMuted },
-    cardValue: { flexShrink: 1, alignItems: 'flex-end' },
+    // Phone cards read as a definition list: labels in a fixed column, every value left-aligned beside it.
+    cardLine: { flexDirection: 'row', alignItems: 'flex-start', gap: Spacing.three },
+    cardLabel: { ...Type.caption, color: t.textMuted, width: 92, paddingTop: 2 },
+    cardValue: { flex: 1, minWidth: 0, alignItems: 'flex-start' },
     kv: {
       flexDirection: 'row',
       justifyContent: 'space-between',
