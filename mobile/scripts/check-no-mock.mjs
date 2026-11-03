@@ -2,7 +2,7 @@
 /**
  * Proves a deployment build carries no mock data.
  *
- * Exports the web app with EXPO_PUBLIC_MOCK_DATA unset, then searches every
+ * Exports the web app with EXPO_PUBLIC_MOCK_DATA and EXPO_PUBLIC_DESIGN_DATA unset, then searches every
  * output file for the sentinel string that src/mock/index.ts exports. Exits 1
  * if any file contains it.
  */
@@ -23,6 +23,7 @@ function filesUnder(dir) {
 const out = mkdtempSync(join(tmpdir(), 'maple-export-'));
 const env = { ...process.env };
 delete env.EXPO_PUBLIC_MOCK_DATA;
+delete env.EXPO_PUBLIC_DESIGN_DATA;
 
 try {
   execFileSync('npx', ['expo', 'export', '-p', 'web', '--output-dir', out, '--clear'], { env, stdio: 'ignore' });

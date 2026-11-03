@@ -7,7 +7,7 @@ import { Avatar, ModeButton } from '@/components/ui';
 import { Radius, SidebarWidth, Spacing, type Theme, Type } from '@/constants/theme';
 import { useStyles } from '@/hooks/use-styles';
 import { useAuth, useMe } from '@/lib/auth/auth-context';
-import { MOCK_DATA } from '@/lib/mock';
+import { DESIGN_DATA } from '@/lib/mock';
 import { activeKey, navFor } from '@/lib/navigation';
 import { usePortal } from '@/lib/portal-context';
 
@@ -21,7 +21,7 @@ export function Sidebar() {
   const { portal } = usePortal();
   const { signOut } = useAuth();
   const me = useMe();
-  const items = navFor(portal, MOCK_DATA);
+  const items = navFor(portal, DESIGN_DATA);
   const active = activeKey(items, pathname);
 
   return (
@@ -58,7 +58,7 @@ export function Sidebar() {
         })}
       </ScrollView>
 
-      {MOCK_DATA ? <Text style={styles.mockNote}>Design preview · mock data</Text> : null}
+      {DESIGN_DATA ? <Text style={styles.mockNote}>Design preview · mock data</Text> : null}
 
       {me.data ? (
         <View style={styles.account}>

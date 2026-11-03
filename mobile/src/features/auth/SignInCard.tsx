@@ -8,7 +8,7 @@ import { Button, ErrorText, Field } from '@/components/ui';
 import { Brand } from '@/features/public/palette';
 import { useAuth } from '@/lib/auth/auth-context';
 import type { IconName } from '@/lib/icons';
-import { MOCK_DATA, mockData } from '@/lib/mock';
+import { MOCK_DATA, mockApi } from '@/lib/mock';
 import type { MockData } from '@/mock';
 
 type Art = MockData['publicPages']['signInArt'];
@@ -113,7 +113,7 @@ export function SignInCard({ art, phone = false }: { art?: Art; phone?: boolean 
     }
   };
   const demoLogin = async (key: 'student' | 'teacher' | 'parent' | 'institution' | 'admin') => {
-    const mock = mockData();
+    const mock = mockApi();
     if (!mock) return;
     const acc = mock.shared.setActiveDemoAccount(key);
     await signIn(acc.email, 'demo1234');

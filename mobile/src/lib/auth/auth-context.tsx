@@ -2,7 +2,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { createContext, type ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import { api, type Me, onSignedOut, session } from '@/lib/api/client';
-import { mockData } from '@/lib/mock';
+import { mockApi } from '@/lib/mock';
 
 type AuthStatus = 'restoring' | 'signedOut' | 'signedIn';
 
@@ -26,7 +26,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     let active = true;
     session.restore().then(async (ok) => {
       if (!ok) {
-        const mock = mockData();
+        const mock = mockApi();
         if (mock) {
           await session.signIn(mock.shared.getActiveDemoAccount().email, 'demo1234');
           if (active) setStatus('signedIn');

@@ -5,7 +5,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Icon } from '@/components/icon';
 import { Elevation, Radius, Spacing, type Theme, Type } from '@/constants/theme';
 import { useStyles } from '@/hooks/use-styles';
-import { mockData } from '@/lib/mock';
+import { mockApi, mockData } from '@/lib/mock';
 
 /**
  * Design builds only: the floating "Ask Maple" button that every signed-in screen
@@ -29,11 +29,12 @@ export function DesignOverlays() {
 
 /**
  * Design builds only: the offline-sync notice, as a slim strip in the layout (above the tab bar)
- * so it never covers a page's title or content.
+ * so it never covers a page's title or content. The real app, even with design data, has real
+ * connectivity, so it never shows this made-up state.
  */
 export function OfflineStrip() {
   const { styles, theme } = useStyles(makeStyles);
-  const mock = useMemo(() => mockData(), []);
+  const mock = useMemo(() => mockApi(), []);
   if (!mock || mock.shared.sync.online) return null;
   const s = mock.shared.sync;
   return (

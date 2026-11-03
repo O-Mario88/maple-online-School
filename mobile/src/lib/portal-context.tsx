@@ -6,7 +6,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { createContext, type ReactNode, useCallback, useContext, useMemo, useState } from 'react';
 
 import { useMe } from '@/lib/auth/auth-context';
-import { mockData } from '@/lib/mock';
+import { mockApi } from '@/lib/mock';
 import { type Portal, PORTALS, portalsFor } from '@/lib/navigation';
 
 interface PortalState {
@@ -30,7 +30,7 @@ export function PortalProvider({ children }: { children: ReactNode }) {
     (next: Portal) => {
       lastChosen = next;
       setChosen(next);
-      const mock = mockData();
+      const mock = mockApi();
       if (mock) {
         mock.shared.setActiveDemoByPortal(next);
         void queryClient.invalidateQueries({ queryKey: ['me'] });
@@ -40,7 +40,7 @@ export function PortalProvider({ children }: { children: ReactNode }) {
   );
 
   const value = useMemo<PortalState>(() => {
-    const mock = mockData();
+    const mock = mockApi();
     const portals: readonly Portal[] = mock ? PORTALS : me.data ? portalsFor(me.data) : ['learner'];
     const defaultPortal = mock ? mock.shared.getActiveDemoAccount().portal : portals[0];
     // Fall back to the main portal if the choice no longer applies.

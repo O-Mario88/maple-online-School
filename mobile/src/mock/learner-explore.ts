@@ -16,12 +16,12 @@ export interface ExploreCourse extends Offering {
   href: Href;
 }
 
-const course = (c: Omit<ExploreCourse, 'href'>): ExploreCourse => ({ ...c, href: c.kind === 'Past Papers' ? '/learn/past-papers' : c.kind === 'Live Classes' ? '/learn/live' : c.kind === 'Practice' ? '/learn/paper' : '/learn/course' });
+const course = (c: Omit<ExploreCourse, 'href'>): ExploreCourse => ({ ...c, href: c.kind === 'Past Papers' ? '/learn/past-papers' : c.kind === 'Live Classes' ? '/learn/live' : c.kind === 'Practice' ? '/learn/paper' : `/learn/course?id=${c.id}` });
 
 export const catalogue: readonly ExploreCourse[] = [
   course({ id: 'x1', title: 'Mathematics: Algebra & Functions', kind: 'Courses', curriculum: 'UNEB', subject: 'Mathematics', level: 'S3', teacher: 'Mr. James Kato', rating: 4.8, learners: 12_400, priceUGX: 120_000, progress: 0.42, lessons: 36, photo: photos.explore[0], face: photos.exploreTeachers[0] }),
   course({ id: 'x2', title: 'Biology: Genetics & Evolution', kind: 'Courses', curriculum: 'UNEB', subject: 'Biology', level: 'S4', teacher: 'Dr. Grace Njeri', rating: 4.8, learners: 9_800, priceUGX: 90_000, progress: 0.15, lessons: 28, photo: photos.explore[3], face: photos.exploreTeachers[3] }),
-  course({ id: 'x3', title: 'English: Composition & Comprehension', kind: 'Courses', curriculum: 'UNEB', subject: 'English', level: 'S3', teacher: 'Ms. Aisha Bello', rating: 4.9, learners: 8_700, priceUGX: 60_000, progress: 0, lessons: 24, photo: photos.explore[1], face: photos.exploreTeachers[1] }),
+  course({ id: 'x3', title: 'English: Composition & Comprehension', kind: 'Courses', curriculum: 'UNEB', subject: 'English', level: 'S3', teacher: 'Ms. Aisha Bello', rating: 4.9, learners: 8_700, priceUGX: 0, progress: 0, lessons: 24, photo: photos.explore[1], face: photos.exploreTeachers[1] }),
   course({ id: 'x4', title: 'Physics: Mechanics Made Simple', kind: 'Courses', curriculum: 'UNEB', subject: 'Physics', level: 'S3', teacher: 'Mr. Peter Okiror', rating: 4.7, learners: 7_900, priceUGX: 80_000, progress: 0, lessons: 30, photo: photos.explore[5], face: photos.exploreTeachers[5] }),
   course({ id: 'x5', title: 'UNEB Chemistry Past Papers (2015–2025)', kind: 'Past Papers', curriculum: 'UNEB', subject: 'Chemistry', level: 'S4', teacher: 'Maple Editorial Team', rating: 4.7, learners: 15_200, priceUGX: 30_000, progress: 0, lessons: 22, photo: photos.explore[2], face: photos.exploreTeachers[2] }),
   course({ id: 'x6', title: 'Chemistry Revision Bootcamp', kind: 'Live Classes', curriculum: 'UNEB', subject: 'Chemistry', level: 'S4', teacher: 'Dr. Ruth Namusoke', rating: 4.8, learners: 4_100, priceUGX: 70_000, progress: 0, lessons: 12, photo: photos.explore[4], face: photos.exploreTeachers[4] }),

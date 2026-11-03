@@ -4,9 +4,11 @@ import { useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
+import { LockMark } from '@/features/access/Paywall';
 import { LearnerPhoneTop } from '@/features/learner/dashboard/DashPhone';
 import { BLUE, BODY, type Home, HomeHeader, HomeSidebar, INK } from '@/features/learner/home/HomeFrame';
 import { TONES } from '@/features/portal/tokens';
+import { useAccess } from '@/lib/access/access-context';
 import { toast } from '@/lib/toast';
 import type { MockData } from '@/mock';
 
@@ -25,6 +27,9 @@ const POPULAR = 4;
 const time = (iso: string) => new Date(iso).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
 const dayTime = (iso: string, now: string) => `${iso.slice(0, 10) === now.slice(0, 10) ? 'Today' : 'Tomorrow'}, ${time(iso)}`;
 const price = (n: number) => (n ? `UGX ${n.toLocaleString('en-US')}` : 'Free');
+
+/** The page each kind of card opens, for asking whether it is locked. */
+const OPENS: Readonly<Record<Course['kind'], string>> = { Courses: '/learn/course', 'Past Papers': '/learn/paper', 'Live Classes': '/learn/live-room', Shorts: '/learn/shorts', Practice: '/learn/paper', Library: '/learn/library/read' };
 
 export function useExplore(d: ExploreData) {
   const [curriculum, setCurriculum] = useState<Curriculum>(d.myCurriculum);
@@ -137,11 +142,15 @@ function Categories({ u, phone = false }: { u: U; phone?: boolean }) {
 }
 
 function CourseCard({ c, onPress, wide = false }: { c: Course; onPress: () => void; wide?: boolean }) {
+  const locked = useAccess().lockFor(OPENS[c.kind], c.id) !== null;
   return (
     <Pressable style={[styles.course, wide && styles.courseWide]} onPress={onPress} accessibilityRole="button" accessibilityLabel={`${c.title} by ${c.teacher}`}>
       <Image source={c.photo} style={styles.coursePhoto} contentFit="cover" accessibilityIgnoresInvertColors />
       <View style={styles.courseBadge}>
         <Text style={styles.courseBadgeText}>{`${c.curriculum} • ${c.level}`}</Text>
+      </View>
+      <View style={styles.courseLock}>
+        <LockMark locked={locked} free={c.priceUGX === 0} />
       </View>
       <View style={styles.courseBody}>
         <Text style={styles.courseTitle} numberOfLines={2}>
@@ -159,7 +168,7 @@ function CourseCard({ c, onPress, wide = false }: { c: Course; onPress: () => vo
         </View>
         <View style={styles.courseFoot}>
           <Text style={styles.price}>{price(c.priceUGX)}</Text>
-          <Text style={styles.cta}>{c.progress > 0 ? 'Continue' : c.kind === 'Courses' ? 'Enrol' : 'Open'}</Text>
+          <Text style={styles.cta}>{locked ? 'Unlock' : c.progress > 0 ? 'Continue' : c.kind === 'Courses' ? 'Enrol' : 'Open'}</Text>
         </View>
       </View>
     </Pressable>
@@ -424,6 +433,7 @@ const styles = StyleSheet.create({
   course: { flex: 1, minWidth: 0, borderRadius: 9, borderWidth: 1, borderColor: LINE, overflow: 'hidden', backgroundColor: '#FFFFFF' },
   courseWide: { flexGrow: 0, flexShrink: 0, flexBasis: 230, width: 230 },
   coursePhoto: { width: '100%', height: 104 },
+  courseLock: { position: 'absolute', top: 8, right: 8 },
   courseBadge: { position: 'absolute', top: 8, left: 8, paddingHorizontal: 7, paddingVertical: 3, borderRadius: 6, backgroundColor: 'rgba(11,20,36,0.75)' },
   courseBadgeText: { fontSize: 9.5, fontWeight: '700', color: '#FFFFFF' },
   courseBody: { gap: 5, padding: 9 },

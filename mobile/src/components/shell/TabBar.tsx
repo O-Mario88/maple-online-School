@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Icon } from '@/components/icon';
 import { Spacing, type Theme, Type } from '@/constants/theme';
 import { useStyles } from '@/hooks/use-styles';
-import { MOCK_DATA } from '@/lib/mock';
+import { DESIGN_DATA } from '@/lib/mock';
 import { activeKey, navFor, tabBar } from '@/lib/navigation';
 import { usePortal } from '@/lib/portal-context';
 
@@ -15,7 +15,7 @@ export function TabBar() {
   const insets = useSafeAreaInsets();
   const pathname = usePathname();
   const { portal } = usePortal();
-  const all = navFor(portal, MOCK_DATA);
+  const all = navFor(portal, DESIGN_DATA);
   const { tabs, more } = tabBar(all);
   const active = activeKey(all, pathname);
   const items = more ? [...tabs, { key: 'more', label: 'More', href: '/more', icon: 'more' as const }] : tabs;

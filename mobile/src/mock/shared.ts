@@ -4,6 +4,8 @@ import type { MicState } from '@/lib/classroom';
 
 import { photos } from './photos';
 
+export * as access from './access';
+
 export const copilot = {
   context: 'S3 Mathematics · Quadratic equations',
   suggestions: ['Explain factorising step by step', 'Give me 3 practice questions', 'Where did I go wrong in question 4?'],

@@ -2,7 +2,7 @@ import createClient from 'openapi-fetch';
 
 import { SessionManager } from '@/lib/auth/session';
 import { tokenStore } from '@/lib/auth/token-store';
-import { mockData } from '@/lib/mock';
+import { mockApi } from '@/lib/mock';
 
 import type { components, paths } from './schema';
 
@@ -21,7 +21,7 @@ export function onSignedOut(listener: SignedOutListener): () => void {
 }
 
 const clientFetch = (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
-  const mock = mockData();
+  const mock = mockApi();
   if (mock) return mock.shared.mockApiFetch(input, init);
   return fetch(input, init);
 };
