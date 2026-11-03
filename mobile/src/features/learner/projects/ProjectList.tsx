@@ -3,6 +3,9 @@ import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-
 
 import { Icon } from '@/components/icon';
 import { Bar } from '@/features/learner/dashboard/DashParts';
+import { PremiumTiles } from '@/features/portal/Premium';
+import type { Tone } from '@/features/portal/tokens';
+import type { IconName } from '@/lib/icons';
 import type { ProjectStatus } from '@/lib/projects';
 
 import { type Page, type Project, type ProjectsState, STATUS_LABEL } from './useProjects';
@@ -31,7 +34,29 @@ const STAT_ORDER: { key: 'total' | ProjectStatus; label: string; bar?: string }[
   { key: 'attention', label: 'Needs Attention', bar: '#E5484D' },
 ];
 
+const STAT_LOOK: Readonly<Record<string, { icon: IconName; tone: Tone }>> = {
+  total: { icon: 'folder', tone: 'blue' },
+  in_progress: { icon: 'clock', tone: 'orange' },
+  completed: { icon: 'check', tone: 'green' },
+  upcoming: { icon: 'calendar', tone: 'purple' },
+  attention: { icon: 'alert', tone: 'red' },
+};
+
 export function StatCards({ page, s, phone = false }: { page: Page; s: ProjectsState; phone?: boolean }) {
+  const pick = (key: string) => (key === 'total' ? s.setStatus(undefined) : key === 'attention' ? s.setAttentionOnly(!s.attentionOnly) : s.setStatus(key as ProjectStatus));
+  if (phone) {
+    return (
+      <PremiumTiles
+        title="Project Summary"
+        subtitle="Where your projects stand this term."
+        minHeight={146}
+        items={STAT_ORDER.map((x) => {
+          const entry = x.key === 'total' ? null : s.stats[x.key as ProjectStatus];
+          return { label: x.label, value: String(x.key === 'total' ? s.stats.total : (entry?.count ?? 0)), icon: STAT_LOOK[x.key].icon, tone: STAT_LOOK[x.key].tone, progress: entry ? entry.percent / 100 : undefined, caption: entry ? `${entry.percent}% of projects` : 'All your projects', onPress: () => pick(x.key) };
+        })}
+      />
+    );
+  }
   return (
     <View style={[styles.stats, phone && styles.statsP]}>
       {STAT_ORDER.map((x) => {
@@ -42,7 +67,7 @@ export function StatCards({ page, s, phone = false }: { page: Page; s: ProjectsS
           <Pressable
             key={x.key}
             style={[styles.stat, phone && styles.statP]}
-            onPress={() => (isTotal ? s.setStatus(undefined) : x.key === 'attention' ? s.setAttentionOnly(!s.attentionOnly) : s.setStatus(x.key as ProjectStatus))}
+            onPress={() => pick(x.key)}
             accessibilityRole="button"
             accessibilityLabel={`${count} ${x.label}${entry ? `, ${entry.percent}%` : ''}`}>
             <Image source={page.statIcons[x.key]} style={styles.statIcon} />

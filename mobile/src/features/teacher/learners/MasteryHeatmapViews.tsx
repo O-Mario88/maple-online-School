@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
+import { PremiumTiles } from '@/features/portal/Premium';
 import {
   type TeacherMe,
   TeacherPhoneTop,
@@ -174,6 +175,9 @@ export function MasteryHeatmapDesk({ m, me, phone = false }: { m: MasteryHeatmap
           </View>
 
           {/* 5 KPI Summary Cards */}
+          {phone ? (
+            <PremiumTiles title="Class Mastery" subtitle="How your learners are doing on this unit." minHeight={132} items={m.kpis.map((k) => ({ label: k.label, value: k.value, icon: k.icon ?? 'people', tone: 'blue' as const, color: k.color }))} />
+          ) : (
           <View style={s.kpiRow}>
             {m.kpis.map((k) => (
               <View key={k.id} style={s.kpiCard}>
@@ -191,6 +195,7 @@ export function MasteryHeatmapDesk({ m, me, phone = false }: { m: MasteryHeatmap
               </View>
             ))}
           </View>
+          )}
 
           {/* Matrix Card */}
           <Panel style={s.matrixCard}>

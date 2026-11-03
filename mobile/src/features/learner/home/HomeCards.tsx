@@ -5,6 +5,7 @@ import { type ReactNode, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
+import { PremiumTiles } from '@/features/portal/Premium';
 import type { IconName } from '@/lib/icons';
 import { toast } from '@/lib/toast';
 import type { AssignmentProjectTab } from '@/mock/learner-home';
@@ -139,31 +140,9 @@ export function KpiRow({ h, phone = false }: { h: Home; phone?: boolean }) {
   );
 }
 
-/** Phones: the six numbers as two columns, each label in full (the change sits under its label). */
+/** Phones: the six numbers as premium tiles, two to a row (the change sits under the figure). */
 function KpiGridPhone({ h }: { h: Home }) {
-  return (
-    <View style={styles.kpiGridPhone}>
-      {h.kpis.map((k) => (
-        <Pressable
-          key={k.id}
-          style={styles.kpiCardPhone}
-          onPress={() => router.push(k.href)}
-          accessibilityRole="link"
-          accessibilityLabel={`${k.value} ${k.label}${k.delta ? `, up ${k.delta} ${k.deltaSub ?? ''}` : ''}`}>
-          <View style={[styles.kpiIconWrapPhone, { backgroundColor: k.bg }]}>
-            <Icon name={k.icon} size={18} color={k.color} />
-          </View>
-          <View style={styles.flex}>
-            <Text style={styles.kpiValPhone}>{k.value}</Text>
-            <Text style={styles.kpiLabelPhone} numberOfLines={2}>
-              {k.label}
-            </Text>
-            {k.delta ? <Text style={styles.kpiDeltaPhone}>{`↑ ${k.delta} ${k.deltaSub ?? ''}`.trim()}</Text> : null}
-          </View>
-        </Pressable>
-      ))}
-    </View>
-  );
+  return <PremiumTiles title="My Progress" subtitle="How your learning is going this week." minHeight={146} items={h.kpis.map((k) => ({ label: k.label, value: k.value, icon: k.icon, tone: 'blue' as const, color: k.color, delta: k.delta, caption: k.deltaSub, onPress: () => router.push(k.href) }))} />;
 }
 
 const SUBJECT_TABS = ['All Subjects', 'This Term', 'Trend'] as const;
@@ -199,18 +178,18 @@ export function MySubjectsCard({ h, phone = false }: { h: Home; phone?: boolean 
         {h.subjects.map((s) => (
           <Pressable
             key={s.id}
-            style={[phone ? styles.subjectTilePhone : styles.subjectTile, { backgroundColor: s.bg }]}
+            style={[phone ? styles.subjectTilePhone : styles.subjectTile, phone ? { backgroundColor: `${s.color}1A`, borderColor: `${s.color}26` } : { backgroundColor: s.bg }]}
             onPress={() => router.push(s.href)}
             accessibilityRole="link"
             accessibilityLabel={`${s.subject}: ${s.score}, up ${s.delta}`}>
             <View style={[styles.subjectIconBox, { backgroundColor: s.iconBg }]}>
               <Icon name={s.icon} size={15} color={s.color} />
             </View>
-            <Text style={phone ? styles.subjectNamePhone : styles.subjectName} numberOfLines={phone ? 2 : 1}>
+            <Text style={[phone ? styles.subjectNamePhone : styles.subjectName, phone && { color: s.color }]} numberOfLines={phone ? 2 : 1}>
               {s.subject}
             </Text>
             <View style={phone ? styles.subjectScoreRowPhone : styles.subjectScoreRow}>
-              <Text style={phone ? styles.subjectScorePhone : styles.subjectScore}>{s.score}</Text>
+              <Text style={[phone ? styles.subjectScorePhone : styles.subjectScore, phone && { color: s.color }]}>{s.score}</Text>
               <Text style={phone ? styles.subjectDeltaPhone : styles.subjectDelta}>{`↑${s.delta}`}</Text>
             </View>
           </Pressable>

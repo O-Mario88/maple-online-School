@@ -5,6 +5,7 @@ import { type ReactNode, useState } from 'react';
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
+import { PremiumTiles } from '@/features/portal/Premium';
 import { LanguageMenu } from '@/components/shell/LanguageMenu';
 import { Bar } from '@/features/learner/dashboard/DashParts';
 import { LearnerPhoneTop } from '@/features/learner/dashboard/DashPhone';
@@ -230,7 +231,7 @@ function ParentHeroBanner({
 }
 
 /** Active child profile summary card + 4 separate subject cards row below it (updates dynamically when toggled!). */
-function StudentProfileOverviewCard({ child }: { child: ParentChildProfile }) {
+function StudentProfileOverviewCard({ child, phone = false }: { child: ParentChildProfile; phone?: boolean }) {
   const styles = useParentSheet();
   return (
     <>
@@ -290,7 +291,15 @@ function StudentProfileOverviewCard({ child }: { child: ParentChildProfile }) {
         </View>
       </Card>
 
-      {/* 4 Separate White Subject Cards Row (matching Image 2) */}
+      {/* 4 Separate White Subject Cards Row (matching Image 2); premium tiles on phones */}
+      {phone ? (
+        <PremiumTiles
+          title="Subject Performance"
+          subtitle="This term's scores by subject."
+          minHeight={140}
+          items={child.subjects.map((s) => ({ label: s.subject, value: s.score, icon: s.icon, tone: 'blue' as const, color: s.color, delta: s.delta, caption: 'this term', onPress: () => router.push('/learn/progress') }))}
+        />
+      ) : (
       <View style={styles.subjectsRow}>
         {child.subjects.map((s) => (
           <Pressable
@@ -312,6 +321,7 @@ function StudentProfileOverviewCard({ child }: { child: ParentChildProfile }) {
           </Pressable>
         ))}
       </View>
+      )}
     </>
   );
 }
@@ -730,7 +740,7 @@ export function ParentHomePhone({ p }: { p: ParentHomeData }) {
               onLinkChild={handleLinkChild}
             />
           ) : null}
-          <StudentProfileOverviewCard child={activeChild} />
+          <StudentProfileOverviewCard child={activeChild} phone />
           <ParentTeacherVoiceCard child={activeChild} />
           <ActivitiesAndRecentRow child={activeChild} />
           <ParentAchievementsCard child={activeChild} />

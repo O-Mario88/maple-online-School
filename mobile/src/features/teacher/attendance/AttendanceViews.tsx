@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
+import { PremiumTiles } from '@/features/portal/Premium';
 import {
   type TeacherMe,
   TeacherPhoneTop,
@@ -191,6 +192,9 @@ export function AttendanceDesk({ r, me, phone = false }: { r: AttendanceRegister
           </View>
 
           {/* 7 KPI Summary Cards */}
+          {phone ? (
+            <PremiumTiles title="Today's Register" subtitle="Attendance and engagement for this class." minHeight={132} items={r.kpis.map((k) => ({ label: k.label, value: k.value, icon: k.icon ?? 'people', tone: 'blue' as const, color: k.color }))} />
+          ) : (
           <View style={s.kpiRow}>
             {r.kpis.map((k) => (
               <View key={k.id} style={s.kpiCard}>
@@ -210,6 +214,7 @@ export function AttendanceDesk({ r, me, phone = false }: { r: AttendanceRegister
               </View>
             ))}
           </View>
+          )}
 
           {/* Main Register Table Card */}
           <Panel style={s.tableCard}>

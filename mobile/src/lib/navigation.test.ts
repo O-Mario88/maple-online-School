@@ -54,6 +54,75 @@ describe('navFor', () => {
     expect(navFor('learner', true).some((i) => i.href === '/admin/onboarding')).toBe(false);
   });
 
+  it('lets school admins reach every school-admin design page from the menu in a design build', () => {
+    const hrefs = navFor('school', true).map((i) => i.href);
+    for (const page of [
+      '/admin/onboarding',
+      '/admin/academics',
+      '/admin/rosters',
+      '/admin/timetable',
+      '/admin/attendance',
+      '/admin/scan',
+      '/admin/report-cards',
+      '/admin/library',
+      '/admin/finance/fees',
+      '/admin/finance/ledger',
+      '/admin/finance/accounting',
+      '/admin/finance/chart-of-accounts',
+      '/admin/finance/journal-entries',
+      '/admin/settings',
+    ]) {
+      expect(hrefs).toContain(page);
+    }
+  });
+
+  it('lets platform admins reach every Maple Command design page from the menu in a design build', () => {
+    const hrefs = navFor('command', true).map((i) => i.href);
+    for (const page of [
+      '/command/overview',
+      '/command/trust',
+      '/command/trust-queue',
+      '/command/institutions',
+      '/command/curricula',
+      '/command/finance/revenue',
+      '/command/finance/payouts',
+      '/command/finance/invoices',
+      '/command/finance/tax',
+      '/command/finance/subscriptions',
+      '/command/finance/transactions',
+      '/command/finance/settlements',
+      '/command/finance/receivables',
+      '/command/finance/revenue-recognition',
+      '/command/finance/contracts',
+      '/command/finance/teacher-payables',
+      '/command/finance/expenses',
+      '/command/finance/payroll',
+      '/command/finance/accounting',
+      '/command/finance/forecast',
+      '/command/finance/reports',
+      '/command/finance/profitability',
+      '/command/finance/integrations',
+      '/command/ops',
+      '/command/security',
+      '/command/security/audit-logs',
+      '/command/security/data-requests',
+      '/command/security/support',
+      '/command/communications',
+      '/command/communications/announcements',
+      '/command/communications/broadcasts',
+    ]) {
+      expect(hrefs).toContain(page);
+    }
+    expect(navFor('command', false).some((i) => i.href.startsWith('/command/'))).toBe(false);
+  });
+
+  it('keeps the school menu of real builds on its live pages', () => {
+    const hrefs = navFor('school', false).map((i) => i.href);
+    expect(hrefs).toContain('/fees');
+    expect(hrefs).toContain('/learn/library');
+    expect(hrefs.some((h) => h.startsWith('/admin/finance') || h === '/admin/library' || h === '/admin/report-cards')).toBe(false);
+  });
+
   it('sends learners to the designed pages once they run on the API, in every build', () => {
     const href = (mock: boolean, key: string) => navFor('learner', mock).find((i) => i.key === key)?.href;
     for (const mock of [true, false]) {
@@ -72,7 +141,7 @@ describe('navFor', () => {
   });
 
   it('keeps the learner phone tabs to Home, Learn, Classes and Assignments', () => {
-    expect(tabBar(navFor('learner', true)).tabs.map((i) => i.label)).toEqual(['Home', 'Learn', 'Classes', 'Assignments']);
+    expect(tabBar(navFor('learner', true)).tabs.map((i) => i.label)).toEqual(['Home', 'Explore', 'Classes', 'Assignments']);
   });
 
   it('lights Classes and Library on both their designed and live pages', () => {

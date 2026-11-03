@@ -10,7 +10,10 @@ import { useMe } from '@/lib/auth/auth-context';
 import { addressName } from '@/lib/home';
 import { mockData } from '@/lib/mock';
 import { usePortal } from '@/lib/portal-context';
+import { useReaderFocus } from '@/lib/reader-focus';
 
+import { commandTabs, isCommandRefPath } from '@/features/command/kit/CommandFrame';
+import { isSchoolRefPath, PARENT_REF_PATHS, PortalTabBar, portalTabsFor } from '@/features/portal/PortalFrame';
 import { TeacherTabBar } from '@/features/teacher/frame/TeacherTabBar';
 
 import { DesignOverlays, OfflineStrip } from './DesignOverlays';
@@ -30,12 +33,15 @@ export function AppShell({ children }: { children: ReactNode }) {
   const { portal } = usePortal();
   const me = useMe();
   const path = usePathname();
-  // The learner home, Projects and Library draw their own sidebar (their references); other learner pages use the top bar.
+  const focusOn = useReaderFocus();
+  // The learner home, Projects, Library and Explore draw their own sidebar (their references); other learner pages use the top bar.
   // The teacher home, AI studio, course builder, calendar and live host draw their own top bar and sidebar too.
   const learnerFrame =
     portal === 'learner' &&
-    (path === '/' || path === '/learn/projects' || path === '/learn/library' || path === '/learn/live-room');
-  const parentFrame = portal === 'parent' && path === '/';
+    (path === '/' || path === '/learn/projects' || path === '/learn/library' || path.startsWith('/learn/library/') || path === '/learn/live-room' || path === '/learn/explore');
+  // The parent home, Academics, Messages and Settings, and the school Onboarding and Academics pages draw their own frame too.
+  const parentFrame = portal === 'parent' && (path === '/' || PARENT_REF_PATHS.includes(path));
+  const schoolFrame = isSchoolRefPath(path) || isCommandRefPath(path);
   // Teacher pages that draw their own frame do so in any mode (a link can open one from another mode);
   // the home ('/') is the teacher's only in teacher mode.
   const teacherFrame =
@@ -57,15 +63,19 @@ export function AppShell({ children }: { children: ReactNode }) {
       path.startsWith('/teach/library'));
   const design = mockData() != null;
   // The host console and the learner classroom are full-screen live rooms in any mode: no app bars, sidebar or overlays.
+  // The book reader's Focus Reading Mode hides every bar too.
+  const readerFocus = path.startsWith('/learn/library/') && focusOn;
   const liveRoom =
-    design && (path === '/teach/host' || path.startsWith('/teach/live-host') || path === '/learn/live-room');
+    design && (path === '/teach/host' || path.startsWith('/teach/live-host') || path === '/learn/live-room' || readerFocus);
   // The phone host console has a dark header: white status bar icons there, the theme's everywhere else.
   // Set here from the route so leaving the console always puts them back.
   const darkHeader = design && !wide && (path === '/teach/host' || path.startsWith('/teach/live-host'));
-  const ownFrame = wide && ((learnerFrame || parentFrame || teacherFrame) && design || liveRoom);
+  const ownFrame = wide && (((learnerFrame || parentFrame || teacherFrame || schoolFrame) && design) || liveRoom);
   // The teacher references show neither the design overlays nor the shared tab bar: they have their own white one.
   const teacherRef = teacherFrame && design;
-  const refScreen = ((learnerFrame || parentFrame || teacherFrame) && design) || liveRoom;
+  const refScreen = ((learnerFrame || parentFrame || teacherFrame || schoolFrame) && design) || liveRoom;
+  // Design builds give parent mode (and the two school-admin references) the references' own phone tab bar.
+  const portalTabs = design ? (isCommandRefPath(path) ? commandTabs(path) : portalTabsFor(portal, path)) : null;
   const topBar = wide && portal === 'learner' && !ownFrame;
   const firstName = me.data ? addressName(me.data.full_name) : '';
 
@@ -83,7 +93,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           </View>
           {refScreen ? null : <OfflineStrip />}
         </View>
-        {wide || liveRoom ? null : teacherRef ? <TeacherTabBar /> : <TabBar />}
+        {wide || liveRoom ? null : teacherRef ? <TeacherTabBar /> : portalTabs ? <PortalTabBar tabs={portalTabs} /> : <TabBar />}
       </View>
     </ShellContext.Provider>
   );

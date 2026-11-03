@@ -25,9 +25,8 @@ const TAG: Record<string, { bg: string; fg: string }> = {
   'Mixed Subjects': { bg: '#E6EEFC', fg: '#1450C8' },
 };
 
-/** Books whose reader opens a sample book (only Mathematics for O-Level has sample pages). */
-const READER_SAMPLE: Record<string, string> = { fractions: 'maths-olevel' };
-export const openBook = (id: string) => router.push({ pathname: '/learn/library/[id]', params: { id: READER_SAMPLE[id] ?? id } });
+/** Every book, video and resource opens in the book reader. */
+export const openBook = (id: string) => router.push({ pathname: '/learn/library/[id]', params: { id } });
 const typeLabel = (t: string) => (t === 'E-books' ? 'eBook' : t.replace(/s$/, ''));
 const LEAF = require('@/assets/images/maple-leaf.png') as number;
 

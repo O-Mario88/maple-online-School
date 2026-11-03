@@ -3,7 +3,7 @@
  * notice states, choices between views, and responsive grids.
  */
 import { Children, type ReactNode, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, type StyleProp, StyleSheet, Text, type TextStyle, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
 import { Elevation, Radius, Spacing, type Theme, Type } from '@/constants/theme';
@@ -38,22 +38,27 @@ interface StatProps {
   tone?: Tone;
 }
 
-/** One headline number, such as fees collected or classes today. */
+/**
+ * One headline number, such as fees collected or classes today, in the premium tile look
+ * (the Maple Command Executive Overview phone page): a tinted tile, a centred icon, the label
+ * and figure in the tile's colour, and the detail under it.
+ */
 export function Stat({ label, value, detail, icon, tone = 'neutral' }: StatProps) {
   const { theme, styles } = useStyles(makeStyles);
   const colors = toneColors(theme, tone);
+  const ink = tone === 'neutral' ? theme.text : colors.strong;
   return (
-    <View style={styles.stat} accessible accessibilityLabel={`${label}: ${value}${detail ? `, ${detail}` : ''}`}>
-      <View style={styles.statTop}>
-        <Text style={styles.statLabel}>{label}</Text>
-        {icon ? (
-          <View style={[styles.statIcon, { backgroundColor: colors.soft }]}>
-            <Icon name={icon} size={16} color={colors.strong} />
-          </View>
-        ) : null}
-      </View>
-      <StatValue value={value} style={styles.statValue} unitStyle={styles.statUnit} />
-      {detail ? <Text style={[styles.statDetail, tone !== 'neutral' && { color: colors.strong }]}>{detail}</Text> : null}
+    <View style={[styles.stat, { backgroundColor: colors.soft, borderColor: `${colors.strong}40` }]} accessible accessibilityLabel={`${label}: ${value}${detail ? `, ${detail}` : ''}`}>
+      {icon ? <Icon name={icon} size={26} color={colors.strong} /> : null}
+      <Text style={[styles.statLabel, { color: ink }]} numberOfLines={2}>
+        {label}
+      </Text>
+      <StatValue value={value} style={[styles.statValue, { color: ink }]} unitStyle={[styles.statUnit, { color: ink }]} />
+      {detail ? (
+        <Text style={styles.statDetail} numberOfLines={2}>
+          {detail}
+        </Text>
+      ) : null}
     </View>
   );
 }
@@ -61,7 +66,7 @@ export function Stat({ label, value, detail, icon, tone = 'neutral' }: StatProps
 // A value that starts with a currency code ("UGX 7.1B") shows the code small, so the figure fits on one line.
 const CURRENCY_VALUE = /^([A-Z]{3}) (.+)$/;
 
-function StatValue({ value, style, unitStyle }: { value: string; style: object; unitStyle: object }) {
+function StatValue({ value, style, unitStyle }: { value: string; style: StyleProp<TextStyle>; unitStyle: StyleProp<TextStyle> }) {
   const money = CURRENCY_VALUE.exec(value);
   return (
     <Text style={style} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.7}>
@@ -236,20 +241,19 @@ function makeStyles(t: Theme) {
     flex: { flex: 1 },
     stat: {
       flexGrow: 1,
-      backgroundColor: t.backgroundElement,
-      borderColor: t.border,
-      borderWidth: StyleSheet.hairlineWidth * 2,
+      alignItems: 'center',
+      minHeight: 150,
+      borderWidth: 1,
       borderRadius: Radius.lg,
-      padding: Spacing.four,
+      paddingVertical: Spacing.three + 2,
+      paddingHorizontal: Spacing.two,
       gap: Spacing.one,
       ...Elevation.card,
     },
-    statTop: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: Spacing.two },
-    statLabel: { ...Type.small, fontWeight: '500', color: t.textSecondary, flex: 1 },
-    statIcon: { width: 28, height: 28, borderRadius: Radius.sm, alignItems: 'center', justifyContent: 'center' },
-    statValue: { ...Type.metric, color: t.text, marginTop: Spacing.two },
-    statUnit: { ...Type.small, fontWeight: '700', color: t.textMuted },
-    statDetail: { ...Type.caption, color: t.textMuted },
+    statLabel: { minHeight: 34, fontSize: 13, fontWeight: '600', textAlign: 'center' },
+    statValue: { fontSize: 24, fontWeight: '800', letterSpacing: -0.5 },
+    statUnit: { fontSize: 15, fontWeight: '800' },
+    statDetail: { fontSize: 12.5, lineHeight: 17, color: t.textSecondary, textAlign: 'center' },
     progress: { gap: Spacing.two },
     progressTop: { flexDirection: 'row', justifyContent: 'space-between' },
     progressLabel: { ...Type.small, color: t.text },

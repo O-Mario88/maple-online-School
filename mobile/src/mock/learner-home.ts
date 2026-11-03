@@ -89,7 +89,8 @@ export const learnerHome = {
   sidebarBooks: h('sdash-sidebar-books'),
   nav: [
     { label: 'Home', icon: 'home', href: '/' },
-    { label: 'My Learning', icon: 'book', href: '/learn/explore' },
+    { label: 'Explore / Learn', icon: 'search', href: '/learn/explore' },
+    { label: 'My Courses', icon: 'book', href: '/learn/course' },
     { label: 'Classes', icon: 'book', href: '/learn/live' },
     { label: 'Assignments', icon: 'clipboard', href: '/learn/assignments' },
     { label: 'Tests & Quizzes', icon: 'check', href: '/learn/paper' },

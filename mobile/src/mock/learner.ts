@@ -360,3 +360,4 @@ export { progressMap } from './progress-map';
 export { squadRoom } from './squad-room';
 export { billingHub } from './billing-hub';
 export { learnerAccount } from './learner-account';
+export * as explore from './learner-explore';

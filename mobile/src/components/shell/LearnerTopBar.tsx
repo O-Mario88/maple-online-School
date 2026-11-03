@@ -14,7 +14,7 @@ const INK = '#0B1424';
 
 const TABS: readonly { label: string; href: Href; icon: IconName; match: readonly string[] }[] = [
   { label: 'Home', href: '/', icon: 'home', match: ['/'] },
-  { label: 'Learn', href: '/learn/explore', icon: 'book', match: ['/learn'] },
+  { label: 'Explore', href: '/learn/explore', icon: 'search', match: ['/learn'] },
   { label: 'Classes', href: '/learn/live', icon: 'person', match: ['/lessons', '/learn/live'] },
   { label: 'Assignments', href: '/learn/assignments', icon: 'chart', match: ['/learn/assignments'] },
   { label: 'Progress', href: '/learn/progress', icon: 'chart', match: ['/learn/progress'] },

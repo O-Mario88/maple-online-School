@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
+import { PremiumTiles } from '@/features/portal/Premium';
 import { BLUE, BODY, GREEN, INK, IconTile, LINE, MUTED, Pill, PanelHead, RED, TButton, toneColor } from '@/features/teacher/frame/TeacherParts';
 import { useTeacherGo } from '@/features/teacher/frame/TeacherFrame';
 import type { Countdown } from '@/lib/teacher-home';
@@ -40,22 +41,18 @@ export function StatRow({ h, cd, phone = false }: { h: TeacherHome; cd: Countdow
   const go = useTeacherGo();
   const e = h.earnings;
   if (phone) {
-    const tiles = [
-      { icon: 'video', color: BLUE, value: cd.live ? 'Live' : `${cd.minutes} min`, label: 'Next Class', onPress: () => go('/teach/host') },
-      { icon: 'notes', color: RED, value: String(h.ungraded.count), label: 'To Grade', onPress: () => go('/teach/grading') },
-      { icon: 'people', color: '#F08C00', value: String(h.struggling), label: 'Need Help', onPress: () => go('analytics') },
-      { icon: 'wallet', color: GREEN, value: `UGX ${Math.round(e.week / 1000)}K`, label: 'This Week', onPress: () => go('/teach/earnings') },
-    ] as const;
     return (
-      <View style={styles.statsP}>
-        {tiles.map((t) => (
-          <Pressable key={t.label} style={styles.statP} onPress={t.onPress} accessibilityRole="button" accessibilityLabel={`${t.value} ${t.label}`}>
-            <IconTile icon={t.icon} color={t.color} size={32} soft />
-            <Text style={styles.statPValue}>{t.value}</Text>
-            <Text style={styles.statPLabel}>{t.label}</Text>
-          </Pressable>
-        ))}
-      </View>
+      <PremiumTiles
+        title="Today at a Glance"
+        subtitle="Your next class, grading, learners and earnings."
+        minHeight={150}
+        items={[
+          { icon: 'video', tone: 'blue', value: cd.live ? 'Live' : `${cd.minutes} min`, label: 'Next Class', caption: h.nextClass.subject, onPress: () => go('/teach/host') },
+          { icon: 'notes', tone: 'red', value: String(h.ungraded.count), label: 'To Grade', caption: `${h.ungraded.overdue} overdue`, captionTone: 'red', onPress: () => go('/teach/grading') },
+          { icon: 'people', tone: 'orange', value: String(h.struggling), label: 'Need Help', caption: 'Struggling students', onPress: () => go('analytics') },
+          { icon: 'wallet', tone: 'green', value: `UGX ${Math.round(e.week / 1000)}K`, label: 'This Week', delta: `${e.change}%`, caption: 'from last week', onPress: () => go('/teach/earnings') },
+        ]}
+      />
     );
   }
   return (
