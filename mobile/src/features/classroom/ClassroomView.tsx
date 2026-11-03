@@ -24,7 +24,7 @@ import {
   type ExcalidrawDeltaPacket,
   type ExcalidrawElement,
   exportBoardSnapshot,
-  INITIAL_FRACTION_ELEMENTS,
+  initialFractionElements,
 } from '@/lib/excalidraw-livekit';
 import { toast } from '@/lib/toast';
 import type { MockData } from '@/mock';
@@ -52,7 +52,7 @@ export function ClassroomView({ room }: { room: Room }) {
   const [sheet, setSheet] = useState<SheetRail | null>(null);
   const [teacherOnly, setTeacherOnly] = useState(false);
   const [whiteboardOpen, setWhiteboardOpen] = useState(false);
-  const [elements, setElements] = useState<readonly ExcalidrawElement[]>(INITIAL_FRACTION_ELEMENTS);
+  const [elements, setElements] = useState<readonly ExcalidrawElement[]>(() => initialFractionElements(room.teacher));
   const [packets, setPackets] = useState<readonly ExcalidrawDeltaPacket[]>([]);
   // Only the teacher grants drawing; in the learner's view nobody else has been given the pen yet.
   const allowedDrawers: readonly string[] = NO_DRAWERS;

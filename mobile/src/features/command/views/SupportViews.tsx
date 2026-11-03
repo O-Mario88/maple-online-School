@@ -64,8 +64,8 @@ function useSupport(s: S) {
   const update = (t: TicketRow) => setList((prev) => prev.map((x) => (x.id === t.id ? t : x)));
 
   const escalateTo = (t: TicketRow, level: 'L2' | 'Trust & Safety') => {
-    update({ ...escalate(t, level, s.escalator), assignee: level === 'L2' ? 'Daniel K.' : 'Trust & Safety' });
-    toast(`${t.id} escalated to ${level}. ${level === 'Trust & Safety' ? 'The safeguarding lead is paged.' : 'Daniel K. (L2) is notified.'}`);
+    update(escalate(t, level, s.escalator, level === 'L2' ? s.l2Lead : 'Trust & Safety'));
+    toast(`${t.id} escalated to ${level}. ${level === 'Trust & Safety' ? 'The safeguarding lead is paged.' : `${s.l2Lead} (L2) is notified.`}`);
   };
   const addNote = (t: TicketRow) =>
     setAsk({ title: 'Add internal note', body: 'Only staff see internal notes. They are kept with the ticket and in the audit log.', confirm: 'Add Note', tone: 'blue', onConfirm: (note) => {

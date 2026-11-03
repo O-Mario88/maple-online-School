@@ -109,10 +109,18 @@ describe('support tickets', () => {
   });
 
   test('escalating moves the ticket up and notes where it went', () => {
-    const t = escalate(ticket(), 'Trust & Safety', 'Mary N.');
+    const t = escalate(ticket(), 'Trust & Safety', 'Mary N.', 'Trust & Safety');
     expect(t.status).toBe('Escalated');
     expect(t.level).toBe('Trust & Safety');
+    expect(t.assignee).toBe('Trust & Safety');
     expect(t.notes[0]).toMatch(/Escalated to Trust & Safety by Mary N\./);
+  });
+
+  test('escalating to L2 hands the ticket to the L2 lead it was sent to', () => {
+    const t = escalate(ticket(), 'L2', 'Mary N.', 'L2 Lead');
+    expect(t.level).toBe('L2');
+    expect(t.assignee).toBe('L2 Lead');
+    expect(t.notes[0]).toBe('Escalated to L2 (L2 Lead) by Mary N.');
   });
 
   test('closing needs a resolution', () => {

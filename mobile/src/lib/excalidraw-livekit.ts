@@ -56,62 +56,64 @@ export interface BoardSnapshot {
   byteSize: number;
 }
 
-/** Default initial worked fraction elements matching the primary & secondary math lessons. */
-export const INITIAL_FRACTION_ELEMENTS: readonly ExcalidrawElement[] = [
-  {
-    id: 'el-heading',
-    type: 'text',
-    x: 24,
-    y: 16,
-    strokeColor: '#1463F3',
-    text: 'Fractions: Adding and Subtracting',
-    version: 1,
-    author: 'Ms. Sarah Kimani',
-  },
-  {
-    id: 'el-ex1',
-    type: 'equation',
-    x: 24,
-    y: 54,
-    strokeColor: '#0F172A',
-    text: 'Find  3/4 + 2/3',
-    version: 1,
-    author: 'Ms. Sarah Kimani',
-  },
-  {
-    id: 'el-step1',
-    type: 'equation',
-    x: 24,
-    y: 92,
-    strokeColor: '#1D4ED8',
-    text: '= (3×3)/(4×3) + (2×4)/(3×4)  [LCM = 12]',
-    version: 1,
-    author: 'Ms. Sarah Kimani',
-  },
-  {
-    id: 'el-step2',
-    type: 'equation',
-    x: 24,
-    y: 126,
-    strokeColor: '#0F172A',
-    text: '= 9/12 + 8/12 = 17/12',
-    version: 1,
-    author: 'Ms. Sarah Kimani',
-  },
-  {
-    id: 'el-ans',
-    type: 'rectangle',
-    x: 24,
-    y: 160,
-    width: 150,
-    height: 36,
-    strokeColor: '#EF4444',
-    backgroundColor: '#FEF2F2',
-    text: 'Answer: 1  5/12',
-    version: 1,
-    author: 'Ms. Sarah Kimani',
-  },
-];
+/** The worked fraction example a lesson's board starts with, written by that lesson's teacher. */
+export function initialFractionElements(author: string): readonly ExcalidrawElement[] {
+  return [
+    {
+      id: 'el-heading',
+      type: 'text',
+      x: 24,
+      y: 16,
+      strokeColor: '#1463F3',
+      text: 'Fractions: Adding and Subtracting',
+      version: 1,
+      author,
+    },
+    {
+      id: 'el-ex1',
+      type: 'equation',
+      x: 24,
+      y: 54,
+      strokeColor: '#0F172A',
+      text: 'Find  3/4 + 2/3',
+      version: 1,
+      author,
+    },
+    {
+      id: 'el-step1',
+      type: 'equation',
+      x: 24,
+      y: 92,
+      strokeColor: '#1D4ED8',
+      text: '= (3×3)/(4×3) + (2×4)/(3×4)  [LCM = 12]',
+      version: 1,
+      author,
+    },
+    {
+      id: 'el-step2',
+      type: 'equation',
+      x: 24,
+      y: 126,
+      strokeColor: '#0F172A',
+      text: '= 9/12 + 8/12 = 17/12',
+      version: 1,
+      author,
+    },
+    {
+      id: 'el-ans',
+      type: 'rectangle',
+      x: 24,
+      y: 160,
+      width: 150,
+      height: 36,
+      strokeColor: '#EF4444',
+      backgroundColor: '#FEF2F2',
+      text: 'Answer: 1  5/12',
+      version: 1,
+      author,
+    },
+  ];
+}
 
 /**
  * Computes a compact JSON delta packet between previous and next Excalidraw elements.
@@ -228,7 +230,7 @@ export function drawCandidate(
 export function toggleStudentDrawPermission(
   currentAllowed: readonly string[],
   studentName: string,
-  teacherName: string = 'Ms. Sarah Kimani',
+  teacherName: string,
   now: number = Date.now(),
 ): { nextAllowed: string[]; packet: ExcalidrawDeltaPacket } {
   const exists = currentAllowed.some(
@@ -259,9 +261,9 @@ export function toggleStudentDrawPermission(
  */
 export function exportBoardSnapshot(
   elements: readonly ExcalidrawElement[],
-  format: ExportFormat = 'png',
-  title: string = 'Worked Board Example',
-  author: string = 'Ms. Sarah Kimani',
+  format: ExportFormat,
+  title: string,
+  author: string,
 ): BoardSnapshot {
   const workedExamples = elements
     .filter((el) => (el.type === 'equation' || el.type === 'rectangle' || el.type === 'text') && el.text)

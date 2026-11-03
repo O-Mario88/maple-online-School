@@ -168,8 +168,11 @@ export function slaState(t: Pick<Ticket, 'created' | 'slaHours'>, now: string): 
   return minutesLeft >= 0 ? { minutesLeft, breached: false, label: `${fmt(minutesLeft)} left` } : { minutesLeft, breached: true, label: `Breached ${fmt(minutesLeft)} ago` };
 }
 
-export function escalate<T extends Ticket>(t: T, level: 'L2' | 'Trust & Safety', by: string): T {
-  return { ...t, status: 'Escalated', level, notes: [`Escalated to ${level} by ${by}.`, ...t.notes] };
+/** Escalates a ticket and hands it to `to`, the L2 lead or the Trust & Safety queue. */
+export function escalate<T extends Ticket>(t: T, level: 'L2' | 'Trust & Safety', by: string, to: string): T {
+  const where = to === level ? level : `${level} (${to})`;
+  const stop = by.endsWith('.') ? '' : '.';
+  return { ...t, status: 'Escalated', level, assignee: to, notes: [`Escalated to ${where} by ${by}${stop}`, ...t.notes] };
 }
 
 export function closeTicket<T extends Ticket>(t: T, resolution: string): { ticket: T; error?: string } {

@@ -37,7 +37,7 @@ export function Stage({
   elements = [],
   onChangeElements,
   viewModeEnabled = true,
-  activeDrawerName = 'Ms. Sarah Kimani',
+  activeDrawerName = teacher,
   onSaveSnapshot,
   packets = [],
 }: {

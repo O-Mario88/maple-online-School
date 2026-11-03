@@ -309,6 +309,8 @@ export const supportTabs: readonly { label: string; count: number }[] = [
 /** The support agent signed in on the Support page, and who escalates. */
 export const supportAgent = 'Alex R.';
 export const escalator = 'Mary N.';
+/** Who takes tickets escalated to L2. */
+export const l2Lead = 'Daniel K.';
 /** People offered in the audit log's user filter. */
 export const auditUsers = ['Mary N.', 'System', 'David O.', 'James K.'];
 export const assignees = ['Alex R.', 'Stella M.', 'Daniel K.', 'Maria L.', 'Kevin T.', 'Ruth N.'];
