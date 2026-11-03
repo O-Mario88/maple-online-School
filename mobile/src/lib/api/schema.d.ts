@@ -1043,12 +1043,17 @@ export interface paths {
             };
             requestBody?: never;
             responses: {
-                /** @description {count, results: Term[]} */
+                /** @description The terms */
                 200: {
                     headers: {
                         [name: string]: unknown;
                     };
-                    content?: never;
+                    content: {
+                        "application/json": {
+                            count: number;
+                            results: components["schemas"]["Term"][];
+                        };
+                    };
                 };
             };
         };
@@ -1061,15 +1066,34 @@ export interface paths {
                 path?: never;
                 cookie?: never;
             };
-            requestBody?: never;
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /**
+                         * Format: int64
+                         * @description Needed only by leaders of more than one school
+                         */
+                        institution?: number;
+                        name: string;
+                        /** Format: date */
+                        start_date: string;
+                        /** Format: date */
+                        end_date: string;
+                        is_active?: boolean;
+                    };
+                };
+            };
             responses: {
                 /** @description The term */
                 201: {
                     headers: {
                         [name: string]: unknown;
                     };
-                    content?: never;
+                    content: {
+                        "application/json": components["schemas"]["Term"];
+                    };
                 };
+                400: components["responses"]["BadRequest"];
                 403: components["responses"]["Forbidden"];
                 /** @description Name already used */
                 409: {
@@ -1103,12 +1127,17 @@ export interface paths {
             };
             requestBody?: never;
             responses: {
-                /** @description {count, results: Room[]} */
+                /** @description The rooms */
                 200: {
                     headers: {
                         [name: string]: unknown;
                     };
-                    content?: never;
+                    content: {
+                        "application/json": {
+                            count: number;
+                            results: components["schemas"]["Room"][];
+                        };
+                    };
                 };
             };
         };
@@ -1121,16 +1150,38 @@ export interface paths {
                 path?: never;
                 cookie?: never;
             };
-            requestBody?: never;
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /**
+                         * Format: int64
+                         * @description Needed only by leaders of more than one school
+                         */
+                        institution?: number;
+                        name: string;
+                        capacity: number;
+                    };
+                };
+            };
             responses: {
                 /** @description The room */
                 201: {
                     headers: {
                         [name: string]: unknown;
                     };
+                    content: {
+                        "application/json": components["schemas"]["Room"];
+                    };
+                };
+                400: components["responses"]["BadRequest"];
+                403: components["responses"]["Forbidden"];
+                /** @description Name already used */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
                     content?: never;
                 };
-                403: components["responses"]["Forbidden"];
             };
         };
         delete?: never;
@@ -1221,16 +1272,67 @@ export interface paths {
                 };
                 400: components["responses"]["BadRequest"];
                 403: components["responses"]["Forbidden"];
-                /** @description Clash: {code: clash, detail, clashes[]} */
+                /** @description The lesson clashes with the class's, teacher's or room's timetable */
                 409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @enum {string} */
+                            code: "clash";
+                            detail: string;
+                            clashes: {
+                                /** Format: int64 */
+                                slot: number;
+                                class_title: string;
+                                reason: string;
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/scheduling/timetable/{id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Remove a lesson from the timetable (school leaders) */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Removed */
+                204: {
                     headers: {
                         [name: string]: unknown;
                     };
                     content?: never;
                 };
+                404: components["responses"]["NotFound"];
             };
         };
-        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -1253,12 +1355,17 @@ export interface paths {
             };
             requestBody?: never;
             responses: {
-                /** @description {count, results: Institution[]} */
+                /** @description The schools */
                 200: {
                     headers: {
                         [name: string]: unknown;
                     };
-                    content?: never;
+                    content: {
+                        "application/json": {
+                            count: number;
+                            results: components["schemas"]["School"][];
+                        };
+                    };
                 };
             };
         };
@@ -1424,12 +1531,17 @@ export interface paths {
             };
             requestBody?: never;
             responses: {
-                /** @description {count, results: InstitutionMembership[]} */
+                /** @description The memberships */
                 200: {
                     headers: {
                         [name: string]: unknown;
                     };
-                    content?: never;
+                    content: {
+                        "application/json": {
+                            count: number;
+                            results: components["schemas"]["SchoolMember"][];
+                        };
+                    };
                 };
             };
         };
@@ -1466,16 +1578,29 @@ export interface paths {
                 };
                 cookie?: never;
             };
-            requestBody?: never;
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @description A school role */
+                        role?: string;
+                        /** @enum {string} */
+                        status?: "active" | "suspended";
+                    };
+                };
+            };
             responses: {
                 /** @description The membership */
                 200: {
                     headers: {
                         [name: string]: unknown;
                     };
-                    content?: never;
+                    content: {
+                        "application/json": components["schemas"]["SchoolMember"];
+                    };
                 };
+                400: components["responses"]["BadRequest"];
                 403: components["responses"]["Forbidden"];
+                404: components["responses"]["NotFound"];
                 /** @description Would remove the school's last active leader */
                 409: {
                     headers: {
@@ -2377,12 +2502,17 @@ export interface paths {
             };
             requestBody?: never;
             responses: {
-                /** @description {count, results: ClassLevel[]} */
+                /** @description The class levels */
                 200: {
                     headers: {
                         [name: string]: unknown;
                     };
-                    content?: never;
+                    content: {
+                        "application/json": {
+                            count: number;
+                            results: components["schemas"]["ClassLevel"][];
+                        };
+                    };
                 };
                 401: components["responses"]["Unauthorized"];
             };
@@ -4836,6 +4966,68 @@ export interface components {
             note?: string;
         } & {
             [key: string]: unknown;
+        };
+        School: {
+            /** Format: int64 */
+            id: number;
+            name: string;
+            country_code: string;
+            school_level: string;
+            curriculum_track: string;
+            primary_color: string;
+            secondary_color: string;
+            subscription_plan: string;
+            is_active: boolean;
+            /** Format: date-time */
+            created_at: string;
+        };
+        ClassLevel: {
+            /** Format: int64 */
+            id: number;
+            name: string;
+            /**
+             * Format: int64
+             * @description The education level (nursery
+             */
+            level: number;
+            /** @description Orders levels across curricula: P1 = 1, S1 = 8 */
+            internal_canonical_grade: number;
+        };
+        Term: {
+            /** Format: int64 */
+            id: number;
+            /** Format: int64 */
+            institution: number;
+            name: string;
+            /** Format: date */
+            start_date: string;
+            /** Format: date */
+            end_date: string;
+            is_active: boolean;
+        };
+        Room: {
+            /** Format: int64 */
+            id: number;
+            /** Format: int64 */
+            institution: number;
+            name: string;
+            capacity: number;
+        };
+        SchoolMember: {
+            /** Format: int64 */
+            id: number;
+            /** Format: int64 */
+            user: number;
+            full_name: string;
+            email: string;
+            /** Format: int64 */
+            institution: number;
+            institution_name: string;
+            role: string;
+            /** @enum {string} */
+            status: "pending" | "active" | "suspended";
+            /** Format: date-time */
+            joined_at: string;
         };
         Slot: {
             /** Format: int64 */

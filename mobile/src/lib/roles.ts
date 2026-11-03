@@ -50,11 +50,25 @@ interface SchoolMembership extends MembershipLike {
   institution_name: string;
 }
 
-/** Schools where the person can approve or decline parents' links to learners. */
-export function admissionsSchools(memberships: readonly SchoolMembership[]): { id: number; name: string }[] {
+export interface SchoolRef {
+  id: number;
+  name: string;
+}
+
+function schoolsWithRoles(memberships: readonly SchoolMembership[], allowed: ReadonlySet<string>): SchoolRef[] {
   const seen = new Map<number, string>();
   for (const m of memberships) {
-    if (m.status === 'active' && ADMISSIONS_ROLES.has(m.role)) seen.set(m.institution_id, m.institution_name);
+    if (m.status === 'active' && allowed.has(m.role)) seen.set(m.institution_id, m.institution_name);
   }
   return [...seen].map(([id, name]) => ({ id, name }));
+}
+
+/** Schools where the person can approve or decline parents' links to learners. */
+export function admissionsSchools(memberships: readonly SchoolMembership[]): SchoolRef[] {
+  return schoolsWithRoles(memberships, ADMISSIONS_ROLES);
+}
+
+/** Schools the person leads: where they can change the timetable, terms, rooms and report cards. */
+export function leaderSchools(memberships: readonly SchoolMembership[]): SchoolRef[] {
+  return schoolsWithRoles(memberships, LEADER_ROLES);
 }

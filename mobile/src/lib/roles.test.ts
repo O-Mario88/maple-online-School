@@ -1,4 +1,4 @@
-import { admissionsSchools, homeFor, isLeader, isStaff } from './roles';
+import { admissionsSchools, homeFor, isLeader, isStaff, leaderSchools } from './roles';
 
 describe('isLeader', () => {
   it('is true only for active school leadership roles', () => {
@@ -49,6 +49,22 @@ describe('admissionsSchools', () => {
       { institution_id: 4, institution_name: 'Delta', role: 'dos', status: 'active' },
     ];
     expect(admissionsSchools(memberships)).toEqual([
+      { id: 1, name: 'Alpha' },
+      { id: 4, name: 'Delta' },
+    ]);
+  });
+});
+
+describe('leaderSchools', () => {
+  it('lists each school the person actively leads, once', () => {
+    const memberships = [
+      { institution_id: 1, institution_name: 'Alpha', role: 'headteacher', status: 'active' },
+      { institution_id: 1, institution_name: 'Alpha', role: 'dos', status: 'active' },
+      { institution_id: 2, institution_name: 'Beta', role: 'registrar', status: 'active' },
+      { institution_id: 3, institution_name: 'Gamma', role: 'deputy', status: 'pending' },
+      { institution_id: 4, institution_name: 'Delta', role: 'deputy', status: 'active' },
+    ];
+    expect(leaderSchools(memberships)).toEqual([
       { id: 1, name: 'Alpha' },
       { id: 4, name: 'Delta' },
     ]);

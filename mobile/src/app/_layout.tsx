@@ -3,14 +3,16 @@ import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
-import { useColorScheme } from 'react-native';
+import { Platform, useColorScheme } from 'react-native';
 
 import { ToastHost } from '@/components/ui/ToastHost';
 import { AuthProvider, useAuth } from '@/lib/auth/auth-context';
+import { signedOutLanding } from '@/lib/landing';
 
-// Signed-out visitors who open a signed-in address (such as /) land on sign-in,
-// not on whichever public page happens to be first.
-export const unstable_settings = { anchor: 'sign-in' };
+// Signed-out visitors who open a signed-in address (such as /) land on the public
+// homepage on the web and on sign-in in the phone apps, not on whichever public page
+// happens to be first.
+export const unstable_settings = { anchor: signedOutLanding(Platform.OS) };
 
 SplashScreen.preventAutoHideAsync();
 

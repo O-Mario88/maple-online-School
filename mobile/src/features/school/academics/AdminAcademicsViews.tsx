@@ -1,14 +1,30 @@
+import { Image } from 'expo-image';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
-import { SchoolDesk, SchoolPhoneTop } from '@/features/portal/PortalFrame';
-import { Btn, Card, CardHead, IconTile, Pill, UnderTabs } from '@/features/portal/PortalParts';
-import { BLUE, BODY, CANVAS, LINE, NAVY, SELECT, type Tone, WHITE } from '@/features/portal/tokens';
+import { SchoolPhoneTop } from '@/features/portal/PortalFrame';
+import { Btn, Card, IconTile, Pill } from '@/features/portal/PortalParts';
+import { BLUE, BODY, CANVAS, LINE, NAVY, SELECT, TEXT, type Tone, WHITE } from '@/features/portal/tokens';
+import type { IconName } from '@/lib/icons';
+import { type AcademicsKey, setupProgress } from '@/lib/school/academics-live';
 import { toast } from '@/lib/toast';
-import type { AdminTable, SchoolAdmin } from '@/mock/portal';
+import type { AdminTable } from '@/mock/portal';
 
-type Academics = SchoolAdmin['academics'];
+import { AcademicsFrame } from './AcademicsFrame';
+import type { AcademicsPage } from './academicsShape';
+
+const HERO = require('@/assets/images/academics-hero.png') as number;
+
+type Academics = AcademicsPage;
+
+/** Real builds: what the page's buttons do. Without it (design builds) they show what would happen. */
+export interface AcademicsActions {
+  onAction: (action: string) => void;
+}
+
+const press = (act: AcademicsActions | undefined, action: string) => (act ? act.onAction(action) : toast(`${action}: the form opens here.`));
 
 /** The colour a status takes: green for live, blue for coming up, grey for closed. */
 function statusTone(status: string): Tone {
@@ -19,33 +35,60 @@ function statusTone(status: string): Tone {
 
 const isStatus = (label: string) => label === 'Status';
 
-/** One configuration table: title, its add buttons, then the rows with a status pill and a ⋮ menu. */
-function TableCard({ t }: { t: AdminTable }) {
+/** The look of each part of the structure: its icon and colours (tile tint, icon), as the design draws them. */
+// `wide` is each stat card's share of the row, as the design sizes them (longer labels get wider cards).
+const PART: Readonly<Record<string, { icon: IconName; tint: string; ink: string; one: string; tab: IconName; wide: number }>> = {
+  campuses: { icon: 'building', tint: '#E6EFFD', ink: '#2A6AE8', one: 'Campus', tab: 'building', wide: 178 },
+  years: { icon: 'calendar', tint: '#E3F5EA', ink: '#22A55A', one: 'Academic Year', tab: 'calendar', wide: 195 },
+  terms: { icon: 'book', tint: '#F1EAFE', ink: '#8B3CF0', one: 'Term', tab: 'calendar', wide: 165 },
+  streams: { icon: 'people', tint: '#E6EFFD', ink: '#2A6AE8', one: 'Grade Level', tab: 'people', wide: 180 },
+  subjects: { icon: 'grid', tint: '#FFF3E3', ink: '#F59E0B', one: 'Subject', tab: 'grid', wide: 163 },
+  grading: { icon: 'star', tint: '#F1EAFE', ink: '#8B3CF0', one: 'Grading Scale', tab: 'chart', wide: 167 },
+  competency: { icon: 'layers', tint: '#DFF6F3', ink: '#14A39A', one: 'Competency Area', tab: 'layers', wide: 192 },
+};
+const TERMS_TILE = { icon: 'calendar' as IconName, tint: '#FFF3E3', ink: '#F59E0B' };
+
+function Tile({ icon, tint, ink, size, radius = 12 }: { icon: IconName; tint: string; ink: string; size: number; radius?: number }) {
+  return (
+    <View style={[styles.tile, { width: size, height: size, borderRadius: radius, backgroundColor: tint }]}>
+      <Icon name={icon} size={size * 0.5} color={ink} />
+    </View>
+  );
+}
+
+/** One configuration table: icon, title and its add button, then the rows with a status pill and a ⋯ menu. */
+function TableCard({ t, act }: { t: AdminTable; act?: AcademicsActions }) {
+  const part = t.key === 'terms' ? TERMS_TILE : (PART[t.key] ?? PART.campuses);
   return (
     <Card style={styles.tableCard}>
-      <CardHead
-        title={t.title}
-        subtitle={t.subtitle}
-        size={20}
-        right={
-          <View style={styles.actions}>
-            {t.actions.map((a) => (
-              <Btn key={a} label={a} icon={a.startsWith('Add') ? 'plus' : undefined} kind="soft" onPress={() => toast(`${a}: the form opens here.`)} height={46} style={styles.actionBtn} />
-            ))}
-          </View>
-        }
-      />
+      <View style={styles.tableHead}>
+        <Tile icon={part.icon} tint={part.tint} ink={part.ink} size={42} radius={11} />
+        <View style={styles.flex}>
+          <Text style={styles.tableTitle} accessibilityRole="header">
+            {t.title}
+          </Text>
+          <Text style={styles.tableSub}>{t.subtitle}</Text>
+        </View>
+        {t.actions.map((a) => (
+          <Pressable key={a} style={({ pressed }) => [styles.addBtn, pressed && styles.pressed]} onPress={() => press(act, a)} accessibilityRole="button" accessibilityLabel={a}>
+            {a.startsWith('Add') ? <Icon name="plus" size={17} color={BLUE} /> : null}
+            <Text style={styles.addText} numberOfLines={1}>
+              {a}
+            </Text>
+          </Pressable>
+        ))}
+      </View>
       <View style={styles.table}>
         <View style={[styles.tr, styles.th]}>
           {t.columns.map((c) => (
-            <Text key={c.label} style={[styles.thText, { flex: c.flex }]} numberOfLines={2}>
+            <Text key={c.label} style={[styles.thText, { flex: c.flex }]} numberOfLines={1}>
               {c.label}
             </Text>
           ))}
           <View style={styles.menuCol} />
         </View>
-        {t.rows.map((r) => (
-          <View key={r.join('|')} style={styles.tr}>
+        {t.rows.map((r, ri) => (
+          <View key={r.join('|')} style={[styles.tr, ri === t.rows.length - 1 && styles.trLast]}>
             {r.map((cell, i) => {
               const col = t.columns[i];
               return isStatus(col.label) ? (
@@ -53,35 +96,122 @@ function TableCard({ t }: { t: AdminTable }) {
                   <Pill label={cell} tone={statusTone(cell)} size={13.5} style={styles.status} />
                 </View>
               ) : (
-                <Text key={col.label} style={[styles.td, i === 1 && styles.tdName, { flex: col.flex }]}>
+                <Text key={col.label} style={[styles.td, i === 1 && styles.tdName, { flex: col.flex }]} numberOfLines={2}>
                   {cell}
                 </Text>
               );
             })}
-            <Pressable style={styles.menuCol} onPress={() => toast(`Edit or archive ${r[1]}.`)} accessibilityRole="button" accessibilityLabel={`Options for ${r[1]}`} hitSlop={6}>
-              <Icon name="more" size={22} color={BLUE} />
+            <Pressable
+              style={styles.menuCol}
+              onPress={() => (act ? act.onAction(`Edit ${r[1]}`) : toast(`Edit or archive ${r[1]}.`))}
+              accessibilityRole="button"
+              accessibilityLabel={`Options for ${r[1]}`}
+              hitSlop={6}>
+              <Icon name="more" size={20} color={NAVY} />
             </Pressable>
           </View>
         ))}
+        {t.rows.length === 0 ? <Text style={styles.emptyRows}>Nothing set up yet.</Text> : null}
       </View>
     </Card>
   );
 }
 
-/** The summary strip: how many campuses, years, terms, grade levels, subjects, scales and competency areas. */
+/** The seven counts, each on its own card: campuses, years, terms, grade levels, subjects, scales and competency areas. */
 function Stats({ a }: { a: Academics }) {
   return (
-    <Card style={styles.stats}>
-      {a.sections.map((s, i) => (
-        <View key={s.key} style={[styles.stat, i > 0 && styles.statLine]}>
-          <IconTile icon={s.icon} tone={s.tone} size={52} radius={13} iconSize={26} />
-          <View style={styles.flex}>
-            <Text style={styles.statNum}>{s.count}</Text>
-            <Text style={styles.statLabel}>{s.countLabel}</Text>
+    <View style={styles.stats}>
+      {a.sections.map((s) => {
+        const part = PART[s.key] ?? PART.campuses;
+        return (
+          <View key={s.key} style={[styles.stat, { flex: part.wide }]}>
+            <Tile icon={part.icon} tint={part.tint} ink={part.ink} size={56} />
+            <View style={styles.flex}>
+              <Text style={styles.statNum}>{s.count}</Text>
+              <Text style={styles.statLabel}>{s.count === 1 ? part.one : s.countLabel}</Text>
+            </View>
           </View>
+        );
+      })}
+    </View>
+  );
+}
+
+/** The hero: the page's icon, title and line, with the globe and books photo on the right. */
+function Hero() {
+  return (
+    <View style={styles.hero}>
+      <Image source={HERO} style={styles.heroPhoto} contentFit="cover" contentPosition="right" accessibilityIgnoresInvertColors />
+      <LinearGradient colors={['#EEF4FD', 'rgba(238,244,253,0)']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.heroFade} />
+      <View style={styles.heroIcon}>
+        <Icon name="cap" size={40} color={BLUE} />
+      </View>
+      <View>
+        <Text style={styles.title} accessibilityRole="header">
+          Academics
+        </Text>
+        <Text style={styles.subtitle}>{"Configure your school's academic structure, grading and competency frameworks."}</Text>
+      </View>
+    </View>
+  );
+}
+
+/** The tab row in its own white card: Overview, then a tab per part, the current one tinted and underlined. */
+function Tabs({ a, tab, onTab }: { a: Academics; tab: string; onTab: (t: string) => void }) {
+  return (
+    <View style={styles.tabCard} accessibilityRole="tablist">
+      {a.tabs.map((t) => {
+        const on = t.label === tab;
+        const key = Object.keys(TAB_FOR_TABLE).find((k) => TAB_FOR_TABLE[k] === t.label);
+        const icon: IconName = key ? PART[key].tab : 'home';
+        return (
+          <Pressable key={t.label} style={[styles.tab, on && styles.tabOn]} onPress={() => onTab(t.label)} accessibilityRole="tab" accessibilityState={{ selected: on }} accessibilityLabel={t.label}>
+            <Icon name={icon} size={19} color={on ? BLUE : NAVY} />
+            <Text style={[styles.tabText, on && styles.tabTextOn]} numberOfLines={1}>
+              {t.label}
+            </Text>
+            {on ? <View style={styles.tabLine} /> : null}
+          </Pressable>
+        );
+      })}
+    </View>
+  );
+}
+
+interface SummaryStat {
+  icon: IconName;
+  tint: string;
+  ink: string;
+  value: number;
+  label: string;
+}
+
+/** One of the three summary cards along the bottom: a tinted head that opens its tab, then two counts. */
+function Summary({ title, body, icon, tint, ink, wash, stats, onOpen }: { title: string; body: string; icon: IconName; tint: string; ink: string; wash: string; stats: readonly SummaryStat[]; onOpen: () => void }) {
+  return (
+    <View style={styles.summary}>
+      <Pressable style={[styles.summaryHead, { backgroundColor: wash }]} onPress={onOpen} accessibilityRole="button" accessibilityLabel={`Open ${title}`}>
+        <Tile icon={icon} tint={tint} ink={ink} size={70} radius={16} />
+        <View style={styles.flex}>
+          <Text style={styles.summaryTitle}>{title}</Text>
+          <Text style={styles.summaryBody}>{body}</Text>
         </View>
-      ))}
-    </Card>
+        <View style={styles.chevron}>
+          <Icon name="chevronRight" size={20} color={BLUE} />
+        </View>
+      </Pressable>
+      <View style={styles.summaryStats}>
+        {stats.map((x, i) => (
+          <View key={x.label} style={[styles.summaryStat, i > 0 && styles.summaryLine]}>
+            <Tile icon={x.icon} tint={x.tint} ink={x.ink} size={38} radius={10} />
+            <View>
+              <Text style={styles.summaryNum}>{x.value}</Text>
+              <Text style={styles.summaryLabel}>{x.label}</Text>
+            </View>
+          </View>
+        ))}
+      </View>
+    </View>
   );
 }
 
@@ -95,36 +225,35 @@ const TAB_FOR_TABLE: Readonly<Record<string, string>> = {
   competency: 'Competency Framework',
 };
 
-/** Academic Structure, Terms, Grades & Subject Matrix on the desktop reference. */
-export function AdminAcademicsDesk({ a }: { a: Academics }) {
+/** Academic Structure, Terms, Grades & Subject Matrix on the desktop design. */
+export function AdminAcademicsDesk({ a, act }: { a: Academics; act?: AcademicsActions }) {
   const [tab, setTab] = useState('Overview');
   const table = (key: string) => a.tables.find((t) => t.key === key);
+  const count = (key: string) => a.sections.find((s) => s.key === key)?.count ?? 0;
   const pair = (left: string, right: string) => {
     const l = table(left);
     const r = table(right);
     return (
       <View style={styles.row}>
-        <View style={styles.flex}>{l ? <TableCard t={l} /> : null}</View>
-        <View style={styles.flex}>{r ? <TableCard t={r} /> : null}</View>
+        <View style={styles.flex}>{l ? <TableCard t={l} act={act} /> : null}</View>
+        <View style={styles.flex}>{r ? <TableCard t={r} act={act} /> : null}</View>
       </View>
     );
   };
   const focused = a.tables.find((t) => TAB_FOR_TABLE[t.key] === tab);
-  const subjects = table('subjects');
   const grading = table('grading');
   const competency = table('competency');
+  const inUse = (grading?.rows ?? []).filter((r) => r[r.length - 1] === 'Active').length;
+  const levelsAt = competency?.columns.findIndex((c) => c.label === 'Levels') ?? -1;
+  const standards = levelsAt < 0 ? 0 : (competency?.rows ?? []).reduce((n, r) => n + (Number.parseInt(r[levelsAt], 10) || 0), 0);
+  const progress = setupProgress(Object.fromEntries(a.sections.map((s) => [s.key, s.count])) as Record<AcademicsKey, number>);
   return (
-    <SchoolDesk search="Search students, classes, teachers, or reports..." me={a.me} nav={a.nav} active="Academics">
-      <Text style={styles.title} accessibilityRole="header">
-        Academics
-      </Text>
-      <Text style={styles.subtitle}>{"Configure your school's academic structure, grading, and competency frameworks."}</Text>
-      <Card style={styles.tabCard}>
-        <UnderTabs items={a.tabs.map((t) => t.label)} icons={a.tabs.map((t) => t.icon)} active={tab} onChange={setTab} size={14.5} spread style={styles.tabs} />
-      </Card>
+    <AcademicsFrame nav={a.nav} active="Academics" school={a.school} me={a.me} progress={progress}>
+      <Hero />
+      <Tabs a={a} tab={tab} onTab={setTab} />
       {focused ? (
         <View style={styles.focus}>
-          <TableCard t={focused} />
+          <TableCard t={focused} act={act} />
         </View>
       ) : (
         <>
@@ -132,13 +261,49 @@ export function AdminAcademicsDesk({ a }: { a: Academics }) {
           {pair('campuses', 'years')}
           {pair('terms', 'streams')}
           <View style={styles.row}>
-            <View style={styles.colWide}>{subjects ? <TableCard t={subjects} /> : null}</View>
-            <View style={styles.flex}>{grading ? <TableCard t={grading} /> : null}</View>
-            <View style={styles.flex}>{competency ? <TableCard t={competency} /> : null}</View>
+            <Summary
+              title="Subjects & Subject Matrix"
+              body="Configure subjects, codes and assign them to each grade level."
+              icon="book"
+              tint="#E3EDFD"
+              ink={BLUE}
+              wash="#EEF4FE"
+              onOpen={() => setTab('Subjects & Matrix')}
+              stats={[
+                { icon: 'layers', tint: '#E6EFFD', ink: '#2A6AE8', value: count('subjects'), label: 'Subjects' },
+                { icon: 'grid', tint: '#E6EFFD', ink: '#2A6AE8', value: a.matrices, label: 'Subject Matrices' },
+              ]}
+            />
+            <Summary
+              title="Grading Scales"
+              body="Define grading scales and performance descriptors."
+              icon="chart"
+              tint="#FFEBD2"
+              ink="#F28C0F"
+              wash="#FFF6EC"
+              onOpen={() => setTab('Grading Scales')}
+              stats={[
+                { icon: 'star', tint: '#FFF3E3', ink: '#F59E0B', value: count('grading'), label: 'Grading Scales' },
+                { icon: 'check', tint: '#E3F5EA', ink: '#22A55A', value: inUse, label: 'In Use' },
+              ]}
+            />
+            <Summary
+              title="Competency Framework"
+              body="Set competency areas, standards and learning outcomes."
+              icon="layers"
+              tint="#EDE4FD"
+              ink="#7A3BE6"
+              wash="#F6F1FE"
+              onOpen={() => setTab('Competency Framework')}
+              stats={[
+                { icon: 'layers', tint: '#F1EAFE', ink: '#8B3CF0', value: count('competency'), label: 'Competency Areas' },
+                { icon: 'flag', tint: '#F1EAFE', ink: '#8B3CF0', value: standards, label: 'Standards' },
+              ]}
+            />
           </View>
         </>
       )}
-    </SchoolDesk>
+    </AcademicsFrame>
   );
 }
 
@@ -146,6 +311,7 @@ export function AdminAcademicsDesk({ a }: { a: Academics }) {
 function PhoneTable({ t }: { t: AdminTable }) {
   return (
     <View style={styles.phoneTable}>
+      {t.rows.length === 0 ? <Text style={styles.emptyRows}>Nothing set up yet.</Text> : null}
       {t.rows.map((r) => (
         <Card key={r.join('|')} style={styles.phoneRow}>
           <View style={styles.phoneRowHead}>
@@ -167,7 +333,7 @@ function PhoneTable({ t }: { t: AdminTable }) {
 }
 
 /** The phone reference: each part of the structure as a row, then Quick Actions; a row opens its table. */
-export function AdminAcademicsPhone({ a }: { a: Academics }) {
+export function AdminAcademicsPhone({ a, act }: { a: Academics; act?: AcademicsActions }) {
   const [open, setOpen] = useState<string | null>(null);
   const section = a.sections.find((s) => s.key === open);
   const t = a.tables.find((x) => x.key === open);
@@ -190,7 +356,7 @@ export function AdminAcademicsPhone({ a }: { a: Academics }) {
             </View>
             <PhoneTable t={t} />
             {t.actions.map((x) => (
-              <Btn key={x} label={x} icon={x.startsWith('Add') ? 'plus' : undefined} kind={x.startsWith('Add') ? 'primary' : 'soft'} onPress={() => toast(`${x}: the form opens here.`)} height={52} />
+              <Btn key={x} label={x} icon={x.startsWith('Add') ? 'plus' : undefined} kind={x.startsWith('Add') ? 'primary' : 'soft'} onPress={() => press(act, x)} height={52} />
             ))}
           </View>
         </ScrollView>
@@ -225,7 +391,7 @@ export function AdminAcademicsPhone({ a }: { a: Academics }) {
             </View>
             <View style={styles.quickGrid}>
               {a.quickActions.map((q) => (
-                <Pressable key={q.label} style={styles.quickBtn} onPress={() => toast(`${q.label}: the form opens here.`)} accessibilityRole="button" accessibilityLabel={q.label}>
+                <Pressable key={q.label} style={styles.quickBtn} onPress={() => press(act, q.label)} accessibilityRole="button" accessibilityLabel={q.label}>
                   {q.label === 'Add Campus' ? <Icon name="plus" size={18} color={BLUE} /> : null}
                   <Icon name={q.icon} size={20} color={BLUE} />
                   <Text style={styles.quickText} numberOfLines={2}>
@@ -242,30 +408,53 @@ export function AdminAcademicsPhone({ a }: { a: Academics }) {
 }
 
 const styles = StyleSheet.create({
+  emptyRows: { fontSize: 14.5, color: BODY, paddingVertical: 18, paddingHorizontal: 6 },
   flex: { flex: 1, minWidth: 0 },
-  title: { fontSize: 34, fontWeight: '800', color: NAVY, letterSpacing: -0.6 },
-  subtitle: { marginTop: 6, fontSize: 16, color: BODY },
-  tabCard: { marginTop: 20, paddingVertical: 0, paddingHorizontal: 18 },
-  tabs: { borderBottomWidth: 0 },
-  stats: { flexDirection: 'row', alignItems: 'center', marginTop: 20, paddingVertical: 18 },
-  stat: { flex: 1, minWidth: 0, flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 12 },
-  statLine: { borderLeftWidth: 1, borderColor: LINE },
-  statNum: { fontSize: 26, fontWeight: '800', color: NAVY },
-  statLabel: { fontSize: 13, color: BODY },
-  row: { flexDirection: 'row', alignItems: 'flex-start', gap: 20, marginTop: 20 },
-  colWide: { flex: 1.3, minWidth: 0 },
-  focus: { marginTop: 20, maxWidth: 1100 },
-  tableCard: { gap: 18 },
-  actions: { flexDirection: 'row', gap: 10 },
-  actionBtn: { paddingHorizontal: 16 },
-  table: { borderRadius: 12, borderWidth: 1, borderColor: LINE, overflow: 'hidden' },
-  tr: { flexDirection: 'row', alignItems: 'center', gap: 8, minHeight: 54, paddingHorizontal: 14, borderBottomWidth: 1, borderColor: LINE },
-  th: { minHeight: 50, backgroundColor: '#F2F6FD' },
-  thText: { fontSize: 14, fontWeight: '600', color: NAVY },
-  td: { fontSize: 14.5, color: BODY },
-  tdName: { color: NAVY, fontWeight: '500' },
-  status: { paddingHorizontal: 12, paddingVertical: 6 },
+  pressed: { opacity: 0.85 },
+  tile: { alignItems: 'center', justifyContent: 'center' },
+  hero: { flexDirection: 'row', alignItems: 'center', gap: 20, height: 124, marginTop: 2, paddingHorizontal: 12, borderRadius: 16, overflow: 'hidden', backgroundColor: '#EEF4FD' },
+  heroPhoto: { position: 'absolute', top: 0, right: 0, bottom: 0, width: 610 },
+  heroFade: { position: 'absolute', top: 0, bottom: 0, right: 470, width: 140 },
+  heroIcon: { width: 70, height: 70, borderRadius: 16, alignItems: 'center', justifyContent: 'center', backgroundColor: '#DCE8FB' },
+  title: { fontSize: 38, fontWeight: '800', color: NAVY, letterSpacing: -0.8 },
+  subtitle: { marginTop: 4, fontSize: 16, color: TEXT },
+  tabCard: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', height: 50, marginTop: -2, paddingHorizontal: 2, borderRadius: 14, backgroundColor: WHITE, borderWidth: 1, borderColor: LINE, shadowColor: '#1B2B5A', shadowOpacity: 0.06, shadowRadius: 10, shadowOffset: { width: 0, height: 3 } },
+  tab: { flexDirection: 'row', alignItems: 'center', gap: 8, height: 46, paddingHorizontal: 13, borderRadius: 10 },
+  tabOn: { backgroundColor: '#EAF1FE' },
+  tabText: { fontSize: 14, color: NAVY },
+  tabTextOn: { color: BLUE, fontWeight: '700' },
+  tabLine: { position: 'absolute', left: 14, right: 14, bottom: -3, height: 3, borderRadius: 2, backgroundColor: BLUE },
+  stats: { flexDirection: 'row', gap: 12 },
+  stat: { minWidth: 0, flexDirection: 'row', alignItems: 'center', gap: 12, height: 88, paddingHorizontal: 14, borderRadius: 14, backgroundColor: WHITE, borderWidth: 1, borderColor: LINE },
+  statNum: { fontSize: 24, fontWeight: '800', color: NAVY },
+  statLabel: { fontSize: 14, lineHeight: 18, color: TEXT },
+  row: { flexDirection: 'row', alignItems: 'stretch', gap: 22 },
+  focus: { maxWidth: 1100 },
+  tableCard: { flex: 1, gap: 14, padding: 16 },
+  tableHead: { flexDirection: 'row', alignItems: 'center', gap: 14 },
+  tableTitle: { fontSize: 19, fontWeight: '800', color: NAVY },
+  tableSub: { marginTop: 2, fontSize: 13.5, color: TEXT },
+  addBtn: { flexDirection: 'row', alignItems: 'center', gap: 6, height: 38, paddingHorizontal: 14, borderRadius: 10, borderWidth: 1, borderColor: '#D3E0F7', backgroundColor: '#F1F6FF' },
+  addText: { fontSize: 14.5, fontWeight: '700', color: BLUE },
+  table: { borderRadius: 10, borderWidth: 1, borderColor: LINE, overflow: 'hidden' },
+  tr: { flexDirection: 'row', alignItems: 'center', gap: 8, minHeight: 40, paddingHorizontal: 14, borderBottomWidth: 1, borderColor: LINE },
+  trLast: { borderBottomWidth: 0 },
+  th: { backgroundColor: '#F2F6FD' },
+  thText: { fontSize: 13.5, fontWeight: '700', color: NAVY },
+  td: { fontSize: 14, color: TEXT },
+  tdName: { color: NAVY, fontWeight: '700' },
+  status: { alignSelf: 'flex-start', paddingHorizontal: 12, paddingVertical: 4 },
   menuCol: { width: 26, alignItems: 'center' },
+  summary: { flex: 1, minWidth: 0, padding: 6, borderRadius: 16, backgroundColor: WHITE, borderWidth: 1, borderColor: LINE },
+  summaryHead: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 16, paddingLeft: 14, paddingRight: 12, borderRadius: 12 },
+  summaryTitle: { fontSize: 18.5, fontWeight: '800', color: NAVY, letterSpacing: -0.3 },
+  summaryBody: { marginTop: 4, fontSize: 14, lineHeight: 19, color: TEXT },
+  chevron: { width: 38, height: 38, borderRadius: 19, alignItems: 'center', justifyContent: 'center', backgroundColor: WHITE, shadowColor: '#1B2B5A', shadowOpacity: 0.08, shadowRadius: 6, shadowOffset: { width: 0, height: 2 } },
+  summaryStats: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 14, paddingTop: 18, paddingBottom: 10 },
+  summaryStat: { flex: 1, minWidth: 0, flexDirection: 'row', alignItems: 'center', gap: 14 },
+  summaryLine: { paddingLeft: 26, borderLeftWidth: 1, borderColor: LINE },
+  summaryNum: { fontSize: 22, fontWeight: '800', color: NAVY },
+  summaryLabel: { fontSize: 14, color: TEXT },
   phoneRoot: { flex: 1, backgroundColor: CANVAS },
   phoneScroll: { paddingBottom: 36 },
   phonePad: { paddingHorizontal: 20, paddingTop: 8, gap: 6 },

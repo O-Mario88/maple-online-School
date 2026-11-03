@@ -1,21 +1,18 @@
 import { useMemo } from 'react';
 
 import { useShell } from '@/components/ui';
-import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { AdminAcademicsDesk, AdminAcademicsPhone } from '@/features/school/academics/AdminAcademicsViews';
-import { mockData } from '@/lib/mock';
+import { LiveAcademics } from '@/features/school/live/LiveAcademics';
+import { mockApi } from '@/lib/mock';
 
-/** Inventory 61 and 60: Academic Structure, Terms, Grades & Subject Matrix (`/(school-admin)/academics`). */
+/**
+ * Inventory 61 and 60: Academic Structure, Terms, Grades & Subject Matrix (`/(school-admin)/academics`).
+ * On the real API the design shows the school's own set-up; design builds (faked API) show its sample data.
+ */
 export default function AcademicsScreen() {
-  const mock = useMemo(() => mockData(), []);
+  const fake = useMemo(() => mockApi(), []);
   const { wide } = useShell();
-  if (!mock) {
-    return (
-      <PreviewScreen title="Academics" subtitle="Campuses, academic years, terms, grade streams, subjects, grading and competencies">
-        {() => null}
-      </PreviewScreen>
-    );
-  }
-  const a = mock.portal.school.academics;
+  if (!fake) return <LiveAcademics />;
+  const a = fake.portal.school.academics;
   return wide ? <AdminAcademicsDesk a={a} /> : <AdminAcademicsPhone a={a} />;
 }

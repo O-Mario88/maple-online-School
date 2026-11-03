@@ -3,6 +3,7 @@
  * Onboarding and Academics pages, copied from Edwin's references (November 2026).
  * Photos are cut from those references.
  */
+import { ACADEMICS_NAV, ACADEMICS_QUICK_ACTIONS, ACADEMICS_SECTIONS, ACADEMICS_TABLES, ACADEMICS_TABS } from '@/features/school/academics/academicsShape';
 import type { IconName } from '@/lib/icons';
 
 type Photo = number;
@@ -349,6 +350,50 @@ export interface AdminTable {
   rows: readonly (readonly string[])[];
 }
 
+/** Sample values for the Academics design; its layout lives in features/school/academics/academicsShape. */
+const ACADEMICS_COUNTS: Readonly<Record<string, number>> = { campuses: 3, years: 2, terms: 6, streams: 12, subjects: 48, grading: 4, competency: 5 };
+const ACADEMICS_ROWS: Readonly<Record<string, readonly (readonly string[])[]>> = {
+  campuses: [
+          ['1', 'Main Campus', 'Kampala', 'Primary & Secondary', '845', 'Active'],
+          ['2', 'West Campus', 'Entebbe', 'Primary', '320', 'Active'],
+          ['3', 'North Campus', 'Gulu', 'Secondary', '280', 'Active'],
+        ],
+  years: [
+          ['1', '2026', 'Jan 5, 2026', 'Dec 18, 2026', '3', 'Current'],
+          ['2', '2025', 'Jan 6, 2025', 'Dec 19, 2025', '3', 'Closed'],
+        ],
+  terms: [
+          ['1', 'Term 1', '2026', 'Jan 5, 2026', 'Apr 16, 2026', 'Current'],
+          ['2', 'Term 2', '2026', 'May 4, 2026', 'Aug 13, 2026', 'Upcoming'],
+          ['3', 'Term 3', '2026', 'Aug 31, 2026', 'Dec 18, 2026', 'Upcoming'],
+        ],
+  streams: [
+          ['1', 'Nursery', 'Main', '60', 'Active'],
+          ['2', 'Primary 1', 'A, B', '120', 'Active'],
+          ['3', 'Primary 2', 'A, B', '118', 'Active'],
+          ['4', 'Primary 3', 'A, B', '125', 'Active'],
+        ],
+  subjects: [
+          ['1', 'English', 'ENG', 'P1 – S6', 'Core', 'Active'],
+          ['2', 'Mathematics', 'MATH', 'P1 – S6', 'Core', 'Active'],
+          ['3', 'Science', 'SCI', 'P1 – S6', 'Core', 'Active'],
+          ['4', 'Social Studies', 'SST', 'P1 – S6', 'Core', 'Active'],
+          ['5', 'Christian Religious Ed.', 'CRE', 'P1 – S6', 'Core', 'Active'],
+        ],
+  grading: [
+          ['1', 'UNEB (U–9)', 'National', 'P1 – S4', 'Active'],
+          ['2', 'KCSE', 'National', 'S5 – S6', 'Active'],
+          ['3', 'IGCSE (A–G)', 'International', 'S1 – S6', 'Active'],
+          ['4', 'Custom (Percent)', 'Custom', 'All Grades', 'Active'],
+        ],
+  competency: [
+          ['1', 'UNESCO 4C', '4', 'Active'],
+          ['2', 'Uganda CBC', '5', 'Active'],
+          ['3', 'IGCSE Competencies', '5', 'Active'],
+          ['4', 'Custom School Framework', '5', 'Active'],
+        ],
+};
+
 export const school = {
   onboarding: {
     me: { name: 'Admin User', role: 'School Administrator', initial: 'A', notifications: 3 },
@@ -424,192 +469,13 @@ export const school = {
   },
   academics: {
     me: { name: 'Mary N.', role: 'School Administrator', avatar: face.mary, initial: 'A', notifications: 3 },
-    nav: [
-      { label: 'Dashboard', icon: 'home', href: '/' },
-      { label: 'Students', icon: 'people', href: '/admin/rosters' },
-      { label: 'Teachers', icon: 'people', href: '/admin/rosters' },
-      { label: 'Classes', icon: 'columns', href: '/admin/rosters' },
-      { label: 'Academics', icon: 'cap', href: '/admin/academics' },
-      { label: 'Attendance', icon: 'calendar', href: '/admin/attendance' },
-      { label: 'Fees & Billing', icon: 'wallet', href: '/admin/accounting' },
-      { label: 'Reports', icon: 'chart', href: '/admin/attendance' },
-      { label: 'Communication', icon: 'chat', href: '/messages' },
-      { label: 'Settings', icon: 'settings', href: '/admin/settings' },
-    ] as readonly NavItem[],
-    sections: [
-      { key: 'campuses', label: 'Campuses', body: 'Manage campuses and school branches', icon: 'campus', tone: 'blue', count: 3, countLabel: 'Campuses' },
-      { key: 'years', label: 'Academic Years', body: 'Set academic years and terms', icon: 'calendar', tone: 'green', count: 2, countLabel: 'Academic Years' },
-      { key: 'terms', label: 'Terms / Semesters', body: 'Configure term dates and holidays', icon: 'book', tone: 'purple', count: 6, countLabel: 'Terms' },
-      { key: 'streams', label: 'Grade Streams', body: 'Manage grades, sections and streams', icon: 'people', tone: 'green', count: 12, countLabel: 'Grade Levels' },
-      { key: 'subjects', label: 'Subjects & Subject Matrix', body: 'Configure subjects per grade', icon: 'grid', tone: 'blue', count: 48, countLabel: 'Subjects' },
-      { key: 'grading', label: 'Grading Scales', body: 'Set grading systems and descriptors', icon: 'star', tone: 'blue', count: 4, countLabel: 'Grading Scales' },
-      { key: 'competency', label: 'Competency Framework', body: 'Manage competency areas and rubrics', icon: 'chart', tone: 'blue', count: 5, countLabel: 'Competency Areas' },
-    ] as readonly { key: string; label: string; body: string; icon: IconName; tone: SubjectTone; count: number; countLabel: string }[],
-    tabs: [
-      { label: 'Overview', icon: 'school' },
-      { label: 'Campuses', icon: 'campus' },
-      { label: 'Academic Years', icon: 'calendar' },
-      { label: 'Terms / Semesters', icon: 'book' },
-      { label: 'Grade Streams', icon: 'people' },
-      { label: 'Subjects & Matrix', icon: 'grid' },
-      { label: 'Grading Scales', icon: 'doc' },
-      { label: 'Competency Framework', icon: 'chart' },
-    ] as readonly { label: string; icon: IconName }[],
-    quickActions: [
-      { label: 'Add Campus', icon: 'campus' },
-      { label: 'New Academic Year', icon: 'calendar' },
-      { label: 'Create Term', icon: 'book' },
-      { label: 'Import from Template', icon: 'upload' },
-    ] as readonly { label: string; icon: IconName }[],
-    tables: [
-      {
-        key: 'campuses',
-        title: 'Campuses',
-        subtitle: 'Manage your school campuses and branches.',
-        icon: 'campus',
-        tone: 'blue',
-        actions: ['Add Campus'],
-        columns: [
-          { label: '#', flex: 0.5 },
-          { label: 'Campus Name', flex: 2 },
-          { label: 'Location', flex: 1.5 },
-          { label: 'School Type', flex: 1.7 },
-          { label: 'Students', flex: 1.3 },
-          { label: 'Status', flex: 1.4 },
-        ],
-        rows: [
-          ['1', 'Main Campus', 'Kampala', 'Primary & Secondary', '845', 'Active'],
-          ['2', 'West Campus', 'Entebbe', 'Primary', '320', 'Active'],
-          ['3', 'North Campus', 'Gulu', 'Secondary', '280', 'Active'],
-        ],
-      },
-      {
-        key: 'years',
-        title: 'Academic Years',
-        subtitle: 'Manage academic years and set them as current.',
-        icon: 'calendar',
-        tone: 'green',
-        actions: ['Add Academic Year'],
-        columns: [
-          { label: '#', flex: 0.5 },
-          { label: 'Year', flex: 1.2 },
-          { label: 'Start Date', flex: 1.8 },
-          { label: 'End Date', flex: 1.8 },
-          { label: 'Terms', flex: 1.2 },
-          { label: 'Status', flex: 1.6 },
-        ],
-        rows: [
-          ['1', '2026', 'Jan 5, 2026', 'Dec 18, 2026', '3', 'Current'],
-          ['2', '2025', 'Jan 6, 2025', 'Dec 19, 2025', '3', 'Closed'],
-        ],
-      },
-      {
-        key: 'terms',
-        title: 'Terms / Semesters',
-        subtitle: 'Configure term dates, holidays and important periods.',
-        icon: 'book',
-        tone: 'purple',
-        actions: ['Add Term'],
-        columns: [
-          { label: '#', flex: 0.5 },
-          { label: 'Term Name', flex: 1.4 },
-          { label: 'Academic Year', flex: 1.5 },
-          { label: 'Start Date', flex: 1.5 },
-          { label: 'End Date', flex: 1.5 },
-          { label: 'Status', flex: 1.4 },
-        ],
-        rows: [
-          ['1', 'Term 1', '2026', 'Jan 5, 2026', 'Apr 16, 2026', 'Current'],
-          ['2', 'Term 2', '2026', 'May 4, 2026', 'Aug 13, 2026', 'Upcoming'],
-          ['3', 'Term 3', '2026', 'Aug 31, 2026', 'Dec 18, 2026', 'Upcoming'],
-        ],
-      },
-      {
-        key: 'streams',
-        title: 'Grade Streams',
-        subtitle: 'Manage grade levels, sections and streams.',
-        icon: 'people',
-        tone: 'green',
-        actions: ['Add Grade'],
-        columns: [
-          { label: '#', flex: 0.5 },
-          { label: 'Grade Level', flex: 1.8 },
-          { label: 'Stream / Section', flex: 1.8 },
-          { label: 'Students', flex: 1.4 },
-          { label: 'Status', flex: 1.4 },
-        ],
-        rows: [
-          ['1', 'Nursery', 'Main', '60', 'Active'],
-          ['2', 'Primary 1', 'A, B', '120', 'Active'],
-          ['3', 'Primary 2', 'A, B', '118', 'Active'],
-          ['4', 'Primary 3', 'A, B', '125', 'Active'],
-        ],
-      },
-      {
-        key: 'subjects',
-        title: 'Subjects & Subject Matrix',
-        subtitle: 'Configure subjects and assign them to each grade level.',
-        icon: 'grid',
-        tone: 'blue',
-        actions: ['Add Subject', 'Manage Matrix'],
-        columns: [
-          { label: '#', flex: 0.5 },
-          { label: 'Subject Name', flex: 2.1 },
-          { label: 'Code', flex: 1 },
-          { label: 'Grade Levels', flex: 1.4 },
-          { label: 'Type', flex: 1 },
-          { label: 'Status', flex: 1.2 },
-        ],
-        rows: [
-          ['1', 'English', 'ENG', 'P1 – S6', 'Core', 'Active'],
-          ['2', 'Mathematics', 'MATH', 'P1 – S6', 'Core', 'Active'],
-          ['3', 'Science', 'SCI', 'P1 – S6', 'Core', 'Active'],
-          ['4', 'Social Studies', 'SST', 'P1 – S6', 'Core', 'Active'],
-          ['5', 'Christian Religious Ed.', 'CRE', 'P1 – S6', 'Core', 'Active'],
-        ],
-      },
-      {
-        key: 'grading',
-        title: 'Grading Scales',
-        subtitle: 'Define grading scales and performance descriptors.',
-        icon: 'star',
-        tone: 'blue',
-        actions: ['Add Scale'],
-        columns: [
-          { label: '#', flex: 0.4 },
-          { label: 'Scale Name', flex: 1.5 },
-          { label: 'Type', flex: 1.3 },
-          { label: 'Used By', flex: 1.2 },
-          { label: 'Status', flex: 1.2 },
-        ],
-        rows: [
-          ['1', 'UNEB (U–9)', 'National', 'P1 – S4', 'Active'],
-          ['2', 'KCSE', 'National', 'S5 – S6', 'Active'],
-          ['3', 'IGCSE (A–G)', 'International', 'S1 – S6', 'Active'],
-          ['4', 'Custom (Percent)', 'Custom', 'All Grades', 'Active'],
-        ],
-      },
-      {
-        key: 'competency',
-        title: 'Competency Framework',
-        subtitle: 'Set competency areas and learning standards.',
-        icon: 'chart',
-        tone: 'blue',
-        actions: ['Add Framework'],
-        columns: [
-          { label: '#', flex: 0.4 },
-          { label: 'Framework Name', flex: 2.4 },
-          { label: 'Levels', flex: 0.9 },
-          { label: 'Status', flex: 1.1 },
-        ],
-        rows: [
-          ['1', 'UNESCO 4C', '4', 'Active'],
-          ['2', 'Uganda CBC', '5', 'Active'],
-          ['3', 'IGCSE Competencies', '5', 'Active'],
-          ['4', 'Custom School Framework', '5', 'Active'],
-        ],
-      },
-    ] as readonly AdminTable[],
+    school: 'Grace Point Christian School',
+    matrices: 6,
+    nav: ACADEMICS_NAV,
+    sections: ACADEMICS_SECTIONS.map((s) => ({ ...s, count: ACADEMICS_COUNTS[s.key] ?? 0 })),
+    tabs: ACADEMICS_TABS,
+    quickActions: ACADEMICS_QUICK_ACTIONS,
+    tables: ACADEMICS_TABLES.map((t): AdminTable => ({ ...t, rows: ACADEMICS_ROWS[t.key] ?? [] })),
   },
 };
 
