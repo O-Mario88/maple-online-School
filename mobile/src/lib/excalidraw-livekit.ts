@@ -214,6 +214,14 @@ export function canParticipantDraw(
   return allowedDrawers.some((name) => name.trim().toLowerCase() === normalized);
 }
 
+/** The student the teacher can hand the pen to, looked up by id. Null when that student is not in the class. */
+export function drawCandidate(
+  students: readonly { id: string; name: string }[],
+  studentId: string | undefined,
+): string | null {
+  return students.find((s) => s.id === studentId)?.name ?? null;
+}
+
 /**
  * Creates a LiveKit permission delta packet when the teacher toggles "Allow Draw" next to a student's name.
  */

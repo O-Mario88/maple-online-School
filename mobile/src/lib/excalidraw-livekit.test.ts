@@ -2,6 +2,7 @@ import {
   applySceneDelta,
   canParticipantDraw,
   computeSceneDelta,
+  drawCandidate,
   estimateBandwidthKbps,
   exportBoardSnapshot,
   INITIAL_FRACTION_ELEMENTS,
@@ -65,5 +66,14 @@ describe('excalidraw-livekit integration', () => {
     expect(snap.workedExamples.some((ex) => ex.includes('3/4 + 2/3'))).toBe(true);
     expect(snap.svgPreview).toContain('<svg');
   });
-});
 
+  it('offers Allow Draw to the student the session names, and to nobody if they have left', () => {
+    const tiles = [
+      { id: 's1', name: 'Student One' },
+      { id: 's3', name: 'Student Three' },
+    ];
+    expect(drawCandidate(tiles, 's3')).toBe('Student Three');
+    expect(drawCandidate(tiles, 's9')).toBeNull();
+    expect(drawCandidate(tiles, undefined)).toBeNull();
+  });
+});

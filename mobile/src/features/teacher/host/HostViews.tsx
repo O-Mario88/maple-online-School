@@ -4,6 +4,7 @@ import { Pressable, ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Icon } from '@/components/icon';
+import { drawCandidate } from '@/lib/excalidraw-livekit';
 import type { IconName } from '@/lib/icons';
 import { toast } from '@/lib/toast';
 import type { HostMaterial, HostToolKey, TeacherHost } from '@/mock/teacher-host';
@@ -37,6 +38,7 @@ export function HostDesk({ h }: { h: TeacherHost }) {
   const [lockStudentMics, setLockStudentMics] = useState(false);
   const [lockStudentCams, setLockStudentCams] = useState(false);
   const [allowedDrawStudent, setAllowedDrawStudent] = useState<string | null>(null);
+  const drawStudent = drawCandidate(h.studentTiles, h.drawStudentId);
   const [materials, setMaterials] = useState<HostMaterial[]>(h.materials);
   const [mutedIds, setMutedIds] = useState<Record<string, boolean>>({ s7: true });
   const [endAsk, setEndAsk] = useState(false);
@@ -183,28 +185,26 @@ export function HostDesk({ h }: { h: TeacherHost }) {
             </Text>
           </Pressable>
 
-          <Pressable
-            style={[d.lockChip, allowedDrawStudent != null && d.allowDrawChipOn]}
-            onPress={() => {
-              const next = allowedDrawStudent === 'Daniel O.' ? null : 'Daniel O.';
-              setAllowedDrawStudent(next);
-              toast(
-                next
-                  ? 'Daniel O. can now draw on the board.'
-                  : 'Only you can draw on the board now.',
-              );
-            }}>
-            <Icon
-              name="edit"
-              size={11}
-              color={allowedDrawStudent ? '#15803D' : '#334155'}
-            />
-            <Text style={[d.lockChipText, allowedDrawStudent != null && { color: '#15803D', fontWeight: '600' }]}>
-              {allowedDrawStudent
-                ? `Drawing allowed: ${allowedDrawStudent}`
-                : 'Allow Draw: Daniel O. (Students Read-Only)'}
-            </Text>
-          </Pressable>
+          {drawStudent && (
+            <Pressable
+              style={[d.lockChip, allowedDrawStudent != null && d.allowDrawChipOn]}
+              onPress={() => {
+                const next = allowedDrawStudent === drawStudent ? null : drawStudent;
+                setAllowedDrawStudent(next);
+                toast(next ? `${next} can now draw on the board.` : 'Only you can draw on the board now.');
+              }}>
+              <Icon
+                name="edit"
+                size={11}
+                color={allowedDrawStudent ? '#15803D' : '#334155'}
+              />
+              <Text style={[d.lockChipText, allowedDrawStudent != null && { color: '#15803D', fontWeight: '600' }]}>
+                {allowedDrawStudent
+                  ? `Drawing allowed: ${allowedDrawStudent}`
+                  : `Allow Draw: ${drawStudent} (Students Read-Only)`}
+              </Text>
+            </Pressable>
+          )}
 
           <Pressable style={d.lockChip} onPress={saveBoardToResources}>
             <Icon name="download" size={11} color="#1463F3" />

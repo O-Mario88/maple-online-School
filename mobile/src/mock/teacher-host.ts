@@ -91,6 +91,8 @@ export const teacherHost = {
     { id: 's7', name: 'Amina K.', photo: photos.teacherHost.amina, muted: true },
     { id: 's8', name: 'James T.', photo: photos.teacherHost.james },
   ] as HostStudentTile[],
+  /** The student who asked about step 2 in chat, offered Allow Draw. */
+  drawStudentId: 's3',
   othersCount: 19,
   pulseQuiz: {
     durationSeconds: 15,
