@@ -5,11 +5,11 @@ import { StyleSheet, Text, View } from 'react-native';
 import { Banner, Body, Button, Card, Chip, ChipRow, ErrorText, Field, Screen } from '@/components/ui';
 import { Spacing, type Theme, Type } from '@/constants/theme';
 import { FamilyLinksCard } from '@/features/family/FamilyLinksCard';
+import { InvitePeopleCard } from '@/features/school/InvitePeopleCard';
 import { useStyles } from '@/hooks/use-styles';
 import { api } from '@/lib/api/client';
 import { useMe } from '@/lib/auth/auth-context';
 import { admissionsSchools, isLeader } from '@/lib/roles';
-import { parseEmails } from '@/lib/school/invites';
 import { toast } from '@/lib/toast';
 
 const STEPS = ['School profile', 'Curriculum', 'Invite people', 'Family links'] as const;
@@ -18,13 +18,6 @@ const COUNTRIES = [
   { code: 'KE', label: 'Kenya' },
   { code: 'RW', label: 'Rwanda' },
 ] as const;
-const ROLES: readonly { value: string; label: string }[] = [
-  { value: 'subject_teacher', label: 'Teachers' },
-  { value: 'class_teacher', label: 'Class teachers' },
-  { value: 'deputy', label: 'Deputies' },
-  { value: 'registrar', label: 'Registrar (fees)' },
-  { value: 'student', label: 'Students' },
-];
 
 /** Create the school; the person creating it becomes its headteacher. */
 function CreateSchool() {
@@ -68,47 +61,6 @@ function CreateSchool() {
       </ChipRow>
       <ErrorText message={problem} />
       <Button label="Create school" onPress={create} busy={busy} />
-    </Card>
-  );
-}
-
-/** Invite staff or learners to one school by email. */
-function InvitePeople({ school, name }: { school: number; name: string }) {
-  const [text, setText] = useState('');
-  const [role, setRole] = useState('subject_teacher');
-  const [problem, setProblem] = useState<string | null>(null);
-  const [done, setDone] = useState<string | null>(null);
-  const [busy, setBusy] = useState(false);
-
-  const invite = async () => {
-    const { valid, invalid } = parseEmails(text);
-    if (invalid.length > 0 || valid.length === 0) {
-      setProblem(invalid.length ? `These aren't email addresses: ${invalid.join(', ')}` : 'Paste at least one email address.');
-      return;
-    }
-    setProblem(null);
-    setBusy(true);
-    const { data, error } = await api.POST('/api/v1/institutions/{id}/bulk_invite/', { params: { path: { id: school } }, body: { emails: valid, role } });
-    setBusy(false);
-    if (error || !data) {
-      setProblem((error as { detail?: string } | undefined)?.detail ?? 'Could not send the invitations.');
-      return;
-    }
-    setDone(`${data.detail} Each person gets an email: new staff choose a password from it, and people with an account accept from their school page.`);
-    setText('');
-  };
-
-  return (
-    <Card title={`Invite people to ${name}`} icon="people">
-      <ChipRow>
-        {ROLES.map((r) => (
-          <Chip key={r.value} label={r.label} selected={role === r.value} onPress={() => setRole(r.value)} />
-        ))}
-      </ChipRow>
-      <Field label="Email addresses (one per line)" value={text} onChangeText={setText} multiline autoCapitalize="none" keyboardType="email-address" />
-      <ErrorText message={problem} />
-      {done ? <Body>{done}</Body> : null}
-      <Button label="Send invitations" onPress={invite} busy={busy} />
     </Card>
   );
 }
@@ -159,7 +111,7 @@ export function LiveSetup() {
           <Banner tone="good" title="Uganda NCDC (UNEB): ready" body="Nursery to S6, 48 subjects, compulsory subjects and elective rules are set up for every new school." />
         </Card>
       ) : null}
-      {step === 2 && led.length > 0 ? led.map((m) => <InvitePeople key={m.institution_id} school={m.institution_id} name={m.institution_name} />) : null}
+      {step === 2 && led.length > 0 ? led.map((m) => <InvitePeopleCard key={m.institution_id} school={m.institution_id} name={m.institution_name} />) : null}
       {step === 2 && led.length === 0 ? <Body muted>Create your school first, then invite its staff here.</Body> : null}
       {step === 3 && admissions ? <FamilyLinksCard /> : null}
       {step === 3 && !admissions ? <Body muted>Parents’ requests to see their children appear here for the headteacher, deputy and registrar.</Body> : null}

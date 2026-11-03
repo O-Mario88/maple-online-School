@@ -8,11 +8,12 @@ import { Platform, useColorScheme } from 'react-native';
 import { ToastHost } from '@/components/ui/ToastHost';
 import { AuthProvider, useAuth } from '@/lib/auth/auth-context';
 import { signedOutLanding } from '@/lib/landing';
+import { DESIGN_DATA } from '@/lib/mock';
 
 // Signed-out visitors who open a signed-in address (such as /) land on the public
-// homepage on the web and on sign-in in the phone apps, not on whichever public page
-// happens to be first.
-export const unstable_settings = { anchor: signedOutLanding(Platform.OS) };
+// homepage on the web once it has its content, and on sign-in otherwise and in the
+// phone apps, not on whichever public page happens to be first.
+export const unstable_settings = { anchor: signedOutLanding(Platform.OS, DESIGN_DATA) };
 
 SplashScreen.preventAutoHideAsync();
 

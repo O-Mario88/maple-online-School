@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react';
 
 import { Badge, type BadgeTone, Body, Button, Card, ErrorText, Loading, Row, Screen } from '@/components/ui';
 import { initialRegister, localToday, nextStatus, type Register, STATUS_LABELS } from '@/lib/school/attendance';
-import { useMarks, useRoster, useSaveRegister } from '@/lib/school/queries';
+import { useClassDayMarks, useRoster, useSaveRegister } from '@/lib/school/queries';
 import type { MarkStatus } from '@/lib/school/types';
 
 const TONE: Record<MarkStatus, BadgeTone> = {
@@ -19,7 +19,7 @@ export default function RegisterScreen() {
   const classId = Number(id);
   const day = useMemo(() => localToday(), []);
   const roster = useRoster(classId);
-  const today = useMarks({ class: classId, record_date: day });
+  const today = useClassDayMarks(classId, day);
   const save = useSaveRegister();
   // Marks the teacher has changed; until then the register is today's saved marks.
   const [edits, setEdits] = useState<Register | null>(null);

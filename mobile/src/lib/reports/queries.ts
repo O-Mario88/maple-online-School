@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { api } from '@/lib/api/client';
+import { collectPages } from '@/lib/api/pages';
 import type { components } from '@/lib/api/schema';
 
 export type Report = components['schemas']['Report'];
@@ -19,6 +20,35 @@ export function useReports() {
       if (error || !data) fail(error, 'Could not load report cards.');
       return data.results;
     },
+  });
+}
+
+/** Every report card for one term: the API pages 20 at a time, so this follows the pages to the end. */
+export function useTermReports(term: number | null) {
+  return useQuery({
+    queryKey: ['reports', 'term', term],
+    enabled: term !== null,
+    queryFn: (): Promise<Report[]> =>
+      collectPages(async (page) => {
+        const { data, error } = await api.GET('/api/v1/grading/reports/', { params: { query: { term: term ?? undefined, page } } });
+        if (error || !data) fail(error, 'Could not load report cards.');
+        return data;
+      }),
+  });
+}
+
+/** Publish several draft report cards to their families, one after another. */
+export function usePublishReports() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: async (ids: readonly number[]): Promise<number> => {
+      for (const id of ids) {
+        const { error } = await api.PATCH('/api/v1/grading/reports/{id}/', { params: { path: { id } }, body: { is_published: true } });
+        if (error) fail(error, 'Could not publish every report card.');
+      }
+      return ids.length;
+    },
+    onSettled: () => client.invalidateQueries({ queryKey: ['reports'] }),
   });
 }
 
@@ -60,8 +90,10 @@ export function useSaveMarks() {
 export function useGenerateReports() {
   const client = useQueryClient();
   return useMutation({
-    mutationFn: async (classId: number) => {
-      const { data, error } = await api.POST('/api/v1/grading/reports/generate/', { body: { class: classId } });
+    /** A class id prepares the current term; `{ class, term }` prepares a chosen term. */
+    mutationFn: async (target: number | { class: number; term: number }) => {
+      const body = typeof target === 'number' ? { class: target } : target;
+      const { data, error } = await api.POST('/api/v1/grading/reports/generate/', { body });
       if (error || !data) fail(error, 'Could not prepare report cards.');
       return data;
     },

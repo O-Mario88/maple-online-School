@@ -76,6 +76,13 @@ describe('navFor', () => {
     }
   });
 
+  it('lists the school-admin pages that run on the real API in a real build', () => {
+    const hrefs = navFor('school', false).map((i) => i.href);
+    for (const page of ['/admin/onboarding', '/admin/timetable', '/admin/report-cards', '/admin/attendance', '/admin/rosters', '/admin/academics', '/admin/finance/ledger']) {
+      expect(hrefs).toContain(page);
+    }
+  });
+
   it('lets platform admins reach every Maple Command design page from the menu in a design build', () => {
     const hrefs = navFor('command', true).map((i) => i.href);
     for (const page of [
@@ -120,7 +127,9 @@ describe('navFor', () => {
     const hrefs = navFor('school', false).map((i) => i.href);
     expect(hrefs).toContain('/fees');
     expect(hrefs).toContain('/learn/library');
-    expect(hrefs.some((h) => h.startsWith('/admin/finance') || h === '/admin/library' || h === '/admin/report-cards')).toBe(false);
+    // Fees and library open the live /fees and /learn/library pages; the accounting suite is design-only.
+    const designOnly = ['/admin/finance/fees', '/admin/finance/accounting', '/admin/finance/chart-of-accounts', '/admin/finance/journal-entries', '/admin/library'];
+    expect(hrefs.filter((h) => designOnly.includes(h))).toEqual([]);
   });
 
   it('sends learners to the designed pages once they run on the API, in every build', () => {
