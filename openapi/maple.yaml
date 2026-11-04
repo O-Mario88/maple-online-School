@@ -1597,6 +1597,126 @@ paths:
       summary: The school's journal as CSV for QuickBooks or Xero
       parameters: [{ name: school, in: query, required: true, schema: { type: integer, format: int64 } }]
       responses: { "200": { description: CSV, content: { text/csv: { schema: { type: string } } } } }
+  /api/v1/network/schools/:
+    get:
+      summary: Verified Maple schools in the School Network
+      description: >-
+        Only schools that are active, verified by Maple and have published a
+        profile are listed. Results go by name; the app ranks them itself.
+      parameters:
+        - $ref: "#/components/parameters/Page"
+        - { name: q, in: query, description: Words in the name, town, district, curriculum, level or programs, schema: { type: string, maxLength: 120 } }
+        - { name: district, in: query, schema: { type: string } }
+        - { name: curriculum, in: query, schema: { type: string } }
+        - { name: level, in: query, schema: { type: string } }
+        - { name: category, in: query, schema: { type: string, enum: [all, top, online, boarding, scholarships] } }
+      responses:
+        "200":
+          description: One page of schools
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [count, results]
+                properties:
+                  count: { type: integer }
+                  next: { type: string, nullable: true }
+                  previous: { type: string, nullable: true }
+                  results: { type: array, items: { $ref: "#/components/schemas/NetworkSchool" } }
+        "400": { $ref: "#/components/responses/BadRequest" }
+  /api/v1/network/schools/{id}/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    get:
+      summary: A listed school's profile
+      description: Adds one to the school's view count. Who viewed is never stored or shown to the school.
+      responses:
+        "200": { description: The profile, content: { application/json: { schema: { $ref: "#/components/schemas/NetworkSchool" } } } }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /api/v1/network/schools/{id}/save/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    put:
+      summary: Save a school (private to you)
+      responses:
+        "200": { description: Saved, content: { application/json: { schema: { $ref: "#/components/schemas/NetworkSaveResult" } } } }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+    delete:
+      summary: Remove a school from your saved schools
+      responses:
+        "200": { description: Removed, content: { application/json: { schema: { $ref: "#/components/schemas/NetworkSaveResult" } } } }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+  /api/v1/network/schools/{id}/applications/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    post:
+      summary: Start an application to a school
+      description: Nothing about you is shared until you submit. Starting again returns the same application.
+      responses:
+        "200": { description: Your existing application, content: { application/json: { schema: { $ref: "#/components/schemas/NetworkApplication" } } } }
+        "201": { description: Started, content: { application/json: { schema: { $ref: "#/components/schemas/NetworkApplication" } } } }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+  /api/v1/network/schools/{id}/insights/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    get:
+      summary: Totals about interest in the school, for its own leaders
+      description: >-
+        Counts only: no names, lists, exports or events. Any figure that fewer
+        than min_cohort people are behind is null.
+      responses:
+        "200": { description: The totals, content: { application/json: { schema: { $ref: "#/components/schemas/NetworkInsights" } } } }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /api/v1/network/saves/:
+    get:
+      summary: Your saved schools
+      responses:
+        "200":
+          description: Most recent first
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [count, results]
+                properties:
+                  count: { type: integer }
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      required: [school, saved_at]
+                      properties:
+                        school: { type: integer, format: int64 }
+                        saved_at: { type: string, format: date-time }
+  /api/v1/network/applications/:
+    get:
+      summary: Your applications to schools
+      responses:
+        "200":
+          description: Most recent first
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [count, results]
+                properties:
+                  count: { type: integer }
+                  results: { type: array, items: { $ref: "#/components/schemas/NetworkApplication" } }
+  /api/v1/network/applications/{id}/submit/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    post:
+      summary: Send your application, sharing only what you filled in here
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/NetworkSubmission" }
+      responses:
+        "200": { description: Submitted, content: { application/json: { schema: { $ref: "#/components/schemas/NetworkApplication" } } } }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { description: Already submitted }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
 components:
   parameters:
     Page:
@@ -1637,6 +1757,122 @@ components:
         application/json:
           schema: { $ref: "#/components/schemas/Error" }
   schemas:
+    NetworkSchool:
+      type: object
+      required: [id, slug, name, town, district, curricula, levels, stay, mode, programs, facilities, blurb, pass_rate, learners, established, scholarships, admissions, exam_centre, vacancies, views, listed_at]
+      properties:
+        id: { type: integer, format: int64 }
+        slug: { type: string }
+        name: { type: string }
+        town: { type: string }
+        district: { type: string }
+        curricula: { type: array, items: { type: string } }
+        levels: { type: array, items: { type: string } }
+        stay: { type: string, enum: [Day, Boarding, Day & Boarding] }
+        mode: { type: string, enum: [Physical, Hybrid, Online] }
+        programs: { type: array, items: { type: string } }
+        facilities: { type: array, items: { type: string } }
+        blurb: { type: string }
+        pass_rate:
+          type: object
+          nullable: true
+          description: The published pass rate and where it comes from
+          required: [rate, board, exam, year, source]
+          properties:
+            rate: { type: integer }
+            board: { type: string }
+            exam: { type: string }
+            year: { type: integer }
+            source: { type: string }
+        learners: { type: integer }
+        established: { type: integer, nullable: true }
+        scholarships: { type: boolean }
+        admissions:
+          type: object
+          required: [opens, deadline, fee_min_ugx, fee_max_ugx, requirements]
+          properties:
+            opens: { type: string, format: date, nullable: true, description: Null when admissions are open all year }
+            deadline: { type: string, format: date, nullable: true, description: Null when admissions are rolling }
+            fee_min_ugx: { type: integer, format: int64, nullable: true }
+            fee_max_ugx: { type: integer, format: int64, nullable: true }
+            requirements: { type: array, items: { type: string } }
+        exam_centre:
+          type: object
+          nullable: true
+          description: Only when Maple has verified the centre with the exam board
+          required: [boards, exams, external, register_by, fee_ugx]
+          properties:
+            boards: { type: array, items: { type: string } }
+            exams: { type: array, items: { type: string } }
+            external: { type: boolean, description: Takes external (private) candidates }
+            register_by: { type: string, format: date, nullable: true }
+            fee_ugx: { type: integer, format: int64, nullable: true }
+        vacancies:
+          type: array
+          items:
+            type: object
+            required: [id, title, kind, closes_on, subjects]
+            properties:
+              id: { type: integer, format: int64 }
+              title: { type: string }
+              kind: { type: string }
+              closes_on: { type: string, format: date }
+              subjects: { type: array, items: { type: string } }
+        views: { type: integer, format: int64, nullable: true, description: Total profile views; null when fewer than the minimum cohort }
+        listed_at: { type: string, format: date-time }
+    NetworkSaveResult:
+      type: object
+      required: [school, saved]
+      properties:
+        school: { type: integer, format: int64 }
+        saved: { type: boolean }
+    NetworkShared:
+      type: object
+      required: [applicant_name, level, contact]
+      properties:
+        applicant_name: { type: string }
+        level: { type: string }
+        contact: { type: string }
+        guardian_name: { type: string }
+        guardian_contact: { type: string }
+        message: { type: string }
+    NetworkApplication:
+      type: object
+      required: [id, school, school_name, status, shared, started_at, submitted_at]
+      properties:
+        id: { type: integer, format: int64 }
+        school: { type: integer, format: int64 }
+        school_name: { type: string }
+        status: { type: string, enum: [started, submitted] }
+        shared: { allOf: [{ $ref: "#/components/schemas/NetworkShared" }], nullable: true }
+        started_at: { type: string, format: date-time }
+        submitted_at: { type: string, format: date-time, nullable: true }
+    NetworkSubmission:
+      type: object
+      required: [consent, applicant_name, level, contact]
+      properties:
+        consent: { type: boolean, description: Must be true to share these details with the school }
+        applicant_name: { type: string, maxLength: 120 }
+        level: { type: string, maxLength: 40 }
+        contact: { type: string, maxLength: 120, description: A phone number or email }
+        guardian_name: { type: string, maxLength: 120 }
+        guardian_contact: { type: string, maxLength: 120 }
+        message: { type: string, maxLength: 2000 }
+    NetworkInsights:
+      type: object
+      required: [school, min_cohort, totals]
+      properties:
+        school: { type: integer, format: int64 }
+        min_cohort: { type: integer }
+        totals:
+          type: object
+          required: [profile_views, saves, application_starts, application_submissions, enrolments]
+          properties:
+            profile_views: { type: integer, format: int64, nullable: true }
+            saves: { type: integer, format: int64, nullable: true }
+            application_starts: { type: integer, format: int64, nullable: true }
+            application_submissions: { type: integer, format: int64, nullable: true }
+            enrolments: { type: integer, format: int64, nullable: true }
     ThreadSummary:
       type: object
       required: [id, subject, student, staff, last_message_at, last_body, last_author]
