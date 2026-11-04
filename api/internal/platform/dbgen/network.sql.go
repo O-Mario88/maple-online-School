@@ -27,6 +27,23 @@ func (q *Queries) ApplicationFor(ctx context.Context, arg ApplicationForParams) 
 	return id, err
 }
 
+const applyForm = `-- name: ApplyForm :one
+SELECT apply_programs, apply_documents FROM network_profiles WHERE school_id = $1
+`
+
+type ApplyFormRow struct {
+	ApplyPrograms  []string
+	ApplyDocuments []byte
+}
+
+// What a school's application form asks for, to check a submission against.
+func (q *Queries) ApplyForm(ctx context.Context, schoolID int64) (ApplyFormRow, error) {
+	row := q.db.QueryRow(ctx, applyForm, schoolID)
+	var i ApplyFormRow
+	err := row.Scan(&i.ApplyPrograms, &i.ApplyDocuments)
+	return i, err
+}
+
 const examCentres = `-- name: ExamCentres :many
 SELECT school_id, boards, exams, external, register_by, fee_ugx
 FROM network_exam_centres
@@ -73,7 +90,8 @@ func (q *Queries) ExamCentres(ctx context.Context, schoolIds []int64) ([]ExamCen
 const getProfile = `-- name: GetProfile :one
 SELECT p.school_id, p.slug, i.name, p.town, p.district, p.curricula, p.levels, p.stay, p.mode, p.programs, p.facilities,
        p.blurb, p.pass_rate, p.pass_board, p.pass_exam, p.pass_year, p.pass_source, p.learners, p.established, p.scholarships,
-       p.admissions_opens, p.admissions_deadline, p.fee_min_ugx, p.fee_max_ugx, p.requirements, p.published_at::timestamptz AS listed_at,
+       p.admissions_opens, p.admissions_deadline, p.fee_min_ugx, p.fee_max_ugx, p.requirements,
+       p.apply_intake, p.apply_fee_ugx, p.apply_programs, p.apply_documents, p.published_at::timestamptz AS listed_at,
        network_cohort_total(v.total, $1::bigint) AS views,
        1::bigint AS total_count
 FROM network_profiles p
@@ -114,6 +132,10 @@ type GetProfileRow struct {
 	FeeMinUgx          pgtype.Int8
 	FeeMaxUgx          pgtype.Int8
 	Requirements       []string
+	ApplyIntake        pgtype.Text
+	ApplyFeeUgx        pgtype.Int8
+	ApplyPrograms      []string
+	ApplyDocuments     []byte
 	ListedAt           pgtype.Timestamptz
 	Views              pgtype.Int8
 	TotalCount         int64
@@ -149,6 +171,10 @@ func (q *Queries) GetProfile(ctx context.Context, arg GetProfileParams) (GetProf
 		&i.FeeMinUgx,
 		&i.FeeMaxUgx,
 		&i.Requirements,
+		&i.ApplyIntake,
+		&i.ApplyFeeUgx,
+		&i.ApplyPrograms,
+		&i.ApplyDocuments,
 		&i.ListedAt,
 		&i.Views,
 		&i.TotalCount,
@@ -202,7 +228,8 @@ const listProfiles = `-- name: ListProfiles :many
 
 SELECT p.school_id, p.slug, i.name, p.town, p.district, p.curricula, p.levels, p.stay, p.mode, p.programs, p.facilities,
        p.blurb, p.pass_rate, p.pass_board, p.pass_exam, p.pass_year, p.pass_source, p.learners, p.established, p.scholarships,
-       p.admissions_opens, p.admissions_deadline, p.fee_min_ugx, p.fee_max_ugx, p.requirements, p.published_at::timestamptz AS listed_at,
+       p.admissions_opens, p.admissions_deadline, p.fee_min_ugx, p.fee_max_ugx, p.requirements,
+       p.apply_intake, p.apply_fee_ugx, p.apply_programs, p.apply_documents, p.published_at::timestamptz AS listed_at,
        network_cohort_total(v.total, $1::bigint) AS views,
        count(*) OVER () AS total_count
 FROM network_profiles p
@@ -262,6 +289,10 @@ type ListProfilesRow struct {
 	FeeMinUgx          pgtype.Int8
 	FeeMaxUgx          pgtype.Int8
 	Requirements       []string
+	ApplyIntake        pgtype.Text
+	ApplyFeeUgx        pgtype.Int8
+	ApplyPrograms      []string
+	ApplyDocuments     []byte
 	ListedAt           pgtype.Timestamptz
 	Views              pgtype.Int8
 	TotalCount         int64
@@ -316,6 +347,10 @@ func (q *Queries) ListProfiles(ctx context.Context, arg ListProfilesParams) ([]L
 			&i.FeeMinUgx,
 			&i.FeeMaxUgx,
 			&i.Requirements,
+			&i.ApplyIntake,
+			&i.ApplyFeeUgx,
+			&i.ApplyPrograms,
+			&i.ApplyDocuments,
 			&i.ListedAt,
 			&i.Views,
 			&i.TotalCount,

@@ -668,6 +668,10 @@ type NetworkProfile struct {
 	FeeMinUgx          pgtype.Int8
 	FeeMaxUgx          pgtype.Int8
 	Requirements       []string
+	ApplyIntake        pgtype.Text
+	ApplyFeeUgx        pgtype.Int8
+	ApplyPrograms      []string
+	ApplyDocuments     []byte
 	VerifiedAt         pgtype.Timestamptz
 	VerifiedBy         pgtype.Int8
 	PublishedAt        pgtype.Timestamptz

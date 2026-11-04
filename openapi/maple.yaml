@@ -1759,7 +1759,7 @@ components:
   schemas:
     NetworkSchool:
       type: object
-      required: [id, slug, name, town, district, curricula, levels, stay, mode, programs, facilities, blurb, pass_rate, learners, established, scholarships, admissions, exam_centre, vacancies, views, listed_at]
+      required: [id, slug, name, town, district, curricula, levels, stay, mode, programs, facilities, blurb, pass_rate, learners, established, scholarships, admissions, exam_centre, vacancies, apply, views, listed_at]
       properties:
         id: { type: integer, format: int64 }
         slug: { type: string }
@@ -1818,6 +1818,23 @@ components:
               kind: { type: string }
               closes_on: { type: string, format: date }
               subjects: { type: array, items: { type: string } }
+        apply:
+          type: object
+          description: The school's application form
+          required: [intake, fee_ugx, programs, documents]
+          properties:
+            intake: { type: string, nullable: true }
+            fee_ugx: { type: integer, format: int64, nullable: true, description: Application fee }
+            programs: { type: array, items: { type: string }, description: What applicants can apply for }
+            documents:
+              type: array
+              description: Documents the school needs, one attached file each
+              items:
+                type: object
+                required: [id, label]
+                properties:
+                  id: { type: string }
+                  label: { type: string }
         views: { type: integer, format: int64, nullable: true, description: Total profile views; null when fewer than the minimum cohort }
         listed_at: { type: string, format: date-time }
     NetworkSaveResult:
@@ -1826,16 +1843,61 @@ components:
       properties:
         school: { type: integer, format: int64 }
         saved: { type: boolean }
+    NetworkApplicant:
+      type: object
+      required: [first, last, dob, gender, nationality]
+      properties:
+        first: { type: string, maxLength: 60 }
+        middle: { type: string, maxLength: 60 }
+        last: { type: string, maxLength: 60 }
+        dob: { type: string, format: date, description: The learner must be 5 to 25 }
+        gender: { type: string, maxLength: 60 }
+        nationality: { type: string, maxLength: 60 }
+    NetworkGuardian:
+      type: object
+      required: [name, relationship, phone, address]
+      properties:
+        name: { type: string, maxLength: 120 }
+        relationship: { type: string, maxLength: 60 }
+        phone: { type: string, description: A Ugandan number; stored as +256 and nine digits }
+        email: { type: string, maxLength: 120 }
+        occupation: { type: string, maxLength: 120 }
+        address: { type: string, maxLength: 200 }
+    NetworkCurrentSchool:
+      type: object
+      properties:
+        school: { type: string, maxLength: 120 }
+        grade: { type: string, maxLength: 60 }
+        year: { type: string, pattern: "^\\d{4}$" }
+    NetworkAcademic:
+      type: object
+      required: [stream, ple_aggregate, ple_index, ple_year]
+      properties:
+        stream: { type: string, maxLength: 60 }
+        subjects: { type: array, maxItems: 15, items: { type: string, maxLength: 60 } }
+        ple_aggregate: { type: integer, minimum: 4, maximum: 36 }
+        ple_index: { type: string, maxLength: 60 }
+        ple_year: { type: integer, minimum: 2000 }
+        boarding: { type: string, enum: ["", Day, Boarding, Day & Boarding] }
+        needs: { type: string, maxLength: 1000 }
+    NetworkAttachedDocument:
+      type: object
+      required: [id, file]
+      description: The file name only, until Maple stores uploads
+      properties:
+        id: { type: string }
+        file: { type: string, maxLength: 200 }
     NetworkShared:
       type: object
-      required: [applicant_name, level, contact]
+      description: Exactly what the applicant sent; fields left empty are not stored
+      required: [applying_for, applicant, guardian, academic, documents]
       properties:
-        applicant_name: { type: string }
-        level: { type: string }
-        contact: { type: string }
-        guardian_name: { type: string }
-        guardian_contact: { type: string }
-        message: { type: string }
+        applying_for: { type: string }
+        applicant: { $ref: "#/components/schemas/NetworkApplicant" }
+        guardian: { $ref: "#/components/schemas/NetworkGuardian" }
+        current: { $ref: "#/components/schemas/NetworkCurrentSchool" }
+        academic: { $ref: "#/components/schemas/NetworkAcademic" }
+        documents: { type: array, items: { $ref: "#/components/schemas/NetworkAttachedDocument" } }
     NetworkApplication:
       type: object
       required: [id, school, school_name, status, shared, started_at, submitted_at]
@@ -1849,15 +1911,16 @@ components:
         submitted_at: { type: string, format: date-time, nullable: true }
     NetworkSubmission:
       type: object
-      required: [consent, applicant_name, level, contact]
+      description: The school's four-step application form. Every required document needs a file, and only those.
+      required: [consent, applying_for, applicant, guardian, academic, documents]
       properties:
-        consent: { type: boolean, description: Must be true to share these details with the school }
-        applicant_name: { type: string, maxLength: 120 }
-        level: { type: string, maxLength: 40 }
-        contact: { type: string, maxLength: 120, description: A phone number or email }
-        guardian_name: { type: string, maxLength: 120 }
-        guardian_contact: { type: string, maxLength: 120 }
-        message: { type: string, maxLength: 2000 }
+        consent: { type: boolean, description: Must be true to share this application with the school }
+        applying_for: { type: string, description: One of the school's apply.programs }
+        applicant: { $ref: "#/components/schemas/NetworkApplicant" }
+        guardian: { $ref: "#/components/schemas/NetworkGuardian" }
+        current: { $ref: "#/components/schemas/NetworkCurrentSchool" }
+        academic: { $ref: "#/components/schemas/NetworkAcademic" }
+        documents: { type: array, items: { $ref: "#/components/schemas/NetworkAttachedDocument" } }
     NetworkInsights:
       type: object
       required: [school, min_cohort, totals]

@@ -6,7 +6,8 @@
 -- name: ListProfiles :many
 SELECT p.school_id, p.slug, i.name, p.town, p.district, p.curricula, p.levels, p.stay, p.mode, p.programs, p.facilities,
        p.blurb, p.pass_rate, p.pass_board, p.pass_exam, p.pass_year, p.pass_source, p.learners, p.established, p.scholarships,
-       p.admissions_opens, p.admissions_deadline, p.fee_min_ugx, p.fee_max_ugx, p.requirements, p.published_at::timestamptz AS listed_at,
+       p.admissions_opens, p.admissions_deadline, p.fee_min_ugx, p.fee_max_ugx, p.requirements,
+       p.apply_intake, p.apply_fee_ugx, p.apply_programs, p.apply_documents, p.published_at::timestamptz AS listed_at,
        network_cohort_total(v.total, sqlc.arg(min_cohort)::bigint) AS views,
        count(*) OVER () AS total_count
 FROM network_profiles p
@@ -31,7 +32,8 @@ LIMIT sqlc.arg(page_limit)::int OFFSET sqlc.arg(page_offset)::int;
 -- The same columns as ListProfiles, so both read into one Go type.
 SELECT p.school_id, p.slug, i.name, p.town, p.district, p.curricula, p.levels, p.stay, p.mode, p.programs, p.facilities,
        p.blurb, p.pass_rate, p.pass_board, p.pass_exam, p.pass_year, p.pass_source, p.learners, p.established, p.scholarships,
-       p.admissions_opens, p.admissions_deadline, p.fee_min_ugx, p.fee_max_ugx, p.requirements, p.published_at::timestamptz AS listed_at,
+       p.admissions_opens, p.admissions_deadline, p.fee_min_ugx, p.fee_max_ugx, p.requirements,
+       p.apply_intake, p.apply_fee_ugx, p.apply_programs, p.apply_documents, p.published_at::timestamptz AS listed_at,
        network_cohort_total(v.total, sqlc.arg(min_cohort)::bigint) AS views,
        1::bigint AS total_count
 FROM network_profiles p
@@ -123,6 +125,10 @@ SELECT network_cohort_total(views, sqlc.arg(min_cohort)::bigint) AS profile_view
        network_cohort_total(submissions, sqlc.arg(min_cohort)::bigint) AS application_submissions,
        network_cohort_total(enrolments, sqlc.arg(min_cohort)::bigint) AS enrolments
 FROM t;
+
+-- name: ApplyForm :one
+-- What a school's application form asks for, to check a submission against.
+SELECT apply_programs, apply_documents FROM network_profiles WHERE school_id = $1;
 
 -- name: HasProfile :one
 SELECT EXISTS (SELECT 1 FROM network_profiles WHERE school_id = $1);

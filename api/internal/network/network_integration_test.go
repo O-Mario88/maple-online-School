@@ -80,12 +80,15 @@ func listed(w *testkit.World, name string, p profile) int64 {
 	_, err := w.Pool.Exec(ctx, `
 		INSERT INTO network_profiles (school_id, slug, town, district, curricula, levels, stay, mode, programs, facilities, blurb,
 		  pass_rate, pass_board, pass_exam, pass_year, pass_source, learners, established, scholarships,
-		  admissions_opens, admissions_deadline, fee_min_ugx, fee_max_ugx, requirements, verified_at, published_at)
+		  admissions_opens, admissions_deadline, fee_min_ugx, fee_max_ugx, requirements, verified_at, published_at,
+		  apply_intake, apply_fee_ugx, apply_programs, apply_documents)
 		VALUES ($1, $2, 'Town', $3, $4, $5, $6, $7, $8, '{Library}', 'A test school.',
 		  $9::smallint, CASE WHEN $9::smallint IS NULL THEN NULL ELSE 'UNEB' END, CASE WHEN $9::smallint IS NULL THEN NULL ELSE 'UCE' END,
 		  CASE WHEN $9::smallint IS NULL THEN NULL ELSE 2025 END, CASE WHEN $9::smallint IS NULL THEN NULL ELSE 'school-published, verified by Maple' END,
 		  500, 2001, $10, current_date - 1, current_date + 60, 1000000, 1500000, '{Latest report card}',
-		  CASE WHEN $11 THEN NULL ELSE now() END, CASE WHEN $12 THEN NULL ELSE now() END)`,
+		  CASE WHEN $11 THEN NULL ELSE now() END, CASE WHEN $12 THEN NULL ELSE now() END,
+		  'Term 1, 2027', 50000, '{"Senior Secondary (S.1)","Senior Five (S.5)"}',
+		  '[{"id":"report","label":"Previous academic report"},{"id":"birth","label":"Birth certificate or age proof"}]')`,
 		id, fmt.Sprintf("test-%d", id), p.district, p.curricula, p.levels, p.stay, p.mode, p.programs,
 		passRate, p.scholarships, p.unverified, p.unpublished)
 	if err != nil {
@@ -227,6 +230,13 @@ func TestProfileShowsResultsAdmissionsVerifiedExamCentreAndOpenVacancies(t *test
 	if body["views"] != nil {
 		t.Errorf("one view is under the minimum cohort and must be hidden: %v", body["views"])
 	}
+	apply, _ := body["apply"].(map[string]any)
+	programs, _ := apply["programs"].([]any)
+	docs, _ := apply["documents"].([]any)
+	if apply["intake"] != "Term 1, 2027" || apply["fee_ugx"] != float64(50000) || len(programs) != 2 || len(docs) != 2 ||
+		docs[0].(map[string]any)["id"] != "report" || docs[0].(map[string]any)["label"] != "Previous academic report" {
+		t.Errorf("the school's application form: intake, fee, programs and required documents: %v", body["apply"])
+	}
 
 	_, other := w.Call(learner, http.MethodGet, schoolPath(plain, ""), nil)
 	if other["exam_centre"] != nil || other["pass_rate"] != nil {
@@ -261,9 +271,28 @@ func TestSavesArePrivateToTheUser(t *testing.T) {
 	}
 }
 
+// submission is a complete application, as the app's four-step form sends it.
+// over replaces top-level sections or fields; sets of the form "applicant.first" reach into a section.
 func submission(over map[string]any) map[string]any {
-	body := map[string]any{"consent": true, "applicant_name": "Amara Test", "level": "S5", "contact": "+256700000001"}
+	body := map[string]any{
+		"consent":      true,
+		"applying_for": "Senior Five (S.5)",
+		"applicant":    map[string]any{"first": "Amara", "middle": "", "last": "Test", "dob": "2010-03-14", "gender": "Female", "nationality": "Ugandan"},
+		"guardian":     map[string]any{"name": "John Test", "relationship": "Father", "phone": "772 345 678", "email": "", "occupation": "", "address": "Ntinda, Kampala"},
+		"current":      map[string]any{"school": "Bright Future Junior School", "grade": "P.7", "year": "2025"},
+		"academic":     map[string]any{"stream": "Sciences", "subjects": []string{"Physics"}, "ple_aggregate": 8, "ple_index": "U0001/023", "ple_year": 2025, "boarding": "", "needs": ""},
+		"documents":    []map[string]any{{"id": "report", "file": "P7-report-2025.pdf"}, {"id": "birth", "file": "birth-certificate.pdf"}},
+	}
 	for k, v := range over {
+		if section, field, ok := strings.Cut(k, "."); ok {
+			inner := map[string]any{}
+			for ik, iv := range body[section].(map[string]any) {
+				inner[ik] = iv
+			}
+			inner[field] = v
+			body[section] = inner
+			continue
+		}
 		body[k] = v
 	}
 	return body
@@ -286,11 +315,27 @@ func TestApplicationsShareOnlyWhatTheUserSubmitsWithConsent(t *testing.T) {
 	submit := fmt.Sprintf("%s%d/submit/", applicationsURL, id)
 
 	for name, body := range map[string]map[string]any{
-		"no consent":    submission(map[string]any{"consent": false}),
-		"no name":       submission(map[string]any{"applicant_name": "  "}),
-		"no contact":    submission(map[string]any{"contact": ""}),
-		"long message":  submission(map[string]any{"message": strings.Repeat("x", 2001)}),
-		"unknown field": submission(map[string]any{"date_of_birth": "2010-01-01"}),
+		"no consent":               submission(map[string]any{"consent": false}),
+		"a program not offered":    submission(map[string]any{"applying_for": "Senior Six"}),
+		"no first name":            submission(map[string]any{"applicant.first": "  "}),
+		"no last name":             submission(map[string]any{"applicant.last": ""}),
+		"not a date of birth":      submission(map[string]any{"applicant.dob": "2010-02-30"}),
+		"too young":                submission(map[string]any{"applicant.dob": "2024-01-01"}),
+		"no gender":                submission(map[string]any{"applicant.gender": ""}),
+		"no guardian":              submission(map[string]any{"guardian.name": ""}),
+		"no relationship":          submission(map[string]any{"guardian.relationship": ""}),
+		"a short phone number":     submission(map[string]any{"guardian.phone": "77234"}),
+		"a bad email":              submission(map[string]any{"guardian.email": "john@"}),
+		"no address":               submission(map[string]any{"guardian.address": ""}),
+		"no stream":                submission(map[string]any{"academic.stream": ""}),
+		"a PLE aggregate over 36":  submission(map[string]any{"academic.ple_aggregate": 40}),
+		"no PLE index":             submission(map[string]any{"academic.ple_index": ""}),
+		"a PLE year in the future": submission(map[string]any{"academic.ple_year": 2099}),
+		"a boarding choice typo":   submission(map[string]any{"academic.boarding": "Weekly"}),
+		"a long note":              submission(map[string]any{"academic.needs": strings.Repeat("x", 1001)}),
+		"a missing document":       submission(map[string]any{"documents": []map[string]any{{"id": "report", "file": "r.pdf"}}}),
+		"a document not asked for": submission(map[string]any{"documents": []map[string]any{{"id": "report", "file": "r.pdf"}, {"id": "birth", "file": "b.pdf"}, {"id": "cv", "file": "cv.pdf"}}}),
+		"an unknown field":         submission(map[string]any{"date_of_birth": "2010-01-01"}),
 	} {
 		if code, _ := w.Call(learner, http.MethodPost, submit, body); code != http.StatusBadRequest {
 			t.Errorf("%s: want 400, got %d", name, code)
@@ -300,18 +345,27 @@ func TestApplicationsShareOnlyWhatTheUserSubmitsWithConsent(t *testing.T) {
 		t.Errorf("submitting someone else's application: want 404, got %d", code)
 	}
 
-	code, done := w.Call(learner, http.MethodPost, submit, submission(map[string]any{"message": "I love chemistry."}))
+	code, done := w.Call(learner, http.MethodPost, submit, submission(map[string]any{"academic.needs": "Needs a ground-floor classroom."}))
 	if code != http.StatusOK || done["status"] != "submitted" {
 		t.Fatalf("submit: %d %v", code, done)
 	}
 	shared, _ := done["shared"].(map[string]any)
-	keys := make([]string, 0, len(shared))
-	for k := range shared {
-		keys = append(keys, k)
+	applicant, _ := shared["applicant"].(map[string]any)
+	guardian, _ := shared["guardian"].(map[string]any)
+	academic, _ := shared["academic"].(map[string]any)
+	docs, _ := shared["documents"].([]any)
+	if applicant["first"] != "Amara" || applicant["dob"] != "2010-03-14" || guardian["phone"] != "+256772345678" ||
+		academic["ple_aggregate"] != float64(8) || academic["needs"] != "Needs a ground-floor classroom." || len(docs) != 2 {
+		t.Errorf("the application keeps what was filled in, with the phone number in one form: %v", shared)
 	}
-	slices.Sort(keys)
-	if !slices.Equal(keys, []string{"applicant_name", "contact", "level", "message"}) {
-		t.Errorf("only the fields the learner filled in are shared: %v", shared)
+	// Fields left empty aren't stored, and nothing comes from the account.
+	for section, empty := range map[string][]string{"applicant": {"middle"}, "guardian": {"email", "occupation"}, "academic": {"boarding"}} {
+		got, _ := shared[section].(map[string]any)
+		for _, k := range empty {
+			if _, ok := got[k]; ok {
+				t.Errorf("%s.%s was left empty and must not be stored: %v", section, k, got)
+			}
+		}
 	}
 	var consent string
 	var consented bool
@@ -390,7 +444,7 @@ func TestInsightsAreSuppressedTotalsForTheSchoolsOwnLeaders(t *testing.T) {
 }
 
 // identityKeys are field names that would carry who someone is.
-var identityKeys = []string{"user", "user_id", "users", "email", "full_name", "applicant_name", "contact", "guardian_name", "guardian_contact", "viewer", "viewers", "visitors", "savers", "applicants", "ip"}
+var identityKeys = []string{"user", "user_id", "users", "email", "full_name", "applicant", "applicants", "first", "last", "dob", "guardian", "phone", "address", "shared", "viewer", "viewers", "visitors", "savers", "ip"}
 
 // leaks returns the identity keys found anywhere in a JSON value.
 func leaks(v any) []string {
@@ -419,17 +473,17 @@ func TestSchoolAdminCannotLearnWhoLookedSavedOrApplied(t *testing.T) {
 	ctx := context.Background()
 	var email, name string
 	_ = w.Pool.QueryRow(ctx, `SELECT email, full_name FROM accounts_user WHERE id = $1`, learner).Scan(&email, &name)
-	typedName := "Zawadi Privacy " + token()
-	typedContact := "+2567" + token()
+	typedName := "Zawadi" + token()
+	typedGuardian := "Guardian" + token()
 
 	// The learner looks, saves, starts and submits an application.
 	w.Call(learner, http.MethodGet, schoolPath(school, ""), nil)
 	w.Call(learner, http.MethodPut, schoolPath(school, "save/"), nil)
 	_, app := w.Call(learner, http.MethodPost, schoolPath(school, "applications/"), nil)
 	appID := testkit.ID(app)
-	w.Call(learner, http.MethodPost, fmt.Sprintf("%s%d/submit/", applicationsURL, appID), submission(map[string]any{"applicant_name": typedName, "contact": typedContact}))
+	w.Call(learner, http.MethodPost, fmt.Sprintf("%s%d/submit/", applicationsURL, appID), submission(map[string]any{"applicant.first": typedName, "guardian.name": typedGuardian, "guardian.phone": "701 234 567"}))
 
-	secrets := []string{email, name, typedName, typedContact}
+	secrets := []string{email, name, typedName, typedGuardian, "701234567"}
 	calls := []struct{ method, path string }{
 		{http.MethodGet, schoolsURL},
 		{http.MethodGet, listPath(map[string]string{"q": "Private"})},

@@ -18,11 +18,7 @@ import (
 )
 
 const (
-	maxFilter  = 120
-	maxName    = 120
-	maxLevel   = 40
-	maxContact = 120
-	maxMessage = 2000
+	maxFilter = 120
 	// writeLimit caps saves and applications per client per minute.
 	writeLimit = 60
 )
@@ -41,7 +37,9 @@ type Store interface {
 	SetSaved(ctx context.Context, user, school int64, on bool) error
 	Applications(ctx context.Context, user int64) ([]Application, error)
 	Start(ctx context.Context, user, school int64) (Application, bool, error)
-	Submit(ctx context.Context, user, id int64, shared Shared, consent func(school string) string) (Application, error)
+	Application(ctx context.Context, user, id int64) (Application, error)
+	Form(ctx context.Context, school int64) (ApplyForm, error)
+	Submit(ctx context.Context, user, id int64, shared Shared, consent string) (Application, error)
 	LeadsSchool(ctx context.Context, user, school int64) (bool, error)
 	HasProfile(ctx context.Context, school int64) (bool, error)
 	Totals(ctx context.Context, school int64) (Totals, error)
@@ -171,64 +169,49 @@ func (h *Handler) start(w http.ResponseWriter, r *http.Request) {
 	httpx.WriteJSON(w, code, app)
 }
 
-type submitRequest struct {
-	Consent         bool   `json:"consent"`
-	ApplicantName   string `json:"applicant_name"`
-	Level           string `json:"level"`
-	Contact         string `json:"contact"`
-	GuardianName    string `json:"guardian_name"`
-	GuardianContact string `json:"guardian_contact"`
-	Message         string `json:"message"`
-}
-
-// shared checks a submission and keeps only what the user filled in.
-func (req submitRequest) shared() (Shared, string) {
-	s := Shared{
-		ApplicantName: strings.TrimSpace(req.ApplicantName), Level: strings.TrimSpace(req.Level), Contact: strings.TrimSpace(req.Contact),
-		GuardianName: strings.TrimSpace(req.GuardianName), GuardianContact: strings.TrimSpace(req.GuardianContact), Message: strings.TrimSpace(req.Message),
-	}
-	switch {
-	case !req.Consent:
-		return s, "Tick the box to agree to share these details with the school."
-	case s.ApplicantName == "" || s.Level == "" || s.Contact == "":
-		return s, "Your name, level and a phone number or email are needed."
-	case tooLong(s.ApplicantName, maxName) || tooLong(s.GuardianName, maxName) || tooLong(s.Level, maxLevel) ||
-		tooLong(s.Contact, maxContact) || tooLong(s.GuardianContact, maxContact):
-		return s, "Names and contacts can be up to 120 characters, the level up to 40."
-	case tooLong(s.Message, maxMessage):
-		return s, "The message can be up to 2,000 characters."
-	}
-	return s, ""
-}
-
-func tooLong(s string, n int) bool { return utf8.RuneCountInString(s) > n }
-
 // consentText is what the applicant agrees to, stored with the application.
 func consentText(school string) string {
-	return "I agree to share the details in this application with " + school + " so they can consider it. Nothing else from my Maple account is shared."
+	return "I confirm these details are true and agree to share this application and its documents with " + school + " so they can consider it. Nothing else from my Maple account is shared."
 }
 
 func (h *Handler) submit(w http.ResponseWriter, r *http.Request) {
+	user := identity.UserFrom(r.Context()).ID
 	var req submitRequest
 	if err := httpx.DecodeJSON(r, &req); err != nil {
 		httpx.WriteError(w, http.StatusBadRequest, "invalid", err.Error())
 		return
 	}
-	shared, problem := req.shared()
+	app, err := h.store.Application(r.Context(), user, pathID(r))
+	if errors.Is(err, ErrNotFound) {
+		notFound(w)
+		return
+	}
+	if err != nil {
+		serverError(w, "load application", err)
+		return
+	}
+	if app.Status != "started" {
+		httpx.WriteError(w, http.StatusConflict, "submitted", "This application has already been sent.")
+		return
+	}
+	form, err := h.store.Form(r.Context(), app.School)
+	if err != nil {
+		serverError(w, "load application form", err)
+		return
+	}
+	shared, problem := req.shared(form, time.Now().UTC())
 	if problem != "" {
 		httpx.WriteError(w, http.StatusBadRequest, "invalid", problem)
 		return
 	}
-	app, err := h.store.Submit(r.Context(), identity.UserFrom(r.Context()).ID, pathID(r), shared, consentText)
+	done, err := h.store.Submit(r.Context(), user, app.ID, shared, consentText(app.SchoolName))
 	switch {
-	case errors.Is(err, ErrNotFound):
-		notFound(w)
 	case errors.Is(err, ErrSubmitted):
 		httpx.WriteError(w, http.StatusConflict, "submitted", "This application has already been sent.")
 	case err != nil:
 		serverError(w, "submit application", err)
 	default:
-		httpx.WriteJSON(w, http.StatusOK, app)
+		httpx.WriteJSON(w, http.StatusOK, done)
 	}
 }
 

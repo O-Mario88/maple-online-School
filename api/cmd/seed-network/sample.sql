@@ -63,6 +63,14 @@ ON CONFLICT (school_id) DO UPDATE SET
   admissions_deadline = EXCLUDED.admissions_deadline, fee_min_ugx = EXCLUDED.fee_min_ugx, fee_max_ugx = EXCLUDED.fee_max_ugx,
   requirements = EXCLUDED.requirements, verified_at = EXCLUDED.verified_at, published_at = EXCLUDED.published_at, updated_at = now();
 
+-- Every sample school uses the same application form as the app's design.
+UPDATE network_profiles SET
+  apply_intake = 'Term 1, 2027',
+  apply_fee_ugx = 50000,
+  apply_programs = '{"Senior Secondary (S.1)","Senior Five (S.5)"}',
+  apply_documents = '[{"id":"report","label":"Previous academic report (last 2 years)"},{"id":"birth","label":"Birth certificate or age proof"},{"id":"photo","label":"Passport-size photo (recent)"},{"id":"guardianId","label":"Parent/guardian identification (National ID)"}]'
+WHERE slug IN (SELECT slug FROM sample_schools);
+
 -- Verified exam centres.
 INSERT INTO network_exam_centres (school_id, boards, exams, external, register_by, fee_ugx, verified_at)
 SELECT p.school_id, '{UNEB}', c.exams, c.external, '2027-02-28', c.fee, now()

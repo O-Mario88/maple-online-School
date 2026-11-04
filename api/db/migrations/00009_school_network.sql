@@ -38,6 +38,12 @@ CREATE TABLE network_profiles (
     fee_min_ugx         bigint      CHECK (fee_min_ugx >= 0),
     fee_max_ugx         bigint      CHECK (fee_max_ugx >= fee_min_ugx),
     requirements        text[]      NOT NULL DEFAULT '{}',
+    -- The school's application form: the intake, its application fee, what
+    -- applicants can apply for, and the documents it needs ([{"id","label"}]).
+    apply_intake        text,
+    apply_fee_ugx       bigint      CHECK (apply_fee_ugx >= 0),
+    apply_programs      text[]      NOT NULL DEFAULT '{}',
+    apply_documents     jsonb       NOT NULL DEFAULT '[]' CHECK (jsonb_typeof(apply_documents) = 'array'),
     verified_at         timestamptz,
     verified_by         bigint      REFERENCES accounts_user(id),
     published_at        timestamptz,
@@ -90,8 +96,9 @@ CREATE TABLE network_saves (
 CREATE INDEX network_saves_school ON network_saves (school_id);
 
 -- A user's application to a school. While it is started, nothing about the
--- user is shared. Submitting stores exactly the fields the user filled in,
--- with when and to what they consented.
+-- user is shared. Submitting stores exactly what the user filled in on the
+-- form (applicant, guardian, current school, academic record and the names of
+-- the documents they attached), with when and to what they consented.
 CREATE TABLE network_applications (
     id           bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     school_id    bigint      NOT NULL REFERENCES network_profiles(school_id) ON DELETE CASCADE,

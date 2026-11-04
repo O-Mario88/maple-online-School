@@ -93,6 +93,7 @@ type Profile struct {
 	Admissions   Admissions  `json:"admissions"`
 	ExamCentre   *ExamCentre `json:"exam_centre"`
 	Vacancies    []Vacancy   `json:"vacancies"`
+	Apply        ApplyForm   `json:"apply"`
 	// Views is the total profile views, or null below MinCohort.
 	Views    *int64    `json:"views"`
 	ListedAt time.Time `json:"listed_at"`
@@ -108,16 +109,6 @@ type Filters struct {
 type Save struct {
 	School  int64     `json:"school"`
 	SavedAt time.Time `json:"saved_at"`
-}
-
-// Shared is exactly what an applicant chose to send a school.
-type Shared struct {
-	ApplicantName   string `json:"applicant_name"`
-	Level           string `json:"level"`
-	Contact         string `json:"contact"`
-	GuardianName    string `json:"guardian_name,omitempty"`
-	GuardianContact string `json:"guardian_contact,omitempty"`
-	Message         string `json:"message,omitempty"`
 }
 
 // Application is the user's own application, shown only to them.
@@ -206,7 +197,10 @@ func (s *PostgresStore) withDetails(ctx context.Context, rows []dbgen.ListProfil
 	}
 	out := make([]Profile, 0, len(rows))
 	for _, r := range rows {
-		p := toProfile(r)
+		p, err := toProfile(r)
+		if err != nil {
+			return nil, err
+		}
 		p.ExamCentre = byCentre[r.SchoolID]
 		if v := byVacancy[r.SchoolID]; v != nil {
 			p.Vacancies = v
@@ -216,7 +210,11 @@ func (s *PostgresStore) withDetails(ctx context.Context, rows []dbgen.ListProfil
 	return out, nil
 }
 
-func toProfile(r dbgen.ListProfilesRow) Profile {
+func toProfile(r dbgen.ListProfilesRow) (Profile, error) {
+	docs, err := requiredDocuments(r.ApplyDocuments)
+	if err != nil {
+		return Profile{}, err
+	}
 	p := Profile{
 		ID: r.SchoolID, Slug: r.Slug, Name: r.Name, Town: r.Town, District: r.District,
 		Curricula: r.Curricula, Levels: r.Levels, Stay: r.Stay, Mode: r.Mode, Programs: r.Programs, Facilities: r.Facilities,
@@ -226,6 +224,7 @@ func toProfile(r dbgen.ListProfilesRow) Profile {
 			FeeMinUGX: int8p(r.FeeMinUgx), FeeMaxUGX: int8p(r.FeeMaxUgx), Requirements: r.Requirements,
 		},
 		Views: int8p(r.Views), ListedAt: r.ListedAt.Time,
+		Apply: ApplyForm{Intake: text(r.ApplyIntake), FeeUGX: int8p(r.ApplyFeeUgx), Programs: r.ApplyPrograms, Documents: docs},
 	}
 	if r.Established.Valid {
 		p.Established = &r.Established.Int16
@@ -233,7 +232,31 @@ func toProfile(r dbgen.ListProfilesRow) Profile {
 	if r.PassRate.Valid {
 		p.PassRate = &PassRate{Rate: r.PassRate.Int16, Board: r.PassBoard.String, Exam: r.PassExam.String, Year: r.PassYear.Int16, Source: r.PassSource.String}
 	}
-	return p
+	return p, nil
+}
+
+func requiredDocuments(raw []byte) ([]RequiredDocument, error) {
+	docs := []RequiredDocument{}
+	if err := json.Unmarshal(raw, &docs); err != nil {
+		return nil, fmt.Errorf("read required documents: %w", err)
+	}
+	return docs, nil
+}
+
+// Form is what the school's application form offers and needs, to check a submission.
+func (s *PostgresStore) Form(ctx context.Context, school int64) (ApplyForm, error) {
+	r, err := s.q.ApplyForm(ctx, school)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return ApplyForm{}, ErrNotFound
+	}
+	if err != nil {
+		return ApplyForm{}, fmt.Errorf("load application form: %w", err)
+	}
+	docs, err := requiredDocuments(r.ApplyDocuments)
+	if err != nil {
+		return ApplyForm{}, err
+	}
+	return ApplyForm{Programs: r.ApplyPrograms, Documents: docs}, nil
 }
 
 // IsListed reports whether learners can see, save and apply to a school.
@@ -307,27 +330,20 @@ func (s *PostgresStore) Start(ctx context.Context, user, school int64) (Applicat
 	if err != nil {
 		return Application{}, false, fmt.Errorf("start application: %w", err)
 	}
-	a, err := s.application(ctx, user, id)
+	a, err := s.Application(ctx, user, id)
 	return a, created, err
 }
 
 // Submit sends the user's started application with exactly what they chose
-// to share, recording what they consented to. It returns ErrNotFound for
-// someone else's application and ErrSubmitted if it was already sent.
-func (s *PostgresStore) Submit(ctx context.Context, user, id int64, shared Shared, consent func(school string) string) (Application, error) {
-	current, err := s.application(ctx, user, id)
-	if err != nil {
-		return Application{}, err
-	}
-	if current.Status != "started" {
-		return Application{}, ErrSubmitted
-	}
+// to share, recording what they consented to. It returns ErrSubmitted if it
+// was already sent (or isn't theirs).
+func (s *PostgresStore) Submit(ctx context.Context, user, id int64, shared Shared, consent string) (Application, error) {
 	body, err := json.Marshal(shared)
 	if err != nil {
 		return Application{}, fmt.Errorf("encode application: %w", err)
 	}
 	n, err := s.q.SubmitApplication(ctx, dbgen.SubmitApplicationParams{
-		ID: id, UserID: user, Shared: body, ConsentText: pgtype.Text{String: consent(current.SchoolName), Valid: true},
+		ID: id, UserID: user, Shared: body, ConsentText: pgtype.Text{String: consent, Valid: true},
 	})
 	if err != nil {
 		return Application{}, fmt.Errorf("submit application: %w", err)
@@ -335,10 +351,11 @@ func (s *PostgresStore) Submit(ctx context.Context, user, id int64, shared Share
 	if n == 0 {
 		return Application{}, ErrSubmitted
 	}
-	return s.application(ctx, user, id)
+	return s.Application(ctx, user, id)
 }
 
-func (s *PostgresStore) application(ctx context.Context, user, id int64) (Application, error) {
+// Application returns the user's own application, or ErrNotFound.
+func (s *PostgresStore) Application(ctx context.Context, user, id int64) (Application, error) {
 	row, err := s.q.MyApplication(ctx, dbgen.MyApplicationParams{ID: id, UserID: user})
 	if errors.Is(err, pgx.ErrNoRows) {
 		return Application{}, ErrNotFound
@@ -401,6 +418,14 @@ func date(d pgtype.Date) *string {
 	}
 	s := d.Time.Format(dateLayout)
 	return &s
+}
+
+func text(t pgtype.Text) *string {
+	if !t.Valid {
+		return nil
+	}
+	v := t.String
+	return &v
 }
 
 func int8p(n pgtype.Int8) *int64 {

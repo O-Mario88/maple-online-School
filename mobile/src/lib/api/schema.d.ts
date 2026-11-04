@@ -5298,6 +5298,22 @@ export interface components {
                 closes_on: string;
                 subjects: string[];
             }[];
+            /** @description The school's application form */
+            apply: {
+                intake: string | null;
+                /**
+                 * Format: int64
+                 * @description Application fee
+                 */
+                fee_ugx: number | null;
+                /** @description What applicants can apply for */
+                programs: string[];
+                /** @description Documents the school needs, one attached file each */
+                documents: {
+                    id: string;
+                    label: string;
+                }[];
+            };
             /**
              * Format: int64
              * @description Total profile views; null when fewer than the minimum cohort
@@ -5311,13 +5327,55 @@ export interface components {
             school: number;
             saved: boolean;
         };
+        NetworkApplicant: {
+            first: string;
+            middle?: string;
+            last: string;
+            /**
+             * Format: date
+             * @description The learner must be 5 to 25
+             */
+            dob: string;
+            gender: string;
+            nationality: string;
+        };
+        NetworkGuardian: {
+            name: string;
+            relationship: string;
+            /** @description A Ugandan number; stored as +256 and nine digits */
+            phone: string;
+            email?: string;
+            occupation?: string;
+            address: string;
+        };
+        NetworkCurrentSchool: {
+            school?: string;
+            grade?: string;
+            year?: string;
+        };
+        NetworkAcademic: {
+            stream: string;
+            subjects?: string[];
+            ple_aggregate: number;
+            ple_index: string;
+            ple_year: number;
+            /** @enum {string} */
+            boarding?: "" | "Day" | "Boarding" | "Day & Boarding";
+            needs?: string;
+        };
+        /** @description The file name only, until Maple stores uploads */
+        NetworkAttachedDocument: {
+            id: string;
+            file: string;
+        };
+        /** @description Exactly what the applicant sent; fields left empty are not stored */
         NetworkShared: {
-            applicant_name: string;
-            level: string;
-            contact: string;
-            guardian_name?: string;
-            guardian_contact?: string;
-            message?: string;
+            applying_for: string;
+            applicant: components["schemas"]["NetworkApplicant"];
+            guardian: components["schemas"]["NetworkGuardian"];
+            current?: components["schemas"]["NetworkCurrentSchool"];
+            academic: components["schemas"]["NetworkAcademic"];
+            documents: components["schemas"]["NetworkAttachedDocument"][];
         };
         NetworkApplication: {
             /** Format: int64 */
@@ -5333,16 +5391,17 @@ export interface components {
             /** Format: date-time */
             submitted_at: string | null;
         };
+        /** @description The school's four-step application form. Every required document needs a file, and only those. */
         NetworkSubmission: {
-            /** @description Must be true to share these details with the school */
+            /** @description Must be true to share this application with the school */
             consent: boolean;
-            applicant_name: string;
-            level: string;
-            /** @description A phone number or email */
-            contact: string;
-            guardian_name?: string;
-            guardian_contact?: string;
-            message?: string;
+            /** @description One of the school's apply.programs */
+            applying_for: string;
+            applicant: components["schemas"]["NetworkApplicant"];
+            guardian: components["schemas"]["NetworkGuardian"];
+            current?: components["schemas"]["NetworkCurrentSchool"];
+            academic: components["schemas"]["NetworkAcademic"];
+            documents: components["schemas"]["NetworkAttachedDocument"][];
         };
         NetworkInsights: {
             /** Format: int64 */
