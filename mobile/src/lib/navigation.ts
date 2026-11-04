@@ -86,6 +86,8 @@ const MENUS: Readonly<Record<Portal, readonly NavItem[]>> = {
     // Ported to the API: the designed page in every build.
     { key: 'assignments', label: 'Assignments', href: '/learn/assignments', icon: 'clipboard' },
     library,
+    p('video-lessons', 'Video lessons', '/learn/lessons', 'play'),
+    p('plan', 'My plan', '/learn/plan', 'target'),
     p('progress', 'My progress', '/learn/progress', 'chart'),
     p('projects', 'Projects', '/learn/projects', 'folder'),
     p('exam', 'Exam practice', '/learn/paper', 'timer'),
@@ -120,7 +122,6 @@ const MENUS: Readonly<Record<Portal, readonly NavItem[]>> = {
     p('earnings', 'Earnings', '/teach/earnings', 'wallet'),
     pricing,
     p('verification', 'Verification', '/teach/verification', 'check'),
-    p('teacher-library', 'Resource library', '/teach/library', 'folder'),
   ],
   parent: [
     { ...home, label: 'Family' },

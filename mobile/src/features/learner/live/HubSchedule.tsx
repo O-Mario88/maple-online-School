@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
+import { ContentStats } from '@/features/shared/ContentStats';
 import { clock12, type DayDot, dayParts, monthTitle, monthWeeks, weekOf } from '@/lib/live-hub';
 import type { IconName } from '@/lib/icons';
 
@@ -75,6 +76,11 @@ export function ScheduleRow({ hub, x, s, phone = false, showDay = false }: { hub
         <Text style={[styles.sub, phone && styles.subP]} numberOfLines={1}>
           {phone ? x.teacher : `${x.teacher} • ${missed ? 'Missed • Recording available' : x.context}`}
         </Text>
+        {x.replay && s.action(x) === 'ended' ? (
+          <View style={styles.replay}>
+            <ContentStats e={x.replay} size={phone ? 10 : 11.5} uploader={false} />
+          </View>
+        ) : null}
       </View>
       <SessionButton x={x} s={s} phone={phone} />
     </View>
@@ -194,8 +200,9 @@ const styles = StyleSheet.create({
   done: { borderWidth: 1, borderColor: '#B9E3C8', backgroundColor: '#F0FAF3' },
   btnText: { fontSize: 13, fontWeight: '500' },
   btnTextP: { fontSize: 11.5 },
-  row: { height: 60, flexDirection: 'row', alignItems: 'center', gap: 12 },
-  rowP: { height: 58, gap: 10 },
+  row: { minHeight: 60, flexDirection: 'row', alignItems: 'center', gap: 12 },
+  rowP: { minHeight: 58, gap: 10 },
+  replay: { marginTop: 4 },
   dot: { width: 7, height: 7, marginLeft: 0, borderRadius: 4 },
   time: { width: 72 },
   timeP: { width: 34 },

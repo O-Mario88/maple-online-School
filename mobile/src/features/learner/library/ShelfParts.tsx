@@ -5,6 +5,8 @@ import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-
 
 import { Icon } from '@/components/icon';
 import { Bar } from '@/features/learner/dashboard/DashParts';
+import { ContentStats } from '@/features/shared/ContentStats';
+import { statsSpoken } from '@/lib/engagement';
 import type { IconName } from '@/lib/icons';
 
 import type { Book, Hub, ShelfState } from './useShelf';
@@ -13,7 +15,6 @@ const INK = '#0B1424';
 const NAVY = '#0B2A6B';
 const BODY = '#4A5263';
 const BLUE = '#1463F3';
-const STAR = '#F5A524';
 const TAG: Record<string, { bg: string; fg: string }> = {
   Mathematics: { bg: '#E6EEFC', fg: '#1450C8' },
   English: { bg: '#E3F6E9', fg: '#15803D' },
@@ -118,18 +119,17 @@ export function Levels({ hub, s }: { hub: Hub; s: ShelfState }) {
 /** The "Recommended for You" card: landscape thumbnail, title, subject tag, rating and type. Every shelf row uses it. */
 export function BookCard({ b, small = false }: { b: Book; small?: boolean }) {
   return (
-    <Pressable style={[styles.card, small && styles.cardS]} onPress={() => openBook(b.id)} accessibilityRole="link" accessibilityLabel={`${b.title}, ${b.subject}, rated ${b.rating}, ${typeLabel(b.type)}`}>
+    <Pressable style={[styles.card, small && styles.cardS]} onPress={() => openBook(b.id)} accessibilityRole="link" accessibilityLabel={`${b.title}, ${b.subject}, ${typeLabel(b.type)}. ${statsSpoken(b)}`}>
       <Image source={b.cover} style={small ? styles.coverS : styles.cover} contentFit="cover" />
       <Text style={[styles.cardTitle, small && styles.cardTitleS]} numberOfLines={small ? 2 : 1}>
         {b.title}
       </Text>
       <View style={styles.cardTags}>
         <Tag text={b.tag} />
-      </View>
-      <View style={styles.cardFoot}>
-        <Icon name="star" size={small ? 11 : 12} color={STAR} />
-        <Text style={[styles.cardRating, small && styles.cardRatingS]}>{b.rating}</Text>
         {small ? null : <Text style={styles.cardType}>{typeLabel(b.type)}</Text>}
+      </View>
+      <View style={styles.cardStats}>
+        <ContentStats e={b} size={small ? 8.5 : 9} />
       </View>
     </Pressable>
   );
@@ -367,11 +367,10 @@ const styles = StyleSheet.create({
   coverS: { width: 98, height: 78, borderRadius: 5 },
   cardTitle: { marginTop: 8, paddingHorizontal: 1, fontSize: 10, lineHeight: 14, letterSpacing: -0.25, fontWeight: '500', color: NAVY },
   cardTitleS: { minHeight: 26, paddingHorizontal: 0, fontSize: 10, lineHeight: 13 },
-  cardTags: { flexDirection: 'row', marginTop: 3, paddingHorizontal: 2 },
+  cardTags: { flexDirection: 'row', alignItems: 'center', marginTop: 3, paddingHorizontal: 2 },
   cardLevel: { fontSize: 9, color: BODY },
-  cardFoot: { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 6, paddingHorizontal: 2 },
-  cardRating: { flex: 1, fontSize: 10.5, color: INK },
-  cardType: { fontSize: 10.5, color: INK },
+  cardStats: { marginTop: 6, paddingHorizontal: 2 },
+  cardType: { marginLeft: 'auto', fontSize: 10, color: INK },
   cont: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: '#F0F3F7' },
   contCover: { width: 46, height: 44, borderRadius: 4 },
   contSub: { marginTop: 2, fontSize: 9.5, color: BODY, letterSpacing: -0.15 },
@@ -391,7 +390,6 @@ const styles = StyleSheet.create({
   checkText: { flex: 1, fontSize: 11, color: INK },
   blue: { color: BLUE },
   headLeaf: { width: 18, height: 18 },
-  cardRatingS: { fontSize: 10 },
   contTitle: { fontSize: 10.5, letterSpacing: -0.15, fontWeight: '500', color: NAVY },
   shelf: { paddingTop: 12, paddingHorizontal: 12, paddingBottom: 10, borderRadius: 8, borderWidth: 1, borderColor: '#E8EDF4', backgroundColor: '#FFFFFF' },
   shelfP: { padding: 0, borderWidth: 0, backgroundColor: 'transparent' },

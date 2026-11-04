@@ -4,6 +4,7 @@ import { type ReactNode, useState } from 'react';
 import { type LayoutChangeEvent, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
+import { ContentStats } from '@/features/shared/ContentStats';
 import type { IconName } from '@/lib/icons';
 import { toast } from '@/lib/toast';
 import type { Block } from '@/mock/book-reader';
@@ -57,10 +58,8 @@ export function BookTop({ x, phone = false }: { x: Reader; phone?: boolean }) {
         <View style={styles.flex}>
           <Text style={[styles.bookTitle, phone && styles.bookTitlePhone]}>{b.title}</Text>
           <Text style={styles.bookSub}>{`${b.subject}  •  ${b.level}`}</Text>
+          <ContentStats e={b.stats} size={13} />
           <View style={styles.inline}>
-            <Icon name="star" size={16} color="#F5B301" />
-            <Text style={styles.rating}>{b.rating}</Text>
-            <Text style={styles.small}>{`(${b.readers.toLocaleString('en-US')} readers)`}</Text>
             <View style={styles.formatPill}>
               <Text style={styles.formatText}>{x.offline ? 'Offline' : b.format}</Text>
             </View>
@@ -348,7 +347,6 @@ const styles = StyleSheet.create({
   flex: { flex: 1, minWidth: 0 },
   inline: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   hover: { backgroundColor: '#F1F5FC' },
-  small: { fontSize: 13, color: BODY },
   bold: { fontWeight: '700', color: INK },
   top: { flexDirection: 'row', alignItems: 'center', gap: 22, padding: 12, borderRadius: 14, backgroundColor: WHITE, borderWidth: 1, borderColor: LINE },
   topPhone: { flexDirection: 'column', alignItems: 'stretch', gap: 12 },
@@ -363,7 +361,6 @@ const styles = StyleSheet.create({
   bookTitle: { fontSize: 27, fontWeight: '800', color: NAVY, letterSpacing: -0.4 },
   bookTitlePhone: { fontSize: 22 },
   bookSub: { marginTop: 2, marginBottom: 8, fontSize: 16, color: NAVY },
-  rating: { fontSize: 16, fontWeight: '800', color: NAVY },
   formatPill: { marginLeft: 6, paddingHorizontal: 10, paddingVertical: 3, borderRadius: 12, backgroundColor: '#E6EEFD' },
   formatText: { fontSize: 13, fontWeight: '600', color: BLUE },
   progressBox: { width: 270, gap: 8 },

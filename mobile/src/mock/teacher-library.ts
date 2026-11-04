@@ -52,7 +52,6 @@ export const teacherLibrary = {
     { label: 'Reviews', icon: 'star' as IconName, go: '/teach/storefront' as TeacherDest },
     { label: 'Library', icon: 'book' as IconName, go: '/teach/library' as TeacherDest },
     { label: 'Co-Teaching', icon: 'people' as IconName, go: '/teach/library' as TeacherDest },
-    { label: 'Resources', icon: 'book' as IconName, go: '/teach/library' as TeacherDest },
     { label: 'Settings', icon: 'settings' as IconName, go: '/teach/storefront' as TeacherDest },
   ],
   storageUsed: '3.2 GB of 10 GB used',

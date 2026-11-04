@@ -3,6 +3,7 @@
  * chapters from the subject outline, a written opening page per chapter, the learner's saved place,
  * and the subject's reading tools, quizzes and activity.
  */
+import type { Engagement } from '@/lib/engagement';
 import type { IconName } from '@/lib/icons';
 import type { Block, PageSpread, Question, Unit } from '@/mock/book-reader';
 
@@ -52,13 +53,12 @@ export interface Outline {
   related: readonly { title: string; meta: string; kind: 'video' | 'pdf' | 'doc'; thumb?: number }[];
 }
 
-export interface ShelfItem {
+export interface ShelfItem extends Engagement {
   id: string;
   title: string;
   subject: string;
   level: string;
   type: string;
-  rating: number;
   cover: number;
   publisher: string;
 }
@@ -112,8 +112,6 @@ export function savedProgress(id: string, pages: number, minPages: number): { la
 const FRONT_PAGES = 3;
 const PAGES_PER_CHAPTER = 8;
 const MINUTES_PER_PART = 4;
-const READERS_BASE = 300;
-const READERS_SPREAD = 2100;
 
 function openingSpread(kind: ResourceKind, n: number, c: OutlineChapter, cover: number, title: string): PageSpread {
   const bullets: Block = { kind: 'bullets', items: c.points.map((p) => ({ bold: p, text: '' })) };
@@ -140,7 +138,8 @@ export interface ReaderData {
     subject: string;
     level: string;
     rating: number;
-    readers: number;
+    /** Who uploaded it, and its views, rating, likes and comments. */
+    stats: Engagement;
     format: string;
     kind: ResourceKind;
     unit: string;
@@ -206,7 +205,7 @@ export function buildReaderBook(item: ShelfItem, outline: Outline): Omit<ReaderD
       subject: item.subject,
       level: item.level,
       rating: item.rating,
-      readers: READERS_BASE + (seed % READERS_SPREAD),
+      stats: { uploader: item.uploader, views: item.views, rating: item.rating, likes: item.likes, comments: item.comments },
       format: look.format,
       kind,
       unit: look.unit,

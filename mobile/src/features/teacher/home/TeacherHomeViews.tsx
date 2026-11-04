@@ -18,7 +18,7 @@ const NAV: readonly SideItem[] = [
   { label: 'Assignments', icon: 'clipboard', go: '/teach/grading' },
   { label: 'Students', icon: 'people', go: '/teach/class-spaces' },
   { label: 'Messages', icon: 'chat', go: '/messages', badge: 3 },
-  { label: 'Resources', icon: 'folder', go: '/learn/library' },
+  { label: 'Library', icon: 'folder', go: '/learn/library' },
   { label: 'Analytics', icon: 'chart', go: 'analytics' },
   { label: 'Earnings', icon: 'wallet', go: '/teach/earnings' },
   { label: 'Schedule', icon: 'calendar', go: '/teach/calendar' },

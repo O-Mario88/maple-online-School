@@ -90,7 +90,9 @@ export const learnerHome = {
   nav: [
     { label: 'Home', icon: 'home', href: '/' },
     { label: 'Explore / Learn', icon: 'search', href: '/learn/explore' },
+    { label: 'My Plan', icon: 'target', href: '/learn/plan' },
     { label: 'My Subjects', icon: 'book', href: '/learn/course' },
+    { label: 'Video Lessons', icon: 'play', href: '/learn/lessons' },
     { label: 'Classes', icon: 'book', href: '/learn/live' },
     { label: 'Assignments', icon: 'clipboard', href: '/learn/assignments' },
     { label: 'Tests & Quizzes', icon: 'check', href: '/learn/paper' },
@@ -101,7 +103,6 @@ export const learnerHome = {
     { label: 'Results', icon: 'clipboard', href: '/learn/passport' },
     { label: 'Messages', icon: 'chat', href: '/inbox', badge: 3 },
     { label: 'Calendar', icon: 'calendar', href: '/learn/live' },
-    { label: 'Resources', icon: 'book', href: '/learn/library' },
     { label: 'Pricing', icon: 'wallet', href: '/plans' },
     { label: 'Profile', icon: 'person', href: '/learn/account' },
   ] as { label: string; icon: IconName; href: Href; badge?: number }[],

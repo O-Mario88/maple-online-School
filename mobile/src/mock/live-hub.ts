@@ -1,4 +1,5 @@
 /** Sample data for the learner's live classes hub: the week of Mon 19 – Sun 25 Oct 2026, seen at 9:20 AM on Wed 21. */
+import type { Engagement } from '@/lib/engagement';
 import type { SessionKind } from '@/lib/live-hub';
 
 import { photos } from './photos';
@@ -21,6 +22,8 @@ export interface HubSession {
   icon: IconKey;
   attended?: boolean;
   recording?: boolean;
+  /** The recording's uploader (the teacher), views, rating, likes and comments. */
+  replay?: Engagement;
 }
 
 const s = (id: string, day: string, start: string, end: string, kind: SessionKind, title: string, short: string, teacher: string, icon: IconKey, extra: Partial<HubSession> = {}): HubSession => ({
@@ -38,9 +41,9 @@ const s = (id: string, day: string, start: string, end: string, kind: SessionKin
 });
 
 const sessions: HubSession[] = [
-  s('mon-camp', '2026-10-19', '16:00', '17:00', 'bootcamp', 'UCE Mathematics Exam Prep: Session 8', 'Maths Exam Prep', 'Ms. Achieng', 'math', { attended: true, recording: true }),
-  s('tue-eng', '2026-10-20', '10:00', '10:45', 'school', 'English - Poetry and Imagery', 'English - Poetry', 'Mr. Okello', 'english', { attended: false, recording: true }),
-  s('tue-math', '2026-10-20', '14:00', '14:45', 'school', 'Mathematics - Ratios and Rates', 'Mathematics - Ratios', 'Ms. Achieng', 'math', { attended: true, recording: true }),
+  s('mon-camp', '2026-10-19', '16:00', '17:00', 'bootcamp', 'UCE Mathematics Exam Prep: Session 8', 'Maths Exam Prep', 'Ms. Achieng', 'math', { attended: true, recording: true, replay: { uploader: 'Ms. Achieng', views: 2_840, rating: 4.9, likes: 412, comments: 63 } }),
+  s('tue-eng', '2026-10-20', '10:00', '10:45', 'school', 'English - Poetry and Imagery', 'English - Poetry', 'Mr. Okello', 'english', { attended: false, recording: true, replay: { uploader: 'Mr. Okello', views: 1_190, rating: 4.6, likes: 148, comments: 21 } }),
+  s('tue-math', '2026-10-20', '14:00', '14:45', 'school', 'Mathematics - Ratios and Rates', 'Mathematics - Ratios', 'Ms. Achieng', 'math', { attended: true, recording: true, replay: { uploader: 'Ms. Achieng', views: 1_675, rating: 4.7, likes: 203, comments: 34 } }),
   s('wed-math', '2026-10-21', '09:00', '09:45', 'school', 'Mathematics - Fractions and Decimals', 'Mathematics - Fractions', 'Ms. Achieng', 'math'),
   s('wed-eng', '2026-10-21', '11:00', '11:45', 'school', 'English - Reading Comprehension', 'English - Reading', 'Mr. Okello', 'english'),
   s('wed-sci', '2026-10-21', '14:00', '15:00', 'bootcamp', 'Science Bootcamp: Exam Techniques', 'Science Bootcamp', 'Ms. Nambasa', 'science'),

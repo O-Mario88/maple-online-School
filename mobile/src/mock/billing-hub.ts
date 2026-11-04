@@ -51,6 +51,7 @@ export const billingHub = {
         { label: 'Assignments & feedback', on: true },
         { label: 'Video explainers', on: false },
         { label: 'Private tutor', on: false },
+        { label: 'Projects & study squads', on: false },
       ],
     },
     {
@@ -59,7 +60,7 @@ export const billingHub = {
       title: 'Maple Premium + Tutoring',
       monthly: 150000,
       blurb: 'Everything in Pro, plus a private tutor and video explainers.',
-      long: 'Everything in Pro, plus your own private tutor, step-by-step past paper solutions and question interpretation video explainers.',
+      long: 'Everything in Pro, plus your own private tutor, question interpretation video explainers, projects and study squads.',
       popular: false,
       icon: b('premium'),
       features: [
@@ -67,6 +68,7 @@ export const billingHub = {
         { label: 'Private tutor', on: true },
         { label: 'Step-by-step solutions', on: true },
         { label: 'Question video explainers', on: true },
+        { label: 'Projects & study squads', on: true },
         { label: 'Personalized study plan', on: true },
       ],
     },

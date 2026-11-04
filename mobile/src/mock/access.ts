@@ -69,7 +69,7 @@ export const plans: Readonly<Record<'learner' | 'teacher' | 'school', readonly P
       deskBlurb: 'Everything in Pro, plus\na private tutor and video explainers.',
       icon: 'diamond',
       tint: '#7C3AED',
-      features: ['Everything in Pro Study Pass', 'Your own private tutor', 'Step-by-step past paper solutions', 'Question interpretation videos', 'Personalized learning plan'],
+      features: ['Everything in Pro Study Pass', 'Your own private tutor', 'Question interpretation videos', 'Projects and study squads', 'Personalized learning plan'],
     },
   ],
   teacher: [
@@ -166,6 +166,7 @@ export const deskNav: readonly { key: string; label: string; icon: IconName; hre
   { key: 'home', label: 'Home', icon: 'home', href: '/' },
   { key: 'explore', label: 'Explore', icon: 'search', href: '/learn/explore' },
   { key: 'courses', label: 'Subjects', icon: 'book', href: '/learn/course' },
+  { key: 'videos', label: 'Video Lessons', icon: 'play', href: '/learn/lessons' },
   { key: 'live', label: 'Live Classes', icon: 'live', href: '/learn/live' },
   { key: 'assignments', label: 'Assignments', icon: 'clipboard', href: '/learn/assignments' },
   { key: 'library', label: 'Library', icon: 'library', href: '/learn/library' },
