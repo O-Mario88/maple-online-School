@@ -42,7 +42,7 @@ export function TeacherSheet({ course, visible, onClose }: { course: Course; vis
         ))}
       </View>
       <Text style={styles.body}>{t.bio}</Text>
-      <SheetButton primary label={`See all courses by ${t.name}`} onPress={seeCourses} />
+      <SheetButton primary label={`See all subjects by ${t.name}`} onPress={seeCourses} />
     </Sheet>
   );
 }
@@ -71,7 +71,7 @@ export function ReviewSheet({ visible, onClose, onPosted }: { visible: boolean; 
   if (status !== 'signedIn') {
     return (
       <Sheet visible={visible} title="Write a review" onClose={close}>
-        <Text style={styles.body}>Sign in with the account you study this course on, so other learners know every review comes from a real student.</Text>
+        <Text style={styles.body}>Sign in with the account you study this subject on, so other learners know every review comes from a real student.</Text>
         <SheetButton
           primary
           label="Sign in to review"

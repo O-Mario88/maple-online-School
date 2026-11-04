@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Icon } from '@/components/icon';
 import { LearnerPhoneTop } from '@/features/learner/dashboard/DashPhone';
 import { type Home, HomeHeader, HomeSidebar } from '@/features/learner/home/HomeFrame';
+import { frameBody } from '@/features/learner/home/frameBody';
 
 import { BookTop, BLUE, Contents, LINE, NAVY, PageView, ReadAloud, ReaderBar, WHITE } from './ReaderBody';
 import { ActivityModal, QuizModal, SidePanel } from './ReaderPanel';
@@ -112,7 +113,7 @@ const styles = StyleSheet.create({
   canvas: { width: READER_REF_WIDTH, minHeight: 1024, backgroundColor: '#EEF3FA' },
   focusCanvas: { alignItems: 'center', paddingVertical: 24, backgroundColor: '#F4F1EA' },
   focusCol: { width: 1040, gap: 14 },
-  body: { gap: 12, paddingTop: 64, paddingLeft: 205, paddingRight: 12, paddingBottom: 20 },
+  body: { gap: 12, ...frameBody({ top: 10, left: 18, right: 12, bottom: 20 }) },
   cols: { flexDirection: 'row', alignItems: 'flex-start', gap: 12 },
   card: { padding: 14, borderRadius: 14, borderWidth: 1, borderColor: LINE, backgroundColor: WHITE },
   contents: { width: 238 },

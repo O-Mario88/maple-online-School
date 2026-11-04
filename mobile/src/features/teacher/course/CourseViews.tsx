@@ -136,9 +136,9 @@ export function CourseDesk({ c, me }: { c: CourseBuilder; me: TeacherMe }) {
   };
   return (
     <View style={styles.canvas}>
-      <TeacherTopBar active="Studio" me={me} placeholder="Search courses, lessons, or students..." />
+      <TeacherTopBar active="Studio" me={me} placeholder="Search subjects, lessons, or students..." />
       <View style={styles.body}>
-        <TeacherSideNav dense title="Course Builder" items={items} active={active} onItem={onItem} />
+        <TeacherSideNav dense title="Subject Builder" items={items} active={active} onItem={onItem} />
         <View style={styles.main}>
           <CourseHeader c={c} b={b} />
           <View style={styles.panels}>

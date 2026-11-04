@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
-import { formatMoney } from '@/lib/finance/fees';
 import type { MockData } from '@/mock';
 
 import { Brand } from '../palette';
@@ -180,7 +179,6 @@ export function Related({ course }: { course: Course }) {
             <Text style={styles.strong}>{r.title}</Text>
             <Text style={styles.muted}>{r.meta}</Text>
             <Text style={styles.body}>{`★ ${r.rating} (${r.reviews})`}</Text>
-            <Text style={styles.strong}>{formatMoney(r.priceUGX, 'UGX')}</Text>
           </View>
         </Pressable>
       ))}

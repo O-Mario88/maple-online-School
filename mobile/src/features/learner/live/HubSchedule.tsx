@@ -48,7 +48,7 @@ function Btn({ label, icon, kind, onPress, phone }: { label: string; icon?: Icon
 /** The session's button: join while live, "Upcoming" inside two hours, a reminder toggle later on, the recording once over. */
 export function SessionButton({ x, s, phone = false }: { x: Session; s: HubState; phone?: boolean }) {
   const a = s.action(x);
-  if (a === 'join') return <Btn label={phone ? 'Join' : 'Join Class'} icon="video" kind="fill" phone={phone} onPress={() => router.push('/learn/live-room')} />;
+  if (a === 'join') return <Btn label={phone ? 'Join' : 'Join Class'} icon="video" kind="fill" phone={phone} onPress={() => router.push(`/learn/live-room?id=${x.id}`)} />;
   if (a === 'soon') return <Btn label="Upcoming" kind="soft" phone={phone} />;
   if (a === 'ended') return x.recording ? <Btn label={phone ? 'Recording' : 'Watch Recording'} icon="playFill" kind="outline" phone={phone} onPress={() => router.push('/learn/lesson')} /> : <Btn label="Ended" kind="soft" phone={phone} />;
   const on = s.reminded(x.id);

@@ -125,18 +125,18 @@ export function StudioDesk({ s, me }: { s: StudioNew; me: TeacherMe }) {
   };
   return (
     <View style={styles.canvas}>
-      <TeacherTopBar active="Studio" me={me} placeholder="Search documents, topics, or courses..." />
+      <TeacherTopBar active="Studio" me={me} placeholder="Search documents, topics, or subjects..." />
       <View style={styles.body}>
-        <TeacherSideNav title="AI Course Studio" items={s.nav} active={activeItem(tab, templates)} onItem={onItem}>
+        <TeacherSideNav title="AI Subject Studio" items={s.nav} active={activeItem(tab, templates)} onItem={onItem}>
           <SideCards s={s} onTemplates={() => setTemplates(true)} />
         </TeacherSideNav>
         <View style={styles.main}>
           <View style={styles.header}>
             <View style={styles.flex}>
               <Text style={styles.title} accessibilityRole="header">
-                Create a New Course with AI
+                Create a New Subject with AI
               </Text>
-              <Text style={styles.subtitle}>Upload your content or paste a link and let AI build a complete, interactive course in 60 seconds.</Text>
+              <Text style={styles.subtitle}>Upload your content or paste a link and let AI build a complete, interactive subject in 60 seconds.</Text>
             </View>
             <Pressable style={styles.howBtn} onPress={() => setHow((h) => !h)} accessibilityRole="button" accessibilityState={{ expanded: how }} accessibilityLabel="How it works">
               <View style={styles.howPlay}>
@@ -177,15 +177,15 @@ export function StudioPhone({ s, me }: { s: StudioNew; me: TeacherMe }) {
       <ScrollView contentContainerStyle={styles.phone}>
         <View>
           <Text style={styles.titleP} accessibilityRole="header">
-            AI Course Studio
+            AI Subject Studio
           </Text>
-          <Text style={styles.subP}>Turn any content into an interactive course in 60 seconds.</Text>
+          <Text style={styles.subP}>Turn any content into an interactive subject in 60 seconds.</Text>
         </View>
         <View style={styles.segs} accessibilityRole="tablist">
-          {(['Create', 'My Courses', 'Templates'] as const).map((t) => {
+          {(['Create', 'My Subjects', 'Templates'] as const).map((t) => {
             const on = t === tab;
             return (
-              <Pressable key={t} style={[styles.seg, on && styles.segOn]} onPress={() => (t === 'My Courses' ? go('/teach/course-editor') : setTab(t))} accessibilityRole="tab" accessibilityState={{ selected: on }}>
+              <Pressable key={t} style={[styles.seg, on && styles.segOn]} onPress={() => (t === 'My Subjects' ? go('/teach/course-editor') : setTab(t))} accessibilityRole="tab" accessibilityState={{ selected: on }}>
                 <Text style={[styles.segText, on && styles.segTextOn]}>{t}</Text>
               </Pressable>
             );

@@ -124,7 +124,7 @@ export function ShortPlayer({ clip, courseSlug, onClose }: { clip: ShortEntry; c
       </View>
       <Pressable style={styles.enrol} onPress={() => router.push(`/courses/${courseSlug}`)} accessibilityRole="button">
         <Icon name="wallet" size={18} color={Brand.surface} />
-        <Text style={styles.enrolText}>Enrol in Full Course</Text>
+        <Text style={styles.enrolText}>Enrol in Full Subject</Text>
       </Pressable>
       <Pressable style={styles.book} onPress={() => router.push('/event')} accessibilityRole="button">
         <Icon name="calendar" size={18} color={Brand.ink} />

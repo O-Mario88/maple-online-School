@@ -6,7 +6,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Icon } from '@/components/icon';
 import { Button, ErrorText, Field } from '@/components/ui';
 import { Brand } from '@/features/public/palette';
-import { useAuth } from '@/lib/auth/auth-context';
+import { useAuth, useStartFree } from '@/lib/auth/auth-context';
 import type { IconName } from '@/lib/icons';
 import { MOCK_DATA, mockApi } from '@/lib/mock';
 import type { MockData } from '@/mock';
@@ -101,6 +101,7 @@ function EmailForm({ onBack, phone }: { onBack: () => void; phone: boolean }) {
 /** The sign-in card: Sign In / Create Account tabs, the ways in, and the security note. Desktop sizes are the reference's pixels. */
 export function SignInCard({ art, phone = false }: { art?: Art; phone?: boolean }) {
   const { signIn } = useAuth();
+  const startFree = useStartFree();
   const [mode, setMode] = useState<'pick' | 'email'>('pick');
   const [soon, setSoon] = useState<string | null>(null);
   const p = phone;
@@ -165,6 +166,11 @@ export function SignInCard({ art, phone = false }: { art?: Art; phone?: boolean 
         </>
       )}
 
+      {startFree ? (
+        <Pressable onPress={startFree} accessibilityRole="button" style={styles.browseFree}>
+          <Text style={[styles.link, p && styles.linkP]}>Not ready to sign up? Browse free resources first</Text>
+        </Pressable>
+      ) : null}
       <View style={[styles.secure, p && styles.secureP]}>
         <Icon name="shield" size={p ? 24 : 30} color={Brand.blue} />
         <View style={styles.flex}>
@@ -246,6 +252,7 @@ const styles = StyleSheet.create({
   form: { gap: 14, marginTop: 24 },
   formLinks: { flexDirection: 'row', justifyContent: 'space-between' },
   link: { fontSize: 14, fontWeight: '600', color: Brand.blue, paddingVertical: 6 },
+  browseFree: { alignSelf: 'center', marginTop: 4 },
   linkP: { fontSize: 13 },
   preview: { marginTop: 10, textAlign: 'center' },
   demoBar: { marginTop: 12, padding: 10, borderRadius: 10, borderWidth: 1, borderColor: '#DCE6F5', backgroundColor: '#F8FBFF', gap: 6 },

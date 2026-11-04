@@ -41,15 +41,15 @@ function Setup({ c }: { c: CourseBuilder }) {
   return (
     <View style={styles.setup}>
       <View style={styles.cover}>
-        <Image source={c.course.thumb} style={styles.coverImg} contentFit="cover" accessibilityLabel="Course cover" />
+        <Image source={c.course.thumb} style={styles.coverImg} contentFit="cover" accessibilityLabel="Subject cover" />
         <TButton small label="Change cover" icon="gallery" variant="outline" onPress={() => toast('Pick a JPG or PNG, at least 1280 × 720.')} />
       </View>
       <View style={styles.form}>
-        <TField label="Course title" value={form.title} onChange={set('title')} />
+        <TField label="Subject title" value={form.title} onChange={set('title')} />
         <TField label="Short description" value={form.description} onChange={set('description')} />
         <TField label="Curriculum" value={form.board} onChange={set('board')} />
         <TField label="Subject" value={form.subject} onChange={set('subject')} />
-        <TButton small label="Save setup" onPress={() => toast('Course setup saved.')} style={styles.save} />
+        <TButton small label="Save setup" onPress={() => toast('Subject setup saved.')} style={styles.save} />
       </View>
     </View>
   );
@@ -134,20 +134,20 @@ function Publish({ c, b }: { c: CourseBuilder; b: Builder }) {
         </View>
       ))}
       <View style={styles.addRow}>
-        <TButton small label="Preview Course" icon="eye" variant="outline" onPress={() => go(c.preview)} />
-        <TButton small label={b.status === 'Draft' ? 'Publish Course' : 'Sent for review'} icon="arrowRight" iconRight onPress={b.publish} />
+        <TButton small label="Preview Subject" icon="eye" variant="outline" onPress={() => go(c.preview)} />
+        <TButton small label={b.status === 'Draft' ? 'Publish Subject' : 'Sent for review'} icon="arrowRight" iconRight onPress={b.publish} />
       </View>
     </View>
   );
 }
 
 const TITLES: Readonly<Record<string, { title: string; sub: string }>> = {
-  setup: { title: 'Course Setup', sub: 'The basics learners see first: title, description, curriculum and cover.' },
-  objectives: { title: 'Learning Objectives', sub: 'What learners will be able to do by the end of the course.' },
+  setup: { title: 'Subject Setup', sub: 'The basics learners see first: title, description, curriculum and cover.' },
+  objectives: { title: 'Learning Objectives', sub: 'What learners will be able to do by the end of the subject.' },
   quizzes: { title: 'Quizzes & Assessments', sub: 'Module quizzes and the quick checks inside each lesson.' },
   resources: { title: 'Resources & Downloads', sub: 'Files learners can download. Each is linked to a lesson or module.' },
-  pricing: { title: 'Pricing & Access', sub: 'What the course costs and who can enrol.' },
-  completion: { title: 'Completion Settings', sub: 'When a lesson, a module and the whole course count as finished.' },
+  pricing: { title: 'Pricing & Access', sub: 'What the subject costs and who can enrol.' },
+  completion: { title: 'Completion Settings', sub: 'When a lesson, a module and the whole subject count as finished.' },
   publish: { title: 'Preview & Publish', sub: 'Check everything, preview as a learner, then publish.' },
 };
 

@@ -89,7 +89,7 @@ export function useCourseBuilder(c: CourseBuilder) {
     const id = newId('m');
     setModules((prev) => [...prev, { id, title: 'New module', lessons: [] }]);
     setOpen((prev) => new Set(prev).add(id));
-    changed('New module added at the end. Rename it in Course Setup.');
+    changed('New module added at the end. Rename it in Subject Setup.');
   };
   const addLesson = (moduleId?: string) => {
     const target = moduleId ?? current?.module.id ?? modules[0].id;

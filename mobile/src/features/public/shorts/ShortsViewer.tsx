@@ -151,7 +151,7 @@ function ShortPage({ clip, active, width, height, stage, courseSlug }: PageProps
             ) : null}
             <Pressable style={styles.course} onPress={() => router.push(`/courses/${courseSlug}`)} accessibilityRole="link">
               <Text style={styles.courseText} numberOfLines={1}>
-                {`▶ Full course with ${clip.teacher}`}
+                {`▶ Full subject with ${clip.teacher}`}
               </Text>
             </Pressable>
           </LinearGradient>

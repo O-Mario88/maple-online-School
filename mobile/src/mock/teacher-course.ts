@@ -52,7 +52,7 @@ export const courseBuilder = {
     thumb: p.thumb,
   },
   nav: [
-    { key: 'setup', label: 'Course Setup', icon: 'settings' },
+    { key: 'setup', label: 'Subject Setup', icon: 'settings' },
     { key: 'content', label: 'Content Builder', icon: 'edit' },
     { key: 'objectives', label: 'Learning Objectives', icon: 'flag' },
     { key: 'quizzes', label: 'Quizzes & Assessments', icon: 'clipboard' },
@@ -128,7 +128,7 @@ export const courseBuilder = {
     toggles: [
       { key: 'downloads', label: 'Allow downloads', icon: 'download', on: true },
       { key: 'comments', label: 'Enable comments', icon: 'chat', on: true },
-      { key: 'nav', label: 'Show in course navigation', icon: 'list', on: true },
+      { key: 'nav', label: 'Show in subject navigation', icon: 'list', on: true },
     ] as { key: string; label: string; icon: IconName; on: boolean }[],
   },
   notes: 'Place value tells us what each digit is worth. In 347,892 the 3 is worth 3 hundred thousands, the 4 is worth 4 ten thousands, and so on.\n\nRounding: look at the digit to the right of the place you are rounding to. 5 or more rounds up; 4 or less rounds down.',

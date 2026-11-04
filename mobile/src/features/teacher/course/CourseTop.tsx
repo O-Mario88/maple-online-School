@@ -27,7 +27,7 @@ export function CourseHeader({ c, b }: { c: CourseBuilder; b: Builder }) {
         source={k.thumb}
         style={styles.thumb}
         contentFit="cover"
-        accessibilityLabel="Course cover: maths on a chalkboard"
+        accessibilityLabel="Subject cover: maths on a chalkboard"
       />
       <View style={styles.flex}>
         <View style={styles.titleRow}>
@@ -64,7 +64,7 @@ function Actions({ c, b }: { c: CourseBuilder; b: Builder }) {
     <View style={styles.actions}>
       <TButton
         small
-        label="Preview Course"
+        label="Preview Subject"
         icon="eye"
         variant="outline"
         onPress={() => go(c.preview)}
@@ -77,32 +77,32 @@ function Actions({ c, b }: { c: CourseBuilder; b: Builder }) {
       />
       <TButton
         small
-        label="Publish Course"
+        label="Publish Subject"
         icon="arrowRight"
         iconRight
         onPress={b.publish}
       />
       <PopMenu
-        label="More course actions"
+        label="More subject actions"
         items={[
           {
-            label: "Course settings",
+            label: "Subject settings",
             icon: "settings",
             onPress: () => b.setSection("setup"),
           },
           {
-            label: "Duplicate course",
+            label: "Duplicate subject",
             icon: "grid",
             onPress: () =>
-              toast("A copy of this course was saved to your drafts."),
+              toast("A copy of this subject was saved to your drafts."),
           },
           {
-            label: "Archive course",
+            label: "Archive subject",
             icon: "folder",
             danger: true,
             onPress: () =>
               toast(
-                "Archiving needs the course to be unpublished first. It is still a draft.",
+                "Archiving needs the subject to be unpublished first. It is still a draft.",
               ),
           },
         ]}

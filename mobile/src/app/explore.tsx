@@ -19,8 +19,6 @@ import { LightOnly } from '@/hooks/use-theme';
 const SORTS: readonly { value: CatalogueSort; label: string }[] = [
   { value: 'popular', label: 'Popularity' },
   { value: 'rating', label: 'Rating' },
-  { value: 'priceLow', label: 'Price: low to high' },
-  { value: 'priceHigh', label: 'Price: high to low' },
 ];
 /** From this width the page is the reference itself, scaled to fit. */
 const DESKTOP_MIN = 1200;
@@ -124,7 +122,7 @@ export default function ExploreScreen() {
                 <View style={styles.main}>
                   <View style={styles.head}>
                     <Text style={styles.title} accessibilityRole="header">
-                      Explore Courses, Live Classes & Past Papers
+                      Explore Subjects, Live Classes & Past Papers
                     </Text>
                     <Text style={styles.sub}>Find the right learning resources for your goals.</Text>
                     <Text style={styles.count} accessibilityLiveRegion="polite">
@@ -162,7 +160,7 @@ export default function ExploreScreen() {
         <HomeNav wide={false} active="Explore" />
         <ScrollView style={styles.scroll} contentContainerStyle={styles.phone}>
           <Text style={styles.titlePhone} accessibilityRole="header">
-            Explore Courses, Live Classes & Past Papers
+            Explore Subjects, Live Classes & Past Papers
           </Text>
           <Text style={styles.subPhone}>Find the right learning resources for your goals.</Text>
           <SearchBox filters={filters} onChange={setFilters} style={styles.searchPhone} />

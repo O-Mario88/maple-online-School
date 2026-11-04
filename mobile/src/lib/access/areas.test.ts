@@ -17,13 +17,19 @@ describe('which pages open a resource', () => {
     }
   });
 
-  test("opening a lesson, paper, book, live class or the study helper is Maple's content", () => {
-    for (const path of ['/learn/lesson', '/learn/paper', '/learn/library/our-environment', '/learn/live-room', '/learn/shorts', '/learn/squads/s1', '/copilot']) {
+  test("opening a lesson, paper, book or the study helper is Maple's content, on any plan", () => {
+    for (const path of ['/learn/lesson', '/learn/paper', '/learn/library/our-environment', '/learn/shorts', '/copilot']) {
       expect(resourceFor(path, 'learner')).toEqual({ source: 'maple' });
     }
   });
 
-  test('a course takes its source and price from the course opened', () => {
+  test('live classes and study squads need Pro or above', () => {
+    for (const path of ['/learn/live-room', '/learn/squads/s1']) {
+      expect(resourceFor(path, 'learner')).toEqual({ source: 'maple', needs: 'pro' });
+    }
+  });
+
+  test('a subject takes its source and price from the subject opened', () => {
     expect(resourceFor('/learn/course', 'learner', { source: 'marketplace', free: false })).toEqual({ source: 'marketplace', free: false });
     expect(resourceFor('/learn/course', 'learner', { source: 'maple', free: true })).toEqual({ source: 'maple', free: true });
     expect(resourceFor('/learn/course', 'learner')).toEqual({ source: 'marketplace' });

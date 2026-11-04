@@ -74,8 +74,8 @@ export type ThemeColor = keyof typeof Colors.light & keyof typeof Colors.dark;
 export type Theme = { readonly [K in ThemeColor]: string };
 
 export const Fonts = Platform.select({
-  ios: { sans: 'system-ui', serif: 'ui-serif', rounded: 'ui-rounded', mono: 'ui-monospace' },
-  default: { sans: 'normal', serif: 'serif', rounded: 'normal', mono: 'monospace' },
+  ios: { sans: 'Inter', serif: 'ui-serif', rounded: 'ui-rounded', mono: 'ui-monospace' },
+  default: { sans: 'Inter', serif: 'serif', rounded: 'normal', mono: 'monospace' },
   web: {
     sans: 'var(--font-display)',
     serif: 'var(--font-serif)',

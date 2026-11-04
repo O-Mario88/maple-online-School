@@ -4,15 +4,17 @@ import { useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
-import { LockMark } from '@/features/access/Paywall';
+import { LockMark } from '@/features/access/LockMark';
 import { LearnerPhoneTop } from '@/features/learner/dashboard/DashPhone';
 import { BLUE, BODY, type Home, HomeHeader, HomeSidebar, INK } from '@/features/learner/home/HomeFrame';
+import { frameBody } from '@/features/learner/home/frameBody';
 import { TONES } from '@/features/portal/tokens';
 import { useAccess } from '@/lib/access/access-context';
+import { guestGreeting } from '@/lib/access/guest';
 import { toast } from '@/lib/toast';
 import type { MockData } from '@/mock';
 
-import { continueLearning, type Curriculum, filterCourses, goalsDone, justForYou, type Kind, liveNow, toggleGoal, upcoming } from './explore';
+import { continueLearning, type Curriculum, exploreRows, offeringSize, filterCourses, goalsDone, justForYou, type Kind, liveNow, type Row, type RowKey, toggleGoal, upcoming } from './explore';
 
 export type ExploreData = MockData['learner']['explore'];
 type Course = ExploreData['catalogue'][number];
@@ -23,13 +25,16 @@ export const EXPLORE_REF_WIDTH = 1276;
 const NAVY = '#0B2A6B';
 const LINE = '#E8EDF4';
 const POPULAR = 4;
+/** Cards a row shows before View more: a desktop line, or a phone's swipe. */
+const ROW_DESK = 4;
+const ROW_PHONE = 8;
+const PHONE_COLUMNS = 2;
 
 const time = (iso: string) => new Date(iso).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
 const dayTime = (iso: string, now: string) => `${iso.slice(0, 10) === now.slice(0, 10) ? 'Today' : 'Tomorrow'}, ${time(iso)}`;
-const price = (n: number) => (n ? `UGX ${n.toLocaleString('en-US')}` : 'Free');
 
 /** The page each kind of card opens, for asking whether it is locked. */
-const OPENS: Readonly<Record<Course['kind'], string>> = { Courses: '/learn/course', 'Past Papers': '/learn/paper', 'Live Classes': '/learn/live-room', Shorts: '/learn/shorts', Practice: '/learn/paper', Library: '/learn/library/read' };
+const OPENS: Readonly<Record<Course['kind'], string>> = { Subjects: '/learn/course', 'Past Papers': '/learn/paper', 'Live Classes': '/learn/live-room', Shorts: '/learn/shorts', Practice: '/learn/paper', Library: '/learn/library/read' };
 
 export function useExplore(d: ExploreData) {
   const [curriculum, setCurriculum] = useState<Curriculum>(d.myCurriculum);
@@ -38,6 +43,9 @@ export function useExplore(d: ExploreData) {
   const [query, setQuery] = useState('');
   const [goals, setGoals] = useState(d.goals);
   const popular = useMemo(() => filterCourses(d.catalogue, { curriculum, kind, subject, query }), [d.catalogue, curriculum, kind, subject, query]);
+  const rows = useMemo(() => exploreRows(d.catalogue, { curriculum, weakest: d.weakest, now: d.NOW }), [d.catalogue, curriculum, d.weakest, d.NOW]);
+  const [more, setMore] = useState<RowKey | null>(null);
+  const toggleMore = (k: RowKey) => setMore((x) => (x === k ? null : k));
   const resume = continueLearning(d.catalogue);
   const forYou = justForYou(d.catalogue, d.myCurriculum, d.weakest).slice(0, 3);
   const now = liveNow(d.sessions, d.NOW);
@@ -56,7 +64,7 @@ export function useExplore(d: ExploreData) {
   const open = (c: Course) => router.push(c.href);
   const join = (s: Live) => {
     toast(`Joining ${s.title} with ${s.teacher}…`);
-    router.push('/learn/live-room');
+    router.push(`/learn/live-room?id=${s.id}`);
   };
   const remind = (s: Live) => toast(`We will remind you 10 minutes before ${s.title} (${dayTime(s.start, d.NOW)}).`);
   const filters = [kind, subject, query.trim() && `“${query.trim()}”`].filter(Boolean).join(' • ');
@@ -65,7 +73,7 @@ export function useExplore(d: ExploreData) {
     setSubject(undefined);
     setQuery('');
   };
-  return { d, curriculum, setCurriculum, kind, pickKind, subject, pickSubject, query, setQuery, goals, flip, g, popular, resume, forYou, now, next, count, subjectCount, open, join, remind, filters, reset };
+  return { d, curriculum, setCurriculum, kind, pickKind, subject, pickSubject, query, setQuery, goals, flip, g, popular, rows, more, toggleMore, resume, forYou, now, next, count, subjectCount, open, join, remind, filters, reset };
 }
 type U = ReturnType<typeof useExplore>;
 
@@ -100,16 +108,17 @@ function Curricula({ u }: { u: U }) {
 }
 
 function Hero({ u, name }: { u: U; name: string }) {
+  const { guest } = useAccess();
   return (
     <View style={styles.hero}>
-      <Text style={styles.heroHi}>{`Hello, ${name}`}</Text>
+      <Text style={styles.heroHi}>{guestGreeting(name, guest)}</Text>
       <Text style={styles.heroTitle} accessibilityRole="header">
         Explore & Learn
       </Text>
-      <Text style={styles.heroSub}>Courses, past papers, live classes and practice for your curriculum.</Text>
+      <Text style={styles.heroSub}>Subjects, past papers, live classes and practice for your curriculum.</Text>
       <View style={styles.heroSearch}>
         <Icon name="search" size={16} color={BLUE} />
-        <TextInput style={styles.heroInput} value={u.query} onChangeText={u.setQuery} placeholder="What do you want to learn today?" placeholderTextColor="#6B7385" accessibilityLabel="Search courses" />
+        <TextInput style={styles.heroInput} value={u.query} onChangeText={u.setQuery} placeholder="What do you want to learn today?" placeholderTextColor="#6B7385" accessibilityLabel="Search subjects" />
       </View>
       <Curricula u={u} />
     </View>
@@ -142,7 +151,10 @@ function Categories({ u, phone = false }: { u: U; phone?: boolean }) {
 }
 
 function CourseCard({ c, onPress, wide = false }: { c: Course; onPress: () => void; wide?: boolean }) {
-  const locked = useAccess().lockFor(OPENS[c.kind], c.id) !== null;
+  const { lockFor, freeFor, guest, access } = useAccess();
+  const locked = lockFor(OPENS[c.kind], c.id) !== null;
+  // "Free" tells people on the free plan what their allowance still opens.
+  const onFreePlan = guest || access?.phase === 'locked';
   return (
     <Pressable style={[styles.course, wide && styles.courseWide]} onPress={onPress} accessibilityRole="button" accessibilityLabel={`${c.title} by ${c.teacher}`}>
       <Image source={c.photo} style={styles.coursePhoto} contentFit="cover" accessibilityIgnoresInvertColors />
@@ -150,7 +162,7 @@ function CourseCard({ c, onPress, wide = false }: { c: Course; onPress: () => vo
         <Text style={styles.courseBadgeText}>{`${c.curriculum} • ${c.level}`}</Text>
       </View>
       <View style={styles.courseLock}>
-        <LockMark locked={locked} free={c.priceUGX === 0} />
+        <LockMark locked={locked} free={onFreePlan && !locked && freeFor(OPENS[c.kind], c.id)} />
       </View>
       <View style={styles.courseBody}>
         <Text style={styles.courseTitle} numberOfLines={2}>
@@ -167,8 +179,8 @@ function CourseCard({ c, onPress, wide = false }: { c: Course; onPress: () => vo
           <Text style={styles.small}>{`${c.rating} • ${c.learners.toLocaleString('en-US')} learners`}</Text>
         </View>
         <View style={styles.courseFoot}>
-          <Text style={styles.price}>{price(c.priceUGX)}</Text>
-          <Text style={styles.cta}>{locked ? 'Unlock' : c.progress > 0 ? 'Continue' : c.kind === 'Courses' ? 'Enrol' : 'Open'}</Text>
+          <Text style={styles.price}>{offeringSize(c.kind, c.lessons)}</Text>
+          <Text style={styles.cta}>{locked ? 'Unlock' : c.progress > 0 ? 'Continue' : c.kind === 'Subjects' ? 'Enrol' : 'Open'}</Text>
         </View>
       </View>
     </Pressable>
@@ -180,7 +192,7 @@ function Popular({ u, phone = false }: { u: U; phone?: boolean }) {
   const category = u.d.categories.find((c) => c.kind === u.kind);
   return (
     <View style={phone ? styles.phoneBlock : styles.card}>
-      <Head title={u.filters ? `In ${u.curriculum}: ${u.filters}` : 'Popular Courses for You'} link={u.filters ? 'Clear' : undefined} onLink={u.filters ? u.reset : undefined} />
+      <Head title={u.filters ? `In ${u.curriculum}: ${u.filters}` : 'Popular Subjects for You'} link={u.filters ? 'Clear' : undefined} onLink={u.filters ? u.reset : undefined} />
       {list.length === 0 ? <Text style={styles.empty}>{`Nothing matches in ${u.curriculum} yet. Try another curriculum or clear the filters.`}</Text> : null}
       {phone ? (
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.rowGap}>
@@ -204,10 +216,64 @@ function Popular({ u, phone = false }: { u: U; phone?: boolean }) {
   );
 }
 
+/** Cards in lines of a few, each line filling the width. */
+function Lines({ list, per, u }: { list: readonly Course[]; per: number; u: U }) {
+  const lines = Array.from({ length: Math.ceil(list.length / per) }, (_, i) => list.slice(i * per, i * per + per));
+  return (
+    <View style={styles.lines}>
+      {lines.map((line) => (
+        <View key={line[0].id} style={styles.rowGap}>
+          {line.map((c) => (
+            <CourseCard key={c.id} c={c} onPress={() => u.open(c)} />
+          ))}
+          {Array.from({ length: per - line.length }, (_, i) => (
+            <View key={`gap-${i}`} style={styles.flex} />
+          ))}
+        </View>
+      ))}
+    </View>
+  );
+}
+
+/** One category row: its title and View more, then a line of cards (a swipe on phones), or all of them once opened. */
+function CategoryRow({ u, row, phone }: { u: U; row: Row<Course>; phone: boolean }) {
+  const open = u.more === row.key;
+  const shown = phone ? ROW_PHONE : ROW_DESK;
+  const link = row.items.length > (phone ? PHONE_COLUMNS : ROW_DESK) ? (open ? 'Show less' : 'View more') : undefined;
+  return (
+    <View style={phone ? styles.phoneBlock : styles.card}>
+      <Head title={row.title} link={link} onLink={() => u.toggleMore(row.key)} />
+      {open ? (
+        <Lines list={row.items} per={phone ? PHONE_COLUMNS : ROW_DESK} u={u} />
+      ) : phone ? (
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.rowGap}>
+          {row.items.slice(0, shown).map((c) => (
+            <CourseCard key={c.id} c={c} onPress={() => u.open(c)} wide />
+          ))}
+        </ScrollView>
+      ) : (
+        <Lines list={row.items.slice(0, shown)} per={ROW_DESK} u={u} />
+      )}
+    </View>
+  );
+}
+
+/** The catalogue: the filtered results while filtering, otherwise the five category rows. */
+function Catalogue({ u, phone = false }: { u: U; phone?: boolean }) {
+  if (u.filters || u.rows.length === 0) return <Popular u={u} phone={phone} />;
+  return (
+    <>
+      {u.rows.map((r) => (
+        <CategoryRow key={r.key} u={u} row={r} phone={phone} />
+      ))}
+    </>
+  );
+}
+
 function Resume({ u, phone = false }: { u: U; phone?: boolean }) {
   return (
     <View style={phone ? styles.phoneBlock : styles.card}>
-      <Head title="Continue Learning" link="My Courses" onLink={() => router.push('/learn/course')} />
+      <Head title="Continue Learning" link="My Subjects" onLink={() => router.push('/learn/course')} />
       {u.resume.map((c) => (
         <Pressable key={c.id} style={styles.resume} onPress={() => u.open(c)} accessibilityRole="button" accessibilityLabel={`Continue ${c.title}, ${Math.round(c.progress * 100)}% done`}>
           <Image source={c.photo} style={styles.resumePhoto} contentFit="cover" />
@@ -241,7 +307,7 @@ function Subjects({ u, phone = false }: { u: U; phone?: boolean }) {
               <Text style={styles.subjectName} numberOfLines={1}>
                 {s.name}
               </Text>
-              <Text style={styles.small}>{`${u.subjectCount(s.name)} offerings`}</Text>
+              <Text style={styles.small}>{`${u.subjectCount(s.name)} ${u.subjectCount(s.name) === 1 ? 'offering' : 'offerings'}`}</Text>
             </Pressable>
           );
         })}
@@ -335,7 +401,7 @@ function ForYou({ u }: { u: U }) {
             <Text style={styles.upTitle} numberOfLines={2}>
               {c.title}
             </Text>
-            <Text style={styles.small}>{`${c.subject} • ${price(c.priceUGX)}`}</Text>
+            <Text style={styles.small}>{`${c.subject} • ${offeringSize(c.kind, c.lessons)}`}</Text>
           </View>
         </Pressable>
       ))}
@@ -349,12 +415,12 @@ export function ExploreDesk({ d, h }: { d: ExploreData; h: Home }) {
   return (
     <View style={styles.canvas}>
       <HomeSidebar h={h} active="Explore / Learn" heading="Keep exploring!" quote={'“Every expert\nwas once a\nbeginner.”'} />
-      <HomeHeader h={h} placeholder="Search courses, past papers, live classes or topics..." />
+      <HomeHeader h={h} placeholder="Search subjects, past papers, live classes or topics..." />
       <View style={styles.body}>
         <View style={styles.main}>
           <Hero u={u} name={h.name.split(' ')[0]} />
           <Categories u={u} />
-          <Popular u={u} />
+          <Catalogue u={u} />
           <View style={styles.twoCol}>
             <View style={styles.flex}>
               <Resume u={u} />
@@ -386,7 +452,7 @@ export function ExplorePhone({ d, h }: { d: ExploreData; h: Home }) {
         <Categories u={u} phone />
         <Today u={u} />
         <LiveNow u={u} />
-        <Popular u={u} phone />
+        <Catalogue u={u} phone />
         <Resume u={u} phone />
         <Subjects u={u} phone />
         <Upcoming u={u} />
@@ -400,7 +466,7 @@ const styles = StyleSheet.create({
   flex: { flex: 1, minWidth: 0 },
   inline: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   canvas: { width: EXPLORE_REF_WIDTH, minHeight: 1024, backgroundColor: '#EEF3FA' },
-  body: { flexDirection: 'row', gap: 15, paddingTop: 56, paddingLeft: 198, paddingRight: 11, paddingBottom: 20 },
+  body: { flexDirection: 'row', gap: 15, ...frameBody({ top: 2, left: 11, right: 11, bottom: 20 }) },
   main: { width: 827, gap: 10, paddingTop: 10 },
   sideCol: { flex: 1, gap: 10, paddingTop: 10 },
   twoCol: { flexDirection: 'row', gap: 10, alignItems: 'flex-start' },
@@ -430,6 +496,7 @@ const styles = StyleSheet.create({
   catNote: { fontSize: 10.5, color: BODY },
   catCount: { fontSize: 10.5, fontWeight: '700' },
   rowGap: { flexDirection: 'row', gap: 9 },
+  lines: { gap: 9 },
   course: { flex: 1, minWidth: 0, borderRadius: 9, borderWidth: 1, borderColor: LINE, overflow: 'hidden', backgroundColor: '#FFFFFF' },
   courseWide: { flexGrow: 0, flexShrink: 0, flexBasis: 230, width: 230 },
   coursePhoto: { width: '100%', height: 104 },

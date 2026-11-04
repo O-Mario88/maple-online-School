@@ -593,6 +593,15 @@ export const photos = {
     googlePay: require('./images/pay-googlepay.jpg') as Photo,
     qr: require('./images/pay-qr.jpg') as Photo,
   },
+  /** The Pricing design's "We Accept" logos, cut from its reference. */
+  pricingAccepts: {
+    mtn: require('./images/pricing-accept-mtn.png') as Photo,
+    airtel: require('./images/pricing-accept-airtel.png') as Photo,
+    mpesa: require('./images/pricing-accept-mpesa.png') as Photo,
+    visa: require('./images/pricing-accept-visa.png') as Photo,
+    mastercard: require('./images/pricing-accept-mastercard.png') as Photo,
+    applePay: require('./images/pricing-accept-applepay.png') as Photo,
+  },
   teacherBanner: require('./images/teacher-banner.jpg') as Photo,
   teacherAvatar: require('./images/teacher-avatar.jpg') as Photo,
   teacherCourses: [require('./images/teacher-course-1.jpg') as Photo, require('./images/teacher-course-2.jpg') as Photo, require('./images/teacher-course-3.jpg') as Photo],

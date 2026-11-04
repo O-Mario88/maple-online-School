@@ -57,14 +57,14 @@ export const arActivity: readonly { text: string; when: string }[] = [
 export interface RecRow extends RevenueItem {
   customer: string;
   ref: string;
-  type: 'Subscription' | 'Course Access' | 'Marketplace Commission' | 'Cancellation';
+  type: 'Subscription' | 'Subject Access' | 'Marketplace Commission' | 'Cancellation';
   avatar?: number;
 }
 
 export const recItems: readonly RecRow[] = [
   { id: 'SUB-2026-0143', customer: 'Hope Valley Schools', ref: 'SCH-00184', type: 'Subscription', total: 420_000_000, cash: 420_000_000, method: 'straight', start: '2026-05-01', periods: 12 },
   { id: 'SUB-2026-0107', customer: 'Bright Future Academy', ref: 'SCH-00126', type: 'Subscription', total: 360_000_000, cash: 360_000_000, method: 'straight', start: '2026-05-01', periods: 12 },
-  { id: 'CRS-2026-0921', customer: 'John K. (Learner)', ref: 'LRN-045889', type: 'Course Access', total: 75_000, cash: 75_000, method: 'access', start: '2026-09-26', periods: 8, avatar: face.john },
+  { id: 'CRS-2026-0921', customer: 'John K. (Learner)', ref: 'LRN-045889', type: 'Subject Access', total: 75_000, cash: 75_000, method: 'access', start: '2026-09-26', periods: 8, avatar: face.john },
   { id: 'MKT-2026-0048', customer: 'Tutor: Mary T.', ref: 'TUT-00873', type: 'Marketplace Commission', total: 1_200_000, cash: 1_200_000, method: 'delivery', start: '2026-10-12', periods: 1, delivered: true, avatar: face.nakato },
   { id: 'SUB-2026-0198', customer: 'Riverside Schools Group', ref: 'SCH-00876', type: 'Subscription', total: 280_000_000, cash: 280_000_000, method: 'straight', start: '2026-08-01', periods: 12 },
   { id: 'SUB-2026-0175', customer: 'Green Valley Education', ref: 'SCH-00835', type: 'Subscription', total: 180_000_000, cash: 180_000_000, method: 'straight', start: '2025-11-01', periods: 12 },
@@ -100,7 +100,7 @@ export const upcoming: readonly { date: string; amount: number }[] = [
 
 export const policy: readonly { bold: string; text: string }[] = [
   { bold: 'Subscriptions:', text: ' Straight-line over contract period' },
-  { bold: 'Course Access:', text: ' Over course duration / access period' },
+  { bold: 'Subject Access:', text: ' Over the subject duration / access period' },
   { bold: 'Marketplace Commissions:', text: ' At service delivery (completion)' },
   { bold: 'Discounts:', text: ' Reduce recognized revenue proportionally' },
   { bold: 'Cancellations & Refunds:', text: ' Reverse unearned revenue' },

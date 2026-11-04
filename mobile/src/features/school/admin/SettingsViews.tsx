@@ -104,7 +104,7 @@ export function SettingsDesk({ a }: { a: Admin }) {
     { label: '#', width: 24, render: (x) => <Cell>{x.n}</Cell> },
     { label: 'Date & Time', flex: 1.2, render: (x) => <Cell>{x.when}</Cell> },
     { label: 'User', flex: 0.8, render: (x) => <Cell strong>{x.user}</Cell> },
-    { label: 'Action', flex: 1.4, render: (x) => <Cell>{x.action}</Cell> },
+    { label: 'Action', flex: 1.4, render: (x) => <Cell lines={2}>{x.action}</Cell> },
     { label: 'Details', flex: 1.4, render: (x) => <Cell lines={2}>{x.detail}</Cell> },
     { label: 'IP Address', flex: 0.9, render: (x) => <Cell>{x.ip}</Cell> },
   ];

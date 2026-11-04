@@ -1,12 +1,13 @@
-import { useGlobalSearchParams, usePathname } from 'expo-router';
+import { type Href, router, useGlobalSearchParams, usePathname } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { type ReactNode, useMemo } from 'react';
+import { type ReactNode, useEffect, useMemo } from 'react';
 import { StyleSheet, useWindowDimensions, View } from 'react-native';
 
 import { ShellContext } from '@/components/ui';
 import { Breakpoints, type Theme } from '@/constants/theme';
 import { useStyles } from '@/hooks/use-styles';
 import { useAccess } from '@/lib/access/access-context';
+import { accessRedirect, PRICING } from '@/lib/access/route';
 import { useMe } from '@/lib/auth/auth-context';
 import { addressName } from '@/lib/home';
 import { isLiveDesign } from '@/lib/live-designs';
@@ -14,7 +15,7 @@ import { mockData } from '@/lib/mock';
 import { usePortal } from '@/lib/portal-context';
 import { useReaderFocus } from '@/lib/reader-focus';
 
-import { Paywall } from '@/features/access/Paywall';
+import { AdBanner } from '@/features/access/AdBanner';
 import { TrialStrip } from '@/features/access/TrialStrip';
 import { commandTabs, isCommandRefPath } from '@/features/command/kit/CommandFrame';
 import { isSchoolRefPath, PARENT_REF_PATHS, PortalTabBar, portalTabsFor } from '@/features/portal/PortalFrame';
@@ -39,9 +40,28 @@ export function AppShell({ children }: { children: ReactNode }) {
   const path = usePathname();
   const focusOn = useReaderFocus();
   const { id: courseId } = useGlobalSearchParams<{ id?: string }>();
-  // A page the free month no longer covers shows the paywall, in the standard frame, over the page.
-  const lock = useAccess().lockFor(path, typeof courseId === 'string' ? courseId : undefined);
-  const locked = lock !== null;
+  // A page the free month no longer covers sends the person to Pricing (or sign-up, browsing free);
+  // once the month has ended, the first page of a visit does too. The page stays hidden while it moves.
+  const access = useAccess();
+  const lock = access.lockFor(path, typeof courseId === 'string' ? courseId : undefined);
+  // Opening a page the free allowance opened uses some of this month's allowance.
+  const openId = typeof courseId === 'string' ? courseId : undefined;
+  const { usesFree, recordFreeOpen } = access;
+  const counts = !lock && usesFree(path, openId);
+  useEffect(() => {
+    if (counts) recordFreeOpen(path, openId);
+  }, [counts, path, openId, recordFreeOpen]);
+  const target = accessRedirect({ path, phase: access.access?.phase ?? null, lock, pricingSeen: access.pricingSeen });
+  const locked = target !== null;
+  const pricingPage = path === PRICING;
+  const ended = access.access?.phase === 'locked';
+  const { markPricingSeen } = access;
+  useEffect(() => {
+    if (target) router.replace(target as Href);
+  }, [target]);
+  useEffect(() => {
+    if (pricingPage && ended) markPricingSeen();
+  }, [pricingPage, ended, markPricingSeen]);
   // The learner home, Projects, Library and Explore draw their own sidebar (their references); other learner pages use the top bar.
   // The teacher home, AI studio, course builder, calendar and live host draw their own top bar and sidebar too.
   const learnerFrame =
@@ -80,10 +100,11 @@ export function AppShell({ children }: { children: ReactNode }) {
   const darkHeader = design && !locked && !wide && (path === '/teach/host' || path.startsWith('/teach/live-host'));
   // A designed page draws its own frame in design builds, and in real builds once it runs on real data.
   const designed = (design || isLiveDesign(path)) && !locked;
-  const ownFrame = wide && (((learnerFrame || parentFrame || teacherFrame || schoolFrame) && designed) || liveRoom);
+  // The Pricing page draws its own frame (its design) on wide screens.
+  const ownFrame = wide && (((learnerFrame || parentFrame || teacherFrame || schoolFrame) && designed) || liveRoom || pricingPage);
   // The teacher references show neither the design overlays nor the shared tab bar: they have their own white one.
   const teacherRef = teacherFrame && designed;
-  const refScreen = ((learnerFrame || parentFrame || teacherFrame || schoolFrame) && designed) || liveRoom;
+  const refScreen = ((learnerFrame || parentFrame || teacherFrame || schoolFrame) && designed) || liveRoom || pricingPage;
   // Design builds give parent mode (and the two school-admin references) the references' own phone tab bar.
   const portalTabs = designed ? (isCommandRefPath(path) ? commandTabs(path) : portalTabsFor(portal, path)) : null;
   const topBar = wide && portal === 'learner' && !ownFrame;
@@ -98,20 +119,18 @@ export function AppShell({ children }: { children: ReactNode }) {
         <View style={styles.content}>
           {/* The page and its floating button sit above the offline strip, never on it. */}
           {/* Wide screens show the free-month strip on top; phones above the tab bar, clear of the notch. */}
-          {wide && !liveRoom ? <TrialStrip /> : null}
+          {wide && !liveRoom && !pricingPage ? <TrialStrip /> : null}
+          {wide && !locked ? <AdBanner /> : null}
           <View style={styles.page}>
             <View style={styles.page} importantForAccessibility={locked ? 'no-hide-descendants' : 'auto'} accessibilityElementsHidden={locked}>
               {children}
             </View>
-            {locked ? (
-              <View style={styles.paywall}>
-                <Paywall lock={lock} />
-              </View>
-            ) : null}
+            {locked ? <View style={styles.paywall} /> : null}
             {refScreen || locked ? null : <DesignOverlays />}
           </View>
           {refScreen ? null : <OfflineStrip />}
-          {!wide && !liveRoom ? <TrialStrip /> : null}
+          {!wide && !locked ? <AdBanner /> : null}
+          {!wide && !liveRoom && !pricingPage ? <TrialStrip /> : null}
         </View>
         {wide || liveRoom ? null : teacherRef ? <TeacherTabBar /> : portalTabs ? <PortalTabBar tabs={portalTabs} /> : <TabBar />}
       </View>

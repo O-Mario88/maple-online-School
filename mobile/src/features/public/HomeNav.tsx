@@ -4,11 +4,12 @@ import { Pressable, StyleSheet, Text, TextInput, useWindowDimensions, View } fro
 
 import { Icon } from '@/components/icon';
 import { LanguageMenu } from '@/components/shell/LanguageMenu';
+import { useStartFree } from '@/lib/auth/auth-context';
 
 import { Brand } from './palette';
 
 /** The homepage reference's top bar links, in its order. */
-const LINKS = ['Home', 'Courses', 'Live Classes', 'Curriculums', 'For Schools', 'For Teachers', 'Pricing', 'About'] as const;
+const LINKS = ['Home', 'Subjects', 'Live Classes', 'Curriculums', 'For Schools', 'For Teachers', 'Pricing', 'About'] as const;
 /** The Explore reference's top bar links, in its order. */
 export const EXPLORE_LINKS = ['Home', 'Explore', 'Live Classes', 'Curriculums', 'For Schools', 'For Teachers', 'Pricing'] as const;
 /** The past paper reference's links: Past Papers joins the bar. */
@@ -21,7 +22,7 @@ const ALL_LINKS_WIDTH = 1280;
 const SHORT_LINKS = 6;
 const LINK_ROUTES: Readonly<Record<NavLink, Href>> = {
   Home: '/welcome',
-  Courses: '/explore',
+  Subjects: '/explore',
   Explore: '/explore',
   'Live Classes': { pathname: '/explore', params: { kind: 'live' } },
   'Past Papers': { pathname: '/explore', params: { kind: 'paper' } },
@@ -59,6 +60,8 @@ interface HomeNavProps {
  */
 export function HomeNav({ wide, active = 'Home', fullWidth = false, links: own, tall = false, searchPlaceholder }: HomeNavProps) {
   const { width } = useWindowDimensions();
+  // Visitors start free, without an account; they sign up later, once they trust Maple.
+  const startFree = useStartFree();
   const all = own ?? LINKS;
   const links = fullWidth || width >= ALL_LINKS_WIDTH ? all : all.slice(0, SHORT_LINKS);
   const t = tall && wide;
@@ -118,7 +121,7 @@ export function HomeNav({ wide, active = 'Home', fullWidth = false, links: own, 
         <Pressable style={[styles.signIn, t && styles.signInTall, !wide && styles.btnNarrow]} accessibilityRole="button" onPress={() => router.push('/sign-in')}>
           <Text style={[styles.signInText, t && styles.btnTextTall]}>Sign in</Text>
         </Pressable>
-        <Pressable style={[styles.start, t && styles.startTall, !wide && styles.btnNarrow]} accessibilityRole="button" onPress={() => router.push('/sign-up')}>
+        <Pressable style={[styles.start, t && styles.startTall, !wide && styles.btnNarrow]} accessibilityRole="button" onPress={() => (startFree ? startFree() : router.push('/sign-up'))}>
           <Text style={[styles.startText, t && styles.btnTextTall]}>Get started</Text>
         </Pressable>
       </View>

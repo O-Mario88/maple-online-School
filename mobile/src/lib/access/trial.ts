@@ -1,17 +1,28 @@
 /**
  * Who may open what: everyone (learners, teachers, schools) starts with a free month
- * of everything, marketplace included. After it, only free items open until they pay.
- * A paid plan opens Maple's own content; a paid marketplace course is bought on its own,
- * and stays open once bought. Dates are plain days ("2026-11-03").
+ * of everything, marketplace included. After it, only the free tier opens until they pay;
+ * a plan opens everything again, teachers' marketplace subjects included. Nothing is
+ * bought on its own. Dates are plain days ("2026-11-03").
  */
 
 export type Phase = 'trial' | 'paid' | 'locked';
+
+/** Plan levels, lowest first: each opens everything the one below it does. */
+export type Tier = 'basic' | 'pro' | 'premium';
+const TIER_RANK: Readonly<Record<Tier, number>> = { basic: 1, pro: 2, premium: 3 };
+const TIERS: readonly Tier[] = ['basic', 'pro', 'premium'];
+
+/** Features inside a page and the plan level each needs. */
+export const FEATURE_TIERS = { stepByStep: 'pro', videoExplainer: 'premium', privateTutor: 'premium' } as const satisfies Readonly<Record<string, Tier>>;
+export type Feature = keyof typeof FEATURE_TIERS;
 
 export interface Plan {
   /** The day the free month started. */
   trialStart: string;
   /** The last day a paid plan covers, if they have paid. */
   paidUntil?: string | null;
+  /** The level paid for; Basic when not given. */
+  tier?: Tier;
 }
 
 export interface Access {
@@ -20,18 +31,20 @@ export interface Access {
   trialEnds: string;
   /** Days of the free month left; 0 once it has ended. */
   daysLeft: number;
+  /** The level paid for, while paid. */
+  tier?: Tier;
 }
 
 export interface Resource {
   /** Maple's own content, or a teacher's course sold in the marketplace. */
   source: 'maple' | 'marketplace';
   free?: boolean;
-  /** A marketplace course this person has bought. */
-  owned?: boolean;
+  /** The lowest plan that opens it; any plan when not given. */
+  needs?: Tier;
 }
 
-/** Why something won't open: the free month is over ('pay'), or it is a marketplace course to buy ('buy'). */
-export type LockReason = 'pay' | 'buy';
+/** Why something won't open: the free month is over ('pay'), it needs a higher plan ('upgrade'), or a visitor needs an account ('signup'). */
+export type LockReason = 'pay' | 'upgrade' | 'signup';
 
 const DAY_MS = 86_400_000;
 
@@ -60,7 +73,7 @@ function daysBetween(from: string, to: string): number {
 /** Where someone stands on a given day. */
 export function accessOn(plan: Plan, today: string): Access {
   const trialEnds = trialEnd(plan.trialStart);
-  if (plan.paidUntil && plan.paidUntil >= today) return { phase: 'paid', trialEnds, daysLeft: 0 };
+  if (plan.paidUntil && plan.paidUntil >= today) return { phase: 'paid', trialEnds, daysLeft: 0, tier: plan.tier ?? 'basic' };
   const daysLeft = Math.max(0, daysBetween(today, trialEnds));
   return daysLeft > 0 ? { phase: 'trial', trialEnds, daysLeft } : { phase: 'locked', trialEnds, daysLeft: 0 };
 }
@@ -74,9 +87,20 @@ export function bestAccess(list: readonly Access[]): Access {
 
 /** Why a resource won't open, or null when it opens. */
 export function lockReason(r: Resource, a: Access): LockReason | null {
-  if (r.free || r.owned || a.phase === 'trial') return null;
-  if (r.source === 'marketplace') return a.phase === 'paid' ? 'buy' : 'pay';
-  return a.phase === 'paid' ? null : 'pay';
+  if (r.free || a.phase === 'trial') return null;
+  if (a.phase === 'locked') return 'pay';
+  return r.needs && TIER_RANK[a.tier ?? 'basic'] < TIER_RANK[r.needs] ? 'upgrade' : null;
+}
+
+/** Whether a feature inside a page is open: the free month opens all, a plan opens its level and below. */
+export function featureOpen(feature: Feature, a: Access | null): boolean {
+  return a === null || lockReason({ source: 'maple', needs: FEATURE_TIERS[feature] }, a) === null;
+}
+
+/** The plan level a ?plan= address asks to preview, or null. */
+export function planOverride(search: string): Tier | null {
+  const value = new URLSearchParams(search).get('plan');
+  return TIERS.find((t) => t === value) ?? null;
 }
 
 export function canOpen(r: Resource, a: Access): boolean {
@@ -105,10 +129,10 @@ export function trialOverride(search: string): TrialPreview | null {
 }
 
 /** A sample payer's plan: its free month started the days it has used before today, unless a preview asks otherwise. */
-export function samplePlan(daysUsed: number, today: string, preview: TrialPreview | null): Plan {
+export function samplePlan(daysUsed: number, today: string, preview: TrialPreview | null, tier?: Tier): Plan {
   if (preview === 'active') return { trialStart: today };
   if (preview === 'ended') return { trialStart: addDays(today, -40) };
-  if (preview === 'paid') return { trialStart: addDays(today, -40), paidUntil: trialEnd(today) };
+  if (preview === 'paid') return { trialStart: addDays(today, -40), paidUntil: trialEnd(today), tier };
   return { trialStart: addDays(today, -daysUsed) };
 }
 

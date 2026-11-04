@@ -75,6 +75,9 @@ const school = item('school', 'Set-up', '/admin/onboarding', 'school');
 const messages = item('messages', 'Messages', '/messages', 'chat');
 
 // Order matters: on phones the first four (or five) become tabs.
+// The plans page: where the free month continues, and where people land once it has ended.
+const pricing = p('pricing', 'Pricing', '/plans', 'wallet');
+
 const MENUS: Readonly<Record<Portal, readonly NavItem[]>> = {
   learner: [
     home,
@@ -93,6 +96,7 @@ const MENUS: Readonly<Record<Portal, readonly NavItem[]>> = {
     p('offline', 'Offline', '/learn/offline', 'cloud'),
     curriculum,
     fees,
+    pricing,
     p('billing', 'Billing', '/learn/billing', 'wallet'),
     p('account', 'My account', '/learn/account', 'person'),
   ],
@@ -108,12 +112,13 @@ const MENUS: Readonly<Record<Portal, readonly NavItem[]>> = {
     library,
     curriculum,
     p('studio', 'AI studio', '/teach/studio', 'sparkle'),
-    p('course-editor', 'Course builder', '/teach/course-editor', 'book'),
+    p('course-editor', 'Subject builder', '/teach/course-editor', 'book'),
     p('host', 'Live host', '/teach/host', 'live'),
     p('shorts-creator', 'Shorts creator', '/teach/shorts', 'play'),
     p('class-spaces', 'Class spaces', '/teach/class-spaces', 'people'),
     p('storefront', 'Storefront', '/teach/storefront', 'person'),
     p('earnings', 'Earnings', '/teach/earnings', 'wallet'),
+    pricing,
     p('verification', 'Verification', '/teach/verification', 'check'),
     p('teacher-library', 'Resource library', '/teach/library', 'folder'),
   ],
@@ -146,6 +151,7 @@ const MENUS: Readonly<Record<Portal, readonly NavItem[]>> = {
     p('accounting', 'Accounting', '/admin/finance/accounting', 'chart'),
     p('chart-of-accounts', 'Chart of accounts', '/admin/finance/chart-of-accounts', 'clipboard'),
     p('journal-entries', 'Journal entries', '/admin/finance/journal-entries', 'doc'),
+    pricing,
     p('admin-settings', 'Roles and audit', '/admin/settings', 'person'),
   ],
   command: [
@@ -218,7 +224,7 @@ export const PUBLIC_PREVIEWS = [
   { href: '/@sarah-kimani', route: '[handle]', label: 'Teacher storefront', icon: 'person' },
   { href: '/live/p7-maths-revision-bootcamp', route: 'live/[slug]', label: 'Live bootcamp', icon: 'live' },
   { href: '/past-papers/uneb-uce/mathematics/2025', route: 'past-papers/[board]/[subject]/[year]', label: 'Past paper (free question)', icon: 'book' },
-  { href: '/courses/complete-mathematics-primary-7', route: 'courses/[slug]', label: 'Course page', icon: 'book' },
+  { href: '/courses/complete-mathematics-primary-7', route: 'courses/[slug]', label: 'Subject page', icon: 'book' },
   { href: '/event', label: 'Live event', icon: 'live' },
   { href: '/digest', label: 'Weekly digest', icon: 'chat' },
   { href: '/p/digest/eyJjaGlsZCI6ImFpc2hhLW5hbXV0ZWJpIiwid2VlayI6IjIwMjYtMTEtMDIiLCJleHAiOjE3OTQ4NjI3NDAwMDB9.demo-signature', route: 'p/digest/[token]', label: 'Parent Sunday digest', icon: 'chat' },

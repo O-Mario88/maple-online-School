@@ -12,13 +12,13 @@ const DEFAULT_LANGUAGES: readonly string[] = ['English'];
 const toggle = (list: readonly string[], v: string) => (list.includes(v) ? list.filter((x) => x !== v) : [...list, v]);
 
 /** The library page: subject, level, search and the left-hand filters. Curated rows show until a filter changes. */
-export function useShelf(hub: Hub, start: { subject?: string; query?: string } = {}) {
+export function useShelf(hub: Hub, start: { subject?: string; query?: string; publisher?: string } = {}) {
   const [subject, setSubject] = useState<string | undefined>(start.subject);
   const [level, setLevel] = useState(DEFAULT_LEVEL);
   const [query, setQuery] = useState(start.query ?? '');
   const [types, setTypes] = useState<readonly string[]>([]);
   const [languages, setLanguages] = useState<readonly string[]>(DEFAULT_LANGUAGES);
-  const [publishers, setPublishers] = useState<readonly string[]>([]);
+  const [publishers, setPublishers] = useState<readonly string[]>(start.publisher ? [start.publisher] : []);
 
   const byId = (id: string) => hub.books.find((b) => b.id === id);
   const pick = (ids: readonly string[]) => ids.map(byId).filter((b): b is Book => b != null);

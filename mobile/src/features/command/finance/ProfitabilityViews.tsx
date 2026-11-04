@@ -16,9 +16,9 @@ import { CheckList, FinDesk, FinHead, FinPanel, FinPhone, FinStats, FinTabs, typ
 type C = CommandData['platformFinance'];
 type Dim = keyof C['ops']['dimensions'];
 const DIMS: readonly Dim[] = ['By Region', 'By Curriculum', 'By Subscription Plan', 'By Channel'];
-const TABS = ['Overview', ...DIMS, 'By Course', 'Unit Economics', 'Cost Breakdown'] as const;
+const TABS = ['Overview', ...DIMS, 'By Subject', 'Unit Economics', 'Cost Breakdown'] as const;
 const RING = ['#2563EB', '#22A55A', '#F5B731', '#8B5CF6', '#E5484D', '#A0AEC0'] as const;
-const PROMO: Promo = { icon: 'chart', color: '#1E6BF0', title: 'Unit Economics & Profitability', body: 'Profitability by region, curriculum, course, plan and channel.' };
+const PROMO: Promo = { icon: 'chart', color: '#1E6BF0', title: 'Unit Economics & Profitability', body: 'Profitability by region, curriculum, subject, plan and channel.' };
 const PERIODS = ['Jan 1 – Oct 31, 2026 (YTD)'];
 const pct = (n: number) => `${n.toFixed(1)}%`;
 /** Table money in millions, so seven columns fit. */
@@ -49,7 +49,7 @@ function useProfit(c: C) {
     setTab(t);
     if ((DIMS as readonly string[]).includes(t)) setDim(t as Dim);
   };
-  const exportAll = () => toast(`Profitability pack exported: ${DIMS.length} dimensions, courses, unit economics and cost structure (XLSX). Shared costs allocated by revenue share.`);
+  const exportAll = () => toast(`Profitability pack exported: ${DIMS.length} dimensions, subjects, unit economics and cost structure (XLSX). Shared costs allocated by revenue share.`);
 
   const stats: readonly Kpi[] = [
     { label: 'Total Revenue (YTD)', value: ugx(pl.revenue), caption: 'excl. interest', icon: 'layers', tone: 'green' },
@@ -243,9 +243,9 @@ function Plans({ u }: { u: U }) {
 
 function Courses({ u }: { u: U }) {
   return (
-    <FinPanel icon="book" title="Top Performing Courses (by Operating Margin)" style={styles.flex}>
+    <FinPanel icon="book" title="Top Performing Subjects (by Operating Margin)" style={styles.flex}>
       <View style={[styles.dRow, styles.cHead]}>
-        <Text style={[styles.th, styles.dName]}>Course</Text>
+        <Text style={[styles.th, styles.dName]}>Subject</Text>
         <Text style={[styles.th, styles.dNum, styles.dMoney]}>Learners</Text>
         <Text style={[styles.th, styles.dNum, styles.dMoney]}>Revenue</Text>
         <Text style={[styles.th, styles.dNum, styles.dPct]}>OM %</Text>
@@ -275,11 +275,11 @@ export function ProfitabilityDesk({ c }: { c: CommandData }) {
   const u = useProfit(c.platformFinance);
   const [period, setPeriod] = useState(PERIODS[0]);
   return (
-    <FinDesk c={c} sub="Profitability" search="Search by region, curriculum, institution, course, or plan..." promo={PROMO}>
+    <FinDesk c={c} sub="Profitability" search="Search by region, curriculum, institution, subject, or plan..." promo={PROMO}>
       <FinHead
         icon="chart"
         title="Unit Economics & Profitability"
-        subtitle="Profitability by region, curriculum, course, subscription plan and delivery channel."
+        subtitle="Profitability by region, curriculum, subject, subscription plan and delivery channel."
         right={
           <>
             <RangeBox value={period} options={PERIODS} onChange={setPeriod} width={250} />

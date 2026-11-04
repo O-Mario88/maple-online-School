@@ -17,7 +17,9 @@ export function payerFor(portal: Portal): Payer | null {
 }
 
 /** A page, or every page under it when it ends in "/". */
-const LEARNER_OPENS = ['/learn/lesson', '/learn/paper', '/learn/library/', '/learn/live-room', '/learn/shorts', '/learn/squads/', '/copilot'];
+const LEARNER_OPENS = ['/learn/lesson', '/learn/paper', '/learn/library/', '/learn/shorts', '/copilot'];
+/** Learner pages that need Pro or above: live classes and study squads. */
+const LEARNER_PRO = ['/learn/live-room', '/learn/squads/'];
 const TEACHER_TOOLS = ['/teach/studio', '/teach/course-editor', '/teach/library', '/teach/shorts', '/teach/new-session', '/teach/host', '/teach/live-host/'];
 const SCHOOL_OPEN = ['/admin/settings', '/admin/onboarding'];
 const COURSE = '/learn/course';
@@ -32,6 +34,7 @@ export function resourceFor(path: string, portal: Portal, course?: Resource): Re
   const maple: Resource = { source: 'maple' };
   if (portal === 'learner') {
     if (path === COURSE) return course ?? { source: 'marketplace' };
+    if (matches(LEARNER_PRO, path)) return { ...maple, needs: 'pro' };
     return matches(LEARNER_OPENS, path) ? maple : null;
   }
   if (portal === 'teacher') return matches(TEACHER_TOOLS, path) ? maple : null;

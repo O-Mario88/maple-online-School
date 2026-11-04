@@ -55,7 +55,7 @@ export default function LiveSessionScreen() {
     <LightOnly>
       <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
         <RefScale width={width}>
-          <HomeNav wide tall fullWidth links={EXPLORE_LINKS} active="Live Classes" searchPlaceholder="Search courses, live classes, topics..." />
+          <HomeNav wide tall fullWidth links={EXPLORE_LINKS} active="Live Classes" searchPlaceholder="Search subjects, live classes, topics..." />
         </RefScale>
         <ScrollView style={styles.page}>
           <RefScale width={width} refWidth={LIVE_REF_WIDTH}>

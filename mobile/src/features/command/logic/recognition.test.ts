@@ -15,7 +15,7 @@ describe('recognising revenue', () => {
     expect(recognise(sub({ start: '2025-11-01', total: 180_000_000 }), AS_OF)).toEqual({ recognized: 180_000_000, deferred: 0, status: 'Completed' });
   });
 
-  test('course access earns over the access weeks; commissions on delivery', () => {
+  test('subject access earns over the access weeks; commissions on delivery', () => {
     expect(recognise(sub({ total: 75_000, method: 'access', start: '2026-09-26', periods: 8 }), AS_OF)).toEqual({ recognized: 46_875, deferred: 28_125, status: 'Active' });
     expect(recognise(sub({ total: 1_200_000, method: 'delivery', delivered: true }), AS_OF)).toEqual({ recognized: 1_200_000, deferred: 0, status: 'Recognized' });
     expect(recognise(sub({ method: 'delivery', delivered: false }), AS_OF).recognized).toBe(0);
@@ -26,7 +26,7 @@ describe('recognising revenue', () => {
     expect(nextRecognition(sub({ start: '2025-11-01' }), AS_OF)).toBeNull();
   });
 
-  test('course access earns weekly; delivered and cancelled items have no next recognition', () => {
+  test('subject access earns weekly; delivered and cancelled items have no next recognition', () => {
     expect(nextRecognition(sub({ total: 75_000, method: 'access', start: '2026-09-26', periods: 8 }), AS_OF)).toEqual({ date: '2026-11-07', amount: 9_375 });
     expect(nextRecognition(sub({ method: 'delivery', delivered: true }), AS_OF)).toBeNull();
     expect(nextRecognition(sub({ cancelled: AS_OF }), AS_OF)).toBeNull();

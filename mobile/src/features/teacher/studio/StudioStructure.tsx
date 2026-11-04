@@ -27,7 +27,7 @@ export function CourseCard({ s, status, levels }: { s: StudioNew; status: string
   return (
     <View>
       <View>
-        <Image source={c.cover} style={styles.cover} contentFit="cover" accessibilityLabel="Course cover: maths on a chalkboard" />
+        <Image source={c.cover} style={styles.cover} contentFit="cover" accessibilityLabel="Subject cover: maths on a chalkboard" />
         <Pressable style={styles.coverEdit} onPress={() => go('/teach/course-editor')} accessibilityRole="button" accessibilityLabel="Edit cover">
           <Text style={styles.coverEditText}>Edit Cover</Text>
         </Pressable>
@@ -105,12 +105,12 @@ export function LevelList({ levels, setLevels }: { levels: readonly StudioLevel[
     const at = levels.length - 1;
     setLevels(levels.map((l, i) => (i === at ? { ...l, lessons: l.lessons + 1, items: [...l.items, { title: 'New topic', kind: 'Video + Quiz', minutes: 30 }] } : l)));
     setOpen((prev) => new Set(prev).add(at));
-    toast(`New topic added to ${levels[at].name}. Open the course builder to fill it in.`);
+    toast(`New topic added to ${levels[at].name}. Open the subject builder to fill it in.`);
   };
   return (
     <View>
       <View style={styles.boxHead}>
-        <Text style={styles.structTitle}>{`Course Structure (${levels.length} Levels)`}</Text>
+        <Text style={styles.structTitle}>{`Subject Structure (${levels.length} Levels)`}</Text>
         <SmallEdit label="Add Topic" onPress={addTopic} a11y="Add a topic" />
       </View>
       {levels.map((l, i) => {

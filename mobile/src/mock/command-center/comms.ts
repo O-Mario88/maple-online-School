@@ -154,7 +154,7 @@ export const announcements: readonly AnnouncementRow[] = [
     publishedAt: 'Oct 24, 2026, 10:00 AM by Mary N.',
   }),
   A(2, 'System Maintenance Notice', 'Scheduled maintenance on Sunday...', 'All Users', 'System', 'settings', 'Published', 'Oct 22, 2026\n08:30 AM', 18245, 35),
-  A(3, 'New Mathematics Course Available', 'Explore our new interactive course...', 'Students', 'Courses', 'book', 'Published', 'Oct 20, 2026\n02:15 PM', 9876, 22),
+  A(3, 'New Mathematics Subject Available', 'Explore our new interactive subject...', 'Students', 'Subjects', 'book', 'Published', 'Oct 20, 2026\n02:15 PM', 9876, 22),
   A(4, 'Parent-Teacher Meeting Schedule', 'Find the schedule for Term 2 meetings...', 'Parents', 'Events', 'calendar', 'Scheduled', 'Oct 28, 2026\n09:00 AM', null, null),
   A(5, 'Holiday Break Reminder', 'Schools will be closed from Dec 20...', 'All Users', 'Calendar', 'calendar', 'Published', 'Oct 18, 2026\n11:00 AM', 25430, 42),
   A(6, 'New Feature: Interactive Whiteboard', "We're excited to introduce live whiteboard...", 'Teachers', 'Platform', 'screen', 'Published', 'Oct 15, 2026\n01:20 PM', 6980, 18),
@@ -200,7 +200,7 @@ const B = (n: number, title: string, preview: string, audience: Audience, status
 export const broadcasts: readonly BroadcastRow[] = [
   B(1, 'Term 3 Registration is Now Open', "Register early to secure your child's place...", 'Students', 'Sent', 'Oct 24, 2026\n10:00 AM', 12460, 88, 24),
   B(2, 'System Maintenance Notice', 'Scheduled maintenance on Sunday...', 'All Users', 'Completed', 'Oct 22, 2026\n08:30 AM', 18245, 92, 18),
-  B(3, 'New Mathematics Course Available', 'Explore our new interactive course...', 'Students', 'Sent', 'Oct 20, 2026\n02:15 PM', 9876, 82, 28),
+  B(3, 'New Mathematics Subject Available', 'Explore our new interactive subject...', 'Students', 'Sent', 'Oct 20, 2026\n02:15 PM', 9876, 82, 28),
   B(4, 'Parent-Teacher Meeting Schedule', 'Find the schedule for Term 2 meetings...', 'Parents', 'Sent', 'Oct 18, 2026\n09:00 AM', 25430, 90, 32),
   B(5, 'Holiday Break Reminder', 'Schools will be closed from Dec 20...', 'All Users', 'Scheduled', 'Oct 28, 2026\n09:00 AM', null, null, null, ['Email', 'In-App Notification', 'SMS']),
   B(6, 'New Feature: Interactive Whiteboard', "We're excited to introduce live whiteboard...", 'Teachers', 'Completed', 'Oct 15, 2026\n01:20 PM', 6980, 76, 20),

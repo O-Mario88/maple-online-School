@@ -13,7 +13,7 @@ export default function CourseEditorScreen() {
   const mock = useMemo(() => mockData(), []);
   const { wide } = useShell();
   const { width } = useWindowDimensions();
-  if (!mock) return <PreviewScreen title="Course builder">{() => null}</PreviewScreen>;
+  if (!mock) return <PreviewScreen title="Subject builder">{() => null}</PreviewScreen>;
   const me = mock.teacher.teacherHome.me;
   const c = mock.teacher.courseBuilder;
   if (!wide) return <CoursePhone c={c} me={me} />;

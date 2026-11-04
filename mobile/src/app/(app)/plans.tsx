@@ -1,10 +1,16 @@
+import { useShell } from '@/components/ui';
+import { PricingDesk } from '@/features/access/PricingDesk';
+import { PricingPhone } from '@/features/access/PricingPhone';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
-import { Paywall } from '@/features/access/Paywall';
 import { useAccess } from '@/lib/access/access-context';
 
-/** The plans that continue the free month, for whoever is signed in. */
-export default function PlansScreen() {
+/**
+ * Pricing: the plans that continue the free month, in the menu for learners, teachers and schools.
+ * Once the month has ended the app sends people here.
+ */
+export default function PricingScreen() {
   const { access } = useAccess();
-  if (!access) return <PreviewScreen back title="Plans">{() => null}</PreviewScreen>;
-  return <Paywall />;
+  const { wide } = useShell();
+  if (!access) return <PreviewScreen back title="Pricing">{() => null}</PreviewScreen>;
+  return wide ? <PricingDesk /> : <PricingPhone />;
 }

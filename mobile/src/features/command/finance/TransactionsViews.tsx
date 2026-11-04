@@ -20,7 +20,7 @@ type D = CommandData['platformFinance']['payments'];
 const PER_PAGE = 10;
 const TABS = ['Overview', 'All Transactions', 'Collections', 'Refunds', 'Chargebacks', 'Settlements', 'Reconciliation', 'Provider Reports'] as const;
 const STATUS_TONE: Readonly<Record<TxnStatus, Tone>> = { Successful: 'green', Pending: 'orange', Failed: 'red', Refunded: 'purple', Chargeback: 'red' };
-const TYPE_TONE: Readonly<Record<string, Tone>> = { Subscription: 'purple', 'Learner Plan': 'blue', 'Course Purchase': 'purple', 'School Fee': 'blue', 'Manual Payment': 'green' };
+const TYPE_TONE: Readonly<Record<string, Tone>> = { Subscription: 'purple', 'Learner Plan': 'blue', 'Subject Purchase': 'purple', 'School Fee': 'blue', 'Manual Payment': 'green' };
 const PROMO: Promo = { icon: 'wallet', color: '#1E6BF0', title: 'Payment Operations', body: 'Track, reconcile and manage all payments across providers.' };
 const PROVIDER_COLORS = ['#8B3CF0', '#F5A623', '#0BA4DB', '#FFCB05', '#1E6BF0', '#22A55A', '#8792B0'];
 const CURRENCY = ['UGX (All)', 'UGX', 'KES', 'USD'];
@@ -31,7 +31,7 @@ function useTxns(d: D) {
   const [query, setQuery] = useState('');
   const [range, setRange, ranges] = useChoice(['Oct 1 – Oct 31, 2026', 'Last 7 Days', 'Today']);
   const [provider, setProvider, providers] = useChoice(['All Providers', 'Stripe', 'Flutterwave', 'Paystack', 'Pesapal', 'Mobile Money', 'Airtel Money', 'Bank Transfer']);
-  const [type, setType, types] = useChoice(['All Types', 'Subscription', 'Learner Plan', 'Course Purchase', 'School Fee', 'Manual Payment']);
+  const [type, setType, types] = useChoice(['All Types', 'Subscription', 'Learner Plan', 'Subject Purchase', 'School Fee', 'Manual Payment']);
   const [customer, setCustomer, customers] = useChoice(['All Customers', 'Institution', 'Learner', 'Parent']);
   const [status, setStatus, statuses] = useChoice(['All Statuses', 'Successful', 'Pending', 'Failed', 'Refunded', 'Chargeback']);
   const [currency, setCurrency] = useChoice(CURRENCY);
@@ -192,7 +192,7 @@ function Filters({ u }: { u: U }) {
       <SelectBox label="Date Range" value={u.range} options={u.ranges} onChange={u.setRange} width={202} />
       <SelectBox label="Provider" value={u.provider} options={u.providers} onChange={u.setProvider} width={122} />
       <SelectBox label="Payment Type" value={u.type} options={u.types} onChange={u.setType} width={118} />
-      <SelectBox label="Customer Type" value={u.customer} options={u.customers} onChange={u.setCustomer} width={130} />
+      <SelectBox label="Customer Type" value={u.customer} options={u.customers} onChange={u.setCustomer} width={142} />
       <SelectBox label="Status" value={u.status} options={u.statuses} onChange={u.setStatus} width={118} />
       <SelectBox label="Currency" value={u.currency} options={CURRENCY} onChange={u.setCurrency} width={96} />
       <Pressable onPress={u.clear} accessibilityRole="button" accessibilityLabel="Clear filters">

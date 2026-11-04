@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
+import { useStartFree } from '@/lib/auth/auth-context';
 
 import { Brand, CARD_SHADOW } from '../palette';
 import type { Landing } from './types';
@@ -27,6 +28,8 @@ export function HeroCopy({ landing, phone = false }: { landing: Landing; phone?:
 
 /** "Choose a curriculum", the search box and the four promises under it. */
 export function HeroActions({ landing, phone = false }: { landing: Landing; phone?: boolean }) {
+  // Visitors start free, without an account; they sign up later, once they trust Maple.
+  const startFree = useStartFree();
   const [board, setBoard] = useState(landing.curricula[0].code);
   const chips = landing.curricula.map((c, i) => {
     const on = c.code === board;
@@ -66,10 +69,10 @@ export function HeroActions({ landing, phone = false }: { landing: Landing; phon
       <View style={[styles.searchRow, phone && styles.searchRowPhone]}>
         <View style={[styles.search, phone && styles.searchPhone]}>
           <Icon name="search" size={18} color={Brand.ink} />
-          <TextInput style={styles.searchInput} placeholder="Search for courses, subjects, or skills..." placeholderTextColor={Brand.muted} accessibilityLabel="Search courses" />
+          <TextInput style={styles.searchInput} placeholder="Search for subjects, topics, or skills..." placeholderTextColor={Brand.muted} accessibilityLabel="Search subjects" />
         </View>
-        <Pressable style={[styles.explore, phone && styles.explorePhone]} accessibilityRole="button" onPress={() => router.push('/explore')}>
-          <Text style={styles.exploreText}>Explore Courses</Text>
+        <Pressable style={[styles.explore, phone && styles.explorePhone]} accessibilityRole="button" onPress={() => (startFree ? startFree() : router.push('/explore'))}>
+          <Text style={styles.exploreText}>Explore Subjects</Text>
           <Icon name="arrowRight" size={16} color={Brand.surface} />
         </Pressable>
       </View>

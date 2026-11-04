@@ -186,14 +186,14 @@ export function ScheduleLiveModal({
 
             <View style={styles.fieldGroup}>
               <Text style={styles.fieldLabel}>
-                Course / Cohort <Text style={styles.req}>*</Text>
+                Subject / Cohort <Text style={styles.req}>*</Text>
               </Text>
               <Pressable
                 style={styles.cohortBox}
                 onPress={() => setCohortOpen((o) => !o)}
                 accessibilityRole="button"
                 accessibilityState={{ expanded: cohortOpen }}
-                accessibilityLabel={`Course / Cohort: ${cohort.title}, ${cohort.subtitle}`}>
+                accessibilityLabel={`Subject / Cohort: ${cohort.title}, ${cohort.subtitle}`}>
                 <Image source={THUMB} style={styles.cohortThumb} contentFit="cover" />
                 <View style={styles.flex}>
                   <Text style={styles.cohortTitle}>{cohort.title}</Text>

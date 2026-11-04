@@ -23,8 +23,8 @@ export const regions = [
 export const trustQueue = [
   { id: 't1', kind: 'Teacher verification', subject: 'Mr. Isaac Mugisha', ai: 'Documents match; low risk', priority: 'normal' },
   { id: 't2', kind: 'Safeguarding alert', subject: 'Message flagged in S2 Biology squad', ai: 'Possible contact-sharing with a minor', priority: 'urgent' },
-  { id: 't3', kind: 'Copyright flag', subject: 'Course: UACE Physics Notes', ai: '38% match to a published textbook', priority: 'high' },
-  { id: 't4', kind: 'Course quality', subject: 'Course: P6 SST Revision', ai: 'Audio quality low in 3 lessons', priority: 'normal' },
+  { id: 't3', kind: 'Copyright flag', subject: 'Subject: UACE Physics Notes', ai: '38% match to a published textbook', priority: 'high' },
+  { id: 't4', kind: 'Subject quality', subject: 'Subject: P6 SST Revision', ai: 'Audio quality low in 3 lessons', priority: 'normal' },
 ];
 
 export const pipeline = [

@@ -30,11 +30,11 @@ const T = (id: string, at: string, customer: string, ref: string, kind: TxnRow['
 export const txns: readonly TxnRow[] = [
   T('TRX-9F72D3A1', 'Oct 31, 2026, 09:14 AM', 'Green Valley School', 'SCH-00184', 'Institution', 'Subscription', 'Stripe', 1_200_000, 'Successful'),
   T('TRX-7A61B9E2', 'Oct 31, 2026, 08:47 AM', 'Amina N.', 'LRN-045772', 'Learner', 'Learner Plan', 'Paystack', 50_000, 'Successful', face.sarah),
-  T('TRX-5C90E7B4', 'Oct 30, 2026, 06:32 PM', 'Daniel K.', 'LRN-045889', 'Learner', 'Course Purchase', 'Flutterwave', 75_000, 'Successful', face.john),
+  T('TRX-5C90E7B4', 'Oct 30, 2026, 06:32 PM', 'Daniel K.', 'LRN-045889', 'Learner', 'Subject Purchase', 'Flutterwave', 75_000, 'Successful', face.john),
   T('TRX-3D27A6F9', 'Oct 30, 2026, 02:18 PM', 'Riverside Academy', 'SCH-00126', 'Institution', 'Subscription', 'Pesapal', 600_000, 'Successful'),
   T('TRX-91B4C2D0', 'Oct 30, 2026, 11:05 AM', 'Parent – Grace A.', 'PRN-008731', 'Parent', 'School Fee', 'Mobile Money', 450_000, 'Successful', face.esther),
   T('TRX-6E44F1A9', 'Oct 29, 2026, 08:21 PM', 'Hope Primary School', 'SCH-00211', 'Institution', 'Subscription', 'Bank Transfer', 2_500_000, 'Pending'),
-  T('TRX-4B77E9C3', 'Oct 29, 2026, 03:40 PM', 'John O.', 'LRN-045993', 'Learner', 'Course Purchase', 'Airtel Money', 30_000, 'Failed', face.okello),
+  T('TRX-4B77E9C3', 'Oct 29, 2026, 03:40 PM', 'John O.', 'LRN-045993', 'Learner', 'Subject Purchase', 'Airtel Money', 30_000, 'Failed', face.okello),
   T('TRX-2A30D8F7', 'Oct 28, 2026, 10:19 AM', 'Bright Future School', 'SCH-00267', 'Institution', 'Subscription', 'Flutterwave', 1_000_000, 'Refunded'),
   T('TRX-8D11C6B2', 'Oct 27, 2026, 04:56 PM', 'Mary T.', 'LRN-045661', 'Learner', 'Learner Plan', 'Paystack', 50_000, 'Chargeback', face.nakato),
   T('TRX-7F33A9E1', 'Oct 27, 2026, 09:08 AM', "St. Mark's College", 'SCH-00155', 'Institution', 'Subscription', 'Stripe', 3_000_000, 'Successful'),

@@ -16,7 +16,7 @@ const item = (over: Partial<CatalogueItem>): CatalogueItem => ({
 });
 
 const items = [
-  item({ id: 'a', title: 'Mathematics Complete Course', priceUGX: 120000, rating: 4.8, reviews: 2100 }),
+  item({ id: 'a', title: 'Mathematics Complete Subject', priceUGX: 120000, rating: 4.8, reviews: 2100 }),
   item({ id: 'b', kind: 'paper', title: 'KCSE Past Papers', board: 'KCSE', country: 'Kenya', priceUGX: 30000, reviews: 3200 }),
   item({ id: 'c', kind: 'live', title: 'English Literature', board: 'IGCSE', subject: 'English', priceUGX: 0, rating: 4.9, reviews: 900 }),
 ];

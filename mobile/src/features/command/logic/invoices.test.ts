@@ -34,8 +34,8 @@ describe('invoice totals', () => {
   });
 
   test('rounds to whole shillings, and to cents in dollars', () => {
-    expect(invoiceTotals(inv({ lines: [{ description: 'Course', qty: 1, unitPrice: 99_999 }], taxRate: 0.18 })).tax).toBe(18_000);
-    expect(invoiceTotals(inv({ currency: 'USD', lines: [{ description: 'Course', qty: 1, unitPrice: 49.99 }], taxRate: 0.18 })).tax).toBe(9);
+    expect(invoiceTotals(inv({ lines: [{ description: 'Subject', qty: 1, unitPrice: 99_999 }], taxRate: 0.18 })).tax).toBe(18_000);
+    expect(invoiceTotals(inv({ currency: 'USD', lines: [{ description: 'Subject', qty: 1, unitPrice: 49.99 }], taxRate: 0.18 })).tax).toBe(9);
   });
 });
 

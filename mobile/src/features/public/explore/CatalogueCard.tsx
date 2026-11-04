@@ -3,7 +3,6 @@ import { router } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
-import { formatMoney } from '@/lib/finance/fees';
 import type { CatalogueEntry } from '@/mock/public';
 
 import { Brand, CARD_SHADOW } from '../palette';
@@ -18,7 +17,7 @@ function reviewCount(n: number): string {
 
 /**
  * One Explore result as the reference draws it: photo (its badge, heart and
- * duration are part of the photo), title, level, teacher, rating, price and cart.
+ * duration are part of the photo), title, level, teacher, rating, and that a study pass includes it.
  */
 interface CardProps {
   item: CatalogueEntry;
@@ -30,14 +29,13 @@ interface CardProps {
 }
 
 export function CatalogueCard({ item, coursePage, width, list = false, compact = false }: CardProps) {
-  const free = item.priceUGX === 0;
   const c = compact;
   return (
     <Pressable
       style={[styles.card, width === undefined ? styles.cardFull : { width }, list && styles.cardList]}
       onPress={() => router.push(`/courses/${coursePage}`)}
       accessibilityRole="link"
-      accessibilityLabel={`${item.title}, ${item.meta}, ${free ? 'free' : formatMoney(item.priceUGX, 'UGX')}`}>
+      accessibilityLabel={`${item.title}, ${item.meta}, included in every study pass`}>
       <View style={[styles.thumb, (width === undefined || c) && !list ? styles.thumbFluid : null, list && styles.thumbList, { backgroundColor: item.tint }]}>
         {item.photo ? <Image source={item.photo} style={StyleSheet.absoluteFill} contentFit="cover" accessibilityLabel={`${item.teacher}, ${item.title}`} /> : null}
       </View>
@@ -61,13 +59,8 @@ export function CatalogueCard({ item, coursePage, width, list = false, compact =
           <Text style={[styles.ratingText, c && styles.smallC]}>{`${item.rating} (${reviewCount(item.reviews)})`}</Text>
         </View>
         <View style={[styles.footer, c && styles.footerC]}>
-          <View style={[styles.prices, c && styles.pricesC]}>
-            <Text style={[styles.price, c && styles.priceC, item.wasUGX ? styles.priceSale : null]}>{free ? 'Free' : formatMoney(item.priceUGX, 'UGX')}</Text>
-            {item.wasUGX ? <Text style={[styles.was, c && styles.wasC]}>{formatMoney(item.wasUGX, 'UGX')}</Text> : null}
-          </View>
-          <Pressable style={[styles.cart, c && styles.cartC]} onPress={() => router.push('/checkout')} accessibilityRole="button" accessibilityLabel={`Add ${item.title} to cart`}>
-            <Icon name="cart" size={16} color={Brand.blue} />
-          </Pressable>
+          <Text style={[styles.included, c && styles.includedC]}>Included in every study pass</Text>
+          <Icon name="chevronRight" size={16} color={Brand.blue} />
         </View>
       </View>
     </Pressable>
@@ -84,10 +77,6 @@ const styles = StyleSheet.create({
   faceC: { width: 20, height: 20, borderRadius: 10 },
   smallC: { fontSize: 11.5 },
   footerC: { marginTop: 7, alignItems: 'flex-end' },
-  pricesC: { flexDirection: 'column', alignItems: 'flex-start', gap: 0 },
-  priceC: { fontSize: 14.5 },
-  wasC: { fontSize: 10 },
-  cartC: { width: 30, height: 30 },
   cardList: { flexDirection: 'row' },
   thumb: { height: THUMB_HEIGHT, overflow: 'hidden' },
   thumbFluid: { height: 'auto', aspectRatio: THUMB_RATIO },
@@ -104,9 +93,6 @@ const styles = StyleSheet.create({
   starSoft: { color: '#FBBF5A' },
   ratingText: { fontSize: 12.5, color: '#4A5263' },
   footer: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 8 },
-  prices: { flexDirection: 'row', alignItems: 'baseline', gap: 7, flexShrink: 1 },
-  price: { fontSize: 17, fontWeight: '700', color: Brand.ink },
-  priceSale: { color: '#E5484D' },
-  was: { fontSize: 11, color: '#8A92A3', textDecorationLine: 'line-through' },
-  cart: { width: 32, height: 32, borderRadius: 7, borderWidth: 1, borderColor: '#CFE0FD', backgroundColor: Brand.surface, alignItems: 'center', justifyContent: 'center' },
+  included: { flexShrink: 1, fontSize: 13, fontWeight: '600', color: Brand.blue },
+  includedC: { fontSize: 11.5 },
 });

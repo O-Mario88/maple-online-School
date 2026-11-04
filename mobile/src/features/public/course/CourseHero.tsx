@@ -14,27 +14,27 @@ type Course = MockData['publicPages']['coursePage'];
 
 function Trailer({ course, wide }: { course: Course; wide: boolean }) {
   const [playing, setPlaying] = useState(false);
-  const sheet = <VideoSheet visible={playing} poster={course.trailer.photo} title={`${course.title}: course trailer`} seconds={lengthSeconds(course.trailer.length)} onClose={() => setPlaying(false)} />;
+  const sheet = <VideoSheet visible={playing} poster={course.trailer.photo} title={`${course.title}: subject trailer`} seconds={lengthSeconds(course.trailer.length)} onClose={() => setPlaying(false)} />;
   if (course.trailer.photo) {
     // The reference frame already shows the trailer label and play button.
     return (
-      <Pressable style={styles.video} onPress={() => setPlaying(true)} accessibilityRole="button" accessibilityLabel={`Play the course trailer, ${course.trailer.length}`}>
+      <Pressable style={styles.video} onPress={() => setPlaying(true)} accessibilityRole="button" accessibilityLabel={`Play the subject trailer, ${course.trailer.length}`}>
         <Image source={course.trailer.photo} style={StyleSheet.absoluteFill} contentFit="cover" />
         {sheet}
       </Pressable>
     );
   }
   return (
-    <View style={styles.video} accessibilityLabel={`Course trailer, ${course.trailer.length}`}>
+    <View style={styles.video} accessibilityLabel={`Subject trailer, ${course.trailer.length}`}>
       <View style={styles.trailerTag}>
         <Icon name="play" size={14} color={Brand.surface} />
-        <Text style={styles.trailerText}>{`Watch course trailer (${course.trailer.length})`}</Text>
+        <Text style={styles.trailerText}>{`Watch subject trailer (${course.trailer.length})`}</Text>
       </View>
       <Text style={[styles.teacherEmoji, !wide && styles.teacherEmojiNarrow]} accessibilityElementsHidden>
         👨🏾‍🏫
       </Text>
       <Text style={styles.board}>{course.trailer.board.join('\n')}</Text>
-      <Pressable style={styles.play} onPress={() => setPlaying(true)} accessibilityRole="button" accessibilityLabel="Play the course trailer">
+      <Pressable style={styles.play} onPress={() => setPlaying(true)} accessibilityRole="button" accessibilityLabel="Play the subject trailer">
         <Icon name="play" size={30} color={Brand.surface} />
       </Pressable>
       {sheet}

@@ -53,8 +53,8 @@ function PlanCards({ plans, wide }: { plans: Plans; wide: boolean }) {
                   <Text style={[styles.body, !f.on && styles.off]}>{f.label}</Text>
                 </View>
               ))}
-              <Pressable style={[styles.button, p.popular ? styles.primary : styles.outline]} onPress={() => go('/sign-up')} accessibilityRole="button" accessibilityLabel={`Choose ${p.name}`}>
-                <Text style={[styles.buttonText, p.popular && styles.primaryText]}>{`Choose ${p.name}`}</Text>
+              <Pressable style={[styles.button, p.popular ? styles.primary : styles.outline]} onPress={() => go('/sign-up')} accessibilityRole="button" accessibilityLabel={p.monthly ? `Choose ${p.name}` : 'Start free'}>
+                <Text style={[styles.buttonText, p.popular && styles.primaryText]}>{p.monthly ? `Choose ${p.name}` : 'Start free'}</Text>
               </Pressable>
             </View>
           );

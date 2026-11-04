@@ -35,7 +35,7 @@ export const accounts: readonly Account[] = [
   a('3100', 'Retained Earnings', 'Equity', 'Reserves'),
   a('4000', 'Subscription Revenue', 'Income', 'Revenue'),
   a('4100', 'Marketplace Commission', 'Income', 'Revenue'),
-  a('4200', 'Course Sales', 'Income', 'Revenue'),
+  a('4200', 'Subject Sales', 'Income', 'Revenue'),
   a('4900', 'Other Income (Interest)', 'Income', 'Other Income'),
   a('5100', 'Teacher Earnings', 'Expense', 'Cost of Sales'),
   a('5200', 'Payment Provider Fees', 'Expense', 'Cost of Sales'),

@@ -13,7 +13,7 @@ export default function StudioScreen() {
   const mock = useMemo(() => mockData(), []);
   const { wide } = useShell();
   const { width } = useWindowDimensions();
-  if (!mock) return <PreviewScreen title="AI course studio">{() => null}</PreviewScreen>;
+  if (!mock) return <PreviewScreen title="AI subject studio">{() => null}</PreviewScreen>;
   const h = mock.teacher.teacherHome;
   const me = h.me;
   const s = mock.teacher.studioNew;

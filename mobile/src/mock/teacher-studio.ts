@@ -47,7 +47,7 @@ export const studioNew = {
   steps: [
     { label: 'Reading and analysing content...', phone: 'Analysing content...', at: 2 },
     { label: 'Identifying key topics and competencies...', phone: 'Identifying key topics...', at: 8 },
-    { label: 'Generating 3-level course structure...', phone: 'Generating course structure...', at: 18 },
+    { label: 'Generating 3-level subject structure...', phone: 'Generating subject structure...', at: 18 },
     { label: 'Creating interactive quizzes...', phone: 'Creating quizzes...', at: 32 },
     { label: 'Adding learning objectives and tags...', phone: 'Adding competency tags...', at: 45 },
     { label: 'Almost ready...', phone: 'Done!', at: 58 },
@@ -130,19 +130,19 @@ export const studioNew = {
   ],
   nav: [
     { label: 'Create New', icon: 'edit', go: '/teach/studio' },
-    { label: 'My Courses', icon: 'book', go: '/teach/course-editor' },
+    { label: 'My Subjects', icon: 'book', go: '/teach/course-editor' },
     { label: 'Imported Content', icon: 'upload', go: '/learn/library' },
     { label: 'Question Bank', icon: 'clipboard', go: '/teach/studio' },
     { label: 'AI Tools', icon: 'sparkle', go: '/copilot' },
     { label: 'Templates', icon: 'columns', go: '/teach/studio' },
     { label: 'Competency Tags', icon: 'flag', go: '/teach/studio' },
     { label: 'Drafts', icon: 'notes', go: '/teach/course-editor' },
-    { label: 'Published Courses', icon: 'check', go: '/teach/storefront' },
+    { label: 'Published Subjects', icon: 'check', go: '/teach/storefront' },
     { label: 'Settings', icon: 'settings', go: '/teach/studio' },
   ] as { label: string; icon: IconName; go: TeacherDest }[],
   templates: [
     { title: 'Past-paper bootcamp', detail: '4 weeks · timed papers with walkthroughs' },
-    { title: 'Full-term syllabus course', detail: '3 levels · lessons, quizzes and tags' },
+    { title: 'Full-term syllabus subject', detail: '3 levels · lessons, quizzes and tags' },
     { title: 'Revision sprint', detail: '10 short lessons · daily quizzes' },
   ],
   promo: {

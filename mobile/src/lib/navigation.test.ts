@@ -248,7 +248,22 @@ describe('activeKey', () => {
     const app = path.join(dirname, '..', 'app');
     expect(fs.existsSync(path.join(app, `${CLASSROOM.route}.tsx`))).toBe(true);
     const layout = fs.readFileSync(path.join(app, '_layout.tsx'), 'utf8');
-    const signedIn = layout.slice(layout.indexOf('<Stack.Protected guard={signedIn}>'), layout.indexOf('</Stack.Protected>'));
+    const start = layout.indexOf('<Stack.Protected guard={signedIn}>');
+    const signedIn = layout.slice(start, layout.indexOf('</Stack.Protected>', start));
     expect(signedIn).toContain(`name="${CLASSROOM.route}"`);
+  });
+});
+
+describe('the pricing page', () => {
+  test('learners, teachers and schools find Pricing in their menu when plans have their content', () => {
+    for (const portal of ['learner', 'teacher', 'school'] as const) {
+      expect(navFor(portal, true).find((i) => i.key === 'pricing')).toMatchObject({ label: 'Pricing', href: '/plans' });
+    }
+  });
+
+  test('parents and Maple staff have no plan, so no Pricing; nor does a deployment build yet', () => {
+    expect(navFor('parent', true).some((i) => i.key === 'pricing')).toBe(false);
+    expect(navFor('command', true).some((i) => i.key === 'pricing')).toBe(false);
+    expect(navFor('learner', false).some((i) => i.key === 'pricing')).toBe(false);
   });
 });

@@ -12,7 +12,7 @@ export const months = ['Nov 2026', 'Dec 2026', 'Jan 2027', 'Feb 2027', 'Mar 2027
 
 export const plan: readonly Line[] = [
   { name: 'Subscriptions (Schools & Learners)', kind: 'revenue', values: r([420, 445, 470, 510, 540, 560, 590, 620, 660, 710, 740, 780]) },
-  { name: 'Course Fees (MOOC & Live)', kind: 'revenue', values: r([160, 170, 180, 190, 200, 215, 230, 240, 250, 265, 280, 300]) },
+  { name: 'Subject Fees (MOOC & Live)', kind: 'revenue', values: r([160, 170, 180, 190, 200, 215, 230, 240, 250, 265, 280, 300]) },
   { name: 'Marketplace Commissions', kind: 'revenue', values: r([60, 65, 70, 75, 80, 85, 90, 95, 100, 110, 115, 120]) },
   { name: 'Other Income (certificates, exams)', kind: 'revenue', values: r([40, 42, 45, 48, 50, 52, 55, 57, 60, 62, 64, 70]) },
   { name: 'Teacher Payouts (Independent)', kind: 'variable', values: m([180, 192, 198, 205, 210, 215, 225, 230, 248, 255, 265, 272]) },

@@ -14,7 +14,7 @@ export function LessonSettingsPanel({ c, b, buttons = true }: { c: CourseBuilder
   const s = b.lessonSettings;
   const [confirm, setConfirm] = useState(false);
   const del = () => {
-    if (b.order.length <= 1) return toast('A course needs at least one lesson.');
+    if (b.order.length <= 1) return toast('A subject needs at least one lesson.');
     if (!confirm) {
       setConfirm(true);
       return toast('Tap Delete Lesson again to delete it.');

@@ -132,14 +132,14 @@ export const summary = {
     { label: 'Identity Verification', result: 'Verified', pct: 98 },
     { label: 'Document Authenticity', result: 'Clear', pct: 95 },
     { label: 'Qualification Verification', result: 'Valid', pct: 92 },
-    { label: 'Course Content Quality', result: 'Good', pct: 88 },
+    { label: 'Subject Content Quality', result: 'Good', pct: 88 },
     { label: 'Copyright & Plagiarism Check', result: 'Clean', pct: 94 },
     { label: 'Safeguarding Screening', result: 'Clear', pct: 96 },
   ],
   fit: [
     { label: 'Subject Expertise', value: 94 },
     { label: 'Teaching Experience', value: 90 },
-    { label: 'Course Content Quality', value: 88 },
+    { label: 'Subject Content Quality', value: 88 },
     { label: 'Student Reviews (external)', value: 91 },
   ],
   documents: [
@@ -157,7 +157,7 @@ export const hubStats: readonly KpiData[] = [
   { label: 'Auto-Approved (Low Risk)', value: '86', delta: '18%', caption: 'this month', icon: 'verified', tone: 'green' },
   { label: 'Needs Human Review', value: '28', delta: '33%', caption: 'AI flagged', icon: 'clock', tone: 'orange' },
   { label: 'High Risk / Blocked', value: '10', delta: '150%', caption: 'serious concerns', icon: 'alert', tone: 'red' },
-  { label: 'Course Quality Flags', value: '17', delta: '41%', caption: 'copyright / quality', icon: 'cap', tone: 'purple' },
+  { label: 'Subject Quality Flags', value: '17', delta: '41%', caption: 'copyright / quality', icon: 'cap', tone: 'purple' },
   { label: 'Minor-Safeguarding Alerts', value: '5', delta: '67%', caption: 'under investigation', icon: 'shield', tone: 'red' },
 ];
 
@@ -314,7 +314,7 @@ export interface HubCase {
 
 /** The other hub tabs: one list of cases each. */
 export const hubCases: Readonly<Record<string, readonly HubCase[]>> = {
-  'Course Quality': [
+  'Subject Quality': [
     { n: 1, id: 'CQ-1042', title: 'S3 Chemistry: Organic Basics', owner: 'Brian Ssali', flag: 'UG', signal: 'Quality score 61 • 4 broken videos', risk: 'Medium', reported: 'Oct 26, 09:40', status: 'Needs Review', ai: 'Four lesson videos fail to load and two quizzes have no answers set.' },
     { n: 2, id: 'CQ-1041', title: 'P7 Mathematics Revision Pack', owner: 'Joy Atuhaire', flag: 'UG', signal: 'Outdated syllabus (2019)', risk: 'Low', reported: 'Oct 25, 17:12', status: 'Open', ai: 'Follows the 2019 PLE syllabus; three topics moved in 2024.' },
     { n: 3, id: 'CQ-1040', title: "A'Level Economics Masterclass", owner: 'Moses Kiprop', flag: 'KE', signal: 'Refund rate 18%', risk: 'Medium', reported: 'Oct 25, 11:03', status: 'Needs Review', ai: 'Refunds cluster on week 2, where lessons are 9 minutes on average against the promised 40.' },
@@ -333,8 +333,8 @@ export const hubCases: Readonly<Record<string, readonly HubCase[]>> = {
   ],
   Appeals: [
     { n: 1, id: 'AP-0044', title: 'Appeal: rejected application', owner: 'Halima Juma', flag: 'TZ', signal: 'New certificate uploaded', risk: 'Low', reported: 'Oct 26, 07:15', status: 'Open', ai: 'The new certificate verifies with the issuer. Original rejection reason no longer applies.' },
-    { n: 2, id: 'AP-0043', title: 'Appeal: removed course', owner: 'Patrick Obi', flag: 'NG', signal: 'Says content is original', risk: 'Medium', reported: 'Oct 24, 16:02', status: 'Needs Review', ai: 'Author shows drafts dated before the matched source. Needs a human call.' },
+    { n: 2, id: 'AP-0043', title: 'Appeal: removed subject', owner: 'Patrick Obi', flag: 'NG', signal: 'Says content is original', risk: 'Medium', reported: 'Oct 24, 16:02', status: 'Needs Review', ai: 'Author shows drafts dated before the matched source. Needs a human call.' },
   ],
 };
 
-export const hubTabs = ['Teacher Verification', 'Course Quality', 'Copyright & IP', 'Minor Safeguarding', 'Reported Content', 'Appeals'];
+export const hubTabs = ['Teacher Verification', 'Subject Quality', 'Copyright & IP', 'Minor Safeguarding', 'Reported Content', 'Appeals'];

@@ -348,7 +348,7 @@ function Filters({ u }: { u: U }) {
 export function PayablesDesk({ c }: { c: CommandData }) {
   const u = usePayables(c.platformFinance.commercial, c.platformFinance.corporate.approvers);
   return (
-    <FinDesk c={c} sub="Teacher Payables" search="Search by teacher, class, course, payout, or reference..." promo={PROMO}>
+    <FinDesk c={c} sub="Teacher Payables" search="Search by teacher, class, subject, payout, or reference..." promo={PROMO}>
       <FinHead
         icon="people"
         title="Teacher Payables & Liability Register"

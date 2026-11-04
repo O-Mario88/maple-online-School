@@ -7,24 +7,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Icon } from '@/components/icon';
 import { Breakpoints } from '@/constants/theme';
 import { useAuth } from '@/lib/auth/auth-context';
-import type { IconName } from '@/lib/icons';
-import { mockApi } from '@/lib/mock';
-import { type Portal, PORTAL_LABELS } from '@/lib/navigation';
+import { mockApi, mockData } from '@/lib/mock';
+import type { Portal } from '@/lib/navigation';
 import { usePortal } from '@/lib/portal-context';
 import { SwitcherContext } from '@/lib/switcher-context';
+import { type Mode, modesFrom } from '@/lib/switcher-modes';
 
-interface Mode {
-  key: string;
-  portal: Portal;
-  title: string;
-  tagline: string;
-  detail: string;
-  short: string;
-  icon: IconName;
-  tint: string;
-  tile?: number;
-  photo?: number;
-}
 interface Account {
   key?: 'student' | 'teacher' | 'parent' | 'institution' | 'admin';
   portal?: Portal;
@@ -37,13 +25,14 @@ interface Account {
 
 const BLUE = '#1463F3';
 const INK = '#0B1424';
-const PORTAL_ICONS: Readonly<Record<Portal, IconName>> = { learner: 'cap', teacher: 'school', parent: 'people', school: 'grid', command: 'settings' };
-
-/** Design builds show the reference's four modes and two accounts; real builds list the person's own portals. */
+/**
+ * Design builds show the reference's modes and accounts; the real app lists the person's own
+ * modes, in the design's cards when there is design data.
+ */
 function modesFor(portals: readonly Portal[]): Mode[] {
   const designed = mockApi()?.shared.contexts;
   if (designed) return [...designed];
-  return portals.map((p) => ({ key: p, portal: p, title: `${PORTAL_LABELS[p]} Mode`, tagline: '', detail: '', short: '', icon: PORTAL_ICONS[p], tint: BLUE }));
+  return modesFrom(portals, mockData()?.shared.contexts);
 }
 
 function Tile({ m, phone }: { m: Mode; phone: boolean }) {

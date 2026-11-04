@@ -29,7 +29,7 @@ export default function ShortsScreen() {
                 </Text>
                 <View style={styles.actions}>
                   <Button label="Save to flashcards" compact variant="secondary" onPress={() => toast(`${s.title} saved to your flashcards.`)} />
-                  <Button label="Full course" compact variant="ghost" onPress={() => router.push('/courses/complete-mathematics-primary-7')} />
+                  <Button label="Full subject" compact variant="ghost" onPress={() => router.push('/courses/complete-mathematics-primary-7')} />
                 </View>
               </View>
             </View>

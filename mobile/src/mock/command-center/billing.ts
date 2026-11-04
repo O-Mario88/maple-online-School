@@ -78,7 +78,7 @@ function build(s: Seed): InvoiceRow {
 
 const seeds: readonly Seed[] = [
   { n: 1, no: 'INV-20261026-001', type: 'Institution', customer: 'Green Valley Academy', place: 'Kampala', description: 'Term 3 Tuition (Primary)', issue: '2026-10-26', due: '2026-11-09', lines: [line('Primary Tuition', 100, 125_000)], paid: true },
-  { n: 2, no: 'INV-20261025-004', type: 'Student', customer: 'Amina Namubiru', place: 'Individual', description: 'Math Mastery Course', issue: '2026-10-25', due: '2026-11-08', lines: [line('Math Mastery Course', 1, 250_000)], paid: true, age: 15, guardian: 'Sarah Namubiru' },
+  { n: 2, no: 'INV-20261025-004', type: 'Student', customer: 'Amina Namubiru', place: 'Individual', description: 'Math Mastery Subject', issue: '2026-10-25', due: '2026-11-08', lines: [line('Math Mastery Subject', 1, 250_000)], paid: true, age: 15, guardian: 'Sarah Namubiru' },
   {
     n: 3,
     no: 'INV-20261025-003',
@@ -94,11 +94,11 @@ const seeds: readonly Seed[] = [
   },
   { n: 4, no: 'INV-20261024-007', type: 'Student', customer: 'David Ojara', place: 'Individual', description: 'Science Revision Pack', issue: '2026-10-24', due: '2026-11-07', lines: [line('Science Revision Pack', 1, 150_000)], paid: true, age: 19 },
   { n: 5, no: 'INV-20260924-006', type: 'Institution', customer: "St. Mark's College", place: 'Jinja', description: 'Subscription – 50 Students', issue: '2026-09-24', due: '2026-10-08', lines: [line('Pro Plan Subscription (per student)', 50, 100_000)] },
-  { n: 6, no: 'INV-20261023-012', type: 'Student', customer: 'Grace Akello', place: 'Individual', description: 'English Writing Course', issue: '2026-10-23', due: '2026-11-06', lines: [line('English Writing Course', 1, 200_000)], paid: true, age: 22 },
+  { n: 6, no: 'INV-20261023-012', type: 'Student', customer: 'Grace Akello', place: 'Individual', description: 'English Writing Subject', issue: '2026-10-23', due: '2026-11-06', lines: [line('English Writing Subject', 1, 200_000)], paid: true, age: 22 },
   { n: 7, no: 'INV-20261023-011', type: 'Institution', customer: 'Hope International', place: 'Lira', description: 'Term 3 Tuition (Primary)', issue: '2026-10-23', due: '2026-11-06', lines: [line('Primary Tuition', 80, 122_500)] },
   { n: 8, no: 'INV-20260922-008', type: 'Student', customer: 'Kevin Nsubuga', place: 'Individual', description: 'Live Class Package (1 month)', issue: '2026-09-22', due: '2026-10-06', lines: [line('Live Class Package (1 month)', 1, 300_000)], age: 16, guardian: 'Robert Nsubuga' },
   { n: 9, no: 'INV-20261021-015', type: 'Institution', customer: 'Sunrise Schools', place: 'Mbarara', description: 'Digital Literacy Program', issue: '2026-10-21', due: '2026-11-04', lines: [line('Digital Literacy Program', 150, 50_000)], paid: true },
-  { n: 10, no: 'INV-20261021-014', type: 'Student', customer: 'Maria Lopez', place: 'Individual', description: 'Reading Bridge Course', issue: '2026-10-21', due: '2026-11-04', lines: [line('Reading Bridge Course', 1, 180_000)], paid: true, age: 12, guardian: 'Ana Lopez' },
+  { n: 10, no: 'INV-20261021-014', type: 'Student', customer: 'Maria Lopez', place: 'Individual', description: 'Reading Bridge Subject', issue: '2026-10-21', due: '2026-11-04', lines: [line('Reading Bridge Subject', 1, 180_000)], paid: true, age: 12, guardian: 'Ana Lopez' },
   { n: 11, no: 'INV-20261020-017', type: 'Institution', customer: 'Cornerstone Academy', place: 'Mbale', description: 'Term 3 Tuition (Secondary)', issue: '2026-10-20', due: '2026-11-03', lines: [line('Secondary Tuition', 100, 142_000)] },
   { n: 12, no: 'INV-20260920-016', type: 'Student', customer: 'Samuel Okello', place: 'Individual', description: 'Holiday Bootcamp', issue: '2026-09-20', due: '2026-10-04', lines: [line('Holiday Bootcamp', 1, 350_000)], age: 17, guardian: 'Esther Okello', recurring: false },
 ];
@@ -125,7 +125,7 @@ export const catalogue: readonly { item: string; price: number; for: Invoice['ty
   { item: 'Secondary Tuition (per learner, term)', price: 150_000, for: 'Institution' },
   { item: 'LMS Access (per learner, term)', price: 25_000, for: 'Institution' },
   { item: 'Pro Plan Subscription (per learner, month)', price: 100_000, for: 'Institution' },
-  { item: 'Math Mastery Course', price: 250_000, for: 'Student' },
+  { item: 'Math Mastery Subject', price: 250_000, for: 'Student' },
   { item: 'Live Class Package (1 month)', price: 300_000, for: 'Student' },
   { item: 'One-to-one Tutoring (5 hours)', price: 175_000, for: 'Student' },
 ];
@@ -152,18 +152,18 @@ export interface TaxRow extends TaxTxn {
 const T = (n: number, day: number, customer: string, kind: TaxRow['kind'], type: string, taxable: number, taxType: TaxTxn['taxType'], efris: TaxTxn['efris'] = 'Submitted'): TaxRow => {
   const date = `2026-10-${String(day).padStart(2, '0')}`;
   const id = `TXN-202610${String(day).padStart(2, '0')}-${String(n).padStart(3, '0')}`;
-  return { n, id, date, taxable, taxType, efris, efrisReceipt: efris === 'Submitted' ? `EFRIS-202610${String(day).padStart(2, '0')}-${7780 + n}` : undefined, invoice: `INV-202610${String(day).padStart(2, '0')}-${String(n).padStart(3, '0')}`, customer, kind, type, method: kind === 'Institution' ? 'Bank Transfer' : 'Mobile Money (MoMo)', notes: kind === 'Institution' ? 'Monthly subscription - 500 students' : 'Course purchase' };
+  return { n, id, date, taxable, taxType, efris, efrisReceipt: efris === 'Submitted' ? `EFRIS-202610${String(day).padStart(2, '0')}-${7780 + n}` : undefined, invoice: `INV-202610${String(day).padStart(2, '0')}-${String(n).padStart(3, '0')}`, customer, kind, type, method: kind === 'Institution' ? 'Bank Transfer' : 'Mobile Money (MoMo)', notes: kind === 'Institution' ? 'Monthly subscription - 500 students' : 'Subject purchase' };
 };
 
 export const taxTxns: readonly TaxRow[] = [
   T(1, 26, 'Green Valley Academy', 'Institution', 'Invoice', 12_500_000, 'VAT'),
-  T(2, 26, 'Amina Namubiru', 'Individual', 'Course Purchase', 250_000, 'VAT'),
+  T(2, 26, 'Amina Namubiru', 'Individual', 'Subject Purchase', 250_000, 'VAT'),
   T(3, 25, 'Bright Future School', 'Institution', 'Subscription', 18_750_000, 'VAT'),
   T(4, 25, 'David Ojara', 'Individual', 'Live Class', 150_000, 'VAT'),
   T(5, 24, "St. Mark's College", 'Institution', 'Invoice', 5_000_000, 'DST'),
   T(6, 24, 'Grace Akello', 'Individual', 'Tutoring Package', 200_000, 'VAT'),
   T(7, 23, 'Hope International', 'Institution', 'Invoice', 9_800_000, 'VAT', 'Pending'),
-  T(8, 23, 'Kevin Nsubuga', 'Individual', 'Course Purchase', 300_000, 'VAT'),
+  T(8, 23, 'Kevin Nsubuga', 'Individual', 'Subject Purchase', 300_000, 'VAT'),
   T(9, 22, 'Sunrise Schools', 'Institution', 'Withholding', 7_500_000, 'WHT', 'Failed'),
   T(10, 21, 'Maria Lopez', 'Individual', 'Live Class', 180_000, 'VAT'),
 ];

@@ -72,7 +72,7 @@ function ParentSidebar({ p }: { p: ParentHomeData }) {
       <LinearGradient colors={['#122B5E', '#1E3A8A', '#3B4278']} style={styles.explorePromo}>
         <Image source={p.sidebarBooksArt} style={styles.promoArt} contentFit="cover" />
         <Text style={styles.promoTitle}>{'Explore. Learn.\nGrow.'}</Text>
-        <Text style={styles.promoSub}>{'New courses, books\nand live sessions\navailable now.'}</Text>
+        <Text style={styles.promoSub}>{'New subjects, books\nand live sessions\navailable now.'}</Text>
         <Pressable
           style={styles.promoBtn}
           onPress={() => router.push('/learn/explore')}

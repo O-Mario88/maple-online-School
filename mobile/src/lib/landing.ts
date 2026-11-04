@@ -8,3 +8,14 @@
 export function signedOutLanding(os: string, homepage: boolean): 'welcome' | 'sign-in' {
   return os === 'web' && homepage ? 'welcome' : 'sign-in';
 }
+
+type Status = 'restoring' | 'signedOut' | 'signedIn';
+
+/**
+ * Whether to open the dashboard: right after someone signs in (or signs up). Otherwise the app falls
+ * back to its anchor page, which on the web is the public homepage. A session restored at start-up
+ * stays on the address it was opened at.
+ */
+export function goesHomeOnSignIn(prev: Status | undefined, next: Status): boolean {
+  return prev === 'signedOut' && next === 'signedIn';
+}

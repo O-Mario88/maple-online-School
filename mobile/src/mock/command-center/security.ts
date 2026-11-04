@@ -179,11 +179,11 @@ export const requests: readonly RequestRow[] = [
   R(3, 'Grace Achieng', 'grace.achieng@gmail.com', face.grace, 'Access', 'School data (children)', 'Verify data', "St. Mark's College", 'Oct 26, 2026 12:44', '2026-11-01', 'Pending', { flag: 'KE', country: 'Kenya', requestedBy: 'Grace Achieng (Parent)' }),
   R(4, 'Parent Request', 'parent@example.com', undefined, 'Export', 'Student data', 'School transfer', 'Hope International', 'Oct 26, 2026 11:52', '2026-11-01', 'Completed', { guardianVerified: true, flag: 'NG', country: 'Nigeria' }),
   R(5, 'James Kato', 'james.kato@gmail.com', face.james, 'Correction', 'Profile information', 'Incorrect details', 'Maple Platform', 'Oct 26, 2026 10:21', '2026-10-31', 'Processing'),
-  R(6, 'Teacher Request', 'teacher@school.ug', face.tutorB, 'Access', 'Teaching resources', 'Course review', 'Cornerstone Academy', 'Oct 26, 2026 09:11', '2026-10-31', 'Pending'),
+  R(6, 'Teacher Request', 'teacher@school.ug', face.tutorB, 'Access', 'Teaching resources', 'Subject review', 'Cornerstone Academy', 'Oct 26, 2026 09:11', '2026-10-31', 'Pending'),
   R(7, 'Agnes Lumu', 'agnes.lumu@gmail.com', face.agnes, 'Deletion', 'All personal data', 'GDPR right to erasure', 'Maple Platform', 'Oct 25, 2026 18:33', '2026-11-01', 'Under Review'),
   R(8, 'Robert Kimani', 'r.kimani@school.ke', face.kato, 'Export', 'Assessment data', 'Research purpose', 'Sunrise Schools', 'Oct 25, 2026 16:20', '2026-10-31', 'Processing', { flag: 'KE', country: 'Kenya' }),
   R(9, 'Lydia Banda', 'lydia.banda@school.zm', face.esther, 'Access', 'Child safety report', 'Support case', 'Green Valley Academy', 'Oct 25, 2026 14:18', '2026-10-31', 'Pending', { flag: 'ZM', country: 'Zambia' }),
-  R(10, 'David Mensah', 'david.mensah@gmail.com', face.michael, 'Export', 'Course content', 'Academic use', 'Maple Platform', 'Oct 25, 2026 12:05', '2026-10-31', 'Completed', { flag: 'GH', country: 'Ghana' }),
+  R(10, 'David Mensah', 'david.mensah@gmail.com', face.michael, 'Export', 'Subject content', 'Academic use', 'Maple Platform', 'Oct 25, 2026 12:05', '2026-10-31', 'Completed', { flag: 'GH', country: 'Ghana' }),
   R(11, 'Maria Lopez', 'maria.lopez@gmail.com', face.aisha, 'Deletion', 'User account', 'Privacy concern', 'Bright Future School', 'Oct 24, 2026 18:45', '2026-10-30', 'Rejected'),
   R(12, 'School Admin', 'admin@school.ug', undefined, 'Export', 'School analytics', 'Internal planning', "St. Mark's College", 'Oct 24, 2026 16:32', '2026-10-30', 'Processing'),
 ];

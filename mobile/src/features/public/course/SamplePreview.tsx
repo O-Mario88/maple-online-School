@@ -96,7 +96,7 @@ export function SamplePreview({ course, wide }: { course: Course; wide: boolean 
         <View style={[styles.side, wide && styles.sideWide]}>
           <Icon name="trophy" size={34} color={Brand.amber} />
           <Text style={styles.strong}>Try a short lesson</Text>
-          <Text style={styles.sideText}>Experience the real course with 3 sample questions before you enrol.</Text>
+          <Text style={styles.sideText}>Experience the real subject with 3 sample questions before you enrol.</Text>
           {PROMISES.map((p) => (
             <View key={p} style={styles.promise}>
               <Icon name="check" size={15} color={Brand.green} />

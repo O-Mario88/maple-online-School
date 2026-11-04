@@ -18,7 +18,7 @@ export function ShortsHero({ promises, wide, photo }: { promises: readonly strin
           <Text style={styles.accent}>Shorts</Text>
         </Text>
         <Text style={styles.tagline}>Quick learning. Real results.</Text>
-        <Text style={styles.body}>60-second revision clips, study tips and classroom moments from expert teachers. Watch, learn, then go deeper with a full course or a live class.</Text>
+        <Text style={styles.body}>60-second revision clips, study tips and classroom moments from expert teachers. Watch, learn, then go deeper with a full subject or a live class.</Text>
         <View style={styles.promises}>
           {promises.map((p) => (
             <View key={p} style={styles.promise}>

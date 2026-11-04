@@ -5,7 +5,7 @@
  */
 
 export type Curriculum = 'UNEB' | 'KCSE' | 'WAEC' | 'IGCSE' | 'IB' | 'Common Core';
-export type Kind = 'Courses' | 'Past Papers' | 'Live Classes' | 'Shorts' | 'Practice' | 'Library';
+export type Kind = 'Subjects' | 'Past Papers' | 'Live Classes' | 'Shorts' | 'Practice' | 'Library';
 
 export interface Offering {
   id: string;
@@ -16,9 +16,27 @@ export interface Offering {
   level: string;
   rating: number;
   learners: number;
-  priceUGX: number;
   /** 0 to 1; 0 is not started. */
   progress: number;
+  /** The teacher who set it for this learner, if one did. */
+  assignedBy?: string;
+  /** The day it was added, YYYY-MM-DD. */
+  added?: string;
+}
+
+const UNITS: Readonly<Record<Kind, [string, string]>> = {
+  Subjects: ['lesson', 'lessons'],
+  'Past Papers': ['paper', 'papers'],
+  'Live Classes': ['session', 'sessions'],
+  Practice: ['question', 'questions'],
+  Shorts: ['clip', 'clips'],
+  Library: ['book', 'books'],
+};
+
+/** What a card says where a price used to be: how big it is ("36 lessons", "22 papers"). */
+export function offeringSize(kind: Kind, n: number): string {
+  const [one, many] = UNITS[kind];
+  return `${n} ${n === 1 ? one : many}`;
 }
 
 export interface Filter {
@@ -41,6 +59,31 @@ export const continueLearning = <T extends Offering>(list: readonly T[]): readon
 export function justForYou<T extends Offering>(list: readonly T[], curriculum: Curriculum, weakest: readonly string[]): readonly T[] {
   const rank = (s: string) => (weakest.includes(s) ? weakest.indexOf(s) : weakest.length);
   return list.filter((x) => x.curriculum === curriculum && x.progress === 0).sort((a, b) => rank(a.subject) - rank(b.subject) || b.rating - a.rating);
+}
+
+export type RowKey = 'popular' | 'assigned' | 'recommended' | 'top' | 'new';
+
+export interface Row<T> {
+  key: RowKey;
+  title: string;
+  items: readonly T[];
+}
+
+const DAY_MS = 86_400_000;
+const NEW_DAYS = 7;
+
+/** The rows on Explore for one curriculum; a row with nothing in it is left out. */
+export function exploreRows<T extends Offering>(list: readonly T[], at: { curriculum: Curriculum; weakest: readonly string[]; now: string }): readonly Row<T>[] {
+  const mine = list.filter((x) => x.curriculum === at.curriculum);
+  const since = Date.parse(at.now.slice(0, 10)) - NEW_DAYS * DAY_MS;
+  const rows: Row<T>[] = [
+    { key: 'popular', title: 'Most Popular', items: [...mine].sort((a, b) => b.learners - a.learners) },
+    { key: 'assigned', title: 'Assigned by Teachers', items: mine.filter((x) => x.assignedBy) },
+    { key: 'recommended', title: 'Recommended for You', items: justForYou(mine, at.curriculum, at.weakest) },
+    { key: 'top', title: 'Top Rated', items: [...mine].sort((a, b) => b.rating - a.rating || b.learners - a.learners) },
+    { key: 'new', title: 'New This Week', items: mine.filter((x) => x.added && Date.parse(x.added) >= since).sort((a, b) => (b.added ?? '').localeCompare(a.added ?? '')) },
+  ];
+  return rows.filter((r) => r.items.length > 0);
 }
 
 export interface Goal {

@@ -113,7 +113,7 @@ function SettingsTab({ s }: { s: StudioNew }) {
 export function ReviewCourse({ s, run, draft, tab, setTab }: { s: StudioNew; run: StudioRun; draft: CourseDraft; tab: ReviewTab; setTab: (t: ReviewTab) => void }) {
   const quizzes = draft.levels.reduce((n, l) => n + l.quizzes, 0);
   const tabs: readonly { key: ReviewTab; label: string }[] = [
-    { key: 'structure', label: 'Course Structure' },
+    { key: 'structure', label: 'Subject Structure' },
     { key: 'quizzes', label: `Quizzes (${quizzes})` },
     { key: 'tags', label: 'Competency Tags' },
     { key: 'resources', label: 'Resources' },
@@ -125,13 +125,13 @@ export function ReviewCourse({ s, run, draft, tab, setTab }: { s: StudioNew; run
         <StepBadge n={3} size={32} />
         <View style={styles.flex}>
           <Text style={styles.title} accessibilityRole="header">
-            Review & Customize Your Course
+            Review & Customize Your Subject
           </Text>
-          <Text style={styles.sub}>{run.running ? 'Your course appears here as soon as AI processing finishes.' : 'Your course has been generated. You can edit the content, quizzes, and settings before publishing.'}</Text>
+          <Text style={styles.sub}>{run.running ? 'Your subject appears here as soon as AI processing finishes.' : 'Your subject has been generated. You can edit the content, quizzes, and settings before publishing.'}</Text>
         </View>
         <TButton small label="Regenerate" icon="redo" variant="outline" onPress={() => run.start(run.source)} />
         <TButton small label="Save as Draft" variant="outline" onPress={draft.saveDraft} />
-        <TButton small label={draft.status === 'Draft' ? 'Publish Course' : 'Sent for review'} icon="arrowRight" iconRight onPress={draft.publish} />
+        <TButton small label={draft.status === 'Draft' ? 'Publish Subject' : 'Sent for review'} icon="arrowRight" iconRight onPress={draft.publish} />
       </View>
       <View style={styles.tabs} accessibilityRole="tablist">
         {tabs.map((t) => {
@@ -180,7 +180,7 @@ export function PhoneReview({ s, draft, onEdit }: { s: StudioNew; draft: CourseD
         <Text style={styles.phoneTitle}>Review & Customize</Text>
       </View>
       <View style={styles.phoneCourse}>
-        <Image source={c.cover} style={styles.phoneThumb} contentFit="cover" contentPosition="left" accessibilityLabel="Course cover" />
+        <Image source={c.cover} style={styles.phoneThumb} contentFit="cover" contentPosition="left" accessibilityLabel="Subject cover" />
         <View style={styles.flex}>
           <View style={styles.phoneTitleRow}>
             <Text style={styles.phoneCourseTitle}>{c.title}</Text>
@@ -189,7 +189,7 @@ export function PhoneReview({ s, draft, onEdit }: { s: StudioNew; draft: CourseD
           <Text style={styles.phoneMeta}>{`${c.lessons} lessons • ${quizzes} quizzes • ${draft.levels.length} levels`}</Text>
           <View style={styles.phoneBtns}>
             <TButton label="Edit" variant="outline" onPress={onEdit} style={styles.flex} />
-            <TButton label={draft.status === 'Draft' ? 'Publish Course' : 'Sent'} onPress={draft.publish} style={styles.publish} />
+            <TButton label={draft.status === 'Draft' ? 'Publish Subject' : 'Sent'} onPress={draft.publish} style={styles.publish} />
           </View>
         </View>
       </View>

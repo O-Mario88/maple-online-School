@@ -19,14 +19,14 @@ type T = CommandData['trust'];
 const PER_PAGE = 10;
 const TEACHERS = 'Teacher Verification';
 /** The tab counts on the reference; they fall as cases are decided. */
-const BASE_COUNTS: Readonly<Record<string, number>> = { [TEACHERS]: 28, 'Course Quality': 17, 'Copyright & IP': 9, 'Minor Safeguarding': 5, 'Reported Content': 7, Appeals: 4 };
-const TAB_TONE: Readonly<Record<string, Tone>> = { [TEACHERS]: 'blue', 'Course Quality': 'red', 'Copyright & IP': 'red', 'Minor Safeguarding': 'red', 'Reported Content': 'red', Appeals: 'red' };
+const BASE_COUNTS: Readonly<Record<string, number>> = { [TEACHERS]: 28, 'Subject Quality': 17, 'Copyright & IP': 9, 'Minor Safeguarding': 5, 'Reported Content': 7, Appeals: 4 };
+const TAB_TONE: Readonly<Record<string, Tone>> = { [TEACHERS]: 'blue', 'Subject Quality': 'red', 'Copyright & IP': 'red', 'Minor Safeguarding': 'red', 'Reported Content': 'red', Appeals: 'red' };
 const OPEN_TEACHER = ['ready', 'review', 'escalated', 'info'];
 const CLOSED_CASE = ['Resolved', 'Removed', 'Upheld', 'Overturned'];
 
 /** Each case tab's four decisions: label, action, tone. */
 const CASE_ACTIONS: Readonly<Record<string, readonly [string, CaseAction, Tone][]>> = {
-  'Course Quality': [['Unpublish Course', 'remove', 'red'], ['Ask Teacher to Fix', 'fix', 'orange'], ['Dismiss Flag', 'dismiss', 'grey'], ['Mark Resolved', 'resolve', 'green']],
+  'Subject Quality': [['Unpublish Subject', 'remove', 'red'], ['Ask Teacher to Fix', 'fix', 'orange'], ['Dismiss Flag', 'dismiss', 'grey'], ['Mark Resolved', 'resolve', 'green']],
   'Copyright & IP': [['Remove Content', 'remove', 'red'], ['Request Licence Proof', 'requestInfo', 'orange'], ['Escalate to Legal', 'escalate', 'grey'], ['Dismiss (Fair Use)', 'dismiss', 'green']],
   'Minor Safeguarding': [['Restrict Account', 'restrict', 'red'], ['Request Statement', 'requestInfo', 'orange'], ['Escalate to Safeguarding Lead', 'escalate', 'grey'], ['Close Case', 'resolve', 'green']],
   'Reported Content': [['Hide Content', 'remove', 'red'], ['Warn Account', 'fix', 'orange'], ['Escalate', 'escalate', 'grey'], ['Dismiss Report', 'dismiss', 'green']],

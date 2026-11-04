@@ -20,7 +20,7 @@ type D = CommandData['platformFinance']['revenue'];
 const PER_PAGE = 10;
 const LABEL_H = 20;
 const TABS = ['Overview', 'Recognition Schedule', 'Deferred Revenue', 'Earned Revenue', 'Contracts & Plans', 'Adjustments (Discounts & Cancellations)', 'Policy & Settings'] as const;
-const TYPE_TONE: Readonly<Record<RecRow['type'], Tone>> = { Subscription: 'purple', 'Course Access': 'blue', 'Marketplace Commission': 'orange', Cancellation: 'red' };
+const TYPE_TONE: Readonly<Record<RecRow['type'], Tone>> = { Subscription: 'purple', 'Subject Access': 'blue', 'Marketplace Commission': 'orange', Cancellation: 'red' };
 type Status = 'Active' | 'Completed' | 'Recognized' | 'Cancelled';
 const STATUS_TONE: Readonly<Record<Status, Tone>> = { Active: 'green', Completed: 'green', Recognized: 'blue', Cancelled: 'red' };
 const METHOD_LABEL: Readonly<Record<Method, string>> = { straight: 'Straight-line', access: 'Over access period', delivery: 'At service delivery' };
@@ -33,7 +33,7 @@ interface Rules {
 }
 const PROMO: Promo = { icon: 'layers', color: '#1E6BF0', title: 'Revenue & Recognition', body: 'Track cash, earned revenue and deferred (unearned) revenue with full control.' };
 const RANGES = ['Last 10 Months', 'This Quarter', 'Year to Date'];
-const FILTERS = { type: ['All Revenue Types', 'Subscription', 'Course Access', 'Marketplace Commission', 'Cancellation'], status: ['All Statuses', 'Active', 'Completed', 'Recognized', 'Cancelled'] } as const;
+const FILTERS = { type: ['All Revenue Types', 'Subscription', 'Subject Access', 'Marketplace Commission', 'Cancellation'], status: ['All Statuses', 'Active', 'Completed', 'Recognized', 'Cancelled'] } as const;
 const LEDGER = { deferred: '2400 Deferred Revenue', revenue: '4000 Subscription Revenue', commission: '4100 Marketplace Commission', refunds: '2410 Refunds Payable' } as const;
 
 const date = (iso: string) => new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
@@ -125,7 +125,7 @@ function useRecognition(d: D) {
       body: 'Rules apply to new contracts and transactions. Posted recognitions stay as they are; changes are logged for audit.',
       fields: [
         { key: 'subscriptions', label: 'Subscriptions', kind: 'choice', options: [rules.subscriptions, ...RULE_OPTIONS.filter((o) => o !== rules.subscriptions)] },
-        { key: 'courses', label: 'Course access', kind: 'choice', options: [rules.courses, ...RULE_OPTIONS.filter((o) => o !== rules.courses)] },
+        { key: 'courses', label: 'Subject access', kind: 'choice', options: [rules.courses, ...RULE_OPTIONS.filter((o) => o !== rules.courses)] },
         { key: 'commissions', label: 'Marketplace commissions', kind: 'choice', options: [rules.commissions, ...RULE_OPTIONS.filter((o) => o !== rules.commissions)] },
       ],
       confirm: 'Save Rules',
@@ -320,7 +320,7 @@ export function RecognitionDesk({ c }: { c: CommandData }) {
       <FinHead
         icon="layers"
         title="Revenue Recognition & Deferred Revenue"
-        subtitle="Separate cash received from revenue earned. Manage prepaid subscriptions, course access, marketplace commissions, discounts and cancellations."
+        subtitle="Separate cash received from revenue earned. Manage prepaid subscriptions, subject access, marketplace commissions, discounts and cancellations."
         right={
           <>
             <OutlineBtn label="Recognition Rules" icon="settings" onPress={u.editRules} />

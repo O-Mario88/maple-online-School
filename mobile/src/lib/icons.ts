@@ -134,6 +134,11 @@ export const ICONS = {
   inspect: { ios: 'doc.text.magnifyingglass', material: 'manage_search' },
   arrowUp: { ios: 'arrow.up', material: 'arrow_upward' },
   arrowDown: { ios: 'arrow.down', material: 'arrow_downward' },
+  diamond: { ios: 'diamond', material: 'diamond' },
+  tick: { ios: 'checkmark', material: 'check' },
+  crown: { ios: 'crown', material: 'crown' },
+  rocket: { ios: 'paperplane', material: 'rocket_launch' },
+  gift: { ios: 'gift', material: 'redeem' },
 } as const;
 
 export type IconName = keyof typeof ICONS;

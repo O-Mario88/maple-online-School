@@ -43,7 +43,7 @@ export function useStudioRun(s: StudioNew): StudioRun {
         }
         stop();
         setElapsed(last);
-        toast('Course generated. Review it below before you publish.');
+        toast('Subject generated. Review it below before you publish.');
       }, TICK_MS);
     },
     [last],
@@ -115,7 +115,7 @@ function SourcePane({ s, tab, start }: { s: StudioNew; tab: SourceKey; start: (s
     return (
       <View style={[styles.zone, styles.zoneText]}>
         <TextInput style={styles.paste} value={text} onChangeText={setText} multiline placeholder="Paste lesson notes, a scheme of work or a topic list…" placeholderTextColor={MUTED} accessibilityLabel="Paste your content" />
-        <TButton label="Build my course" icon="sparkle" onPress={go} />
+        <TButton label="Build my subject" icon="sparkle" onPress={go} />
       </View>
     );
   }
@@ -190,7 +190,7 @@ export function Processing({ s, run, phone = false }: { s: StudioNew; run: Studi
           <Text style={styles.phoneTitle}>AI Processing</Text>
         </View>
       ) : (
-        <StepHead n={2} compact title="AI Processing" sub={run.running ? `Working on ${run.source}` : 'Our AI analyses your content and generates a complete course.'} />
+        <StepHead n={2} compact title="AI Processing" sub={run.running ? `Working on ${run.source}` : 'Our AI analyses your content and generates a complete subject.'} />
       )}
       <View style={styles.steps} accessibilityLiveRegion="polite">
         {s.steps.map((x, i) => {
@@ -216,7 +216,7 @@ export function Processing({ s, run, phone = false }: { s: StudioNew; run: Studi
       <View style={[styles.done, run.running && styles.pending]}>
         <Icon name="sparkle" size={phone ? 20 : 24} color={GREEN} />
         <View style={styles.flex}>
-          <Text style={styles.doneTitle}>{run.running ? 'Building your course…' : 'Course generated in 60 seconds!'}</Text>
+          <Text style={styles.doneTitle}>{run.running ? 'Building your subject…' : 'Subject generated in 60 seconds!'}</Text>
           <Text style={styles.doneSub}>{run.running ? 'This takes about a minute.' : phone ? 'Review and customize.' : 'Review and customize before publishing.'}</Text>
         </View>
         {run.running ? null : (

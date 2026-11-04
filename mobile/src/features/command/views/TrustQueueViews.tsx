@@ -68,7 +68,7 @@ function summaryFor(t: T, a: QueueApp) {
     { label: 'Identity Verification', result: word(st(0), 'Verified'), pct: st(0) === 'ok' ? 97 : st(0) === 'warn' ? 74 : 41, state: st(0) },
     { label: 'Document Authenticity', result: word(st(1), 'Clear'), pct: st(1) === 'ok' ? 93 : st(1) === 'warn' ? 70 : 38, state: st(1) },
     { label: 'Qualification Verification', result: word(st(2), 'Valid'), pct: st(2) === 'ok' ? 90 : st(2) === 'warn' ? 66 : 35, state: st(2) },
-    { label: 'Course Content Quality', result: a.score >= 80 ? 'Good' : 'Fair', pct: a.score, state: a.score >= 70 ? ('ok' as const) : ('warn' as const) },
+    { label: 'Subject Content Quality', result: a.score >= 80 ? 'Good' : 'Fair', pct: a.score, state: a.score >= 70 ? ('ok' as const) : ('warn' as const) },
     { label: 'Copyright & Plagiarism Check', result: 'Clean', pct: 92, state: 'ok' as const },
     { label: 'Safeguarding Screening', result: a.safeguarding === 'clear' ? 'Clear' : 'Alert', pct: a.safeguarding === 'clear' ? 95 : 52, state: a.safeguarding === 'clear' ? ('ok' as const) : ('fail' as const) },
   ];
@@ -106,7 +106,7 @@ function Applicant({ t, q, phone = false }: { t: T; q: Q; phone?: boolean }) {
           </View>
         )}
       </View>
-      <CountTabs tabs={['Overview', 'Documents', 'Qualifications', 'Courses', 'History'].map((label) => ({ label }))} active={tab} onChange={setTab} size={11.5} dense style={styles.noWrap} />
+      <CountTabs tabs={['Overview', 'Documents', 'Qualifications', 'Subjects', 'History'].map((label) => ({ label }))} active={tab} onChange={setTab} size={11.5} dense style={styles.noWrap} />
       {tab === 'Overview' ? (
         <>
           <View style={styles.sectionHead}>
@@ -170,7 +170,7 @@ function Applicant({ t, q, phone = false }: { t: T; q: Q; phone?: boolean }) {
         </>
       ) : null}
       {tab === 'Qualifications' ? a.checks.map((c) => <CheckLine key={c.label} state={c.state} text={c.label} size={13} />) : null}
-      {tab === 'Courses' ? <Text style={styles.small}>{`Sample lesson reviewed: ${a.subjects}, ${a.level}. Content quality ${a.score}/100; no copyright matches found.`}</Text> : null}
+      {tab === 'Subjects' ? <Text style={styles.small}>{`Sample lesson reviewed: ${a.subjects}, ${a.level}. Content quality ${a.score}/100; no copyright matches found.`}</Text> : null}
       {tab === 'History' ? (
         <View style={styles.history}>
           {a.history.map((h, i) => (
@@ -264,7 +264,7 @@ export function TrustQueueDesk({ c }: { c: CommandData }) {
       <CmdHead
         icon="verified"
         title="Trust, Safety & Teacher Verification Queue"
-        subtitle="Review AI pre-screened teacher applications, course quality, copyright checks and safeguarding alerts."
+        subtitle="Review AI pre-screened teacher applications, subject quality, copyright checks and safeguarding alerts."
         right={
           <>
             <CmdSelect value={when} options={whens} onChange={setWhen} width={170} label="Period" />

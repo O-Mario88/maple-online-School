@@ -73,7 +73,7 @@ export function CredentialsCard({ t }: { t: Storefront }) {
 export function CoursesRow({ t }: { t: Storefront }) {
   return (
     <View style={styles.section}>
-      <SectionHead title="Popular Courses" link="View all courses" onPress={() => router.push('/explore')} />
+      <SectionHead title="Popular Subjects" link="View all subjects" onPress={() => router.push('/explore')} />
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.hRow}>
         {t.courses.map((c) => (
           <Pressable key={c.title} style={styles.course} onPress={() => router.push(`/courses/${t.courseSlug}`)} accessibilityRole="link" accessibilityLabel={`${c.title}, ${formatMoney(c.priceUGX, 'UGX')}`}>
@@ -94,10 +94,6 @@ export function CoursesRow({ t }: { t: Storefront }) {
               <Text style={styles.muted}>{c.meta}</Text>
               <Text style={styles.body}>{`★ ${c.rating} (${c.reviews})`}</Text>
               <Text style={styles.muted}>{`${c.lessons} lessons · ${c.hours} hours`}</Text>
-              <Text style={[styles.price, c.wasUGX ? styles.sale : null]}>
-                {formatMoney(c.priceUGX, 'UGX')}
-                {c.wasUGX ? <Text style={styles.was}>{`  ${formatMoney(c.wasUGX, 'UGX')}`}</Text> : null}
-              </Text>
             </View>
           </Pressable>
         ))}
@@ -176,9 +172,6 @@ const styles = StyleSheet.create({
   courseThumb: { height: 110, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
   courseBadge: { position: 'absolute', top: 10, left: 10, fontSize: 11, fontWeight: '800', color: Brand.ink, backgroundColor: HIGHLIGHT, paddingHorizontal: 8, paddingVertical: 2, borderRadius: 4, overflow: 'hidden' },
   courseInfo: { gap: 3, padding: 12 },
-  price: { fontSize: 15, fontWeight: '800', color: Brand.ink, marginTop: 4 },
-  sale: { color: Brand.live },
-  was: { fontSize: 11, fontWeight: '400', color: Brand.muted, textDecorationLine: 'line-through' },
   shorts: { flexDirection: 'row', gap: 10 },
   short: { flex: 1, aspectRatio: 9 / 15, maxWidth: 140, borderRadius: 12, padding: 10, justifyContent: 'flex-end', gap: 2, overflow: 'hidden' },
   shortPhoto: { padding: 0 },

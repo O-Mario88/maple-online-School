@@ -1,4 +1,4 @@
-import { accessOn, addDays, bestAccess, canOpen, dayLabel, lockReason, samplePlan, trialEnd, trialOverride } from './trial';
+import { accessOn, addDays, bestAccess, canOpen, dayLabel, featureOpen, lockReason, planOverride, samplePlan, trialEnd, trialOverride } from './trial';
 
 describe('the free month', () => {
   test('lasts one calendar month, ending on the last day of a shorter month', () => {
@@ -40,20 +40,64 @@ describe('what can be opened', () => {
     expect(canOpen(course, trial)).toBe(true);
   });
 
-  test('a plan opens Maple content; a marketplace course still has to be bought', () => {
+  test('a plan opens everything, teachers’ marketplace subjects included: nothing is bought on its own', () => {
     expect(canOpen(maple, paid)).toBe(true);
-    expect(canOpen(course, paid)).toBe(false);
-    expect(lockReason(course, paid)).toBe('buy');
-    expect(canOpen({ ...course, owned: true }, paid)).toBe(true);
+    expect(canOpen(course, paid)).toBe(true);
+    expect(lockReason(course, paid)).toBeNull();
   });
 
-  test('after the trial only free items, and courses already bought, open', () => {
+  test('after the trial only the free tier opens; everything else asks for a plan', () => {
     expect(canOpen(maple, locked)).toBe(false);
     expect(lockReason(maple, locked)).toBe('pay');
+    expect(lockReason(course, locked)).toBe('pay');
     expect(canOpen({ source: 'maple', free: true }, locked)).toBe(true);
     expect(canOpen({ source: 'marketplace', free: true }, locked)).toBe(true);
-    expect(canOpen({ ...course, owned: true }, locked)).toBe(true);
     expect(lockReason({ source: 'maple', free: true }, locked)).toBeNull();
+  });
+});
+
+describe('plan levels: Basic, then Pro, then Premium', () => {
+  const on = (tier: 'basic' | 'pro' | 'premium') => accessOn({ trialStart: '2026-09-01', paidUntil: '2026-12-01', tier }, '2026-11-03');
+  const trial = accessOn({ trialStart: '2026-10-15' }, '2026-11-03');
+  const locked = accessOn({ trialStart: '2026-09-01' }, '2026-11-03');
+  const live = { source: 'maple', needs: 'pro' } as const;
+
+  test('a paid plan carries its level; a plan with none is Basic', () => {
+    expect(on('pro').tier).toBe('pro');
+    expect(accessOn({ trialStart: '2026-09-01', paidUntil: '2026-12-01' }, '2026-11-03').tier).toBe('basic');
+  });
+
+  test('a page needing a higher plan asks to upgrade; the plan or a higher one opens it', () => {
+    expect(lockReason(live, on('basic'))).toBe('upgrade');
+    expect(lockReason(live, on('pro'))).toBeNull();
+    expect(lockReason(live, on('premium'))).toBeNull();
+    expect(lockReason({ source: 'maple' }, on('basic'))).toBeNull();
+  });
+
+  test('the free month opens every level; after it, the page asks for a plan', () => {
+    expect(lockReason(live, trial)).toBeNull();
+    expect(lockReason(live, locked)).toBe('pay');
+  });
+
+  test('features inside a page follow the same levels', () => {
+    expect(featureOpen('stepByStep', on('basic'))).toBe(false);
+    expect(featureOpen('stepByStep', on('pro'))).toBe(true);
+    expect(featureOpen('videoExplainer', on('pro'))).toBe(false);
+    expect(featureOpen('videoExplainer', on('premium'))).toBe(true);
+    expect(featureOpen('privateTutor', on('pro'))).toBe(false);
+    expect(featureOpen('privateTutor', on('premium'))).toBe(true);
+    expect(featureOpen('videoExplainer', trial)).toBe(true);
+    expect(featureOpen('stepByStep', locked)).toBe(false);
+  });
+
+  test('with nothing to check (no plans in this build), features stay open', () => {
+    expect(featureOpen('videoExplainer', null)).toBe(true);
+  });
+
+  test('?plan= previews a paid level', () => {
+    expect(planOverride('?plan=basic')).toBe('basic');
+    expect(planOverride('?trial=paid&plan=premium')).toBe('premium');
+    expect(planOverride('?plan=gold')).toBeNull();
   });
 });
 
