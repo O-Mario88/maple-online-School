@@ -1,12 +1,14 @@
-import { Image } from 'expo-image';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
 import { L } from '@/features/learner/frame/LightFrame';
 import { toast } from '@/lib/toast';
 
-import { LAVENDER, PURPLE, Tag, ugx } from './SchoolParts';
+import { Crest, examNote, LAVENDER, PURPLE, Tag, ugx } from './SchoolParts';
 import type { Net, SN } from './useSchoolNetwork';
+
+/** The crest size in the list rows. */
+const CREST = 44;
 
 /** "Your Journey on Maple": discover, compare, apply, enrol. */
 export function JourneyCard({ net }: { net: Net }) {
@@ -50,8 +52,9 @@ export function LinkCard({ title, sub, icon, tone, onPress }: { title: string; s
   );
 }
 
-/** Institutional Pricing: the three plans and what every plan includes. */
+/** Institutional Pricing: the three plans and what every plan includes. Hidden until plans are published. */
 export function PricingCard({ net, onCompare, phone = false, action = 'Compare Plans' }: { net: Net; onCompare: () => void; phone?: boolean; action?: string }) {
+  if (!net.plans.length) return null;
   return (
     <View style={s.card}>
       <View style={s.priceHead}>
@@ -103,7 +106,7 @@ export function RecsTab({ x }: { x: SN }) {
       {x.recommended.length ? (
         x.recommended.map((c) => (
           <View key={c.id} style={[s.card, s.row]}>
-            <Image source={c.crest} style={s.rowCrest} contentFit="contain" />
+            <Crest c={c} size={CREST} />
             <View style={s.flex}>
               <Text style={s.rowTitle}>{c.name}</Text>
               {x.reasons(c).map((r) => (
@@ -135,11 +138,11 @@ export function ExamsTab({ x }: { x: SN }) {
       </View>
       {x.examCentres.map((c) => (
         <View key={c.id} style={[s.card, s.row]}>
-          <Image source={c.crest} style={s.rowCrest} contentFit="contain" />
+          <Crest c={c} size={CREST} />
           <View style={s.flex}>
             <Text style={s.rowTitle}>{c.name}</Text>
             <Text style={s.small}>{`${c.town} · ${c.exam?.boards.join(', ')} · ${c.exam?.exams.join(' and ')}`}</Text>
-            <Text style={s.small}>{c.exam?.external ? `Accepts external candidates · register by ${c.exam.deadline} · ${ugx(c.exam.feeUGX)}` : 'Registers its own learners only'}</Text>
+            {c.exam ? <Text style={s.small}>{examNote(c.exam)}</Text> : null}
           </View>
           {c.exam?.external ? (
             <Pressable style={s.outline} onPress={() => toast(`Inquiry sent to ${c.name}. They see only what you sent.`)} accessibilityRole="button" accessibilityLabel={`Ask ${c.name} about sitting exams`}>
@@ -164,7 +167,7 @@ export function VacanciesTab({ x }: { x: SN }) {
         const c = x.byId(v.schoolId);
         return (
           <View key={v.id} style={[s.card, s.row]}>
-            {c ? <Image source={c.crest} style={s.rowCrest} contentFit="contain" /> : null}
+            {c ? <Crest c={c} size={CREST} /> : null}
             <View style={s.flex}>
               <Text style={s.rowTitle}>{v.title}</Text>
               <Text style={s.small}>{`${c?.name ?? ''} · ${v.type} · closes ${v.closes}`}</Text>
@@ -228,7 +231,6 @@ const s = StyleSheet.create({
   compare: { height: 40, alignItems: 'center', justifyContent: 'center', borderRadius: 20, backgroundColor: PURPLE },
   compareText: { fontSize: 14.5, fontWeight: '600', color: L.white },
   row: { flexDirection: 'row', alignItems: 'center', gap: 14 },
-  rowCrest: { width: 44, height: 44 },
   rowTitle: { fontSize: 15, fontWeight: '700', color: L.navy },
   tags: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginTop: 4 },
   outline: { paddingHorizontal: 14, height: 34, alignItems: 'center', justifyContent: 'center', borderRadius: 8, borderWidth: 1.5, borderColor: PURPLE },

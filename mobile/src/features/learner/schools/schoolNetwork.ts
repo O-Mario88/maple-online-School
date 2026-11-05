@@ -12,9 +12,10 @@ export interface NetworkSchool {
   name: string;
   town: string;
   district: string;
-  /** Distance from the learner's chosen area. */
-  km: number;
-  rating: number;
+  /** Distance from the learner's chosen area; null when it isn't known. */
+  km: number | null;
+  /** Average review rating; null until the school has reviews. */
+  rating: number | null;
   reviews: number;
   curricula: readonly string[];
   levels: readonly string[];
@@ -23,10 +24,11 @@ export interface NetworkSchool {
   /** Programs such as STEM, Arts or Vocational. */
   programs: readonly string[];
   blurb: string;
-  /** Published pass rate (%), for the latest verified year. */
-  passRate: number;
+  /** Published pass rate (%), for the latest verified year; null when not published. */
+  passRate: number | null;
   learners: number;
-  est: number;
+  /** Year founded; null when the school hasn't said. */
+  est: number | null;
   scholarships: boolean;
   /** Total profile views: an aggregate, never who viewed. */
   views: number;
@@ -61,6 +63,16 @@ export const TOP_PASS_RATE = 95;
 
 const lower = (s: string) => s.toLowerCase();
 
+/** Orders known numbers by `by`, with unknown ones last. */
+const knownFirst = (a: number | null, b: number | null, by: (x: number, y: number) => number) => {
+  if (a === null || b === null) return a === b ? 0 : a === null ? 1 : -1;
+  return by(a, b);
+};
+/** Bigger first, unknown last. */
+const desc = (a: number | null, b: number | null) => knownFirst(a, b, (x, y) => y - x);
+/** Smaller first, unknown last. */
+const asc = (a: number | null, b: number | null) => knownFirst(a, b, (x, y) => x - y);
+
 /** Schools matching the search words and every filter that is set. */
 export function searchSchools<T extends NetworkSchool>(list: readonly T[], f: SchoolFilters): readonly T[] {
   const q = lower((f.query ?? '').trim());
@@ -76,9 +88,9 @@ export function searchSchools<T extends NetworkSchool>(list: readonly T[], f: Sc
 export function inCategory(s: NetworkSchool, c: Category): boolean {
   switch (c) {
     case 'near':
-      return s.mode !== 'Online' && s.km <= NEAR_KM;
+      return s.mode !== 'Online' && s.km !== null && s.km <= NEAR_KM;
     case 'top':
-      return s.passRate >= TOP_PASS_RATE;
+      return s.passRate !== null && s.passRate >= TOP_PASS_RATE;
     case 'online':
       return s.mode !== 'Physical';
     case 'boarding':
@@ -117,14 +129,14 @@ export function listFor<T extends NetworkSchool>(list: readonly T[], tab: ListTa
   return list
     .map((s) => ({ s, n: score(s, p) }))
     .filter((x) => x.n > 0)
-    .sort((a, b) => b.n - a.n || b.s.rating - a.s.rating)
+    .sort((a, b) => b.n - a.n || desc(a.s.rating, b.s.rating))
     .map((x) => x.s);
 }
 
 /** The Sort menu; "relevance" keeps the tab's own order. */
 export function sortSchools<T extends NetworkSchool>(list: readonly T[], sort: SchoolSort): readonly T[] {
-  if (sort === 'rating') return [...list].sort((a, b) => b.rating - a.rating);
-  if (sort === 'distance') return [...list].sort((a, b) => a.km - b.km);
-  if (sort === 'passRate') return [...list].sort((a, b) => b.passRate - a.passRate);
+  if (sort === 'rating') return [...list].sort((a, b) => desc(a.rating, b.rating));
+  if (sort === 'distance') return [...list].sort((a, b) => asc(a.km, b.km));
+  if (sort === 'passRate') return [...list].sort((a, b) => desc(a.passRate, b.passRate));
   return list;
 }

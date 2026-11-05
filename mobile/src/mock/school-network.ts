@@ -4,36 +4,14 @@
  * Counts about a school (views, saves, reviews) are totals; no school ever sees who.
  */
 import type { ApplicationForm } from '@/features/learner/schools/applicationForm';
-import type { NetworkSchool, SchoolPrefs } from '@/features/learner/schools/schoolNetwork';
+import { APPLY_CHOICES, NETWORK_COPY, type SchoolCard, type SchoolNetworkData } from '@/features/learner/schools/networkData';
+import type { SchoolPrefs } from '@/features/learner/schools/schoolNetwork';
 
 import { planVersions } from './institution-plans';
 import { photos } from './photos';
 
 const sn = photos.schoolNetwork;
 const LEAF = require('@/assets/images/maple-leaf.png') as number;
-
-export interface ExamCentre {
-  boards: readonly string[];
-  exams: readonly string[];
-  /** Whether the centre takes external (private) candidates. */
-  external: boolean;
-  deadline: string;
-  feeUGX: number;
-}
-
-export interface SchoolCard extends NetworkSchool {
-  photo: number;
-  crest: number;
-  /** The chips under the rating, as the school publishes them. */
-  tags: readonly string[];
-  /** What the pass rate measures, e.g. "UCE Pass Rate". */
-  passLabel: string;
-  /** The year and source of the published pass rate. */
-  passSource: string;
-  facilities: readonly string[];
-  admissions: { opens: string; deadline: string; feesUGX: readonly [number, number]; requirements: readonly string[] };
-  exam?: ExamCentre;
-}
 
 const schools: readonly SchoolCard[] = [
   {
@@ -209,10 +187,9 @@ const schools: readonly SchoolCard[] = [
   },
 ];
 
-export const schoolNetwork = {
+export const schoolNetwork: SchoolNetworkData = {
+  ...NETWORK_COPY,
   hero: sn.hero,
-  title: 'School Network',
-  sub: 'Discover verified schools, explore programs, find exam centres, and teaching opportunities.',
   schools,
   /** Totals across the whole network, for the category tiles. */
   categoryCounts: { all: 243, near: 36, top: 48, online: 72, boarding: 65, scholarships: 29 },
@@ -222,19 +199,8 @@ export const schoolNetwork = {
   curricula: ['UNEB', 'Cambridge'],
   levels: ['O-Level', 'A-Level'],
   saved: ['riverside'],
-  journey: [
-    { title: 'Discover Schools', sub: 'Explore verified Maple institutions', icon: 'cap' as const },
-    { title: 'Explore & Compare', sub: 'View profiles, programs, reviews', icon: 'pointer' as const },
-    { title: 'Apply', sub: 'Submit an application to your chosen school', icon: 'clipboard' as const },
-    { title: 'Enrol', sub: 'Join and start learning', icon: 'people' as const },
-  ],
-  funnel: [
-    { title: 'Profile View', sub: '(Interest)', icon: 'eye' as const },
-    { title: 'Save / Like', sub: '(Consideration)', icon: 'bookmark' as const },
-    { title: 'Admissions Visit', sub: '(Deeper Interest)', icon: 'pointer' as const },
-    { title: 'Application', sub: '(Action)', icon: 'doc' as const },
-    { title: 'Enrolment', sub: '(Success)', icon: 'tick' as const },
-  ],
+  /** The learner's applications on Maple; the Riverside draft below is still on the device. */
+  applications: [],
   /** The application form: what every school asks for, the fee and intake, the choices, and the learner's draft so far. */
   apply: {
     intake: 'Term 1, 2027',
@@ -247,13 +213,8 @@ export const schoolNetwork = {
       { id: 'photo', label: 'Passport-size photo (recent)', file: 'passport-photo.jpg' },
       { id: 'guardianId', label: 'Parent/guardian identification (National ID)', file: 'guardian-national-id.jpg' },
     ],
-    genders: ['Female', 'Male'],
-    nationalities: ['Ugandan', 'Kenyan', 'Tanzanian', 'Rwandan', 'South Sudanese', 'Other'],
-    relationships: ['Father', 'Mother', 'Guardian', 'Grandparent', 'Sibling', 'Other'],
-    grades: ['P.6', 'P.7', 'S.3', 'S.4'],
+    ...APPLY_CHOICES,
     years: ['2024', '2025', '2026'],
-    streams: ['Sciences', 'Arts', 'STEM', 'Business', 'Undecided'],
-    subjects: ['Mathematics', 'English', 'Physics', 'Chemistry', 'Biology', 'Geography', 'History', 'ICT', 'Fine Art'],
     /** The learner's saved draft for Riverside: step 1 filled, as in the reference. */
     draft: {
       schoolId: 'riverside',
@@ -281,5 +242,4 @@ export const schoolNetwork = {
   ],
   /** The institution plans, from the one published plan configuration. */
   plans: planVersions.map((p) => ({ id: p.planId, name: p.name.replace('Maple ', ''), from: false, priceUGX: p.priceUGX, popular: p.planId === 'growth' })),
-  planFeatures: ['Complete digital school', 'Full financial management', 'Live classes (LiveKit)', 'School Network listing', 'Custom branding'],
 };
