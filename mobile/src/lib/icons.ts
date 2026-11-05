@@ -144,6 +144,11 @@ export const ICONS = {
   crown: { ios: 'crown', material: 'crown' },
   rocket: { ios: 'paperplane', material: 'rocket_launch' },
   gift: { ios: 'gift', material: 'redeem' },
+  heartFill: { ios: 'heart.fill', material: 'favorite' },
+  briefcase: { ios: 'briefcase', material: 'work' },
+  award: { ios: 'rosette', material: 'military_tech' },
+  pointer: { ios: 'cursorarrow.rays', material: 'ads_click' },
+  sealCheck: { ios: 'checkmark.seal.fill', material: 'verified' },
 } as const;
 
 export type IconName = keyof typeof ICONS;

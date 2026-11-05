@@ -6,6 +6,8 @@
 import { ACADEMICS_NAV, ACADEMICS_QUICK_ACTIONS, ACADEMICS_SECTIONS, ACADEMICS_TABLES, ACADEMICS_TABS } from '@/features/school/academics/academicsShape';
 import type { IconName } from '@/lib/icons';
 
+import { planCards, planVersions } from './institution-plans';
+
 type Photo = number;
 
 const face = {
@@ -445,26 +447,11 @@ export const school = {
       'Our system will validate and detect errors',
       'You can review and edit before final import',
     ],
-    plans: [
-      {
-        key: 'school',
-        name: 'School Plan',
-        body: 'Full access for your school with unlimited classes, teachers and students.',
-        yearly: 199,
-        monthly: 19,
-        recommended: true,
-        features: ['Unlimited classes', 'Unlimited teachers', 'Unlimited students', 'Reports and analytics', 'Priority support'],
-      },
-      {
-        key: 'starter',
-        name: 'Starter Plan',
-        body: 'For small schools getting started.',
-        yearly: 49,
-        monthly: 5,
-        recommended: false,
-        features: ['Up to 10 classes', 'Up to 5 teachers', 'Up to 300 students', 'Basic reports', 'Email support'],
-      },
-    ],
+    /** The institution plans, from the one published plan configuration (prices per academic term). */
+    plans: planVersions.map((v) => {
+      const card = planCards.find((c) => c.planId === v.planId);
+      return { key: v.planId, name: v.name, body: card?.tagline ?? '', price: v.priceUGX, learners: v.learners, recommended: card?.popular ?? false, features: (card?.features ?? []).slice(0, 5) };
+    }),
     art: require('./images/sa-school-art.png') as Photo,
   },
   academics: {

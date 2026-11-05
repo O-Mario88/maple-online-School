@@ -363,6 +363,7 @@ export { projectsPage } from './projects';
 export { libraryHub } from './library-hub';
 export { learnerPlan } from './learner-plan';
 export { videoHub } from './learner-video';
+export { schoolNetwork } from './school-network';
 export { progressMap } from './progress-map';
 export { squadRoom } from './squad-room';
 export { billingHub } from './billing-hub';

@@ -1,3 +1,4 @@
+import { type Href, router } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
@@ -24,6 +25,9 @@ function UserFace({ u, size = 30 }: { u: User; size?: number }) {
     </View>
   );
 }
+
+/** The plan, capacity, usage, invoices and billing live on Subscription & Billing. */
+const openSubscription = () => router.push('/admin/subscription' as Href);
 
 /** Roles, permissions and the plan, kept as page state. */
 function useSettings(s: S) {
@@ -198,7 +202,7 @@ export function SettingsDesk({ a }: { a: Admin }) {
         </View>
         <View style={styles.side}>
           <Card style={styles.block}>
-            <CardHead title="Subscription & Billing" size={17} right={<MiniBtn label="Manage Plan" icon="settings" onPress={() => toast('Compare plans, add students or change the billing cycle.')} />} />
+            <CardHead title="Subscription & Billing" size={17} right={<MiniBtn label="Manage Plan" icon="settings" onPress={openSubscription} />} />
             <View style={styles.plan}>
               <IconTile icon="star" tone="orange" size={56} radius={12} />
               <View style={styles.flex}>
@@ -210,7 +214,7 @@ export function SettingsDesk({ a }: { a: Admin }) {
                 <Text style={styles.price}>{p.price}</Text>
               </View>
             </View>
-            <MiniBtn label="Change Plan" onPress={() => toast('Starter, Pro and Enterprise plans.')} style={styles.changePlan} />
+            <MiniBtn label="Change Plan" onPress={openSubscription} style={styles.changePlan} />
             {p.features.map((f) => (
               <View key={f} style={styles.feature}>
                 <Icon name="check" size={18} color="#16A34A" />
@@ -219,7 +223,7 @@ export function SettingsDesk({ a }: { a: Admin }) {
             ))}
           </Card>
           <Card style={styles.block}>
-            <CardHead title="Billing Information" link="View All" onLink={() => toast('Invoices and receipts for the last 12 months.')} />
+            <CardHead title="Billing Information" link="View All" onLink={openSubscription} />
             {[
               ['Next Billing Date', p.next],
               ['Amount', p.amount],
@@ -322,7 +326,7 @@ export function SettingsPhone({ a }: { a: Admin }) {
           onPress={() => (m.title === 'Users & Roles' || m.title === 'Audit Log' ? setView(m.title) : m.title === 'Academic Settings' ? setView('Role Permissions') : toast(`${m.title}: ${m.body}.`))}
         />
       ))}
-      <ListCard title="Your Plan" right={<Pressable onPress={() => toast('Compare plans or add students.')} accessibilityRole="button" accessibilityLabel="Manage plan"><Text style={styles.link}>Manage</Text></Pressable>}>
+      <ListCard title="Your Plan" right={<Pressable onPress={openSubscription} accessibilityRole="button" accessibilityLabel="Manage plan"><Text style={styles.link}>Manage</Text></Pressable>}>
         <View style={styles.phonePlan}>
           <IconTile icon="columns" tone="blue" size={40} radius={10} />
           <View style={styles.flex}>

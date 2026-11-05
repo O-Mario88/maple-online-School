@@ -1,3 +1,4 @@
+import { useLocalSearchParams } from 'expo-router';
 import { useMemo } from 'react';
 
 import { useShell } from '@/components/ui';
@@ -9,8 +10,10 @@ import { mockData } from '@/lib/mock';
 export default function OnboardingWizardScreen() {
   const mock = useMemo(() => mockData(), []);
   const { wide } = useShell();
+  const { plan } = useLocalSearchParams<{ plan?: string }>();
   // Real builds create the school and invite people through the API; design builds show the reference wizard.
   if (!mock) return <LiveSetup />;
   const o = mock.portal.school.onboarding;
-  return wide ? <OnboardingDesk o={o} /> : <OnboardingPhone o={o} />;
+  const picked = typeof plan === 'string' ? plan : undefined;
+  return wide ? <OnboardingDesk o={o} plan={picked} /> : <OnboardingPhone o={o} plan={picked} />;
 }

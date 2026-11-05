@@ -1,6 +1,6 @@
 import { Image } from 'expo-image';
 import { Fragment, type ReactNode, useState } from 'react';
-import { Pressable, type StyleProp, StyleSheet, Switch, Text, TextInput, View, type ViewStyle } from 'react-native';
+import { Pressable, type StyleProp, StyleSheet, Text, TextInput, View, type ViewStyle } from 'react-native';
 
 import { Icon } from '@/components/icon';
 import { Btn, Card, UnderTabs } from '@/features/portal/PortalParts';
@@ -259,11 +259,10 @@ export function ImportCard({ o }: { o: Onboarding }) {
   );
 }
 
-/** Step 4: choose a plan (yearly or monthly) or claim existing teacher class spaces. */
-export function PlanCard({ o }: { o: Onboarding }) {
+/** Step 4: choose a plan (starting on the one picked on the pricing page) or claim existing teacher class spaces. */
+export function PlanCard({ o, initial }: { o: Onboarding; initial?: string }) {
   const [tab, setTab] = useState('Choose a Plan');
-  const [plan, setPlan] = useState('school');
-  const [yearly, setYearly] = useState(true);
+  const [plan, setPlan] = useState(o.plans.find((p) => p.key === initial)?.key ?? o.plans.find((p) => p.recommended)?.key ?? o.plans[0].key);
   return (
     <Card style={styles.stepCard}>
       <StepHead n={4} title="Step 4: Activate Subscription" body="Choose a plan or claim existing teacher class spaces." />
@@ -273,7 +272,6 @@ export function PlanCard({ o }: { o: Onboarding }) {
           <View style={styles.plans}>
             {o.plans.map((p) => {
               const on = p.key === plan;
-              const price = yearly ? p.yearly : p.monthly;
               return (
                 <Pressable
                   key={p.key}
@@ -281,7 +279,7 @@ export function PlanCard({ o }: { o: Onboarding }) {
                   onPress={() => setPlan(p.key)}
                   accessibilityRole="radio"
                   accessibilityState={{ checked: on }}
-                  accessibilityLabel={`${p.name}, $${price} a ${yearly ? 'year' : 'month'}`}>
+                  accessibilityLabel={`${p.name}, UGX ${p.price.toLocaleString('en-US')} a term, up to ${p.learners} learners`}>
                   {p.recommended ? (
                     <View style={styles.recommended}>
                       <Text style={styles.recommendedText}>Recommended</Text>
@@ -290,8 +288,8 @@ export function PlanCard({ o }: { o: Onboarding }) {
                   <Text style={styles.planName}>{p.name}</Text>
                   <Text style={styles.planBody}>{p.body}</Text>
                   <Text style={styles.price}>
-                    {`$${price}`}
-                    <Text style={styles.per}>{yearly ? ' /year' : ' /month'}</Text>
+                    {`UGX ${p.price.toLocaleString('en-US')}`}
+                    <Text style={styles.per}> /term</Text>
                   </Text>
                   {p.features.map((f) => (
                     <View key={f} style={styles.feature}>
@@ -303,22 +301,7 @@ export function PlanCard({ o }: { o: Onboarding }) {
               );
             })}
           </View>
-          <View style={styles.billing}>
-            <Text style={[styles.billingText, yearly && styles.billingOn]}>Pay Yearly</Text>
-            <View style={styles.save}>
-              <Text style={styles.saveText}>Save 20%</Text>
-            </View>
-            <Switch
-              value={!yearly}
-              onValueChange={(monthly) => setYearly(!monthly)}
-              trackColor={{ false: BLUE, true: BLUE }}
-              thumbColor={WHITE}
-              ios_backgroundColor={BLUE}
-              accessibilityLabel="Pay monthly instead of yearly"
-              {...({ activeThumbColor: WHITE } as object)}
-            />
-            <Text style={[styles.billingText, !yearly && styles.billingOn]}>Pay Monthly</Text>
-          </View>
+          <Text style={styles.billingText}>Billed per academic term. Nothing is charged until your school is verified and you accept the contract.</Text>
         </>
       ) : (
         <View style={styles.claim}>
@@ -405,16 +388,16 @@ const styles = StyleSheet.create({
   checkRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   checkText: { flex: 1, fontSize: 14, color: BODY },
   plans: { flexDirection: 'row', gap: 12 },
-  plan: { flex: 1, minWidth: 0, gap: 6, padding: 16, borderRadius: 12, borderWidth: 1, borderColor: LINE, backgroundColor: WHITE },
+  plan: { flex: 1, minWidth: 0, gap: 6, padding: 12, borderRadius: 12, borderWidth: 1, borderColor: LINE, backgroundColor: WHITE },
   planOn: { borderColor: '#34C17A', borderWidth: 2, backgroundColor: '#F4FBF7' },
   recommended: { alignSelf: 'flex-start', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 6, backgroundColor: '#22A55A' },
   recommendedText: { fontSize: 12.5, fontWeight: '700', color: WHITE },
-  planName: { fontSize: 18, fontWeight: '800', color: NAVY },
-  planBody: { fontSize: 13.5, lineHeight: 19, color: BODY },
-  price: { marginVertical: 4, fontSize: 30, fontWeight: '800', color: NAVY },
-  per: { fontSize: 15, fontWeight: '400', color: BODY },
+  planName: { fontSize: 15, fontWeight: '800', color: NAVY },
+  planBody: { fontSize: 12, lineHeight: 16, color: BODY },
+  price: { marginVertical: 4, fontSize: 15, fontWeight: '800', color: NAVY },
+  per: { fontSize: 12, fontWeight: '400', color: BODY },
   feature: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  featureText: { flex: 1, fontSize: 14, color: NAVY },
+  featureText: { flex: 1, fontSize: 12, color: NAVY },
   billing: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 12 },
   billingText: { fontSize: 15, color: BODY },
   billingOn: { color: NAVY, fontWeight: '600' },
