@@ -5,6 +5,7 @@ import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Icon } from '@/components/icon';
 import { L } from '@/features/learner/frame/LightFrame';
 import { ContentStats } from '@/features/shared/ContentStats';
+import type { IconName } from '@/lib/icons';
 
 import { clock, type LessonStatus, lessonStatus, type VideoLessonItem } from './videoLessons';
 
@@ -55,17 +56,17 @@ export function LessonStats({ l, size = 12 }: { l: VideoLessonItem; size?: numbe
   return <ContentStats e={l} size={size} />;
 }
 
-/** A dropdown: the label and current choice, opening the choices in a sheet. */
-export function Picker<T extends string>({ label, value, options, onChange, icon, width }: { label: string; value: T; options: readonly { value: T; label: string }[]; onChange: (v: T) => void; icon: 'layers' | 'cap' | 'flag' | 'sync'; width?: number }) {
+/** A dropdown: the label and current choice (only the choice when compact), opening the choices in a sheet. */
+export function Picker<T extends string>({ label, value, options, onChange, icon, width, compact = false }: { label: string; value: T; options: readonly { value: T; label: string }[]; onChange: (v: T) => void; icon: IconName; width?: number; compact?: boolean }) {
   const [open, setOpen] = useState(false);
   const shown = options.find((o) => o.value === value)?.label ?? '';
   return (
     <>
-      <Pressable style={[s.picker, width ? { width } : null]} onPress={() => setOpen(true)} accessibilityRole="button" accessibilityLabel={`${label}: ${shown}`}>
-        <Icon name={icon} size={18} color={L.ink} />
-        <Text style={s.pickerText} numberOfLines={1}>
-          {`${label}: `}
-          <Text style={s.pickerValue}>{shown}</Text>
+      <Pressable style={[compact ? s.pickerC : s.picker, width ? { width } : null]} onPress={() => setOpen(true)} accessibilityRole="button" accessibilityLabel={`${label}: ${shown}`}>
+        <Icon name={icon} size={compact ? 15 : 18} color={L.ink} />
+        <Text style={compact ? s.pickerTextC : s.pickerText} numberOfLines={1}>
+          {compact ? null : `${label}: `}
+          <Text style={compact ? null : s.pickerValue}>{shown}</Text>
         </Text>
         <Icon name="chevronDown" size={16} color={L.ink} />
       </Pressable>
@@ -141,6 +142,8 @@ const s = StyleSheet.create({
   chipTextSmall: { fontSize: 11.5 },
   picker: { height: 42, flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 14, borderRadius: 10, borderWidth: 1, borderColor: '#DFE5EE', backgroundColor: L.white },
   pickerText: { flex: 1, fontSize: 14, color: L.ink },
+  pickerC: { height: 38, flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 10, borderRadius: 10, backgroundColor: L.white },
+  pickerTextC: { fontSize: 13, color: L.ink },
   pickerValue: { fontWeight: '600' },
   scrim: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24, backgroundColor: 'rgba(11,26,63,0.35)' },
   sheet: { width: '100%', maxWidth: 360, gap: 4, padding: 16, borderRadius: 16, backgroundColor: L.white },

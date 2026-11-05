@@ -88,6 +88,7 @@ const MENUS: Readonly<Record<Portal, readonly NavItem[]>> = {
     library,
     p('video-lessons', 'Video lessons', '/learn/lessons', 'play'),
     p('plan', 'My plan', '/learn/plan', 'target'),
+    p('schools', 'School Network', '/learn/schools', 'building'),
     p('progress', 'My progress', '/learn/progress', 'chart'),
     p('projects', 'Projects', '/learn/projects', 'folder'),
     p('exam', 'Exam practice', '/learn/paper', 'timer'),
@@ -154,6 +155,11 @@ const MENUS: Readonly<Record<Portal, readonly NavItem[]>> = {
     p('journal-entries', 'Journal entries', '/admin/finance/journal-entries', 'doc'),
     pricing,
     p('admin-settings', 'Roles and audit', '/admin/settings', 'person'),
+    p('subscription', 'Subscription & billing', '/admin/subscription', 'receipt'),
+    p('admissions', 'Admissions', '/admin/admissions', 'clipboard'),
+    p('school-growth', 'School growth', '/admin/growth', 'pulse'),
+    p('community', 'School community', '/admin/community', 'people'),
+    p('school-profile', 'School profile', '/admin/school-profile', 'building'),
   ],
   command: [
     // Design builds open the Maple Command references; real builds keep the live home and curriculum.

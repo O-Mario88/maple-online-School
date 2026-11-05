@@ -35,6 +35,7 @@ const NAV: readonly { label: string; icon: IconName; href: string; match?: reado
   { label: 'Assignments', icon: 'clipboard', href: '/learn/assignments' },
   { label: 'Progress', icon: 'chart', href: '/learn/progress' },
   { label: 'Library', icon: 'library', href: '/learn/library' },
+  { label: 'School Network', icon: 'building', href: '/learn/schools', match: ['/learn/schools', '/learn/apply'] },
   { label: 'Achievements', icon: 'trophy', href: '/learn/passport' },
 ];
 

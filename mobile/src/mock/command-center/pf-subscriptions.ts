@@ -1,9 +1,11 @@
 /** Maple Command › Finance › Subscription Management sample data. All figures and prices are illustrative. */
 import type { Plan, Sub } from '@/features/command/logic/subscriptions';
 
+import { planVersions } from '../institution-plans';
 import type { KpiData } from './shared';
 
 export const TODAY = '2026-10-26';
+const TERMS_PER_YEAR = 3;
 
 export interface PlanRow extends Plan {
   limit: string;
@@ -11,11 +13,11 @@ export interface PlanRow extends Plan {
 }
 
 export const plans: readonly PlanRow[] = [
-  { id: 'basic', name: 'School Basic', type: 'School', price: 250_000, limit: 'Up to 200 learners', subscribers: 1284 },
-  { id: 'standard', name: 'School Standard', type: 'School', price: 500_000, limit: 'Up to 1,000 learners', subscribers: 496 },
-  { id: 'premium', name: 'School Premium', type: 'School', price: 1_200_000, limit: 'Unlimited learners', subscribers: 118 },
-  { id: 'plus', name: 'Learner Plus', type: 'Learner', price: 25_000, limit: 'Individual learner plan', subscribers: 2610 },
-  { id: 'pro', name: 'Learner Pro', type: 'Learner', price: 50_000, limit: 'Full access + AI Tutor', subscribers: 384 },
+  // School plans come from the published plan configuration: per-term prices as a monthly figure (three terms a year).
+  ...planVersions.map((v, i) => ({ id: v.planId, name: v.name, type: 'School' as const, price: Math.round((v.priceUGX * TERMS_PER_YEAR) / 12), limit: `Up to ${v.learners.toLocaleString('en-US')} learners`, subscribers: [1284, 496, 118][i] ?? 0 })),
+  { id: 'plus', name: 'Basic', type: 'Learner', price: 60_000, limit: 'Individual learner plan', subscribers: 2610 },
+  { id: 'pro', name: 'Pro Study Pass', type: 'Learner', price: 90_000, limit: 'Live classes + step-by-step solutions', subscribers: 384 },
+  { id: 'learner-premium', name: 'Premium', type: 'Learner', price: 150_000, limit: 'Private tutor + video explainers', subscribers: 142 },
 ];
 
 export interface SubRow extends Sub {
@@ -27,15 +29,15 @@ export interface SubRow extends Sub {
 const S = (id: string, subscriber: string, kind: SubRow['kind'], plan: string, billing: Sub['billing'], start: string, nextRenewal: string, status: Sub['status'], over: Partial<SubRow> = {}): SubRow => ({ id, ref: id, subscriber, kind, plan, billing, start, nextRenewal, status, failedAttempts: status === 'Past Due' ? 1 : 0, ...over });
 
 export const subs: readonly SubRow[] = [
-  S('SCH-00184', 'Green Valley School', 'School', 'premium', 'Annual', '2026-01-15', '2027-01-15', 'Active'),
-  S('SCH-00126', 'Riverside Academy', 'School', 'standard', 'Annual', '2026-03-01', '2027-03-01', 'Active'),
+  S('SCH-00184', 'Green Valley School', 'School', 'enterprise', 'Annual', '2026-01-15', '2027-01-15', 'Active'),
+  S('SCH-00126', 'Riverside Academy', 'School', 'growth', 'Annual', '2026-03-01', '2027-03-01', 'Active'),
   S('LRN-045772', 'Amina N.', 'Learner', 'pro', 'Monthly', '2026-10-02', '2026-11-02', 'Active', { avatar: require('../images/pp-sarah.png') as number }),
   S('LRN-045889', 'Daniel K.', 'Learner', 'plus', 'Monthly', '2026-10-05', '2026-11-05', 'Active', { avatar: require('../images/pp-john.png') as number }),
-  S('SCH-00157', 'Lakeview International', 'School', 'basic', 'Annual', '2026-02-10', '2027-02-10', 'Trial'),
-  S('SCH-00211', 'Hope Primary School', 'School', 'basic', 'Termly', '2026-09-01', '2026-11-12', 'Past Due', { failedAttempts: 2 }),
-  S('SCH-00198', 'Sunrise Secondary', 'School', 'standard', 'Annual', '2025-11-20', '2026-11-20', 'Active'),
+  S('SCH-00157', 'Lakeview International', 'School', 'launch', 'Annual', '2026-02-10', '2027-02-10', 'Trial'),
+  S('SCH-00211', 'Hope Primary School', 'School', 'launch', 'Termly', '2026-09-01', '2026-11-12', 'Past Due', { failedAttempts: 2 }),
+  S('SCH-00198', 'Sunrise Secondary', 'School', 'growth', 'Annual', '2025-11-20', '2026-11-20', 'Active'),
   S('LRN-046012', 'Grace A.', 'Learner', 'plus', 'Monthly', '2026-09-28', '2026-10-28', 'Past Due', { avatar: require('../images/pp-esther.png') as number }),
-  S('SCH-00267', 'Bright Future Academy', 'School', 'premium', 'Annual', '2026-05-04', '2027-05-04', 'Active'),
+  S('SCH-00267', 'Bright Future Academy', 'School', 'enterprise', 'Annual', '2026-05-04', '2027-05-04', 'Active'),
   S('LRN-045993', 'Brian O.', 'Learner', 'pro', 'Monthly', '2026-08-14', '2026-11-14', 'Cancelled', { avatar: require('../images/pp-kato.png') as number, endsOn: '2026-11-14', cancelReason: 'Finished exam revision' }),
 ];
 

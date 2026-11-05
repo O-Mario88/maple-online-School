@@ -48,7 +48,7 @@ function BackTitle({ title, onBack, size }: { title: string; onBack: () => void;
 /** Back from the wizard: to where the admin came from, or the dashboard when they opened it directly. */
 const leave = () => (router.canGoBack() ? router.back() : router.replace('/'));
 
-export function OnboardingDesk({ o }: { o: Onboarding }) {
+export function OnboardingDesk({ o, plan }: { o: Onboarding; plan?: string }) {
   const w = useWizard(o);
   return (
     <SchoolDesk search="Search for anything..." me={o.me} help nav={o.nav} active="Onboarding">
@@ -81,7 +81,7 @@ export function OnboardingDesk({ o }: { o: Onboarding }) {
           <ImportCard o={o} />
         </View>
         <View style={styles.flex}>
-          <PlanCard o={o} />
+          <PlanCard o={o} initial={plan} />
         </View>
       </View>
     </SchoolDesk>
@@ -89,7 +89,7 @@ export function OnboardingDesk({ o }: { o: Onboarding }) {
 }
 
 /** One step on its own phone screen, with Save & Continue at the bottom. */
-function PhoneStep({ o, w, index, onBack, onNext }: { o: Onboarding; w: ReturnType<typeof useWizard>; index: number; onBack: () => void; onNext: (next: number) => void }) {
+function PhoneStep({ o, w, index, onBack, onNext, plan }: { o: Onboarding; w: ReturnType<typeof useWizard>; index: number; onBack: () => void; onNext: (next: number) => void; plan?: string }) {
   const s = o.steps[index];
   return (
     <ScrollView contentContainerStyle={styles.phoneScroll}>
@@ -108,7 +108,7 @@ function PhoneStep({ o, w, index, onBack, onNext }: { o: Onboarding; w: ReturnTy
         ) : null}
         {index === 1 ? <CurriculumCard o={o} phone /> : null}
         {index === 2 ? <ImportCard o={o} /> : null}
-        {index === 3 ? <PlanCard o={o} /> : null}
+        {index === 3 ? <PlanCard o={o} initial={plan} /> : null}
         <Btn label={index === 3 ? 'Activate & Finish' : 'Save & Continue'} iconRight="arrowRight" onPress={() => onNext(w.finish(index))} height={56} textStyle={styles.continueText} />
       </View>
     </ScrollView>
@@ -116,14 +116,14 @@ function PhoneStep({ o, w, index, onBack, onNext }: { o: Onboarding; w: ReturnTy
 }
 
 /** The phone reference: the four steps as a checklist, the time it takes, and Continue. */
-export function OnboardingPhone({ o }: { o: Onboarding }) {
+export function OnboardingPhone({ o, plan }: { o: Onboarding; plan?: string }) {
   const w = useWizard(o);
   const [open, setOpen] = useState<number | null>(null);
   if (open !== null) {
     return (
       <View style={styles.phoneRoot}>
         <SchoolPhoneTop initial={o.me.initial} notifications={o.me.notifications} help />
-        <PhoneStep o={o} w={w} index={open} onBack={() => setOpen(null)} onNext={(next) => setOpen(w.done.length >= 3 && open === 3 ? null : next)} />
+        <PhoneStep o={o} w={w} index={open} plan={plan} onBack={() => setOpen(null)} onNext={(next) => setOpen(w.done.length >= 3 && open === 3 ? null : next)} />
       </View>
     );
   }

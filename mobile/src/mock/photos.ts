@@ -569,6 +569,31 @@ export const photos = {
   },
   /** Phones: just the teacher and learners (x 470–805, y 110–420), without the printed cards. */
   schoolsHeroPhone: require('./images/schools-hero-phone.jpg') as Photo,
+  /** The school-admin Admissions campaigns and School Community pages, cut from their references. */
+  schoolHub: {
+    campaigns: [require('./images/adm-campaign-1.png') as Photo, require('./images/adm-campaign-2.png') as Photo, require('./images/adm-campaign-3.png') as Photo],
+    cover: require('./images/com-cover.png') as Photo,
+    leaf: require('./images/com-leaf.png') as Photo,
+    stem: [require('./images/com-stem-1.png') as Photo, require('./images/com-stem-2.png') as Photo, require('./images/com-stem-3.png') as Photo],
+    groups: [require('./images/com-group-1.png') as Photo, require('./images/com-group-2.png') as Photo, require('./images/com-group-3.png') as Photo, require('./images/com-group-4.png') as Photo],
+  },
+  /** The School Network page: the hero cut from its reference, the campus photos (heart and crest painted out), mirrored copies for the extra sample schools, and the school crests. */
+  schoolNetwork: {
+    hero: require('./images/school-network-hero.png') as Photo,
+    campus: {
+      lakeview: require('./images/sn-school-lakeview.png') as Photo,
+      riverside: require('./images/sn-school-riverside.png') as Photo,
+      greenhill: require('./images/sn-school-greenhill.png') as Photo,
+      kigezi: require('./images/sn-school-kigezi.png') as Photo,
+      stmarys: require('./images/sn-school-stmarys.png') as Photo,
+      online: require('./images/sn-school-online.png') as Photo,
+    } as Record<string, Photo>,
+    crest: {
+      lakeview: require('./images/sn-crest-lakeview.png') as Photo,
+      riverside: require('./images/sn-crest-riverside.png') as Photo,
+      greenhill: require('./images/sn-crest-greenhill.png') as Photo,
+    } as Record<string, Photo>,
+  },
   crests: {
     uneb: require('./images/crest-uneb.jpg') as Photo,
     kcse: require('./images/crest-kcse.jpg') as Photo,

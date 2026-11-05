@@ -1,0 +1,285 @@
+/**
+ * Sample data for the School Network: verified Maple schools, the learner's own choices for
+ * matching, exam centres, teaching vacancies and the institution plans. Illustrative.
+ * Counts about a school (views, saves, reviews) are totals; no school ever sees who.
+ */
+import type { ApplicationForm } from '@/features/learner/schools/applicationForm';
+import type { NetworkSchool, SchoolPrefs } from '@/features/learner/schools/schoolNetwork';
+
+import { planVersions } from './institution-plans';
+import { photos } from './photos';
+
+const sn = photos.schoolNetwork;
+const LEAF = require('@/assets/images/maple-leaf.png') as number;
+
+export interface ExamCentre {
+  boards: readonly string[];
+  exams: readonly string[];
+  /** Whether the centre takes external (private) candidates. */
+  external: boolean;
+  deadline: string;
+  feeUGX: number;
+}
+
+export interface SchoolCard extends NetworkSchool {
+  photo: number;
+  crest: number;
+  /** The chips under the rating, as the school publishes them. */
+  tags: readonly string[];
+  /** What the pass rate measures, e.g. "UCE Pass Rate". */
+  passLabel: string;
+  /** The year and source of the published pass rate. */
+  passSource: string;
+  facilities: readonly string[];
+  admissions: { opens: string; deadline: string; feesUGX: readonly [number, number]; requirements: readonly string[] };
+  exam?: ExamCentre;
+}
+
+const schools: readonly SchoolCard[] = [
+  {
+    id: 'lakeview',
+    name: 'Lakeview International School',
+    town: 'Kampala',
+    district: 'Kampala',
+    km: 12,
+    rating: 4.8,
+    reviews: 286,
+    curricula: ['UNEB'],
+    levels: ['O-Level', 'A-Level'],
+    stay: 'Day & Boarding',
+    mode: 'Physical',
+    programs: ['Sciences', 'Arts'],
+    blurb: 'A leading school offering a strong academic program, modern facilities and holistic development.',
+    passRate: 98,
+    learners: 1240,
+    est: 2008,
+    scholarships: false,
+    views: 5200,
+    added: '2026-03-01',
+    photo: sn.campus.lakeview,
+    crest: sn.crest.lakeview,
+    tags: ['UNEB', 'O-Level', 'A-Level', 'Day & Boarding'],
+    passLabel: 'UCE Pass Rate',
+    passSource: 'UNEB UCE 2025, school-published, verified by Maple',
+    facilities: ['Science laboratories', 'Library', 'Boarding houses', 'Sports fields'],
+    admissions: { opens: '1 Nov 2026', deadline: '15 Jan 2027', feesUGX: [1_800_000, 2_600_000], requirements: ['Latest report card', 'Birth certificate', 'PLE or UCE results slip'] },
+    exam: { boards: ['UNEB'], exams: ['UCE', 'UACE'], external: true, deadline: '28 Feb 2027', feeUGX: 220_000 },
+  },
+  {
+    id: 'riverside',
+    name: 'Riverside High School',
+    town: 'Entebbe',
+    district: 'Wakiso',
+    km: 38,
+    rating: 4.7,
+    reviews: 192,
+    curricula: ['UNEB'],
+    levels: ['O-Level', 'A-Level'],
+    stay: 'Day',
+    mode: 'Hybrid',
+    programs: ['STEM'],
+    blurb: 'Academic excellence with a focus on STEM, innovation and real-world skills.',
+    passRate: 96,
+    learners: 980,
+    est: 2012,
+    scholarships: true,
+    views: 7400,
+    added: '2026-09-20',
+    photo: sn.campus.riverside,
+    crest: sn.crest.riverside,
+    tags: ['UNEB', 'O-Level', 'A-Level', 'STEM', 'Hybrid'],
+    passLabel: 'UCE Pass Rate',
+    passSource: 'UNEB UCE 2025, school-published, verified by Maple',
+    facilities: ['Robotics lab', 'Computer labs', 'Online classrooms'],
+    admissions: { opens: '15 Oct 2026', deadline: '20 Dec 2026', feesUGX: [1_400_000, 1_900_000], requirements: ['UCE results slip', 'Latest report card'] },
+  },
+  {
+    id: 'greenhill',
+    name: 'Greenhill Academy',
+    town: 'Jinja',
+    district: 'Jinja',
+    km: 82,
+    rating: 4.7,
+    reviews: 192,
+    curricula: ['UNEB'],
+    levels: ['O-Level', 'A-Level'],
+    stay: 'Day',
+    mode: 'Physical',
+    programs: ['Sciences', 'Business'],
+    blurb: 'A values-based school with strong results, experienced teachers and a vibrant student life.',
+    passRate: 95,
+    learners: 780,
+    est: 2010,
+    scholarships: false,
+    views: 3100,
+    added: '2026-10-30',
+    photo: sn.campus.greenhill,
+    crest: sn.crest.greenhill,
+    tags: ['UNEB', 'O-Level', 'A-Level', 'Day'],
+    passLabel: 'UCE Pass Rate',
+    passSource: 'UNEB UCE 2025, school-published, verified by Maple',
+    facilities: ['Science laboratories', 'Music room', 'Football pitch'],
+    admissions: { opens: '1 Nov 2026', deadline: '31 Jan 2027', feesUGX: [1_100_000, 1_500_000], requirements: ['Latest report card', 'PLE or UCE results slip'] },
+    exam: { boards: ['UNEB'], exams: ['UCE'], external: true, deadline: '28 Feb 2027', feeUGX: 200_000 },
+  },
+  {
+    id: 'kigezi',
+    name: 'Kigezi Hills College',
+    town: 'Kabale',
+    district: 'Kabale',
+    km: 410,
+    rating: 4.6,
+    reviews: 143,
+    curricula: ['UNEB'],
+    levels: ['O-Level', 'A-Level'],
+    stay: 'Boarding',
+    mode: 'Physical',
+    programs: ['Agriculture', 'Sciences'],
+    blurb: 'A boarding college in the hills known for agriculture, sciences and strong discipline.',
+    passRate: 93,
+    learners: 1560,
+    est: 1998,
+    scholarships: true,
+    views: 2400,
+    added: '2026-05-12',
+    photo: sn.campus.kigezi,
+    crest: photos.crests.aisu,
+    tags: ['UNEB', 'O-Level', 'A-Level', 'Boarding'],
+    passLabel: 'UCE Pass Rate',
+    passSource: 'UNEB UCE 2025, school-published, verified by Maple',
+    facilities: ['School farm', 'Boarding houses', 'Science laboratories'],
+    admissions: { opens: '1 Nov 2026', deadline: '10 Jan 2027', feesUGX: [1_300_000, 1_700_000], requirements: ['Latest report card', 'Medical form'] },
+    exam: { boards: ['UNEB'], exams: ['UCE', 'UACE'], external: false, deadline: '28 Feb 2027', feeUGX: 210_000 },
+  },
+  {
+    id: 'stmarys',
+    name: 'St. Mary’s Girls’ School',
+    town: 'Mbarara',
+    district: 'Mbarara',
+    km: 266,
+    rating: 4.8,
+    reviews: 210,
+    curricula: ['UNEB'],
+    levels: ['O-Level', 'A-Level'],
+    stay: 'Boarding',
+    mode: 'Physical',
+    programs: ['Sciences', 'Music'],
+    blurb: 'A girls’ boarding school with top science results and a celebrated music program.',
+    passRate: 97,
+    learners: 1100,
+    est: 1985,
+    scholarships: true,
+    views: 4600,
+    added: '2026-07-08',
+    photo: sn.campus.stmarys,
+    crest: photos.crests.greenhill,
+    tags: ['UNEB', 'O-Level', 'A-Level', 'Boarding'],
+    passLabel: 'UCE Pass Rate',
+    passSource: 'UNEB UCE 2025, school-published, verified by Maple',
+    facilities: ['Chapel', 'Music rooms', 'Science laboratories', 'Boarding houses'],
+    admissions: { opens: '1 Nov 2026', deadline: '20 Jan 2027', feesUGX: [1_900_000, 2_400_000], requirements: ['Latest report card', 'Interview'] },
+  },
+  {
+    id: 'maple-online',
+    name: 'Maple Online Academy',
+    town: 'Online',
+    district: 'Kampala',
+    km: 0,
+    rating: 4.6,
+    reviews: 521,
+    curricula: ['UNEB', 'Cambridge'],
+    levels: ['O-Level', 'A-Level'],
+    stay: 'Day',
+    mode: 'Online',
+    programs: ['STEM', 'ICT'],
+    blurb: 'Fully online classes with live teachers, recorded lessons and exam preparation from anywhere.',
+    passRate: 91,
+    learners: 3400,
+    est: 2024,
+    scholarships: false,
+    views: 6100,
+    added: '2026-06-01',
+    photo: sn.campus.online,
+    crest: LEAF,
+    tags: ['UNEB', 'Cambridge', 'Online'],
+    passLabel: 'UCE Pass Rate',
+    passSource: 'UNEB UCE 2025, Maple-published',
+    facilities: ['Live classrooms', 'Digital library', 'Tutoring'],
+    admissions: { opens: 'Open all year', deadline: 'Rolling', feesUGX: [600_000, 900_000], requirements: ['Latest report card'] },
+  },
+];
+
+export const schoolNetwork = {
+  hero: sn.hero,
+  title: 'School Network',
+  sub: 'Discover verified schools, explore programs, find exam centres, and teaching opportunities.',
+  schools,
+  /** Totals across the whole network, for the category tiles. */
+  categoryCounts: { all: 243, near: 36, top: 48, online: 72, boarding: 65, scholarships: 29 },
+  /** What this learner chose to share for matching (changeable in More Filters). */
+  prefs: { district: 'Kampala', curriculum: 'UNEB', level: 'A-Level', stay: 'Day & Boarding', subjects: ['STEM'] } as SchoolPrefs,
+  districts: ['Kampala', 'Wakiso', 'Jinja', 'Mbarara', 'Kabale'],
+  curricula: ['UNEB', 'Cambridge'],
+  levels: ['O-Level', 'A-Level'],
+  saved: ['riverside'],
+  journey: [
+    { title: 'Discover Schools', sub: 'Explore verified Maple institutions', icon: 'cap' as const },
+    { title: 'Explore & Compare', sub: 'View profiles, programs, reviews', icon: 'pointer' as const },
+    { title: 'Apply', sub: 'Submit an application to your chosen school', icon: 'clipboard' as const },
+    { title: 'Enrol', sub: 'Join and start learning', icon: 'people' as const },
+  ],
+  funnel: [
+    { title: 'Profile View', sub: '(Interest)', icon: 'eye' as const },
+    { title: 'Save / Like', sub: '(Consideration)', icon: 'bookmark' as const },
+    { title: 'Admissions Visit', sub: '(Deeper Interest)', icon: 'pointer' as const },
+    { title: 'Application', sub: '(Action)', icon: 'doc' as const },
+    { title: 'Enrolment', sub: '(Success)', icon: 'tick' as const },
+  ],
+  /** The application form: what every school asks for, the fee and intake, the choices, and the learner's draft so far. */
+  apply: {
+    intake: 'Term 1, 2027',
+    feeUGX: 50_000,
+    programs: ['Senior Secondary (S.1)', 'Senior Five (S.5)'],
+    requirements: ['Completed application form', 'Previous academic report (last 2 years)', 'Birth certificate or age proof', 'Passport-size photo (recent)', 'Parent/guardian identification (National ID)', 'Application fee payment'],
+    documents: [
+      { id: 'report', label: 'Previous academic report (last 2 years)', file: 'P7-report-2025.pdf' },
+      { id: 'birth', label: 'Birth certificate or age proof', file: 'birth-certificate.pdf' },
+      { id: 'photo', label: 'Passport-size photo (recent)', file: 'passport-photo.jpg' },
+      { id: 'guardianId', label: 'Parent/guardian identification (National ID)', file: 'guardian-national-id.jpg' },
+    ],
+    genders: ['Female', 'Male'],
+    nationalities: ['Ugandan', 'Kenyan', 'Tanzanian', 'Rwandan', 'South Sudanese', 'Other'],
+    relationships: ['Father', 'Mother', 'Guardian', 'Grandparent', 'Sibling', 'Other'],
+    grades: ['P.6', 'P.7', 'S.3', 'S.4'],
+    years: ['2024', '2025', '2026'],
+    streams: ['Sciences', 'Arts', 'STEM', 'Business', 'Undecided'],
+    subjects: ['Mathematics', 'English', 'Physics', 'Chemistry', 'Biology', 'Geography', 'History', 'ICT', 'Fine Art'],
+    /** The learner's saved draft for Riverside: step 1 filled, as in the reference. */
+    draft: {
+      schoolId: 'riverside',
+      form: {
+        applyingFor: 'Senior Secondary (S.1)',
+        first: 'Aisha',
+        middle: 'Nalubega',
+        last: 'Kato',
+        dob: '2011-03-14',
+        gender: 'Female',
+        nationality: 'Ugandan',
+        guardian: { name: 'John Kato', relationship: 'Father', phone: '772 345 678', email: 'john.kato@gmail.com', occupation: 'Accountant', address: 'Ntinda, Kampala' },
+        current: { school: 'Bright Future Junior School', grade: 'P.7', year: '2025' },
+        academic: { stream: '', subjects: [], pleAggregate: '', pleIndex: '', pleYear: '', boarding: '', needs: '' },
+        documents: {},
+        consent: false,
+      } as ApplicationForm,
+    },
+  },
+  vacancies: [
+    { id: 'v1', schoolId: 'lakeview', title: 'Mathematics Teacher (O-Level)', type: 'Full-time', closes: '30 Nov 2026', subjects: ['Mathematics'] },
+    { id: 'v2', schoolId: 'riverside', title: 'Physics & Robotics Teacher', type: 'Full-time · Hybrid', closes: '15 Dec 2026', subjects: ['Physics', 'ICT'] },
+    { id: 'v3', schoolId: 'maple-online', title: 'Online Chemistry Tutor', type: 'Part-time · Online', closes: '20 Dec 2026', subjects: ['Chemistry'] },
+    { id: 'v4', schoolId: 'stmarys', title: 'Music Teacher', type: 'Full-time', closes: '10 Jan 2027', subjects: ['Music'] },
+  ],
+  /** The institution plans, from the one published plan configuration. */
+  plans: planVersions.map((p) => ({ id: p.planId, name: p.name.replace('Maple ', ''), from: false, priceUGX: p.priceUGX, popular: p.planId === 'growth' })),
+  planFeatures: ['Complete digital school', 'Full financial management', 'Live classes (LiveKit)', 'School Network listing', 'Custom branding'],
+};

@@ -99,6 +99,7 @@ export const learnerHome = {
     { label: 'Projects', icon: 'folder', href: '/learn/projects' },
     { label: 'Live Classes', icon: 'live', href: '/learn/live' },
     { label: 'Library', icon: 'library', href: '/learn/library' },
+    { label: 'School Network', icon: 'building', href: '/learn/schools' },
     { label: 'Progress', icon: 'chart', href: '/learn/progress' },
     { label: 'Results', icon: 'clipboard', href: '/learn/passport' },
     { label: 'Messages', icon: 'chat', href: '/inbox', badge: 3 },
