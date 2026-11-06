@@ -1,4 +1,4 @@
-import { gridColumns, initials } from './layout';
+import { gridColumns, initials, PAGE_MAX_WIDTH, pageWidth } from './layout';
 
 describe('gridColumns', () => {
   it('fits as many equal columns as the minimum width allows', () => {
@@ -19,5 +19,15 @@ describe('initials', () => {
     expect(initials('Head Teacher Adongo')).toBe('HA');
     expect(initials('amina')).toBe('A');
     expect(initials('   ')).toBe('?');
+  });
+});
+
+describe('page width', () => {
+  test('wide web pages stop at one centred width, with the gutter on each side', () => {
+    expect(PAGE_MAX_WIDTH).toBe(1448);
+    expect(pageWidth(2000)).toBe(1448);
+    expect(pageWidth(1448)).toBe(1448);
+    expect(pageWidth(1200)).toBe(1200);
+    expect(pageWidth(0)).toBe(0);
   });
 });

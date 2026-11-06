@@ -8,6 +8,7 @@ import { MAX_MESSAGE, MODERATION_HELP, moderate } from '@/lib/squad';
 import { toast } from '@/lib/toast';
 
 import { Brand } from '../palette';
+import { Maple } from '@/constants/maple';
 
 /** Write to a teacher from their storefront. Visitors sign in first; messages pass the same safety check as squad chat. */
 export function MessageSheet({ teacher, visible, onClose }: { teacher: string; visible: boolean; onClose: () => void }) {
@@ -65,7 +66,7 @@ export function MessageSheet({ teacher, visible, onClose }: { teacher: string; v
         multiline
         maxLength={MAX_MESSAGE}
         placeholder="Ask about lessons, times or your goals"
-        placeholderTextColor="#8A92A3"
+        placeholderTextColor={Maple.faint}
         accessibilityLabel={`Message to ${teacher}`}
       />
       {problem ? (
@@ -80,6 +81,6 @@ export function MessageSheet({ teacher, visible, onClose }: { teacher: string; v
 
 const styles = StyleSheet.create({
   body: { fontSize: 13.5, lineHeight: 20, color: Brand.body },
-  input: { minHeight: 110, padding: 12, borderRadius: 10, borderWidth: 1, borderColor: '#D5DEEB', fontSize: 14, color: Brand.ink, textAlignVertical: 'top' },
-  error: { fontSize: 12.5, color: '#B42318' },
+  input: { minHeight: 110, padding: 12, borderRadius: 10, borderWidth: 1, borderColor: Maple.blueLine, fontSize: 14, color: Brand.ink, textAlignVertical: 'top' },
+  error: { fontSize: 12.5, color: Maple.errorText },
 });

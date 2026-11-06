@@ -2,6 +2,7 @@ import { type ReactNode, useState } from 'react';
 import { Modal, Pressable, type StyleProp, StyleSheet, Text, View, type ViewStyle } from 'react-native';
 
 import { Icon } from '@/components/icon';
+import { Maple } from '@/constants/maple';
 
 const LANGUAGES = [
   { name: 'English', ready: true },
@@ -25,7 +26,7 @@ export function LanguageMenu({ style, children }: { style?: StyleProp<ViewStyle>
             {LANGUAGES.map((l) => (
               <Pressable key={l.name} style={styles.row} disabled={!l.ready} onPress={() => setOpen(false)} accessibilityRole="radio" accessibilityState={{ checked: l.name === 'English', disabled: !l.ready }}>
                 <Text style={[styles.name, !l.ready && styles.muted]}>{l.name}</Text>
-                {l.name === 'English' ? <Icon name="check" size={16} color="#1463F3" /> : <Text style={styles.soon}>Coming soon</Text>}
+                {l.name === 'English' ? <Icon name="check" size={16} color={Maple.blue} /> : <Text style={styles.soon}>Coming soon</Text>}
               </Pressable>
             ))}
           </View>
@@ -37,10 +38,10 @@ export function LanguageMenu({ style, children }: { style?: StyleProp<ViewStyle>
 
 const styles = StyleSheet.create({
   scrim: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24, backgroundColor: 'rgba(8,12,20,0.45)' },
-  sheet: { width: '100%', maxWidth: 320, paddingVertical: 8, borderRadius: 14, backgroundColor: '#FFFFFF' },
-  title: { paddingHorizontal: 18, paddingVertical: 10, fontSize: 15, fontWeight: '700', color: '#0B1424' },
-  row: { height: 46, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 18, borderTopWidth: 1, borderTopColor: '#F0F3F7' },
-  name: { fontSize: 14, color: '#0B1424' },
-  muted: { color: '#9AA3B2' },
-  soon: { fontSize: 11.5, color: '#9AA3B2' },
+  sheet: { width: '100%', maxWidth: 320, paddingVertical: 8, borderRadius: 14, backgroundColor: Maple.surface },
+  title: { paddingHorizontal: 18, paddingVertical: 10, fontSize: 15, fontWeight: '700', color: Maple.navy },
+  row: { height: 46, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 18, borderTopWidth: 1, borderTopColor: Maple.blueSelected },
+  name: { fontSize: 14, color: Maple.navy },
+  muted: { color: Maple.muted },
+  soon: { fontSize: 11.5, color: Maple.muted },
 });

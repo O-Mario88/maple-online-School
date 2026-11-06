@@ -3,6 +3,7 @@ import type { IconName } from '@/lib/icons';
 import type { TeacherDest } from '@/lib/teacher-home';
 
 import { photos } from './photos';
+import { Maple } from '@/constants/maple';
 
 const p = photos.studio;
 
@@ -26,23 +27,23 @@ export interface StudioLevel {
 
 export const studioNew = {
   sources: [
-    { key: 'file', label: 'Upload File', icon: 'upload', color: '#1463F3' },
-    { key: 'youtube', label: 'YouTube Playlist', short: 'YouTube', icon: 'playFill', color: '#E5484D' },
-    { key: 'classroom', label: 'Google Classroom', icon: 'people', color: '#22A35A' },
-    { key: 'text', label: 'Text / Paste', icon: 'notes', color: '#1463F3' },
-    { key: 'paper', label: 'Past Paper', icon: 'clipboard', color: '#7C4DDB' },
+    { key: 'file', label: 'Upload File', icon: 'upload', color: Maple.blue },
+    { key: 'youtube', label: 'YouTube Playlist', short: 'YouTube', icon: 'playFill', color: Maple.error },
+    { key: 'classroom', label: 'Google Classroom', icon: 'people', color: Maple.successText },
+    { key: 'text', label: 'Text / Paste', icon: 'notes', color: Maple.blue },
+    { key: 'paper', label: 'Past Paper', icon: 'clipboard', color: Maple.blue },
   ] as { key: SourceKey; label: string; short?: string; icon: IconName; color: string }[],
   sampleFile: 'O-Level Mathematics syllabus (Cambridge 4024).pdf',
   supported: [
-    { label: 'PDF\nSyllabus', icon: 'notes', color: '#E5484D' },
-    { label: 'Past Exam\nPapers', icon: 'clipboard', color: '#1463F3' },
-    { label: 'Worksheets', icon: 'notes', color: '#1463F3' },
-    { label: 'Textbooks', icon: 'book', color: '#22A35A' },
-    { label: 'Images', icon: 'gallery', color: '#F08C00' },
+    { label: 'PDF\nSyllabus', icon: 'notes', color: Maple.error },
+    { label: 'Past Exam\nPapers', icon: 'clipboard', color: Maple.blue },
+    { label: 'Worksheets', icon: 'notes', color: Maple.blue },
+    { label: 'Textbooks', icon: 'book', color: Maple.successText },
+    { label: 'Images', icon: 'gallery', color: Maple.warning },
   ] as { label: string; icon: IconName; color: string }[],
   linkSources: [
-    { label: 'YouTube\nPlaylist', icon: 'playFill', color: '#E5484D' },
-    { label: 'Google\nClassroom', icon: 'people', color: '#22A35A' },
+    { label: 'YouTube\nPlaylist', icon: 'playFill', color: Maple.error },
+    { label: 'Google\nClassroom', icon: 'people', color: Maple.successText },
   ] as { label: string; icon: IconName; color: string }[],
   steps: [
     { label: 'Reading and analysing content...', phone: 'Analysing content...', at: 2 },

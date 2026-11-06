@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
@@ -6,7 +6,7 @@ import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-
 import { Icon } from '@/components/icon';
 import { LockMark } from '@/features/access/LockMark';
 import { LearnerPhoneTop } from '@/features/learner/dashboard/DashPhone';
-import { BLUE, BODY, type Home, HomeHeader, HomeSidebar, INK } from '@/features/learner/home/HomeFrame';
+import { BLUE, BODY, type Home, INK } from '@/features/learner/home/HomeFrame';
 import { frameBody } from '@/features/learner/home/frameBody';
 import { TONES } from '@/features/portal/tokens';
 import { useAccess } from '@/lib/access/access-context';
@@ -15,6 +15,7 @@ import { toast } from '@/lib/toast';
 import type { MockData } from '@/mock';
 
 import { continueLearning, type Curriculum, exploreRows, offeringSize, filterCourses, goalsDone, justForYou, type Kind, liveNow, type Row, type RowKey, toggleGoal, upcoming } from './explore';
+import { Maple } from '@/constants/maple';
 
 export type ExploreData = MockData['learner']['explore'];
 type Course = ExploreData['catalogue'][number];
@@ -22,8 +23,8 @@ type Live = ExploreData['sessions'][number];
 
 /** The explore page is laid out at the library reference's width (sidebar included) and scaled. */
 export const EXPLORE_REF_WIDTH = 1276;
-const NAVY = '#0B2A6B';
-const LINE = '#E8EDF4';
+const NAVY = Maple.blueHover;
+const LINE = Maple.blueSelected;
 const POPULAR = 4;
 /** Cards a row shows before View more: a desktop line, or a phone's swipe. */
 const ROW_DESK = 4;
@@ -118,7 +119,7 @@ function Hero({ u, name }: { u: U; name: string }) {
       <Text style={styles.heroSub}>Subjects, past papers, live classes and practice for your curriculum.</Text>
       <View style={styles.heroSearch}>
         <Icon name="search" size={16} color={BLUE} />
-        <TextInput style={styles.heroInput} value={u.query} onChangeText={u.setQuery} placeholder="What do you want to learn today?" placeholderTextColor="#6B7385" accessibilityLabel="Search subjects" />
+        <TextInput style={styles.heroInput} value={u.query} onChangeText={u.setQuery} placeholder="What do you want to learn today?" placeholderTextColor={Maple.secondary} accessibilityLabel="Search subjects" />
       </View>
       <Curricula u={u} />
     </View>
@@ -134,7 +135,7 @@ function Categories({ u, phone = false }: { u: U; phone?: boolean }) {
         return (
           <Pressable key={c.kind} style={[styles.cat, phone && styles.catPhone, { backgroundColor: t.soft + 'B0', borderColor: on ? t.solid : t.soft }]} onPress={() => u.pickKind(c.kind)} accessibilityRole="button" accessibilityState={{ selected: on }} accessibilityLabel={`${c.kind}: ${c.note}`}>
             <View style={[styles.catIcon, { backgroundColor: t.solid }]}>
-              <Icon name={c.icon} size={18} color="#FFFFFF" />
+              <Icon name={c.icon} size={18} color={Maple.surface} />
             </View>
             <Text style={styles.catTitle}>{c.kind}</Text>
             {phone ? null : (
@@ -175,7 +176,7 @@ function CourseCard({ c, onPress, wide = false }: { c: Course; onPress: () => vo
           </Text>
         </View>
         <View style={styles.inline}>
-          <Icon name="star" size={12} color="#F5B731" />
+          <Icon name="star" size={12} color={Maple.warning} />
           <Text style={styles.small}>{`${c.rating} • ${c.learners.toLocaleString('en-US')} learners`}</Text>
         </View>
         <View style={styles.courseFoot}>
@@ -334,7 +335,7 @@ function Today({ u }: { u: U }) {
       </View>
       {u.goals.map((g) => (
         <Pressable key={g.id} style={styles.goal} onPress={() => u.flip(g.id)} accessibilityRole="checkbox" accessibilityState={{ checked: g.done }} accessibilityLabel={g.label}>
-          <View style={[styles.box, g.done && styles.boxOn]}>{g.done ? <Icon name="check" size={12} color="#FFFFFF" /> : null}</View>
+          <View style={[styles.box, g.done && styles.boxOn]}>{g.done ? <Icon name="check" size={12} color={Maple.surface} /> : null}</View>
           <Text style={[styles.goalText, g.done && styles.goalDone]}>{g.label}</Text>
         </Pressable>
       ))}
@@ -356,7 +357,7 @@ function LiveNow({ u }: { u: U }) {
           <Text style={styles.resumeTitle}>{s.title}</Text>
           <Text style={styles.small}>{`${s.teacher} • ${s.subject} • ${s.attendees} watching`}</Text>
           <Pressable style={styles.join} onPress={() => u.join(s)} accessibilityRole="button" accessibilityLabel={`Join ${s.title}`}>
-            <Icon name="live" size={14} color="#FFFFFF" />
+            <Icon name="live" size={14} color={Maple.surface} />
             <Text style={styles.joinText}>Join Live Class</Text>
           </Pressable>
         </>
@@ -414,8 +415,6 @@ export function ExploreDesk({ d, h }: { d: ExploreData; h: Home }) {
   const u = useExplore(d);
   return (
     <View style={styles.canvas}>
-      <HomeSidebar h={h} active="Explore / Learn" heading="Keep exploring!" quote={'“Every expert\nwas once a\nbeginner.”'} />
-      <HomeHeader h={h} placeholder="Search subjects, past papers, live classes or topics..." />
       <View style={styles.body}>
         <View style={styles.main}>
           <Hero u={u} name={h.name.split(' ')[0]} />
@@ -465,27 +464,27 @@ export function ExplorePhone({ d, h }: { d: ExploreData; h: Home }) {
 const styles = StyleSheet.create({
   flex: { flex: 1, minWidth: 0 },
   inline: { flexDirection: 'row', alignItems: 'center', gap: 6 },
-  canvas: { width: EXPLORE_REF_WIDTH, minHeight: 1024, backgroundColor: '#EEF3FA' },
+  canvas: { width: EXPLORE_REF_WIDTH, minHeight: 1024, backgroundColor: Maple.blueSoft },
   body: { flexDirection: 'row', gap: 15, ...frameBody({ top: 2, left: 11, right: 11, bottom: 20 }) },
   main: { width: 827, gap: 10, paddingTop: 10 },
   sideCol: { flex: 1, gap: 10, paddingTop: 10 },
   twoCol: { flexDirection: 'row', gap: 10, alignItems: 'flex-start' },
-  card: { gap: 10, padding: 12, borderRadius: 8, borderWidth: 1, borderColor: LINE, backgroundColor: '#FFFFFF' },
+  card: { gap: 10, padding: 12, borderRadius: 8, borderWidth: 1, borderColor: LINE, backgroundColor: Maple.surface },
   phoneBlock: { gap: 10 },
-  side: { gap: 8, paddingHorizontal: 14, paddingVertical: 12, borderRadius: 8, borderWidth: 1, borderColor: LINE, backgroundColor: '#FFFFFF' },
+  side: { gap: 8, paddingHorizontal: 14, paddingVertical: 12, borderRadius: 8, borderWidth: 1, borderColor: LINE, backgroundColor: Maple.surface },
   head: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 },
   headTitle: { flexShrink: 1, fontSize: 14, fontWeight: '800', color: NAVY },
   headLink: { fontSize: 11.5, fontWeight: '700', color: BLUE },
-  hero: { gap: 6, padding: 16, borderRadius: 10, backgroundColor: '#0B2A6B' },
-  heroHi: { fontSize: 13, fontWeight: '600', color: '#BFD4FF' },
-  heroTitle: { fontSize: 24, fontWeight: '800', color: '#FFFFFF' },
-  heroSub: { fontSize: 12.5, color: '#DCE7FF' },
-  heroSearch: { flexDirection: 'row', alignItems: 'center', gap: 8, height: 40, marginTop: 6, paddingHorizontal: 12, borderRadius: 9, backgroundColor: '#FFFFFF' },
+  hero: { gap: 6, padding: 16, borderRadius: 10, backgroundColor: Maple.blueHover },
+  heroHi: { fontSize: 13, fontWeight: '600', color: Maple.blueLine },
+  heroTitle: { fontSize: 24, fontWeight: '800', color: Maple.surface },
+  heroSub: { fontSize: 12.5, color: Maple.blueSelected },
+  heroSearch: { flexDirection: 'row', alignItems: 'center', gap: 8, height: 40, marginTop: 6, paddingHorizontal: 12, borderRadius: 9, backgroundColor: Maple.surface },
   heroInput: { flex: 1, fontSize: 13, color: INK },
   chips: { gap: 7, paddingTop: 6 },
-  chip: { height: 30, justifyContent: 'center', paddingHorizontal: 14, borderRadius: 15, borderWidth: 1, borderColor: '#3A5A9C' },
-  chipOn: { borderColor: '#FFFFFF', backgroundColor: '#FFFFFF' },
-  chipText: { fontSize: 12, fontWeight: '700', color: '#DCE7FF' },
+  chip: { height: 30, justifyContent: 'center', paddingHorizontal: 14, borderRadius: 15, borderWidth: 1, borderColor: Maple.blueHover },
+  chipOn: { borderColor: Maple.surface, backgroundColor: Maple.surface },
+  chipText: { fontSize: 12, fontWeight: '700', color: Maple.blueSelected },
   chipTextOn: { color: NAVY },
   cats: { flexDirection: 'row', gap: 8 },
   catsPhone: { flexWrap: 'wrap' },
@@ -497,12 +496,12 @@ const styles = StyleSheet.create({
   catCount: { fontSize: 10.5, fontWeight: '700' },
   rowGap: { flexDirection: 'row', gap: 9 },
   lines: { gap: 9 },
-  course: { flex: 1, minWidth: 0, borderRadius: 9, borderWidth: 1, borderColor: LINE, overflow: 'hidden', backgroundColor: '#FFFFFF' },
+  course: { flex: 1, minWidth: 0, borderRadius: 9, borderWidth: 1, borderColor: LINE, overflow: 'hidden', backgroundColor: Maple.surface },
   courseWide: { flexGrow: 0, flexShrink: 0, flexBasis: 230, width: 230 },
   coursePhoto: { width: '100%', height: 104 },
   courseLock: { position: 'absolute', top: 8, right: 8 },
   courseBadge: { position: 'absolute', top: 8, left: 8, paddingHorizontal: 7, paddingVertical: 3, borderRadius: 6, backgroundColor: 'rgba(11,20,36,0.75)' },
-  courseBadgeText: { fontSize: 9.5, fontWeight: '700', color: '#FFFFFF' },
+  courseBadgeText: { fontSize: 9.5, fontWeight: '700', color: Maple.surface },
   courseBody: { gap: 5, padding: 9 },
   courseTitle: { minHeight: 32, fontSize: 12.5, fontWeight: '800', color: INK },
   face: { width: 18, height: 18, borderRadius: 9 },
@@ -514,7 +513,7 @@ const styles = StyleSheet.create({
   resume: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 6 },
   resumePhoto: { width: 54, height: 40, borderRadius: 6 },
   resumeTitle: { fontSize: 12.5, fontWeight: '800', color: INK },
-  track: { height: 6, marginTop: 5, borderRadius: 3, backgroundColor: '#E6EDF7', overflow: 'hidden' },
+  track: { height: 6, marginTop: 5, borderRadius: 3, backgroundColor: Maple.blueSelected, overflow: 'hidden' },
   fill: { height: 6, borderRadius: 3, backgroundColor: BLUE },
   fillGreen: { backgroundColor: TONES.green.solid },
   pct: { width: 38, textAlign: 'right', fontSize: 12, fontWeight: '800', color: NAVY },
@@ -525,17 +524,17 @@ const styles = StyleSheet.create({
   ring: { width: 58, height: 58, borderRadius: 29, borderWidth: 6, borderColor: TONES.green.solid, alignItems: 'center', justifyContent: 'center', backgroundColor: TONES.green.soft },
   ringText: { fontSize: 15, fontWeight: '800', color: NAVY },
   goal: { flexDirection: 'row', alignItems: 'center', gap: 9, paddingVertical: 4 },
-  box: { width: 18, height: 18, borderRadius: 5, borderWidth: 1.5, borderColor: '#9AA6BA', alignItems: 'center', justifyContent: 'center' },
+  box: { width: 18, height: 18, borderRadius: 5, borderWidth: 1.5, borderColor: Maple.faint, alignItems: 'center', justifyContent: 'center' },
   boxOn: { borderColor: TONES.green.solid, backgroundColor: TONES.green.solid },
   goalText: { fontSize: 12, color: INK },
   goalDone: { color: BODY, textDecorationLine: 'line-through' },
-  liveDot: { width: 9, height: 9, borderRadius: 5, backgroundColor: '#E5484D' },
+  liveDot: { width: 9, height: 9, borderRadius: 5, backgroundColor: Maple.error },
   livePhoto: { width: '100%', height: 110, borderRadius: 8 },
-  join: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, height: 36, borderRadius: 8, backgroundColor: '#E5484D' },
-  joinText: { fontSize: 12.5, fontWeight: '800', color: '#FFFFFF' },
+  join: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, height: 36, borderRadius: 8, backgroundColor: Maple.error },
+  joinText: { fontSize: 12.5, fontWeight: '800', color: Maple.surface },
   up: { flexDirection: 'row', alignItems: 'center', gap: 9, paddingVertical: 4 },
   upPhoto: { width: 44, height: 34, borderRadius: 6 },
   upTitle: { fontSize: 11.5, fontWeight: '800', color: INK },
-  phoneRoot: { flex: 1, backgroundColor: '#FFFFFF' },
+  phoneRoot: { flex: 1, backgroundColor: Maple.surface },
   phone: { gap: 16, padding: 16, paddingBottom: 110 },
 });

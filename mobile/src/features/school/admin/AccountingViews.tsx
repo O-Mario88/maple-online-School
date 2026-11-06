@@ -9,6 +9,7 @@ import type { MockData } from '@/mock';
 
 import { AdminDesk, AdminPhone, BigButton, Cell, type Column, DataTable, Legend, ListCard, ListRow, money, PageHead, SelectBox, StatusCell, useChoice } from '../kit/AdminKit';
 import { BarChart, Donut, DonutLabel, Spark } from '../kit/Charts';
+import { Maple } from '@/constants/maple';
 
 type Admin = MockData['schoolAdmin'];
 type Acc = Admin['accounting'];
@@ -129,14 +130,14 @@ export function AccountingDesk({ a }: { a: Admin }) {
           <Card style={[styles.block, styles.colTrend]}>
             <CardHead title="Income vs Expenses Trend" right={<SelectBox value={period} options={periods} onChange={setPeriod} width={130} />} />
             <View style={styles.legendRow}>
-              <Legend color="#22A55A" label="Income" />
-              <Legend color="#EF3B4D" label="Expenses" />
+              <Legend color={Maple.successText} label="Income" />
+              <Legend color={Maple.error} label="Expenses" />
             </View>
             <BarChart
               labels={acc.trend.labels}
               series={[
-                { name: 'Income', color: '#22A55A', values: acc.trend.income },
-                { name: 'Expenses', color: '#EF3B4D', values: acc.trend.expenses },
+                { name: 'Income', color: Maple.successText, values: acc.trend.income },
+                { name: 'Expenses', color: Maple.error, values: acc.trend.expenses },
               ]}
               max={300}
               ticks={6}
@@ -217,7 +218,7 @@ export function AccountingDesk({ a }: { a: Admin }) {
                 </View>
               </View>
               <View style={styles.reconRow}>
-                <Bar value={b.reconciled ? 1 : acc.bank.pct / 100} color="#22A55A" height={10} style={styles.flex} />
+                <Bar value={b.reconciled ? 1 : acc.bank.pct / 100} color={Maple.successText} height={10} style={styles.flex} />
                 <Text style={styles.reconPct}>{b.reconciled ? '100% Reconciled' : `${acc.bank.pct}% Reconciled`}</Text>
               </View>
               <Btn label={b.reconciled ? 'Reconciled' : 'Reconcile Transactions'} iconRight={b.reconciled ? undefined : 'arrowRight'} icon={b.reconciled ? 'check' : undefined} onPress={b.reconcile} height={50} />

@@ -2,6 +2,7 @@
 import type { Batch, Txn } from '@/features/command/logic/payments';
 
 import { face, type KpiData } from './shared';
+import { Maple } from '@/constants/maple';
 
 export interface TxnRow extends Txn {
   ref: string;
@@ -42,15 +43,15 @@ export const txns: readonly TxnRow[] = [
 
 /** Provider badge colours (a plain letter badge, not the providers' marks). */
 export const providerColor: Readonly<Record<string, string>> = {
-  Stripe: '#635BFF',
+  Stripe: Maple.blue,
   Paystack: '#0BA4DB',
-  Flutterwave: '#F5A623',
-  Pesapal: '#1E6BF0',
-  'Mobile Money': '#FFCB05',
-  'MTN MoMo': '#FFCB05',
-  'Airtel Money': '#E40000',
-  'Bank Transfer': '#5A6890',
-  Others: '#8792B0',
+  Flutterwave: Maple.warning,
+  Pesapal: Maple.blue,
+  'Mobile Money': Maple.warning,
+  'MTN MoMo': Maple.warning,
+  'Airtel Money': Maple.error,
+  'Bank Transfer': Maple.secondary,
+  Others: Maple.faint,
 };
 
 export const txnStats: readonly KpiData[] = [
@@ -124,10 +125,10 @@ export const flow = {
 };
 
 export const reconParts: readonly { label: string; value: number; color: string }[] = [
-  { label: 'Reconciled', value: 4_826_800_000, color: '#22A55A' },
-  { label: 'Pending Match', value: 9_250_000, color: '#F7A21B' },
-  { label: 'Mismatch / Difference', value: 5_600_000, color: '#EF3B4D' },
-  { label: 'Under Investigation', value: 3_600_000, color: '#8B3CF0' },
+  { label: 'Reconciled', value: 4_826_800_000, color: Maple.successText },
+  { label: 'Pending Match', value: 9_250_000, color: Maple.warning },
+  { label: 'Mismatch / Difference', value: 5_600_000, color: Maple.error },
+  { label: 'Under Investigation', value: 3_600_000, color: Maple.blue },
 ];
 
 export const topDifferences: readonly { label: string; amount: number; icon: 'building' | 'undo' | 'help' }[] = [
@@ -138,14 +139,14 @@ export const topDifferences: readonly { label: string; amount: number; icon: 'bu
 ];
 
 export const breakdown: readonly { label: string; pct: number; color: string }[] = [
-  { label: 'Stripe', pct: 24.1, color: '#8B3CF0' },
-  { label: 'Flutterwave', pct: 12.3, color: '#F5A623' },
-  { label: 'Paystack', pct: 8.6, color: '#1E6BF0' },
-  { label: 'MTN MoMo', pct: 7.4, color: '#FFCB05' },
-  { label: 'Airtel Money', pct: 5.8, color: '#EF3B4D' },
+  { label: 'Stripe', pct: 24.1, color: Maple.blue },
+  { label: 'Flutterwave', pct: 12.3, color: Maple.warning },
+  { label: 'Paystack', pct: 8.6, color: Maple.blue },
+  { label: 'MTN MoMo', pct: 7.4, color: Maple.warning },
+  { label: 'Airtel Money', pct: 5.8, color: Maple.error },
   { label: 'Pesapal', pct: 3.2, color: '#0BA4DB' },
-  { label: 'Bank Transfer', pct: 32.5, color: '#5A6890' },
-  { label: 'Others', pct: 6.1, color: '#22A55A' },
+  { label: 'Bank Transfer', pct: 32.5, color: Maple.secondary },
+  { label: 'Others', pct: 6.1, color: Maple.successText },
 ];
 
 export const providerCounts: readonly { label: string; count: number }[] = [

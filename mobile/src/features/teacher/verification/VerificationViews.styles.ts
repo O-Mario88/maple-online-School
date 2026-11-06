@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 
 import { BLUE, BODY, INK, LINE, MUTED } from '@/features/teacher/frame/TeacherParts';
+import { Maple } from '@/constants/maple';
 
 /** Styles for VerificationViews (kept apart so the view file stays readable). */
 export const VERIFICATION_REF_WIDTH = 1220;
@@ -10,7 +11,7 @@ export const s = StyleSheet.create({
     width: VERIFICATION_REF_WIDTH,
     padding: 12,
     gap: 10,
-    backgroundColor: '#EAF1FB',
+    backgroundColor: Maple.blueSelected,
   },
   body: {
     flexDirection: 'row',
@@ -62,14 +63,14 @@ export const s = StyleSheet.create({
     backgroundColor: BLUE,
   },
   stepNumCircleIdle: {
-    backgroundColor: '#E0ECFF',
+    backgroundColor: Maple.blueSelected,
   },
   stepNumText: {
     fontSize: 11,
     fontWeight: '800',
   },
   stepNumTextOn: {
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   stepNumTextIdle: {
     color: BLUE,
@@ -86,7 +87,7 @@ export const s = StyleSheet.create({
   },
   stepperArrow: {
     fontSize: 12,
-    color: '#94A3B8',
+    color: Maple.muted,
   },
 
   /* Section Cards */
@@ -122,13 +123,12 @@ export const s = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 6,
-    borderBottomWidth: 2,
+    borderBottomWidth: 3,
     borderBottomColor: 'transparent',
     marginBottom: -1,
   },
   idTabOn: {
     borderBottomColor: BLUE,
-    backgroundColor: '#F3F8FF',
   },
   idTabText: {
     fontSize: 10.5,
@@ -150,8 +150,8 @@ export const s = StyleSheet.create({
     borderRadius: 9,
     borderWidth: 1.5,
     borderStyle: 'dashed',
-    borderColor: '#93C5FD',
-    backgroundColor: '#F8FAFF',
+    borderColor: Maple.blueLine,
+    backgroundColor: Maple.blueSoft,
     alignItems: 'center',
     justifyContent: 'center',
     gap: 3,
@@ -161,7 +161,7 @@ export const s = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: '#E0ECFF',
+    backgroundColor: Maple.blueSelected,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 2,
@@ -193,8 +193,8 @@ export const s = StyleSheet.create({
     borderRadius: 9,
     borderWidth: 1.5,
     borderStyle: 'dashed',
-    borderColor: '#93C5FD',
-    backgroundColor: '#F8FAFF',
+    borderColor: Maple.blueLine,
+    backgroundColor: Maple.blueSoft,
     alignItems: 'center',
     justifyContent: 'center',
     gap: 3,
@@ -226,14 +226,14 @@ export const s = StyleSheet.create({
     width: 14,
     height: 14,
     borderRadius: 7,
-    backgroundColor: '#22C55E',
+    backgroundColor: Maple.success,
     alignItems: 'center',
     justifyContent: 'center',
   },
   greenCheckMark: {
     fontSize: 8.5,
     fontWeight: '800',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   checkItemText: {
     flex: 1,
@@ -262,8 +262,8 @@ export const s = StyleSheet.create({
     height: 15,
     borderRadius: 4,
     borderWidth: 1.5,
-    borderColor: '#CBD5E1',
-    backgroundColor: '#FFFFFF',
+    borderColor: Maple.borderStrong,
+    backgroundColor: Maple.surface,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 1,
@@ -275,7 +275,7 @@ export const s = StyleSheet.create({
   checkboxTick: {
     fontSize: 9,
     fontWeight: '800',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   confirmMainText: {
     fontSize: 10,
@@ -298,7 +298,7 @@ export const s = StyleSheet.create({
   submitVerifyBtnText: {
     fontSize: 11.5,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
 
   /* Right Column */
@@ -334,7 +334,7 @@ export const s = StyleSheet.create({
     borderRadius: 8.5,
     backgroundColor: BLUE,
     borderWidth: 1.5,
-    borderColor: '#FFFFFF',
+    borderColor: Maple.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -355,7 +355,7 @@ export const s = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: '#E0ECFF',
+    backgroundColor: Maple.blueSelected,
     borderRadius: 12,
     paddingHorizontal: 8,
     paddingVertical: 4,
@@ -371,7 +371,7 @@ export const s = StyleSheet.create({
     alignItems: 'flex-start',
     gap: 9,
     borderRadius: 9,
-    backgroundColor: '#FFFBEB',
+    backgroundColor: Maple.warningSoft,
     borderWidth: 1,
     borderColor: '#FDE68A',
     padding: 10,
@@ -380,7 +380,7 @@ export const s = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 15,
-    backgroundColor: '#F59E0B',
+    backgroundColor: Maple.warning,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -406,7 +406,7 @@ export const s = StyleSheet.create({
     width: 26,
     height: 26,
     borderRadius: 7,
-    backgroundColor: '#DCFCE7',
+    backgroundColor: Maple.successSoft,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -432,7 +432,7 @@ export const s = StyleSheet.create({
     color: INK,
   },
   inProgressPill: {
-    backgroundColor: '#E0ECFF',
+    backgroundColor: Maple.blueSelected,
     borderRadius: 10,
     paddingHorizontal: 8,
     paddingVertical: 2.5,
@@ -465,20 +465,20 @@ export const s = StyleSheet.create({
   timelineCheck: {
     fontSize: 9.5,
     fontWeight: '800',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   timelineCircleIdle: {
     width: 18,
     height: 18,
     borderRadius: 9,
     borderWidth: 1.5,
-    borderColor: '#94A3B8',
-    backgroundColor: '#FFFFFF',
+    borderColor: Maple.faint,
+    backgroundColor: Maple.surface,
   },
   timelineVertLine: {
     width: 1.5,
     height: 18,
-    backgroundColor: '#CBD5E1',
+    backgroundColor: Maple.borderStrong,
   },
   timelineTitle: {
     fontSize: 10.5,
@@ -494,8 +494,8 @@ export const s = StyleSheet.create({
   helpCard: {
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#CFE0FF',
-    backgroundColor: '#F0F6FF',
+    borderColor: Maple.blueSelected,
+    backgroundColor: Maple.blueSoft,
     padding: 12,
     gap: 10,
   },
@@ -515,7 +515,7 @@ export const s = StyleSheet.create({
   helpQMark: {
     fontSize: 14,
     fontWeight: '800',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   helpSub: {
     fontSize: 9.5,
@@ -530,8 +530,8 @@ export const s = StyleSheet.create({
     height: 30,
     borderRadius: 7,
     borderWidth: 1,
-    borderColor: '#93C5FD',
-    backgroundColor: '#FFFFFF',
+    borderColor: Maple.blueLine,
+    backgroundColor: Maple.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -551,7 +551,7 @@ export const s = StyleSheet.create({
   contactSupportText: {
     fontSize: 10,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
 });
 

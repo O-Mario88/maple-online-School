@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { type ReactNode, useState } from 'react';
 import { Pressable, ScrollView, type StyleProp, StyleSheet, Text, TextInput, View, type ViewStyle } from 'react-native';
 
@@ -8,8 +8,11 @@ import { Bar, Card, CardHead, IconTile, Pill } from '@/features/portal/PortalPar
 import { PremiumTiles } from '@/features/portal/Premium';
 import { BLUE, BODY, CANVAS, LINE, MUTED, NAVY, SOFT, TONES, type Tone, WHITE } from '@/features/portal/tokens';
 import type { IconName } from '@/lib/icons';
+import { useMe } from '@/lib/auth/auth-context';
+import { frameIdentity } from '@/lib/frame-identity';
 import { toast } from '@/lib/toast';
 import type { NavItem } from '@/mock/portal';
+import { Maple } from '@/constants/maple';
 
 /** Every school-admin page shares this sidebar; the current page is tinted blue. */
 export const ADMIN_NAV: readonly NavItem[] = [
@@ -41,10 +44,17 @@ export interface AdminMe {
   notifications: number;
 }
 
+/** The person the frame shows: whoever is signed in, so every school page names the same person. */
+export function useAdminMe(me: AdminMe): AdminMe {
+  const signedIn = useMe();
+  return frameIdentity(me, signedIn.data?.full_name);
+}
+
 /** A school-admin desktop page: the shared top bar and sidebar around the page. */
 export function AdminDesk({ me, search, active, children }: { me: AdminMe; search: string; active: string; children: ReactNode }) {
+  const shown = useAdminMe(me);
   return (
-    <SchoolDesk search={search} me={me} nav={ADMIN_NAV} active={active}>
+    <SchoolDesk search={search} me={shown} nav={ADMIN_NAV} active={active}>
       {children}
     </SchoolDesk>
   );
@@ -52,9 +62,10 @@ export function AdminDesk({ me, search, active, children }: { me: AdminMe; searc
 
 /** A school-admin phone page: header, scrolling body and an optional fixed footer. */
 export function AdminPhone({ me, children, footer }: { me: AdminMe; children: ReactNode; footer?: ReactNode }) {
+  const shown = useAdminMe(me);
   return (
     <View style={styles.phoneRoot}>
-      <SchoolPhoneTop initial={me.initial} notifications={me.notifications} />
+      <SchoolPhoneTop initial={shown.initial} notifications={shown.notifications} />
       <ScrollView contentContainerStyle={styles.phoneScroll} keyboardShouldPersistTaps="handled">
         {children}
       </ScrollView>
@@ -342,7 +353,7 @@ export function MiniBtn({ label, icon, onPress, tone = 'blue', style }: { label:
   const c = TONES[tone].text;
   return (
     <Pressable
-      style={({ hovered }) => [styles.mini, hovered && styles.miniHover, { borderColor: tone === 'red' ? '#F5C2C8' : '#C9DAF7' }, style]}
+      style={({ hovered }) => [styles.mini, hovered && styles.miniHover, { borderColor: tone === 'red' ? '#F5C2C8' : Maple.blueLine }, style]}
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={label}>
@@ -541,8 +552,8 @@ const styles = StyleSheet.create({
   trCompact: { minHeight: 34, paddingHorizontal: 10 },
   thCompact: { minHeight: 34 },
   thTextCompact: { fontSize: 12 },
-  trOn: { backgroundColor: '#F1F6FF' },
-  th: { minHeight: 44, backgroundColor: '#F3F6FC' },
+  trOn: { backgroundColor: Maple.blueSoft },
+  th: { minHeight: 44, backgroundColor: Maple.blueSoft },
   thText: { fontSize: 13, fontWeight: '600', color: NAVY },
   textRight: { textAlign: 'right' },
   cell: { minWidth: 0, paddingRight: 8, justifyContent: 'center' },
@@ -553,7 +564,7 @@ const styles = StyleSheet.create({
   tdStrong: { color: NAVY, fontWeight: '600' },
   statusPill: { paddingHorizontal: 9, paddingVertical: 4 },
   checkCol: { width: 30, justifyContent: 'center' },
-  box: { width: 18, height: 18, borderRadius: 4, borderWidth: 1.5, borderColor: '#9AA7C4', alignItems: 'center', justifyContent: 'center', backgroundColor: WHITE },
+  box: { width: 18, height: 18, borderRadius: 4, borderWidth: 1.5, borderColor: Maple.faint, alignItems: 'center', justifyContent: 'center', backgroundColor: WHITE },
   boxOn: { backgroundColor: BLUE, borderColor: BLUE },
   menuCol: { width: 30, alignItems: 'center' },
   search: { flexDirection: 'row', alignItems: 'center', gap: 10, height: 44, paddingHorizontal: 14, borderRadius: 10, borderWidth: 1, borderColor: LINE, backgroundColor: WHITE },
@@ -577,13 +588,13 @@ const styles = StyleSheet.create({
   stepsCompact: { paddingVertical: 12, paddingHorizontal: 6 },
   stepWrap: { flex: 1, flexDirection: 'row', alignItems: 'center' },
   stepWrapCompact: { justifyContent: 'center' },
-  stepLine: { flex: 1, height: 2, marginHorizontal: 14, backgroundColor: '#D7E2F3', minWidth: 20 },
+  stepLine: { flex: 1, height: 2, marginHorizontal: 14, backgroundColor: Maple.blueLine, minWidth: 20 },
   step: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   stepCompact: { flexDirection: 'column', gap: 6 },
   stepDot: { width: 42, height: 42, borderRadius: 21, alignItems: 'center', justifyContent: 'center', borderWidth: 2, borderColor: NAVY, backgroundColor: WHITE },
   stepDotCompact: { width: 36, height: 36, borderRadius: 18 },
   stepDotOn: { borderColor: BLUE, backgroundColor: BLUE },
-  stepDotDone: { borderColor: '#16A34A', backgroundColor: '#16A34A' },
+  stepDotDone: { borderColor: Maple.successText, backgroundColor: Maple.successText },
   stepNum: { fontSize: 17, fontWeight: '700', color: NAVY },
   stepNumOn: { color: WHITE },
   stepTextCompact: { alignItems: 'center' },

@@ -1,24 +1,21 @@
-import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
 import { LanguageMenu } from '@/components/shell/LanguageMenu';
+import { PageScroll } from '@/components/shell/PageScroll';
 import { Brand } from '@/features/public/palette';
+import { Maple } from '@/constants/maple';
+import { MapleLogo } from '@/components/brand/MapleLogo';
 
-const LEAF = require('@/assets/images/maple-leaf.png') as number;
 /** The light blue page behind the sign-in, onboarding and consent references. */
-export const AUTH_SKY = '#E6EFFA';
+export const AUTH_SKY = Maple.blueSelected;
 
 function Logo({ small = false }: { small?: boolean }) {
   return (
     <Pressable style={styles.logo} onPress={() => router.push('/welcome')} accessibilityRole="link" accessibilityLabel="Maple home">
-      <Image source={LEAF} style={small ? styles.leafSmall : styles.leaf} contentFit="contain" />
-      <View>
-        <Text style={[styles.name, small && styles.nameSmall]}>Maple</Text>
-        <Text style={[styles.tag, small && styles.tagSmall]}>Global Online School</Text>
-      </View>
+      <MapleLogo markStyle={small ? styles.leafSmall : styles.leaf} />
     </Pressable>
   );
 }
@@ -68,12 +65,15 @@ export function AuthPhoneTop() {
 export function FitScale({ refWidth, refHeight, children }: { refWidth: number; refHeight: number; children: ReactNode }) {
   const { width, height } = useWindowDimensions();
   const scale = Math.min(width / refWidth, height / refHeight);
+  // The screen still fills the window exactly; on the web the site footer follows below it.
   return (
-    <View style={styles.fitOuter}>
-      <View style={{ width: refWidth * scale, height: refHeight * scale }}>
-        <View style={[styles.fitInner, { width: refWidth, height: refHeight, transform: [{ scale }] }]}>{children}</View>
+    <PageScroll style={styles.fitScroll} contentContainerStyle={{ minHeight: height }}>
+      <View style={styles.fitOuter}>
+        <View style={{ width: refWidth * scale, height: refHeight * scale }}>
+          <View style={[styles.fitInner, { width: refWidth, height: refHeight, transform: [{ scale }] }]}>{children}</View>
+        </View>
       </View>
-    </View>
+    </PageScroll>
   );
 }
 
@@ -91,6 +91,7 @@ const styles = StyleSheet.create({
   actionText: { fontSize: 14.5, color: Brand.ink },
   actionTextSmall: { fontSize: 13 },
   phoneTop: { height: 58, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, backgroundColor: Brand.surface },
+  fitScroll: { flex: 1, backgroundColor: AUTH_SKY },
   fitOuter: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: AUTH_SKY },
   fitInner: { transformOrigin: 'top left' },
 });

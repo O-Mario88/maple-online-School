@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
@@ -13,6 +13,7 @@ import {
   type ExportFormat,
 } from '@/lib/excalidraw-livekit';
 import { toast } from '@/lib/toast';
+import { Maple } from '@/constants/maple';
 
 const EXTRA_WORKED_STEPS = [
   '5/6 − 1/4 = 10/12 − 3/12 = 7/12',
@@ -56,7 +57,7 @@ export function ExcalidrawBoard({
   packets,
 }: Props) {
   const [tool, setTool] = useState<'pen' | 'equation' | 'rect' | 'pdf'>('pen');
-  const [strokeColor, setStrokeColor] = useState('#1463F3');
+  const [strokeColor, setStrokeColor] = useState<string>(Maple.blue);
   const [exportFormat, setExportFormat] = useState<ExportFormat>('png');
   const [stepIdx, setStepIdx] = useState(0);
 
@@ -100,7 +101,7 @@ export function ExcalidrawBoard({
       {/* Top bar: board name, sync rate, who can draw */}
       <View style={s.topBar}>
         <View style={s.sdkBadge}>
-          <Icon name="edit" size={12} color="#1463F3" />
+          <Icon name="edit" size={12} color={Maple.blue} />
           <Text style={s.sdkBadgeText}>Class whiteboard</Text>
         </View>
 
@@ -117,7 +118,7 @@ export function ExcalidrawBoard({
           <Icon
             name={viewModeEnabled ? 'lock' : 'edit'}
             size={10}
-            color={viewModeEnabled ? '#64748B' : '#15803D'}
+            color={viewModeEnabled ? Maple.secondary : Maple.successText}
           />
           <Text
             style={[
@@ -146,7 +147,7 @@ export function ExcalidrawBoard({
           onPress={handleSaveToNotes}
           accessibilityRole="button"
           accessibilityLabel="Save Board to Notes">
-          <Icon name="download" size={12} color="#FFFFFF" />
+          <Icon name="download" size={12} color={Maple.surface} />
           <Text style={s.saveNotesText}>Save Board to Notes</Text>
         </Pressable>
       </View>
@@ -227,7 +228,7 @@ export function ExcalidrawBoard({
               </Pressable>
             );
           })}
-          {['#1463F3', '#EF4444', '#16A34A'].map((c) => (
+          {[Maple.blue, Maple.error, Maple.successText].map((c) => (
             <Pressable
               key={c}
               style={[
@@ -260,7 +261,7 @@ export function ExcalidrawBoard({
           </View>
         ) : (
           <Pressable style={s.restorePipBadge} onPress={onTogglePipLocation}>
-            <Icon name="video" size={11} color="#FFFFFF" />
+            <Icon name="video" size={11} color={Maple.surface} />
             <Text style={s.restorePipText}>Pin Teacher PiP to Corner ↗</Text>
           </Pressable>
         )}
@@ -272,11 +273,11 @@ export function ExcalidrawBoard({
 const s = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     borderRadius: 12,
     overflow: 'hidden',
     borderWidth: 1,
-    borderColor: '#DCE4F2',
+    borderColor: Maple.blueSelected,
   },
   topBar: {
     flexDirection: 'row',
@@ -284,18 +285,18 @@ const s = StyleSheet.create({
     gap: 8,
     paddingHorizontal: 12,
     paddingVertical: 8,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
     borderBottomWidth: 1,
-    borderBottomColor: '#E2E8F0',
+    borderBottomColor: Maple.border,
     flexWrap: 'wrap',
   },
   sdkBadge: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 5,
-    backgroundColor: '#EEF4FF',
+    backgroundColor: Maple.blueSoft,
     borderWidth: 1,
-    borderColor: '#BFDBFE',
+    borderColor: Maple.blueLine,
     borderRadius: 6,
     paddingHorizontal: 8,
     paddingVertical: 3.5,
@@ -303,13 +304,13 @@ const s = StyleSheet.create({
   sdkBadgeText: {
     fontSize: 11,
     fontWeight: '700',
-    color: '#1463F3',
+    color: Maple.blue,
   },
   dataChannelPill: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 5,
-    backgroundColor: '#F0FDF4',
+    backgroundColor: Maple.successSoft,
     borderWidth: 1,
     borderColor: '#BBF7D0',
     borderRadius: 6,
@@ -320,12 +321,12 @@ const s = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: '#16A34A',
+    backgroundColor: Maple.successText,
   },
   dataChannelText: {
     fontSize: 10.5,
     fontWeight: '600',
-    color: '#15803D',
+    color: Maple.successText,
   },
   permPill: {
     flexDirection: 'row',
@@ -337,11 +338,11 @@ const s = StyleSheet.create({
     borderWidth: 1,
   },
   permReadOnly: {
-    backgroundColor: '#F1F5F9',
-    borderColor: '#CBD5E1',
+    backgroundColor: Maple.blueSoft,
+    borderColor: Maple.borderStrong,
   },
   permCanDraw: {
-    backgroundColor: '#DCFCE7',
+    backgroundColor: Maple.successSoft,
     borderColor: '#86EFAC',
   },
   permText: {
@@ -349,15 +350,15 @@ const s = StyleSheet.create({
     fontWeight: '600',
   },
   permTextReadOnly: {
-    color: '#475569',
+    color: Maple.body,
   },
   permTextCanDraw: {
-    color: '#15803D',
+    color: Maple.successText,
   },
   formatBtn: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     borderWidth: 1,
-    borderColor: '#CBD5E1',
+    borderColor: Maple.borderStrong,
     borderRadius: 6,
     paddingHorizontal: 8,
     paddingVertical: 4,
@@ -365,13 +366,13 @@ const s = StyleSheet.create({
   formatBtnText: {
     fontSize: 10.5,
     fontWeight: '700',
-    color: '#334155',
+    color: Maple.body,
   },
   saveNotesBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 5,
-    backgroundColor: '#1463F3',
+    backgroundColor: Maple.blue,
     borderRadius: 7,
     paddingHorizontal: 10,
     paddingVertical: 5,
@@ -379,14 +380,14 @@ const s = StyleSheet.create({
   saveNotesText: {
     fontSize: 11,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
 
   /* Canvas */
   canvas: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     justifyContent: 'space-between',
     position: 'relative',
   },
@@ -394,7 +395,7 @@ const s = StyleSheet.create({
     gap: 12,
   },
   boardHeaderBanner: {
-    backgroundColor: '#1D4ED8',
+    backgroundColor: Maple.blue,
     borderRadius: 8,
     paddingVertical: 7,
     paddingHorizontal: 16,
@@ -403,7 +404,7 @@ const s = StyleSheet.create({
   boardHeaderText: {
     fontSize: 15,
     fontWeight: '800',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   boardColumns: {
     flexDirection: 'row',
@@ -412,7 +413,7 @@ const s = StyleSheet.create({
   },
   workedCol: {
     flex: 1.2,
-    backgroundColor: '#F0F6FF',
+    backgroundColor: Maple.blueSoft,
     borderRadius: 10,
     padding: 14,
     gap: 6,
@@ -420,17 +421,17 @@ const s = StyleSheet.create({
   exampleHeading: {
     fontSize: 14,
     fontWeight: '800',
-    color: '#0F172A',
+    color: Maple.navy,
   },
   equationRow: {
     fontSize: 17,
     fontWeight: '700',
-    color: '#0F172A',
+    color: Maple.navy,
   },
   equationStep: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#1E293B',
+    color: Maple.navy,
   },
   finalAnswerRow: {
     flexDirection: 'row',
@@ -440,8 +441,8 @@ const s = StyleSheet.create({
   },
   redAnswerBox: {
     borderWidth: 2,
-    borderColor: '#EF4444',
-    backgroundColor: '#FEF2F2',
+    borderColor: Maple.error,
+    backgroundColor: Maple.errorSoft,
     borderRadius: 6,
     paddingHorizontal: 10,
     paddingVertical: 3,
@@ -449,13 +450,13 @@ const s = StyleSheet.create({
   redAnswerText: {
     fontSize: 15,
     fontWeight: '800',
-    color: '#0F172A',
+    color: Maple.navy,
   },
   liveStrokePill: {
     marginTop: 4,
     borderWidth: 1.5,
     borderRadius: 6,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     paddingHorizontal: 8,
     paddingVertical: 4,
     alignSelf: 'flex-start',
@@ -471,7 +472,7 @@ const s = StyleSheet.create({
   stepsHeading: {
     fontSize: 14,
     fontWeight: '800',
-    color: '#0F172A',
+    color: Maple.navy,
   },
   stepRow: {
     flexDirection: 'row',
@@ -482,19 +483,19 @@ const s = StyleSheet.create({
     width: 20,
     height: 20,
     borderRadius: 10,
-    backgroundColor: '#1D4ED8',
+    backgroundColor: Maple.blue,
     alignItems: 'center',
     justifyContent: 'center',
   },
   stepNum: {
     fontSize: 11,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   stepLabel: {
     fontSize: 12.5,
     fontWeight: '500',
-    color: '#1E293B',
+    color: Maple.navy,
   },
 
   /* Floating Excalidraw Toolbar */
@@ -503,9 +504,9 @@ const s = StyleSheet.create({
     alignItems: 'center',
     gap: 6,
     alignSelf: 'flex-start',
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
     borderWidth: 1,
-    borderColor: '#CBD5E1',
+    borderColor: Maple.borderStrong,
     borderRadius: 8,
     paddingHorizontal: 8,
     paddingVertical: 5,
@@ -518,21 +519,21 @@ const s = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 6,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: Maple.border,
   },
   toolChipOn: {
-    backgroundColor: '#EEF4FF',
-    borderColor: '#1463F3',
+    backgroundColor: Maple.blueSoft,
+    borderColor: Maple.blue,
   },
   toolChipText: {
     fontSize: 11,
     fontWeight: '600',
-    color: '#334155',
+    color: Maple.body,
   },
   toolChipTextOn: {
-    color: '#1463F3',
+    color: Maple.blue,
     fontWeight: '700',
   },
   colorSwatch: {
@@ -542,7 +543,7 @@ const s = StyleSheet.create({
   },
   colorSwatchOn: {
     borderWidth: 2,
-    borderColor: '#0F172A',
+    borderColor: Maple.navy,
   },
 
   /* Corner Picture-in-Picture (PiP) Teacher Camera */
@@ -555,8 +556,8 @@ const s = StyleSheet.create({
     borderRadius: 10,
     overflow: 'hidden',
     borderWidth: 2,
-    borderColor: '#1463F3',
-    backgroundColor: '#0F172A',
+    borderColor: Maple.blue,
+    backgroundColor: Maple.navy,
   },
   pipOverlay: {
     position: 'absolute',
@@ -575,16 +576,16 @@ const s = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: '#22C55E',
+    backgroundColor: Maple.success,
   },
   pipName: {
     flex: 1,
     fontSize: 10,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   pipPinBtn: {
-    backgroundColor: '#1463F3',
+    backgroundColor: Maple.blue,
     borderRadius: 4,
     paddingHorizontal: 5,
     paddingVertical: 1.5,
@@ -592,7 +593,7 @@ const s = StyleSheet.create({
   pipPinText: {
     fontSize: 9,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   restorePipBadge: {
     position: 'absolute',
@@ -601,7 +602,7 @@ const s = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 5,
-    backgroundColor: '#0F172A',
+    backgroundColor: Maple.navy,
     borderRadius: 7,
     paddingHorizontal: 9,
     paddingVertical: 5,
@@ -609,7 +610,7 @@ const s = StyleSheet.create({
   restorePipText: {
     fontSize: 10,
     fontWeight: '600',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
 });
 

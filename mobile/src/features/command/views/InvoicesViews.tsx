@@ -13,6 +13,7 @@ import { toast } from '@/lib/toast';
 import { dateLabel, type InvoiceRow } from '@/mock/command-center/billing';
 
 import { CreateInvoiceModal, type MoneyAsk, MoneyModal, type NewInvoice } from './InvoiceModals';
+import { Maple } from '@/constants/maple';
 
 type B = CommandData['billing'];
 const PER_PAGE = 12;
@@ -468,10 +469,10 @@ const styles = StyleSheet.create({
   number: { fontSize: 15, fontWeight: '800', color: NAVY },
   custCard: { flexDirection: 'row', alignItems: 'center', gap: 10, padding: 10, borderRadius: 10, borderWidth: 1, borderColor: LINE },
   custName: { fontSize: 13.5, fontWeight: '700', color: NAVY },
-  linkRow: { flexDirection: 'row', alignItems: 'center', gap: 10, padding: 10, borderRadius: 10, backgroundColor: '#F4F7FC' },
+  linkRow: { flexDirection: 'row', alignItems: 'center', gap: 10, padding: 10, borderRadius: 10, backgroundColor: Maple.blueSoft },
   items: { borderRadius: 10, borderWidth: 1, borderColor: LINE, overflow: 'hidden' },
   itemRow: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 10, paddingVertical: 7, borderBottomWidth: 1, borderColor: LINE },
-  itemHead: { backgroundColor: '#F4F7FC' },
+  itemHead: { backgroundColor: Maple.blueSoft },
   th: { fontSize: 11, fontWeight: '600', color: NAVY },
   td: { fontSize: 11.5, color: NAVY },
   numCol: { width: 14 },

@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect, useState } from 'react';
 import { type LayoutChangeEvent, type GestureResponderEvent, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
@@ -7,8 +7,9 @@ import { Icon } from '@/components/icon';
 import { formatPlayback } from '@/lib/exam';
 
 import type { Question } from './useExam';
+import { Maple } from '@/constants/maple';
 
-const BLUE = '#1463F3';
+const BLUE = Maple.blue;
 const SPEEDS = [1, 1.5, 2] as const;
 const TICK_MS = 1000;
 /** The filmed frame's shape (the reference's x 474–851, y 367–541). */
@@ -78,10 +79,10 @@ export function PlayerControls({ total, p, muted, onMute, cc, onCc, onExpand }: 
       </Pressable>
       <View style={styles.row}>
         <Pressable onPress={p.toggle} accessibilityRole="button" accessibilityLabel={p.running ? 'Pause' : 'Play'} hitSlop={8}>
-          <Icon name={p.running ? 'pause' : 'playFill'} size={20} color="#FFFFFF" />
+          <Icon name={p.running ? 'pause' : 'playFill'} size={20} color={Maple.surface} />
         </Pressable>
         <Pressable onPress={onMute} accessibilityRole="button" accessibilityLabel={muted ? 'Unmute' : 'Mute'} hitSlop={8}>
-          <Icon name={muted ? 'volumeOff' : 'volume'} size={19} color="#FFFFFF" />
+          <Icon name={muted ? 'volumeOff' : 'volume'} size={19} color={Maple.surface} />
         </Pressable>
         <Text style={styles.time}>{`${formatPlayback(p.pos)} / ${formatPlayback(total)}`}</Text>
         <View style={styles.flex} />
@@ -92,11 +93,11 @@ export function PlayerControls({ total, p, muted, onMute, cc, onCc, onExpand }: 
           <Text style={[styles.ccText, cc && styles.ccTextOn]}>CC</Text>
         </Pressable>
         <View accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
-          <Icon name="settings" size={19} color="#FFFFFF" />
+          <Icon name="settings" size={19} color={Maple.surface} />
         </View>
         {onExpand ? (
           <Pressable onPress={onExpand} accessibilityRole="button" accessibilityLabel="Full screen" hitSlop={8}>
-            <Icon name="expand" size={18} color="#FFFFFF" />
+            <Icon name="expand" size={18} color={Maple.surface} />
           </Pressable>
         ) : null}
       </View>
@@ -115,7 +116,7 @@ export function WalkthroughPlayer({ q, frame, onClose, onExpand }: { q: Question
         <Text style={styles.title}>{walkthroughLabel(q)}</Text>
         {onClose ? (
           <Pressable onPress={onClose} accessibilityRole="button" accessibilityLabel="Close walkthrough" hitSlop={10}>
-            <Icon name="close" size={18} color="#FFFFFF" />
+            <Icon name="close" size={18} color={Maple.surface} />
           </Pressable>
         ) : null}
       </View>
@@ -132,24 +133,24 @@ export function WalkthroughPlayer({ q, frame, onClose, onExpand }: { q: Question
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
-  card: { borderRadius: 8, backgroundColor: '#161B26', overflow: 'hidden' },
+  card: { borderRadius: 8, backgroundColor: Maple.navy, overflow: 'hidden' },
   head: { height: 39, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 12 },
-  title: { fontSize: 16.5, fontWeight: '700', color: '#FFFFFF' },
-  frame: { width: '100%', aspectRatio: FRAME_RATIO, backgroundColor: '#2A3140', overflow: 'hidden' },
-  board: { position: 'absolute', left: '37%', right: '3%', top: '4%', bottom: '12%', justifyContent: 'center', gap: 6, paddingHorizontal: 14, borderRadius: 3, backgroundColor: '#F6F7FA' },
-  boardText: { fontFamily: HAND, fontSize: 14, color: '#1E2A78' },
+  title: { fontSize: 16.5, fontWeight: '700', color: Maple.surface },
+  frame: { width: '100%', aspectRatio: FRAME_RATIO, backgroundColor: Maple.navy, overflow: 'hidden' },
+  board: { position: 'absolute', left: '37%', right: '3%', top: '4%', bottom: '12%', justifyContent: 'center', gap: 6, paddingHorizontal: 14, borderRadius: 3, backgroundColor: Maple.canvas },
+  boardText: { fontFamily: HAND, fontSize: 14, color: Maple.body },
   fade: { position: 'absolute', left: 0, right: 0, bottom: 0, height: '30%' },
-  caption: { position: 'absolute', left: 24, right: 24, bottom: 8, alignSelf: 'center', paddingHorizontal: 8, paddingVertical: 3, borderRadius: 3, backgroundColor: 'rgba(0,0,0,0.7)', fontSize: 12, color: '#FFFFFF', textAlign: 'center', overflow: 'hidden' },
+  caption: { position: 'absolute', left: 24, right: 24, bottom: 8, alignSelf: 'center', paddingHorizontal: 8, paddingVertical: 3, borderRadius: 3, backgroundColor: 'rgba(0,0,0,0.7)', fontSize: 12, color: Maple.surface, textAlign: 'center', overflow: 'hidden' },
   controls: { paddingHorizontal: 12, paddingBottom: 9, backgroundColor: 'rgba(16,20,30,0.85)' },
   track: { height: 14, justifyContent: 'center' },
   trackLine: { height: 3, borderRadius: 2, backgroundColor: 'rgba(255,255,255,0.35)', overflow: 'hidden' },
   trackFill: { height: 3, backgroundColor: BLUE },
-  knob: { position: 'absolute', top: 2, width: 10, height: 10, marginLeft: -5, borderRadius: 5, borderWidth: 2, borderColor: '#FFFFFF', backgroundColor: BLUE },
+  knob: { position: 'absolute', top: 2, width: 10, height: 10, marginLeft: -5, borderRadius: 5, borderWidth: 2, borderColor: Maple.surface, backgroundColor: BLUE },
   row: { flexDirection: 'row', alignItems: 'center', gap: 14, marginTop: 2 },
-  time: { fontSize: 12.5, color: '#FFFFFF', fontVariant: ['tabular-nums'] },
-  speed: { fontSize: 14, color: '#FFFFFF' },
-  cc: { paddingHorizontal: 4, paddingVertical: 1, borderRadius: 3, borderWidth: 1.5, borderColor: '#FFFFFF' },
-  ccOn: { backgroundColor: '#FFFFFF' },
-  ccText: { fontSize: 10, fontWeight: '800', color: '#FFFFFF' },
-  ccTextOn: { color: '#161B26' },
+  time: { fontSize: 12.5, color: Maple.surface, fontVariant: ['tabular-nums'] },
+  speed: { fontSize: 14, color: Maple.surface },
+  cc: { paddingHorizontal: 4, paddingVertical: 1, borderRadius: 3, borderWidth: 1.5, borderColor: Maple.surface },
+  ccOn: { backgroundColor: Maple.surface },
+  ccText: { fontSize: 10, fontWeight: '800', color: Maple.surface },
+  ccTextOn: { color: Maple.navy },
 });

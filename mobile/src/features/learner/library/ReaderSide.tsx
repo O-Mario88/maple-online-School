@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
@@ -8,14 +8,15 @@ import type { IconName } from '@/lib/icons';
 
 import { openBook } from './ShelfParts';
 import type { Hub } from './useShelf';
+import { Maple } from '@/constants/maple';
 
-const INK = '#0B1424';
-const NAVY = '#0B2A6B';
-const BODY = '#4A5263';
-const BLUE = '#1463F3';
+const INK = Maple.navy;
+const NAVY = Maple.blueHover;
+const BODY = Maple.body;
+const BLUE = Maple.blue;
 
 const MENU_ICONS: readonly IconName[] = ['library', 'book', 'list', 'grid', 'download', 'edit', 'clock'];
-const LIST_TONES = ['#E8F0FE', '#F1EAFE', '#FDECEE', '#FDECEE'] as const;
+const LIST_TONES = [Maple.blueSelected, Maple.blueSoft, Maple.errorSoft, Maple.errorSoft] as const;
 
 const toLibrary = (params: { subject?: string; q?: string } = {}) => router.push({ pathname: '/learn/library', params });
 
@@ -26,7 +27,7 @@ export function ReaderSearch({ hub, phone = false }: { hub: Hub; phone?: boolean
     <View style={styles.searchCol}>
       <View style={styles.search}>
         <Icon name="search" size={15} color={BODY} />
-        <TextInput style={styles.searchInput} value={q} onChangeText={setQ} onSubmitEditing={() => toLibrary({ q: q.trim() })} placeholder="Search books, topics, or authors..." placeholderTextColor="#7A8396" returnKeyType="search" accessibilityLabel="Search the library" />
+        <TextInput style={styles.searchInput} value={q} onChangeText={setQ} onSubmitEditing={() => toLibrary({ q: q.trim() })} placeholder="Search books, topics, or authors..." placeholderTextColor={Maple.secondary} returnKeyType="search" accessibilityLabel="Search the library" />
       </View>
       <View style={[styles.types, phone && styles.typesP]}>
         {hub.reader.types.map((t, i) => (
@@ -68,7 +69,7 @@ export function ReaderMenu({ hub, onNotes, onDecks }: { hub: Hub; onNotes: () =>
           style={[styles.menuItem, i === 0 && styles.menuOn]}
           onPress={() => (m === 'Notes & Highlights' ? onNotes() : m === 'Flashcard Decks' ? onDecks() : toLibrary())}
           accessibilityRole="link">
-          <Icon name={MENU_ICONS[i]} size={17} color={i === 0 ? BLUE : '#3B4456'} />
+          <Icon name={MENU_ICONS[i]} size={17} color={i === 0 ? BLUE : Maple.body} />
           <Text style={[styles.menuText, i === 0 && styles.menuTextOn]}>{m}</Text>
         </Pressable>
       ))}
@@ -118,7 +119,7 @@ export function AutoCard({ hub, onDecks }: { hub: Hub; onDecks: () => void }) {
       </View>
       <Pressable style={styles.autoBtn} onPress={onDecks} accessibilityRole="button">
         <Text style={styles.autoBtnText}>View My Decks</Text>
-        <Icon name="arrowRight" size={15} color="#FFFFFF" />
+        <Icon name="arrowRight" size={15} color={Maple.surface} />
       </Pressable>
     </View>
   );
@@ -155,25 +156,25 @@ export function ReadingLists({ hub, toast, phone = false }: { hub: Hub; toast: (
 const styles = StyleSheet.create({
   flex: { flex: 1 },
   searchCol: { gap: 12 },
-  search: { height: 34, flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 12, borderRadius: 6, borderWidth: 1, borderColor: '#DCE3EE', backgroundColor: '#FFFFFF' },
+  search: { height: 34, flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 12, borderRadius: 6, borderWidth: 1, borderColor: Maple.blueLine, backgroundColor: Maple.surface },
   searchInput: { flex: 1, height: 32, paddingVertical: 0, fontSize: 12, color: INK },
   types: { flexDirection: 'row', gap: 5 },
   typesP: { flexWrap: 'wrap' },
-  type: { height: 30, justifyContent: 'center', paddingHorizontal: 9, borderRadius: 5, borderWidth: 1, borderColor: '#DCE3EE', backgroundColor: '#FFFFFF' },
-  typeOn: { borderColor: '#0B6BFF', backgroundColor: '#0B6BFF' },
+  type: { height: 30, justifyContent: 'center', paddingHorizontal: 9, borderRadius: 5, borderWidth: 1, borderColor: Maple.blueLine, backgroundColor: Maple.surface },
+  typeOn: { borderColor: Maple.blue, backgroundColor: Maple.blue },
   typeText: { fontSize: 11, color: INK },
-  typeTextOn: { fontWeight: '600', color: '#FFFFFF' },
+  typeTextOn: { fontWeight: '600', color: Maple.surface },
   tiles: { flexDirection: 'row', gap: 12 },
-  tile: { flexGrow: 1, flexShrink: 1, flexBasis: 0, height: 52, flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 10, borderRadius: 8, backgroundColor: '#FFFFFF' },
+  tile: { flexGrow: 1, flexShrink: 1, flexBasis: 0, height: 52, flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 10, borderRadius: 8, backgroundColor: Maple.surface },
   tileFirst: { flexGrow: 0, flexShrink: 0, flexBasis: 218, marginLeft: 14 },
-  tileOn: { backgroundColor: '#E6EEFC' },
+  tileOn: { backgroundColor: Maple.blueSelected },
   tileIcon: { width: 34, height: 34 },
   tileName: { fontSize: 12.5, fontWeight: '500', color: INK },
   tileCount: { marginTop: 3, fontSize: 10.5, color: BODY },
   menu: { gap: 4 },
   menuItem: { height: 33, flexDirection: 'row', alignItems: 'center', gap: 14, paddingHorizontal: 14, borderRadius: 6 },
-  menuOn: { backgroundColor: '#E6EEFC' },
-  menuText: { fontSize: 13, color: '#2B3445' },
+  menuOn: { backgroundColor: Maple.blueSelected },
+  menuText: { fontSize: 13, color: Maple.navy },
   menuTextOn: { fontWeight: '500', color: BLUE },
   headRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   head: { fontSize: 14, fontWeight: '700', color: INK },
@@ -185,20 +186,20 @@ const styles = StyleSheet.create({
   recTitle: { fontSize: 12.5, fontWeight: '500', color: NAVY },
   recMeta: { marginTop: 2, fontSize: 11.5, color: BODY },
   recRate: { marginTop: 2, fontSize: 11, color: BODY },
-  gold: { color: '#F59E0B' },
-  auto: { gap: 14, padding: 12, borderRadius: 8, borderWidth: 1, borderColor: '#EEF1F6', backgroundColor: '#FFFFFF' },
+  gold: { color: Maple.warning },
+  auto: { gap: 14, padding: 12, borderRadius: 8, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface },
   autoHead: { flexDirection: 'row', gap: 10 },
   autoIcon: { width: 34, height: 34 },
   autoTitle: { fontSize: 12.5, fontWeight: '600', color: INK },
   autoText: { marginTop: 4, fontSize: 11.5, lineHeight: 16, color: BODY },
-  autoBtn: { height: 36, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, borderRadius: 4, backgroundColor: '#0B6BFF' },
-  autoBtnText: { fontSize: 13, fontWeight: '500', color: '#FFFFFF' },
+  autoBtn: { height: 36, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, borderRadius: 4, backgroundColor: Maple.blue },
+  autoBtnText: { fontSize: 13, fontWeight: '500', color: Maple.surface },
   lists: { gap: 12 },
   listRow: { flexDirection: 'row', gap: 12 },
   listCol: { flexDirection: 'column', gap: 8 },
-  list: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 12, padding: 10, borderRadius: 8, borderWidth: 1, borderColor: '#EEF1F6', backgroundColor: '#FFFFFF' },
+  list: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 12, padding: 10, borderRadius: 8, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface },
   // Phones: a whole style (a `flex: 0` override collapses the rows on the web).
-  listP: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 10, borderRadius: 8, borderWidth: 1, borderColor: '#EEF1F6', backgroundColor: '#FFFFFF' },
+  listP: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 10, borderRadius: 8, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface },
   listIconBox: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center', borderRadius: 8 },
   listIcon: { width: 30, height: 30 },
   listTitle: { fontSize: 12, fontWeight: '500', color: INK },

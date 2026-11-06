@@ -8,6 +8,7 @@ import { useAccess } from '@/lib/access/access-context';
 import { adFor, adPick } from '@/lib/access/ads';
 import { mockData } from '@/lib/mock';
 import { toast } from '@/lib/toast';
+import { Radii } from '@/constants/maple';
 
 /**
  * The free tier's ad: a bigger card on the pages the free tier opens (the library, the free
@@ -90,7 +91,7 @@ function makeStyles(t: Theme) {
     title: { marginTop: 2, fontSize: 15, fontWeight: '600', color: t.text },
     body: { marginTop: 1, fontSize: 13, color: t.textSecondary },
     actions: { alignItems: 'center', gap: 6 },
-    button: { paddingHorizontal: 14, paddingVertical: 8, borderRadius: Radius.pill },
+    button: { paddingHorizontal: 14, paddingVertical: 8, borderRadius: Radii.control},
     buttonText: { fontSize: 13, fontWeight: '600' },
   });
 }

@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
@@ -19,6 +19,7 @@ import type {
 } from '@/mock/teacher-assignment-new';
 import { ASSIGNMENT_REF_WIDTH, s, s as deskS } from './AssignmentViews.styles';
 import { phoneS } from './AssignmentViews.phoneStyles';
+import { Maple } from '@/constants/maple';
 
 export { ASSIGNMENT_REF_WIDTH };
 
@@ -311,7 +312,7 @@ export function AssignmentDesk({ a, me, phone = false }: { a: AssignmentBuilder;
           <Pressable
             style={s.genRubricBtn}
             onPress={() => toast('Regenerated standards-aligned UNEB O-Level rubric with AI!')}>
-            <Icon name="sparkle" size={13} color="#FFFFFF" />
+            <Icon name="sparkle" size={13} color={Maple.surface} />
             <Text style={s.genRubricBtnText}>Generate Rubric</Text>
           </Pressable>
         </View>
@@ -516,7 +517,7 @@ export function AssignmentDesk({ a, me, phone = false }: { a: AssignmentBuilder;
         <View style={s.previewHeader}>
           <View style={s.stepHeader}>
             <View style={s.eyeBadge}>
-              <Icon name="eye" size={12} color="#FFFFFF" />
+              <Icon name="eye" size={12} color={Maple.surface} />
             </View>
             <Text style={s.stepTitle}>Assignment Preview</Text>
           </View>
@@ -547,8 +548,8 @@ export function AssignmentDesk({ a, me, phone = false }: { a: AssignmentBuilder;
 
           <View style={s.previewStatsRow}>
             <View style={s.previewStatBox}>
-              <View style={[s.previewStatIcon, { backgroundColor: '#FEE2E2' }]}>
-                <Icon name="notes" size={12} color="#EF4444" />
+              <View style={[s.previewStatIcon, { backgroundColor: Maple.errorSoft }]}>
+                <Icon name="notes" size={12} color={Maple.error} />
               </View>
               <View>
                 <Text style={s.previewStatLabel}>Attachment</Text>
@@ -557,20 +558,20 @@ export function AssignmentDesk({ a, me, phone = false }: { a: AssignmentBuilder;
             </View>
 
             <View style={s.previewStatBox}>
-              <View style={[s.previewStatIcon, { backgroundColor: '#DCFCE7' }]}>
-                <Icon name="mic" size={12} color="#16A34A" />
+              <View style={[s.previewStatIcon, { backgroundColor: Maple.successSoft }]}>
+                <Icon name="mic" size={12} color={Maple.successText} />
               </View>
               <View>
                 <Text style={s.previewStatLabel}>60-Second Viva</Text>
-                <Text style={[s.previewStatVal, { color: '#16A34A' }]}>
+                <Text style={[s.previewStatVal, { color: Maple.successText }]}>
                   {requireViva ? 'Required' : 'Optional'}
                 </Text>
               </View>
             </View>
 
             <View style={s.previewStatBox}>
-              <View style={[s.previewStatIcon, { backgroundColor: '#FEF3C7' }]}>
-                <Icon name="trophy" size={12} color="#D97706" />
+              <View style={[s.previewStatIcon, { backgroundColor: Maple.warningSoft }]}>
+                <Icon name="trophy" size={12} color={Maple.warning} />
               </View>
               <View>
                 <Text style={s.previewStatLabel}>Total Marks</Text>
@@ -620,7 +621,7 @@ export function AssignmentDesk({ a, me, phone = false }: { a: AssignmentBuilder;
                   toast('Assignment published to O-Level Mathematics & O-Level Science!');
                   router.push('/teach/grading');
                 }}>
-                <Icon name="send" size={14} color="#FFFFFF" />
+                <Icon name="send" size={14} color={Maple.surface} />
                 <Text style={s.assignBtnText}>Assign</Text>
               </Pressable>
             </View>
@@ -663,7 +664,7 @@ export function AssignmentDesk({ a, me, phone = false }: { a: AssignmentBuilder;
 
 export function AssignmentPhone({ a, me }: { a: AssignmentBuilder; me: TeacherMe }) {
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: '#EAF1FB' }}>
+    <ScrollView style={{ flex: 1, backgroundColor: Maple.blueSelected }}>
       <TeacherPhoneTop me={me} />
       <AssignmentDesk a={a} me={me} phone />
     </ScrollView>

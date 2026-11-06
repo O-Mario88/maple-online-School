@@ -1,5 +1,6 @@
 /** Sample data for Image 3: Rapid Speed-Grader (/(teacher)/grading/[assignmentId]). */
 import { photos } from './photos';
+import { Maple } from '@/constants/maple';
 
 export type SubmissionStatus = 'Needs Review' | 'AI Scored' | 'Graded';
 
@@ -147,7 +148,7 @@ export const speedGrader = {
       description: 'Accurate solutions final\nanswers.',
       score: 32,
       max: 40,
-      color: '#16A34A',
+      color: Maple.successText,
     },
     {
       id: 'cr-2',
@@ -155,7 +156,7 @@ export const speedGrader = {
       description: 'Clear and logical working\nsteps.',
       score: 26,
       max: 30,
-      color: '#16A34A',
+      color: Maple.successText,
     },
     {
       id: 'cr-3',
@@ -163,7 +164,7 @@ export const speedGrader = {
       description: 'Clear explanation and\nmathematical notation.',
       score: 14,
       max: 20,
-      color: '#F59E0B',
+      color: Maple.warning,
     },
     {
       id: 'cr-4',
@@ -171,7 +172,7 @@ export const speedGrader = {
       description: 'Neat, organized and easy\nto follow.',
       score: 6,
       max: 10,
-      color: '#F59E0B',
+      color: Maple.warning,
     },
   ] as SpeedGraderCriterion[],
   quickComments: [

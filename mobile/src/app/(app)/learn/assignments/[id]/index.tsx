@@ -1,9 +1,9 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
-import { useShell } from '@/components/ui';
+import { useContentWidth, useShell } from '@/components/ui';
 import { LearnerPhoneTop } from '@/features/learner/dashboard/DashPhone';
 import { ScannerCard, ScannerPanel, VivaCard, VivaPanel } from '@/features/learner/work/Capture';
 import { BLUE, BODY, INK } from '@/features/learner/work/MathText';
@@ -14,6 +14,8 @@ import { useWork, type Work, type WorkState } from '@/features/learner/work/useW
 import { RefScale } from '@/features/public/home/RefScale';
 import type { IconName } from '@/lib/icons';
 import { mockData } from '@/lib/mock';
+import { Maple } from '@/constants/maple';
+import { PageScroll } from '@/components/shell/PageScroll';
 
 /** The workspace reference's page (x 18–1176 at 1536 wide); the desktop layout uses its pixels. */
 const WORK_REF_WIDTH = 1158;
@@ -109,7 +111,7 @@ function Phone({ w, s, avatar }: { w: Work; s: WorkState; avatar: number }) {
   return (
     <View style={styles.phoneRoot}>
       <LearnerPhoneTop avatar={avatar} globe />
-      <ScrollView contentContainerStyle={styles.phone}>
+      <PageScroll contentContainerStyle={styles.phone}>
         <Crumbs items={w.phoneCrumbs} phone />
         <Text style={styles.titleP} accessibilityRole="header">
           {w.title}
@@ -151,7 +153,7 @@ function Phone({ w, s, avatar }: { w: Work; s: WorkState; avatar: number }) {
         ) : (
           <SubmitButton s={s} phone />
         )}
-      </ScrollView>
+      </PageScroll>
     </View>
   );
 }
@@ -177,15 +179,15 @@ export default function AssignmentWorkScreen() {
 function WorkView({ w, avatar }: { w: Work; avatar: number }) {
   const s = useWork(w);
   const { wide } = useShell();
-  const { width } = useWindowDimensions();
+  const width = useContentWidth();
   return (
     <View style={styles.flex}>
       {wide ? (
-        <ScrollView style={styles.deskBg} contentContainerStyle={styles.deskWrap}>
+        <PageScroll style={styles.deskBg} contentContainerStyle={styles.deskWrap}>
           <RefScale width={Math.min(width - 48, MAX_DESK_WIDTH)} refWidth={WORK_REF_WIDTH}>
             <Desktop w={w} s={s} />
           </RefScale>
-        </ScrollView>
+        </PageScroll>
       ) : (
         <Phone w={w} s={s} avatar={avatar} />
       )}
@@ -196,39 +198,39 @@ function WorkView({ w, avatar }: { w: Work; avatar: number }) {
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
-  deskBg: { backgroundColor: '#EEF3FB' },
+  deskBg: { backgroundColor: Maple.blueSoft },
   deskWrap: { alignItems: 'center', paddingVertical: 16 },
-  canvas: { width: WORK_REF_WIDTH, minHeight: 1030, borderRadius: 12, backgroundColor: '#F4F8FD' },
-  kind: { paddingHorizontal: 9, paddingVertical: 3, borderRadius: 5, backgroundColor: '#E6EEFC', fontSize: 12.5, fontWeight: '600', color: '#1450C8', overflow: 'hidden' },
+  canvas: { width: WORK_REF_WIDTH, minHeight: 1030, borderRadius: 12, backgroundColor: Maple.blueSoft },
+  kind: { paddingHorizontal: 9, paddingVertical: 3, borderRadius: 5, backgroundColor: Maple.blueSelected, fontSize: 12.5, fontWeight: '600', color: Maple.blueHover, overflow: 'hidden' },
   crumbsPos: { position: 'absolute', left: 18, top: 14 },
   titleRow: { position: 'absolute', left: 18, top: 40, flexDirection: 'row', alignItems: 'center', gap: 12 },
   title: { fontSize: 25, fontWeight: '800', color: INK, letterSpacing: -0.6 },
   sub: { position: 'absolute', left: 18, top: 77, width: 694, fontSize: 12, color: BODY },
   progressPos: { position: 'absolute', left: 715, top: 26, width: 433 },
   tabsPos: { position: 'absolute', left: 14, top: 104 },
-  tabs: { height: 40, flexDirection: 'row', borderRadius: 6, backgroundColor: '#FFFFFF' },
-  tabsP: { flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: '#E3E8F0' },
+  tabs: { height: 40, flexDirection: 'row', borderRadius: 6, backgroundColor: Maple.surface },
+  tabsP: { flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: Maple.blueSelected },
   tab: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 20 },
   tabP: { flex: 1, height: 38, justifyContent: 'center', paddingHorizontal: 0 },
   tabText: { fontSize: 13, color: INK },
   tabTextP: { fontSize: 12 },
   tabOn: { color: BLUE, fontWeight: '600' },
-  tabLine: { position: 'absolute', left: 4, right: 4, bottom: 0, height: 2.5, backgroundColor: BLUE },
+  tabLine: { position: 'absolute', left: 4, right: 4, bottom: 0, height: 3, backgroundColor: BLUE },
   col: { position: 'absolute', top: 151, gap: 9 },
   colLeft: { left: 16, width: 338 },
   colMid: { left: 368, width: 554, gap: 10 },
   colRight: { left: 930, width: 218, gap: 9 },
-  card: { padding: 12, borderRadius: 8, backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#EAEFF6' },
+  card: { padding: 12, borderRadius: 8, backgroundColor: Maple.surface, borderWidth: 1, borderColor: Maple.blueSelected },
   instructions: { minHeight: 570 },
   work: { padding: 16 },
   pair: { flexDirection: 'row', gap: 8 },
   scan: { width: 277 },
   viva: { width: 269 },
-  phoneRoot: { flex: 1, backgroundColor: '#F7F9FC' },
+  phoneRoot: { flex: 1, backgroundColor: Maple.blueSoft },
   phone: { gap: 12, padding: 16, paddingBottom: 110 },
   titleP: { fontSize: 21, fontWeight: '800', color: INK, letterSpacing: -0.4 },
-  cardP: { padding: 12, borderRadius: 10, borderWidth: 1, borderColor: '#E6EBF2', backgroundColor: '#FFFFFF' },
+  cardP: { padding: 12, borderRadius: 10, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface },
   hint: { fontSize: 12.5, color: BODY },
   toast: { position: 'absolute', left: 16, right: 16, bottom: 96, alignItems: 'center' },
-  toastText: { maxWidth: 520, paddingHorizontal: 14, paddingVertical: 10, borderRadius: 10, backgroundColor: 'rgba(11,20,36,0.92)', fontSize: 13, color: '#FFFFFF', textAlign: 'center', overflow: 'hidden' },
+  toastText: { maxWidth: 520, paddingHorizontal: 14, paddingVertical: 10, borderRadius: 10, backgroundColor: 'rgba(11,20,36,0.92)', fontSize: 13, color: Maple.surface, textAlign: 'center', overflow: 'hidden' },
 });

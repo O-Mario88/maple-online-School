@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
@@ -9,6 +9,7 @@ import type { MockData } from '@/mock';
 
 import { Brand } from '../palette';
 import { crumbHref } from '@/features/public/HomeNav';
+import { Maple } from '@/constants/maple';
 
 type Course = MockData['publicPages']['coursePage'];
 
@@ -112,11 +113,11 @@ const styles = StyleSheet.create({
   tag: { fontSize: 12, color: Brand.ink, paddingHorizontal: 12, paddingVertical: 6, borderRadius: 999, backgroundColor: Brand.surface, borderWidth: 1, borderColor: Brand.line, overflow: 'hidden' },
   videoCol: { minHeight: 240 },
   videoColWide: { flex: 1 },
-  video: { flex: 1, minHeight: 240, borderRadius: 14, backgroundColor: '#2C3E50', overflow: 'hidden' },
+  video: { flex: 1, minHeight: 240, borderRadius: 14, backgroundColor: Maple.navy, overflow: 'hidden' },
   trailerTag: { position: 'absolute', top: 14, right: 14, flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 12, paddingVertical: 6, borderRadius: 999, backgroundColor: 'rgba(11,20,36,0.75)', zIndex: 1 },
   trailerText: { fontSize: 12, fontWeight: '600', color: Brand.surface },
   teacherEmoji: { position: 'absolute', left: '8%', bottom: -10, fontSize: 160 },
   teacherEmojiNarrow: { fontSize: 110, left: 0 },
-  board: { position: 'absolute', right: 28, top: 60, fontSize: 18, lineHeight: 30, color: '#EEF2F7', textAlign: 'center' },
+  board: { position: 'absolute', right: 28, top: 60, fontSize: 18, lineHeight: 30, color: Maple.blueSelected, textAlign: 'center' },
   play: { position: 'absolute', left: '50%', top: '50%', marginLeft: -32, marginTop: -32, width: 64, height: 64, borderRadius: 32, backgroundColor: Brand.blue, alignItems: 'center', justifyContent: 'center', borderWidth: 4, borderColor: 'rgba(255,255,255,0.6)' },
 });

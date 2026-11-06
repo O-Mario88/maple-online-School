@@ -10,6 +10,7 @@ import type { RosterRow, RosterStatus } from '@/mock/school-admin';
 
 import { AdminDesk, AdminPhone, Cell, type Column, DataTable, ListCard, ListRow, MiniBtn, PageHead, Search, Segments, StatusCell, Steps, useSelection } from '../kit/AdminKit';
 import { Donut, DonutLabel } from '../kit/Charts';
+import { Maple } from '@/constants/maple';
 
 type Admin = MockData['schoolAdmin'];
 type Roster = Admin['roster'];
@@ -58,10 +59,10 @@ function DropZone({ r, onChoose, phone = false }: { r: Roster; onChoose: () => v
 /** The import summary ring: ready, needs review, duplicates and missing data. */
 function Summary({ r, counts, onContinue }: { r: Roster; counts: { ready: number; review: number; duplicates: number }; onContinue: () => void }) {
   const items = [
-    { label: 'Ready to import', value: counts.ready, color: '#22A55A' },
-    { label: 'Need review', value: counts.review, color: '#F7A21B' },
-    { label: 'Duplicates', value: counts.duplicates, color: '#EF3B4D' },
-    { label: 'Missing required data', value: r.summary.missing, color: '#A6B0C6' },
+    { label: 'Ready to import', value: counts.ready, color: Maple.successText },
+    { label: 'Need review', value: counts.review, color: Maple.warning },
+    { label: 'Duplicates', value: counts.duplicates, color: Maple.error },
+    { label: 'Missing required data', value: r.summary.missing, color: Maple.muted },
   ];
   return (
     <View style={styles.summary}>
@@ -383,7 +384,7 @@ const styles = StyleSheet.create({
   importCard: { flexDirection: 'row', gap: 16, marginTop: 18, padding: 14 },
   dropCol: { width: 290 },
   mapWrap: { flex: 1, minWidth: 0, gap: 14 },
-  drop: { alignItems: 'center', gap: 6, padding: 18, borderRadius: 14, borderWidth: 1.5, borderStyle: 'dashed', borderColor: '#A9C2F0', backgroundColor: '#F8FAFF' },
+  drop: { alignItems: 'center', gap: 6, padding: 18, borderRadius: 14, borderWidth: 1.5, borderStyle: 'dashed', borderColor: Maple.blueLine, backgroundColor: Maple.blueSoft },
   dropDesk: { flex: 1 },
   dropPhone: { paddingVertical: 26, backgroundColor: WHITE },
   dropTitle: { marginTop: 8, fontSize: 16.5, fontWeight: '700', color: NAVY, textAlign: 'center' },
@@ -406,7 +407,7 @@ const styles = StyleSheet.create({
   paneSub: { marginTop: 3, marginBottom: 10, fontSize: 12.5, color: BODY },
   mapTable: { borderRadius: 10, borderWidth: 1, borderColor: LINE, overflow: 'hidden' },
   mapRow: { flexDirection: 'row', alignItems: 'center', gap: 10, height: 40, paddingHorizontal: 10, borderBottomWidth: 1, borderColor: LINE },
-  mapHead: { backgroundColor: '#F3F6FC' },
+  mapHead: { backgroundColor: Maple.blueSoft },
   mapHeadText: { fontSize: 13, fontWeight: '600', color: NAVY },
   mapCol: { fontSize: 13.5, color: NAVY },
   mapField: { width: 160 },
@@ -429,7 +430,7 @@ const styles = StyleSheet.create({
   reviewSearch: { width: 240 },
   td: { fontSize: 13.5, color: BODY },
   emailInput: { height: 32, paddingVertical: 0, paddingHorizontal: 10, borderRadius: 7, borderWidth: 1, borderColor: LINE, fontSize: 13, color: NAVY, backgroundColor: WHITE },
-  emailBad: { borderColor: '#F3A1AB', backgroundColor: '#FFF6F7' },
+  emailBad: { borderColor: '#F3A1AB', backgroundColor: Maple.errorSoft },
   footer: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingTop: 4 },
   footerText: { fontSize: 14, color: BODY },
   phoneCard: { gap: 12, padding: 16 },

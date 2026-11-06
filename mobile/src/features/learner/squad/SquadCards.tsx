@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, ScrollView, Share, StyleSheet, Text, View } from 'react-native';
@@ -9,12 +9,13 @@ import type { IconName } from '@/lib/icons';
 
 import { Face } from './SquadChat';
 import { type Room, type SquadState, type SquadTab, TABS } from './useSquad';
+import { Maple } from '@/constants/maple';
 
-const INK = '#0B1424';
-const NAVY = '#0B2A6B';
-const BODY = '#4A5263';
-const BLUE = '#1463F3';
-const GREEN = '#16A34A';
+const INK = Maple.navy;
+const NAVY = Maple.blueHover;
+const BODY = Maple.body;
+const BLUE = Maple.blue;
+const GREEN = Maple.successText;
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as const;
 const TAB_ICON: Record<SquadTab, IconName> = { Overview: 'grid', Chat: 'chat', 'Study Sessions': 'calendar', Resources: 'folder', Tasks: 'check', Members: 'people', Settings: 'settings' };
 
@@ -39,7 +40,7 @@ export function Hero({ room, s, phone = false }: { room: Room; s: SquadState; ph
       {phone ? null : <Image source={room.icons.hero} style={styles.fill} contentFit="cover" contentPosition="right" accessibilityLabel="A group of learners on a mountain top with a flag" />}
       <View style={styles.heroRow}>
         <View style={[styles.heroIcon, phone && styles.heroIconP]}>
-          <Icon name="people" size={phone ? 22 : 30} color="#FFFFFF" />
+          <Icon name="people" size={phone ? 22 : 30} color={Maple.surface} />
         </View>
         <View style={styles.flex}>
           <Text style={[styles.heroTitle, phone && styles.heroTitleP]} accessibilityRole="header">
@@ -98,7 +99,7 @@ export function Hero({ room, s, phone = false }: { room: Room; s: SquadState; ph
             {s.squad.members.length > 4 ? <Text style={styles.morePeople}>{`+${s.squad.members.length - 4}`}</Text> : null}
           </View>
           <Pressable style={styles.inviteBtnP} onPress={() => invite(s)} accessibilityRole="button">
-            <Icon name="people" size={15} color="#FFFFFF" />
+            <Icon name="people" size={15} color={Maple.surface} />
             <Text style={styles.inviteTextP}>Invite</Text>
           </Pressable>
         </View>
@@ -135,13 +136,13 @@ export function GoalCard({ room, s, phone = false }: { room: Room; s: SquadState
           <Text style={styles.goalSub}>{g.label}</Text>
         </View>
         <View style={styles.daysLeft}>
-          <Icon name="calendar" size={12} color="#7C3AED" />
+          <Icon name="calendar" size={12} color={Maple.blue} />
           <Text style={styles.daysLeftText}>{`${g.daysLeft} days left`}</Text>
         </View>
       </View>
       <View style={styles.goalBarRow}>
         <View style={styles.flex}>
-          <Bar value={g.done / g.target} color="#22A045" track="#E4ECF6" height={phone ? 7 : 12} />
+          <Bar value={g.done / g.target} color={Maple.successText} track={Maple.blueSelected} height={phone ? 7 : 12} />
           {phone ? null : <Text style={styles.goalCount}>{`${g.done} / ${g.target}`}</Text>}
         </View>
         {phone ? (
@@ -197,7 +198,7 @@ export function StreakCard({ room, s }: { room: Room; s: SquadState }) {
       <View style={styles.week}>
         {s.squad.streak.week.map((d, i) => (
           <View key={DAYS[i]} style={styles.day} accessibilityLabel={`${DAYS[i]}: ${d === 'done' ? 'done' : d === 'today' ? 'today, not yet' : 'still to come'}`}>
-            <View style={[styles.dayDot, d === 'done' && styles.dayDone, d === 'today' && styles.dayToday]}>{d === 'next' ? null : <Icon name="check" size={11} color={d === 'done' ? '#FFFFFF' : '#8EA2C4'} />}</View>
+            <View style={[styles.dayDot, d === 'done' && styles.dayDone, d === 'today' && styles.dayToday]}>{d === 'next' ? null : <Icon name="check" size={11} color={d === 'done' ? Maple.surface : Maple.blue} />}</View>
             <Text style={styles.dayName}>{DAYS[i]}</Text>
           </View>
         ))}
@@ -339,7 +340,7 @@ export function Tasks({ s }: { s: SquadState }) {
           const on = s.taskDone(t.id);
           return (
             <Pressable key={t.id} style={styles.task} onPress={() => s.toggleTask(t.id)} accessibilityRole="checkbox" accessibilityState={{ checked: on }}>
-              <View style={[styles.box, on && styles.boxOn]}>{on ? <Icon name="check" size={12} color="#FFFFFF" /> : null}</View>
+              <View style={[styles.box, on && styles.boxOn]}>{on ? <Icon name="check" size={12} color={Maple.surface} /> : null}</View>
               <View style={styles.flex}>
                 <Text style={[styles.taskTitle, on && styles.taskDone]}>{t.title}</Text>
                 <Text style={styles.resMeta}>{`${t.who} • ${on ? 'Done' : `Due ${t.due}`}`}</Text>
@@ -410,42 +411,42 @@ const styles = StyleSheet.create({
   blue: { color: BLUE },
   gold: { color: '#C2410C' },
   small: { fontSize: 11, color: BODY },
-  hero: { height: 136, justifyContent: 'center', paddingHorizontal: 22, borderTopLeftRadius: 10, borderTopRightRadius: 10, backgroundColor: '#14203F', overflow: 'hidden' },
+  hero: { height: 136, justifyContent: 'center', paddingHorizontal: 22, borderTopLeftRadius: 10, borderTopRightRadius: 10, backgroundColor: Maple.navy, overflow: 'hidden' },
   heroP: { height: 'auto', gap: 14, padding: 14, borderRadius: 12 },
   heroRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 18 },
-  heroIcon: { width: 56, height: 56, alignItems: 'center', justifyContent: 'center', borderRadius: 12, backgroundColor: '#2563EB' },
+  heroIcon: { width: 56, height: 56, alignItems: 'center', justifyContent: 'center', borderRadius: 12, backgroundColor: Maple.blue },
   heroIconP: { width: 42, height: 42, borderRadius: 10 },
-  heroTitle: { fontSize: 26, fontWeight: '700', color: '#FFFFFF', letterSpacing: -0.4 },
+  heroTitle: { fontSize: 26, fontWeight: '700', color: Maple.surface, letterSpacing: -0.4 },
   heroTitleP: { fontSize: 17 },
-  heroMeta: { marginTop: 6, fontSize: 14, color: '#E2E8F5' },
+  heroMeta: { marginTop: 6, fontSize: 14, color: Maple.blueSelected },
   heroMetaP: { marginTop: 4, fontSize: 11.5 },
-  heroText: { marginTop: 12, fontSize: 12.5, lineHeight: 18, color: '#E2E8F5' },
+  heroText: { marginTop: 12, fontSize: 12.5, lineHeight: 18, color: Maple.blueSelected },
   heroBtns: { flexDirection: 'row', gap: 10, marginRight: 270 },
-  inviteBtn: { height: 34, flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 16, borderRadius: 6, backgroundColor: '#FFFFFF' },
+  inviteBtn: { height: 34, flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 16, borderRadius: 6, backgroundColor: Maple.surface },
   inviteText: { fontSize: 12.5, fontWeight: '600', color: BLUE },
-  moreBtn: { width: 34, height: 34, alignItems: 'center', justifyContent: 'center', borderRadius: 6, backgroundColor: '#FFFFFF' },
-  menu: { position: 'absolute', top: 38, right: 0, width: 170, paddingVertical: 4, borderRadius: 8, borderWidth: 1, borderColor: '#E1E7F0', backgroundColor: '#FFFFFF', zIndex: 5 },
+  moreBtn: { width: 34, height: 34, alignItems: 'center', justifyContent: 'center', borderRadius: 6, backgroundColor: Maple.surface },
+  menu: { position: 'absolute', top: 38, right: 0, width: 170, paddingVertical: 4, borderRadius: 8, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface, zIndex: 5 },
   menuItem: { height: 30, justifyContent: 'center', paddingHorizontal: 12 },
   menuText: { fontSize: 12, color: INK },
   heroFoot: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  inviteBtnP: { height: 34, flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 16, borderRadius: 6, backgroundColor: '#0B6BFF' },
-  inviteTextP: { fontSize: 13, fontWeight: '600', color: '#FFFFFF' },
+  inviteBtnP: { height: 34, flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 16, borderRadius: 6, backgroundColor: Maple.blue },
+  inviteTextP: { fontSize: 13, fontWeight: '600', color: Maple.surface },
   faces: { flexDirection: 'row', alignItems: 'center' },
-  faceRing: { borderRadius: 20, borderWidth: 2, borderColor: '#FFFFFF' },
+  faceRing: { borderRadius: 20, borderWidth: 2, borderColor: Maple.surface },
   faceOverlap: { marginLeft: -8 },
   faceOverlapS: { marginLeft: -6 },
-  morePeople: { marginLeft: -6, width: 30, height: 30, borderRadius: 15, borderWidth: 2, borderColor: '#FFFFFF', backgroundColor: '#E8EEF8', fontSize: 11, fontWeight: '600', lineHeight: 26, color: NAVY, textAlign: 'center', overflow: 'hidden' },
-  moreSmall: { marginLeft: -6, width: 26, height: 26, borderRadius: 13, borderWidth: 2, borderColor: '#FFFFFF', backgroundColor: '#E8EEF8', fontSize: 10, fontWeight: '600', lineHeight: 22, color: NAVY, textAlign: 'center', overflow: 'hidden' },
-  tabsBar: { flexGrow: 0, borderBottomWidth: 1, borderBottomColor: '#E6ECF5', backgroundColor: '#FFFFFF' },
+  morePeople: { marginLeft: -6, width: 30, height: 30, borderRadius: 15, borderWidth: 2, borderColor: Maple.surface, backgroundColor: Maple.blueSelected, fontSize: 11, fontWeight: '600', lineHeight: 26, color: NAVY, textAlign: 'center', overflow: 'hidden' },
+  moreSmall: { marginLeft: -6, width: 26, height: 26, borderRadius: 13, borderWidth: 2, borderColor: Maple.surface, backgroundColor: Maple.blueSelected, fontSize: 10, fontWeight: '600', lineHeight: 22, color: NAVY, textAlign: 'center', overflow: 'hidden' },
+  tabsBar: { flexGrow: 0, borderBottomWidth: 1, borderBottomColor: Maple.blueSelected, backgroundColor: Maple.surface },
   tabs: { gap: 4, paddingHorizontal: 14 },
   tabsP: { paddingHorizontal: 0 },
   tab: { height: 40, flexDirection: 'row', alignItems: 'center', gap: 7, paddingHorizontal: 12, borderBottomWidth: 2, borderBottomColor: 'transparent' },
   tabP: { paddingHorizontal: 9 },
-  tabOn: { borderBottomColor: '#0B6BFF' },
+  tabOn: { borderBottomColor: Maple.blue },
   tabText: { fontSize: 12.5, color: BODY },
   tabTextP: { fontSize: 11.5 },
   tabTextOn: { fontWeight: '600', color: BLUE },
-  card: { borderRadius: 10, borderWidth: 1, borderColor: '#EAEFF6', backgroundColor: '#FFFFFF' },
+  card: { borderRadius: 10, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface },
   pad: { padding: 14, gap: 12 },
   cardHead: { flexDirection: 'row', alignItems: 'center', gap: 8, zIndex: 3 },
   cardIcon: { width: 18, height: 18 },
@@ -456,35 +457,35 @@ const styles = StyleSheet.create({
   targetP: { width: 30, height: 30 },
   goalTitle: { fontSize: 14, fontWeight: '700', color: NAVY },
   goalSub: { marginTop: 4, fontSize: 12, color: BODY },
-  daysLeft: { height: 24, flexDirection: 'row', alignItems: 'center', gap: 5, paddingHorizontal: 8, borderRadius: 6, backgroundColor: '#F4EEFE' },
+  daysLeft: { height: 24, flexDirection: 'row', alignItems: 'center', gap: 5, paddingHorizontal: 8, borderRadius: 6, backgroundColor: Maple.blueSoft },
   daysLeftText: { fontSize: 11, fontWeight: '500', color: INK },
   goalBarRow: { flexDirection: 'row', alignItems: 'center', gap: 14 },
   goalCount: { marginTop: 6, fontSize: 12, color: INK, textAlign: 'center' },
   goalCountP: { fontSize: 12.5, fontWeight: '600', color: INK },
   goalFoot: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  goalMine: { paddingHorizontal: 10, paddingVertical: 9, borderRadius: 6, backgroundColor: '#F4F7FB', fontSize: 11, letterSpacing: -0.2, color: BODY, overflow: 'hidden' },
-  primary: { height: 36, justifyContent: 'center', paddingHorizontal: 13, borderRadius: 6, backgroundColor: '#0B6BFF' },
-  primaryText: { fontSize: 12.5, fontWeight: '600', color: '#FFFFFF' },
+  goalMine: { paddingHorizontal: 10, paddingVertical: 9, borderRadius: 6, backgroundColor: Maple.blueSoft, fontSize: 11, letterSpacing: -0.2, color: BODY, overflow: 'hidden' },
+  primary: { height: 36, justifyContent: 'center', paddingHorizontal: 13, borderRadius: 6, backgroundColor: Maple.blue },
+  primaryText: { fontSize: 12.5, fontWeight: '600', color: Maple.surface },
   streak: { gap: 12, padding: 14 },
   streakTop: { flexDirection: 'row', gap: 10 },
   flame: { width: 30, height: 34 },
-  streakDays: { fontSize: 22, fontWeight: '700', color: '#15603A' },
-  chev: { position: 'absolute', top: 0, right: 0, width: 26, height: 26, alignItems: 'center', justifyContent: 'center', borderRadius: 13, backgroundColor: '#F2F6FD' },
+  streakDays: { fontSize: 22, fontWeight: '700', color: Maple.successText },
+  chev: { position: 'absolute', top: 0, right: 0, width: 26, height: 26, alignItems: 'center', justifyContent: 'center', borderRadius: 13, backgroundColor: Maple.blueSoft },
   streakSub: { marginTop: 4, fontSize: 11, color: BODY },
   streakHelp: { fontSize: 11, lineHeight: 15, color: BODY },
   week: { flexDirection: 'row', justifyContent: 'space-between' },
   day: { alignItems: 'center', gap: 4 },
-  dayDot: { width: 20, height: 20, alignItems: 'center', justifyContent: 'center', borderRadius: 10, borderWidth: 1.5, borderColor: '#D5DDEA' },
+  dayDot: { width: 20, height: 20, alignItems: 'center', justifyContent: 'center', borderRadius: 10, borderWidth: 1.5, borderColor: Maple.blueLine },
   dayDone: { borderColor: GREEN, backgroundColor: GREEN },
-  dayToday: { borderColor: '#C9D6EE', backgroundColor: '#E8EEF8' },
+  dayToday: { borderColor: Maple.blueLine, backgroundColor: Maple.blueSelected },
   dayName: { fontSize: 9.5, color: BODY },
   board: { padding: 14, gap: 10 },
-  period: { height: 26, flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 8, borderRadius: 5, borderWidth: 1, borderColor: '#DCE3EE' },
+  period: { height: 26, flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 8, borderRadius: 5, borderWidth: 1, borderColor: Maple.blueLine },
   periodText: { fontSize: 11, color: INK },
-  periodMenu: { position: 'absolute', top: 30, right: 0, width: 120, paddingVertical: 4, borderRadius: 8, borderWidth: 1, borderColor: '#E1E7F0', backgroundColor: '#FFFFFF' },
+  periodMenu: { position: 'absolute', top: 30, right: 0, width: 120, paddingVertical: 4, borderRadius: 8, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface },
   rows: { gap: 4 },
   rankRow: { height: 36, flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 6, borderRadius: 6 },
-  rankMe: { backgroundColor: '#EEF4FF' },
+  rankMe: { backgroundColor: Maple.blueSoft },
   rank: { width: 26, alignItems: 'center' },
   medal: { width: 26, height: 20 },
   crown: { width: 18, height: 18 },
@@ -493,37 +494,37 @@ const styles = StyleSheet.create({
   rankNameMe: { fontWeight: '600', color: BLUE },
   rankScore: { fontSize: 12.5, fontWeight: '600', color: INK },
   session: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  divider: { paddingTop: 12, borderTopWidth: 1, borderTopColor: '#EEF1F6' },
+  divider: { paddingTop: 12, borderTopWidth: 1, borderTopColor: Maple.blueSelected },
   sessionIcon: { width: 28, height: 28, alignSelf: 'flex-start' },
   when: { fontSize: 10.5, color: BODY },
   sessionTitle: { marginTop: 3, fontSize: 12, fontWeight: '600', color: INK },
   going: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 6 },
   goingText: { fontSize: 11, color: BODY },
-  join: { height: 30, justifyContent: 'center', paddingHorizontal: 18, borderRadius: 6, backgroundColor: '#0B6BFF' },
-  remind: { height: 30, justifyContent: 'center', paddingHorizontal: 12, borderRadius: 6, borderWidth: 1, borderColor: '#C9DAF8' },
-  remindOn: { backgroundColor: '#EEF4FF' },
+  join: { height: 30, justifyContent: 'center', paddingHorizontal: 18, borderRadius: 6, backgroundColor: Maple.blue },
+  remind: { height: 30, justifyContent: 'center', paddingHorizontal: 12, borderRadius: 6, borderWidth: 1, borderColor: Maple.blueLine },
+  remindOn: { backgroundColor: Maple.blueSoft },
   remindText: { fontSize: 11.5, fontWeight: '600', color: BLUE },
-  pill: { paddingHorizontal: 6, paddingVertical: 3, borderRadius: 5, backgroundColor: '#F2F6FD' },
+  pill: { paddingHorizontal: 6, paddingVertical: 3, borderRadius: 5, backgroundColor: Maple.blueSoft },
   pillText: { fontSize: 11, color: BLUE },
   res: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingVertical: 5 },
   resIcon: { width: 34, height: 34 },
   resTitle: { fontSize: 10.5, fontWeight: '600', color: INK, letterSpacing: -0.2 },
   resMeta: { marginTop: 1, fontSize: 10, color: BODY },
-  dl: { width: 30, height: 30, alignItems: 'center', justifyContent: 'center', borderRadius: 6, borderWidth: 1, borderColor: '#DCE6F7' },
-  dlOn: { borderColor: '#BBE5C8', backgroundColor: '#ECF8F0' },
+  dl: { width: 30, height: 30, alignItems: 'center', justifyContent: 'center', borderRadius: 6, borderWidth: 1, borderColor: Maple.blueSelected },
+  dlOn: { borderColor: '#BBE5C8', backgroundColor: Maple.successSoft },
   task: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 6 },
-  box: { width: 20, height: 20, alignItems: 'center', justifyContent: 'center', borderRadius: 5, borderWidth: 1.5, borderColor: '#9AA4B5' },
+  box: { width: 20, height: 20, alignItems: 'center', justifyContent: 'center', borderRadius: 5, borderWidth: 1.5, borderColor: Maple.faint },
   boxOn: { borderColor: GREEN, backgroundColor: GREEN },
   taskTitle: { fontSize: 12.5, fontWeight: '500', color: INK },
   taskDone: { color: BODY, textDecorationLine: 'line-through' },
   memberGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
-  member: { width: 150, alignItems: 'center', gap: 4, paddingVertical: 12, borderRadius: 10, borderWidth: 1, borderColor: '#EEF1F6' },
+  member: { width: 150, alignItems: 'center', gap: 4, paddingVertical: 12, borderRadius: 10, borderWidth: 1, borderColor: Maple.blueSelected },
   memberName: { marginTop: 4, fontSize: 12, fontWeight: '600', color: INK },
   setting: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 6 },
-  switch: { width: 38, height: 22, justifyContent: 'center', paddingHorizontal: 2, borderRadius: 11, backgroundColor: '#D5DDEA' },
-  switchOn: { backgroundColor: '#0B6BFF' },
-  knob: { width: 18, height: 18, borderRadius: 9, backgroundColor: '#FFFFFF' },
+  switch: { width: 38, height: 22, justifyContent: 'center', paddingHorizontal: 2, borderRadius: 11, backgroundColor: Maple.blueLine },
+  switchOn: { backgroundColor: Maple.blue },
+  knob: { width: 18, height: 18, borderRadius: 9, backgroundColor: Maple.surface },
   knobOn: { alignSelf: 'flex-end' },
-  safety: { flexDirection: 'row', gap: 8, padding: 10, borderRadius: 8, backgroundColor: '#ECF8F0' },
-  safetyText: { flex: 1, fontSize: 11.5, lineHeight: 16, color: '#14532D' },
+  safety: { flexDirection: 'row', gap: 8, padding: 10, borderRadius: 8, backgroundColor: Maple.successSoft },
+  safetyText: { flex: 1, fontSize: 11.5, lineHeight: 16, color: Maple.successText },
 });

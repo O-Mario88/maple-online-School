@@ -1,7 +1,7 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { type ComponentRef, useMemo, useRef, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, TextInput, useWindowDimensions, View } from 'react-native';
+import { Pressable, StyleSheet, Text, TextInput, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Icon } from '@/components/icon';
@@ -13,6 +13,8 @@ import type { IconName } from '@/lib/icons';
 import { mockData } from '@/lib/mock';
 import { toast } from '@/lib/toast';
 import type { MockData } from '@/mock';
+import { Maple } from '@/constants/maple';
+import { PageScroll } from '@/components/shell/PageScroll';
 
 type Qr = MockData['publicPages']['qrLogin'];
 
@@ -62,7 +64,7 @@ function PinBoxes({ pin, phone = false }: { pin: Pin; phone?: boolean }) {
           secureTextEntry
           maxLength={1}
           placeholder="•"
-          placeholderTextColor="#9AA3B2"
+          placeholderTextColor={Maple.faint}
           textAlign="center"
           accessibilityLabel={`PIN digit ${i + 1}`}
         />
@@ -96,7 +98,7 @@ function ClassCode({ q, open, onOpen, phone = false }: { q: Qr; open: boolean; o
         <View style={styles.flex}>
           <Text style={styles.codeLabel}>Or enter your class code</Text>
           <View style={styles.codeRow}>
-            <TextInput style={styles.codeInput} value={code} onChangeText={(v) => setCode(v.slice(0, q.classCodeLength))} placeholder={`Enter ${q.classCodeLength}-digit class code`} placeholderTextColor="#9AA3B2" autoCapitalize="characters" accessibilityLabel="Class code" />
+            <TextInput style={styles.codeInput} value={code} onChangeText={(v) => setCode(v.slice(0, q.classCodeLength))} placeholder={`Enter ${q.classCodeLength}-digit class code`} placeholderTextColor={Maple.faint} autoCapitalize="characters" accessibilityLabel="Class code" />
             <Pressable style={[styles.codeGo, code.length === q.classCodeLength && styles.codeGoOn]} disabled={code.length !== q.classCodeLength} onPress={() => toast(`Class ${code.toUpperCase()} found. Now enter your PIN to sign in.`)} accessibilityRole="button" accessibilityLabel="Use class code">
               <Icon name="chevronRight" size={16} color={Brand.surface} />
             </Pressable>
@@ -212,7 +214,7 @@ function Phone({ q, pin, onLogin }: { q: Qr; pin: Pin; onLogin: () => void }) {
   return (
     <>
       <AuthPhoneTop />
-      <ScrollView contentContainerStyle={styles.phone} keyboardShouldPersistTaps="handled">
+      <PageScroll contentContainerStyle={styles.phone} keyboardShouldPersistTaps="handled">
         <ScanHeader phone />
         <Image source={q.art.scanner} style={styles.scannerP} contentFit="cover" accessibilityLabel="Hold your QR badge inside the frame" />
         <ClassCode q={q} open={codeOpen} onOpen={() => setCodeOpen(true)} phone />
@@ -220,7 +222,7 @@ function Phone({ q, pin, onLogin }: { q: Qr; pin: Pin; onLogin: () => void }) {
         <PinBoxes pin={pin} phone />
         <LoginButton pin={pin} onLogin={onLogin} phone />
         <HelpBox phone />
-      </ScrollView>
+      </PageScroll>
     </>
   );
 }
@@ -252,40 +254,40 @@ const styles = StyleSheet.create({
   bar: { position: 'absolute', left: 18, top: 13 },
   panel: { position: 'absolute', left: 18, top: 80, width: 460, height: 890, overflow: 'hidden', borderBottomLeftRadius: 14 },
   hero: { position: 'absolute', left: 37, top: 38, fontSize: 47, lineHeight: 48, fontWeight: '800', color: Brand.surface, letterSpacing: -1.2 },
-  heroAccent: { color: '#4DA3FF' },
-  heroSub: { position: 'absolute', left: 37, top: 194, fontSize: 20, lineHeight: 28, color: '#EAF0F8' },
+  heroAccent: { color: Maple.blue },
+  heroSub: { position: 'absolute', left: 37, top: 194, fontSize: 20, lineHeight: 28, color: Maple.blueSelected },
   promises: { position: 'absolute', left: 38, top: 282, gap: 20 },
   promise: { flexDirection: 'row', alignItems: 'center', gap: 22 },
   promiseTitle: { fontSize: 16, fontWeight: '600', color: Brand.surface },
-  promiseBody: { marginTop: 3, fontSize: 13.5, color: '#E1E8F5' },
+  promiseBody: { marginTop: 3, fontSize: 13.5, color: Maple.blueSelected },
   card: { position: 'absolute', borderRadius: 12, backgroundColor: Brand.surface },
   mid: { left: 478, top: 108, width: 443, height: 844, paddingHorizontal: 25, paddingTop: 24 },
   side: { left: 933, top: 108, width: 241, height: 840, paddingHorizontal: 12, paddingTop: 26 },
   scanHead: { flexDirection: 'row', alignItems: 'center', gap: 22 },
-  camBox: { width: 68, height: 68, borderRadius: 16, backgroundColor: '#EAF2FE', alignItems: 'center', justifyContent: 'center' },
+  camBox: { width: 68, height: 68, borderRadius: 16, backgroundColor: Maple.blueSoft, alignItems: 'center', justifyContent: 'center' },
   camBoxP: { width: 56, height: 56, borderRadius: 14 },
   scanTitle: { fontSize: 25, fontWeight: '700', color: Brand.ink, letterSpacing: -0.4 },
   scanTitleP: { fontSize: 20 },
-  scanSub: { marginTop: 8, fontSize: 13, color: '#4A5263' },
+  scanSub: { marginTop: 8, fontSize: 13, color: Maple.body },
   scanSubP: { fontSize: 12 },
   scanner: { width: 394, height: 369, marginTop: 21, borderRadius: 10 },
   scannerP: { width: '100%', aspectRatio: 394 / 369, borderRadius: 12 },
-  code: { flexDirection: 'row', alignItems: 'center', gap: 18, marginTop: 23, paddingHorizontal: 14, paddingVertical: 16, borderRadius: 10, backgroundColor: '#EEF4FF' },
+  code: { flexDirection: 'row', alignItems: 'center', gap: 18, marginTop: 23, paddingHorizontal: 14, paddingVertical: 16, borderRadius: 10, backgroundColor: Maple.blueSoft },
   codeP: { marginTop: 0, paddingVertical: 14 },
   codeClosed: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   codeLabel: { fontSize: 13.5, color: Brand.ink },
   codeRow: { flexDirection: 'row', gap: 6, marginTop: 9 },
-  codeInput: { flex: 1, height: 36, paddingHorizontal: 12, borderRadius: 6, borderWidth: 1, borderColor: '#DFE4EC', backgroundColor: Brand.surface, fontSize: 12.5, color: Brand.ink },
-  codeGo: { width: 36, height: 36, borderRadius: 6, backgroundColor: '#A9C6FB', alignItems: 'center', justifyContent: 'center' },
+  codeInput: { flex: 1, height: 36, paddingHorizontal: 12, borderRadius: 6, borderWidth: 1, borderColor: Maple.border, backgroundColor: Brand.surface, fontSize: 12.5, color: Brand.ink },
+  codeGo: { width: 36, height: 36, borderRadius: 6, backgroundColor: Maple.blueLine, alignItems: 'center', justifyContent: 'center' },
   codeGoOn: { backgroundColor: Brand.blue },
   divider: { flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 26 },
-  line: { flex: 1, height: 1, backgroundColor: '#E1E6EF' },
-  dividerText: { fontSize: 13.5, color: '#2A3242' },
+  line: { flex: 1, height: 1, backgroundColor: Maple.blueSelected },
+  dividerText: { fontSize: 13.5, color: Maple.navy },
   pins: { flexDirection: 'row', justifyContent: 'center', gap: 10, marginTop: 22 },
   pinsP: { marginTop: 0 },
-  pin: { width: 66, height: 66, textAlign: 'center', borderRadius: 9, borderWidth: 1, borderColor: '#DFE4EC', backgroundColor: Brand.surface, fontSize: 24, color: Brand.ink },
+  pin: { width: 66, height: 66, textAlign: 'center', borderRadius: 9, borderWidth: 1, borderColor: Maple.border, backgroundColor: Brand.surface, fontSize: 24, color: Brand.ink },
   pinP: { width: 52, height: 52, fontSize: 20 },
-  login: { height: 68, marginTop: 22, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 12, borderRadius: 10, backgroundColor: '#A9C6FB' },
+  login: { height: 68, marginTop: 22, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 12, borderRadius: 10, backgroundColor: Maple.blueLine },
   loginP: { height: 48, marginTop: 0 },
   loginOn: { backgroundColor: Brand.blue },
   loginText: { fontSize: 17, fontWeight: '600', color: Brand.surface },
@@ -295,17 +297,17 @@ const styles = StyleSheet.create({
   howCol: { alignItems: 'center' },
   howNum: { width: 32, height: 32, borderRadius: 16, backgroundColor: Brand.blue, alignItems: 'center', justifyContent: 'center' },
   howNumText: { fontSize: 14, fontWeight: '600', color: Brand.surface },
-  howLine: { width: 1, flex: 1, minHeight: 40, marginVertical: 4, backgroundColor: '#C9D7EE' },
+  howLine: { width: 1, flex: 1, minHeight: 40, marginVertical: 4, backgroundColor: Maple.blueLine },
   howStep: { fontSize: 13.5, fontWeight: '600', color: Brand.ink },
-  howBody: { marginTop: 6, marginBottom: 22, fontSize: 11.5, lineHeight: 17, color: '#4A5263' },
+  howBody: { marginTop: 6, marginBottom: 22, fontSize: 11.5, lineHeight: 17, color: Maple.body },
   kids: { width: 200, height: 156, alignSelf: 'center', marginTop: 2 },
   motto: { marginTop: 10, fontSize: 14, fontWeight: '700', color: Brand.ink, textAlign: 'center' },
-  mottoSub: { marginTop: 4, fontSize: 12, color: '#4A5263', textAlign: 'center' },
+  mottoSub: { marginTop: 4, fontSize: 12, color: Maple.body, textAlign: 'center' },
   helpWrap: { marginTop: 42 },
-  help: { flexDirection: 'row', gap: 14, padding: 14, borderRadius: 10, backgroundColor: '#EEF4FF' },
+  help: { flexDirection: 'row', gap: 14, padding: 14, borderRadius: 10, backgroundColor: Maple.blueSoft },
   helpP: { paddingVertical: 16 },
   helpTitle: { fontSize: 14, fontWeight: '600', color: Brand.ink, marginBottom: 6 },
   helpLink: { paddingVertical: 2, fontSize: 12, color: Brand.blue, textDecorationLine: 'underline' },
-  phoneSafe: { flex: 1, backgroundColor: '#F4F7FC' },
+  phoneSafe: { flex: 1, backgroundColor: Maple.blueSoft },
   phone: { gap: 16, padding: 16, paddingBottom: 32 },
 });

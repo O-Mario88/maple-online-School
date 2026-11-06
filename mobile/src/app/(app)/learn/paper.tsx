@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react';
-import { Modal, Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Icon } from '@/components/icon';
-import { useShell } from '@/components/ui';
+import { useContentWidth, useShell } from '@/components/ui';
 import { UpgradeNote } from '@/features/access/UpgradeNote';
 import { LearnerPhoneTop } from '@/features/learner/dashboard/DashPhone';
 import { Legend, NavGrid, NavStrip, Progress, SubmitButton } from '@/features/learner/exam/ExamNav';
@@ -15,6 +15,8 @@ import { RefScale } from '@/features/public/home/RefScale';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { useAccess } from '@/lib/access/access-context';
 import { mockData } from '@/lib/mock';
+import { Maple } from '@/constants/maple';
+import { PageScroll } from '@/components/shell/PageScroll';
 
 /** The exam reference's page (x 18–1166, y 78–1002 at 1536 wide); the desktop layout uses its pixels. */
 const EXAM_REF_WIDTH = 1148;
@@ -33,7 +35,7 @@ function NavButtons({ s, phone = false }: { s: ExamState; phone?: boolean }) {
       </Pressable>
       <Pressable style={[styles.next, phone && styles.btnP, n === s.total && styles.disabled]} onPress={() => s.go(n + 1)} disabled={n === s.total} accessibilityRole="button" accessibilityLabel="Next question">
         <Text style={styles.nextText}>{phone ? 'Next' : 'Next Question'}</Text>
-        <Icon name="arrowRight" size={17} color="#FFFFFF" />
+        <Icon name="arrowRight" size={17} color={Maple.surface} />
       </Pressable>
     </View>
   );
@@ -44,7 +46,7 @@ function WalkthroughButton({ s, onPress, phone = false }: { s: ExamState; onPres
   return (
     <Pressable style={phone ? styles.watchP : styles.watch} onPress={onPress} accessibilityRole="button">
       <View style={phone ? styles.watchPlayP : styles.watchPlay}>
-        <Icon name="playFill" size={phone ? 13 : 11} color="#FFFFFF" />
+        <Icon name="playFill" size={phone ? 13 : 11} color={Maple.surface} />
       </View>
       <Text style={phone ? styles.watchTextP : styles.watchText}>{`Watch ${walkthroughLabel(s.q)}`}</Text>
     </Pressable>
@@ -60,13 +62,13 @@ function WalkthroughSheet({ exam, s, open, onClose }: { exam: Exam; s: ExamState
       <View style={[styles.sheetBg, { paddingTop: insets.top + 8, paddingBottom: insets.bottom }]}>
         <View style={styles.sheet}>
           <WalkthroughPlayer key={s.q.n} q={s.q} frame={exam.video} onClose={onClose} />
-          <ScrollView style={styles.sheetBody} contentContainerStyle={styles.sheetBodyIn}>
+          <PageScroll style={styles.sheetBody} contentContainerStyle={styles.sheetBodyIn}>
             <Text style={styles.sheetTeacher}>{`${exam.teacher} • Question ${s.q.n}`}</Text>
             <SolutionTabs s={s} phone />
             <Pressable style={styles.sheetBack} onPress={onClose} accessibilityRole="button">
               <Text style={styles.prevText}>Back to question</Text>
             </Pressable>
-          </ScrollView>
+          </PageScroll>
         </View>
       </View>
     </Modal>
@@ -139,9 +141,9 @@ function Desktop({ exam, s, onExpand }: { exam: Exam; s: ExamState; onExpand: ()
               </View>
             ) : null}
             <View style={styles.tabsPos}>
-              <ScrollView style={styles.flex}>
+              <PageScroll style={styles.flex}>
                 <SolutionTabs s={s} />
-              </ScrollView>
+              </PageScroll>
             </View>
             <AnswerBox s={s} />
           </View>
@@ -168,7 +170,7 @@ function Phone({ exam, s, avatar, onWatch }: { exam: Exam; s: ExamState; avatar:
   return (
     <View style={styles.phoneRoot}>
       <LearnerPhoneTop avatar={avatar} globe />
-      <ScrollView contentContainerStyle={styles.phonePage}>
+      <PageScroll contentContainerStyle={styles.phonePage}>
         <View style={styles.phonePad}>
           <Crumbs items={exam.phoneCrumbs} phone />
           <View style={styles.phoneTitleRow}>
@@ -198,7 +200,7 @@ function Phone({ exam, s, avatar, onWatch }: { exam: Exam; s: ExamState; avatar:
           <Text style={styles.phoneProgress}>{`${s.marks.answered} of ${s.total} answered • ${s.marks.correct} correct • ${s.marks.incorrect} incorrect`}</Text>
           <SubmitButton s={s} phone />
         </View>
-      </ScrollView>
+      </PageScroll>
     </View>
   );
 }
@@ -214,7 +216,7 @@ function ExamView({ exam, avatar }: { exam: Exam; avatar: number }) {
   const s = useExam(exam);
   const [sheet, setSheet] = useState(false);
   const { wide } = useShell();
-  const { width } = useWindowDimensions();
+  const width = useContentWidth();
   const sheetView = <WalkthroughSheet exam={exam} s={s} open={sheet} onClose={() => setSheet(false)} />;
   if (!wide)
     return (
@@ -224,38 +226,38 @@ function ExamView({ exam, avatar }: { exam: Exam; avatar: number }) {
       </>
     );
   return (
-    <ScrollView style={styles.deskBg} contentContainerStyle={styles.deskWrap}>
+    <PageScroll style={styles.deskBg} contentContainerStyle={styles.deskWrap}>
       <RefScale width={Math.min(width - 48, MAX_DESK_WIDTH)} refWidth={EXAM_REF_WIDTH}>
         <Desktop exam={exam} s={s} onExpand={() => setSheet(true)} />
       </RefScale>
       {sheetView}
-    </ScrollView>
+    </PageScroll>
   );
 }
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
   flip: { transform: [{ scaleX: -1 }] },
-  deskBg: { backgroundColor: '#EEF3FB' },
+  deskBg: { backgroundColor: Maple.blueSoft },
   deskWrap: { alignItems: 'center', paddingVertical: 16 },
-  canvas: { width: EXAM_REF_WIDTH, height: EXAM_REF_HEIGHT, borderRadius: 12, backgroundColor: '#F7F9FD' },
+  canvas: { width: EXAM_REF_WIDTH, height: EXAM_REF_HEIGHT, borderRadius: 12, backgroundColor: Maple.blueSoft },
   crumbsPos: { position: 'absolute', left: 22, top: 20 },
   title: { position: 'absolute', left: 22, top: 46, fontSize: 29, fontWeight: '800', color: INK, letterSpacing: -0.6 },
   sub: { position: 'absolute', left: 22, top: 87, fontSize: 15, color: BODY },
-  exit: { position: 'absolute', left: 678, top: 37, width: 128, height: 40, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, borderRadius: 5, borderWidth: 1.5, borderColor: '#F3A9AB', backgroundColor: '#FFF6F6' },
+  exit: { position: 'absolute', left: 678, top: 37, width: 128, height: 40, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, borderRadius: 5, borderWidth: 1.5, borderColor: '#F3A9AB', backgroundColor: Maple.errorSoft },
   exitText: { fontSize: 14, color: RED },
   timerPos: { position: 'absolute', left: 828, top: 20, width: 306 },
   sectionsPos: { position: 'absolute', left: 22, top: 123 },
-  panel: { position: 'absolute', top: 198, height: 714, borderRadius: 8, backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#EDF1F6' },
+  panel: { position: 'absolute', top: 198, height: 714, borderRadius: 8, backgroundColor: Maple.surface, borderWidth: 1, borderColor: Maple.blueSelected },
   leftPanel: { left: 16, width: 416, padding: 15 },
   navPos: { position: 'absolute', left: 17, top: 621, width: 385 },
-  flag: { position: 'absolute', left: 16, top: 672, height: 34, flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 12, borderRadius: 5, borderWidth: 1, borderColor: '#E1E7F0', backgroundColor: '#FFFFFF' },
-  flagOn: { borderColor: '#F7C99A', backgroundColor: '#FFF7EE' },
+  flag: { position: 'absolute', left: 16, top: 672, height: 34, flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 12, borderRadius: 5, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface },
+  flagOn: { borderColor: '#F7C99A', backgroundColor: Maple.warningSoft },
   flagText: { fontSize: 13, color: INK },
   flagTextOn: { color: ORANGE },
   midPanel: { left: 437, width: 415, paddingTop: 12, paddingBottom: 50, paddingHorizontal: 10 },
   watchRow: { height: 28, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingRight: 8 },
-  watch: { height: 28, flexDirection: 'row', alignItems: 'center', gap: 12, paddingLeft: 4, paddingRight: 10, borderRadius: 5, backgroundColor: '#EEF4FF' },
+  watch: { height: 28, flexDirection: 'row', alignItems: 'center', gap: 12, paddingLeft: 4, paddingRight: 10, borderRadius: 5, backgroundColor: Maple.blueSoft },
   watchPlay: { width: 20, height: 20, alignItems: 'center', justifyContent: 'center', borderRadius: 4, backgroundColor: BLUE },
   watchText: { fontSize: 13.5, color: BLUE },
   videoPos: { marginTop: 12 },
@@ -263,35 +265,35 @@ const styles = StyleSheet.create({
   otherPanel: { left: 16, width: 836, alignItems: 'center', justifyContent: 'center', gap: 12, padding: 40 },
   otherTitle: { fontSize: 18, fontWeight: '700', color: INK },
   otherBody: { maxWidth: 460, fontSize: 14, lineHeight: 21, color: BODY, textAlign: 'center' },
-  otherBtn: { height: 42, paddingHorizontal: 22, justifyContent: 'center', borderRadius: 6, backgroundColor: '#0B6BFF' },
-  side: { position: 'absolute', left: 871, top: 122, width: 263, height: 790, paddingTop: 22, paddingHorizontal: 14, borderRadius: 8, backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#EDF1F6' },
+  otherBtn: { height: 42, paddingHorizontal: 22, justifyContent: 'center', borderRadius: 6, backgroundColor: Maple.blue },
+  side: { position: 'absolute', left: 871, top: 122, width: 263, height: 790, paddingTop: 22, paddingHorizontal: 14, borderRadius: 8, backgroundColor: Maple.surface, borderWidth: 1, borderColor: Maple.blueSelected },
   sideTitle: { fontSize: 14.5, fontWeight: '700', color: INK },
   sideGap: { height: 22 },
   submitPos: { position: 'absolute', left: 7, right: 7, bottom: 26 },
   navBtns: { flexDirection: 'row', gap: 12 },
   navBtnsP: { gap: 15, marginTop: 12 },
-  prev: { flex: 183, height: 40, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 12, borderRadius: 5, borderWidth: 1.5, borderColor: BLUE, backgroundColor: '#FFFFFF' },
-  next: { flex: 190, height: 40, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 12, borderRadius: 5, backgroundColor: '#0B6BFF' },
+  prev: { flex: 183, height: 40, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 12, borderRadius: 5, borderWidth: 1.5, borderColor: BLUE, backgroundColor: Maple.surface },
+  next: { flex: 190, height: 40, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 12, borderRadius: 5, backgroundColor: Maple.blue },
   btnP: { flex: 1, height: 42 },
   disabled: { opacity: 0.45 },
   prevText: { fontSize: 14.5, color: BLUE },
-  nextText: { fontSize: 14.5, fontWeight: '500', color: '#FFFFFF' },
-  phoneRoot: { flex: 1, backgroundColor: '#FFFFFF' },
+  nextText: { fontSize: 14.5, fontWeight: '500', color: Maple.surface },
+  phoneRoot: { flex: 1, backgroundColor: Maple.surface },
   phonePage: { paddingBottom: 110 },
   phonePad: { paddingHorizontal: 16 },
   phoneTitleRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginTop: 12, marginBottom: 16 },
   phoneTitle: { flexShrink: 1, fontSize: 17, fontWeight: '800', color: INK, letterSpacing: -0.3 },
   legendP: { marginTop: 12, paddingHorizontal: 12 },
-  rule: { height: 1, marginVertical: 14, backgroundColor: '#E8EDF4' },
+  rule: { height: 1, marginVertical: 14, backgroundColor: Maple.blueSelected },
   watchPos: { marginTop: 12 },
-  watchP: { height: 42, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 14, borderRadius: 6, borderWidth: 1, borderColor: '#A9C4F5', backgroundColor: '#F2F7FE' },
+  watchP: { height: 42, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 14, borderRadius: 6, borderWidth: 1, borderColor: Maple.blueLine, backgroundColor: Maple.blueSoft },
   watchPlayP: { width: 22, height: 22, alignItems: 'center', justifyContent: 'center', borderRadius: 11, backgroundColor: BLUE },
   watchTextP: { fontSize: 13.5, fontWeight: '500', color: BLUE },
   autoTitle: { marginBottom: 10, fontSize: 13.5, fontWeight: '700', color: INK },
   phoneProgress: { marginTop: 14, marginBottom: 10, fontSize: 12, color: BODY },
   sheetBg: { flex: 1, alignItems: 'center', backgroundColor: 'rgba(8,12,20,0.88)' },
   sheet: { flex: 1, width: '100%', maxWidth: 760, padding: 12, gap: 12 },
-  sheetBody: { flex: 1, borderRadius: 10, backgroundColor: '#FFFFFF' },
+  sheetBody: { flex: 1, borderRadius: 10, backgroundColor: Maple.surface },
   sheetBodyIn: { padding: 16, paddingBottom: 40 },
   sheetTeacher: { marginBottom: 6, fontSize: 12, color: BODY },
   sheetBack: { height: 42, alignItems: 'center', justifyContent: 'center', marginTop: 24, borderRadius: 6, borderWidth: 1.5, borderColor: BLUE },

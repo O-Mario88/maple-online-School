@@ -1,5 +1,4 @@
-import { Image } from 'expo-image';
-import { LinearGradient } from 'expo-linear-gradient';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { type ReactNode, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
@@ -7,11 +6,13 @@ import { Pressable, Text, View } from 'react-native';
 import { Icon } from '@/components/icon';
 import { PremiumTiles } from '@/features/portal/Premium';
 import type { IconName } from '@/lib/icons';
+import { heroMessage } from '@/lib/learner-home';
 import { toast } from '@/lib/toast';
 import type { AssignmentProjectTab } from '@/mock/learner-home';
 
 import { BLUE, BODY, type Home, INK } from './HomeFrame';
 import { styles } from './HomeCards.styles';
+import { Maple } from '@/constants/maple';
 
 const WAVE_BARS = [6, 12, 9, 16, 20, 13, 8, 15, 22, 18, 10, 14, 19, 11, 7, 14, 17, 10, 13, 8, 5, 9, 6, 4];
 
@@ -47,60 +48,88 @@ export function CardHead({
   );
 }
 
-/** Hero Banner matching Image 1: student photo on left, Welcome back Daniel + This Week pill, quote + mountain sunrise on right. */
-export function Hero({ h, phone = false }: { h: Home; phone?: boolean }) {
-  const x = h.hero;
-  if (phone) return <HeroPhone h={h} />;
+/** One labelled progress bar in the hero's inset panel. */
+function HeroMeter({ label, value, display }: { label: string; value: number; display: string }) {
+  const pct = Math.max(0, Math.min(100, Math.round(value * 100)));
   return (
-    <LinearGradient
-      colors={['#0A1F47', '#13356E', '#1F4B8E', '#3A639C']}
-      locations={[0, 0.45, 0.78, 1]}
-      start={{ x: 0, y: 0.2 }}
-      end={{ x: 1, y: 0.8 }}
-      style={styles.hero}>
-      <Image source={x.mountainPhoto} style={styles.heroMountain} contentFit="cover" />
-      <Image
-        source={x.studentPhoto}
-        style={styles.heroPhoto}
-        contentFit="cover"
-        accessibilityLabel={`${h.name} smiling`}
-      />
-      <View style={styles.heroCopy}>
-        <Text style={styles.heroTitle}>{x.title}</Text>
-        <Text style={styles.heroSub}>{x.sub}</Text>
-        <View style={styles.weekPill}>
-          <Icon name="calendar" size={12} color="#93C5FD" />
-          <Text style={styles.weekPillText}>
-            <Text style={styles.weekPillBold}>This Week: </Text>
-            {h.weekRange}
-          </Text>
-        </View>
+    <View style={styles.heroGoal} accessible accessibilityLabel={`${label}, ${display}`}>
+      <View style={styles.heroGoalHead}>
+        <Text style={styles.heroGoalText} numberOfLines={1}>
+          {label}
+        </Text>
+        <Text style={styles.heroGoalValue}>{display}</Text>
       </View>
-      <View style={styles.quoteWrap}>
-        <Text style={styles.quoteMark}>“</Text>
-        <Text style={styles.quoteText}>{x.quote}</Text>
+      <View style={styles.heroTrack}>
+        <View style={[styles.heroBar, { width: `${pct}%` }]} />
       </View>
-    </LinearGradient>
+    </View>
   );
 }
 
-/** Phones: the photo and the greeting side by side over the mountain (the desktop row of photo, greeting and quote is 440px wide). */
-function HeroPhone({ h }: { h: Home }) {
-  const x = h.hero;
+/**
+ * The learner's greeting: one Maple Blue panel with a heading, one sentence about
+ * their progress and Continue Learning, plus this week's tasks and current goal
+ * (the numbers below the hero are not repeated here).
+ */
+export function Hero({ h, phone = false }: { h: Home; phone?: boolean }) {
+  const title = h.hero.title.replace(/!$/, '');
+  const message = heroMessage(h.subjects);
+  if (phone) return <HeroPhone title={title} message={message} />;
+  const done = h.todoWeek.filter((t) => t.done).length;
+  const total = h.todoWeek.length;
+  const goal = h.goals[0];
+  return (
+    <View style={styles.hero}>
+      <View style={styles.heroCopy}>
+        <Text style={styles.heroTitle} accessibilityRole="header">
+          {title}
+        </Text>
+        <Text style={styles.heroSub}>{message}</Text>
+        <View style={styles.heroActions}>
+          <HeroButton label="Continue Learning" icon="playFill" onPress={() => router.push('/learn/course')} primary />
+          <HeroButton label="View My Plan" icon="map" onPress={() => router.push('/learn/plan')} />
+        </View>
+      </View>
+      <View style={styles.heroPanel}>
+        <View style={styles.heroWeek}>
+          <Icon name="calendar" size={12} color={Maple.onBlueMuted} />
+          <Text style={styles.heroWeekText}>{`This week · ${h.weekRange}`}</Text>
+        </View>
+        {total > 0 ? <HeroMeter label="Tasks done this week" value={done / total} display={`${done} of ${total}`} /> : null}
+        {goal ? <HeroMeter label={`Goal: ${goal.title}`} value={goal.value} display={goal.label} /> : null}
+      </View>
+    </View>
+  );
+}
+
+function HeroButton({ label, icon, onPress, primary = false }: { label: string; icon: IconName; onPress: () => void; primary?: boolean }) {
+  return (
+    <Pressable
+      style={({ hovered, pressed }: { hovered?: boolean; pressed: boolean }) => [
+        primary ? styles.heroBtn : styles.heroBtnGhost,
+        (hovered || pressed) && (primary ? styles.heroBtnHover : styles.heroBtnGhostHover),
+      ]}
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={label}>
+      <Icon name={icon} size={13} color={primary ? Maple.blue : Maple.white} />
+      <Text style={primary ? styles.heroBtnText : styles.heroBtnGhostText}>{label}</Text>
+    </Pressable>
+  );
+}
+
+/** Phones: the same panel stacked: greeting, sentence and Continue Learning (the numbers follow in My Progress). */
+function HeroPhone({ title, message }: { title: string; message: string }) {
   return (
     <View style={styles.heroPhone}>
-      <Image source={x.mountainPhoto} style={styles.heroPhoneMountain} contentFit="cover" />
-      <LinearGradient
-        colors={['rgba(10,31,71,0.92)', 'rgba(19,53,110,0.55)']}
-        start={{ x: 0, y: 0.5 }}
-        end={{ x: 1, y: 0.5 }}
-        style={styles.heroPhoneShade}
-      />
-      <Image source={x.studentPhoto} style={styles.heroPhonePhoto} contentFit="cover" accessibilityLabel={`${h.name} smiling`} />
-      <View style={styles.heroPhoneCopy}>
-        <Text style={styles.heroPhoneTitle}>{x.title}</Text>
-        <Text style={styles.heroPhoneSub}>{x.phoneSub ?? x.sub}</Text>
-      </View>
+      <Text style={styles.heroPhoneTitle} accessibilityRole="header">
+        {title}
+      </Text>
+      <Text style={styles.heroPhoneSub}>{message}</Text>
+      <Pressable style={styles.heroPhoneBtn} onPress={() => router.push('/learn/course')} accessibilityRole="button" accessibilityLabel="Continue Learning">
+        <Icon name="playFill" size={15} color={Maple.blue} />
+        <Text style={styles.heroPhoneBtnText}>Continue Learning</Text>
+      </Pressable>
     </View>
   );
 }
@@ -219,7 +248,7 @@ export function TeacherVoiceCard({ h, phone = false }: { h: Home; phone?: boolea
             }}
             accessibilityRole="button"
             accessibilityLabel={playing ? 'Pause teacher message' : 'Play teacher message'}>
-            <Icon name={playing ? 'pause' : 'playFill'} size={12} color="#FFFFFF" />
+            <Icon name={playing ? 'pause' : 'playFill'} size={12} color={Maple.surface} />
           </Pressable>
           <View style={styles.waveRow}>
             {WAVE_BARS.map((height, idx) => (
@@ -229,7 +258,7 @@ export function TeacherVoiceCard({ h, phone = false }: { h: Home; phone?: boolea
                   styles.waveBar,
                   {
                     height,
-                    backgroundColor: playing || idx < 14 ? BLUE : '#CBD5E1',
+                    backgroundColor: playing || idx < 14 ? BLUE : Maple.borderStrong,
                   },
                 ]}
               />
@@ -261,7 +290,7 @@ export function UpcomingLiveClassesCard({ h }: { h: Home }) {
             accessibilityLabel={`${c.title}, ${c.time}`}>
             {c.liveSoon ? (
               <View style={styles.liveInBadge}>
-                <Icon name="video" size={11} color="#E5484D" />
+                <Icon name="video" size={11} color={Maple.error} />
                 <Text style={styles.liveInText}>{c.badge}</Text>
               </View>
             ) : (
@@ -406,12 +435,12 @@ export function RecentWorkCard({ h }: { h: Home }) {
 export function WeekAchievementsCard({ h }: { h: Home }) {
   return (
     <View style={styles.flex}>
-      <CardHead icon="trophy" color="#F59E0B" title="This Week's Achievements" />
+      <CardHead icon="trophy" color={Maple.warning} title="This Week's Achievements" />
       <View style={styles.achList}>
         {h.weekAchievements.map((a) => (
           <View key={a.id} style={styles.achRow}>
             <View style={styles.achCheck}>
-              <Icon name="check" size={11} color="#FFFFFF" />
+              <Icon name="check" size={11} color={Maple.surface} />
             </View>
             <Text style={styles.achText}>{a.text}</Text>
             <Text style={styles.achDate}>{a.date}</Text>
@@ -453,7 +482,7 @@ export function LearningJourneyCard({ h, phone = false }: { h: Home; phone?: boo
                 <Icon
                   name={s.icon}
                   size={13}
-                  color={isDone || isCurrent ? '#FFFFFF' : '#64748B'}
+                  color={isDone || isCurrent ? Maple.surface : Maple.secondary}
                 />
               </View>
               <Text style={[styles.journeyTitle, isCurrent && { color: INK, fontWeight: '800' }]}>
@@ -482,7 +511,7 @@ function LearningJourneyPhone({ h }: { h: Home }) {
             <View key={s.id} style={styles.journeyRowPhone}>
               <View style={styles.journeyRailPhone}>
                 <View style={[styles.journeyCircle, isDone && styles.journeyCircleDone, isCurrent && styles.journeyCircleCurrent]}>
-                  <Icon name={s.icon} size={13} color={isDone || isCurrent ? '#FFFFFF' : '#64748B'} />
+                  <Icon name={s.icon} size={13} color={isDone || isCurrent ? Maple.surface : Maple.secondary} />
                 </View>
                 {i < last ? <View style={[styles.journeyLinePhone, isDone && styles.journeyLineDonePhone]} /> : null}
               </View>
@@ -504,7 +533,7 @@ export function RecommendedCard({ h }: { h: Home }) {
     <View>
       <CardHead
         icon="star"
-        color="#F59E0B"
+        color={Maple.warning}
         title="Recommended for You"
         link="View All"
         onLink={() => router.push('/learn/library')}

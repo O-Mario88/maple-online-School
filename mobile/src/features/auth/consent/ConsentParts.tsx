@@ -1,10 +1,11 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
 import { Brand } from '@/features/public/palette';
 import type { IconName } from '@/lib/icons';
 import type { MockData } from '@/mock';
+import { Maple } from '@/constants/maple';
 
 export type Consent = MockData['publicPages']['guardianConsent'];
 export type Channel = 'whatsapp' | 'email' | 'phone';
@@ -12,9 +13,9 @@ export type Channel = 'whatsapp' | 'email' | 'phone';
 export const MESSAGE_LIMIT = 200;
 
 export const CHANNELS: readonly { key: Channel; title: string; detail: string; short: string; icon: IconName; tint: string; field: string; placeholder: string }[] = [
-  { key: 'whatsapp', title: 'WhatsApp', detail: 'Fast & easy', short: 'Fast & easy', icon: 'chat', tint: '#25D366', field: 'Parent or guardian’s WhatsApp number', placeholder: '700 123 456' },
-  { key: 'email', title: 'Email', detail: 'Works on any device', short: 'Any device', icon: 'mail', tint: '#1463F3', field: 'Parent or guardian’s email address', placeholder: 'parent@example.com' },
-  { key: 'phone', title: 'Phone (SMS)', detail: 'Text message link', short: 'Text message', icon: 'phone', tint: '#8B3DFF', field: 'Parent or guardian’s phone number', placeholder: '700 123 456' },
+  { key: 'whatsapp', title: 'WhatsApp', detail: 'Fast & easy', short: 'Fast & easy', icon: 'chat', tint: Maple.success, field: 'Parent or guardian’s WhatsApp number', placeholder: '700 123 456' },
+  { key: 'email', title: 'Email', detail: 'Works on any device', short: 'Any device', icon: 'mail', tint: Maple.blue, field: 'Parent or guardian’s email address', placeholder: 'parent@example.com' },
+  { key: 'phone', title: 'Phone (SMS)', detail: 'Text message link', short: 'Text message', icon: 'phone', tint: Maple.blue, field: 'Parent or guardian’s phone number', placeholder: '700 123 456' },
 ];
 
 export const CONSENT_STEPS = [
@@ -75,7 +76,7 @@ export function ContactField({ c, channel, value, onChange, phone = false }: { c
           value={value}
           onChangeText={onChange}
           placeholder={ch.placeholder}
-          placeholderTextColor="#9AA3B2"
+          placeholderTextColor={Maple.faint}
           keyboardType={channel === 'email' ? 'email-address' : 'phone-pad'}
           autoCapitalize="none"
           accessibilityLabel={ch.field}
@@ -91,7 +92,7 @@ export function MessageBox({ value, onChange, phone = false }: { value: string; 
       <Text style={[styles.label, phone && styles.labelP]}>
         Add a personal message <Text style={styles.muted}>(optional)</Text>
       </Text>
-      <TextInput style={[styles.message, phone && styles.messageP]} value={value} onChangeText={(t) => onChange(t.slice(0, MESSAGE_LIMIT))} multiline placeholderTextColor="#9AA3B2" accessibilityLabel="Personal message" />
+      <TextInput style={[styles.message, phone && styles.messageP]} value={value} onChangeText={(t) => onChange(t.slice(0, MESSAGE_LIMIT))} multiline placeholderTextColor={Maple.faint} accessibilityLabel="Personal message" />
       <Text style={styles.count}>{`${value.length}/${MESSAGE_LIMIT}`}</Text>
     </View>
   );
@@ -117,34 +118,34 @@ const styles = StyleSheet.create({
   tick: { width: 20, height: 20, borderRadius: 10, backgroundColor: Brand.blue, alignItems: 'center', justifyContent: 'center' },
   channels: { flexDirection: 'row', gap: 10 },
   channelsP: { gap: 7 },
-  channel: { flex: 1, height: 106, alignItems: 'center', justifyContent: 'center', gap: 4, borderRadius: 8, borderWidth: 1, borderColor: '#E3E8F0', backgroundColor: Brand.surface },
+  channel: { flex: 1, height: 106, alignItems: 'center', justifyContent: 'center', gap: 4, borderRadius: 8, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Brand.surface },
   channelP: { height: 86 },
   channelOn: { borderWidth: 2, borderColor: Brand.blue },
   logo: { width: 40, height: 40, borderRadius: 20, marginBottom: 6 },
   logoP: { width: 30, height: 30, borderRadius: 15, marginBottom: 4 },
   chTitle: { fontSize: 13.5, fontWeight: '500', color: Brand.ink },
   chTitleP: { fontSize: 12 },
-  chDetail: { fontSize: 11.5, color: '#4A5263' },
+  chDetail: { fontSize: 11.5, color: Maple.body },
   chDetailP: { fontSize: 10 },
   chTick: { position: 'absolute', top: 10, right: 10 },
   label: { marginBottom: 9, fontSize: 13.5, color: Brand.ink },
   labelP: { fontSize: 13 },
-  muted: { color: '#4A5263' },
-  contact: { height: 44, flexDirection: 'row', alignItems: 'center', borderRadius: 7, borderWidth: 1, borderColor: '#DFE4EC', backgroundColor: Brand.surface },
+  muted: { color: Maple.body },
+  contact: { height: 44, flexDirection: 'row', alignItems: 'center', borderRadius: 7, borderWidth: 1, borderColor: Maple.border, backgroundColor: Brand.surface },
   contactP: { height: 40 },
-  dial: { height: '100%', flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 11, borderRightWidth: 1, borderRightColor: '#DFE4EC' },
+  dial: { height: '100%', flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 11, borderRightWidth: 1, borderRightColor: Maple.border },
   flag: { width: 28, height: 18 },
   dialText: { fontSize: 13.5, color: Brand.ink },
   input: { flex: 1, height: '100%', paddingHorizontal: 13, fontSize: 13.5, color: Brand.ink },
-  message: { minHeight: 68, paddingHorizontal: 13, paddingTop: 10, borderRadius: 7, borderWidth: 1, borderColor: '#DFE4EC', backgroundColor: Brand.surface, fontSize: 12, lineHeight: 17, color: '#3D4656', textAlignVertical: 'top' },
+  message: { minHeight: 68, paddingHorizontal: 13, paddingTop: 10, borderRadius: 7, borderWidth: 1, borderColor: Maple.border, backgroundColor: Brand.surface, fontSize: 12, lineHeight: 17, color: Maple.body, textAlignVertical: 'top' },
   messageP: { minHeight: 66, fontSize: 12.5 },
-  count: { marginTop: 7, alignSelf: 'flex-end', fontSize: 11.5, color: '#4A5263' },
-  why: { flexDirection: 'row', gap: 12, paddingHorizontal: 14, paddingVertical: 13, borderRadius: 8, backgroundColor: '#EEF4FF' },
+  count: { marginTop: 7, alignSelf: 'flex-end', fontSize: 11.5, color: Maple.body },
+  why: { flexDirection: 'row', gap: 12, paddingHorizontal: 14, paddingVertical: 13, borderRadius: 8, backgroundColor: Maple.blueSoft },
   whyP: { paddingVertical: 14 },
   info: { width: 24, height: 24, borderRadius: 12, backgroundColor: Brand.blue, alignItems: 'center', justifyContent: 'center' },
   infoText: { fontSize: 13, fontWeight: '800', color: Brand.surface },
   whyTitle: { fontSize: 12.5, fontWeight: '600', color: Brand.ink },
   whyTitleP: { fontSize: 12.5 },
-  whyText: { marginTop: 4, fontSize: 11, lineHeight: 16, color: '#3D4656' },
+  whyText: { marginTop: 4, fontSize: 11, lineHeight: 16, color: Maple.body },
   whyTextP: { fontSize: 11.5 },
 });

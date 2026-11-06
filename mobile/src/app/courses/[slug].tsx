@@ -14,6 +14,7 @@ import { Brand, PUBLIC_WIDE } from '@/features/public/palette';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { LightOnly } from '@/hooks/use-theme';
 import { mockData } from '@/lib/mock';
+import { PageScroll } from '@/components/shell/PageScroll';
 
 const MAX_WIDTH = 1440;
 const SIDE = 380;
@@ -70,7 +71,7 @@ export default function CourseLandingScreen() {
     <LightOnly>
     <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
       <HomeNav wide={wide} active="Subjects" />
-      <ScrollView ref={scroll} contentContainerStyle={styles.page}>
+      <PageScroll ref={scroll} contentContainerStyle={styles.page}>
         <View style={styles.inner}>
           <View style={[styles.row, wide && styles.rowWide]}>
             <View style={[styles.main, wide && styles.flex]}>
@@ -109,7 +110,7 @@ export default function CourseLandingScreen() {
             </View>
           </View>
         </View>
-      </ScrollView>
+      </PageScroll>
     </SafeAreaView>
     </LightOnly>
   );

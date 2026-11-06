@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
@@ -7,6 +7,7 @@ import { useTeacherGo } from '@/features/teacher/frame/TeacherFrame';
 import { BLUE, BODY, GREEN, INK, LINE, Pill, RED, type Tone, toneColor } from '@/features/teacher/frame/TeacherParts';
 import { toast } from '@/lib/toast';
 import type { LevelTone, StudioLevel, StudioNew } from '@/mock/teacher-studio';
+import { Maple } from '@/constants/maple';
 
 const LEVEL_TONE: Readonly<Record<LevelTone, Tone>> = { green: 'green', blue: 'blue', purple: 'purple' };
 const LETTERS = ['A', 'B', 'C', 'D'];
@@ -77,7 +78,7 @@ export function Objectives({ s }: { s: StudioNew }) {
       {items.map((o, i) => (
         <View key={i} style={styles.objective}>
           <View style={styles.tick}>
-            <Icon name="check" size={10} color="#FFFFFF" />
+            <Icon name="check" size={10} color={Maple.surface} />
           </View>
           {editing ? (
             <TextInput style={styles.objectiveInput} value={o} onChangeText={(t) => change(i, t)} accessibilityLabel={`Objective ${i + 1}`} />
@@ -120,7 +121,7 @@ export function LevelList({ levels, setLevels }: { levels: readonly StudioLevel[
           <View key={l.name} style={styles.level}>
             <Pressable style={styles.levelHead} onPress={() => toggle(i)} accessibilityRole="button" accessibilityState={{ expanded: isOpen }} accessibilityLabel={`${l.name}, ${l.tag}, ${l.lessons} lessons, ${l.quizzes} quizzes`}>
               <View style={[styles.levelIcon, { backgroundColor: toneColor(tone) }]}>
-                <Icon name="columns" size={12} color="#FFFFFF" />
+                <Icon name="columns" size={12} color={Maple.surface} />
               </View>
               <Text style={styles.levelName} numberOfLines={1}>{l.name}</Text>
               <Pill label={l.tag} tone={tone} small />
@@ -201,7 +202,7 @@ const styles = StyleSheet.create({
   edit: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 6, borderWidth: 1, borderColor: LINE },
   editText: { fontSize: 11.5, fontWeight: '600', color: BLUE },
   cover: { width: '100%', height: 92, borderRadius: 8 },
-  coverEdit: { position: 'absolute', top: 8, right: 8, paddingHorizontal: 9, paddingVertical: 4, borderRadius: 6, backgroundColor: '#FFFFFF' },
+  coverEdit: { position: 'absolute', top: 8, right: 8, paddingHorizontal: 9, paddingVertical: 4, borderRadius: 6, backgroundColor: Maple.surface },
   coverEditText: { fontSize: 11, fontWeight: '600', color: INK },
   titleRow: { flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 12 },
   courseTitle: { flexShrink: 1, fontSize: 17, fontWeight: '800', color: INK },
@@ -209,7 +210,7 @@ const styles = StyleSheet.create({
   counts: { flexDirection: 'row', flexWrap: 'wrap', gap: 14, marginTop: 10 },
   count: { flexDirection: 'row', alignItems: 'center', gap: 5 },
   countText: { fontSize: 11.5, color: BODY },
-  box: { padding: 12, borderRadius: 10, borderWidth: 1, borderColor: LINE, backgroundColor: '#FFFFFF' },
+  box: { padding: 12, borderRadius: 10, borderWidth: 1, borderColor: LINE, backgroundColor: Maple.surface },
   boxHead: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 },
   boxTitle: { flexShrink: 1, fontSize: 12.5, fontWeight: '700', color: INK },
   structTitle: { fontSize: 15, fontWeight: '700', color: INK },
@@ -218,13 +219,13 @@ const styles = StyleSheet.create({
   objectiveText: { flex: 1, fontSize: 11, color: INK },
   objectiveInput: { flex: 1, height: 28, paddingVertical: 0, paddingHorizontal: 6, borderRadius: 6, borderWidth: 1, borderColor: LINE, fontSize: 12, color: INK },
   level: { marginTop: 8, borderRadius: 10, borderWidth: 1, borderColor: LINE, overflow: 'hidden' },
-  levelHead: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 8, paddingVertical: 8, backgroundColor: '#F7FAFE' },
+  levelHead: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 8, paddingVertical: 8, backgroundColor: Maple.blueSoft },
   levelIcon: { width: 18, height: 18, alignItems: 'center', justifyContent: 'center', borderRadius: 5 },
   levelName: { fontSize: 11, fontWeight: '700', color: INK },
   levelMeta: { flex: 1, fontSize: 9, color: BODY, textAlign: 'right', letterSpacing: -0.1 },
-  kind: { paddingHorizontal: 5, paddingVertical: 2, borderRadius: 5, overflow: 'hidden', fontSize: 8.5, fontWeight: '600', color: BLUE, backgroundColor: '#E8F0FE' },
-  lesson: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 10, paddingVertical: 4, borderTopWidth: 1, borderColor: '#EEF2F8' },
-  num: { width: 20, height: 20, alignItems: 'center', justifyContent: 'center', borderRadius: 10, backgroundColor: '#EEF1F6' },
+  kind: { paddingHorizontal: 5, paddingVertical: 2, borderRadius: 5, overflow: 'hidden', fontSize: 8.5, fontWeight: '600', color: BLUE, backgroundColor: Maple.blueSelected },
+  lesson: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 10, paddingVertical: 4, borderTopWidth: 1, borderColor: Maple.blueSelected },
+  num: { width: 20, height: 20, alignItems: 'center', justifyContent: 'center', borderRadius: 10, backgroundColor: Maple.blueSelected },
   numText: { fontSize: 10.5, fontWeight: '600', color: BODY },
   lessonTitle: { flex: 1, fontSize: 10.5, color: INK },
   mins: { width: 40, fontSize: 10, color: BODY, textAlign: 'right' },
@@ -233,12 +234,12 @@ const styles = StyleSheet.create({
   quizTags: { flexDirection: 'row', gap: 6 },
   question: { fontSize: 11.5, color: INK, marginVertical: 6 },
   option: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 4, paddingHorizontal: 8, paddingVertical: 3, borderRadius: 7, borderWidth: 1, borderColor: LINE },
-  optionRight: { borderColor: GREEN, backgroundColor: '#E9F7EF' },
-  optionWrong: { borderColor: RED, backgroundColor: '#FDECEC' },
+  optionRight: { borderColor: GREEN, backgroundColor: Maple.successSoft },
+  optionWrong: { borderColor: RED, backgroundColor: Maple.errorSoft },
   letter: { width: 20, height: 20, alignItems: 'center', justifyContent: 'center', borderRadius: 10, borderWidth: 1, borderColor: LINE },
   letterRight: { backgroundColor: GREEN, borderColor: GREEN },
   letterWrong: { backgroundColor: RED, borderColor: RED },
   letterText: { fontSize: 10.5, fontWeight: '700', color: BODY },
-  letterTextOn: { color: '#FFFFFF' },
+  letterTextOn: { color: Maple.surface },
   optionText: { flex: 1, fontSize: 12, color: INK },
 });

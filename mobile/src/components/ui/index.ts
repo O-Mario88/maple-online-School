@@ -1,3 +1,4 @@
+export * from './controls';
 export * from './data';
 export * from './display';
 export * from './primitives';

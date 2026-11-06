@@ -17,6 +17,7 @@ import type { BookAccount } from '@/mock/school-books';
 import { accountBalance, ACCOUNT_TYPES, type AccountType, addAccount, canDelete, categoryTree } from './books';
 import { BooksDesk, BooksHead } from './BooksFrame';
 import { type AccountDraft, AccountModal } from './BooksModals';
+import { Maple } from '@/constants/maple';
 
 type Admin = MockData['schoolAdmin'];
 const PER_PAGE = 15;
@@ -274,7 +275,7 @@ function Trend({ u }: { u: U }) {
   const t = u.b.balanceTrend;
   return (
     <Panel title="Account Balance Trend" right={<CmdSelect value={span} options={['This Year', 'Last Year']} onChange={setSpan} width={110} label="Period" />} style={[styles.block, styles.flex]}>
-      <ComboChart labels={t.labels} bars={[{ name: u.open?.name ?? 'Balance', color: '#22A55A', values: span === 'This Year' ? t.values : t.values.map((v) => Math.round(v * 0.8)) }]} max={300} height={150} format={(n) => (n ? `${n}M` : '0')} barWidth={14} />
+      <ComboChart labels={t.labels} bars={[{ name: u.open?.name ?? 'Balance', color: Maple.successText, values: span === 'This Year' ? t.values : t.values.map((v) => Math.round(v * 0.8)) }]} max={300} height={150} format={(n) => (n ? `${n}M` : '0')} barWidth={14} />
     </Panel>
   );
 }
@@ -498,7 +499,7 @@ const styles = StyleSheet.create({
   cats: { width: 262, gap: 10, padding: 12 },
   catGroup: { gap: 2, paddingLeft: 6, paddingBottom: 6, borderLeftWidth: 3, borderLeftColor: 'transparent', borderBottomWidth: 1, borderBottomColor: LINE },
   catHead: { flexDirection: 'row', alignItems: 'center', gap: 9, padding: 6, borderRadius: 8 },
-  catOn: { backgroundColor: '#EAF1FE' },
+  catOn: { backgroundColor: Maple.blueSoft },
   catName: { fontSize: 13.5, fontWeight: '700', color: NAVY },
   catCount: { fontSize: 13, fontWeight: '700', color: NAVY },
   subRow: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingVertical: 6, paddingLeft: 14, paddingRight: 6, borderRadius: 8 },
@@ -516,8 +517,8 @@ const styles = StyleSheet.create({
   topRow: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingVertical: 3 },
   topAmt: { fontSize: 11.5, fontWeight: '700', color: NAVY },
   topPct: { width: 30, textAlign: 'right', fontSize: 11.5, color: BODY },
-  track: { height: 4, marginTop: 4, borderRadius: 2, backgroundColor: '#E8EEF8', overflow: 'hidden' },
-  fill: { height: 4, borderRadius: 2, backgroundColor: '#22A55A' },
+  track: { height: 4, marginTop: 4, borderRadius: 2, backgroundColor: Maple.blueSelected, overflow: 'hidden' },
+  fill: { height: 4, borderRadius: 2, backgroundColor: Maple.successText },
   tilesCard: { gap: 10, padding: 14, borderRadius: 16, borderWidth: 1, borderColor: LINE, backgroundColor: WHITE },
   tilesRow: { flexDirection: 'row', gap: 8 },
   cardTitle: { fontSize: 16, fontWeight: '800', color: NAVY },

@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StyleSheet, Text, View } from 'react-native';
 
@@ -6,6 +6,7 @@ import { Icon } from '@/components/icon';
 import type { MockData } from '@/mock';
 
 import { Brand, CARD_SHADOW } from '../palette';
+import { Maple } from '@/constants/maple';
 
 type Digest = MockData['publicPages']['parentDigest'];
 
@@ -97,7 +98,7 @@ const styles = StyleSheet.create({
   bannerCopy: { gap: 10, padding: 24, maxWidth: 380 },
   title: { fontSize: 34, lineHeight: 38, fontWeight: '900', color: Brand.surface, letterSpacing: -0.8 },
   titleWide: { fontSize: 42, lineHeight: 46 },
-  accent: { color: '#5B9BFF' },
+  accent: { color: Maple.blue },
   sub: { fontSize: 15, lineHeight: 22, color: 'rgba(255,255,255,0.9)' },
   week: { flexDirection: 'row', alignItems: 'center', gap: 8, alignSelf: 'flex-start', paddingHorizontal: 14, paddingVertical: 9, borderRadius: 999, backgroundColor: 'rgba(255,255,255,0.14)', marginTop: 6 },
   weekText: { fontSize: 14, fontWeight: '600', color: Brand.surface },

@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 
 import { BLUE, BODY, INK, LINE, MUTED } from '@/features/teacher/frame/TeacherParts';
+import { Maple } from '@/constants/maple';
 
 /** Styles for AssignmentViews (kept apart so the view file stays readable). */
 export const ASSIGNMENT_REF_WIDTH = 1220;
@@ -10,7 +11,7 @@ export const s = StyleSheet.create({
     width: ASSIGNMENT_REF_WIDTH,
     padding: 12,
     gap: 10,
-    backgroundColor: '#EAF1FB',
+    backgroundColor: Maple.blueSelected,
   },
   body: {
     flexDirection: 'row',
@@ -47,9 +48,9 @@ export const s = StyleSheet.create({
     height: 34,
     paddingHorizontal: 14,
     borderRadius: 8,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     borderWidth: 1,
-    borderColor: '#CBD5E1',
+    borderColor: Maple.borderStrong,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -70,7 +71,7 @@ export const s = StyleSheet.create({
   assignBtnText: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
 
   /* 3-Column Builder Layout */
@@ -126,13 +127,13 @@ export const s = StyleSheet.create({
     borderRadius: 9,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     position: 'relative',
   },
   typeCardOn: {
     borderColor: BLUE,
     borderWidth: 1.5,
-    backgroundColor: '#F3F8FF',
+    backgroundColor: Maple.blueSoft,
   },
   typeCheckCircle: {
     position: 'absolute',
@@ -148,7 +149,7 @@ export const s = StyleSheet.create({
   typeCheckMark: {
     fontSize: 8.5,
     fontWeight: '800',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   typeIconBox: {
     width: 26,
@@ -209,7 +210,7 @@ export const s = StyleSheet.create({
     borderRadius: 7,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
   },
   classSearchInput: {
     flex: 1,
@@ -232,10 +233,10 @@ export const s = StyleSheet.create({
     height: 15,
     borderRadius: 4,
     borderWidth: 1.5,
-    borderColor: '#CBD5E1',
+    borderColor: Maple.borderStrong,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
   },
   checkboxOn: {
     backgroundColor: BLUE,
@@ -244,7 +245,7 @@ export const s = StyleSheet.create({
   checkboxTick: {
     fontSize: 9,
     fontWeight: '800',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   classList: {
     gap: 6,
@@ -257,11 +258,11 @@ export const s = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
   },
   classRowOn: {
-    backgroundColor: '#F4F8FF',
-    borderColor: '#C9DEFF',
+    backgroundColor: Maple.blueSoft,
+    borderColor: Maple.blueLine,
   },
   classThumb: {
     width: 28,
@@ -288,7 +289,7 @@ export const s = StyleSheet.create({
     color: INK,
   },
   reqStar: {
-    color: '#EF4444',
+    color: Maple.error,
   },
   textInput: {
     height: 32,
@@ -296,7 +297,7 @@ export const s = StyleSheet.create({
     borderRadius: 7,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     paddingHorizontal: 10,
     fontSize: 11.5,
     color: INK,
@@ -311,7 +312,7 @@ export const s = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     overflow: 'hidden',
   },
   richToolbar: {
@@ -322,7 +323,7 @@ export const s = StyleSheet.create({
     paddingHorizontal: 10,
     borderBottomWidth: 1,
     borderBottomColor: LINE,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
   },
   richGlyph: {
     fontSize: 11.5,
@@ -356,7 +357,7 @@ export const s = StyleSheet.create({
     borderRadius: 7,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
   },
   attachChipText: {
     fontSize: 10,
@@ -371,20 +372,20 @@ export const s = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
   },
   pdfIconBadge: {
     width: 24,
     height: 24,
     borderRadius: 6,
-    backgroundColor: '#E11D48',
+    backgroundColor: Maple.error,
     alignItems: 'center',
     justifyContent: 'center',
   },
   pdfIconBadgeText: {
     fontSize: 11,
     fontWeight: '800',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   attachedFileName: {
     fontSize: 10.5,
@@ -410,7 +411,7 @@ export const s = StyleSheet.create({
     borderRadius: 7,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
   },
   dueInputText: {
     fontSize: 11,
@@ -421,7 +422,7 @@ export const s = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
     padding: 9,
     gap: 7,
   },
@@ -434,7 +435,7 @@ export const s = StyleSheet.create({
     width: 22,
     height: 22,
     borderRadius: 6,
-    backgroundColor: '#E8F0FE',
+    backgroundColor: Maple.blueSelected,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -461,7 +462,7 @@ export const s = StyleSheet.create({
     width: 32,
     height: 18,
     borderRadius: 9,
-    backgroundColor: '#94A3B8',
+    backgroundColor: Maple.faint,
     padding: 2,
     justifyContent: 'center',
   },
@@ -472,7 +473,7 @@ export const s = StyleSheet.create({
     width: 14,
     height: 14,
     borderRadius: 7,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
   },
   switchThumbOn: {
     alignSelf: 'flex-end',
@@ -495,7 +496,7 @@ export const s = StyleSheet.create({
   },
   segBtnOn: {
     borderBottomColor: BLUE,
-    backgroundColor: '#F8FAFF',
+    backgroundColor: Maple.blueSoft,
   },
   segBtnText: {
     fontSize: 10.5,
@@ -508,9 +509,9 @@ export const s = StyleSheet.create({
   },
   aiBox: {
     borderRadius: 9,
-    backgroundColor: '#EEF5FF',
+    backgroundColor: Maple.blueSoft,
     borderWidth: 1,
-    borderColor: '#CFE0FF',
+    borderColor: Maple.blueSelected,
     padding: 10,
     gap: 8,
   },
@@ -546,7 +547,7 @@ export const s = StyleSheet.create({
   genRubricBtnText: {
     fontSize: 11,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   // Phone rubric rows (text sizes before the phone scaling of about 1.15).
   rubricItemPhone: { paddingHorizontal: 10, paddingVertical: 10, gap: 6, borderBottomWidth: 1, borderBottomColor: LINE },
@@ -564,7 +565,7 @@ export const s = StyleSheet.create({
   rubricHeaderRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
     paddingHorizontal: 8,
     paddingVertical: 6,
     borderBottomWidth: 1,
@@ -606,7 +607,7 @@ export const s = StyleSheet.create({
     borderRadius: 5,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -621,7 +622,7 @@ export const s = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 8,
     paddingVertical: 6,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
   },
   rubricTotalText: {
     fontSize: 10,
@@ -638,7 +639,7 @@ export const s = StyleSheet.create({
     borderRadius: 7,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
   },
   addCriteriaText: {
     fontSize: 10,
@@ -669,7 +670,7 @@ export const s = StyleSheet.create({
     borderRadius: 7,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
   },
   previewStudentBtnText: {
     fontSize: 10,
@@ -680,7 +681,7 @@ export const s = StyleSheet.create({
     borderRadius: 9,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
     padding: 10,
     gap: 6,
   },
@@ -709,7 +710,7 @@ export const s = StyleSheet.create({
   previewDueText: {
     fontSize: 9.5,
     fontWeight: '600',
-    color: '#E11D48',
+    color: Maple.error,
   },
   previewTitle: {
     fontSize: 13,
@@ -731,7 +732,7 @@ export const s = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     borderRadius: 7,
     borderWidth: 1,
     borderColor: LINE,

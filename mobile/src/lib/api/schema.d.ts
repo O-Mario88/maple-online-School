@@ -1971,6 +1971,195 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/career-requests/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Your Career Compass requests (events and communities you asked for), newest first */
+        get: {
+            parameters: {
+                query?: {
+                    page?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description A page of your requests */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            count: number;
+                            next?: string | null;
+                            previous?: string | null;
+                            results: components["schemas"]["CareerRequest"][];
+                        };
+                    };
+                };
+                401: components["responses"]["Unauthorized"];
+            };
+        };
+        put?: never;
+        /** Ask Maple's career team for an event or a community (10 an hour) */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        kind: "event" | "community";
+                        body: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Sent */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["CareerRequest"];
+                    };
+                };
+                400: components["responses"]["BadRequest"];
+                401: components["responses"]["Unauthorized"];
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/career-requests/all/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Every learner's request, for Maple's career team (staff only; requesters by first name) */
+        get: {
+            parameters: {
+                query?: {
+                    status?: "received" | "planned" | "declined";
+                    page?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description A page of requests */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            count: number;
+                            next?: string | null;
+                            previous?: string | null;
+                            results: components["schemas"]["CareerRequest"][];
+                        };
+                    };
+                };
+                /** @description Not Maple staff */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/career-requests/{id}/status/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Answer a request (staff only) */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        status: "received" | "planned" | "declined";
+                    };
+                };
+            };
+            responses: {
+                /** @description Answered */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            status: string;
+                        };
+                    };
+                };
+                400: components["responses"]["BadRequest"];
+                /** @description Not Maple staff */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description No such request */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/insights/classes/{id}/learners/": {
         parameters: {
             query?: never;
@@ -4893,6 +5082,19 @@ export interface components {
             note: string;
             /** Format: date-time */
             created_at: string;
+        };
+        CareerRequest: {
+            /** Format: int64 */
+            id: number;
+            /** @enum {string} */
+            kind: "event" | "community";
+            body: string;
+            /** @enum {string} */
+            status: "received" | "planned" | "declined";
+            /** Format: date-time */
+            created_at: string;
+            /** @description Who asked (staff list only) */
+            first_name?: string;
         };
         Notification: {
             /** Format: int64 */

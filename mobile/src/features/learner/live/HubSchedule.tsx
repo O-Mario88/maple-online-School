@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
@@ -9,20 +9,21 @@ import { clock12, type DayDot, dayParts, monthTitle, monthWeeks, weekOf } from '
 import type { IconName } from '@/lib/icons';
 
 import { type Hub, type HubState, type Session, TABS } from './useLiveHub';
+import { Maple } from '@/constants/maple';
 
-export const INK = '#0B1424';
-export const BODY = '#4A5263';
-export const BLUE = '#1463F3';
-export const GREEN = '#22A35A';
-export const RED = '#E5484D';
-export const ORANGE = '#F28C28';
-const DOT: Record<DayDot, string> = { missed: ORANGE, school: BLUE, bootcamp: GREEN, none: '#D5DBE5' };
-const LINE: Record<Session['icon'], string> = { math: BLUE, english: GREEN, science: BLUE, qa: ORANGE, ict: '#7C3AED', paper: ORANGE };
+export const INK = Maple.navy;
+export const BODY = Maple.body;
+export const BLUE = Maple.blue;
+export const GREEN = Maple.successText;
+export const RED = Maple.error;
+export const ORANGE = Maple.warning;
+const DOT: Record<DayDot, string> = { missed: ORANGE, school: BLUE, bootcamp: GREEN, none: Maple.borderStrong };
+const LINE: Record<Session['icon'], string> = { math: BLUE, english: GREEN, science: BLUE, qa: ORANGE, ict: Maple.blue, paper: ORANGE };
 
 export function LiveBadge({ text = 'LIVE NOW' }: { text?: string }) {
   return (
     <View style={styles.live}>
-      <Icon name="live" size={9} color="#FFFFFF" />
+      <Icon name="live" size={9} color={Maple.surface} />
       <Text style={styles.liveText}>{text}</Text>
     </View>
   );
@@ -37,7 +38,7 @@ export function dayTitle(hub: Hub, s: HubState, phone = false): string {
 }
 
 function Btn({ label, icon, kind, onPress, phone }: { label: string; icon?: IconName; kind: 'fill' | 'outline' | 'soft' | 'done'; onPress?: () => void; phone: boolean }) {
-  const color = kind === 'fill' ? '#FFFFFF' : kind === 'done' ? GREEN : BLUE;
+  const color = kind === 'fill' ? Maple.surface : kind === 'done' ? GREEN : BLUE;
   return (
     <Pressable style={[styles.btn, phone && styles.btnP, styles[kind]]} onPress={onPress} disabled={!onPress} accessibilityRole="button" accessibilityState={{ disabled: !onPress }}>
       {icon && (!phone || kind === 'fill') ? <Icon name={icon} size={phone ? 14 : 16} color={color} /> : null}
@@ -188,16 +189,16 @@ export function CalendarHeader({ s }: { s: HubState }) {
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
-  white: { color: '#FFFFFF' },
+  white: { color: Maple.surface },
   cardTitle: { fontSize: 18, fontWeight: '700', color: INK },
   live: { alignSelf: 'flex-start', flexDirection: 'row', alignItems: 'center', gap: 3, marginBottom: 3, paddingHorizontal: 5, paddingVertical: 1, borderRadius: 3, backgroundColor: RED },
-  liveText: { fontSize: 8.5, fontWeight: '700', color: '#FFFFFF' },
+  liveText: { fontSize: 8.5, fontWeight: '700', color: Maple.surface },
   btn: { width: 125, height: 34, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, borderRadius: 5 },
   btnP: { width: 76, height: 32, gap: 5 },
-  fill: { backgroundColor: '#0B6BFF' },
-  outline: { borderWidth: 1, borderColor: '#BBD0F4', backgroundColor: '#FFFFFF' },
-  soft: { backgroundColor: '#E6EEFB' },
-  done: { borderWidth: 1, borderColor: '#B9E3C8', backgroundColor: '#F0FAF3' },
+  fill: { backgroundColor: Maple.blue },
+  outline: { borderWidth: 1, borderColor: Maple.blueLine, backgroundColor: Maple.surface },
+  soft: { backgroundColor: Maple.blueSelected },
+  done: { borderWidth: 1, borderColor: '#B9E3C8', backgroundColor: Maple.successSoft },
   btnText: { fontSize: 13, fontWeight: '500' },
   btnTextP: { fontSize: 11.5 },
   row: { minHeight: 60, flexDirection: 'row', alignItems: 'center', gap: 12 },
@@ -219,7 +220,7 @@ const styles = StyleSheet.create({
   dayCol: { flex: 1, alignItems: 'center' },
   dayBox: { width: 75, height: 50, alignItems: 'center', justifyContent: 'center', gap: 3, borderRadius: 6 },
   dayBoxP: { width: 34, height: 44 },
-  dayOn: { backgroundColor: '#0B6BFF' },
+  dayOn: { backgroundColor: Maple.blue },
   dow: { fontSize: 12.5, color: BODY },
   dowP: { fontSize: 10.5 },
   date: { fontSize: 15, fontWeight: '600', color: INK },
@@ -232,16 +233,16 @@ const styles = StyleSheet.create({
   monthDate: { fontSize: 13, color: INK },
   monthDot: { width: 5, height: 5, marginTop: 3, borderRadius: 3 },
   calHead: { height: 26, flexDirection: 'row', alignItems: 'center', gap: 7, zIndex: 2 },
-  today: { height: 26, paddingHorizontal: 10, justifyContent: 'center', marginLeft: 13, borderRadius: 5, borderWidth: 1, borderColor: '#E1E7F0' },
+  today: { height: 26, paddingHorizontal: 10, justifyContent: 'center', marginLeft: 13, borderRadius: 5, borderWidth: 1, borderColor: Maple.blueSelected },
   todayText: { fontSize: 12.5, color: INK },
-  arrow: { width: 26, height: 26, alignItems: 'center', justifyContent: 'center', borderRadius: 5, borderWidth: 1, borderColor: '#E1E7F0' },
+  arrow: { width: 26, height: 26, alignItems: 'center', justifyContent: 'center', borderRadius: 5, borderWidth: 1, borderColor: Maple.blueSelected },
   monthTitle: { marginLeft: 4, fontSize: 15, color: INK },
-  seg: { flexDirection: 'row', borderRadius: 5, borderWidth: 1, borderColor: '#E1E7F0', overflow: 'hidden' },
+  seg: { flexDirection: 'row', borderRadius: 5, borderWidth: 1, borderColor: Maple.blueSelected, overflow: 'hidden' },
   segItem: { width: 55, height: 26, alignItems: 'center', justifyContent: 'center' },
-  segOn: { backgroundColor: '#0B6BFF' },
+  segOn: { backgroundColor: Maple.blue },
   segText: { fontSize: 12.5, color: INK },
-  filter: { height: 26, flexDirection: 'row', alignItems: 'center', gap: 6, marginLeft: 3, paddingHorizontal: 10, borderRadius: 5, borderWidth: 1, borderColor: '#E1E7F0' },
-  menu: { position: 'absolute', top: 30, right: 0, width: 160, paddingVertical: 4, borderRadius: 8, backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#E1E7F0', shadowColor: INK, shadowOpacity: 0.1, shadowRadius: 12, shadowOffset: { width: 0, height: 4 } },
+  filter: { height: 26, flexDirection: 'row', alignItems: 'center', gap: 6, marginLeft: 3, paddingHorizontal: 10, borderRadius: 5, borderWidth: 1, borderColor: Maple.blueSelected },
+  menu: { position: 'absolute', top: 30, right: 0, width: 160, paddingVertical: 4, borderRadius: 8, backgroundColor: Maple.surface, borderWidth: 1, borderColor: Maple.blueSelected, shadowColor: INK, shadowOpacity: 0.1, shadowRadius: 12, shadowOffset: { width: 0, height: 4 } },
   menuItem: { height: 32, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 12 },
   menuText: { fontSize: 12.5, color: INK },
   menuOn: { color: BLUE, fontWeight: '600' },

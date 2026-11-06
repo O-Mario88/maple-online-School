@@ -14,6 +14,7 @@ import { toast } from '@/lib/toast';
 
 import { amount, type FormAsk, FormModal } from './FinForm';
 import { FinDesk, FinHead, FinPanel, FinPhone, FinStats, FinTabs, num, PhoneRow, type Promo, RingLegend, ugx } from './FinKit';
+import { Maple } from '@/constants/maple';
 
 type D = CommandData['platformFinance']['corporate'];
 const PER_PAGE = 10;
@@ -21,7 +22,7 @@ const TABS = ['Overview', 'All Expenses', 'Accounts Payable', 'Recurring Expense
 const CATEGORIES = Object.keys(CATEGORY_ACCOUNT) as Category[];
 const CAT_TONE: Readonly<Record<Category, Tone>> = { 'Cloud & Infra': 'blue', 'Software & AI': 'purple', 'Salaries & Benefits': 'green', 'Marketing & Growth': 'purple', 'Contractors & Services': 'orange', 'Admin & Operations': 'green' };
 const STATUS_TONE: Readonly<Record<ExpenseStatus, Tone>> = { Pending: 'orange', Approved: 'blue', Paid: 'green', Rejected: 'red' };
-const PROMO: Promo = { icon: 'wallet', color: '#1E6BF0', title: 'Corporate Expenses', body: "Manage Maple's operating expenses, vendors and accounts payable." };
+const PROMO: Promo = { icon: 'wallet', color: Maple.blue, title: 'Corporate Expenses', body: "Manage Maple's operating expenses, vendors and accounts payable." };
 const RANGES = ['Last 10 Months', 'This Quarter', 'Year to Date'];
 const FILTERS = { category: ['All Categories', ...CATEGORIES], status: ['All Statuses', 'Pending', 'Approved', 'Paid', 'Rejected'] } as const;
 
@@ -190,12 +191,12 @@ function Trend({ d, phone = false }: { d: D; phone?: boolean }) {
   const [range, setRange] = useState(RANGES[0]);
   return (
     <FinPanel icon="chart" title="Expense Trend" style={!phone && styles.trend} right={phone ? undefined : <RangeBox value={range} options={RANGES} onChange={setRange} width={176} />}>
-      <ComboChart labels={f.labels} bars={[{ name: 'Actual Expenses', color: '#3B82F6', values: f.actual }]} line={{ name: 'Budget', color: '#8B5CF6', values: f.budget, dots: true }} max={400} lineMax={400} rightAxis={false} every={phone ? 2 : 1} barWidth={phone ? 14 : 28} height={phone ? 190 : 160} format={(v) => (v ? `${Math.round(v)}M` : '0')} />
+      <ComboChart labels={f.labels} bars={[{ name: 'Actual Expenses', color: Maple.blue, values: f.actual }]} line={{ name: 'Budget', color: Maple.blue, values: f.budget, dots: true }} max={400} lineMax={400} rightAxis={false} every={phone ? 2 : 1} barWidth={phone ? 14 : 28} height={phone ? 190 : 160} format={(v) => (v ? `${Math.round(v)}M` : '0')} />
       <View style={styles.legend}>
         {(
           [
-            ['Actual Expenses', '#3B82F6'],
-            ['Budget', '#8B5CF6'],
+            ['Actual Expenses', Maple.blue],
+            ['Budget', Maple.blue],
           ] as const
         ).map(([l, c]) => (
           <View key={l} style={styles.inline}>

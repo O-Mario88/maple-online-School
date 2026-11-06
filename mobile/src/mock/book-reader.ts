@@ -3,6 +3,7 @@
  * Amina N. Pages 12–15 are written out; other pages show their chapter's summary. Illustrative.
  */
 import type { IconName } from '@/lib/icons';
+import { Maple } from '@/constants/maple';
 
 export type Block =
   | { kind: 'tag'; text: string }
@@ -99,11 +100,11 @@ export const spreads: Readonly<Record<number, PageSpread>> = {
       {
         kind: 'uses',
         items: [
-          { icon: 'flask', color: '#1E88E5', text: 'Water for drinking, cooking and cleaning.' },
-          { icon: 'sparkle', color: '#22A55A', bold: 'Food', text: ' from plants and animals.' },
-          { icon: 'cloud', color: '#3B6FD8', text: 'Clean air for breathing.' },
-          { icon: 'home', color: '#F59E0B', text: 'Materials such as wood, clay and sand for building.' },
-          { icon: 'star', color: '#F5B301', text: 'A pleasant place to live, learn and play.' },
+          { icon: 'flask', color: Maple.blue, text: 'Water for drinking, cooking and cleaning.' },
+          { icon: 'sparkle', color: Maple.successText, bold: 'Food', text: ' from plants and animals.' },
+          { icon: 'cloud', color: Maple.blue, text: 'Clean air for breathing.' },
+          { icon: 'home', color: Maple.warning, text: 'Materials such as wood, clay and sand for building.' },
+          { icon: 'star', color: Maple.warning, text: 'A pleasant place to live, learn and play.' },
         ],
       },
     ],

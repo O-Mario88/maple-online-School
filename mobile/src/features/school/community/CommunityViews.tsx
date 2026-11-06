@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
@@ -14,11 +14,12 @@ import type { CommunityPost } from '@/mock/school-community';
 import { AdminDesk, AdminPhone } from '../kit/AdminKit';
 import { HubHeader, HubTabs } from '../kit/HubKit';
 import { CATEGORIES, filterFeed, postStatus, toggleLike } from './community';
+import { Maple } from '@/constants/maple';
 
 type Admin = MockData['schoolAdmin'];
 type Cat = (typeof CATEGORIES)[number];
 
-const PURPLE = '#5B3FD9';
+const BRAND_BLUE = Maple.blue;
 
 function useCommunity(a: Admin) {
   const c = a.schoolCommunity;
@@ -73,7 +74,7 @@ function LeftNav({ x }: { x: X }) {
       <Card style={s.navCard}>
         {x.c.nav.map((n, i) => (
           <Pressable key={n.label} style={[s.navItem, i === 0 && s.navOn]} onPress={() => x.setTab(n.label === 'Feed' ? 'Home (Feed)' : n.label === 'My Groups' ? 'Groups' : n.label === 'Saved Posts' ? 'Home (Feed)' : n.label)} accessibilityRole="link">
-            <Icon name={n.icon} size={18} color={i === 0 ? PURPLE : NAVY} />
+            <Icon name={n.icon} size={18} color={i === 0 ? BRAND_BLUE : NAVY} />
             <Text style={[s.navText, i === 0 && s.navTextOn]}>{n.label}</Text>
             {n.count ? <Text style={s.count}>{n.count}</Text> : null}
           </Pressable>
@@ -189,7 +190,7 @@ function PostCard({ p, x }: { p: CommunityPost; x: X }) {
           <Text style={s.actionText}>Share</Text>
         </Pressable>
         <Pressable style={s.action} onPress={() => x.save(p.id)} accessibilityRole="button" accessibilityState={{ selected: p.saved }}>
-          <Icon name={p.saved ? 'bookmarkOn' : 'bookmark'} size={17} color={p.saved ? PURPLE : NAVY} />
+          <Icon name={p.saved ? 'bookmarkOn' : 'bookmark'} size={17} color={p.saved ? BRAND_BLUE : NAVY} />
           <Text style={s.actionText}>{p.saved ? 'Saved' : 'Save'}</Text>
         </Pressable>
       </View>
@@ -231,7 +232,7 @@ function RightRail({ x }: { x: X }) {
         <CardHead title="School Announcements" size={16} link="View All" onLink={() => x.setTab('Announcements')} />
         {x.c.announcements.map((a) => (
           <View key={a.id} style={s.rowTop}>
-            <Icon name={a.icon} size={18} color={PURPLE} />
+            <Icon name={a.icon} size={18} color={BRAND_BLUE} />
             <View style={s.flex}>
               <Text style={s.strong}>{a.title}</Text>
               <Text style={s.small}>{a.sub}</Text>
@@ -260,14 +261,14 @@ function RightRail({ x }: { x: X }) {
         <View style={s.quick}>
           {quick.map(([icon, label]) => (
             <Pressable key={label} style={s.quickItem} onPress={() => toast(label === 'Create Post' ? 'Write it in the box at the top of the feed.' : `${label}: coming to this page next.`)} accessibilityRole="button">
-              <Icon name={icon} size={20} color={PURPLE} />
+              <Icon name={icon} size={20} color={BRAND_BLUE} />
               <Text style={s.quickText}>{label}</Text>
             </Pressable>
           ))}
         </View>
       </Card>
       <Card style={s.card}>
-        <CardHead title="Community Guidelines" size={16} icon={<Icon name="shield" size={18} color={PURPLE} />} />
+        <CardHead title="Community Guidelines" size={16} icon={<Icon name="shield" size={18} color={BRAND_BLUE} />} />
         <Text style={s.body}>{x.c.guidelines}</Text>
         <Text style={s.small}>Learner posts in moderated groups wait for a moderator. Nobody can direct-message a learner; staff reach learners in class or group threads only.</Text>
       </Card>
@@ -322,7 +323,7 @@ function Middle({ x }: { x: X }) {
           <CardHead title="Announcements" size={16} />
           {x.c.announcements.map((a) => (
             <View key={a.id} style={s.rowTop}>
-              <Icon name={a.icon} size={18} color={PURPLE} />
+              <Icon name={a.icon} size={18} color={BRAND_BLUE} />
               <View style={s.flex}>
                 <Text style={s.strong}>{a.title}</Text>
                 <Text style={s.small}>{a.sub}</Text>
@@ -428,10 +429,10 @@ const s = StyleSheet.create({
   coverText: { padding: 14, fontSize: 17, fontWeight: '800', color: WHITE },
   navCard: { gap: 4, padding: 12 },
   navItem: { flexDirection: 'row', alignItems: 'center', gap: 12, height: 40, paddingHorizontal: 10, borderRadius: 10 },
-  navOn: { backgroundColor: '#F1EDFE' },
+  navOn: { backgroundColor: Maple.blueSoft },
   navText: { flex: 1, fontSize: 14, color: NAVY },
-  navTextOn: { fontWeight: '700', color: PURPLE },
-  count: { minWidth: 22, overflow: 'hidden', paddingHorizontal: 6, paddingVertical: 1, borderRadius: 10, fontSize: 12, fontWeight: '600', textAlign: 'center', color: NAVY, backgroundColor: '#EEF1F8' },
+  navTextOn: { fontWeight: '700', color: BRAND_BLUE },
+  count: { minWidth: 22, overflow: 'hidden', paddingHorizontal: 6, paddingVertical: 1, borderRadius: 10, fontSize: 12, fontWeight: '600', textAlign: 'center', color: NAVY, backgroundColor: Maple.blueSelected },
   divider: { height: 1, marginVertical: 8, backgroundColor: LINE },
   group: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 4 },
   groupPhoto: { width: 40, height: 40, borderRadius: 10 },
@@ -440,13 +441,13 @@ const s = StyleSheet.create({
   tool: { flexDirection: 'row', alignItems: 'center', gap: 6, height: 34, paddingHorizontal: 12, borderRadius: 17, borderWidth: 1, borderColor: LINE },
   toolText: { fontSize: 13, color: NAVY },
   filter: { paddingHorizontal: 14, paddingVertical: 7, borderRadius: 16 },
-  filterOn: { borderWidth: 1.5, borderColor: BLUE, backgroundColor: '#EEF4FF' },
+  filterOn: { borderWidth: 1.5, borderColor: BLUE, backgroundColor: Maple.blueSoft },
   filterText: { fontSize: 13.5, color: NAVY },
   filterTextOn: { fontWeight: '600', color: BLUE },
   author: { fontSize: 15, fontWeight: '700', color: NAVY },
   postTitle: { marginBottom: 4, fontSize: 16.5, fontWeight: '800', color: NAVY },
   file: { flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 10, padding: 10, borderRadius: 10, borderWidth: 1, borderColor: LINE },
-  pdf: { width: 36, height: 40, alignItems: 'center', justifyContent: 'center', borderRadius: 6, backgroundColor: '#E5383B' },
+  pdf: { width: 36, height: 40, alignItems: 'center', justifyContent: 'center', borderRadius: 6, backgroundColor: Maple.error },
   pdfText: { fontSize: 10.5, fontWeight: '800', color: WHITE },
   sidePhoto: { width: 150, height: 134, borderRadius: 12 },
   photos: { flexDirection: 'row', gap: 10 },
@@ -455,8 +456,8 @@ const s = StyleSheet.create({
   action: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   actionText: { fontSize: 13.5, color: NAVY },
   liked: { color: BLUE, fontWeight: '600' },
-  date: { width: 52, height: 52, alignItems: 'center', justifyContent: 'center', borderRadius: 10, backgroundColor: '#F1EDFE' },
-  dateMonth: { fontSize: 12, color: PURPLE },
+  date: { width: 52, height: 52, alignItems: 'center', justifyContent: 'center', borderRadius: 10, backgroundColor: Maple.blueSoft },
+  dateMonth: { fontSize: 12, color: BRAND_BLUE },
   dateDay: { fontSize: 19, fontWeight: '800', color: NAVY },
   quick: { flexDirection: 'row', gap: 8 },
   quickItem: { flex: 1, alignItems: 'center', gap: 6, paddingVertical: 12, borderRadius: 10, borderWidth: 1, borderColor: LINE },
@@ -464,5 +465,5 @@ const s = StyleSheet.create({
   gridWrap: { flexDirection: 'row', flexWrap: 'wrap', gap: 14 },
   groupCard: { width: 220, gap: 6, padding: 12 },
   groupCover: { width: '100%', height: 110, borderRadius: 10 },
-  modRow: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: '#EEF2F8' },
+  modRow: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: Maple.blueSelected },
 });

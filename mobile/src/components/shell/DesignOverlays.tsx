@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { router, usePathname } from 'expo-router';
 import { useMemo } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
@@ -14,7 +14,9 @@ import { mockApi, mockData } from '@/lib/mock';
 export function DesignOverlays() {
   const { styles, theme } = useStyles(makeStyles);
   const mock = useMemo(() => mockData(), []);
-  if (!mock) return null;
+  const path = usePathname();
+  // A conversation and the New conversation form keep their send controls where the button would float.
+  if (!mock || path === '/copilot' || path.startsWith('/messages/')) return null;
   return (
     <Pressable
       style={styles.fab}

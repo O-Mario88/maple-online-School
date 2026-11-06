@@ -15,14 +15,15 @@ import type { TxnRow } from '@/mock/command-center/pf-payments';
 
 import { amount, type FormAsk, FormModal } from './FinForm';
 import { CheckList, FinDesk, FinHead, FinPanel, FinPhone, FinStats, FinTabs, num, PhoneRow, type Promo, ProviderBadge, RingLegend, short, ugx } from './FinKit';
+import { Maple } from '@/constants/maple';
 
 type D = CommandData['platformFinance']['payments'];
 const PER_PAGE = 10;
 const TABS = ['Overview', 'All Transactions', 'Collections', 'Refunds', 'Chargebacks', 'Settlements', 'Reconciliation', 'Provider Reports'] as const;
 const STATUS_TONE: Readonly<Record<TxnStatus, Tone>> = { Successful: 'green', Pending: 'orange', Failed: 'red', Refunded: 'purple', Chargeback: 'red' };
 const TYPE_TONE: Readonly<Record<string, Tone>> = { Subscription: 'purple', 'Learner Plan': 'blue', 'Subject Purchase': 'purple', 'School Fee': 'blue', 'Manual Payment': 'green' };
-const PROMO: Promo = { icon: 'wallet', color: '#1E6BF0', title: 'Payment Operations', body: 'Track, reconcile and manage all payments across providers.' };
-const PROVIDER_COLORS = ['#8B3CF0', '#F5A623', '#0BA4DB', '#FFCB05', '#1E6BF0', '#22A55A', '#8792B0'];
+const PROMO: Promo = { icon: 'wallet', color: Maple.blue, title: 'Payment Operations', body: 'Track, reconcile and manage all payments across providers.' };
+const PROVIDER_COLORS = [Maple.blue, Maple.warning, '#0BA4DB', Maple.warning, Maple.blue, Maple.successText, Maple.faint];
 const CURRENCY = ['UGX (All)', 'UGX', 'KES', 'USD'];
 
 function useTxns(d: D) {
@@ -173,7 +174,7 @@ function cols(d: D): readonly Column<TxnRow>[] {
       width: 122,
       render: (t) => (
         <View style={styles.inline}>
-          <ProviderBadge name={t.provider} color={d.providerColor[t.provider] ?? '#8792B0'} size={20} />
+          <ProviderBadge name={t.provider} color={d.providerColor[t.provider] ?? Maple.faint} size={20} />
           <Text style={styles.cellStrong} numberOfLines={1}>
             {t.provider}
           </Text>
@@ -209,8 +210,8 @@ function Volume({ d, phone = false }: { d: D; phone?: boolean }) {
     <FinPanel icon="chart" title="Transaction Volume & Value" right={<CmdSelect value={mode} options={modes} onChange={setMode} width={122} label="Show" />}>
       <ComboChart
         labels={d.volume.labels}
-        bars={[{ name: 'Transaction Value (UGX)', color: '#5B8DF6', values: mode === 'Count' ? d.volume.count.map((c) => c / 2) : d.volume.value }]}
-        line={{ name: 'Transaction Count', color: '#8B3CF0', values: d.volume.count, dots: true }}
+        bars={[{ name: 'Transaction Value (UGX)', color: Maple.blue, values: mode === 'Count' ? d.volume.count.map((c) => c / 2) : d.volume.value }]}
+        line={{ name: 'Transaction Count', color: Maple.blue, values: d.volume.count, dots: true }}
         max={500}
         lineMax={1000}
         height={phone ? 190 : 170}
@@ -219,11 +220,11 @@ function Volume({ d, phone = false }: { d: D; phone?: boolean }) {
       />
       <View style={styles.legend}>
         <View style={styles.inline}>
-          <View style={[styles.dot, { backgroundColor: '#5B8DF6' }]} />
+          <View style={[styles.dot, { backgroundColor: Maple.blue }]} />
           <Text style={styles.cell}>Transaction Value (UGX)</Text>
         </View>
         <View style={styles.inline}>
-          <View style={[styles.dot, { backgroundColor: '#8B3CF0' }]} />
+          <View style={[styles.dot, { backgroundColor: Maple.blue }]} />
           <Text style={styles.cell}>Transaction Count</Text>
         </View>
       </View>
@@ -310,7 +311,7 @@ export function TransactionsPhone({ c }: { c: CommandData }) {
       {u.rows.map((t) => (
         <PhoneRow
           key={t.id}
-          lead={<ProviderBadge name={t.provider} color={d.providerColor[t.provider] ?? '#8792B0'} size={36} />}
+          lead={<ProviderBadge name={t.provider} color={d.providerColor[t.provider] ?? Maple.faint} size={36} />}
           title={t.customer}
           sub={`${t.id} • ${t.type} • ${t.at}`}
           right={ugx(t.amount)}
@@ -333,7 +334,7 @@ const styles = StyleSheet.create({
   stack: { gap: 12 },
   side: { width: 384, gap: 12 },
   inline: { flexDirection: 'row', alignItems: 'center', gap: 7 },
-  box: { padding: 12, borderRadius: 14, borderWidth: 1, borderColor: '#E3E9F4', backgroundColor: '#FFFFFF' },
+  box: { padding: 12, borderRadius: 14, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface },
   filters: { flexDirection: 'row', alignItems: 'flex-end', gap: 8 },
   link: { paddingBottom: 12, fontSize: 13, fontWeight: '600', color: BLUE },
   search: { width: 360 },

@@ -10,6 +10,7 @@ import { saveText } from '@/lib/save-text';
 import type { MockData } from '@/mock';
 
 import { NotesBody } from './Panels';
+import { Maple } from '@/constants/maple';
 
 type Room = MockData['shared']['classroom'];
 type Style = 'bold' | 'italic' | 'underline';
@@ -63,7 +64,7 @@ export function NotesPanel({
       onChangeText={setText}
       multiline
       placeholder="Write your own notes for this class"
-      placeholderTextColor="#8A92A3"
+      placeholderTextColor={Maple.faint}
       accessibilityLabel="My notes"
     />
   );

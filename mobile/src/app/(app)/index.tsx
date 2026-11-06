@@ -14,9 +14,11 @@ import {
 import { ParentResultsSection } from '@/features/parent/ParentResultsSection';
 import { HOME_REF_WIDTH, HomeDesk, HomePhone } from '@/features/learner/home/HomeViews';
 import { LiveHome } from '@/features/learner/home/LiveHome';
+import { HomeCanvas } from '@/features/learner/home/HomeFrame';
 import { RefScale } from '@/features/public/home/RefScale';
 import { mockData } from '@/lib/mock';
-import { ScrollView, useWindowDimensions } from 'react-native';
+import { StyleSheet, useWindowDimensions, View } from 'react-native';
+import { AdminDesk, AdminPhone, PageHead } from '@/features/school/kit/AdminKit';
 import { ReportsSection } from '@/features/shared/ReportsSection';
 import { TodaySection } from '@/features/shared/TodaySection';
 import { ClassesSection } from '@/features/teacher/ClassesSection';
@@ -29,6 +31,8 @@ import { addressName, greeting, humanize } from '@/lib/home';
 import { type Portal, PORTAL_LABELS } from '@/lib/navigation';
 import { usePortal } from '@/lib/portal-context';
 import { homeFor } from '@/lib/roles';
+import { Maple } from '@/constants/maple';
+import { PageScroll } from '@/components/shell/PageScroll';
 
 const TEACHER_BG = { backgroundColor: CANVAS };
 
@@ -73,11 +77,11 @@ export default function HomeScreen() {
     // Design build: the learner home is its reference, sidebar included (drawn at its pixels, then scaled).
     if (!wide) return <HomePhone h={learnerHome} now={now} />;
     return (
-      <ScrollView style={{ backgroundColor: '#EEF3FA' }}>
-        <RefScale width={width} refWidth={HOME_REF_WIDTH}>
+      <PageScroll style={{ backgroundColor: Maple.blueSoft }}>
+        <HomeCanvas refWidth={HOME_REF_WIDTH}>
           <HomeDesk h={learnerHome} now={now} />
-        </RefScale>
-      </ScrollView>
+        </HomeCanvas>
+      </PageScroll>
     );
   }
   const teacherHome = portal === 'teacher' ? mockData()?.teacher.teacherHome : undefined;
@@ -85,11 +89,11 @@ export default function HomeScreen() {
     // Design build: the teacher home reference, top bar and sidebar included (drawn at its pixels, then scaled).
     if (!wide) return <TeacherHomePhone h={teacherHome} now={now} />;
     return (
-      <ScrollView style={TEACHER_BG}>
+      <PageScroll style={TEACHER_BG}>
         <RefScale width={width} refWidth={TEACHER_REF_WIDTH}>
           <TeacherHomeDesk h={teacherHome} now={now} />
         </RefScale>
-      </ScrollView>
+      </PageScroll>
     );
   }
   const parentHome = portal === 'parent' ? mockData()?.family.parentHome : undefined;
@@ -97,15 +101,41 @@ export default function HomeScreen() {
     // Design build: the parent dashboard reference (Image 2), with multi-child switcher and cross-school QR/login claiming.
     if (!wide) return <ParentHomePhone p={parentHome} />;
     return (
-      <ScrollView style={{ backgroundColor: '#EEF3FA' }}>
+      <PageScroll style={{ backgroundColor: Maple.blueSoft }}>
         <RefScale width={width} refWidth={PARENT_HOME_REF_WIDTH}>
           <ParentHomeDesk p={parentHome} />
         </RefScale>
-      </ScrollView>
+      </PageScroll>
     );
   }
   // Real builds: the learner home in the design's look, on the API.
   if (portal === 'learner') return <LiveHome firstName={firstName} />;
+  // Design builds: the school dashboard sits in the same admin frame (sidebar, top bar, signed-in
+  // person) as every other school page, so moving between them never swaps the shell.
+  const schoolAdmin = portal === 'school' ? mockData()?.schoolAdmin : undefined;
+  if (schoolAdmin) {
+    const title = `${greeting(now)}, ${firstName}`;
+    const body = (
+      <View style={dash.body}>
+        <HomeStats portal={portal} user={user} />
+        <PortalHome portal={portal} user={user} />
+      </View>
+    );
+    if (!wide) {
+      return (
+        <AdminPhone me={schoolAdmin.me}>
+          <PageHead phone title={title} subtitle={home.subtitle} />
+          {body}
+        </AdminPhone>
+      );
+    }
+    return (
+      <AdminDesk me={schoolAdmin.me} search="Search students, payments, or reports..." active="Dashboard">
+        <PageHead title={title} subtitle={home.subtitle} />
+        {body}
+      </AdminDesk>
+    );
+  }
   const today = now.toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' });
 
   return (
@@ -304,3 +334,4 @@ function SchoolsCard({ user }: { user: Me }) {
   );
 }
 
+const dash = StyleSheet.create({ body: { gap: 16, marginTop: 16 } });

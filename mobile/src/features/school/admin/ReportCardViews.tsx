@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
@@ -10,13 +10,14 @@ import type { MockData } from '@/mock';
 import type { MarkRow, MarkStatus } from '@/mock/school-admin';
 
 import { AdminDesk, AdminPhone, BigButton, Cell, type Column, DataTable, ListCard, ListRow, MenuRow, MiniBtn, PageHead, Pager, Search, SelectBox, type Stat, StatRow, StatusCell, Steps, useChoice, useSelection } from '../kit/AdminKit';
+import { Maple } from '@/constants/maple';
 
 type Admin = MockData['schoolAdmin'];
 type RC = Admin['reportCards'];
 
 const LEAF = require('@/assets/images/maple-leaf.png') as number;
-const NAVY_DARK = '#13235C';
-const GOLD = '#E3B341';
+const NAVY_DARK = Maple.navy;
+const GOLD = Maple.warning;
 const STATUS_TONE: Readonly<Record<MarkStatus, Tone>> = { Submitted: 'green', 'Needs Review': 'red', Pending: 'orange' };
 
 /** The term's workflow: which approvals are done and whether reports went out. */
@@ -170,7 +171,7 @@ function Publish({ rc, w }: { rc: RC; w: ReturnType<typeof useWorkflow> }) {
             <Text style={styles.flowTitle}>{p.title}</Text>
             <Text style={styles.flowBody}>{p.body}</Text>
           </View>
-          {w.published ? <Icon name="check" size={20} color="#16A34A" /> : null}
+          {w.published ? <Icon name="check" size={20} color={Maple.successText} /> : null}
         </View>
       ))}
       <Btn label={w.published ? 'Published to 42 Parents' : 'Publish Report Cards'} onPress={w.publish} height={50} style={w.ready || w.published ? undefined : styles.dim} />
@@ -390,11 +391,11 @@ const styles = StyleSheet.create({
   main: { flex: 1, minWidth: 0, gap: 16 },
   marksCard: { gap: 14, padding: 14 },
   tools: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  rowAlert: { backgroundColor: '#FFF4F5' },
-  rowPicked: { backgroundColor: '#EEF4FF' },
+  rowAlert: { backgroundColor: Maple.errorSoft },
+  rowPicked: { backgroundColor: Maple.blueSoft },
   pagerWrap: { marginTop: -4 },
   tabBody: { gap: 12 },
-  passport: { flexDirection: 'row', alignItems: 'flex-start', gap: 16, padding: 16, borderRadius: 12, backgroundColor: '#F7F9FE' },
+  passport: { flexDirection: 'row', alignItems: 'flex-start', gap: 16, padding: 16, borderRadius: 12, backgroundColor: Maple.blueSoft },
   passportSeal: { width: 54, height: 56 },
   passportState: { marginTop: 8, color: NAVY, fontWeight: '600' },
   bottom: { flexDirection: 'row', gap: 16 },
@@ -404,7 +405,7 @@ const styles = StyleSheet.create({
   flowTitle: { fontSize: 15, fontWeight: '600', color: BLUE },
   flowBody: { marginTop: 2, fontSize: 13, color: BODY },
   previewCard: { width: 372, gap: 12, padding: 14 },
-  rc: { padding: 5, borderRadius: 4, borderWidth: 2, borderColor: GOLD, backgroundColor: '#FFFDF7' },
+  rc: { padding: 5, borderRadius: 4, borderWidth: 2, borderColor: GOLD, backgroundColor: Maple.warningSoft },
   rcInner: { alignItems: 'center', gap: 4, padding: 12, borderWidth: 1, borderColor: '#EAD9A8', backgroundColor: WHITE },
   rcLeaf: { width: 34, height: 36 },
   rcSchool: { fontSize: 15, fontWeight: '700', color: NAVY_DARK, textAlign: 'center' },
@@ -414,16 +415,16 @@ const styles = StyleSheet.create({
   rcInfoRow: { flexDirection: 'row' },
   rcKey: { width: 92, fontSize: 10.5, color: BODY },
   rcVal: { flex: 1, fontSize: 10.5, fontWeight: '600', color: NAVY_DARK },
-  rcTable: { alignSelf: 'stretch', borderWidth: 1, borderColor: '#C9CFDD' },
-  rcRow: { flexDirection: 'row', alignItems: 'center', minHeight: 21, paddingHorizontal: 5, borderBottomWidth: 1, borderColor: '#DCE1EB' },
+  rcTable: { alignSelf: 'stretch', borderWidth: 1, borderColor: Maple.borderStrong },
+  rcRow: { flexDirection: 'row', alignItems: 'center', minHeight: 21, paddingHorizontal: 5, borderBottomWidth: 1, borderColor: Maple.disabledBorder },
   rcHead: { backgroundColor: NAVY_DARK },
   rcHeadText: { fontSize: 9.5, fontWeight: '700', color: WHITE },
   rcSubj: { flex: 1.5, minWidth: 0 },
   rcNum: { width: 54, textAlign: 'center' },
   rcComment: { flex: 1.5, minWidth: 0 },
-  rcCell: { fontSize: 9.5, color: '#2A3352' },
+  rcCell: { fontSize: 9.5, color: Maple.navy },
   rcCellStrong: { fontSize: 9.5, fontWeight: '700', color: NAVY_DARK },
-  rcCommentBox: { alignSelf: 'stretch', gap: 3, marginTop: 8, padding: 7, borderWidth: 1, borderColor: '#DCE1EB' },
+  rcCommentBox: { alignSelf: 'stretch', gap: 3, marginTop: 8, padding: 7, borderWidth: 1, borderColor: Maple.disabledBorder },
   rcSigs: { alignSelf: 'stretch', flexDirection: 'row', gap: 10, marginTop: 8 },
   rcSig: { flex: 1, gap: 1 },
   rcSigImg: { width: 80, height: 34 },

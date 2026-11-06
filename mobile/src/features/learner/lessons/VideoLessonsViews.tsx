@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { LinearGradient } from 'expo-linear-gradient';
 import { type Href, router } from 'expo-router';
 import { useState } from 'react';
@@ -14,6 +14,7 @@ import type { MockData } from '@/mock';
 
 import { ChalkThumb, LessonMenu, LessonStats, Picker, StatusChip } from './LessonParts';
 import { clock, continueWatching, filterLessons, learningPath, type LessonSort, type LessonTab, lessonStatus, subjectProgress, topicsOf, type VideoLessonItem } from './videoLessons';
+import { Maple } from '@/constants/maple';
 
 type Hub = MockData['learner']['videoHub'];
 
@@ -212,7 +213,7 @@ function Progress({ v }: { v: V }) {
     <View style={s.side}>
       <Text style={s.sideTitle}>{`Your Progress in ${v.subject}`}</Text>
       <View style={s.progRow}>
-        <ProgressRing value={p.pct / 100} size={96} stroke={11} color={L.green} track="#E6EBF3" labelSize={22} />
+        <ProgressRing value={p.pct / 100} size={96} stroke={11} color={L.green} track={Maple.blueSelected} labelSize={22} />
         <View style={s.progList}>
           <ProgLine icon="playFill" color={L.green} text={`${p.completed} ${p.completed === 1 ? 'lesson' : 'lessons'} completed`} />
           <ProgLine icon="play" color={L.blue} text={`${p.inProgress} in progress`} />
@@ -329,7 +330,7 @@ function Grid({ v, phone = false }: { v: V; phone?: boolean }) {
 export function VideoLessonsDesk({ hub, avatar, subject }: { hub: Hub; avatar?: number; subject?: string }) {
   const v = useVideoLessons(hub, subject);
   return (
-    <LightFrame placeholder="Search subjects, video lessons, topics, or past papers..." avatar={avatar}>
+    <LightFrame>
       <View style={s.heroPhoto} pointerEvents="none">
         <Image source={hub.hero} style={StyleSheet.absoluteFill} contentFit="cover" contentPosition="right" />
         <LinearGradient colors={[L.canvas, 'rgba(246,248,253,0)']} start={{ x: 0, y: 0.5 }} end={{ x: 0.45, y: 0.5 }} style={StyleSheet.absoluteFill} />
@@ -396,7 +397,7 @@ const s = StyleSheet.create({
   flex: { flex: 1, minWidth: 0 },
   heroPhoto: { position: 'absolute', top: -20, right: -16, width: 500, height: 168, overflow: 'hidden' },
   head: { height: 92, flexDirection: 'row', alignItems: 'flex-start', gap: 20 },
-  headIcon: { width: 57, height: 57, alignItems: 'center', justifyContent: 'center', borderRadius: 14, backgroundColor: '#E8EAFE' },
+  headIcon: { width: 57, height: 57, alignItems: 'center', justifyContent: 'center', borderRadius: 14, backgroundColor: Maple.blueSelected },
   title: { fontSize: 36, lineHeight: 42, fontWeight: '700', color: L.navy },
   sub: { marginTop: 6, fontSize: 16, color: L.body },
   tabsWrap: { width: 829, borderRadius: 14, backgroundColor: 'rgba(255,255,255,0.96)', borderWidth: 1, borderColor: L.line },
@@ -413,7 +414,7 @@ const s = StyleSheet.create({
   cols: { marginTop: 16, flexDirection: 'row', gap: 16, alignItems: 'flex-start' },
   left: { width: 931, gap: 16 },
   right: { flex: 1, gap: 16 },
-  cont: { flexDirection: 'row', gap: 22, padding: 18, borderRadius: 16, borderWidth: 1, borderColor: '#DCE7FA', backgroundColor: '#EEF4FF' },
+  cont: { flexDirection: 'row', gap: 22, padding: 18, borderRadius: 16, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.blueSoft },
   contP: { flexDirection: 'column', gap: 12, padding: 14 },
   contThumb: { width: 283 },
   contThumbP: { width: '100%' },
@@ -421,7 +422,7 @@ const s = StyleSheet.create({
   contTitle: { marginTop: 8, fontSize: 18, lineHeight: 24, fontWeight: '700', color: L.navy },
   contMeta: { marginTop: 6, fontSize: 14, color: L.body },
   contTime: { marginTop: 14, fontSize: 14, color: L.ink },
-  bar: { marginTop: 8, width: '100%', maxWidth: 296, height: 6, borderRadius: 3, backgroundColor: '#D7E2F5' },
+  bar: { marginTop: 8, width: '100%', maxWidth: 296, height: 6, borderRadius: 3, backgroundColor: Maple.blueSelected },
   barFill: { height: 6, borderRadius: 3, backgroundColor: L.blue },
   contStats: { marginTop: 10 },
   contActions: { alignItems: 'center', gap: 16 },
@@ -440,8 +441,8 @@ const s = StyleSheet.create({
   progText: { fontSize: 14.5, color: L.ink },
   steps: { marginTop: 14, gap: 6 },
   step: { flexDirection: 'row', alignItems: 'center', gap: 16, padding: 10, borderRadius: 12 },
-  stepOn: { backgroundColor: '#E7EFFE' },
-  dot: { width: 28, height: 28, alignItems: 'center', justifyContent: 'center', borderRadius: 14, borderWidth: 2, borderColor: '#B6C0CF', backgroundColor: L.white },
+  stepOn: { backgroundColor: Maple.blueSelected },
+  dot: { width: 28, height: 28, alignItems: 'center', justifyContent: 'center', borderRadius: 14, borderWidth: 2, borderColor: Maple.borderStrong, backgroundColor: L.white },
   dotDone: { borderColor: L.green, backgroundColor: L.green },
   dotOn: { borderColor: L.blue },
   stepTitle: { fontSize: 14.5, fontWeight: '600', color: L.navy },
@@ -449,7 +450,7 @@ const s = StyleSheet.create({
   stepMeta: { marginTop: 2, fontSize: 12.5, color: L.muted },
   doneText: { color: L.green },
   onText: { color: L.blue },
-  quiz: { marginTop: 14, height: 46, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, borderRadius: 12, backgroundColor: '#E7EFFE' },
+  quiz: { marginTop: 14, height: 46, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, borderRadius: 12, backgroundColor: Maple.blueSelected },
   quizText: { fontSize: 15, fontWeight: '600', color: L.blue },
   gridCard: { padding: 20, borderRadius: 16, borderWidth: 1, borderColor: L.line, backgroundColor: L.white },
   gridCardP: { padding: 14 },

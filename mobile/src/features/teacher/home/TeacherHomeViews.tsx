@@ -8,6 +8,7 @@ import type { TeacherHome } from '@/mock/teacher-home';
 
 import { ActionQueue, FlaggedStudents, NextLiveClass, StatRow, useIntervene, useNextClassCountdown } from './HomeCards';
 import { DateControls, QuickActions, TodaySchedule, WeekEarnings, dayLabel } from './HomeMore';
+import { Maple } from '@/constants/maple';
 
 /** The teacher home reference's desktop (top bar to the end of the cards), laid out in its pixels and scaled. */
 export const TEACHER_REF_WIDTH = 1180;
@@ -114,7 +115,7 @@ const styles = StyleSheet.create({
   row: { flexDirection: 'row', gap: 12 },
   left: { width: 535 },
   schedule: { width: 600 },
-  phoneRoot: { flex: 1, backgroundColor: '#F4F7FB' },
+  phoneRoot: { flex: 1, backgroundColor: Maple.blueSoft },
   phone: { gap: 12, padding: 14, paddingBottom: 110 },
   titleP: { fontSize: 20, fontWeight: '800', color: INK },
   dateP: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 4 },

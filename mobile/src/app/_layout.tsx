@@ -1,26 +1,34 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { DarkTheme, DefaultTheme, router, Stack, ThemeProvider, usePathname } from 'expo-router';
+import { DefaultTheme, router, Stack, ThemeProvider, usePathname } from 'expo-router';
+import Head from 'expo-router/head';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useRef, useState } from 'react';
-import { Platform, useColorScheme } from 'react-native';
+import { Platform } from 'react-native';
 
 import { ToastHost } from '@/components/ui/ToastHost';
+import { mapleNavTheme } from '@/lib/appearance';
 import { AuthProvider, useAuth } from '@/lib/auth/auth-context';
 import { INTER_FAMILY } from '@/lib/fonts/inter';
 import { goesHomeOnSignIn, signedOutLanding } from '@/lib/landing';
 import { DESIGN_DATA } from '@/lib/mock';
+import { Maple } from '@/constants/maple';
 
 // Signed-out visitors who open a signed-in address (such as /) land on the public
 // homepage on the web once it has its content, and on sign-in otherwise and in the
 // phone apps, not on whichever public page happens to be first.
 export const unstable_settings = { anchor: signedOutLanding(Platform.OS, DESIGN_DATA) };
 
+/** Last resort for a crash outside a screen; screens have their own boundary in app/(app)/_layout.tsx. */
+export { RootErrorBoundary as ErrorBoundary } from '@/components/shell/ScreenBoundary';
+
 SplashScreen.preventAutoHideAsync();
 
+// The space the navigator shows while a page opens is Maple's page colour (see lib/appearance).
+const NAV_THEME = mapleNavTheme(DefaultTheme);
+
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
   const [queryClient] = useState(() => new QueryClient({ defaultOptions: { queries: { retry: 1 } } }));
   // Inter is every page's font: the splash screen stays up until it has loaded (or failed, then
   // the system font stands in rather than leaving the app blank).
@@ -30,9 +38,14 @@ export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-          {/* The app's status bar follows the theme; screens with a dark header (live rooms) set their own while open. */}
-          <StatusBar style="auto" />
+        <ThemeProvider value={NAV_THEME}>
+          {/* Dark status bar icons on Maple's light pages; screens with a dark header (live rooms) set their own while open. */}
+          <StatusBar style="dark" />
+          {/* The web manifest makes Maple installable as an app on a computer (where it gets the sidebar). */}
+          <Head>
+            <link rel="manifest" href="/manifest.json" />
+            <meta name="theme-color" content={Maple.blue} />
+          </Head>
           <RootNavigator />
           <ToastHost />
         </ThemeProvider>
@@ -77,6 +90,8 @@ function RootNavigator() {
       <Stack.Protected guard={signedIn}>
         {/* The live classroom takes the whole screen, outside the app shell. */}
         <Stack.Screen name="classroom/[slug]" />
+        {/* A counseling call takes the whole screen too. */}
+        <Stack.Screen name="counseling/[session]" />
       </Stack.Protected>
       <Stack.Protected guard={!signedIn}>
         <Stack.Screen name="sign-in" />
@@ -89,6 +104,8 @@ function RootNavigator() {
       {/* Public pages (PUBLIC_PREVIEWS in lib/navigation): open to everyone. */}
       <Stack.Screen name="welcome" />
       <Stack.Screen name="courses/[slug]" />
+      <Stack.Screen name="universities/index" />
+      <Stack.Screen name="universities/[slug]" />
       <Stack.Screen name="explore" />
       <Stack.Screen name="schools" />
       <Stack.Screen name="p/digest/[token]" />

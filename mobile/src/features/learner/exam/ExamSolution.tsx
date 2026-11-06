@@ -8,6 +8,7 @@ import { useAccess } from '@/lib/access/access-context';
 
 import { BLUE, BODY, GREEN, INK, letter, MATH, RED } from './ExamParts';
 import type { ExamState, Question } from './useExam';
+import { Maple } from '@/constants/maple';
 
 const TABS = ['Explanation', 'Marking Scheme', 'Related Topic'] as const;
 type Tab = (typeof TABS)[number];
@@ -124,27 +125,27 @@ export function SolutionTabs({ s, phone = false }: { s: ExamState; phone?: boole
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
-  tabs: { flexDirection: 'row', gap: 38, paddingHorizontal: 12, borderBottomWidth: 1, borderBottomColor: '#E3E8F0' },
+  tabs: { flexDirection: 'row', gap: 38, paddingHorizontal: 12, borderBottomWidth: 1, borderBottomColor: Maple.blueSelected },
   tabsP: { gap: 22, paddingHorizontal: 0 },
   tab: { paddingVertical: 10, paddingHorizontal: 2 },
-  tabText: { fontSize: 13.5, color: '#3D4656' },
+  tabText: { fontSize: 13.5, color: Maple.body },
   tabTextP: { fontSize: 12.5 },
   tabOn: { color: BLUE, fontWeight: '600' },
-  tabLine: { position: 'absolute', left: -12, right: -12, bottom: -1, height: 2.5, backgroundColor: BLUE },
+  tabLine: { position: 'absolute', left: -12, right: -12, bottom: -1, height: 3, backgroundColor: BLUE },
   body: { paddingHorizontal: 21, paddingTop: 20 },
   bodyP: { paddingHorizontal: 0, paddingTop: 14 },
   heading: { fontSize: 14.5, fontWeight: '700', color: INK },
   steps: { gap: 18, marginTop: 18 },
   stepsP: { gap: 14, marginTop: 12 },
   step: { flexDirection: 'row', gap: 18 },
-  num: { width: 26, height: 26, alignItems: 'center', justifyContent: 'center', borderRadius: 13, backgroundColor: '#DCE8FD' },
+  num: { width: 26, height: 26, alignItems: 'center', justifyContent: 'center', borderRadius: 13, backgroundColor: Maple.blueSelected },
   numText: { fontSize: 14, fontWeight: '700', color: BLUE },
-  stepLabel: { fontSize: 13.5, color: '#2B3445' },
-  math: { marginTop: 4, fontFamily: MATH, fontStyle: 'italic', fontSize: 17, color: '#2B3445' },
+  stepLabel: { fontSize: 13.5, color: Maple.navy },
+  math: { marginTop: 4, fontFamily: MATH, fontStyle: 'italic', fontSize: 17, color: Maple.navy },
   mathP: { fontSize: 15 },
-  table: { marginTop: 12, borderRadius: 6, borderWidth: 1, borderColor: '#E1E7F0', overflow: 'hidden' },
+  table: { marginTop: 12, borderRadius: 6, borderWidth: 1, borderColor: Maple.blueSelected, overflow: 'hidden' },
   tr: { flexDirection: 'row', alignItems: 'center', minHeight: 34 },
-  th: { backgroundColor: '#F3F6FA', borderBottomWidth: 1, borderBottomColor: '#E1E7F0' },
+  th: { backgroundColor: Maple.blueSoft, borderBottomWidth: 1, borderBottomColor: Maple.blueSelected },
   td: { paddingHorizontal: 10, fontSize: 13, color: INK },
   thText: { fontSize: 11.5, fontWeight: '600', color: BODY },
   tdQ: { width: 44 },
@@ -152,17 +153,17 @@ const styles = StyleSheet.create({
   tdMath: { fontFamily: MATH, fontStyle: 'italic', fontSize: 15 },
   award: { fontWeight: '700', color: BLUE },
   note: { marginTop: 8, fontSize: 12.5, color: BODY },
-  compare: { marginTop: 14, padding: 12, borderRadius: 8, backgroundColor: '#F1F4F8' },
-  compareGood: { backgroundColor: '#EAF7EF' },
-  compareBad: { backgroundColor: '#FDEEEE' },
+  compare: { marginTop: 14, padding: 12, borderRadius: 8, backgroundColor: Maple.blueSoft },
+  compareGood: { backgroundColor: Maple.successSoft },
+  compareBad: { backgroundColor: Maple.errorSoft },
   compareLabel: { fontSize: 11.5, color: BODY },
   compareValue: { marginTop: 3, fontSize: 14, fontWeight: '600', color: INK },
   verdict: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 8 },
   verdictText: { fontSize: 12.5, fontWeight: '600' },
-  topic: { flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 12, padding: 12, borderRadius: 8, borderWidth: 1, borderColor: '#E1E7F0' },
-  topicIcon: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center', borderRadius: 8, backgroundColor: '#EAF1FE' },
+  topic: { flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 12, padding: 12, borderRadius: 8, borderWidth: 1, borderColor: Maple.blueSelected },
+  topicIcon: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center', borderRadius: 8, backgroundColor: Maple.blueSoft },
   topicTitle: { fontSize: 14.5, fontWeight: '600', color: INK },
   topicMeta: { marginTop: 3, fontSize: 12, color: BODY },
-  topicBtn: { alignSelf: 'flex-start', flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 12, paddingHorizontal: 14, height: 38, borderRadius: 6, borderWidth: 1, borderColor: '#C9DAF8', backgroundColor: '#F2F7FE' },
+  topicBtn: { alignSelf: 'flex-start', flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 12, paddingHorizontal: 14, height: 38, borderRadius: 6, borderWidth: 1, borderColor: Maple.blueLine, backgroundColor: Maple.blueSoft },
   topicBtnText: { fontSize: 13, fontWeight: '500', color: BLUE },
 });

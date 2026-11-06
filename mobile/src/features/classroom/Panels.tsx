@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { type ReactNode, useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
@@ -9,6 +9,7 @@ import { Brand, CARD_SHADOW } from '@/features/public/palette';
 import { filterParticipants, type ParticipantFilter, searchTranscript } from '@/lib/classroom';
 import type { BoardSnapshot } from '@/lib/excalidraw-livekit';
 import type { MockData } from '@/mock';
+import { Maple } from '@/constants/maple';
 
 type Room = MockData['shared']['classroom'];
 export type ChatMessage = Room['chat'][number];
@@ -339,7 +340,7 @@ const styles = StyleSheet.create({
   notesTitle: { fontSize: 17, fontWeight: '800', color: Brand.ink },
   notesSub: { fontSize: 16, fontWeight: '800', color: Brand.ink, marginTop: 6 },
   bullet: { fontSize: 14, lineHeight: 22, color: Brand.body },
-  keyPoint: { flexDirection: 'row', gap: 10, padding: 14, borderRadius: 10, backgroundColor: '#FFF7E6', marginTop: 6 },
+  keyPoint: { flexDirection: 'row', gap: 10, padding: 14, borderRadius: 10, backgroundColor: Maple.warningSoft, marginTop: 6 },
   keyIcon: { fontSize: 22 },
   message: { flexDirection: 'row', gap: 10 },
   nameRow: { flexDirection: 'row', alignItems: 'center', gap: 5 },
@@ -386,8 +387,8 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#BFDBFE',
-    backgroundColor: '#F0F6FF',
+    borderColor: Maple.blueLine,
+    backgroundColor: Maple.blueSoft,
     gap: 3,
     marginTop: 4,
   },
@@ -416,7 +417,7 @@ const styles = StyleSheet.create({
   },
   allowDrawBtnOn: {
     borderColor: '#86EFAC',
-    backgroundColor: '#DCFCE7',
+    backgroundColor: Maple.successSoft,
   },
   allowDrawText: {
     fontSize: 10.5,
@@ -424,7 +425,7 @@ const styles = StyleSheet.create({
     color: Brand.ink,
   },
   allowDrawTextOn: {
-    color: '#15803D',
+    color: Maple.successText,
     fontWeight: '700',
   },
   expand: { width: 28, height: 28, marginLeft: 8, alignItems: 'center', justifyContent: 'center' },

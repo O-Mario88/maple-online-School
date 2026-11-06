@@ -1,11 +1,13 @@
-import { type Href, router, usePathname } from 'expo-router';
+import { type Href, usePathname } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Icon } from '@/components/icon';
 import type { IconName } from '@/lib/icons';
+import { openMenuPage } from '@/lib/menu-nav';
 
 import { BLUE, LINE, MUTED } from './TeacherParts';
+import { Maple } from '@/constants/maple';
 
 const TABS: readonly { label: string; icon: IconName; href: Href }[] = [
   { label: 'Home', icon: 'home', href: '/' },
@@ -35,7 +37,7 @@ export function TeacherTabBar() {
         const on = t.href === path || (t === STUDIO && studio) || (t === CALENDAR && calendar);
         const color = on ? BLUE : MUTED;
         return (
-          <Pressable key={t.label} style={styles.tab} onPress={() => router.navigate(t.href)} accessibilityRole="tab" accessibilityState={{ selected: on }} accessibilityLabel={t.label}>
+          <Pressable key={t.label} style={styles.tab} onPress={() => openMenuPage(t.href)} accessibilityRole="tab" accessibilityState={{ selected: on }} accessibilityLabel={t.label}>
             <Icon name={t.icon} size={22} color={color} />
             <Text style={[styles.label, { color }, on && styles.labelOn]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.85}>
               {t.label}
@@ -48,7 +50,7 @@ export function TeacherTabBar() {
 }
 
 const styles = StyleSheet.create({
-  bar: { flexDirection: 'row', paddingTop: 8, backgroundColor: '#FFFFFF', borderTopWidth: 1, borderColor: LINE },
+  bar: { flexDirection: 'row', paddingTop: 8, backgroundColor: Maple.surface, borderTopWidth: 1, borderColor: LINE },
   tab: { flex: 1, alignItems: 'center', gap: 3, minHeight: 48 },
   label: { fontSize: 11 },
   labelOn: { fontWeight: '600' },

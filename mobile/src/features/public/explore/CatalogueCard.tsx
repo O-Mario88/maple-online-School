@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
@@ -6,6 +6,7 @@ import { Icon } from '@/components/icon';
 import type { CatalogueEntry } from '@/mock/public';
 
 import { Brand, CARD_SHADOW } from '../palette';
+import { Maple } from '@/constants/maple';
 
 /** The thumbnail's height on a 263px-wide card in the reference. */
 export const THUMB_HEIGHT = 139;
@@ -84,14 +85,14 @@ const styles = StyleSheet.create({
   info: { paddingTop: 11, paddingHorizontal: 13, paddingBottom: 16 },
   infoList: { flex: 1 },
   title: { fontSize: 15, lineHeight: 20, fontWeight: '700', color: Brand.ink, letterSpacing: -0.2 },
-  meta: { marginTop: 5, fontSize: 13.5, lineHeight: 18, color: '#4A5263' },
+  meta: { marginTop: 5, fontSize: 13.5, lineHeight: 18, color: Maple.body },
   teacher: { flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 11 },
-  face: { width: 24, height: 24, borderRadius: 12, backgroundColor: '#D9DEE7' },
-  teacherName: { flex: 1, fontSize: 13.5, color: '#2A3242' },
+  face: { width: 24, height: 24, borderRadius: 12, backgroundColor: Maple.disabledBorder },
+  teacherName: { flex: 1, fontSize: 13.5, color: Maple.navy },
   rating: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 11, height: 17 },
-  stars: { fontSize: 13, color: '#F59E0B', letterSpacing: 1 },
+  stars: { fontSize: 13, color: Maple.warning, letterSpacing: 1 },
   starSoft: { color: '#FBBF5A' },
-  ratingText: { fontSize: 12.5, color: '#4A5263' },
+  ratingText: { fontSize: 12.5, color: Maple.body },
   footer: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 8 },
   included: { flexShrink: 1, fontSize: 13, fontWeight: '600', color: Brand.blue },
   includedC: { fontSize: 11.5 },

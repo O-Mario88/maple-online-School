@@ -68,3 +68,6 @@ jobs:
       - run: npm test -- --ci
       - name: Deployment build carries no mock data
         run: npm run check:no-mock
+      # Moves around each portal in Chrome on the sample-data web build: one frame, no reload, no dark frame.
+      - name: Browser navigation tests
+        run: npm run test:nav

@@ -7,3 +7,15 @@
   --font-rounded: 'SF Pro Rounded', 'Hiragino Maru Gothic ProN', Meiryo, 'MS PGothic', sans-serif;
   --font-serif: Georgia, 'Times New Roman', serif;
 }
+
+/*
+ * Keyboard focus: a Maple Blue ring (Maple.blue in constants/maple.ts; a test keeps
+ * them equal). Mouse and touch focus show no ring; keyboard focus always does.
+ */
+:focus {
+  outline: none;
+}
+:focus-visible {
+  outline: 2px solid #2D4A6E;
+  outline-offset: 2px;
+}

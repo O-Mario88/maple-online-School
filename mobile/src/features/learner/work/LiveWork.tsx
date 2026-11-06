@@ -10,9 +10,10 @@ import { answerProblem, MAX_ANSWER, submittedAnswer, trimDecimal } from '@/lib/l
 
 import { BLUE, BODY, GREEN, INK } from './MathText';
 import { Crumbs } from './WorkSide';
+import { Maple } from '@/constants/maple';
 
-const LINE = '#EAEFF6';
-const SOFT = '#F4F8FD';
+const LINE = Maple.blueSelected;
+const SOFT = Maple.blueSoft;
 
 /** The learner's own submission and its mark for one assignment, from the API. */
 function useMyWork(id: number) {
@@ -104,7 +105,7 @@ function Answer({ a }: { a: Assessment }) {
         multiline
         maxLength={MAX_ANSWER + 1}
         placeholder="Write your answer and show your working"
-        placeholderTextColor="#8A92A3"
+        placeholderTextColor={Maple.faint}
         accessibilityLabel="Your answer"
       />
       {shown ? (
@@ -113,7 +114,7 @@ function Answer({ a }: { a: Assessment }) {
         </Text>
       ) : null}
       <Pressable style={[styles.submit, submit.isPending && styles.busy]} onPress={send} disabled={submit.isPending} accessibilityRole="button" accessibilityState={{ busy: submit.isPending }}>
-        {submit.isPending ? <ActivityIndicator color="#FFFFFF" /> : <Icon name="send" size={16} color="#FFFFFF" />}
+        {submit.isPending ? <ActivityIndicator color={Maple.surface} /> : <Icon name="send" size={16} color={Maple.surface} />}
         <Text style={styles.submitText}>Submit Assignment</Text>
       </Pressable>
       <Text style={styles.muted}>You can submit once. Your teacher marks it and you’ll see the feedback here.</Text>
@@ -139,7 +140,7 @@ function Marked({ a, grade }: { a: Assessment; grade: Grade }) {
       <Text style={styles.cardTitle}>Marked</Text>
       <Text style={styles.score}>{`${trimDecimal(grade.score)} / ${trimDecimal(a.max_score)}`}</Text>
       <Pressable style={styles.submit} onPress={() => router.push({ pathname: '/learn/assignments/[id]/feedback', params: { id: String(a.id) } })} accessibilityRole="button">
-        <Icon name="star" size={16} color="#FFFFFF" />
+        <Icon name="star" size={16} color={Maple.surface} />
         <Text style={styles.submitText}>See your feedback</Text>
       </Pressable>
     </View>
@@ -210,24 +211,24 @@ const styles = StyleSheet.create({
   gapSmall: { gap: 6 },
   titleRow: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 10 },
   title: { fontSize: 24, fontWeight: '800', color: INK, letterSpacing: -0.5 },
-  kind: { paddingHorizontal: 9, paddingVertical: 3, borderRadius: 5, backgroundColor: '#E6EEFC', fontSize: 12.5, fontWeight: '600', color: '#1450C8', overflow: 'hidden' },
+  kind: { paddingHorizontal: 9, paddingVertical: 3, borderRadius: 5, backgroundColor: Maple.blueSelected, fontSize: 12.5, fontWeight: '600', color: Maple.blueHover, overflow: 'hidden' },
   columns: { gap: 14 },
   columnsWide: { flexDirection: 'row', alignItems: 'flex-start' },
   colLeft: { flex: 5 },
   colRight: { flex: 6 },
-  card: { gap: 10, padding: 16, borderRadius: 10, borderWidth: 1, borderColor: LINE, backgroundColor: '#FFFFFF' },
+  card: { gap: 10, padding: 16, borderRadius: 10, borderWidth: 1, borderColor: LINE, backgroundColor: Maple.surface },
   cardTitle: { fontSize: 16, fontWeight: '700', color: INK },
   body: { fontSize: 14, lineHeight: 21, color: BODY },
   muted: { fontSize: 12, color: BODY },
   label: { marginTop: 4, fontSize: 12.5, fontWeight: '700', color: INK },
   question: { flexDirection: 'row', alignItems: 'flex-start', gap: 10, paddingVertical: 8, borderTopWidth: 1, borderTopColor: LINE },
-  qNumber: { width: 24, height: 24, borderRadius: 12, overflow: 'hidden', textAlign: 'center', lineHeight: 24, fontSize: 12, fontWeight: '700', color: BLUE, backgroundColor: '#E6EEFC' },
-  input: { minHeight: 220, padding: 12, borderRadius: 8, borderWidth: 1, borderColor: '#DCE3EE', fontSize: 14, lineHeight: 21, color: INK, textAlignVertical: 'top' },
-  error: { fontSize: 12.5, color: '#B42318' },
+  qNumber: { width: 24, height: 24, borderRadius: 12, overflow: 'hidden', textAlign: 'center', lineHeight: 24, fontSize: 12, fontWeight: '700', color: BLUE, backgroundColor: Maple.blueSelected },
+  input: { minHeight: 220, padding: 12, borderRadius: 8, borderWidth: 1, borderColor: Maple.blueLine, fontSize: 14, lineHeight: 21, color: INK, textAlignVertical: 'top' },
+  error: { fontSize: 12.5, color: Maple.errorText },
   submit: { height: 44, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, borderRadius: 8, backgroundColor: BLUE },
   busy: { opacity: 0.7 },
-  submitText: { fontSize: 14, fontWeight: '700', color: '#FFFFFF' },
-  waiting: { paddingHorizontal: 8, paddingVertical: 3, borderRadius: 5, backgroundColor: '#FFF4E5', fontSize: 12, fontWeight: '600', color: '#B45309', overflow: 'hidden' },
+  submitText: { fontSize: 14, fontWeight: '700', color: Maple.surface },
+  waiting: { paddingHorizontal: 8, paddingVertical: 3, borderRadius: 5, backgroundColor: Maple.warningSoft, fontSize: 12, fontWeight: '600', color: Maple.warningText, overflow: 'hidden' },
   score: { fontSize: 32, fontWeight: '800', color: INK },
   good: { color: GREEN },
 });

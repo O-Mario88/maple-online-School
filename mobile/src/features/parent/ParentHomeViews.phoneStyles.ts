@@ -1,6 +1,7 @@
 import { fill, half, hidden, phoneSheet, restyle, stacked, wrapped } from '@/lib/phone-sheet';
 
 import { styles as s } from './ParentHomeViews.styles';
+import { Maple } from '@/constants/maple';
 
 /** Room kept beside the welcome text for the child's round photo. */
 const HERO_PHOTO = 64;
@@ -21,7 +22,7 @@ export const phoneStyles = phoneSheet(s, {
     height: HERO_PHOTO,
     borderRadius: HERO_PHOTO / 2,
     borderWidth: 2,
-    borderColor: '#FFFFFF',
+    borderColor: Maple.surface,
   },
   heroBody: restyle(s.heroBody, ['flex', 'paddingVertical', 'paddingLeft'], {
     padding: 16,

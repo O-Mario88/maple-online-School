@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
@@ -6,11 +6,13 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Icon } from '@/components/icon';
 import { Bar } from '@/features/learner/dashboard/DashParts';
 import { toast } from '@/lib/toast';
+import { openMenuPage } from '@/lib/menu-nav';
 
 import { CardHead } from './HomeCards';
 import { BLUE, BODY, type Home, INK } from './HomeFrame';
+import { Maple } from '@/constants/maple';
 
-const GREEN = '#16A34A';
+const GREEN = Maple.successText;
 
 /** Top-right "This Week 20 – 26 Oct 2026" card with `<` `>` week switcher. */
 export function ThisWeekCard({ h }: { h: Home }) {
@@ -73,7 +75,7 @@ export function MyTodoWeekCard({ h }: { h: Home }) {
               accessibilityState={{ checked: isDone }}
               accessibilityLabel={t.text}>
               <View style={[styles.checkbox, isDone && styles.checkboxOn]}>
-                {isDone ? <Icon name="check" size={11} color="#FFFFFF" /> : null}
+                {isDone ? <Icon name="check" size={11} color={Maple.surface} /> : null}
               </View>
               <Text style={[styles.todoText, isDone && styles.todoTextDone]} numberOfLines={2}>
                 {t.text}
@@ -94,7 +96,7 @@ export function ContinueReadingCard({ h }: { h: Home }) {
       <CardHead title="Continue Reading" link="View All" onLink={() => router.push('/learn/library')} />
       <Pressable
         style={styles.bookRow}
-        onPress={() => router.push(b.href)}
+        onPress={() => openMenuPage(b.href)}
         accessibilityRole="link"
         accessibilityLabel={`${b.title}, ${b.subject}, ${b.percentLabel}`}>
         <Image source={b.thumb} style={styles.bookThumb} contentFit="cover" />
@@ -105,7 +107,7 @@ export function ContinueReadingCard({ h }: { h: Home }) {
           <Text style={styles.bookSub}>{b.subject}</Text>
           <View style={styles.bookBarRow}>
             <View style={styles.flex}>
-              <Bar value={b.progress} color={BLUE} track="#E2E8F0" height={6} />
+              <Bar value={b.progress} color={BLUE} track={Maple.border} height={6} />
             </View>
             <Text style={styles.bookPct}>{b.percentLabel}</Text>
           </View>
@@ -123,7 +125,7 @@ export function CompletedReadingCard({ h }: { h: Home }) {
       <CardHead title="Completed Reading" link="View All" onLink={() => router.push('/learn/library')} />
       <Pressable
         style={styles.bookRow}
-        onPress={() => router.push(b.href)}
+        onPress={() => openMenuPage(b.href)}
         accessibilityRole="link"
         accessibilityLabel={`${b.title}, ${b.subject}, Completed`}>
         <Image source={b.thumb} style={styles.bookThumb} contentFit="cover" />
@@ -134,7 +136,7 @@ export function CompletedReadingCard({ h }: { h: Home }) {
           <Text style={styles.bookSub}>{b.subject}</Text>
         </View>
         <View style={styles.completedCheck}>
-          <Icon name="check" size={11} color="#FFFFFF" />
+          <Icon name="check" size={11} color={Maple.surface} />
         </View>
       </Pressable>
     </View>
@@ -147,7 +149,7 @@ export function LearningTipsCard({ h }: { h: Home }) {
     <View>
       <View style={styles.tipsHead}>
         <View style={styles.bulbCircle}>
-          <Icon name="sparkle" size={13} color="#D97706" />
+          <Icon name="sparkle" size={13} color={Maple.warning} />
         </View>
         <Text style={styles.tipsTitle}>Learning Tips</Text>
       </View>
@@ -155,7 +157,7 @@ export function LearningTipsCard({ h }: { h: Home }) {
         {h.learningTips.map((tip) => (
           <View key={tip} style={styles.tipRow}>
             <View style={styles.tipCheck}>
-              <Icon name="check" size={9} color="#FFFFFF" />
+              <Icon name="check" size={9} color={Maple.surface} />
             </View>
             <Text style={styles.tipText}>{tip}</Text>
           </View>
@@ -184,7 +186,7 @@ const styles = StyleSheet.create({
     width: 34,
     height: 34,
     borderRadius: 8,
-    backgroundColor: '#EAF3FF',
+    backgroundColor: Maple.blueSoft,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -207,8 +209,8 @@ const styles = StyleSheet.create({
     height: 24,
     borderRadius: 6,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
-    backgroundColor: '#F8FAFC',
+    borderColor: Maple.border,
+    backgroundColor: Maple.blueSoft,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -231,7 +233,7 @@ const styles = StyleSheet.create({
     height: 16,
     borderRadius: 4,
     borderWidth: 1.5,
-    borderColor: '#94A3B8',
+    borderColor: Maple.faint,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -299,7 +301,7 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: '#FEF3C7',
+    backgroundColor: Maple.warningSoft,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -321,7 +323,7 @@ const styles = StyleSheet.create({
     width: 15,
     height: 15,
     borderRadius: 8,
-    backgroundColor: '#F59E0B',
+    backgroundColor: Maple.warning,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -334,7 +336,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
     paddingTop: 8,
     borderTopWidth: 1,
-    borderTopColor: '#F1F5F9',
+    borderTopColor: Maple.blueSoft,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',

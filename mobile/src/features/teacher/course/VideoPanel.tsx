@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
@@ -9,6 +9,7 @@ import { BLUE, BODY, INK, LINE, MUTED, RED, TButton } from '@/features/teacher/f
 import { formatTimestamp, parseTimestamp } from '@/lib/course-builder';
 
 import type { Builder } from './useCourseBuilder';
+import { Maple } from '@/constants/maple';
 
 const TICK_MS = 250;
 const SPEEDS = [1, 1.25, 1.5, 2];
@@ -76,7 +77,7 @@ export function VideoPlayer({ frame, b, player, compact = false }: { frame: numb
         <Image source={frame} style={styles.frame} contentFit="cover" accessibilityLabel="A teacher explaining place value at a whiteboard" />
         {player.playing ? (
           <View style={styles.pauseOver}>
-            <Icon name="pause" size={22} color="#FFFFFF" />
+            <Icon name="pause" size={22} color={Maple.surface} />
           </View>
         ) : null}
       </Pressable>
@@ -92,7 +93,7 @@ export function VideoPlayer({ frame, b, player, compact = false }: { frame: numb
         </Pressable>
         <View style={styles.controls}>
           <Pressable onPress={player.toggle} accessibilityRole="button" accessibilityLabel={player.playing ? 'Pause' : 'Play'} hitSlop={8}>
-            <Icon name={player.playing ? 'pause' : 'playFill'} size={compact ? 13 : 15} color="#FFFFFF" />
+            <Icon name={player.playing ? 'pause' : 'playFill'} size={compact ? 13 : 15} color={Maple.surface} />
           </Pressable>
           <Text style={styles.time}>{`${clock(player.pos)} / ${clock(player.length)}`}</Text>
           <View style={styles.flex} />
@@ -103,7 +104,7 @@ export function VideoPlayer({ frame, b, player, compact = false }: { frame: numb
             <Text style={styles.speed}>{`${player.speed % 1 === 0 ? player.speed.toFixed(1) : player.speed}x`}</Text>
           </Pressable>
           <Pressable onPress={() => go('/learn/lesson')} accessibilityRole="button" accessibilityLabel="Open full screen as a learner" hitSlop={8}>
-            <Icon name="expand" size={14} color="#FFFFFF" />
+            <Icon name="expand" size={14} color={Maple.surface} />
           </Pressable>
         </View>
       </View>
@@ -189,19 +190,19 @@ export function Timestamps({ b, player, max }: { b: Builder; player: Player; max
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
-  player: { borderRadius: 8, overflow: 'hidden', backgroundColor: '#0E0E10' },
+  player: { borderRadius: 8, overflow: 'hidden', backgroundColor: Maple.navy },
   frame: { width: '100%', aspectRatio: 426 / 203 },
   pauseOver: { position: 'absolute', top: '50%', left: '50%', width: 52, height: 52, marginTop: -26, marginLeft: -26, alignItems: 'center', justifyContent: 'center', borderRadius: 26, backgroundColor: 'rgba(30,30,32,0.92)' },
-  bar: { backgroundColor: '#141416' },
+  bar: { backgroundColor: Maple.navy },
   track: { height: 10, justifyContent: 'center' },
   fill: { position: 'absolute', left: 0, height: 3, backgroundColor: RED },
   knob: { position: 'absolute', width: 9, height: 9, marginLeft: -4, borderRadius: 5, backgroundColor: RED },
   controls: { height: 26, flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 12, paddingBottom: 4 },
-  time: { fontSize: 11, color: '#FFFFFF' },
-  cc: { paddingHorizontal: 3, borderRadius: 2, backgroundColor: '#FFFFFF' },
-  ccText: { fontSize: 8, fontWeight: '800', color: '#141416' },
-  speed: { fontSize: 11, fontWeight: '700', color: '#FFFFFF' },
-  upload: { aspectRatio: 426 / 238, alignItems: 'center', justifyContent: 'center', gap: 8, borderRadius: 8, borderWidth: 1.5, borderStyle: 'dashed', borderColor: '#C9D6EA', backgroundColor: '#FAFCFF' },
+  time: { fontSize: 11, color: Maple.surface },
+  cc: { paddingHorizontal: 3, borderRadius: 2, backgroundColor: Maple.surface },
+  ccText: { fontSize: 8, fontWeight: '800', color: Maple.navy },
+  speed: { fontSize: 11, fontWeight: '700', color: Maple.surface },
+  upload: { aspectRatio: 426 / 238, alignItems: 'center', justifyContent: 'center', gap: 8, borderRadius: 8, borderWidth: 1.5, borderStyle: 'dashed', borderColor: Maple.blueLine, backgroundColor: Maple.blueSoft },
   uploadP: { aspectRatio: 16 / 10 },
   uploadTitle: { fontSize: 13, fontWeight: '700', color: INK },
   uploadSub: { fontSize: 11, color: MUTED, marginBottom: 4 },
@@ -209,14 +210,14 @@ const styles = StyleSheet.create({
   headTitle: { flexShrink: 1, fontSize: 11.5, fontWeight: '700', color: INK, letterSpacing: -0.2 },
   addBtn: { flexDirection: 'row', alignItems: 'center', gap: 3, paddingHorizontal: 5, paddingVertical: 3, borderRadius: 6, borderWidth: 1, borderColor: LINE },
   addText: { fontSize: 8.5, fontWeight: '600', color: BLUE },
-  form: { gap: 6, marginBottom: 8, padding: 8, borderRadius: 8, backgroundColor: '#F4F8FF' },
+  form: { gap: 6, marginBottom: 8, padding: 8, borderRadius: 8, backgroundColor: Maple.blueSoft },
   formRow: { flexDirection: 'row', gap: 6 },
-  input: { height: 28, paddingVertical: 0, paddingHorizontal: 8, borderRadius: 6, borderWidth: 1, borderColor: LINE, backgroundColor: '#FFFFFF', fontSize: 11, color: INK },
+  input: { height: 28, paddingVertical: 0, paddingHorizontal: 8, borderRadius: 6, borderWidth: 1, borderColor: LINE, backgroundColor: Maple.surface, fontSize: 11, color: INK },
   timeInput: { width: 58 },
   error: { fontSize: 10.5, color: RED },
   empty: { fontSize: 11, color: MUTED, paddingVertical: 8 },
   mark: { height: 34.5, flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 3, borderRadius: 6 },
-  markOn: { backgroundColor: '#EEF4FF' },
+  markOn: { backgroundColor: Maple.blueSoft },
   markMain: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 7 },
   markIcon: { width: 16, height: 16, alignItems: 'center', justifyContent: 'center', borderRadius: 4 },
   markTime: { width: 31, fontSize: 10, color: BODY },

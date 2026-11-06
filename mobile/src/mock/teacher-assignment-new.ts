@@ -3,6 +3,7 @@ import type { IconName } from '@/lib/icons';
 import type { TeacherDest } from '@/lib/teacher-home';
 
 import { photos } from './photos';
+import { Maple } from '@/constants/maple';
 
 export type AssessmentTypeKey =
   | 'quiz'
@@ -58,24 +59,24 @@ export const assignmentBuilder = {
       title: 'Quiz',
       subtitle: 'Auto-graded\nMCQ, T/F, short answer',
       icon: 'list',
-      tint: '#16A34A',
-      bg: '#DCFCE7',
+      tint: Maple.successText,
+      bg: Maple.successSoft,
     },
     {
       key: 'homework',
       title: 'Homework',
       subtitle: 'Written responses,\nproblem sets',
       icon: 'home',
-      tint: '#9333EA',
-      bg: '#F3E8FF',
+      tint: Maple.blue,
+      bg: Maple.blueSelected,
     },
     {
       key: 'project',
       title: 'Project',
       subtitle: 'Research or creative\nprojects',
       icon: 'folder',
-      tint: '#D97706',
-      bg: '#FEF3C7',
+      tint: Maple.warning,
+      bg: Maple.warningSoft,
     },
     {
       key: 'essay',
@@ -90,16 +91,16 @@ export const assignmentBuilder = {
       title: 'Presentation',
       subtitle: 'Slides, video or live',
       icon: 'screen',
-      tint: '#0284C7',
-      bg: '#E0F2FE',
+      tint: Maple.blueHover,
+      bg: Maple.blueSelected,
     },
     {
       key: 'practical',
       title: 'Practical / Lab',
       subtitle: 'Hands-on work with\nevidence',
       icon: 'sparkle',
-      tint: '#7C3AED',
-      bg: '#EDE9FE',
+      tint: Maple.blue,
+      bg: Maple.blueSelected,
     },
     {
       key: 'discussion',
@@ -107,15 +108,15 @@ export const assignmentBuilder = {
       subtitle: 'Forum posts & replies',
       icon: 'chat',
       tint: '#EA580C',
-      bg: '#FFEDD5',
+      bg: Maple.warningSoft,
     },
     {
       key: 'viva',
       title: 'Viva (Oral)',
       subtitle: 'AI + teacher assessed\noral responses',
       icon: 'mic',
-      tint: '#E11D48',
-      bg: '#FFE4E6',
+      tint: Maple.error,
+      bg: Maple.errorSoft,
     },
   ] as AssessmentTypeOption[],
   initialTitle: 'Quadratic Equations – Problem Set 2',

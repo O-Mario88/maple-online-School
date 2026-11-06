@@ -3,6 +3,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api/client';
 import type { components } from '@/lib/api/schema';
 
+import { isThread } from './view';
+
 export type ThreadSummary = components['schemas']['ThreadSummary'];
 export type Thread = components['schemas']['Thread'];
 export interface Contact {
@@ -56,6 +58,8 @@ export function useStartThread() {
     mutationFn: async (body: { student: number; staff?: number; subject: string; body: string }): Promise<Thread> => {
       const { data, error } = await api.POST('/api/v1/messages/threads/', { body });
       if (error || !data) fail(error, 'Could not send.');
+      // The form opens the new conversation next, so it needs the conversation back, not just an acknowledgement.
+      if (!isThread(data)) fail(undefined, 'Sent, but the conversation could not be opened. Find it in Messages.');
       return data;
     },
     onSuccess: () => client.invalidateQueries({ queryKey: ['messages'] }),
@@ -71,7 +75,9 @@ export function useReply(id: number) {
       return data;
     },
     onSuccess: (thread) => {
-      client.setQueryData(['messages', 'thread', id], thread);
+      // Show the updated conversation straight away when the server sends it; otherwise fetch it again.
+      if (isThread(thread)) client.setQueryData(['messages', 'thread', id], thread);
+      else void client.invalidateQueries({ queryKey: ['messages', 'thread', id] });
       return client.invalidateQueries({ queryKey: ['messages', 'threads'] });
     },
   });

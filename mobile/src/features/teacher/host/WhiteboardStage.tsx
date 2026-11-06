@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { type ReactNode, useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 
@@ -9,8 +9,9 @@ import type { HostStudentTile, TeacherHost } from '@/mock/teacher-host';
 import { FitWidth } from './FitWidth';
 import { InkLayer, type InkTool, useInk } from './InkLayer';
 import { s } from './WhiteboardStage.styles';
+import { Maple } from '@/constants/maple';
 
-const COLORS = ['#0F172A', '#EF4444', '#1463F3', '#22C55E'] as const;
+const COLORS = [Maple.navy, Maple.error, Maple.blue, Maple.success] as const;
 type DrawTool = InkTool;
 
 interface Props {
@@ -58,10 +59,10 @@ export function WhiteboardStage({ h, studentsMutedAll, onToggleStudentMute, mute
         <View style={[s.toolbar, phone && s.toolbarPhone]}>
           <View style={s.toolGroup}>
             <Pressable style={[s.toolBtn, !ink.canUndo && s.toolOff]} disabled={!ink.canUndo} onPress={() => ink.dispatch({ type: 'undo' })} accessibilityRole="button" accessibilityLabel="Undo">
-              <Icon name="undo" size={13} color="#475569" />
+              <Icon name="undo" size={13} color={Maple.body} />
             </Pressable>
             <Pressable style={[s.toolBtn, !ink.canRedo && s.toolOff]} disabled={!ink.canRedo} onPress={() => ink.dispatch({ type: 'redo' })} accessibilityRole="button" accessibilityLabel="Redo">
-              <Icon name="redo" size={13} color="#475569" />
+              <Icon name="redo" size={13} color={Maple.body} />
             </Pressable>
           </View>
 
@@ -86,8 +87,8 @@ export function WhiteboardStage({ h, studentsMutedAll, onToggleStudentMute, mute
               accessibilityLabel="Pen tool"
               accessibilityState={{ selected: activeTool === 'pen' }}>
               <View style={s.penWrap}>
-                <Icon name="edit" size={12} color={activeTool === 'pen' ? '#1463F3' : '#334155'} />
-                <View style={[s.penBar, { backgroundColor: '#1463F3' }]} />
+                <Icon name="edit" size={12} color={activeTool === 'pen' ? Maple.blue : Maple.body} />
+                <View style={[s.penBar, { backgroundColor: Maple.blue }]} />
               </View>
             </Pressable>
 
@@ -99,8 +100,8 @@ export function WhiteboardStage({ h, studentsMutedAll, onToggleStudentMute, mute
               accessibilityLabel="Highlighter tool"
               accessibilityState={{ selected: activeTool === 'highlighter' }}>
               <View style={s.penWrap}>
-                <Icon name="edit" size={12} color={activeTool === 'highlighter' ? '#EF4444' : '#334155'} />
-                <View style={[s.penBar, { backgroundColor: '#EF4444' }]} />
+                <Icon name="edit" size={12} color={activeTool === 'highlighter' ? Maple.error : Maple.body} />
+                <View style={[s.penBar, { backgroundColor: Maple.error }]} />
               </View>
             </Pressable>
 
@@ -111,7 +112,7 @@ export function WhiteboardStage({ h, studentsMutedAll, onToggleStudentMute, mute
               accessibilityRole="button"
               accessibilityLabel="Rectangle tool"
               accessibilityState={{ selected: activeTool === 'rect' }}>
-              <View style={[s.shapeRect, activeTool === 'rect' && { borderColor: '#1463F3' }]} />
+              <View style={[s.shapeRect, activeTool === 'rect' && { borderColor: Maple.blue }]} />
             </Pressable>
 
             {/* Circle + chevron */}
@@ -121,8 +122,8 @@ export function WhiteboardStage({ h, studentsMutedAll, onToggleStudentMute, mute
               accessibilityRole="button"
               accessibilityLabel="Circle tool"
               accessibilityState={{ selected: activeTool === 'circle' }}>
-              <View style={[s.shapeCircle, activeTool === 'circle' && { borderColor: '#1463F3' }]} />
-              <Icon name="chevronDown" size={9} color="#64748B" />
+              <View style={[s.shapeCircle, activeTool === 'circle' && { borderColor: Maple.blue }]} />
+              <Icon name="chevronDown" size={9} color={Maple.secondary} />
             </Pressable>
 
             {/* Text tool T */}
@@ -132,7 +133,7 @@ export function WhiteboardStage({ h, studentsMutedAll, onToggleStudentMute, mute
               accessibilityRole="button"
               accessibilityLabel="Text tool"
               accessibilityState={{ selected: activeTool === 'text' }}>
-              <Text style={[s.toolTextGlyph, activeTool === 'text' && { color: '#1463F3' }]}>T</Text>
+              <Text style={[s.toolTextGlyph, activeTool === 'text' && { color: Maple.blue }]}>T</Text>
             </Pressable>
 
             {/* Image tool */}
@@ -142,7 +143,7 @@ export function WhiteboardStage({ h, studentsMutedAll, onToggleStudentMute, mute
                 setActiveTool('image');
                 toast('Choose a picture to place on the board.');
               }}>
-              <Icon name="gallery" size={13} color={activeTool === 'image' ? '#1463F3' : '#475569'} />
+              <Icon name="gallery" size={13} color={activeTool === 'image' ? Maple.blue : Maple.body} />
             </Pressable>
           </View>
 
@@ -184,13 +185,13 @@ export function WhiteboardStage({ h, studentsMutedAll, onToggleStudentMute, mute
           <Pressable
             style={s.zoomPill}
             onPress={() => setZoom((z) => (z === 100 ? 125 : z === 125 ? 90 : 100))}>
-            <Icon name="search" size={11} color="#64748B" />
+            <Icon name="search" size={11} color={Maple.secondary} />
             <Text style={s.zoomText}>{zoom}%</Text>
-            <Icon name="chevronDown" size={10} color="#64748B" />
+            <Icon name="chevronDown" size={10} color={Maple.secondary} />
           </Pressable>
 
           <Pressable style={[s.expandBtn, focus && s.toolBtnOn]} onPress={() => setFocus((f) => !f)} accessibilityRole="button" accessibilityLabel={focus ? 'Show the PDF again' : 'Make the board fill the stage'}>
-            <Icon name="expand" size={12} color="#475569" />
+            <Icon name="expand" size={12} color={Maple.body} />
           </Pressable>
         </View>
 
@@ -312,12 +313,12 @@ export function WhiteboardStage({ h, studentsMutedAll, onToggleStudentMute, mute
                 <Pressable
                   style={s.pdfNavBtn}
                   onPress={() => setPdfPage((p) => Math.max(1, p - 1))}>
-                  <Icon name="chevronLeft" size={10} color="#475569" />
+                  <Icon name="chevronLeft" size={10} color={Maple.body} />
                 </Pressable>
                 <Pressable
                   style={s.pdfNavBtn}
                   onPress={() => setPdfPage((p) => Math.min(h.pdf.totalPages, p + 1))}>
-                  <Icon name="chevronRight" size={10} color="#475569" />
+                  <Icon name="chevronRight" size={10} color={Maple.body} />
                 </Pressable>
               </View>
             </View>
@@ -342,15 +343,15 @@ export function WhiteboardStage({ h, studentsMutedAll, onToggleStudentMute, mute
             {/* PDF Bottom Controls */}
             <View style={s.pdfFooter}>
               <Pressable style={s.pdfFooterBtn} onPress={() => setZoom((z) => Math.min(150, z + 10))}>
-                <Icon name="search" size={12} color="#475569" />
+                <Icon name="search" size={12} color={Maple.body} />
               </Pressable>
               <Pressable style={s.pdfFooterBtn} onPress={() => setZoom((z) => Math.max(75, z - 10))}>
-                <Icon name="minus" size={12} color="#475569" />
+                <Icon name="minus" size={12} color={Maple.body} />
               </Pressable>
               <Pressable
                 style={s.pdfFooterBtn}
                 onPress={() => setPdfPage((p) => Math.min(h.pdf.totalPages, p + 1))}>
-                <Icon name="arrowRight" size={12} color="#475569" />
+                <Icon name="arrowRight" size={12} color={Maple.body} />
               </Pressable>
             </View>
           </View>
@@ -364,7 +365,7 @@ export function WhiteboardStage({ h, studentsMutedAll, onToggleStudentMute, mute
             <Image source={h.teacherVideo} style={s.tileImg} contentFit="cover" />
             <View style={s.teacherTileBar}>
               <View style={s.micBadgeGreen}>
-                <Icon name="mic" size={10} color="#FFFFFF" />
+                <Icon name="mic" size={10} color={Maple.surface} />
               </View>
               <Text style={s.teacherTileName}>You (Teacher)</Text>
             </View>
@@ -380,7 +381,7 @@ export function WhiteboardStage({ h, studentsMutedAll, onToggleStudentMute, mute
           ))}
           <View style={[s.othersTile, s.phoneStudentTile]}>
             <View style={s.othersIconCircle}>
-              <Icon name="people" size={15} color="#E2E8F0" />
+              <Icon name="people" size={15} color={Maple.border} />
             </View>
             <Text style={s.othersText}>+{h.othersCount} others</Text>
           </View>
@@ -397,7 +398,7 @@ export function WhiteboardStage({ h, studentsMutedAll, onToggleStudentMute, mute
               </View>
               <View style={s.teacherTileBar}>
                 <View style={s.micBadgeGreen}>
-                  <Icon name="mic" size={10} color="#FFFFFF" />
+                  <Icon name="mic" size={10} color={Maple.surface} />
                 </View>
                 <Text style={s.teacherTileName}>You (Teacher)</Text>
                 <View style={{ flex: 1 }} />
@@ -431,7 +432,7 @@ export function WhiteboardStage({ h, studentsMutedAll, onToggleStudentMute, mute
                 ))}
                 <View style={s.othersTile}>
                   <View style={s.othersIconCircle}>
-                    <Icon name="people" size={15} color="#E2E8F0" />
+                    <Icon name="people" size={15} color={Maple.border} />
                   </View>
                   <Text style={s.othersText}>+{h.othersCount} others</Text>
                 </View>
@@ -461,7 +462,7 @@ function StudentVideoTile({
       </View>
       <View style={s.studentTileBar}>
         <View style={[s.micBadgeSmall, muted ? s.micBadgeRed : s.micBadgeGreen]}>
-          <Icon name={muted ? 'micOff' : 'mic'} size={8} color="#FFFFFF" />
+          <Icon name={muted ? 'micOff' : 'mic'} size={8} color={Maple.surface} />
         </View>
         <Text style={s.studentTileName} numberOfLines={1}>
           {tile.name}

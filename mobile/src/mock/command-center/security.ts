@@ -5,6 +5,7 @@
 import type { DataRequest, RlsPolicy, Ticket } from '@/features/command/logic/security';
 
 import { face, type KpiData, type Photo, wave } from './shared';
+import { Maple } from '@/constants/maple';
 
 /** "Now" for the design build, so countdowns read like the references (Oct 26, 2026, 15:12 EAT). */
 export const NOW = '2026-10-26T12:12:00Z';
@@ -287,13 +288,13 @@ export const volume = {
 };
 
 export const categories: readonly { label: string; pct: number; count: number; color: string }[] = [
-  { label: 'Technical Issue', pct: 32, count: 109, color: '#1E6BF0' },
-  { label: 'Account & Access', pct: 20, count: 68, color: '#22A55A' },
-  { label: 'Billing & Payments', pct: 14, count: 48, color: '#F59E0B' },
+  { label: 'Technical Issue', pct: 32, count: 109, color: Maple.blue },
+  { label: 'Account & Access', pct: 20, count: 68, color: Maple.successText },
+  { label: 'Billing & Payments', pct: 14, count: 48, color: Maple.warning },
   { label: 'Content & Curriculum', pct: 12, count: 41, color: '#F472B6' },
-  { label: 'AI Copilot', pct: 10, count: 34, color: '#A855F7' },
-  { label: 'Safety & Policy', pct: 7, count: 25, color: '#1E3A8A' },
-  { label: 'Other', pct: 5, count: 17, color: '#94A3B8' },
+  { label: 'AI Copilot', pct: 10, count: 34, color: Maple.blue },
+  { label: 'Safety & Policy', pct: 7, count: 25, color: Maple.blueHover },
+  { label: 'Other', pct: 5, count: 17, color: Maple.muted },
 ];
 
 export const sla = { within: 305, breached: 37 };

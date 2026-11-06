@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { ScrollView, StyleSheet, useWindowDimensions } from 'react-native';
+import { StyleSheet, useWindowDimensions } from 'react-native';
 
 import { useShell } from '@/components/ui';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
@@ -11,6 +11,7 @@ import {
   StorefrontPhone,
 } from '@/features/teacher/storefront/StorefrontViews';
 import { mockData } from '@/lib/mock';
+import { PageScroll } from '@/components/shell/PageScroll';
 
 /** Inventory 48 (and 5, the public view): Public @teacher Storefront & Growth Promotions Editor (`/(teacher)/storefront`). */
 export default function StorefrontScreen() {
@@ -28,11 +29,11 @@ export default function StorefrontScreen() {
   const s = mock.teacher.storefrontEditor;
   if (!wide) return <StorefrontPhone sf={s} me={me} />;
   return (
-    <ScrollView style={styles.bg}>
+    <PageScroll style={styles.bg}>
       <RefScale width={width} refWidth={STOREFRONT_REF_WIDTH}>
         <StorefrontDesk sf={s} me={me} />
       </RefScale>
-    </ScrollView>
+    </PageScroll>
   );
 }
 

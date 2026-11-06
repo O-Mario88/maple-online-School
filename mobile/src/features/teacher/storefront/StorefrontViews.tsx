@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
@@ -15,6 +15,7 @@ import type { StorefrontEditor, StorefrontSubjectCard } from '@/mock/teacher-sto
 import { STOREFRONT_REF_WIDTH, s as deskS } from './StorefrontViews.styles';
 import { phoneS } from './StorefrontViews.phoneStyles';
 import { PhoneScroll } from '@/features/teacher/frame/PhoneScroll';
+import { Maple } from '@/constants/maple';
 
 export { STOREFRONT_REF_WIDTH };
 
@@ -99,7 +100,7 @@ export function StorefrontDesk({ sf, me, phone = false }: { sf: StorefrontEditor
                 <Pressable
                   style={s.cameraBadge}
                   onPress={() => toast('Uploading new profile portrait.')}>
-                  <Icon name="camera" size={11} color="#FFFFFF" />
+                  <Icon name="camera" size={11} color={Maple.surface} />
                 </Pressable>
               </View>
 
@@ -183,18 +184,18 @@ export function StorefrontDesk({ sf, me, phone = false }: { sf: StorefrontEditor
               <View style={s.videoFrame}>
                 <Image source={sf.videoThumb} style={StyleSheet.absoluteFill} contentFit="cover" />
                 <View style={s.videoCloseCircle}>
-                  <Icon name="close" size={9} color="#FFFFFF" />
+                  <Icon name="close" size={9} color={Maple.surface} />
                 </View>
                 <Pressable
                   style={s.videoPlayCircle}
                   onPress={() => toast('Playing 2:15 Teacher Intro Video.')}>
-                  <Icon name="playFill" size={14} color="#FFFFFF" />
+                  <Icon name="playFill" size={14} color={Maple.surface} />
                 </Pressable>
                 <View style={s.videoBottomBar}>
                   <View style={s.videoTimePill}>
                     <Text style={s.videoTimeText}>{sf.videoDuration}</Text>
                   </View>
-                  <Icon name="expand" size={10} color="#FFFFFF" />
+                  <Icon name="expand" size={10} color={Maple.surface} />
                 </View>
               </View>
 
@@ -237,7 +238,7 @@ export function StorefrontDesk({ sf, me, phone = false }: { sf: StorefrontEditor
                 <View key={sub.id} style={s.subjectCard}>
                   <View style={s.subjectTopRow}>
                     <View style={[s.subjectIconBox, { backgroundColor: sub.color }]}>
-                      <Icon name={sub.icon} size={14} color="#FFFFFF" />
+                      <Icon name={sub.icon} size={14} color={Maple.surface} />
                     </View>
                     <View style={{ flex: 1, gap: 2 }}>
                       <View style={s.subjectTitleLine}>
@@ -496,7 +497,7 @@ export function StorefrontDesk({ sf, me, phone = false }: { sf: StorefrontEditor
                   contentFit="cover"
                 />
                 <View style={s.miniPlayCircle}>
-                  <Icon name="playFill" size={11} color="#FFFFFF" />
+                  <Icon name="playFill" size={11} color={Maple.surface} />
                 </View>
                 <View style={s.miniDurationPill}>
                   <Text style={s.miniDurationText}>{sf.videoDuration}</Text>
@@ -520,7 +521,7 @@ export function StorefrontDesk({ sf, me, phone = false }: { sf: StorefrontEditor
                           s.previewSubIcon,
                           { backgroundColor: sub.color },
                         ]}>
-                        <Icon name={sub.icon} size={11} color="#FFFFFF" />
+                        <Icon name={sub.icon} size={11} color={Maple.surface} />
                       </View>
                       <Text style={s.dotsMenu}>⋮</Text>
                     </View>
@@ -557,7 +558,7 @@ export function StorefrontDesk({ sf, me, phone = false }: { sf: StorefrontEditor
                     key={h.day}
                     style={[
                       s.previewHourChip,
-                      !h.start && { backgroundColor: '#F1F5F9' },
+                      !h.start && { backgroundColor: Maple.blueSoft },
                     ]}>
                     <Text style={s.previewHourDay}>{h.day}</Text>
                     <Text
@@ -603,7 +604,7 @@ export function StorefrontDesk({ sf, me, phone = false }: { sf: StorefrontEditor
 
 export function StorefrontPhone({ sf, me }: { sf: StorefrontEditor; me: TeacherMe }) {
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: '#EAF1FB' }}>
+    <ScrollView style={{ flex: 1, backgroundColor: Maple.blueSelected }}>
       <TeacherPhoneTop me={me} />
       <StorefrontDesk sf={sf} me={me} phone />
     </ScrollView>

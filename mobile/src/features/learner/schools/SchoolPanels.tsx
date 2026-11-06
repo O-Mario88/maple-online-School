@@ -1,12 +1,13 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
 import { L } from '@/features/learner/frame/LightFrame';
 import { toast } from '@/lib/toast';
 
-import { LAVENDER, PURPLE, Tag, ugx } from './SchoolParts';
+import { BRAND_SOFT, BRAND_BLUE, Tag, ugx } from './SchoolParts';
 import type { Net, SN } from './useSchoolNetwork';
+import { Maple } from '@/constants/maple';
 
 /** "Your Journey on Maple": discover, compare, apply, enrol. */
 export function JourneyCard({ net }: { net: Net }) {
@@ -18,7 +19,7 @@ export function JourneyCard({ net }: { net: Net }) {
           <View key={j.title} style={s.journeyRow}>
             <View style={s.journeyIconCol}>
               <View style={s.roundIcon}>
-                <Icon name={j.icon} size={18} color={PURPLE} />
+                <Icon name={j.icon} size={18} color={BRAND_BLUE} />
               </View>
               {i < net.journey.length - 1 ? <View style={s.dots} /> : null}
             </View>
@@ -38,13 +39,13 @@ export function LinkCard({ title, sub, icon, tone, onPress }: { title: string; s
   const green = tone === 'green';
   return (
     <Pressable style={[s.link, green ? s.linkGreen : s.linkPurple]} onPress={onPress} accessibilityRole="button" accessibilityLabel={title}>
-      <Icon name={icon} size={30} color={green ? '#15803D' : PURPLE} />
+      <Icon name={icon} size={30} color={green ? Maple.successText : BRAND_BLUE} />
       <View style={s.flex}>
-        <Text style={[s.linkTitle, { color: green ? '#14532D' : '#3B1E9C' }]}>{title}</Text>
+        <Text style={[s.linkTitle, { color: green ? Maple.successText : Maple.blueHover }]}>{title}</Text>
         <Text style={s.small}>{sub}</Text>
       </View>
-      <View style={[s.arrow, { backgroundColor: green ? '#D7F2E0' : '#E2DBFB' }]}>
-        <Icon name="arrowRight" size={16} color={green ? '#15803D' : PURPLE} />
+      <View style={[s.arrow, { backgroundColor: green ? Maple.successSoft : Maple.blueSelected }]}>
+        <Icon name="arrowRight" size={16} color={green ? Maple.successText : BRAND_BLUE} />
       </View>
     </Pressable>
   );
@@ -55,7 +56,7 @@ export function PricingCard({ net, onCompare, phone = false, action = 'Compare P
   return (
     <View style={s.card}>
       <View style={s.priceHead}>
-        <Icon name="layers" size={30} color={PURPLE} />
+        <Icon name="layers" size={30} color={BRAND_BLUE} />
         <View style={s.flex}>
           <Text style={s.cardTitle}>Institutional Pricing</Text>
           <Text style={s.small}>Run your complete digital school on Maple.</Text>
@@ -206,31 +207,31 @@ const s = StyleSheet.create({
   journey: { gap: 2 },
   journeyRow: { flexDirection: 'row', gap: 14 },
   journeyIconCol: { alignItems: 'center' },
-  roundIcon: { width: 38, height: 38, alignItems: 'center', justifyContent: 'center', borderRadius: 19, backgroundColor: LAVENDER },
-  dots: { width: 0, height: 12, borderLeftWidth: 2, borderStyle: 'dotted', borderColor: '#C9C1F3' },
+  roundIcon: { width: 38, height: 38, alignItems: 'center', justifyContent: 'center', borderRadius: 19, backgroundColor: BRAND_SOFT },
+  dots: { width: 0, height: 12, borderLeftWidth: 2, borderStyle: 'dotted', borderColor: Maple.blueLine },
   journeyTitle: { marginTop: 2, fontSize: 14.5, fontWeight: '700', color: L.navy },
   link: { flexDirection: 'row', alignItems: 'center', gap: 14, padding: 18, borderRadius: 16, borderWidth: 1 },
-  linkGreen: { borderColor: '#CDEFD8', backgroundColor: '#EEFAF2' },
-  linkPurple: { borderColor: '#E2DBFB', backgroundColor: '#F4F1FE' },
+  linkGreen: { borderColor: '#CDEFD8', backgroundColor: Maple.successSoft },
+  linkPurple: { borderColor: Maple.blueSelected, backgroundColor: Maple.blueSoft },
   linkTitle: { fontSize: 16.5, fontWeight: '700' },
   arrow: { width: 28, height: 28, alignItems: 'center', justifyContent: 'center', borderRadius: 14 },
   priceHead: { flexDirection: 'row', alignItems: 'center', gap: 14 },
   plans: { flexDirection: 'row', gap: 8, marginTop: 6 },
   plan: { flex: 1, alignItems: 'center', gap: 2, paddingTop: 16, paddingBottom: 12, paddingHorizontal: 2, borderRadius: 12, borderWidth: 1, borderColor: L.line },
-  planOn: { borderWidth: 2, borderColor: PURPLE, backgroundColor: '#F6F3FF' },
-  popular: { position: 'absolute', top: -10, overflow: 'hidden', paddingHorizontal: 8, paddingVertical: 2, borderRadius: 6, fontSize: 10, fontWeight: '600', color: L.white, backgroundColor: PURPLE },
+  planOn: { borderWidth: 2, borderColor: BRAND_BLUE, backgroundColor: Maple.blueSoft },
+  popular: { position: 'absolute', top: -10, overflow: 'hidden', paddingHorizontal: 8, paddingVertical: 2, borderRadius: 6, fontSize: 10, fontWeight: '600', color: L.white, backgroundColor: BRAND_BLUE },
   planName: { marginBottom: 6, fontSize: 14.5, fontWeight: '700', color: L.navy },
   planPrice: { fontSize: 12.5, letterSpacing: -0.3, fontWeight: '700', color: L.navy },
   planPriceP: { fontSize: 11.5 },
   features: { flexDirection: 'row', flexWrap: 'wrap', rowGap: 6, columnGap: 14 },
   feature: { flexDirection: 'row', alignItems: 'center', gap: 6, minWidth: 150 },
   featureText: { flexShrink: 1, fontSize: 12.5, color: L.ink },
-  compare: { height: 40, alignItems: 'center', justifyContent: 'center', borderRadius: 20, backgroundColor: PURPLE },
+  compare: { height: 40, alignItems: 'center', justifyContent: 'center', borderRadius: 20, backgroundColor: BRAND_BLUE },
   compareText: { fontSize: 14.5, fontWeight: '600', color: L.white },
   row: { flexDirection: 'row', alignItems: 'center', gap: 14 },
   rowCrest: { width: 44, height: 44 },
   rowTitle: { fontSize: 15, fontWeight: '700', color: L.navy },
   tags: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginTop: 4 },
-  outline: { paddingHorizontal: 14, height: 34, alignItems: 'center', justifyContent: 'center', borderRadius: 8, borderWidth: 1.5, borderColor: PURPLE },
-  outlineText: { fontSize: 13, fontWeight: '600', color: PURPLE },
+  outline: { paddingHorizontal: 14, height: 34, alignItems: 'center', justifyContent: 'center', borderRadius: 8, borderWidth: 1.5, borderColor: BRAND_BLUE },
+  outlineText: { fontSize: 13, fontWeight: '600', color: BRAND_BLUE },
 });

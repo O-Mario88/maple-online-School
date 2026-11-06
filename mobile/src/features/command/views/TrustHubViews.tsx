@@ -14,6 +14,7 @@ import { toast } from '@/lib/toast';
 import type { HubCase, HubTeacher } from '@/mock/command-center/trust';
 
 import { RiskPill, StatusPill, useReview } from './TrustParts';
+import { Maple } from '@/constants/maple';
 
 type T = CommandData['trust'];
 const PER_PAGE = 10;
@@ -129,7 +130,7 @@ function useHub(t: T, by: string) {
 }
 type H = ReturnType<typeof useHub>;
 
-const RESULT_TEXT = { ok: '#16A34A', warn: '#D97F06', fail: '#E0283E' } as const;
+const RESULT_TEXT = { ok: Maple.successText, warn: Maple.warning, fail: Maple.error } as const;
 
 /** The review panel for one teacher application: AI results, the AI summary and four decisions. */
 function TeacherReview({ h, phone = false, onClose }: { h: H; phone?: boolean; onClose?: () => void }) {
@@ -521,12 +522,12 @@ const styles = StyleSheet.create({
   resultIcon: { width: 18, height: 18, borderRadius: 9, alignItems: 'center', justifyContent: 'center' },
   resultLabel: { width: 132, fontSize: 11, color: NAVY },
   resultText: { flex: 1, minWidth: 0, fontSize: 11 },
-  summary: { gap: 4, padding: 10, borderRadius: 10, backgroundColor: '#F1F4FE' },
+  summary: { gap: 4, padding: 10, borderRadius: 10, backgroundColor: Maple.blueSoft },
   summaryHead: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   summaryTitle: { fontSize: 13, fontWeight: '700', color: NAVY },
   summaryBody: { fontSize: 12, lineHeight: 17, color: BODY },
   history: { gap: 6 },
-  decided: { padding: 10, borderRadius: 10, backgroundColor: '#F1F5FB', fontSize: 12.5, color: NAVY },
+  decided: { padding: 10, borderRadius: 10, backgroundColor: Maple.blueSoft, fontSize: 12.5, color: NAVY },
   decisions: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   decision: { width: '48.5%', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, minHeight: 44, paddingHorizontal: 8, borderRadius: 9, borderWidth: 1 },
   decisionText: { flexShrink: 1, fontSize: 12, fontWeight: '600', textAlign: 'center' },

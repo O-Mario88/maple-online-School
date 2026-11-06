@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
@@ -8,6 +8,7 @@ import { Avatar, Bar, Btn, Card, CardHead, GradeChip, IconTile, Pill, PlayButton
 import { BLUE, BODY, LINE, MUTED, NAVY, RED, SOFT, TEXT, TONES, WHITE } from '@/features/portal/tokens';
 import { toast } from '@/lib/toast';
 import type { GradeRow, Homework, ParentPortal, SubjectScore } from '@/mock/portal';
+import { Maple } from '@/constants/maple';
 
 type Academics = ParentPortal['academics'];
 
@@ -388,7 +389,7 @@ const styles = StyleSheet.create({
   subjectScoreRow: { flexDirection: 'row', alignItems: 'baseline', justifyContent: 'space-between', gap: 8 },
   subjectScore: { fontSize: 28, fontWeight: '800', color: NAVY, letterSpacing: -0.5 },
   subjectScoreSmall: { fontSize: 20 },
-  delta: { fontSize: 15, fontWeight: '600', color: '#16A34A' },
+  delta: { fontSize: 15, fontWeight: '600', color: Maple.successText },
   deltaSmall: { fontSize: 12.5 },
   subjectBar: { marginLeft: 74 },
   subjectBarSmall: { marginLeft: 0 },
@@ -408,7 +409,7 @@ const styles = StyleSheet.create({
   table: { borderRadius: 12, borderWidth: 1, borderColor: LINE, overflow: 'hidden' },
   tr: { flexDirection: 'row', alignItems: 'center', minHeight: 50, paddingHorizontal: 14, borderBottomWidth: 1, borderColor: LINE },
   trTall: { minHeight: 64 },
-  th: { minHeight: 46, backgroundColor: '#F1F5FC' },
+  th: { minHeight: 46, backgroundColor: Maple.blueSoft },
   thText: { fontSize: 13.5, fontWeight: '600', color: NAVY },
   td: { fontSize: 14, color: BODY },
   tdStrong: { color: NAVY, fontWeight: '600' },
@@ -425,7 +426,7 @@ const styles = StyleSheet.create({
   gGrade: { width: 54 },
   gDate: { width: 66 },
   gFeedback: { width: 114 },
-  feedbackLink: { alignSelf: 'flex-start', paddingHorizontal: 8, paddingVertical: 5, borderRadius: 7, backgroundColor: '#EEF4FE', borderWidth: 1, borderColor: '#D3E2FB' },
+  feedbackLink: { alignSelf: 'flex-start', paddingHorizontal: 8, paddingVertical: 5, borderRadius: 7, backgroundColor: Maple.blueSoft, borderWidth: 1, borderColor: Maple.blueSelected },
   feedbackLinkText: { fontSize: 12.5, fontWeight: '600', color: BLUE },
   player: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   duration: { fontSize: 15, color: BODY },

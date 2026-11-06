@@ -7,6 +7,7 @@ import { Sheet, SheetButton } from '@/components/ui/Sheet';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { toast } from '@/lib/toast';
 import type { MockData } from '@/mock';
+import { Maple } from '@/constants/maple';
 
 type Topic = MockData['publicPages']['help'][number];
 type Article = Topic['articles'][number];
@@ -69,5 +70,5 @@ export default function HelpScreen() {
 }
 
 const styles = StyleSheet.create({
-  answer: { fontSize: 14, lineHeight: 21, color: '#3D4656' },
+  answer: { fontSize: 14, lineHeight: 21, color: Maple.body },
 });

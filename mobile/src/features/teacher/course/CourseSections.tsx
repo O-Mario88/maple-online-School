@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
@@ -10,6 +10,7 @@ import { toast } from '@/lib/toast';
 import type { CourseBuilder } from '@/mock/teacher-course';
 
 import type { Builder } from './useCourseBuilder';
+import { Maple } from '@/constants/maple';
 
 /** Rows of choices where one is picked, as pricing and completion use. */
 function Choices({ groups }: { groups: readonly { label: string; options: readonly string[] }[] }) {
@@ -92,7 +93,7 @@ function Quizzes({ b }: { b: Builder }) {
             .filter((l) => l.kind === 'quiz')
             .map((l) => (
               <Pressable key={l.id} style={styles.line} onPress={() => { b.select(l.id); b.setTab('quiz'); }} accessibilityRole="button" accessibilityLabel={`Open ${l.title}`}>
-                <IconTile icon="clipboard" color="#F0A000" size={26} soft />
+                <IconTile icon="clipboard" color={Maple.warning} size={26} soft />
                 <Text style={styles.lineText}>{l.title}</Text>
                 <Text style={styles.lineMeta}>10 questions · pass at 60%</Text>
                 <Icon name="chevronRight" size={14} color={BODY} />
@@ -129,7 +130,7 @@ function Publish({ c, b }: { c: CourseBuilder; b: Builder }) {
     <View style={styles.list}>
       {c.sections.checks.map((k) => (
         <View key={k.label} style={styles.line}>
-          <Icon name={k.done ? 'check' : 'alert'} size={15} color={k.done ? GREEN : '#C25E00'} />
+          <Icon name={k.done ? 'check' : 'alert'} size={15} color={k.done ? GREEN : Maple.warningText} />
           <Text style={styles.lineText}>{k.label}</Text>
         </View>
       ))}
@@ -181,7 +182,7 @@ const styles = StyleSheet.create({
   groupLabel: { fontSize: 13, fontWeight: '700', color: INK },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   chip: { paddingHorizontal: 12, paddingVertical: 7, borderRadius: 8, borderWidth: 1, borderColor: LINE },
-  chipOn: { borderColor: BLUE, backgroundColor: '#EEF4FF' },
+  chipOn: { borderColor: BLUE, backgroundColor: Maple.blueSoft },
   chipText: { fontSize: 12.5, color: INK },
   chipTextOn: { color: BLUE, fontWeight: '600' },
   setup: { flexDirection: 'row', gap: 24 },

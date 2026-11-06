@@ -4,6 +4,7 @@ import { Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 
 import { Icon } from '@/components/icon';
 import { Btn } from '@/features/portal/PortalParts';
 import { BLUE, BODY, LINE, MUTED, NAVY, RED, WHITE } from '@/features/portal/tokens';
+import { Maple } from '@/constants/maple';
 
 export interface Field {
   key: string;
@@ -120,7 +121,7 @@ const styles = StyleSheet.create({
   input: { height: 44, paddingHorizontal: 12, borderRadius: 10, borderWidth: 1, borderColor: LINE, fontSize: 14, color: NAVY },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
   chip: { paddingHorizontal: 11, paddingVertical: 7, borderRadius: 18, borderWidth: 1, borderColor: LINE, backgroundColor: WHITE },
-  chipOn: { borderColor: BLUE, backgroundColor: '#EAF1FE' },
+  chipOn: { borderColor: BLUE, backgroundColor: Maple.blueSoft },
   chipText: { fontSize: 12.5, color: NAVY },
   chipTextOn: { fontWeight: '700', color: BLUE },
   error: { fontSize: 13, lineHeight: 18, color: RED },

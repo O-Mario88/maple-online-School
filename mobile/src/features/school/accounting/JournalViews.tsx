@@ -16,6 +16,7 @@ import { type BookEntry, dayLabel } from '@/mock/school-books';
 import { canEdit, type EntryStatus, entryTotals, type JournalLine, nextEntryId, postEntry, reverseEntry } from './books';
 import { BooksDesk, BooksHead } from './BooksFrame';
 import { EntryModal } from './BooksModals';
+import { Maple } from '@/constants/maple';
 
 type Admin = MockData['schoolAdmin'];
 const PER_PAGE = 10;
@@ -440,7 +441,7 @@ const styles = StyleSheet.create({
   inline: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   noWrap: { flexWrap: 'nowrap' },
   block: { gap: 8 },
-  hover: { backgroundColor: '#F3F6FC' },
+  hover: { backgroundColor: Maple.blueSoft },
   small: { fontSize: 12, lineHeight: 17, color: BODY },
   td: { fontSize: 12.5, color: NAVY },
   th: { fontSize: 11.5, fontWeight: '700', color: NAVY },
@@ -453,13 +454,13 @@ const styles = StyleSheet.create({
   pillStart: { alignSelf: 'flex-start' },
   lines: { borderRadius: 10, borderWidth: 1, borderColor: LINE, overflow: 'hidden' },
   lineRow: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 10, paddingVertical: 8, borderBottomWidth: 1, borderColor: LINE },
-  lineHead: { backgroundColor: '#F4F7FC' },
-  lineTotal: { borderBottomWidth: 0, backgroundColor: '#F4F7FC' },
+  lineHead: { backgroundColor: Maple.blueSoft },
+  lineTotal: { borderBottomWidth: 0, backgroundColor: Maple.blueSoft },
   totalText: { fontSize: 13.5, fontWeight: '800', color: NAVY },
   num: { width: 16 },
   amt: { width: 78, textAlign: 'right' },
   attach: { flexDirection: 'row', alignItems: 'center', gap: 10, padding: 10, borderRadius: 10, borderWidth: 1, borderColor: LINE },
-  reverse: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 5, minHeight: 34, paddingHorizontal: 6, borderRadius: 8, borderWidth: 1, borderColor: '#FCA5A5', backgroundColor: '#FEF2F2' },
+  reverse: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 5, minHeight: 34, paddingHorizontal: 6, borderRadius: 8, borderWidth: 1, borderColor: '#FCA5A5', backgroundColor: Maple.errorSoft },
   reverseText: { fontSize: 12, fontWeight: '600', color: RED },
   quick: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
   quickBtn: { flexDirection: 'row', alignItems: 'center', gap: 10, width: '48%', padding: 10, borderRadius: 10, borderWidth: 1, borderColor: LINE },
@@ -467,7 +468,7 @@ const styles = StyleSheet.create({
   quickTitle: { fontSize: 12.5, fontWeight: '700', color: NAVY },
   activity: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 4 },
   foot: { paddingHorizontal: 16, paddingVertical: 10, backgroundColor: WHITE, borderTopWidth: 1, borderColor: LINE },
-  segments: { flexDirection: 'row', gap: 6, padding: 4, borderRadius: 12, backgroundColor: '#EEF3FB' },
+  segments: { flexDirection: 'row', gap: 6, padding: 4, borderRadius: 12, backgroundColor: Maple.blueSoft },
   segment: { flex: 1, alignItems: 'center', paddingVertical: 9, borderRadius: 9 },
   segmentOn: { backgroundColor: BLUE },
   segmentText: { fontSize: 13.5, color: NAVY },

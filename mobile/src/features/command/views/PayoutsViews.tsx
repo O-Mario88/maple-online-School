@@ -11,6 +11,7 @@ import { BLUE, BODY, GREEN, LINE, NAVY, type Tone, WHITE } from '@/features/port
 import { Cell, type Column, DataTable, PageHead, useSelection } from '@/features/school/kit/AdminKit';
 import { toast } from '@/lib/toast';
 import type { PayoutRow } from '@/mock/command-center/finance';
+import { Maple } from '@/constants/maple';
 
 type F = CommandData['finance'];
 const PER_PAGE = 10;
@@ -92,7 +93,7 @@ function MethodCell({ m }: { m: PayoutRow['method'] }) {
   const icon = m === 'Bank Transfer' ? 'building' : m === 'Stripe' ? 'wallet' : 'phone';
   return (
     <View style={styles.inline}>
-      <Icon name={icon} size={14} color={m === 'Stripe' ? '#635BFF' : m === 'Bank Transfer' ? BLUE : '#D4A800'} />
+      <Icon name={icon} size={14} color={m === 'Stripe' ? Maple.blue : m === 'Bank Transfer' ? BLUE : Maple.warning} />
       <Cell small>{m}</Cell>
     </View>
   );
@@ -468,7 +469,7 @@ const styles = StyleSheet.create({
   bigTabOn: { borderColor: LINE, backgroundColor: WHITE, borderBottomWidth: 3, borderBottomColor: BLUE },
   bigTabText: { fontSize: 15, color: NAVY },
   bigTabTextOn: { fontSize: 16, fontWeight: '700', color: BLUE },
-  redBadge: { paddingHorizontal: 7, paddingVertical: 1, borderRadius: 10, backgroundColor: '#EF4444' },
+  redBadge: { paddingHorizontal: 7, paddingVertical: 1, borderRadius: 10, backgroundColor: Maple.error },
   redBadgeText: { fontSize: 12, fontWeight: '700', color: WHITE },
   queue: { gap: 10, padding: 12 },
   queueHead: { flexDirection: 'row', alignItems: 'center', gap: 12 },
@@ -481,7 +482,7 @@ const styles = StyleSheet.create({
   sumDelta: { fontSize: 13, fontWeight: '700', color: GREEN },
   small_table: { borderRadius: 8, borderWidth: 1, borderColor: LINE, overflow: 'hidden' },
   stRow: { flexDirection: 'row', alignItems: 'center', gap: 6, minHeight: 32, paddingHorizontal: 8, borderBottomWidth: 1, borderColor: LINE },
-  stHead: { backgroundColor: '#F3F6FC' },
+  stHead: { backgroundColor: Maple.blueSoft },
   stHeadText: { fontSize: 11, fontWeight: '700', color: NAVY },
   stCell: { fontSize: 11, color: NAVY },
   phoneRows: { gap: 8 },
@@ -499,6 +500,6 @@ const styles = StyleSheet.create({
   fact: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 5 },
   factLabel: { fontSize: 13, color: BODY },
   factValue: { fontSize: 13, fontWeight: '600', color: NAVY },
-  rule: { padding: 10, borderRadius: 8, backgroundColor: '#EEF4FF', fontSize: 12.5, color: NAVY },
+  rule: { padding: 10, borderRadius: 8, backgroundColor: Maple.blueSoft, fontSize: 12.5, color: NAVY },
   modalBtns: { flexDirection: 'row', gap: 8 },
 });

@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
@@ -11,6 +11,7 @@ import { toast } from '@/lib/toast';
 import type { SchoolAdmin } from '@/mock/portal';
 
 import { BasicInfo, Branding, CurriculumCard, ImportCard, PlanCard, Preview, type Profile, Stepper } from './OnboardingParts';
+import { Maple } from '@/constants/maple';
 
 type Onboarding = SchoolAdmin['onboarding'];
 
@@ -201,8 +202,8 @@ const styles = StyleSheet.create({
   list: { padding: 0, paddingHorizontal: 14 },
   listRow: { flexDirection: 'row', alignItems: 'stretch', gap: 14 },
   rail: { width: 44, alignItems: 'center', justifyContent: 'center' },
-  railTop: { position: 'absolute', top: 0, height: '50%', width: 2, backgroundColor: '#C9D6EE' },
-  railBottom: { position: 'absolute', bottom: 0, height: '50%', width: 2, backgroundColor: '#C9D6EE' },
+  railTop: { position: 'absolute', top: 0, height: '50%', width: 2, backgroundColor: Maple.blueLine },
+  railBottom: { position: 'absolute', bottom: 0, height: '50%', width: 2, backgroundColor: Maple.blueLine },
   dot: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center', borderWidth: 2, borderColor: NAVY, backgroundColor: WHITE },
   dotOn: { borderColor: BLUE, backgroundColor: BLUE },
   dotDone: { borderColor: GREEN, backgroundColor: GREEN },

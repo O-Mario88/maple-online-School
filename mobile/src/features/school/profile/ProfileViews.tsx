@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { type Href, router } from 'expo-router';
 import { type ReactNode, useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
@@ -13,11 +13,12 @@ import type { MockData } from '@/mock';
 import { AdminDesk, AdminPhone } from '../kit/AdminKit';
 import { HubHeader, HubTabs } from '../kit/HubKit';
 import { type BasicInfo, canPublish, DESCRIPTION_MAX, profileCompletion, PROFILE_SECTIONS, validateBasic } from './profile';
+import { Maple, Radii } from '@/constants/maple';
 
 type Admin = MockData['schoolAdmin'];
 type P = Admin['schoolProfile'];
 
-const PURPLE = '#5B3FD9';
+const BRAND_BLUE = Maple.blue;
 const thisYear = () => new Date().getFullYear();
 
 function useProfile(a: Admin) {
@@ -95,15 +96,15 @@ function Completion({ x }: { x: X }) {
           const ok = x.done.includes(sec.key);
           return (
             <View key={sec.key} style={s.checkRow}>
-              <Icon name="tick" size={15} color={ok ? GREEN : '#C3CADB'} />
+              <Icon name="tick" size={15} color={ok ? GREEN : Maple.borderStrong} />
               <Text style={[s.body, s.flex]}>{sec.label}</Text>
-              <Icon name={ok ? 'check' : 'clock'} size={15} color={ok ? GREEN : '#C3CADB'} />
+              <Icon name={ok ? 'check' : 'clock'} size={15} color={ok ? GREEN : Maple.borderStrong} />
             </View>
           );
         })}
       </Card>
       <View style={s.tip}>
-        <Icon name="bulb" size={18} color={PURPLE} />
+        <Icon name="bulb" size={18} color={BRAND_BLUE} />
         <Text style={[s.body, s.flex]}>Complete your profile to improve your visibility and recommendations on the School Network.</Text>
       </View>
     </View>
@@ -156,7 +157,7 @@ function Overview({ x, phone }: { x: X; phone: boolean }) {
           <Text style={s.label}>Map Location</Text>
           <Pressable style={s.map} onPress={() => toast('Drop a pin on the map to set your exact location.')} accessibilityRole="button">
             <Text style={s.link}>Set on Map</Text>
-            <Icon name="pin" size={18} color={PURPLE} />
+            <Icon name="pin" size={18} color={BRAND_BLUE} />
           </Pressable>
         </View>
       </Row>
@@ -228,7 +229,7 @@ function Facilities({ x }: { x: X }) {
           <Image key={i} source={g} style={s.galleryPhoto} contentFit="cover" />
         ))}
         <Pressable style={[s.galleryPhoto, s.addPhoto]} onPress={() => toast('Photos are checked by Maple before they appear on your profile.')} accessibilityRole="button" accessibilityLabel="Add photos">
-          <Icon name="plus" size={22} color={PURPLE} />
+          <Icon name="plus" size={22} color={BRAND_BLUE} />
         </Pressable>
       </View>
     </Card>
@@ -273,7 +274,7 @@ function Preview({ x }: { x: X }) {
   return (
     <View style={s.stack}>
       <Card style={s.previewHead}>
-        <Icon name="eye" size={22} color={PURPLE} />
+        <Icon name="eye" size={22} color={BRAND_BLUE} />
         <View style={s.flex}>
           <Text style={s.cardTitle}>Public Profile Preview</Text>
           <Text style={s.small}>How your school appears on the School Network.</Text>
@@ -316,7 +317,7 @@ function Preview({ x }: { x: X }) {
           <View style={s.highlights}>
             {pv.highlights.map((h) => (
               <View key={h.label} style={s.highlight}>
-                <Icon name={h.icon} size={20} color={PURPLE} />
+                <Icon name={h.icon} size={20} color={BRAND_BLUE} />
                 <Text style={s.highlightText}>{h.label}</Text>
               </View>
             ))}
@@ -423,34 +424,34 @@ const s = StyleSheet.create({
   body: { fontSize: 13.5, lineHeight: 19, color: NAVY },
   small: { fontSize: 12.5, lineHeight: 17, color: BODY },
   label: { fontSize: 14, fontWeight: '500', color: NAVY },
-  star: { color: '#DC2626' },
+  star: { color: Maple.error },
   big: { fontSize: 26, fontWeight: '800', color: NAVY },
   link: { fontSize: 14, fontWeight: '600', color: BLUE },
   checkRow: { flexDirection: 'row', alignItems: 'center', gap: 10, minHeight: 26 },
-  tip: { flexDirection: 'row', gap: 10, padding: 16, borderRadius: 14, backgroundColor: '#F1EDFE' },
+  tip: { flexDirection: 'row', gap: 10, padding: 16, borderRadius: 14, backgroundColor: Maple.blueSoft },
   field: { gap: 6 },
-  area: { borderRadius: 8, borderWidth: 1, borderColor: '#D5DCE7', backgroundColor: WHITE },
-  areaError: { borderColor: '#DC2626' },
+  area: { borderRadius: 8, borderWidth: 1, borderColor: Maple.borderStrong, backgroundColor: WHITE },
+  areaError: { borderColor: Maple.error },
   areaInput: { minHeight: 110, padding: 12, fontSize: 14, lineHeight: 20, color: NAVY, textAlignVertical: 'top' },
   counter: { alignSelf: 'flex-end', padding: 8, fontSize: 12, color: BODY },
-  over: { color: '#DC2626' },
-  error: { fontSize: 12, color: '#DC2626' },
+  over: { color: Maple.error },
+  error: { fontSize: 12, color: Maple.error },
   divider: { height: 1, backgroundColor: LINE },
   mapCol: { flex: 1, gap: 6 },
-  map: { height: 40, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, borderRadius: 8, borderWidth: 1, borderColor: '#D5DCE7', backgroundColor: '#F7F8FF' },
+  map: { height: 40, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, borderRadius: 8, borderWidth: 1, borderColor: Maple.borderStrong, backgroundColor: Maple.blueSoft },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  chip: { paddingHorizontal: 12, paddingVertical: 7, borderRadius: 999, borderWidth: 1, borderColor: '#D5DCE7', backgroundColor: WHITE },
-  chipOn: { borderColor: PURPLE, backgroundColor: '#F1EDFE' },
+  chip: { paddingHorizontal: 12, paddingVertical: 7, borderRadius: 999, borderWidth: 1, borderColor: Maple.borderStrong, backgroundColor: WHITE },
+  chipOn: { borderColor: BRAND_BLUE, backgroundColor: Maple.blueSoft },
   chipText: { fontSize: 13, color: NAVY },
-  chipTextOn: { fontWeight: '600', color: PURPLE },
+  chipTextOn: { fontWeight: '600', color: BRAND_BLUE },
   gallery: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
   galleryPhoto: { width: 140, height: 92, borderRadius: 10 },
-  addPhoto: { alignItems: 'center', justifyContent: 'center', borderWidth: 1.5, borderStyle: 'dashed', borderColor: '#C9BFF4' },
-  box: { width: 20, height: 20, alignItems: 'center', justifyContent: 'center', borderRadius: 5, borderWidth: 1.5, borderColor: '#B6C0CF' },
+  addPhoto: { alignItems: 'center', justifyContent: 'center', borderWidth: 1.5, borderStyle: 'dashed', borderColor: Maple.blueLine },
+  box: { width: 20, height: 20, alignItems: 'center', justifyContent: 'center', borderRadius: 5, borderWidth: 1.5, borderColor: Maple.borderStrong },
   boxOn: { borderColor: BLUE, backgroundColor: BLUE },
   previewHead: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 16 },
   device: { width: 34, height: 34, alignItems: 'center', justifyContent: 'center', borderRadius: 8, borderWidth: 1, borderColor: LINE },
-  deviceOn: { borderColor: BLUE, backgroundColor: '#EEF4FF' },
+  deviceOn: { borderColor: BLUE, backgroundColor: Maple.blueSoft },
   preview: { overflow: 'hidden', padding: 0 },
   previewPhone: { alignSelf: 'center', width: 300 },
   previewPhoto: { width: '100%', height: 130 },
@@ -462,14 +463,14 @@ const s = StyleSheet.create({
   nameRow: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingLeft: 86 },
   previewName: { flexShrink: 1, fontSize: 17, fontWeight: '800', color: NAVY },
   previewTabs: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
-  previewTab: { overflow: 'hidden', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 14, fontSize: 13, color: NAVY, backgroundColor: '#F5F7FC' },
-  previewTabOn: { color: BLUE, fontWeight: '600', backgroundColor: '#E8F0FF' },
+  previewTab: { overflow: 'hidden', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 14, fontSize: 13, color: NAVY, backgroundColor: Maple.blueSoft },
+  previewTabOn: { color: BLUE, fontWeight: '600', backgroundColor: Maple.blueSelected },
   highlights: { flexDirection: 'row', gap: 8 },
   highlight: { flex: 1, alignItems: 'center', gap: 6, paddingVertical: 10, borderRadius: 10, borderWidth: 1, borderColor: LINE },
   highlightText: { fontSize: 11.5, fontWeight: '600', color: NAVY, textAlign: 'center' },
-  previewBtn: { flex: 1, height: 40, alignItems: 'center', justifyContent: 'center', borderRadius: 20 },
-  previewBtnGhost: { borderWidth: 1.5, borderColor: '#9DB4F2' },
+  previewBtn: { flex: 1, height: 40, alignItems: 'center', justifyContent: 'center', borderRadius: Radii.control},
+  previewBtnGhost: { borderWidth: 1.5, borderColor: Maple.blueLine },
   previewBtnBlue: { backgroundColor: BLUE },
   previewBtnText: { fontSize: 14, fontWeight: '600', color: WHITE },
-  publish: { backgroundColor: PURPLE },
+  publish: { backgroundColor: BRAND_BLUE },
 });

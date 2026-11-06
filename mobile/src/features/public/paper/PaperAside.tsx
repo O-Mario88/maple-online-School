@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
@@ -9,6 +9,7 @@ import type { MockData } from '@/mock';
 import type { PastPaperEntry } from '@/mock/public';
 
 import { Brand, CARD_SHADOW } from '../palette';
+import { Maple } from '@/constants/maple';
 
 type Pages = MockData['publicPages']['pastPaperPages'];
 
@@ -40,12 +41,12 @@ export function CompletePaper({ benefits }: { benefits: Pages['benefits'] }) {
 /** The paper's facts: board, level, subject, year, marks, duration, files and language. */
 export function PaperInfo({ paper }: { paper: PastPaperEntry }) {
   const facts: { label: string; value: string; icon: IconName; tint: string }[] = [
-    { label: 'Board', value: paper.boardName.split(' ').length > 3 ? paper.title.split(' ')[0] : paper.boardName, icon: 'school', tint: '#2F6BFF' },
-    { label: 'Level', value: paper.level, icon: 'chart', tint: '#2F6BFF' },
-    { label: 'Subject', value: paper.subjectName, icon: 'book', tint: '#F59E0B' },
-    { label: 'Year', value: paper.year, icon: 'calendar', tint: '#2F6BFF' },
-    { label: 'Total Marks', value: `${paper.totalMarks} (Paper 1)`, icon: 'check', tint: '#16A34A' },
-    { label: 'Duration', value: paper.duration, icon: 'clock', tint: '#8B5CF6' },
+    { label: 'Board', value: paper.boardName.split(' ').length > 3 ? paper.title.split(' ')[0] : paper.boardName, icon: 'school', tint: Maple.blue },
+    { label: 'Level', value: paper.level, icon: 'chart', tint: Maple.blue },
+    { label: 'Subject', value: paper.subjectName, icon: 'book', tint: Maple.warning },
+    { label: 'Year', value: paper.year, icon: 'calendar', tint: Maple.blue },
+    { label: 'Total Marks', value: `${paper.totalMarks} (Paper 1)`, icon: 'check', tint: Maple.successText },
+    { label: 'Duration', value: paper.duration, icon: 'clock', tint: Maple.blue },
   ];
   return (
     <View style={styles.card}>
@@ -139,8 +140,8 @@ const styles = StyleSheet.create({
   thumb: { width: 100, height: 92, borderRadius: 8 },
   videoTitle: { fontSize: 10.5, fontWeight: '700', color: Brand.ink },
   relTabs: { flexDirection: 'row', gap: 6, marginTop: 10, marginBottom: 2 },
-  relTab: { paddingHorizontal: 6, paddingVertical: 6, borderRadius: 6, borderBottomWidth: 2, borderBottomColor: 'transparent' },
-  relTabOn: { backgroundColor: '#EAF1FE', borderBottomColor: Brand.blue },
-  relTabText: { fontSize: 10, color: '#2A3242' },
+  relTab: { paddingHorizontal: 6, paddingVertical: 6, borderBottomWidth: 3, borderBottomColor: 'transparent' },
+  relTabOn: { borderBottomColor: Brand.blue },
+  relTabText: { fontSize: 10, color: Maple.navy },
   relTabTextOn: { color: Brand.blue, fontWeight: '600' },
 });

@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
@@ -7,10 +7,11 @@ import { formatMoney } from '@/lib/finance/fees';
 import type { MockData } from '@/mock';
 
 import { Brand } from '../palette';
+import { Maple } from '@/constants/maple';
 
 type Storefront = MockData['publicPages']['teacherStorefront'];
 
-const HIGHLIGHT = '#FFD43B';
+const HIGHLIGHT = Maple.warning;
 
 function SectionHead({ title, link, onPress }: { title: string; link?: string; onPress?: () => void }) {
   return (

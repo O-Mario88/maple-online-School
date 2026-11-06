@@ -1,11 +1,11 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
-import { useShell } from '@/components/ui';
+import { useContentWidth, useShell } from '@/components/ui';
 import { LearnerPhoneTop } from '@/features/learner/dashboard/DashPhone';
 import { BookingSheet, BootcampRow, Head, LiveClassCard, LiveClassRow, TutorCard, WeekRow } from '@/features/learner/live/HubCards';
 import { LiveClasses } from '@/features/learner/live/LiveClasses';
@@ -13,6 +13,8 @@ import { BODY, CalendarHeader, DayStrip, dayTitle, INK, MonthGrid, ScheduleRow }
 import { type Hub, type HubState, TABS, useLiveHub } from '@/features/learner/live/useLiveHub';
 import { RefScale } from '@/features/public/home/RefScale';
 import { mockData } from '@/lib/mock';
+import { Maple } from '@/constants/maple';
+import { PageScroll } from '@/components/shell/PageScroll';
 
 /** The live hub reference's page (x 18–1168 at 1536 wide); the desktop layout uses its pixels. */
 const HUB_REF_WIDTH = 1150;
@@ -41,7 +43,7 @@ function Schedule({ hub, s, phone = false }: { hub: Hub; s: HubState; phone?: bo
 function Hero({ hub, s }: { hub: Hub; s: HubState }) {
   return (
     <View style={styles.hero}>
-      <LinearGradient colors={['#EEF6FF', '#E4F0FD']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />
+      <LinearGradient colors={[Maple.blueSoft, Maple.blueSelected]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />
       <Image source={hub.hero} style={styles.heroPhoto} contentFit="fill" accessibilityLabel="A smiling learner with headphones beside the words Learn, Ask, Practice, Grow" />
       <Text style={styles.title} accessibilityRole="header">
         {hub.title}
@@ -145,7 +147,7 @@ function Phone({ hub, s, avatar }: { hub: Hub; s: HubState; avatar: number }) {
   return (
     <View style={styles.phoneRoot}>
       <LearnerPhoneTop avatar={avatar} />
-      <ScrollView contentContainerStyle={styles.phone}>
+      <PageScroll contentContainerStyle={styles.phone}>
         <Text style={styles.titleP} accessibilityRole="header">
           {hub.title}
         </Text>
@@ -197,7 +199,7 @@ function Phone({ hub, s, avatar }: { hub: Hub; s: HubState; avatar: number }) {
             <WeekRow key={x.id} hub={hub} x={x} s={s} phone />
           ))}
         </View>
-      </ScrollView>
+      </PageScroll>
     </View>
   );
 }
@@ -213,7 +215,7 @@ export default function LiveScreen() {
 function HubView({ hub, avatar }: { hub: Hub; avatar: number }) {
   const s = useLiveHub(hub);
   const { wide } = useShell();
-  const { width } = useWindowDimensions();
+  const width = useContentWidth();
   const sheet = <BookingSheet hub={hub} s={s} />;
   if (!wide)
     return (
@@ -223,38 +225,38 @@ function HubView({ hub, avatar }: { hub: Hub; avatar: number }) {
       </>
     );
   return (
-    <ScrollView style={styles.deskBg} contentContainerStyle={styles.deskWrap}>
+    <PageScroll style={styles.deskBg} contentContainerStyle={styles.deskWrap}>
       <RefScale width={Math.min(width - 48, MAX_DESK_WIDTH)} refWidth={HUB_REF_WIDTH}>
         <Desktop hub={hub} s={s} />
       </RefScale>
       {sheet}
-    </ScrollView>
+    </PageScroll>
   );
 }
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
-  white: { color: '#FFFFFF' },
-  deskBg: { backgroundColor: '#EEF3FB' },
+  white: { color: Maple.surface },
+  deskBg: { backgroundColor: Maple.blueSoft },
   deskWrap: { alignItems: 'center', paddingVertical: 16 },
-  canvas: { width: HUB_REF_WIDTH, paddingBottom: 16, borderRadius: 12, backgroundColor: '#F4F8FD', overflow: 'hidden' },
+  canvas: { width: HUB_REF_WIDTH, paddingBottom: 16, borderRadius: 12, backgroundColor: Maple.blueSoft, overflow: 'hidden' },
   hero: { height: 178, overflow: 'hidden' },
   heroPhoto: { position: 'absolute', left: 574, top: 0, width: 574, height: 175 },
   title: { position: 'absolute', left: 28, top: 28, fontSize: 37, fontWeight: '800', color: INK, letterSpacing: -1 },
   sub: { position: 'absolute', left: 28, top: 76, fontSize: 16.5, color: BODY },
   tabs: { position: 'absolute', left: 26, top: 132, height: 35, flexDirection: 'row', borderRadius: 5, backgroundColor: 'rgba(255,255,255,0.85)' },
   tab: { height: 35, justifyContent: 'center', paddingHorizontal: 14, borderRadius: 5 },
-  tabOn: { backgroundColor: '#0B6BFF' },
+  tabOn: { backgroundColor: Maple.blue },
   tabText: { fontSize: 13.5, color: INK },
   nowOuter: { position: 'absolute', left: 868, top: 36, width: 269, height: 95, justifyContent: 'center', paddingHorizontal: 11, borderRadius: 12, backgroundColor: 'rgba(255,255,255,0.45)' },
-  now: { height: 70, flexDirection: 'row', alignItems: 'center', gap: 9, paddingLeft: 11, paddingRight: 8, borderRadius: 8, backgroundColor: '#FFFFFF' },
+  now: { height: 70, flexDirection: 'row', alignItems: 'center', gap: 9, paddingLeft: 11, paddingRight: 8, borderRadius: 8, backgroundColor: Maple.surface },
   nowIcon: { width: 32, height: 32 },
-  nowTitle: { fontSize: 14.5, fontWeight: '600', color: '#15803D' },
+  nowTitle: { fontSize: 14.5, fontWeight: '600', color: Maple.successText },
   nowSub: { marginTop: 4, fontSize: 11, color: BODY },
   cols: { flexDirection: 'row', gap: 16, marginTop: 6, paddingHorizontal: 16 },
   left: { width: 656, gap: 14 },
   right: { width: 449 },
-  card: { borderRadius: 10, backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#EAEFF6' },
+  card: { borderRadius: 10, backgroundColor: Maple.surface, borderWidth: 1, borderColor: Maple.blueSelected },
   calendar: { padding: 16, minHeight: 422, zIndex: 2 },
   strip: { marginTop: 12 },
   dayTitle: { marginTop: 22, marginBottom: 6, fontSize: 17, fontWeight: '700', color: INK, letterSpacing: -0.2 },
@@ -265,18 +267,18 @@ const styles = StyleSheet.create({
   classes: { flexDirection: 'row', gap: 12, marginTop: 16 },
   panel: { paddingVertical: 14, paddingHorizontal: 10 },
   tutors: { flexDirection: 'row', gap: 7, marginTop: 16 },
-  carouselBtn: { position: 'absolute', top: 108, width: 26, height: 26, alignItems: 'center', justifyContent: 'center', borderRadius: 13, backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#E1E7F0' },
+  carouselBtn: { position: 'absolute', top: 108, width: 26, height: 26, alignItems: 'center', justifyContent: 'center', borderRadius: 13, backgroundColor: Maple.surface, borderWidth: 1, borderColor: Maple.blueSelected },
   carouselNext: { right: -6 },
   carouselPrev: { left: -10 },
   camps: { marginTop: 5 },
   campList: { gap: 18, marginTop: 18 },
   weekPanel: { marginTop: 8 },
   weekList: { gap: 14, marginTop: 14 },
-  phoneRoot: { flex: 1, backgroundColor: '#FFFFFF' },
+  phoneRoot: { flex: 1, backgroundColor: Maple.surface },
   phone: { gap: 12, padding: 16, paddingBottom: 110 },
   titleP: { fontSize: 20, fontWeight: '800', color: INK, letterSpacing: -0.4 },
   subP: { marginTop: -6, fontSize: 12.5, color: BODY },
-  tabsP: { flexDirection: 'row', marginTop: 4, borderRadius: 6, borderWidth: 1, borderColor: '#E1E7F0', overflow: 'hidden' },
+  tabsP: { flexDirection: 'row', marginTop: 4, borderRadius: 6, borderWidth: 1, borderColor: Maple.blueSelected, overflow: 'hidden' },
   tabP: { flex: 1, height: 34, alignItems: 'center', justifyContent: 'center' },
   tabTextP: { fontSize: 12, color: INK },
   gapP: { marginTop: 8 },

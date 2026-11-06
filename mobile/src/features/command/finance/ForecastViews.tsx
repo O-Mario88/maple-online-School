@@ -12,12 +12,13 @@ import { toast } from '@/lib/toast';
 
 import { type FormAsk, FormModal } from './FinForm';
 import { CheckList, FinDesk, FinHead, FinPanel, FinPhone, FinStats, FinTabs, type Mark, type Promo, SumLine, ugx } from './FinKit';
+import { Maple } from '@/constants/maple';
 
 type C = CommandData['platformFinance'];
 type Key = 'base' | 'high' | 'low' | 'custom';
 const TABS = ['Overview', 'Revenue Forecast', 'Cost Forecast', 'Cash & Liquidity', 'Treasury Plan', 'Scenarios & What-If', 'Assumptions', 'Reports'] as const;
-const STREAM_COLORS = ['#2563EB', '#8B5CF6', '#F5B731', '#84CC16'] as const;
-const PROMO: Promo = { icon: 'chart', color: '#1E6BF0', title: 'Financial Forecasting', body: 'Predict revenue, costs, cash and liquidity to plan and grow Maple.' };
+const STREAM_COLORS = [Maple.blue, Maple.blue, Maple.warning, '#84CC16'] as const;
+const PROMO: Promo = { icon: 'chart', color: Maple.blue, title: 'Financial Forecasting', body: 'Predict revenue, costs, cash and liquidity to plan and grow Maple.' };
 const PERIODS = ['Nov 2026 – Oct 2027'];
 const M = 1_000_000;
 
@@ -140,7 +141,7 @@ function CashChart({ u, phone = false }: { u: U; phone?: boolean }) {
       <ComboChart
         labels={u.p.months.map((x) => x.slice(0, 3))}
         bars={[
-          { name: 'Cash Inflow', color: '#22A55A', values: c.inflow.map((v) => v / M) },
+          { name: 'Cash Inflow', color: Maple.successText, values: c.inflow.map((v) => v / M) },
           { name: 'Cash Outflow', color: '#F87171', values: c.outflow.map((v) => v / M) },
         ]}
         line={{ name: 'Closing Cash', color: BLUE, values: c.closing.map((v) => v / M), dots: true }}
@@ -154,7 +155,7 @@ function CashChart({ u, phone = false }: { u: U; phone?: boolean }) {
       <View style={styles.legend}>
         {(
           [
-            ['Cash Inflow', '#22A55A'],
+            ['Cash Inflow', Maple.successText],
             ['Cash Outflow', '#F87171'],
             ['Closing Cash', BLUE],
           ] as const

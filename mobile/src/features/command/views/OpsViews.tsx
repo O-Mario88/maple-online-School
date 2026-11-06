@@ -12,6 +12,7 @@ import { BLUE, BODY, GREEN, LINE, NAVY, RED, type Tone, WHITE } from '@/features
 import { Cell, type Column, DataTable, PageHead, Segments, useChoice } from '@/features/school/kit/AdminKit';
 import { toast } from '@/lib/toast';
 import type { IncidentRow } from '@/mock/command-center/ops';
+import { Maple } from '@/constants/maple';
 
 type O = CommandData['ops'];
 const SEV_TONE: Readonly<Record<Severity, Tone>> = { Critical: 'red', Warning: 'orange', Info: 'blue' };
@@ -72,7 +73,7 @@ function Charts({ o, u, phone = false }: { o: O; u: U; phone?: boolean }) {
       <Panel title="Go API Performance" badge={<Icon name="info" size={15} color={BODY} />} right={<Segments items={['p50', 'p95', 'p99']} active={u.pct} onChange={(v) => u.setPct(v as 'p50' | 'p95' | 'p99')} size={12.5} />} style={[styles.block, !phone && styles.colWide]}>
         <View style={styles.chartWrap}>
           <View style={styles.flex}>
-            <AreaChart labels={o.hours} series={[{ name: u.pct, color: '#1E6BF0', values: u.values, fill: true }]} max={u.pct === 'p99' ? 400 : u.pct === 'p95' ? 400 : 100} height={phone ? 150 : 140} format={(v) => `${Math.round(v)} ms`} />
+            <AreaChart labels={o.hours} series={[{ name: u.pct, color: Maple.blue, values: u.values, fill: true }]} max={u.pct === 'p99' ? 400 : u.pct === 'p95' ? 400 : 100} height={phone ? 150 : 140} format={(v) => `${Math.round(v)} ms`} />
           </View>
           <View style={styles.chartFigure}>
             <Text style={styles.figure}>{`${u.now} ms`}</Text>
@@ -122,9 +123,9 @@ function Health({ o, u, phone = false }: { o: O; u: U; phone?: boolean }) {
               <Text style={[styles.subTitle, styles.flex]}>Connection Usage</Text>
               {(
                 [
-                  ['Active', '#1E6BF0'],
-                  ['Idle', '#22A55A'],
-                  ['Waiting', '#F59E0B'],
+                  ['Active', Maple.blue],
+                  ['Idle', Maple.successText],
+                  ['Waiting', Maple.warning],
                 ] as const
               ).map(([l, c]) => (
                 <View key={l} style={styles.inline}>
@@ -136,9 +137,9 @@ function Health({ o, u, phone = false }: { o: O; u: U; phone?: boolean }) {
             <AreaChart
               labels={o.hours}
               series={[
-                { name: 'Active', color: '#1E6BF0', values: o.connections.active },
-                { name: 'Idle', color: '#22A55A', values: o.connections.idle },
-                { name: 'Waiting', color: '#F59E0B', values: o.connections.waiting },
+                { name: 'Active', color: Maple.blue, values: o.connections.active },
+                { name: 'Idle', color: Maple.successText, values: o.connections.idle },
+                { name: 'Waiting', color: Maple.warning, values: o.connections.waiting },
               ]}
               stacked
               max={30}
@@ -181,9 +182,9 @@ function Health({ o, u, phone = false }: { o: O; u: U; phone?: boolean }) {
           <Text style={[styles.subTitle, styles.flex]}>Live Session Quality (last 24h)</Text>
           {(
             [
-              ['Good', '#22A55A'],
-              ['Fair', '#F59E0B'],
-              ['Poor', '#EF4444'],
+              ['Good', Maple.successText],
+              ['Fair', Maple.warning],
+              ['Poor', Maple.error],
             ] as const
           ).map(([l, c]) => (
             <View key={l} style={styles.inline}>
@@ -195,8 +196,8 @@ function Health({ o, u, phone = false }: { o: O; u: U; phone?: boolean }) {
         <ShareBars
           labels={o.hours}
           parts={[
-            { name: 'Good', color: '#22C55E', values: o.quality.good },
-            { name: 'Fair', color: '#FBBF24', values: o.quality.fair },
+            { name: 'Good', color: Maple.success, values: o.quality.good },
+            { name: 'Fair', color: Maple.warning, values: o.quality.fair },
             { name: 'Poor', color: '#F87171', values: o.quality.poor },
           ]}
           height={phone ? 150 : 158}
@@ -214,7 +215,7 @@ function incidentCols(u: U): readonly Column<IncidentRow>[] {
       width: 92,
       render: (i) => (
         <View style={styles.inline}>
-          <Icon name={i.severity === 'Info' ? 'info' : 'alert'} size={14} color={i.severity === 'Info' ? BLUE : i.severity === 'Warning' ? '#F59E0B' : RED} />
+          <Icon name={i.severity === 'Info' ? 'info' : 'alert'} size={14} color={i.severity === 'Info' ? BLUE : i.severity === 'Warning' ? Maple.warning : RED} />
           <Cell small>{i.severity}</Cell>
         </View>
       ),

@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
@@ -6,11 +6,12 @@ import { usePlayback } from '@/features/learner/exam/Walkthrough';
 import { mmss, waveform } from '@/lib/feedback';
 
 import type { Message, SquadState } from './useSquad';
+import { Maple } from '@/constants/maple';
 
-const INK = '#0B1424';
-const NAVY = '#0B2A6B';
-const BODY = '#4A5263';
-const BLUE = '#1463F3';
+const INK = Maple.navy;
+const NAVY = Maple.blueHover;
+const BODY = Maple.body;
+const BLUE = Maple.blue;
 const BARS = waveform(48);
 const QUICK = ['👍', '❤️'] as const;
 
@@ -37,11 +38,11 @@ function VoiceNote({ seconds }: { seconds: number }) {
   return (
     <View style={styles.voice}>
       <Pressable style={styles.play} onPress={p.toggle} accessibilityRole="button" accessibilityLabel={p.running ? 'Pause voice note' : 'Play voice note'}>
-        <Icon name={p.running ? 'pause' : 'playFill'} size={13} color="#FFFFFF" />
+        <Icon name={p.running ? 'pause' : 'playFill'} size={13} color={Maple.surface} />
       </Pressable>
       <View style={styles.wave}>
         {BARS.map((h, i) => (
-          <View key={i} style={[styles.bar, { height: 4 + h * 16, backgroundColor: i < played || (!p.running && p.pos === 0) ? BLUE : '#BFD3F8' }]} />
+          <View key={i} style={[styles.bar, { height: 4 + h * 16, backgroundColor: i < played || (!p.running && p.pos === 0) ? BLUE : Maple.blueLine }]} />
         ))}
       </View>
       <Text style={styles.voiceTime}>{mmss(p.running || p.pos > 0 ? p.pos : seconds)}</Text>
@@ -97,7 +98,7 @@ export function SquadChat({ s, phone = false, onAttach }: { s: SquadState; phone
       </View>
       {s.held ? (
         <View style={styles.held} accessibilityLiveRegion="polite">
-          <Icon name="shield" size={14} color="#B45309" />
+          <Icon name="shield" size={14} color={Maple.warningText} />
           <Text style={styles.heldText}>{`Not sent. ${s.held}`}</Text>
         </View>
       ) : null}
@@ -105,13 +106,13 @@ export function SquadChat({ s, phone = false, onAttach }: { s: SquadState; phone
         <Pressable onPress={onAttach} accessibilityRole="button" accessibilityLabel="Share a resource" hitSlop={6}>
           <Icon name="link" size={18} color={BODY} />
         </Pressable>
-        <TextInput style={styles.input} value={s.draft} onChangeText={s.setDraft} onSubmitEditing={s.send} placeholder="Type a message..." placeholderTextColor="#7A8396" returnKeyType="send" accessibilityLabel="Message the squad" />
+        <TextInput style={styles.input} value={s.draft} onChangeText={s.setDraft} onSubmitEditing={s.send} placeholder="Type a message..." placeholderTextColor={Maple.secondary} returnKeyType="send" accessibilityLabel="Message the squad" />
         {phone ? null : <Text style={styles.emoji}>🙂</Text>}
         <Pressable onPress={() => s.toast('Hold to record a voice note in the app')} accessibilityRole="button" accessibilityLabel="Record a voice note" hitSlop={6}>
           <Icon name="mic" size={18} color={BODY} />
         </Pressable>
         <Pressable style={styles.send} onPress={s.send} accessibilityRole="button" accessibilityLabel="Send">
-          <Icon name="send" size={18} color="#FFFFFF" />
+          <Icon name="send" size={18} color={Maple.surface} />
         </Pressable>
       </View>
       <Text style={styles.note}>{`Moderated by ${s.squad.moderator}. Messages with contact details, links or unkind words are held back.`}</Text>
@@ -121,7 +122,7 @@ export function SquadChat({ s, phone = false, onAttach }: { s: SquadState; phone
 
 const styles = StyleSheet.create({
   wrap: { flex: 1 },
-  initials: { alignItems: 'center', justifyContent: 'center', backgroundColor: '#DDE7FB' },
+  initials: { alignItems: 'center', justifyContent: 'center', backgroundColor: Maple.blueSelected },
   initialsText: { fontWeight: '700', color: NAVY },
   day: { alignSelf: 'center', marginBottom: 6, fontSize: 10.5, color: BODY },
   list: { flex: 1, gap: 14 },
@@ -131,28 +132,28 @@ const styles = StyleSheet.create({
   who: { fontSize: 11.5, fontWeight: '700', color: NAVY },
   whoMe: { color: BLUE },
   time: { fontSize: 10.5, color: BODY },
-  text: { paddingHorizontal: 10, paddingVertical: 6, borderRadius: 8, backgroundColor: '#F2F5FA', fontSize: 12, lineHeight: 17, color: INK, overflow: 'hidden' },
-  textMe: { backgroundColor: '#EAF1FE' },
+  text: { paddingHorizontal: 10, paddingVertical: 6, borderRadius: 8, backgroundColor: Maple.blueSoft, fontSize: 12, lineHeight: 17, color: INK, overflow: 'hidden' },
+  textMe: { backgroundColor: Maple.blueSoft },
   photo: { width: 232, height: 74, borderRadius: 6 },
   photoP: { width: 210, height: 67 },
-  voice: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 10, paddingVertical: 6, borderRadius: 8, borderWidth: 1, borderColor: '#E6ECF5' },
-  play: { width: 26, height: 26, alignItems: 'center', justifyContent: 'center', borderRadius: 13, backgroundColor: '#0B6BFF' },
+  voice: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 10, paddingVertical: 6, borderRadius: 8, borderWidth: 1, borderColor: Maple.blueSelected },
+  play: { width: 26, height: 26, alignItems: 'center', justifyContent: 'center', borderRadius: 13, backgroundColor: Maple.blue },
   wave: { flexDirection: 'row', alignItems: 'center', gap: 1.5, height: 22 },
   bar: { width: 2, borderRadius: 1 },
   voiceTime: { fontSize: 11, color: INK },
-  speed: { paddingHorizontal: 7, paddingVertical: 3, borderRadius: 4, backgroundColor: '#E8F0FE' },
+  speed: { paddingHorizontal: 7, paddingVertical: 3, borderRadius: 4, backgroundColor: Maple.blueSelected },
   speedText: { fontSize: 10.5, fontWeight: '600', color: BLUE },
   reactions: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
-  reaction: { paddingHorizontal: 7, paddingVertical: 2, borderRadius: 10, borderWidth: 1, borderColor: '#E6ECF5', backgroundColor: '#FFFFFF' },
-  reactionOn: { borderColor: '#0B6BFF', backgroundColor: '#EAF1FE' },
+  reaction: { paddingHorizontal: 7, paddingVertical: 2, borderRadius: 10, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface },
+  reactionOn: { borderColor: Maple.blue, backgroundColor: Maple.blueSoft },
   reactionText: { fontSize: 11, color: INK },
   addReaction: { paddingHorizontal: 5, paddingVertical: 2, borderRadius: 10, opacity: 0.45 },
   addReactionText: { fontSize: 11 },
-  held: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 10, padding: 8, borderRadius: 6, backgroundColor: '#FEF3C7' },
+  held: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 10, padding: 8, borderRadius: 6, backgroundColor: Maple.warningSoft },
   heldText: { flex: 1, fontSize: 11.5, color: '#92400E' },
-  composer: { flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 12, paddingLeft: 14, borderRadius: 8, borderWidth: 1, borderColor: '#E1E7F0', backgroundColor: '#FFFFFF' },
+  composer: { flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 12, paddingLeft: 14, borderRadius: 8, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface },
   input: { flex: 1, height: 44, paddingVertical: 0, fontSize: 12.5, color: INK },
   emoji: { fontSize: 17 },
-  send: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center', borderRadius: 8, backgroundColor: '#0B6BFF' },
+  send: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center', borderRadius: 8, backgroundColor: Maple.blue },
   note: { marginTop: 6, fontSize: 10, color: BODY },
 });

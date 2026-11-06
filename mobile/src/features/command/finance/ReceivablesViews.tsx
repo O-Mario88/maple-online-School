@@ -16,15 +16,16 @@ import type { ReceivableRow } from '@/mock/command-center/pf-revenue';
 
 import { amount, type FormAsk, FormModal } from './FinForm';
 import { FinDesk, FinHead, FinPanel, FinPhone, FinStats, FinTabs, num, PhoneRow, type Promo, RingLegend, ugx } from './FinKit';
+import { Maple } from '@/constants/maple';
 
 type D = CommandData['platformFinance']['revenue'];
 const PER_PAGE = 10;
 const TABS = ['Overview', 'Contracts', 'Invoices', 'Aging & Arrears', 'Collection Commitments', 'Forecast', 'Reports'] as const;
 const BUCKET_TONE: Readonly<Record<Bucket, Tone>> = { Current: 'green', '31 – 60 Days': 'orange', '61 – 90 Days': 'orange', '> 90 Days': 'red' };
-const BUCKET_COLOR: Readonly<Record<Bucket, string>> = { Current: '#22A55A', '31 – 60 Days': '#F5B731', '61 – 90 Days': '#F28A2E', '> 90 Days': '#E5484D' };
+const BUCKET_COLOR: Readonly<Record<Bucket, string>> = { Current: Maple.successText, '31 – 60 Days': Maple.warning, '61 – 90 Days': Maple.warning, '> 90 Days': Maple.error };
 const PROMISE_TONE: Readonly<Record<CommitmentStatus, Tone>> = { 'On Track': 'green', 'At Risk': 'orange', Overdue: 'red', Kept: 'blue' };
 const ACTION_ICON: Readonly<Record<NextAction, IconName>> = { '—': 'check', 'Send Reminder': 'send', 'Agree Payment': 'calendar', 'Follow Up': 'phone', 'Collection Plan': 'clipboard' };
-const PROMO: Promo = { icon: 'building', color: '#1E6BF0', title: 'Enterprise Finance', body: 'Contracts, receivables, settlements and collections.' };
+const PROMO: Promo = { icon: 'building', color: Maple.blue, title: 'Enterprise Finance', body: 'Contracts, receivables, settlements and collections.' };
 const FILTERS = { institution: ['All Institutions', 'Enterprise Plus', 'School Premium', 'School Standard'], status: ['All Statuses', ...BUCKETS] } as const;
 
 const date = (iso: string) => new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
@@ -210,8 +211,8 @@ function Trend({ d, phone = false }: { d: D; phone?: boolean }) {
     <FinPanel icon="chart" title="Receivables Trend" style={!phone && styles.flex}>
       <ComboChart
         labels={f.labels}
-        bars={[{ name: 'Receivables Balance', color: '#5B8DEF', values: f.balance }]}
-        line={{ name: 'Collections', color: '#8B5CF6', values: f.collections, dots: true }}
+        bars={[{ name: 'Receivables Balance', color: Maple.blue, values: f.balance }]}
+        line={{ name: 'Collections', color: Maple.blue, values: f.collections, dots: true }}
         max={2}
         lineMax={2}
         rightAxis={false}
@@ -223,8 +224,8 @@ function Trend({ d, phone = false }: { d: D; phone?: boolean }) {
       <View style={styles.legend}>
         {(
           [
-            ['Receivables Balance', '#5B8DEF'],
-            ['Collections', '#8B5CF6'],
+            ['Receivables Balance', Maple.blue],
+            ['Collections', Maple.blue],
           ] as const
         ).map(([l, c]) => (
           <View key={l} style={styles.inline}>
@@ -403,7 +404,7 @@ const styles = StyleSheet.create({
   legend: { flexDirection: 'row', justifyContent: 'center', gap: 16 },
   dot: { width: 10, height: 10, borderRadius: 5 },
   nowrap: { flexShrink: 0 },
-  act: { flexDirection: 'row', alignItems: 'center', gap: 5, height: 28, paddingHorizontal: 8, borderRadius: 8, borderWidth: 1, borderColor: LINE, backgroundColor: '#FFFFFF' },
+  act: { flexDirection: 'row', alignItems: 'center', gap: 5, height: 28, paddingHorizontal: 8, borderRadius: 8, borderWidth: 1, borderColor: LINE, backgroundColor: Maple.surface },
   actText: { fontSize: 10.5, fontWeight: '700', color: BLUE },
   line: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 5, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: LINE },
 });

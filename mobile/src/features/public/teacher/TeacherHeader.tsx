@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import * as Linking from 'expo-linking';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useState } from 'react';
@@ -10,6 +10,7 @@ import type { MockData } from '@/mock';
 
 import { Brand } from '../palette';
 import { MessageSheet } from './MessageSheet';
+import { Maple } from '@/constants/maple';
 
 type Storefront = MockData['publicPages']['teacherStorefront'];
 
@@ -43,7 +44,7 @@ export function TeacherHeader({ t, wide }: { t: Storefront; wide: boolean }) {
           <Image source={t.bannerPhoto} style={StyleSheet.absoluteFill} contentFit="cover" contentPosition={wide ? 'center' : 'left'} />
         </Pressable>
       ) : (
-      <LinearGradient colors={['#C9A27A', '#8C6A4F', '#5B4636']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={[styles.banner, wide && styles.bannerWide]}>
+      <LinearGradient colors={['#C9A27A', Maple.secondary, Maple.body]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={[styles.banner, wide && styles.bannerWide]}>
         {wide ? <Text style={[styles.quote, styles.quoteLeft, { fontFamily: SCRIPT_FONT }]}>{`“ ${t.quotes[0]} ♡`}</Text> : null}
         <Text style={styles.bannerFace} accessibilityElementsHidden>
           👩🏾‍🏫

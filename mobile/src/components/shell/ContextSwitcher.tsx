@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { type ReactNode, useState } from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
@@ -12,6 +12,7 @@ import type { Portal } from '@/lib/navigation';
 import { usePortal } from '@/lib/portal-context';
 import { SwitcherContext } from '@/lib/switcher-context';
 import { type Mode, modesFrom } from '@/lib/switcher-modes';
+import { Maple } from '@/constants/maple';
 
 interface Account {
   key?: 'student' | 'teacher' | 'parent' | 'institution' | 'admin';
@@ -23,8 +24,8 @@ interface Account {
   current: boolean;
 }
 
-const BLUE = '#1463F3';
-const INK = '#0B1424';
+const BLUE = Maple.blue;
+const INK = Maple.navy;
 /**
  * Design builds show the reference's modes and accounts; the real app lists the person's own
  * modes, in the design's cards when there is design data.
@@ -58,7 +59,7 @@ function ModeCard({ m, on, phone, onPress }: { m: Mode; on: boolean; phone: bool
       {m.photo ? <Image source={m.photo} style={p ? styles.photoP : styles.photo} /> : null}
       {on ? (
         <View style={[styles.tick, p && styles.tickP]}>
-          <Icon name="check" size={p ? 13 : 16} color="#FFFFFF" />
+          <Icon name="check" size={p ? 13 : 16} color={Maple.surface} />
         </View>
       ) : (
         <View style={styles.chev}>
@@ -196,14 +197,14 @@ const styles = StyleSheet.create({
   flex: { flex: 1 },
   backdrop: { flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(11, 20, 36, 0.4)' },
   backdropWide: { justifyContent: 'center', alignItems: 'center', padding: 24 },
-  sheet: { backgroundColor: '#FFFFFF' },
+  sheet: { backgroundColor: Maple.surface },
   sheetWide: { width: 580, maxHeight: '96%', paddingHorizontal: 22, paddingTop: 20, paddingBottom: 20, borderRadius: 14 },
   sheetP: { maxHeight: '86%', paddingHorizontal: 12, paddingTop: 8, borderTopLeftRadius: 18, borderTopRightRadius: 18 },
-  handle: { alignSelf: 'center', width: 32, height: 4, borderRadius: 2, marginBottom: 14, backgroundColor: '#8A93A6' },
+  handle: { alignSelf: 'center', width: 32, height: 4, borderRadius: 2, marginBottom: 14, backgroundColor: Maple.faint },
   head: { flexDirection: 'row', alignItems: 'flex-start', gap: 12, paddingHorizontal: 2 },
   title: { fontSize: 22, fontWeight: '700', color: INK, letterSpacing: -0.4 },
   titleP: { fontSize: 18 },
-  sub: { marginTop: 6, fontSize: 14.5, color: '#3D4656' },
+  sub: { marginTop: 6, fontSize: 14.5, color: Maple.body },
   subP: { marginTop: 8, fontSize: 12.5, lineHeight: 17 },
   close: { paddingTop: 4, paddingHorizontal: 4 },
   closeText: { fontSize: 20, color: INK },
@@ -211,15 +212,15 @@ const styles = StyleSheet.create({
   scroll: { flexGrow: 0 },
   list: { gap: 13, paddingTop: 22 },
   listP: { gap: 9, paddingTop: 18 },
-  card: { flexDirection: 'row', alignItems: 'center', gap: 18, minHeight: 107, paddingLeft: 18, paddingRight: 18, paddingVertical: 14, borderRadius: 12, borderWidth: 1, borderColor: '#E6EAF1', backgroundColor: '#FFFFFF' },
+  card: { flexDirection: 'row', alignItems: 'center', gap: 18, minHeight: 107, paddingLeft: 18, paddingRight: 18, paddingVertical: 14, borderRadius: 12, borderWidth: 1, borderColor: Maple.disabledSurface, backgroundColor: Maple.surface },
   cardP: { gap: 12, minHeight: 82, paddingLeft: 10, paddingRight: 10, paddingVertical: 10 },
-  cardOn: { borderWidth: 2, borderColor: '#4C8DF6', backgroundColor: '#F3F8FF' },
+  cardOn: { borderWidth: 2, borderColor: Maple.blue, backgroundColor: Maple.blueSoft },
   tileBox: { borderRadius: 16, alignItems: 'center', justifyContent: 'center' },
   mTitle: { fontSize: 16, fontWeight: '700', color: INK },
   mTitleP: { fontSize: 12.5 },
-  mTag: { marginTop: 2, fontSize: 14, color: '#3D4656' },
+  mTag: { marginTop: 2, fontSize: 14, color: Maple.body },
   mTagP: { fontSize: 11 },
-  mBody: { marginTop: 8, fontSize: 12.5, lineHeight: 17, color: '#3D4656' },
+  mBody: { marginTop: 8, fontSize: 12.5, lineHeight: 17, color: Maple.body },
   mBodyP: { marginTop: 5, fontSize: 9.5, lineHeight: 14 },
   photo: { width: 64, height: 64, borderRadius: 32 },
   photoP: { width: 44, height: 44, borderRadius: 22, alignSelf: 'flex-start', marginTop: 2 },
@@ -227,19 +228,19 @@ const styles = StyleSheet.create({
   tickP: { width: 20, height: 20, borderRadius: 10, marginTop: 4 },
   chev: { width: 26, alignItems: 'center' },
   divider: { flexDirection: 'row', alignItems: 'center', gap: 14, marginTop: 6 },
-  line: { flex: 1, height: 1, backgroundColor: '#E1E6EF' },
-  dividerText: { fontSize: 14.5, color: '#3D4656' },
-  accounts: { borderRadius: 10, borderWidth: 1, borderColor: '#E6EAF1', paddingHorizontal: 16 },
+  line: { flex: 1, height: 1, backgroundColor: Maple.blueSelected },
+  dividerText: { fontSize: 14.5, color: Maple.body },
+  accounts: { borderRadius: 10, borderWidth: 1, borderColor: Maple.disabledSurface, paddingHorizontal: 16 },
   account: { flexDirection: 'row', alignItems: 'center', gap: 14, paddingVertical: 10 },
-  accountRule: { borderTopWidth: 1, borderTopColor: '#EEF1F6' },
+  accountRule: { borderTopWidth: 1, borderTopColor: Maple.blueSelected },
   face: { width: 44, height: 44, borderRadius: 22 },
   accName: { fontSize: 15.5, fontWeight: '600', color: INK },
-  accRole: { marginTop: 2, fontSize: 13.5, color: '#3D4656' },
-  current: { paddingHorizontal: 13, paddingVertical: 5, borderRadius: 999, backgroundColor: '#E5F0FF', fontSize: 13.5, fontWeight: '500', color: BLUE, overflow: 'hidden' },
-  switchPill: { paddingHorizontal: 13, paddingVertical: 5, borderRadius: 999, backgroundColor: '#F3F6FB', fontSize: 13.5, fontWeight: '600', color: '#3D4656', overflow: 'hidden' },
-  add: { height: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 12, borderRadius: 10, borderWidth: 1, borderColor: '#DCE6F5', backgroundColor: '#EEF4FF' },
-  addP: { height: 42, marginTop: 4, borderColor: '#EEF4FF' },
-  signOut: { height: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, borderRadius: 10, borderWidth: 1, borderColor: '#DCE6F5' },
+  accRole: { marginTop: 2, fontSize: 13.5, color: Maple.body },
+  current: { paddingHorizontal: 13, paddingVertical: 5, borderRadius: 999, backgroundColor: Maple.blueSelected, fontSize: 13.5, fontWeight: '500', color: BLUE, overflow: 'hidden' },
+  switchPill: { paddingHorizontal: 13, paddingVertical: 5, borderRadius: 999, backgroundColor: Maple.blueSoft, fontSize: 13.5, fontWeight: '600', color: Maple.body, overflow: 'hidden' },
+  add: { height: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 12, borderRadius: 10, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.blueSoft },
+  addP: { height: 42, marginTop: 4, borderColor: Maple.blueSoft },
+  signOut: { height: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, borderRadius: 10, borderWidth: 1, borderColor: Maple.blueSelected },
   addIcon: { width: 20, height: 20, borderRadius: 10, borderWidth: 1.5, borderColor: BLUE, alignItems: 'center', justifyContent: 'center' },
   addText: { fontSize: 15, fontWeight: '500', color: INK },
   addTextP: { fontSize: 12.5 },

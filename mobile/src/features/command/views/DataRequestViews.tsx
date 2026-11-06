@@ -12,6 +12,7 @@ import { BLUE, BODY, GREEN, LINE, NAVY, RED, type Tone, WHITE } from '@/features
 import { Cell, type Column, DataTable, PageHead, Search, useChoice, useSelection } from '@/features/school/kit/AdminKit';
 import { toast } from '@/lib/toast';
 import type { RequestRow } from '@/mock/command-center/security';
+import { Maple } from '@/constants/maple';
 
 type S = CommandData['security'];
 const PER_PAGE = 12;
@@ -219,7 +220,7 @@ function RequestPanel({ s, u, onClose }: { s: S; u: U; onClose?: () => void }) {
       {tab === 'Notes' ? <Text style={styles.small}>{r.note ?? r.notes ?? 'No notes yet.'}</Text> : null}
       {!done && !release.ok ? (
         <View style={styles.blocker}>
-          <Icon name="lock" size={15} color="#B45309" />
+          <Icon name="lock" size={15} color={Maple.warningText} />
           <Text style={styles.blockerText}>{release.reason}</Text>
         </View>
       ) : null}
@@ -379,12 +380,12 @@ const styles = StyleSheet.create({
   scopeItem: { width: '50%', flexDirection: 'row', alignItems: 'center', gap: 7, paddingRight: 6 },
   scopeTitle: { fontSize: 12, fontWeight: '600', color: NAVY },
   checks: { gap: 10 },
-  blocker: { flexDirection: 'row', alignItems: 'center', gap: 8, padding: 9, borderRadius: 8, backgroundColor: '#FFF7E6' },
+  blocker: { flexDirection: 'row', alignItems: 'center', gap: 8, padding: 9, borderRadius: 8, backgroundColor: Maple.warningSoft },
   blockerText: { flex: 1, fontSize: 12, color: '#92400E' },
-  decided: { padding: 10, borderRadius: 8, backgroundColor: '#F1F5FB', fontSize: 12.5, color: NAVY },
+  decided: { padding: 10, borderRadius: 8, backgroundColor: Maple.blueSoft, fontSize: 12.5, color: NAVY },
   decide: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 6 },
   approve: { flex: 1.5, minWidth: 0, height: 36, paddingHorizontal: 6 },
-  rejectBtn: { flex: 1, minHeight: 32, paddingVertical: 4, paddingHorizontal: 4, borderRadius: 8, borderWidth: 1, borderColor: '#FCA5A5', alignItems: 'center', justifyContent: 'center', backgroundColor: '#FEF2F2' },
+  rejectBtn: { flex: 1, minHeight: 32, paddingVertical: 4, paddingHorizontal: 4, borderRadius: 8, borderWidth: 1, borderColor: '#FCA5A5', alignItems: 'center', justifyContent: 'center', backgroundColor: Maple.errorSoft },
   rejectText: { fontSize: 12, fontWeight: '600', color: RED, textAlign: 'center' },
   card: { gap: 8, padding: 12, borderRadius: 14, borderWidth: 1, borderColor: LINE, backgroundColor: WHITE },
 });

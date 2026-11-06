@@ -20,7 +20,7 @@ export function payerFor(portal: Portal): Payer | null {
 const LEARNER_OPENS = ['/learn/lesson', '/learn/paper', '/learn/library/', '/learn/shorts', '/copilot'];
 /** Learner pages that need Pro or above (live classes), and Premium (projects and study squads). */
 const LEARNER_PRO = ['/learn/live-room'];
-const LEARNER_PREMIUM = ['/learn/projects', '/learn/squads', '/learn/plan'];
+const LEARNER_PREMIUM = ['/learn/projects', '/learn/squads', '/learn/plan', '/learn/careers'];
 const TEACHER_TOOLS = ['/teach/studio', '/teach/course-editor', '/teach/library', '/teach/shorts', '/teach/new-session', '/teach/host', '/teach/live-host/'];
 const SCHOOL_OPEN = ['/admin/settings', '/admin/onboarding'];
 const COURSE = '/learn/course';

@@ -5,6 +5,7 @@ import { Icon } from '@/components/icon';
 import type { CatalogueFilters } from '@/lib/catalogue';
 
 import { Brand } from '../palette';
+import { Maple } from '@/constants/maple';
 
 type ListKey = 'kinds' | 'boards' | 'levels' | 'subjects';
 
@@ -69,7 +70,7 @@ export function SearchBox({ filters, onChange, style }: { filters: CatalogueFilt
         value={filters.query}
         onChangeText={(query) => onChange((f) => ({ ...f, query }))}
         placeholder="Search for subjects, topics..."
-        placeholderTextColor="#8A92A3"
+        placeholderTextColor={Maple.faint}
         accessibilityLabel="Search the catalogue"
       />
       <View style={styles.searchBtn}>
@@ -102,19 +103,19 @@ export function ExploreFilters({ filters, groups, onChange, hideSearch = false }
 }
 
 const styles = StyleSheet.create({
-  search: { flexDirection: 'row', alignItems: 'center', height: 45, marginTop: 16, borderRadius: 8, borderWidth: 1, borderColor: '#DFE4EC', backgroundColor: Brand.surface },
+  search: { flexDirection: 'row', alignItems: 'center', height: 45, marginTop: 16, borderRadius: 8, borderWidth: 1, borderColor: Maple.border, backgroundColor: Brand.surface },
   input: { flex: 1, height: 43, paddingVertical: 0, paddingHorizontal: 15, fontSize: 13.5, color: Brand.ink },
-  searchBtn: { width: 45, height: 43, alignItems: 'center', justifyContent: 'center', borderLeftWidth: 1, borderLeftColor: '#DFE4EC' },
+  searchBtn: { width: 45, height: 43, alignItems: 'center', justifyContent: 'center', borderLeftWidth: 1, borderLeftColor: Maple.border },
   group: { marginTop: 22 },
   groupHead: { height: 22, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingRight: 2 },
   groupTitle: { fontSize: 15.5, lineHeight: 20, fontWeight: '700', color: Brand.ink },
   options: { marginTop: 5 },
   option: { height: 30, flexDirection: 'row', alignItems: 'center', gap: 15 },
-  optionText: { fontSize: 15, color: '#3D4656' },
-  count: { color: '#6B7385' },
-  box: { width: 20, height: 20, borderRadius: 4, borderWidth: 1, borderColor: '#D5DAE3', backgroundColor: Brand.surface, alignItems: 'center', justifyContent: 'center' },
+  optionText: { fontSize: 15, color: Maple.body },
+  count: { color: Maple.secondary },
+  box: { width: 20, height: 20, borderRadius: 4, borderWidth: 1, borderColor: Maple.borderStrong, backgroundColor: Brand.surface, alignItems: 'center', justifyContent: 'center' },
   boxOn: { backgroundColor: Brand.blue, borderColor: Brand.blue },
-  radio: { width: 18, height: 18, marginHorizontal: 1, borderRadius: 9, borderWidth: 1, borderColor: '#B8C0CC' },
+  radio: { width: 18, height: 18, marginHorizontal: 1, borderRadius: 9, borderWidth: 1, borderColor: Maple.borderStrong },
   radioOn: { borderWidth: 5, borderColor: Brand.blue },
   more: { fontSize: 14.5, fontWeight: '500', color: Brand.blue },
 });

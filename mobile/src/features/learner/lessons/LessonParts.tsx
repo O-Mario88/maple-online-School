@@ -8,6 +8,7 @@ import { ContentStats } from '@/features/shared/ContentStats';
 import type { IconName } from '@/lib/icons';
 
 import { clock, type LessonStatus, lessonStatus, type VideoLessonItem } from './videoLessons';
+import { Maple } from '@/constants/maple';
 
 /** A lesson's thumbnail: a chalkboard with what the lesson writes on it, its running time, and how far it is watched. */
 export function ChalkThumb({ l, height, big = false }: { l: VideoLessonItem; height: number; big?: boolean }) {
@@ -35,10 +36,10 @@ export function ChalkThumb({ l, height, big = false }: { l: VideoLessonItem; hei
 }
 
 const STATUS: Readonly<Record<LessonStatus | 'locked', { label: string; icon: 'playFill' | 'check' | 'lock'; fg: string; bg: string }>> = {
-  progress: { label: 'In Progress', icon: 'playFill', fg: L.blue, bg: '#E7EFFE' },
-  done: { label: 'Completed', icon: 'check', fg: L.green, bg: '#E6F6EC' },
-  new: { label: 'Not Started', icon: 'playFill', fg: L.body, bg: '#F1F4F9' },
-  locked: { label: 'Locked', icon: 'lock', fg: L.body, bg: '#F1F4F9' },
+  progress: { label: 'In Progress', icon: 'playFill', fg: L.blue, bg: Maple.blueSelected },
+  done: { label: 'Completed', icon: 'check', fg: L.green, bg: Maple.successSoft },
+  new: { label: 'Not Started', icon: 'playFill', fg: L.body, bg: Maple.blueSoft },
+  locked: { label: 'Locked', icon: 'lock', fg: L.body, bg: Maple.blueSoft },
 };
 
 export function StatusChip({ l, locked, small = false }: { l: VideoLessonItem; locked: boolean; small?: boolean }) {
@@ -140,7 +141,7 @@ const s = StyleSheet.create({
   chip: { flexDirection: 'row', alignItems: 'center', alignSelf: 'flex-start', gap: 5, paddingHorizontal: 9, paddingVertical: 4, borderRadius: 7 },
   chipText: { fontSize: 12.5, fontWeight: '600' },
   chipTextSmall: { fontSize: 11.5 },
-  picker: { height: 42, flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 14, borderRadius: 10, borderWidth: 1, borderColor: '#DFE5EE', backgroundColor: L.white },
+  picker: { height: 42, flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 14, borderRadius: 10, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: L.white },
   pickerText: { flex: 1, fontSize: 14, color: L.ink },
   pickerC: { height: 38, flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 10, borderRadius: 10, backgroundColor: L.white },
   pickerTextC: { fontSize: 13, color: L.ink },

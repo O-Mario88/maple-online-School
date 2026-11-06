@@ -3,6 +3,7 @@ import { Platform, StyleSheet, Text, View } from 'react-native';
 import Svg, { Circle, G, Line, Path, Polygon, Rect, Text as SvgText } from 'react-native-svg';
 
 import { BODY, LINE, NAVY, WHITE } from '@/features/portal/tokens';
+import { Maple } from '@/constants/maple';
 
 /** Chart text uses the app's font, not the SVG default serif. */
 const FONT = Platform.OS === 'web' ? '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' : undefined;
@@ -281,15 +282,15 @@ const COUNTRIES: Readonly<Record<string, readonly Pt[]>> = {
 };
 
 /** A heat map of Africa: the continent in pale blue, each listed country tinted by its share of `values`. */
-export function AfricaMap({ values, width = 300, color = '#1E6BF0' }: { values: Readonly<Record<string, number>>; width?: number; color?: string }) {
+export function AfricaMap({ values, width = 300, color = Maple.blue }: { values: Readonly<Record<string, number>>; width?: number; color?: string }) {
   const scale = width / 72;
   const height = 74 * scale;
   const pts = (list: readonly Pt[]) => list.map(([lon, lat]) => `${((lon + 19) * scale).toFixed(1)},${((38 - lat) * scale).toFixed(1)}`).join(' ');
   const max = Math.max(1, ...Object.values(values));
   return (
     <Svg width={width} height={height} accessibilityLabel="Map of Africa shaded by growth">
-      <Polygon points={pts(AFRICA)} fill="#D6E4FB" stroke={WHITE} strokeWidth={1} />
-      <Polygon points={pts(MADAGASCAR)} fill="#D6E4FB" stroke={WHITE} strokeWidth={1} />
+      <Polygon points={pts(AFRICA)} fill={Maple.blueSelected} stroke={WHITE} strokeWidth={1} />
+      <Polygon points={pts(MADAGASCAR)} fill={Maple.blueSelected} stroke={WHITE} strokeWidth={1} />
       {Object.entries(COUNTRIES).map(([code, list]) => {
         const v = values[code] ?? 0;
         return <Polygon key={code} points={pts(list)} fill={color} opacity={v ? 0.25 + 0.75 * (v / max) : 0} stroke={WHITE} strokeWidth={0.8} />;
@@ -305,7 +306,7 @@ export function HeatScale({ low, high }: { low: string; high: string }) {
       <Text style={styles.scaleText}>{low}</Text>
       <Svg width={140} height={8}>
         {Array.from({ length: 14 }, (_, i) => (
-          <Rect key={i} x={i * 10} y={0} width={10} height={8} fill="#1E6BF0" opacity={0.15 + (i / 13) * 0.85} />
+          <Rect key={i} x={i * 10} y={0} width={10} height={8} fill={Maple.blue} opacity={0.15 + (i / 13) * 0.85} />
         ))}
       </Svg>
       <Text style={styles.scaleText}>{high}</Text>

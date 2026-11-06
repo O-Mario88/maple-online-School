@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
@@ -16,6 +16,7 @@ import { BLUE, BODY, GREEN, LINE, NAVY, TONES, WHITE } from '@/features/portal/t
 import { PageHead, useChoice } from '@/features/school/kit/AdminKit';
 import { toast } from '@/lib/toast';
 import type { Cohort } from '@/mock/command-center/overview';
+import { Maple } from '@/constants/maple';
 
 type O = CommandData['overview'];
 const fmtK = (n: number) => (n >= 1000 ? `${Math.round(n / 1000)}K` : `${n}`);
@@ -194,9 +195,9 @@ function LiveNow({ o, phone = false }: { o: O; phone?: boolean }) {
   const [page, setPage] = useState(0);
   const cards = carouselPage(l.classes, page, 3);
   const legend: readonly [number, string, string][] = [
-    [l.teaching, 'Teaching now', '#22C55E'],
+    [l.teaching, 'Teaching now', Maple.success],
     [l.upcoming, 'Upcoming (next 30 min)', BLUE],
-    [l.ended, 'Ended (last 30 min)', '#C3CBDD'],
+    [l.ended, 'Ended (last 30 min)', Maple.borderStrong],
   ];
   return (
     <Panel title="Live Classes Now" onAll={() => router.push('/command/ops' as never)} style={[styles.block, !phone && styles.colLive]}>
@@ -271,7 +272,7 @@ function Gmv({ o, phone = false }: { o: O; phone?: boolean }) {
   const legend: readonly [string, string][] = [
     ['Tuition Fees', CHART.blue],
     ['Resources', CHART.teal],
-    ['Other', '#B9A3F6'],
+    ['Other', Maple.blueLine],
   ];
   return (
     <Panel title="GMV Trend" right={<CmdSelect value={win} options={wins} onChange={setWin} width={134} label="Window" />} style={[styles.block, !phone && styles.flex]}>
@@ -285,7 +286,7 @@ function Gmv({ o, phone = false }: { o: O; phone?: boolean }) {
         bars={[
           { name: 'Tuition Fees', color: CHART.blue, values: g.tuition },
           { name: 'Resources', color: CHART.teal, values: g.resources },
-          { name: 'Other', color: '#B9A3F6', values: g.other },
+          { name: 'Other', color: Maple.blueLine, values: g.other },
         ]}
         mode="stacked"
         max={200}
@@ -391,7 +392,7 @@ const styles = StyleSheet.create({
   subtle: { marginTop: -6, fontSize: 12.5, color: BODY },
   greenText: { color: GREEN },
   updated: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  greenDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: '#22C55E' },
+  greenDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: Maple.success },
   northRow: { flexDirection: 'row', gap: 10 },
   northGrid: { flexWrap: 'wrap', marginHorizontal: -5, gap: 0, rowGap: 10 },
   north: { alignItems: 'center', gap: 4, minHeight: 178, paddingVertical: 14, paddingHorizontal: 6, borderRadius: 12, borderWidth: 1 },
@@ -416,7 +417,7 @@ const styles = StyleSheet.create({
   legendText: { fontSize: 12.5, color: NAVY },
   cohortTable: { borderRadius: 10, borderWidth: 1, borderColor: LINE, overflow: 'hidden' },
   cohortRow: { flexDirection: 'row', alignItems: 'center', height: 36, borderBottomWidth: 1, borderColor: LINE },
-  cohortHeadRow: { backgroundColor: '#F3F6FC' },
+  cohortHeadRow: { backgroundColor: Maple.blueSoft },
   cohortHead: { fontSize: 12.5, fontWeight: '600', color: NAVY },
   cohortFirst: { width: 86, paddingLeft: 10 },
   cohortCol: { flex: 1, alignItems: 'stretch', textAlign: 'center' },
@@ -424,23 +425,24 @@ const styles = StyleSheet.create({
   cohortSize: { fontSize: 12.5, color: BODY },
   heat: { height: 35, alignItems: 'center', justifyContent: 'center', borderLeftWidth: 1, borderColor: WHITE },
   heatText: { fontSize: 12.5, fontWeight: '600' },
-  liveTop: { flexDirection: 'row', alignItems: 'flex-start', gap: 10 },
+  // Wraps on narrow phones so the legend moves under the number instead of running off the edge.
+  liveTop: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'flex-start', gap: 10 },
   liveNum: { fontSize: 26, fontWeight: '800', color: NAVY },
-  liveLegend: { marginLeft: 'auto', gap: 4 },
+  liveLegend: { marginLeft: 'auto', gap: 4, flexShrink: 1 },
   liveLegendNum: { fontSize: 12.5, fontWeight: '700', color: NAVY },
   dot: { width: 9, height: 9, borderRadius: 5 },
   classRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   classCard: { gap: 4 },
   classPhoto: { width: '100%', height: 66, borderRadius: 8 },
-  liveBadge: { position: 'absolute', top: 5, right: 5, flexDirection: 'row', alignItems: 'center', gap: 3, paddingHorizontal: 5, paddingVertical: 1.5, borderRadius: 4, backgroundColor: '#EF4444' },
+  liveBadge: { position: 'absolute', top: 5, right: 5, flexDirection: 'row', alignItems: 'center', gap: 3, paddingHorizontal: 5, paddingVertical: 1.5, borderRadius: 4, backgroundColor: Maple.error },
   liveBadgeDot: { width: 5, height: 5, borderRadius: 3, backgroundColor: WHITE },
   liveBadgeText: { fontSize: 9.5, fontWeight: '800', color: WHITE },
   studentsBadge: { position: 'absolute', bottom: 5, right: 5, flexDirection: 'row', alignItems: 'center', gap: 3, paddingHorizontal: 5, paddingVertical: 1.5, borderRadius: 4, backgroundColor: 'rgba(15,23,42,0.55)' },
   studentsText: { fontSize: 11, fontWeight: '700', color: WHITE },
   classTitle: { fontSize: 12.5, fontWeight: '700', color: NAVY },
   classTeacher: { fontSize: 11.5, color: BODY },
-  classBar: { height: 5, borderRadius: 3, backgroundColor: '#E4EAF5', overflow: 'hidden' },
-  classBarFill: { height: 5, borderRadius: 3, backgroundColor: '#22C55E' },
+  classBar: { height: 5, borderRadius: 3, backgroundColor: Maple.blueSelected, overflow: 'hidden' },
+  classBarFill: { height: 5, borderRadius: 3, backgroundColor: Maple.success },
   next: { width: 30, height: 30, borderRadius: 15, borderWidth: 1, borderColor: LINE, alignItems: 'center', justifyContent: 'center', backgroundColor: WHITE },
   regionBody: { flexDirection: 'row', alignItems: 'center', gap: 14 },
   regionBodyPhone: { flexDirection: 'column', alignItems: 'stretch' },

@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
@@ -8,6 +8,7 @@ import type { StudioLevel, StudioNew } from '@/mock/teacher-studio';
 
 import type { StudioRun } from './StudioInput';
 import { CourseCard, LevelList, Objectives, Samples } from './StudioStructure';
+import { Maple } from '@/constants/maple';
 
 export type ReviewTab = 'structure' | 'quizzes' | 'tags' | 'resources' | 'settings';
 
@@ -203,27 +204,27 @@ const styles = StyleSheet.create({
   title: { fontSize: 17, fontWeight: '700', color: INK },
   sub: { fontSize: 10.5, color: BODY, marginTop: 2 },
   tabs: { flexDirection: 'row', marginTop: 12, marginBottom: 12, borderBottomWidth: 1, borderColor: LINE },
-  tab: { paddingHorizontal: 18, paddingVertical: 6, borderBottomWidth: 2.5, borderColor: 'transparent' },
-  tabOn: { borderColor: BLUE, backgroundColor: '#EEF4FF' },
+  tab: { paddingHorizontal: 18, paddingVertical: 6, borderBottomWidth: 3, borderColor: 'transparent' },
+  tabOn: { borderColor: BLUE },
   tabText: { fontSize: 12, color: INK },
   tabTextOn: { color: BLUE, fontWeight: '600' },
   dim: { opacity: 0.35 },
   cols: { flexDirection: 'row', gap: 14 },
   colLeft: { width: 300, gap: 12 },
   colRight: { width: 220 },
-  box: { padding: 10, borderRadius: 10, borderWidth: 1, borderColor: LINE, backgroundColor: '#FFFFFF' },
+  box: { padding: 10, borderRadius: 10, borderWidth: 1, borderColor: LINE, backgroundColor: Maple.surface },
   tabBody: { gap: 14, minHeight: 380 },
   group: { gap: 6 },
   groupTitle: { fontSize: 13.5, fontWeight: '700', color: INK },
-  line: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 6, borderBottomWidth: 1, borderColor: '#EEF2F8' },
+  line: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 6, borderBottomWidth: 1, borderColor: Maple.blueSelected },
   lineTitle: { flex: 1, fontSize: 12.5, color: INK },
   lineMeta: { fontSize: 11.5, color: MUTED },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  chip: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 10, paddingVertical: 6, borderRadius: 8, backgroundColor: '#EEF4FF' },
+  chip: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 10, paddingVertical: 6, borderRadius: 8, backgroundColor: Maple.blueSoft },
   chipCode: { fontSize: 11, fontWeight: '700', color: BLUE },
   chipText: { fontSize: 12, color: INK },
   option: { paddingHorizontal: 12, paddingVertical: 7, borderRadius: 8, borderWidth: 1, borderColor: LINE },
-  optionOn: { borderColor: BLUE, backgroundColor: '#EEF4FF' },
+  optionOn: { borderColor: BLUE, backgroundColor: Maple.blueSoft },
   optionText: { fontSize: 12.5, color: INK },
   optionTextOn: { color: BLUE, fontWeight: '600' },
   phoneHead: { flexDirection: 'row', alignItems: 'center', gap: 10 },

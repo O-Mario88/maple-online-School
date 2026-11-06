@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { type ComponentRef, useRef } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
@@ -7,6 +7,7 @@ import { Icon } from '@/components/icon';
 
 import type { LiveClass } from './home/types';
 import { Brand, CARD_SHADOW } from './palette';
+import { Maple } from '@/constants/maple';
 
 const CARD_WIDTH = 270;
 const CARD_GAP = 14;
@@ -104,7 +105,7 @@ const styles = StyleSheet.create({
   head: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 2 },
   headPhone: { paddingHorizontal: 14 },
   headLeft: { flexDirection: 'row', alignItems: 'center', gap: 9, paddingLeft: 0 },
-  headIcon: { width: 24, height: 24, borderRadius: 7, backgroundColor: '#F2614B', alignItems: 'center', justifyContent: 'center' },
+  headIcon: { width: 24, height: 24, borderRadius: 7, backgroundColor: Maple.error, alignItems: 'center', justifyContent: 'center' },
   title: { fontSize: 14.5, fontWeight: '700', color: Brand.ink },
   subtitle: { fontSize: 9.5, color: Brand.body },
   viewAll: { flexDirection: 'row', alignItems: 'center', gap: 5 },

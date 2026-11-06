@@ -1,9 +1,10 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { useState } from 'react';
 import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
 import { PlayerControls, usePlayback } from '@/features/learner/exam/Walkthrough';
+import { Maple } from '@/constants/maple';
 
 function Player({ poster, title, seconds, onClose }: { poster?: number; title: string; seconds: number; onClose: () => void }) {
   const p = usePlayback(seconds);
@@ -16,14 +17,14 @@ function Player({ poster, title, seconds, onClose }: { poster?: number; title: s
           {title}
         </Text>
         <Pressable onPress={onClose} accessibilityRole="button" accessibilityLabel="Close video" hitSlop={8}>
-          <Icon name="close" size={18} color="#FFFFFF" />
+          <Icon name="close" size={18} color={Maple.surface} />
         </Pressable>
       </View>
       <Pressable style={styles.video} onPress={p.toggle} accessibilityRole="button" accessibilityLabel={p.running ? 'Pause' : 'Play'}>
         {poster ? <Image source={poster} style={StyleSheet.absoluteFill} contentFit="cover" /> : null}
         {p.running ? null : (
           <View style={styles.play}>
-            <Icon name="playFill" size={26} color="#FFFFFF" />
+            <Icon name="playFill" size={26} color={Maple.surface} />
           </View>
         )}
         {cc && p.running ? <Text style={styles.caption}>{title}</Text> : null}
@@ -53,10 +54,10 @@ export function VideoSheet({ visible, poster, title, seconds = 120, onClose }: {
 
 const styles = StyleSheet.create({
   scrim: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 16, backgroundColor: 'rgba(4,8,16,0.82)' },
-  sheet: { width: '100%', maxWidth: 820, borderRadius: 12, backgroundColor: '#0B1424', overflow: 'hidden' },
+  sheet: { width: '100%', maxWidth: 820, borderRadius: 12, backgroundColor: Maple.navy, overflow: 'hidden' },
   head: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 14, paddingVertical: 10 },
-  title: { flex: 1, fontSize: 14, fontWeight: '600', color: '#FFFFFF' },
+  title: { flex: 1, fontSize: 14, fontWeight: '600', color: Maple.surface },
   video: { width: '100%', aspectRatio: 16 / 9, alignItems: 'center', justifyContent: 'center', backgroundColor: '#000000' },
   play: { width: 64, height: 64, alignItems: 'center', justifyContent: 'center', borderRadius: 32, backgroundColor: 'rgba(11,107,255,0.92)' },
-  caption: { position: 'absolute', bottom: 14, paddingHorizontal: 10, paddingVertical: 4, borderRadius: 4, backgroundColor: 'rgba(0,0,0,0.6)', fontSize: 13, color: '#FFFFFF' },
+  caption: { position: 'absolute', bottom: 14, paddingHorizontal: 10, paddingVertical: 4, borderRadius: 4, backgroundColor: 'rgba(0,0,0,0.6)', fontSize: 13, color: Maple.surface },
 });

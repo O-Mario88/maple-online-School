@@ -5,12 +5,13 @@ import { Radius, Spacing, type Theme, Type } from '@/constants/theme';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { useStyles } from '@/hooks/use-styles';
 import { router } from 'expo-router';
+import { Maple } from '@/constants/maple';
 
 const GRID = 11;
 const CELL = 18;
 // A QR code stays black on white in both themes so phone cameras can read it.
-const QR_PAPER = '#ffffff';
-const QR_INK = '#111111';
+const QR_PAPER = Maple.surface;
+const QR_INK = Maple.navy;
 
 /** A stand-in QR pattern: three corner squares and scattered dots. */
 function isDark(i: number): boolean {

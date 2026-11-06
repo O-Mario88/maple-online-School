@@ -1,7 +1,7 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { useMemo } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Icon } from '@/components/icon';
@@ -12,6 +12,8 @@ import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { Brand } from '@/features/public/palette';
 import { LightOnly } from '@/hooks/use-theme';
 import { mockData } from '@/lib/mock';
+import { Maple } from '@/constants/maple';
+import { PageScroll } from '@/components/shell/PageScroll';
 
 const DESKTOP_MIN = 900;
 // The reference's desktop frame is 1178 × 1024 (the white bar at (18, 10), the page under it).
@@ -116,7 +118,7 @@ function Phone({ w, o }: { w: Wizard; o: Onboarding }) {
   return (
     <>
       <AuthPhoneTop />
-      <ScrollView contentContainerStyle={styles.phone}>
+      <PageScroll contentContainerStyle={styles.phone}>
         <Steps phone />
         <Text style={styles.titleP} accessibilityRole="header">
           {'Let’s set up your\nMaple experience'}
@@ -152,7 +154,7 @@ function Phone({ w, o }: { w: Wizard; o: Onboarding }) {
           <Text style={styles.continueText}>Continue to Your Dashboard</Text>
           <Icon name="arrowRight" size={16} color={Brand.surface} />
         </Pressable>
-      </ScrollView>
+      </PageScroll>
     </>
   );
 }
@@ -180,11 +182,11 @@ const styles = StyleSheet.create({
   flex: { flex: 1 },
   sky: { flex: 1, backgroundColor: AUTH_SKY },
   bar: { position: 'absolute', left: 18, top: 10 },
-  page: { position: 'absolute', left: 18, top: 77, width: 1142, height: 940, backgroundColor: '#F4F9FE', borderBottomLeftRadius: 14, borderBottomRightRadius: 14 },
+  page: { position: 'absolute', left: 18, top: 77, width: 1142, height: 940, backgroundColor: Maple.blueSoft, borderBottomLeftRadius: 14, borderBottomRightRadius: 14 },
   note: { position: 'absolute', left: 917, top: 5, width: 180, height: 130 },
   eyebrow: { position: 'absolute', left: 52, top: 25, fontSize: 13, fontWeight: '600', letterSpacing: 0.4, color: Brand.blue },
   title: { position: 'absolute', left: 52, top: 44, fontSize: 40, fontWeight: '700', color: Brand.ink, letterSpacing: -1 },
-  sub: { position: 'absolute', left: 52, top: 99, fontSize: 18, color: '#3D4656' },
+  sub: { position: 'absolute', left: 52, top: 99, fontSize: 18, color: Maple.body },
   stepsDesk: { position: 'absolute', left: 52, top: 132 },
   box: { position: 'absolute', left: 28, width: 825, paddingHorizontal: 25, borderRadius: 10, backgroundColor: Brand.surface },
   roleBox: { top: 185, height: 346, paddingTop: 12 },
@@ -192,13 +194,13 @@ const styles = StyleSheet.create({
   gradeBox: { top: 692, height: 179, paddingTop: 12 },
   h: { fontSize: 23, fontWeight: '700', color: Brand.ink },
   h2: { fontSize: 21, fontWeight: '700', color: Brand.ink },
-  hSub: { marginTop: 7, fontSize: 13.5, color: '#4A5263' },
+  hSub: { marginTop: 7, fontSize: 13.5, color: Maple.body },
   rolesDesk: { marginTop: 14 },
   twoCols: { flexDirection: 'row', gap: 25, marginTop: 14 },
   colCountry: { width: 342 },
   colGrade: { width: 185 },
   label: { marginBottom: 6, fontSize: 13.5, color: Brand.ink },
-  muted: { color: '#4A5263' },
+  muted: { color: Maple.body },
   selectText: { fontSize: 13.5, color: Brand.ink },
   selectSmall: { fontSize: 11.5, color: Brand.ink },
   selectStrong: { fontWeight: '600' },
@@ -206,16 +208,16 @@ const styles = StyleSheet.create({
   gradeSelect: { height: 40 },
   gradeText: { fontSize: 14, fontWeight: '500', color: Brand.ink },
   summaryBox: { position: 'absolute', left: 867, top: 185, width: 251 },
-  back: { position: 'absolute', left: 29, top: 881, width: 117, height: 42, alignItems: 'center', justifyContent: 'center', borderRadius: 7, borderWidth: 1, borderColor: '#D5DCE7', backgroundColor: '#F1F5FB' },
+  back: { position: 'absolute', left: 29, top: 881, width: 117, height: 42, alignItems: 'center', justifyContent: 'center', borderRadius: 7, borderWidth: 1, borderColor: Maple.borderStrong, backgroundColor: Maple.blueSoft },
   backText: { fontSize: 14.5, color: Brand.ink },
-  continue: { position: 'absolute', left: 800, top: 881, width: 302, height: 42, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, borderRadius: 7, backgroundColor: '#0067FE' },
+  continue: { position: 'absolute', left: 800, top: 881, width: 302, height: 42, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, borderRadius: 7, backgroundColor: Maple.blue },
   continueText: { fontSize: 14.5, fontWeight: '500', color: Brand.surface },
-  phoneSafe: { flex: 1, backgroundColor: '#F4F7FC' },
+  phoneSafe: { flex: 1, backgroundColor: Maple.blueSoft },
   phone: { gap: 14, padding: 16, paddingBottom: 32 },
   titleP: { marginTop: 8, fontSize: 25, lineHeight: 29, fontWeight: '700', color: Brand.ink, letterSpacing: -0.5 },
-  subP: { marginTop: -6, fontSize: 14.5, lineHeight: 20, color: '#3D4656' },
+  subP: { marginTop: -6, fontSize: 14.5, lineHeight: 20, color: Maple.body },
   cardP: { gap: 10, padding: 12, borderRadius: 12, backgroundColor: Brand.surface },
   hP: { fontSize: 17, fontWeight: '700', color: Brand.ink },
-  hSubP: { marginTop: -6, fontSize: 12, color: '#4A5263' },
-  continueP: { height: 48, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, borderRadius: 9, backgroundColor: '#0067FE' },
+  hSubP: { marginTop: -6, fontSize: 12, color: Maple.body },
+  continueP: { height: 48, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, borderRadius: 9, backgroundColor: Maple.blue },
 });

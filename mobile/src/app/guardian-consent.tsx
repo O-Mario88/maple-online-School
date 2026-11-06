@@ -1,7 +1,7 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Icon } from '@/components/icon';
@@ -13,6 +13,8 @@ import { Brand } from '@/features/public/palette';
 import { LightOnly } from '@/hooks/use-theme';
 import type { IconName } from '@/lib/icons';
 import { mockData } from '@/lib/mock';
+import { Maple } from '@/constants/maple';
+import { PageScroll } from '@/components/shell/PageScroll';
 
 const DESKTOP_MIN = 900;
 // The reference's desktop frame: 1178 × 1010 (bar at (18, 14), photo panel at (18, 142), middle column x 398–902, right x 913–1153).
@@ -147,7 +149,7 @@ function Desktop({ c, f }: { c: Consent; f: Form }) {
           </View>
         ))}
         <View style={styles.expiry}>
-          <Icon name="lock" size={20} color="#16A34A" />
+          <Icon name="lock" size={20} color={Maple.successText} />
           <Text style={styles.expiryText}>{`The link expires in ${c.expiresDays} days for security. Your parent can always approve later from their own device.`}</Text>
         </View>
       </View>
@@ -155,7 +157,7 @@ function Desktop({ c, f }: { c: Consent; f: Form }) {
         <Text style={styles.sideTitle}>For Parents & Guardians</Text>
         {FOR_PARENTS.map((t) => (
           <View key={t} style={styles.check}>
-            <Icon name="check" size={18} color="#16A34A" />
+            <Icon name="check" size={18} color={Maple.successText} />
             <Text style={styles.checkText}>{t}</Text>
           </View>
         ))}
@@ -168,13 +170,13 @@ function Phone({ c, f }: { c: Consent; f: Form }) {
   return (
     <>
       <AuthPhoneTop />
-      <ScrollView contentContainerStyle={styles.phone} keyboardShouldPersistTaps="handled">
+      <PageScroll contentContainerStyle={styles.phone} keyboardShouldPersistTaps="handled">
         <FlowSteps steps={CONSENT_STEPS} phone />
         <Heading c={c} phone />
         <WhyBox phone />
         <SendBlock c={c} f={f} phone />
         <SendButton f={f} style={styles.sendP} />
-      </ScrollView>
+      </PageScroll>
     </>
   );
 }
@@ -203,14 +205,14 @@ const styles = StyleSheet.create({
   gap16: { gap: 16, marginTop: 16 },
   sky: { flex: 1, backgroundColor: AUTH_SKY },
   bar: { position: 'absolute', left: 18, top: 5 },
-  page: { position: 'absolute', left: 18, top: 72, width: 1142, height: 921, backgroundColor: '#F4F8FD', borderBottomLeftRadius: 14, borderBottomRightRadius: 14 },
+  page: { position: 'absolute', left: 18, top: 72, width: 1142, height: 921, backgroundColor: Maple.blueSoft, borderBottomLeftRadius: 14, borderBottomRightRadius: 14 },
   steps: { position: 'absolute', left: 66, top: 88 },
   panel: { position: 'absolute', left: 18, top: 142, width: 370, height: 851, overflow: 'hidden', borderBottomLeftRadius: 14 },
   promises: { position: 'absolute', left: 0, right: 0, top: 628, flexDirection: 'row' },
   promise: { flex: 1, alignItems: 'center', paddingHorizontal: 6 },
   promiseRule: { borderLeftWidth: 1, borderLeftColor: 'rgba(255,255,255,0.18)' },
   promiseTitle: { marginTop: 12, fontSize: 11.5, fontWeight: '700', color: Brand.surface, textAlign: 'center' },
-  promiseBody: { marginTop: 8, fontSize: 9.5, lineHeight: 15, color: '#E1E8F5', textAlign: 'center' },
+  promiseBody: { marginTop: 8, fontSize: 9.5, lineHeight: 15, color: Maple.blueSelected, textAlign: 'center' },
   card: { position: 'absolute', borderRadius: 10, backgroundColor: Brand.surface },
   introCard: { left: 398, top: 142, width: 504, height: 305, paddingHorizontal: 17, paddingTop: 22 },
   sendCard: { left: 398, top: 460, width: 504, height: 433, paddingHorizontal: 17, paddingTop: 18 },
@@ -221,17 +223,17 @@ const styles = StyleSheet.create({
   eyebrowP: { fontSize: 9.5 },
   title: { marginTop: 10, fontSize: 28.5, lineHeight: 33, fontWeight: '700', color: Brand.ink, letterSpacing: -0.6 },
   titleP: { marginTop: 8, fontSize: 24, lineHeight: 28 },
-  body: { marginTop: 10, fontSize: 13.5, lineHeight: 20, color: '#4A5263' },
+  body: { marginTop: 10, fontSize: 13.5, lineHeight: 20, color: Maple.body },
   bodyP: { fontSize: 14, lineHeight: 19 },
   whyWrap: { marginTop: 22 },
   h: { fontSize: 18, fontWeight: '700', color: Brand.ink, letterSpacing: -0.3 },
   hP: { fontSize: 17 },
-  hSub: { marginTop: 4, fontSize: 13, lineHeight: 19, color: '#4A5263' },
+  hSub: { marginTop: 4, fontSize: 13, lineHeight: 19, color: Maple.body },
   hSubP: { fontSize: 13 },
-  sent: { fontSize: 12.5, color: '#16A34A' },
-  back: { position: 'absolute', left: 411, top: 912, width: 121, height: 46, alignItems: 'center', justifyContent: 'center', borderRadius: 7, borderWidth: 1, borderColor: '#C9D3E2', backgroundColor: '#F1F5FB' },
+  sent: { fontSize: 12.5, color: Maple.successText },
+  back: { position: 'absolute', left: 411, top: 912, width: 121, height: 46, alignItems: 'center', justifyContent: 'center', borderRadius: 7, borderWidth: 1, borderColor: Maple.blueLine, backgroundColor: Maple.blueSoft },
   backText: { fontSize: 14.5, color: Brand.ink },
-  send: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 12, borderRadius: 7, backgroundColor: '#0067FE' },
+  send: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 12, borderRadius: 7, backgroundColor: Maple.blue },
   sendDesk: { position: 'absolute', left: 556, top: 912, width: 333, height: 46 },
   sendOff: { opacity: 0.55 },
   sendText: { fontSize: 15, fontWeight: '500', color: Brand.surface },
@@ -240,16 +242,16 @@ const styles = StyleSheet.create({
   sideTitle: { fontSize: 15, fontWeight: '700', color: Brand.ink, marginBottom: 10 },
   nextRow: { flexDirection: 'row', gap: 11 },
   nextIconCol: { alignItems: 'center' },
-  nextIcon: { width: 30, height: 30, borderRadius: 15, borderWidth: 1, borderColor: '#D5E2F7', alignItems: 'center', justifyContent: 'center', backgroundColor: Brand.surface },
-  nextIconDone: { backgroundColor: '#16A34A', borderColor: '#16A34A' },
-  nextLine: { width: 1, flex: 1, minHeight: 34, marginVertical: 4, backgroundColor: '#B9CCEA' },
+  nextIcon: { width: 30, height: 30, borderRadius: 15, borderWidth: 1, borderColor: Maple.blueSelected, alignItems: 'center', justifyContent: 'center', backgroundColor: Brand.surface },
+  nextIconDone: { backgroundColor: Maple.successText, borderColor: Maple.successText },
+  nextLine: { width: 1, flex: 1, minHeight: 34, marginVertical: 4, backgroundColor: Maple.blueLine },
   nextTitle: { fontSize: 12.5, fontWeight: '600', color: Brand.ink },
-  nextBody: { marginTop: 5, marginBottom: 18, fontSize: 10.5, lineHeight: 16, color: '#4A5263' },
-  expiry: { flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 8, padding: 12, borderRadius: 8, backgroundColor: '#EAF7EF' },
-  expiryText: { flex: 1, fontSize: 10, lineHeight: 15, color: '#2A3242' },
+  nextBody: { marginTop: 5, marginBottom: 18, fontSize: 10.5, lineHeight: 16, color: Maple.body },
+  expiry: { flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 8, padding: 12, borderRadius: 8, backgroundColor: Maple.successSoft },
+  expiryText: { flex: 1, fontSize: 10, lineHeight: 15, color: Maple.navy },
   check: { flexDirection: 'row', gap: 10 },
-  checkText: { flex: 1, fontSize: 11.5, lineHeight: 16, color: '#2A3242' },
-  phoneSafe: { flex: 1, backgroundColor: '#F4F7FC' },
+  checkText: { flex: 1, fontSize: 11.5, lineHeight: 16, color: Maple.navy },
+  phoneSafe: { flex: 1, backgroundColor: Maple.blueSoft },
   phone: { gap: 14, padding: 16, paddingBottom: 32 },
   sendP: { height: 50, marginTop: 4 },
 });

@@ -15,6 +15,7 @@ import { CourseSection } from './CourseSections';
 import { LessonSettingsPanel, NotesTab, QuizTab } from './LessonPanels';
 import { type Builder, type LessonTab, useCourseBuilder } from './useCourseBuilder';
 import { Timestamps, usePlayer, VideoPlayer } from './VideoPanel';
+import { Maple } from '@/constants/maple';
 
 /** The course builder reference's desktop (top bar to the end of the editor), laid out in its pixels and scaled. */
 export const COURSE_REF_WIDTH = 1180;
@@ -229,7 +230,7 @@ export function CoursePhone({ c, me }: { c: CourseBuilder; me: TeacherMe }) {
             </View>
             <LessonContent c={c} b={b} phone />
             <Pressable style={styles.addBlock} onPress={() => setPalette((p) => !p)} accessibilityRole="button" accessibilityState={{ expanded: palette }}>
-              <Icon name="plus" size={15} color="#FFFFFF" />
+              <Icon name="plus" size={15} color={Maple.surface} />
               <Text style={styles.addBlockText}>Add Content Block</Text>
             </Pressable>
             {palette ? (
@@ -250,8 +251,8 @@ export function CoursePhone({ c, me }: { c: CourseBuilder; me: TeacherMe }) {
             </View>
             <View style={styles.pButtons}>
               <Pressable style={[styles.pBtn, styles.pDelete, confirm && styles.pDeleteOn]} onPress={del} accessibilityRole="button" accessibilityLabel={confirm ? 'Confirm: delete this lesson' : 'Delete lesson'}>
-                <Icon name="trash" size={14} color={confirm ? '#FFFFFF' : RED} />
-                <Text style={[styles.pBtnText, { color: confirm ? '#FFFFFF' : RED }]}>{confirm ? 'Confirm' : 'Delete'}</Text>
+                <Icon name="trash" size={14} color={confirm ? Maple.surface : RED} />
+                <Text style={[styles.pBtnText, { color: confirm ? Maple.surface : RED }]}>{confirm ? 'Confirm' : 'Delete'}</Text>
               </Pressable>
               <Pressable style={[styles.pBtn, styles.pSave]} onPress={b.saveDraft} accessibilityRole="button" accessibilityLabel="Save changes">
                 <Text style={[styles.pBtnText, styles.white]}>Save Changes</Text>
@@ -268,7 +269,7 @@ export function CoursePhone({ c, me }: { c: CourseBuilder; me: TeacherMe }) {
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
-  white: { color: '#FFFFFF' },
+  white: { color: Maple.surface },
   disabled: { opacity: 0.4 },
   canvas: { width: COURSE_REF_WIDTH, padding: 14, gap: 8, backgroundColor: CANVAS },
   body: { flexDirection: 'row', gap: 8 },
@@ -290,10 +291,10 @@ const styles = StyleSheet.create({
   videoCol: { width: 425 },
   sectionHead: { flexDirection: 'row', alignItems: 'center', gap: 7, marginBottom: 8 },
   sectionTitle: { fontSize: 12.5, fontWeight: '700', color: INK },
-  rowB: { flexDirection: 'row', gap: 20, marginTop: 16, paddingTop: 14, borderTopWidth: 1, borderColor: '#EEF2F8', zIndex: 2 },
+  rowB: { flexDirection: 'row', gap: 20, marginTop: 16, paddingTop: 14, borderTopWidth: 1, borderColor: Maple.blueSelected, zIndex: 2 },
   blocksCol: { width: 457 },
   settingsTab: { maxWidth: 360 },
-  phoneRoot: { flex: 1, backgroundColor: '#F4F7FB' },
+  phoneRoot: { flex: 1, backgroundColor: Maple.blueSoft },
   phone: { gap: 12, padding: 14, paddingBottom: 110 },
   pTabs: { flexDirection: 'row', borderBottomWidth: 1, borderColor: LINE },
   pTab: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, paddingVertical: 9, borderBottomWidth: 2.5, borderColor: 'transparent' },
@@ -303,18 +304,18 @@ const styles = StyleSheet.create({
   pHeadTitle: { fontSize: 14, fontWeight: '700', color: INK },
   link: { fontSize: 12.5, fontWeight: '600', color: BLUE },
   addBlock: { height: 40, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, borderRadius: 8, backgroundColor: BLUE },
-  addBlockText: { fontSize: 13, fontWeight: '600', color: '#FFFFFF' },
-  paletteP: { padding: 10, borderRadius: 10, backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: LINE },
+  addBlockText: { fontSize: 13, fontWeight: '600', color: Maple.surface },
+  paletteP: { padding: 10, borderRadius: 10, backgroundColor: Maple.surface, borderWidth: 1, borderColor: LINE },
   fold: { borderTopWidth: 1, borderColor: LINE },
   foldHead: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 13 },
   foldTitle: { flex: 1, fontSize: 13.5, fontWeight: '600', color: INK },
   foldBody: { paddingBottom: 12 },
-  resource: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 8, borderBottomWidth: 1, borderColor: '#EEF2F8' },
+  resource: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 8, borderBottomWidth: 1, borderColor: Maple.blueSelected },
   resTitle: { fontSize: 12.5, color: INK },
   resMeta: { marginTop: 2, fontSize: 11, color: MUTED },
   pButtons: { flexDirection: 'row', gap: 10, marginTop: 4 },
   pBtn: { flex: 1, height: 40, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, borderRadius: 8 },
-  pDelete: { borderWidth: 1.5, borderColor: RED, backgroundColor: '#FFFFFF' },
+  pDelete: { borderWidth: 1.5, borderColor: RED, backgroundColor: Maple.surface },
   pDeleteOn: { backgroundColor: RED },
   pSave: { flex: 1.4, backgroundColor: BLUE },
   pBtnText: { fontSize: 13, fontWeight: '600' },

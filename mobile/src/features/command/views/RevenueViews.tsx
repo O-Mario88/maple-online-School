@@ -14,17 +14,18 @@ import { Donut, DonutLabel } from '@/features/school/kit/Charts';
 import { Cell, type Column, DataTable, PageHead, Search, useChoice, useSelection } from '@/features/school/kit/AdminKit';
 import { toast } from '@/lib/toast';
 import type { BatchRow, Provider } from '@/mock/command-center/finance';
+import { Maple } from '@/constants/maple';
 
 type F = CommandData['finance'];
 const PER_PAGE = 10;
 const ugx = (n: number) => `UGX ${Math.round(n).toLocaleString('en-US')}`;
 
 const PROVIDER: Readonly<Record<Provider, { bg: string; fg: string; mark: string }>> = {
-  Stripe: { bg: '#635BFF', fg: WHITE, mark: 'stripe' },
-  Flutterwave: { bg: '#FFF4E2', fg: '#F5A623', mark: 'FW' },
+  Stripe: { bg: Maple.blue, fg: WHITE, mark: 'stripe' },
+  Flutterwave: { bg: Maple.warningSoft, fg: Maple.warning, mark: 'FW' },
   Paystack: { bg: '#0BA4DB', fg: WHITE, mark: '≡' },
-  'MTN MoMo': { bg: '#FFCC00', fg: '#111', mark: 'MTN' },
-  'Airtel Money': { bg: '#E40000', fg: WHITE, mark: 'a' },
+  'MTN MoMo': { bg: Maple.warning, fg: Maple.navy, mark: 'MTN' },
+  'Airtel Money': { bg: Maple.error, fg: WHITE, mark: 'a' },
 };
 
 const STATUS_TONE: Readonly<Record<BatchRow['status'], Tone>> = { Settled: 'green', Settling: 'orange', Mismatch: 'red' };
@@ -135,7 +136,7 @@ function Breakdown({ f, phone = false }: { f: F; phone?: boolean }) {
     { name: 'Teacher Escrow', color: CHART.blue, values: b.escrow },
     { name: 'Maple Commission', color: CHART.green, values: b.maple },
     { name: 'Payment Fees', color: CHART.orange, values: b.fees },
-    { name: 'BYOS (0%)', color: '#C3CBDD', values: b.byos },
+    { name: 'BYOS (0%)', color: Maple.borderStrong, values: b.byos },
   ];
   return (
     <Panel title="Revenue Breakdown" right={<CmdSelect value={win} options={wins} onChange={setWin} width={128} label="Window" />} style={[styles.block, !phone && styles.flex]}>
@@ -188,7 +189,7 @@ function MarketVsByos({ f, phone = false }: { f: F; phone?: boolean }) {
         labels={m.months}
         bars={[
           { name: 'Marketplace GMV', color: CHART.blue, values: m.market },
-          { name: 'BYOS GMV (0%)', color: '#93C5FD', values: m.byos },
+          { name: 'BYOS GMV (0%)', color: Maple.blueLine, values: m.byos },
         ]}
         max={2}
         ticks={4}
@@ -201,7 +202,7 @@ function MarketVsByos({ f, phone = false }: { f: F; phone?: boolean }) {
       <Legend
         items={[
           ['Marketplace GMV', CHART.blue],
-          ['BYOS GMV (0%)', '#93C5FD'],
+          ['BYOS GMV (0%)', Maple.blueLine],
           ['Commission %', CHART.green],
         ]}
       />

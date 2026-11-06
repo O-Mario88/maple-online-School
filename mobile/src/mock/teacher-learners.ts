@@ -3,6 +3,7 @@ import type { IconName } from '@/lib/icons';
 import type { TeacherDest } from '@/lib/teacher-home';
 
 import { photos } from './photos';
+import { Maple } from '@/constants/maple';
 
 export type HeatCellTier = 'darkGreen' | 'lightGreen' | 'yellow' | 'orange' | 'red';
 
@@ -42,17 +43,17 @@ export const masteryHeatmap = {
     { label: 'Settings', icon: 'settings' as IconName, go: '/teach/learners' as TeacherDest },
   ],
   myClasses: [
-    { id: 'mc-1', title: 'O-Level Mathematics', color: '#1463F3', active: true },
-    { id: 'mc-2', title: 'O-Level Science', color: '#16A34A', active: false },
-    { id: 'mc-3', title: 'Form 3 Advanced Maths', color: '#F59E0B', active: false },
-    { id: 'mc-4', title: 'Holiday Bootcamp', color: '#EF4444', active: false },
+    { id: 'mc-1', title: 'O-Level Mathematics', color: Maple.blue, active: true },
+    { id: 'mc-2', title: 'O-Level Science', color: Maple.successText, active: false },
+    { id: 'mc-3', title: 'Form 3 Advanced Maths', color: Maple.warning, active: false },
+    { id: 'mc-4', title: 'Holiday Bootcamp', color: Maple.error, active: false },
   ],
   kpis: [
-    { id: 'total', value: '32', label: 'Total Students', icon: 'people' as IconName, color: '#1463F3', bg: '#DBEAFE' },
-    { id: 'ontrack', value: '18', label: 'On Track (56%)', icon: 'check' as IconName, color: '#16A34A', bg: '#DCFCE7' },
-    { id: 'support', value: '8', label: 'Needs Support (25%)', icon: 'info' as IconName, color: '#F59E0B', bg: '#FEF3C7' },
-    { id: 'atrisk', value: '5', label: 'At Risk (16%)', icon: 'alert' as IconName, color: '#EF4444', bg: '#FEE2E2' },
-    { id: 'nodata', value: '1', label: 'Not Enough Data (3%)', icon: 'help' as IconName, color: '#64748B', bg: '#F1F5F9' },
+    { id: 'total', value: '32', label: 'Total Students', icon: 'people' as IconName, color: Maple.blue, bg: Maple.blueSelected },
+    { id: 'ontrack', value: '18', label: 'On Track (56%)', icon: 'check' as IconName, color: Maple.successText, bg: Maple.successSoft },
+    { id: 'support', value: '8', label: 'Needs Support (25%)', icon: 'info' as IconName, color: Maple.warning, bg: Maple.warningSoft },
+    { id: 'atrisk', value: '5', label: 'At Risk (16%)', icon: 'alert' as IconName, color: Maple.error, bg: Maple.errorSoft },
+    { id: 'nodata', value: '1', label: 'Not Enough Data (3%)', icon: 'help' as IconName, color: Maple.secondary, bg: Maple.blueSoft },
   ],
   competencies: [
     { key: 'num', label: 'Number\n& Algebra', singleLine: 'Number & Algebra', avg: 78, avgTone: 'green' as const },

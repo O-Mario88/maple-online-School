@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router, useLocalSearchParams } from 'expo-router';
 import Head from 'expo-router/head';
 import { useEffect, useMemo, useState } from 'react';
@@ -20,6 +20,8 @@ import { LightOnly } from '@/hooks/use-theme';
 import { clockOf } from '@/lib/classroom';
 import { mockData } from '@/lib/mock';
 import { findPaper } from '@/lib/past-paper';
+import { Maple } from '@/constants/maple';
+import { PageScroll } from '@/components/shell/PageScroll';
 
 const PAPER_TABS = ['Paper 1', 'Paper 2', 'Marking Scheme', 'Exam Report', 'Related Resources'] as const;
 const SHOWN_QUESTIONS = 10;
@@ -276,7 +278,7 @@ export default function PastPaperScreen() {
             <RefScale width={width}>
               <HomeNav wide tall fullWidth links={PAPER_LINKS} active="Past Papers" searchPlaceholder="Search subjects, topics, or past papers..." />
             </RefScale>
-            <ScrollView style={styles.body}>
+            <PageScroll style={styles.body}>
               <RefScale width={width} refWidth={PAPER_REF_WIDTH}>
                 <View style={styles.deskRow}>
                   <PaperSidebar boards={pages.boards} subjects={pages.subjects} activeBoardHref={here} activeSubject={paper.subjectName} />
@@ -286,15 +288,15 @@ export default function PastPaperScreen() {
                   </View>
                 </View>
               </RefScale>
-            </ScrollView>
+            </PageScroll>
           </>
         ) : (
           <>
             <PhoneBar />
-            <ScrollView style={styles.body} contentContainerStyle={styles.page}>
+            <PageScroll style={styles.body} contentContainerStyle={styles.page}>
               {main}
               {aside}
-            </ScrollView>
+            </PageScroll>
           </>
         )}
       </SafeAreaView>
@@ -312,7 +314,7 @@ const styles = StyleSheet.create({
   deskPage: { flex: 1, flexDirection: 'row', alignItems: 'flex-start', gap: 17, paddingTop: 10, paddingLeft: 20, paddingRight: 15, paddingBottom: 30 },
   heroRowPhone: { flexDirection: 'row-reverse', alignItems: 'flex-start' },
   fold: { flexDirection: 'row', alignItems: 'center', gap: 10, height: 48, paddingHorizontal: 14, borderRadius: 10, borderWidth: 1, borderColor: Brand.line, backgroundColor: Brand.surface },
-  foldHint: { backgroundColor: '#EEF4FF', borderColor: '#EEF4FF' },
+  foldHint: { backgroundColor: Maple.blueSoft, borderColor: Maple.blueSoft },
   foldText: { flex: 1, fontSize: 14, fontWeight: '600', color: Brand.ink },
   bulb: { fontSize: 16 },
   navBarPhone: { flexDirection: 'column', alignItems: 'stretch', backgroundColor: 'transparent', padding: 0, shadowOpacity: 0, elevation: 0 },
@@ -322,7 +324,7 @@ const styles = StyleSheet.create({
   aside: { gap: 16 },
   asideWide: { width: ASIDE },
   crumbs: { fontSize: 12, color: Brand.muted },
-  hero: { borderRadius: 16, overflow: 'hidden', backgroundColor: '#EEF2FA', padding: 22, minHeight: 150, justifyContent: 'center' },
+  hero: { borderRadius: 16, overflow: 'hidden', backgroundColor: Maple.blueSoft, padding: 22, minHeight: 150, justifyContent: 'center' },
   heroPhoto: { position: 'absolute', top: 0, bottom: 0, right: 0, width: '38%', opacity: 0.9 },
   heroFade: { position: 'absolute', top: 0, bottom: 0, left: 0, right: '30%', backgroundColor: 'rgba(238,242,250,0.94)' },
   heroRow: { flexDirection: 'row', alignItems: 'center', gap: 18 },

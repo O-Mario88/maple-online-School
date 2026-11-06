@@ -4,6 +4,7 @@
  * split across regions, curricula, plans and channels.
  */
 import type { SegmentWeights } from '@/features/command/logic/profitability';
+import { Maple } from '@/constants/maple';
 
 /* ─── Profitability ─── */
 
@@ -79,12 +80,12 @@ export interface Integration {
 }
 
 export const integrations: readonly Integration[] = [
-  { id: 'INT-01', name: 'Stanbic Bank (UG)', type: 'Bank Feed', badge: 'SB', color: '#0033A0', status: 'Connected', lastSync: 'Oct 31, 2026, 10:42 AM', today: 3_420, secret: 'sbg_demo_8h2KqP0wLm4ZtYv7Rr2201', lastRotated: '2026-09-12' },
-  { id: 'INT-02', name: 'MTN MoMo', type: 'Payment Gateway', badge: 'MTN', color: '#FFCB05', status: 'Connected', lastSync: 'Oct 31, 2026, 10:40 AM', today: 14_860, secret: 'mtn_demo_Q8yTb3NnVz6LkPp1Ww7784', lastRotated: '2026-06-28' },
-  { id: 'INT-03', name: 'Airtel Money', type: 'Payment Gateway', badge: 'AT', color: '#E40000', status: 'Connected', lastSync: 'Oct 31, 2026, 10:38 AM', today: 9_204, secret: 'atl_demo_Xr5Mc8Ga2Hn0Js9Kd4410', lastRotated: '2026-08-30' },
-  { id: 'INT-04', name: 'M-Pesa', type: 'Payment Gateway', badge: 'MP', color: '#3BAA35', status: 'Connected', lastSync: 'Oct 31, 2026, 10:37 AM', today: 6_112, secret: 'mps_demo_Pq2Zr6Tb9Vc1Wn4Yx3091', lastRotated: '2026-10-02' },
-  { id: 'INT-05', name: 'Stripe (Cards)', type: 'Payment Gateway', badge: 'S', color: '#635BFF', status: 'Connected', lastSync: 'Oct 31, 2026, 10:39 AM', today: 2_418, secret: 'sk_demo_51HxQpL2eZvKYlo2C5520', lastRotated: '2026-09-20' },
-  { id: 'INT-06', name: 'QuickBooks Online', type: 'Accounting Export', badge: 'qb', color: '#2CA01C', status: 'Connected', lastSync: 'Oct 31, 2026, 10:30 AM', today: 0, secret: 'qbo_demo_Lm3Nb7Vc2Xz8Kj5Hg1188', lastRotated: '2026-07-15' },
+  { id: 'INT-01', name: 'Stanbic Bank (UG)', type: 'Bank Feed', badge: 'SB', color: Maple.blueHover, status: 'Connected', lastSync: 'Oct 31, 2026, 10:42 AM', today: 3_420, secret: 'sbg_demo_8h2KqP0wLm4ZtYv7Rr2201', lastRotated: '2026-09-12' },
+  { id: 'INT-02', name: 'MTN MoMo', type: 'Payment Gateway', badge: 'MTN', color: Maple.warning, status: 'Connected', lastSync: 'Oct 31, 2026, 10:40 AM', today: 14_860, secret: 'mtn_demo_Q8yTb3NnVz6LkPp1Ww7784', lastRotated: '2026-06-28' },
+  { id: 'INT-03', name: 'Airtel Money', type: 'Payment Gateway', badge: 'AT', color: Maple.error, status: 'Connected', lastSync: 'Oct 31, 2026, 10:38 AM', today: 9_204, secret: 'atl_demo_Xr5Mc8Ga2Hn0Js9Kd4410', lastRotated: '2026-08-30' },
+  { id: 'INT-04', name: 'M-Pesa', type: 'Payment Gateway', badge: 'MP', color: Maple.success, status: 'Connected', lastSync: 'Oct 31, 2026, 10:37 AM', today: 6_112, secret: 'mps_demo_Pq2Zr6Tb9Vc1Wn4Yx3091', lastRotated: '2026-10-02' },
+  { id: 'INT-05', name: 'Stripe (Cards)', type: 'Payment Gateway', badge: 'S', color: Maple.blue, status: 'Connected', lastSync: 'Oct 31, 2026, 10:39 AM', today: 2_418, secret: 'sk_demo_51HxQpL2eZvKYlo2C5520', lastRotated: '2026-09-20' },
+  { id: 'INT-06', name: 'QuickBooks Online', type: 'Accounting Export', badge: 'qb', color: Maple.successText, status: 'Connected', lastSync: 'Oct 31, 2026, 10:30 AM', today: 0, secret: 'qbo_demo_Lm3Nb7Vc2Xz8Kj5Hg1188', lastRotated: '2026-07-15' },
 ];
 
 export const intStats = { syncedYtd: 2_486_320, banks: 4, gateways: 5, exports: 3, webhooks: 12, exceptions: 18 };

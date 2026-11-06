@@ -13,6 +13,7 @@ import { BODY, LINE, NAVY, RED, type Tone } from '@/features/portal/tokens';
 import { PageHead } from '@/features/school/kit/AdminKit';
 import { toast } from '@/lib/toast';
 import type { CrossTenantAlert } from '@/mock/command-center/security';
+import { Maple } from '@/constants/maple';
 
 type S = CommandData['security'];
 const SEV_TONE: Readonly<Record<string, Tone>> = { Critical: 'red', High: 'orange', Medium: 'orange', Low: 'green', Info: 'blue' };
@@ -230,7 +231,7 @@ const styles = StyleSheet.create({
   alertTitle: { fontSize: 13, fontWeight: '700', color: NAVY },
   table: { borderRadius: 10, borderWidth: 1, borderColor: LINE, overflow: 'hidden' },
   tr: { flexDirection: 'row', alignItems: 'center', minHeight: 34, paddingHorizontal: 10, borderBottomWidth: 1, borderColor: LINE },
-  th: { backgroundColor: '#F3F6FC' },
+  th: { backgroundColor: Maple.blueSoft },
   thText: { fontSize: 12, fontWeight: '700', color: NAVY },
   td: { fontSize: 12, color: NAVY },
   col: { width: 86 },

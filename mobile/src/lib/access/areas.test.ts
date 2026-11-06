@@ -33,7 +33,7 @@ describe('which pages open a resource', () => {
   });
 
   test('projects, study squads and the personalized learning plan need Premium', () => {
-    for (const path of ['/learn/projects', '/learn/squads', '/learn/squads/s1', '/learn/plan']) {
+    for (const path of ['/learn/projects', '/learn/squads', '/learn/squads/s1', '/learn/plan', '/learn/careers']) {
       expect(resourceFor(path, 'learner')).toEqual({ source: 'maple', needs: 'premium' });
     }
   });

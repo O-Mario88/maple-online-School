@@ -1,3 +1,5 @@
+import { Maple } from '@/constants/maple';
+
 /**
  * A stand-in for the Excalidraw + LiveKit whiteboard sync, for design builds. Neither library is
  * installed: these types and helpers mimic their shapes so the screens behave realistically, and are
@@ -64,7 +66,7 @@ export function initialFractionElements(author: string): readonly ExcalidrawElem
       type: 'text',
       x: 24,
       y: 16,
-      strokeColor: '#1463F3',
+      strokeColor: Maple.blue,
       text: 'Fractions: Adding and Subtracting',
       version: 1,
       author,
@@ -74,7 +76,7 @@ export function initialFractionElements(author: string): readonly ExcalidrawElem
       type: 'equation',
       x: 24,
       y: 54,
-      strokeColor: '#0F172A',
+      strokeColor: Maple.navy,
       text: 'Find  3/4 + 2/3',
       version: 1,
       author,
@@ -84,7 +86,7 @@ export function initialFractionElements(author: string): readonly ExcalidrawElem
       type: 'equation',
       x: 24,
       y: 92,
-      strokeColor: '#1D4ED8',
+      strokeColor: Maple.blue,
       text: '= (3×3)/(4×3) + (2×4)/(3×4)  [LCM = 12]',
       version: 1,
       author,
@@ -94,7 +96,7 @@ export function initialFractionElements(author: string): readonly ExcalidrawElem
       type: 'equation',
       x: 24,
       y: 126,
-      strokeColor: '#0F172A',
+      strokeColor: Maple.navy,
       text: '= 9/12 + 8/12 = 17/12',
       version: 1,
       author,
@@ -106,8 +108,8 @@ export function initialFractionElements(author: string): readonly ExcalidrawElem
       y: 160,
       width: 150,
       height: 36,
-      strokeColor: '#EF4444',
-      backgroundColor: '#FEF2F2',
+      strokeColor: Maple.error,
+      backgroundColor: Maple.errorSoft,
       text: 'Answer: 1  5/12',
       version: 1,
       author,

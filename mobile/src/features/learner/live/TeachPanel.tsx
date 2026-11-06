@@ -7,6 +7,7 @@ import { providerFor } from '@/lib/lessons/live';
 import { useAddLiveSession, useLessons, useLiveSessions, usePlanLesson, usePublishLesson } from '@/lib/lessons/queries';
 import { useClasses } from '@/lib/school/queries';
 import { toast } from '@/lib/toast';
+import { Maple } from '@/constants/maple';
 
 /** Draft lessons for staff to publish. */
 function Drafts() {
@@ -141,6 +142,6 @@ const styles = StyleSheet.create({
   panel: { gap: 12 },
   h2: { fontSize: 18, fontWeight: '800', color: FORM.ink },
   muted: { fontSize: 12, color: FORM.body },
-  row: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 8, borderTopWidth: 1, borderTopColor: '#F0F3F8' },
+  row: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 8, borderTopWidth: 1, borderTopColor: Maple.blueSoft },
   rowTitle: { fontSize: 14, fontWeight: '700', color: FORM.ink },
 });

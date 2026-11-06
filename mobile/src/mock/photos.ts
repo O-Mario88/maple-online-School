@@ -278,8 +278,7 @@ export const photos = {
     'res-2': require('./images/lhome-res-2.png') as Photo,
     'res-3': require('./images/lhome-res-3.png') as Photo,
     'res-4': require('./images/lhome-res-4.png') as Photo,
-    'sdash-boy': require('./images/sdash-hero-boy.jpg') as Photo,
-    'sdash-mountain': require('./images/sdash-hero-mountain.jpg') as Photo,
+    'sdash-boy': require('./images/sdash-hero-boy-clean.jpg') as Photo,
     'sdash-sidebar-books': require('./images/sdash-sidebar-books.jpg') as Photo,
     'sdash-rec-1': require('./images/sdash-rec-1.jpg') as Photo,
     'sdash-rec-2': require('./images/sdash-rec-2.jpg') as Photo,
@@ -631,4 +630,58 @@ export const photos = {
   teacherAvatar: require('./images/teacher-avatar.jpg') as Photo,
   teacherCourses: [require('./images/teacher-course-1.jpg') as Photo, require('./images/teacher-course-2.jpg') as Photo, require('./images/teacher-course-3.jpg') as Photo],
   teacherShorts: [require('./images/teacher-short-1.jpg') as Photo, require('./images/teacher-short-2.jpg') as Photo, require('./images/teacher-short-3.jpg') as Photo],
+  /** Career Compass references (desktop and phone): heroes, the assessment art, journey cards, career photos and interest tiles. */
+  careerCompass: {
+    hero: require('./images/cc-hero.png') as Photo,
+    heroPhone: require('./images/cc-hero-phone.png') as Photo,
+    assessment: require('./images/cc-assessment.png') as Photo,
+    interestsHero: require('./images/cc-interests-hero.png') as Photo,
+    journey: { interests: require('./images/cc-journey-interests.png') as Photo, explorer: require('./images/cc-journey-explorer.png') as Photo, roadmap: require('./images/cc-journey-roadmap.png') as Photo, counselor: require('./images/cc-journey-counselor.png') as Photo },
+    careers: {
+      'doctor': require('./images/cc-career-doctor.png') as Photo,
+      'nurse': require('./images/cc-career-nurse.png') as Photo,
+      'pharmacist': require('./images/cc-career-pharmacist.png') as Photo,
+      'lab-scientist': require('./images/cc-career-lab.png') as Photo,
+      'civil-engineer': require('./images/cc-career-civil.png') as Photo,
+      'developer': require('./images/cc-career-developer.png') as Photo,
+      'data-scientist': require('./images/cc-career-data-scientist.png') as Photo,
+      'teacher': require('./images/cc-career-teacher.png') as Photo,
+      'agronomist': require('./images/cc-career-agronomist.png') as Photo,
+      'accountant': require('./images/cc-career-accountant.png') as Photo,
+    } as Record<string, Photo>,
+    /** Heroes and art from the Career Events, Counselor & Sessions, Scholarships and Communities references. */
+    heroes: { interests: require('./images/cc-interests-banner.png') as Photo, results: require('./images/cc-results-hero.png') as Photo, events: require('./images/cc-ev-hero.png') as Photo, counselor: require('./images/cc-co-hero.png') as Photo, scholarships: require('./images/cc-sc-hero.png') as Photo, communities: require('./images/cc-cm-hero.png') as Photo },
+    art: { assessment: require('./images/cc-assessment-art.png') as Photo, calendar: require('./images/cc-ev-calendar.png') as Photo, howCounseling: require('./images/cc-co-how.png') as Photo, planner: require('./images/cc-sc-planner.png') as Photo, help: require('./images/cc-sc-help.png') as Photo, startCommunity: require('./images/cc-cm-start.png') as Photo, groupSession: require('./images/cc-cm-session.png') as Photo },
+    /** Event and community card photos, their own badges painted out. */
+    events: { health: require('./images/cc-ev-health.png') as Photo, alevel: require('./images/cc-ev-alevel.png') as Photo, klu: require('./images/cc-ev-klu.png') as Photo, fair: require('./images/cc-ev-fair.png') as Photo, stem: require('./images/cc-ev-stem.png') as Photo, tech: require('./images/cc-ev-tech.png') as Photo } as Record<string, Photo>,
+    communities: { health: require('./images/cc-cm-health.png') as Photo, eng: require('./images/cc-cm-eng.png') as Photo, code: require('./images/cc-cm-code.png') as Photo, green: require('./images/cc-cm-green.png') as Photo, edu: require('./images/cc-cm-edu.png') as Photo, creative: require('./images/cc-cm-creative.png') as Photo } as Record<string, Photo>,
+    counselors: { c1: require('./images/cc-co-miriam.png') as Photo, c2: require('./images/cc-co-joseph.png') as Photo } as Record<string, Photo>,
+    interests: {
+      science: require('./images/cc-interest-science.png') as Photo,
+      technology: require('./images/cc-interest-technology.png') as Photo,
+      design: require('./images/cc-interest-design.png') as Photo,
+      creativity: require('./images/cc-interest-creativity.png') as Photo,
+      leadership: require('./images/cc-interest-leadership.png') as Photo,
+      business: require('./images/cc-interest-business.png') as Photo,
+      sports: require('./images/cc-interest-sports.png') as Photo,
+      environment: require('./images/cc-interest-environment.png') as Photo,
+      reading: require('./images/cc-interest-reading.png') as Photo,
+    } as Record<string, Photo>,
+  },
+  /** The University & Programs Directory: mirrored School Network campuses and crests for the extra sample institutions. */
+  directory: {
+    campus: {
+      lakeview: require('./images/uni-campus-lakeview-b.png') as Photo,
+      riverside: require('./images/uni-campus-riverside-b.png') as Photo,
+      greenhill: require('./images/uni-campus-greenhill-b.png') as Photo,
+      kigezi: require('./images/uni-campus-kigezi-b.png') as Photo,
+      stmarys: require('./images/uni-campus-stmarys-b.png') as Photo,
+      online: require('./images/uni-campus-online-b.png') as Photo,
+    } as Record<string, Photo>,
+    crest: {
+      lakeview: require('./images/uni-crest-lakeview-b.png') as Photo,
+      riverside: require('./images/uni-crest-riverside-b.png') as Photo,
+      greenhill: require('./images/uni-crest-greenhill-b.png') as Photo,
+    } as Record<string, Photo>,
+  },
 };

@@ -2,6 +2,7 @@
 import type { IconName } from '@/lib/icons';
 
 import { photos } from './photos';
+import { Maple } from '@/constants/maple';
 
 export type HostToolKey =
   | 'Whiteboard'
@@ -64,8 +65,8 @@ export const teacherHost = {
   materials: [
     { id: 'm1', title: 'Lesson Slides.pdf', kind: 'pdf', color: '#EC4899' },
     { id: 'm2', title: 'Quadratic Worksheet.pdf', kind: 'pro', color: '#F97316' },
-    { id: 'm3', title: 'Practice Questions.pdf', kind: 'pdf', color: '#E11D48' },
-    { id: 'm4', title: 'Example Video.mp4', kind: 'video', color: '#1463F3' },
+    { id: 'm3', title: 'Practice Questions.pdf', kind: 'pdf', color: Maple.error },
+    { id: 'm4', title: 'Example Video.mp4', kind: 'video', color: Maple.blue },
   ] as HostMaterial[],
   pdf: {
     filename: 'Quadratic Equations.pdf',
@@ -107,32 +108,32 @@ export const teacherHost = {
   comprehension: {
     percent: 78,
     legend: [
-      { label: 'Strong (18)', color: '#22C55E' },
-      { label: 'Good (6)', color: '#4ADE80' },
-      { label: 'Needs Help (4)', color: '#F59E0B' },
-      { label: 'Stuck (0)', color: '#EF4444' },
+      { label: 'Strong (18)', color: Maple.success },
+      { label: 'Good (6)', color: Maple.success },
+      { label: 'Needs Help (4)', color: Maple.warning },
+      { label: 'Stuck (0)', color: Maple.error },
     ],
     bars: [
-      { h: 0.72, color: '#16A34A' },
-      { h: 0.9, color: '#16A34A' },
-      { h: 0.82, color: '#22C55E' },
-      { h: 0.42, color: '#EF4444' },
-      { h: 0.65, color: '#4ADE80' },
-      { h: 0.95, color: '#16A34A' },
-      { h: 0.78, color: '#22C55E' },
-      { h: 0.54, color: '#F59E0B' },
-      { h: 0.36, color: '#EF4444' },
-      { h: 0.6, color: '#4ADE80' },
-      { h: 0.88, color: '#16A34A' },
-      { h: 0.7, color: '#22C55E' },
-      { h: 0.46, color: '#EF4444' },
-      { h: 0.58, color: '#F59E0B' },
-      { h: 0.82, color: '#16A34A' },
-      { h: 0.64, color: '#F59E0B' },
-      { h: 0.86, color: '#16A34A' },
-      { h: 0.74, color: '#22C55E' },
-      { h: 0.48, color: '#F59E0B' },
-      { h: 0.62, color: '#4ADE80' },
+      { h: 0.72, color: Maple.successText },
+      { h: 0.9, color: Maple.successText },
+      { h: 0.82, color: Maple.success },
+      { h: 0.42, color: Maple.error },
+      { h: 0.65, color: Maple.success },
+      { h: 0.95, color: Maple.successText },
+      { h: 0.78, color: Maple.success },
+      { h: 0.54, color: Maple.warning },
+      { h: 0.36, color: Maple.error },
+      { h: 0.6, color: Maple.success },
+      { h: 0.88, color: Maple.successText },
+      { h: 0.7, color: Maple.success },
+      { h: 0.46, color: Maple.error },
+      { h: 0.58, color: Maple.warning },
+      { h: 0.82, color: Maple.successText },
+      { h: 0.64, color: Maple.warning },
+      { h: 0.86, color: Maple.successText },
+      { h: 0.74, color: Maple.success },
+      { h: 0.48, color: Maple.warning },
+      { h: 0.62, color: Maple.success },
     ],
   },
   breakoutRooms: [

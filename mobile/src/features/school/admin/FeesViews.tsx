@@ -10,6 +10,7 @@ import type { MockData } from '@/mock';
 
 import { AdminDesk, AdminPhone, BigButton, Cell, type Column, DataTable, Legend, ListCard, ListRow, MenuRow, MiniBtn, money, PageHead, SelectBox, type Stat, StatCard, StatGrid, StatusCell, useChoice, useSelection } from '../kit/AdminKit';
 import { BarChart, Donut, DonutLabel } from '../kit/Charts';
+import { Maple } from '@/constants/maple';
 
 type Admin = MockData['schoolAdmin'];
 type Fees = Admin['fees'];
@@ -111,14 +112,14 @@ export function FeesDesk({ a }: { a: Admin }) {
           <Card style={[styles.block, styles.colTrend]}>
             <CardHead title="Collection Trend" right={<SelectBox value={trendTerm} options={trendTerms} onChange={setTrendTerm} width={140} />} />
             <View style={styles.legendRow}>
-              <Legend color="#22A55A" label="Collected" />
-              <Legend color="#EF3B4D" label="Outstanding" />
+              <Legend color={Maple.successText} label="Collected" />
+              <Legend color={Maple.error} label="Outstanding" />
             </View>
             <BarChart
               labels={f.trend.labels}
               series={[
-                { name: 'Collected', color: '#22A55A', values: f.trend.collected },
-                { name: 'Outstanding', color: '#EF3B4D', values: f.trend.outstanding },
+                { name: 'Collected', color: Maple.successText, values: f.trend.collected },
+                { name: 'Outstanding', color: Maple.error, values: f.trend.outstanding },
               ]}
               mode="stacked"
               max={100}
@@ -131,9 +132,9 @@ export function FeesDesk({ a }: { a: Admin }) {
             <View style={styles.statusRow}>
               <Donut
                 slices={[
-                  { value: f.status.full, color: '#22A55A' },
-                  { value: f.status.partial, color: '#F7A21B' },
-                  { value: f.status.arrears, color: '#EF3B4D' },
+                  { value: f.status.full, color: Maple.successText },
+                  { value: f.status.partial, color: Maple.warning },
+                  { value: f.status.arrears, color: Maple.error },
                 ]}
                 size={160}
                 stroke={22}>
@@ -141,9 +142,9 @@ export function FeesDesk({ a }: { a: Admin }) {
               </Donut>
               <View style={styles.flex}>
                 {[
-                  { c: '#22A55A', l: 'Paid in Full', v: f.status.full },
-                  { c: '#F7A21B', l: 'Partially Paid', v: f.status.partial },
-                  { c: '#EF3B4D', l: 'In Arrears', v: f.status.arrears },
+                  { c: Maple.successText, l: 'Paid in Full', v: f.status.full },
+                  { c: Maple.warning, l: 'Partially Paid', v: f.status.partial },
+                  { c: Maple.error, l: 'In Arrears', v: f.status.arrears },
                 ].map((x) => (
                   <View key={x.l} style={styles.statusItem}>
                     <Legend color={x.c} label={x.l} />

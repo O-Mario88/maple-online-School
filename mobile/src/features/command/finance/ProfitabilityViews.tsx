@@ -12,13 +12,14 @@ import { accountBalance } from '@/features/school/accounting/books';
 import { toast } from '@/lib/toast';
 
 import { CheckList, FinDesk, FinHead, FinPanel, FinPhone, FinStats, FinTabs, type Mark, num, type Promo, RingLegend, ugx } from './FinKit';
+import { Maple } from '@/constants/maple';
 
 type C = CommandData['platformFinance'];
 type Dim = keyof C['ops']['dimensions'];
 const DIMS: readonly Dim[] = ['By Region', 'By Curriculum', 'By Subscription Plan', 'By Channel'];
 const TABS = ['Overview', ...DIMS, 'By Subject', 'Unit Economics', 'Cost Breakdown'] as const;
-const RING = ['#2563EB', '#22A55A', '#F5B731', '#8B5CF6', '#E5484D', '#A0AEC0'] as const;
-const PROMO: Promo = { icon: 'chart', color: '#1E6BF0', title: 'Unit Economics & Profitability', body: 'Profitability by region, curriculum, subject, plan and channel.' };
+const RING = [Maple.blue, Maple.successText, Maple.warning, Maple.blue, Maple.error, Maple.faint] as const;
+const PROMO: Promo = { icon: 'chart', color: Maple.blue, title: 'Unit Economics & Profitability', body: 'Profitability by region, curriculum, subject, plan and channel.' };
 const PERIODS = ['Jan 1 – Oct 31, 2026 (YTD)'];
 const pct = (n: number) => `${n.toFixed(1)}%`;
 /** Table money in millions, so seven columns fit. */
@@ -85,10 +86,10 @@ function Trend({ u, phone = false }: { u: U; phone?: boolean }) {
       <ComboChart
         labels={f.labels}
         bars={[
-          { name: 'Revenue', color: '#3B82F6', values: f.revenue },
-          { name: 'Direct Costs', color: '#A78BFA', values: f.direct },
+          { name: 'Revenue', color: Maple.blue, values: f.revenue },
+          { name: 'Direct Costs', color: Maple.blueLine, values: f.direct },
         ]}
-        line={{ name: 'Operating Profit', color: '#22A55A', values: op, dots: true }}
+        line={{ name: 'Operating Profit', color: Maple.successText, values: op, dots: true }}
         max={1200}
         lineMax={1200}
         rightAxis={false}
@@ -99,9 +100,9 @@ function Trend({ u, phone = false }: { u: U; phone?: boolean }) {
       <View style={styles.legend}>
         {(
           [
-            ['Revenue', '#3B82F6'],
-            ['Direct Costs', '#A78BFA'],
-            ['Operating Profit', '#22A55A'],
+            ['Revenue', Maple.blue],
+            ['Direct Costs', Maple.blueLine],
+            ['Operating Profit', Maple.successText],
           ] as const
         ).map(([l, col]) => (
           <View key={l} style={styles.inline}>

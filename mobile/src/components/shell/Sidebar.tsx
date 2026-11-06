@@ -1,17 +1,19 @@
-import { type Href, router, usePathname } from 'expo-router';
+import { type Href, usePathname } from 'expo-router';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Icon } from '@/components/icon';
 import { Avatar, ModeButton } from '@/components/ui';
-import { Radius, SidebarWidth, Spacing, type Theme, Type } from '@/constants/theme';
+import { Colors, Radius, SidebarWidth, Spacing, type Theme, Type } from '@/constants/theme';
+import { MapleLogo } from '@/components/brand/MapleLogo';
 import { useStyles } from '@/hooks/use-styles';
 import { useAuth, useMe } from '@/lib/auth/auth-context';
 import { DESIGN_DATA } from '@/lib/mock';
-import { activeKey, navFor } from '@/lib/navigation';
+import { useCanOpen } from '@/lib/access/use-role';
+import { activeKey, navFor, onlyAllowed } from '@/lib/navigation';
 import { usePortal } from '@/lib/portal-context';
+import { openMenuPage } from '@/lib/menu-nav';
 
-import { BrandMark } from './BrandMark';
 import { InboxBell } from './InboxBell';
 
 /** The wide-screen menu: brand, portal switcher, sections and account. */
@@ -21,16 +23,16 @@ export function Sidebar() {
   const { portal } = usePortal();
   const { signOut } = useAuth();
   const me = useMe();
-  const items = navFor(portal, DESIGN_DATA);
+  const may = useCanOpen();
+  const items = onlyAllowed(navFor(portal, DESIGN_DATA), may);
   const active = activeKey(items, pathname);
 
   return (
     <SafeAreaView style={styles.sidebar} edges={['top', 'left', 'bottom']}>
       <View style={styles.brand}>
-        <BrandMark size={32} />
+        {/* The white-navy logo on the light sidebar, the light one on the dark-mode sidebar. */}
         <View style={styles.flexText}>
-          <Text style={styles.brandName}>Maple</Text>
-          <Text style={styles.brandSub}>Global Online School</Text>
+          <MapleLogo size={30} onDark={theme.sidebar === Colors.dark.sidebar} />
         </View>
         <InboxBell onDark />
       </View>
@@ -45,7 +47,7 @@ export function Sidebar() {
           return (
             <Pressable
               key={item.key}
-              onPress={() => router.navigate(item.href as Href)}
+              onPress={() => openMenuPage(item.href as Href)}
               style={({ hovered }) => [styles.item, selected && styles.itemOn, hovered && !selected && styles.itemHover]}
               accessibilityRole="menuitem"
               accessibilityState={{ selected }}

@@ -6,6 +6,7 @@ import { BLUE, BODY, GREEN, INK, IconTile, LINE, MUTED, RED, StepBadge, TButton 
 import { processingSteps, sourceLinkError } from '@/lib/teacher-home';
 import { toast } from '@/lib/toast';
 import type { SourceKey, StudioNew } from '@/mock/teacher-studio';
+import { Maple } from '@/constants/maple';
 
 /** Simulated seconds per real second, so the "60 seconds" run plays in about five. */
 const SPEED = 12;
@@ -200,7 +201,7 @@ export function Processing({ s, run, phone = false }: { s: StudioNew; run: Studi
             <View key={x.label} style={styles.stepRow} accessible accessibilityLabel={`${label} ${st === 'done' ? 'done' : st === 'running' ? 'in progress' : 'waiting'}`}>
               {st === 'done' ? (
                 <View style={styles.tick}>
-                  <Icon name="check" size={12} color="#FFFFFF" />
+                  <Icon name="check" size={12} color={Maple.surface} />
                 </View>
               ) : st === 'running' ? (
                 <ActivityIndicator size="small" color={BLUE} style={styles.tickSpace} />
@@ -221,7 +222,7 @@ export function Processing({ s, run, phone = false }: { s: StudioNew; run: Studi
         </View>
         {run.running ? null : (
           <View style={styles.doneTick}>
-            <Icon name="check" size={14} color="#FFFFFF" />
+            <Icon name="check" size={14} color={Maple.surface} />
           </View>
         )}
       </View>
@@ -275,23 +276,23 @@ const styles = StyleSheet.create({
   stepSub: { fontSize: 12.5, color: BODY, marginTop: 2 },
   stepSubSmall: { fontSize: 10 },
   tabs: { flexDirection: 'row', marginTop: 14, borderBottomWidth: 1, borderColor: LINE },
-  tab: { paddingHorizontal: 12, paddingVertical: 9, borderBottomWidth: 2.5, borderColor: 'transparent' },
-  tabOn: { borderColor: BLUE, backgroundColor: '#EEF4FF' },
+  tab: { paddingHorizontal: 12, paddingVertical: 9, borderBottomWidth: 3, borderColor: 'transparent' },
+  tabOn: { borderColor: BLUE },
   tabText: { fontSize: 13, color: INK },
   tabTextOn: { color: BLUE, fontWeight: '600' },
   addRow: { flexDirection: 'row', gap: 16, marginTop: 14 },
-  zone: { height: 210, alignItems: 'center', justifyContent: 'center', gap: 8, paddingHorizontal: 18, borderRadius: 10, borderWidth: 1.5, borderStyle: 'dashed', borderColor: '#C9D6EA', backgroundColor: '#FAFCFF' },
+  zone: { height: 210, alignItems: 'center', justifyContent: 'center', gap: 8, paddingHorizontal: 18, borderRadius: 10, borderWidth: 1.5, borderStyle: 'dashed', borderColor: Maple.blueLine, backgroundColor: Maple.blueSoft },
   zoneText: { alignItems: 'stretch', justifyContent: 'flex-start', padding: 12, borderStyle: 'solid' },
   zoneTitle: { fontSize: 13, fontWeight: '600', color: INK, textAlign: 'center' },
   zoneSub: { fontSize: 11, color: MUTED },
   zoneLink: { alignSelf: 'stretch', marginTop: 6 },
   choose: { marginTop: 10, width: 140 },
-  paste: { flex: 1, minHeight: 120, marginBottom: 10, padding: 10, borderRadius: 8, borderWidth: 1, borderColor: LINE, backgroundColor: '#FFFFFF', fontSize: 13, color: INK, textAlignVertical: 'top' },
+  paste: { flex: 1, minHeight: 120, marginBottom: 10, padding: 10, borderRadius: 8, borderWidth: 1, borderColor: LINE, backgroundColor: Maple.surface, fontSize: 13, color: INK, textAlignVertical: 'top' },
   side: { width: 250 },
   sideLabel: { fontSize: 13, fontWeight: '600', color: INK },
   supported: { marginTop: 16 },
   links: { gap: 8, marginTop: 8 },
-  linkBox: { height: 30, flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 8, borderRadius: 8, borderWidth: 1, borderColor: LINE, backgroundColor: '#FFFFFF' },
+  linkBox: { height: 30, flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 8, borderRadius: 8, borderWidth: 1, borderColor: LINE, backgroundColor: Maple.surface },
   linkBoxBad: { borderColor: RED },
   linkInput: { flex: 1, minWidth: 0, height: 28, paddingVertical: 0, fontSize: 11.5, color: INK },
   error: { marginTop: 4, fontSize: 11, color: RED },
@@ -303,14 +304,14 @@ const styles = StyleSheet.create({
   steps: { gap: 0, marginTop: 12 },
   stepRow: { height: 25.5, flexDirection: 'row', alignItems: 'center', gap: 10 },
   tick: { width: 18, height: 18, alignItems: 'center', justifyContent: 'center', borderRadius: 9, backgroundColor: GREEN },
-  tickWaiting: { backgroundColor: 'transparent', borderWidth: 1.5, borderColor: '#C9D6EA' },
+  tickWaiting: { backgroundColor: 'transparent', borderWidth: 1.5, borderColor: Maple.blueLine },
   tickSpace: { width: 18, height: 18 },
   stepText: { flex: 1, fontSize: 11.5, color: INK },
   stepTextP: { fontSize: 12 },
   waiting: { color: MUTED },
   secs: { fontSize: 11.5, color: BODY, minWidth: 28, textAlign: 'right' },
-  done: { flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 18, padding: 12, borderRadius: 10, backgroundColor: '#E9F7EF' },
-  pending: { backgroundColor: '#EEF4FF' },
+  done: { flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 18, padding: 12, borderRadius: 10, backgroundColor: Maple.successSoft },
+  pending: { backgroundColor: Maple.blueSoft },
   doneTitle: { fontSize: 12, fontWeight: '700', color: INK },
   doneSub: { fontSize: 10.5, color: BODY, marginTop: 3 },
   doneTick: { width: 26, height: 26, alignItems: 'center', justifyContent: 'center', borderRadius: 13, backgroundColor: GREEN },
@@ -318,10 +319,10 @@ const styles = StyleSheet.create({
   phoneTitle: { fontSize: 15, fontWeight: '700', color: INK },
   phoneSub: { fontSize: 11.5, color: BODY, marginTop: 2 },
   tiles: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 12 },
-  tile: { height: 62, alignItems: 'center', justifyContent: 'center', gap: 5, borderRadius: 10, borderWidth: 1, borderColor: LINE, backgroundColor: '#FFFFFF' },
+  tile: { height: 62, alignItems: 'center', justifyContent: 'center', gap: 5, borderRadius: 10, borderWidth: 1, borderColor: LINE, backgroundColor: Maple.surface },
   tileThird: { width: '31.5%' },
   tileHalf: { width: '48.5%' },
-  tileOn: { borderColor: '#BBD2FA', backgroundColor: '#EEF4FF' },
+  tileOn: { borderColor: Maple.blueLine, backgroundColor: Maple.blueSoft },
   tileText: { fontSize: 11, color: INK },
   openBox: { marginTop: 10 },
 });

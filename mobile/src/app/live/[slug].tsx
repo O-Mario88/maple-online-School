@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useMemo } from 'react';
-import { ScrollView, StyleSheet, useWindowDimensions } from 'react-native';
+import { StyleSheet, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Button, EmptyState } from '@/components/ui';
@@ -12,6 +12,8 @@ import { Brand } from '@/features/public/palette';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { LightOnly } from '@/hooks/use-theme';
 import { mockData } from '@/lib/mock';
+import { Maple } from '@/constants/maple';
+import { PageScroll } from '@/components/shell/PageScroll';
 
 /** From this width the page is the reference itself, scaled to fit. */
 const DESKTOP_MIN = 1200;
@@ -57,11 +59,11 @@ export default function LiveSessionScreen() {
         <RefScale width={width}>
           <HomeNav wide tall fullWidth links={EXPLORE_LINKS} active="Live Classes" searchPlaceholder="Search subjects, live classes, topics..." />
         </RefScale>
-        <ScrollView style={styles.page}>
+        <PageScroll style={styles.page}>
           <RefScale width={width} refWidth={LIVE_REF_WIDTH}>
             <LiveDesk s={s} />
           </RefScale>
-        </ScrollView>
+        </PageScroll>
       </SafeAreaView>
     </LightOnly>
   );
@@ -69,5 +71,5 @@ export default function LiveSessionScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: Brand.surface },
-  page: { backgroundColor: '#F4F8FC' },
+  page: { backgroundColor: Maple.blueSoft },
 });

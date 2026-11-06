@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { type ReactNode, useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
@@ -15,6 +15,7 @@ import { toast } from '@/lib/toast';
 import type { BroadcastRow, BroadcastStatus, Channel } from '@/mock/command-center/comms';
 
 import { AudiencePill } from './CommsAnnouncements';
+import { Maple } from '@/constants/maple';
 
 type M = CommandData['comms'];
 type TabKey = 'all' | 'Scheduled' | 'Sending' | 'Completed' | 'Failed';
@@ -506,24 +507,24 @@ const styles = StyleSheet.create({
   half: { width: '48%' },
   choiceText: { fontSize: 12.5, color: NAVY },
   choiceSmall: { fontSize: 11.5 },
-  radio: { width: 17, height: 17, borderRadius: 9, borderWidth: 1.5, borderColor: '#B8C2D9', alignItems: 'center', justifyContent: 'center' },
+  radio: { width: 17, height: 17, borderRadius: 9, borderWidth: 1.5, borderColor: Maple.blueLine, alignItems: 'center', justifyContent: 'center' },
   radioOn: { borderColor: BLUE },
   radioDot: { width: 9, height: 9, borderRadius: 5, backgroundColor: BLUE },
-  box: { width: 16, height: 16, borderRadius: 4, borderWidth: 1.5, borderColor: '#B8C2D9', alignItems: 'center', justifyContent: 'center' },
+  box: { width: 16, height: 16, borderRadius: 4, borderWidth: 1.5, borderColor: Maple.blueLine, alignItems: 'center', justifyContent: 'center' },
   boxOn: { borderColor: BLUE, backgroundColor: BLUE },
   reach: { fontSize: 12, fontWeight: '600', color: BLUE },
-  tplBtn: { flexDirection: 'row', alignItems: 'center', gap: 5, paddingHorizontal: 9, paddingVertical: 5, borderRadius: 7, backgroundColor: '#EAF1FE' },
+  tplBtn: { flexDirection: 'row', alignItems: 'center', gap: 5, paddingHorizontal: 9, paddingVertical: 5, borderRadius: 7, backgroundColor: Maple.blueSoft },
   tplText: { fontSize: 12, fontWeight: '600', color: BLUE },
   label: { fontSize: 12, fontWeight: '600', color: NAVY },
   input: { height: 38, paddingHorizontal: 10, borderRadius: 8, borderWidth: 1, borderColor: LINE, fontSize: 13, color: NAVY, backgroundColor: WHITE },
   editor: { borderRadius: 8, borderWidth: 1, borderColor: LINE, backgroundColor: WHITE },
   textarea: { minHeight: 80, padding: 10, fontSize: 13, lineHeight: 19, color: NAVY, textAlignVertical: 'top' },
   toolbar: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 10, paddingVertical: 8, borderTopWidth: 1, borderColor: LINE },
-  errors: { gap: 3, padding: 10, borderRadius: 8, backgroundColor: '#FEF2F2' },
+  errors: { gap: 3, padding: 10, borderRadius: 8, backgroundColor: Maple.errorSoft },
   error: { fontSize: 12, color: RED },
   preview: { flexDirection: 'row', gap: 10, padding: 12, borderRadius: 12, borderWidth: 1, borderColor: LINE, backgroundColor: WHITE },
   previewIcon: { width: 36, height: 36, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
-  sms: { backgroundColor: '#F1F4FA' },
+  sms: { backgroundColor: Maple.blueSoft },
   card: { flexDirection: 'row', gap: 12, padding: 12, borderRadius: 14, borderWidth: 1, borderColor: LINE, backgroundColor: WHITE },
   cardThumb: { width: 56, height: 56, borderRadius: 10 },
   cardBody: { gap: 5 },

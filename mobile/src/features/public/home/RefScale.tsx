@@ -22,6 +22,7 @@ export function RefScale({ width, refWidth = REF_WIDTH, children }: { width: num
 }
 
 const styles = StyleSheet.create({
-  outer: { overflow: 'hidden' },
+  // Centred in the room it is given (a page wider than the content width shows margins either side).
+  outer: { overflow: 'hidden', alignSelf: 'center' },
   inner: { width: REF_WIDTH, transformOrigin: 'top left' },
 });

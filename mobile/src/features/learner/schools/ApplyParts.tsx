@@ -6,9 +6,10 @@ import { L } from '@/features/learner/frame/LightFrame';
 import type { IconName } from '@/lib/icons';
 
 import { STEPS, type StepKey } from './applicationForm';
-import { LAVENDER, PURPLE } from './SchoolParts';
+import { BRAND_SOFT, BRAND_BLUE } from './SchoolParts';
+import { Maple } from '@/constants/maple';
 
-const RED = '#DC2626';
+const RED = Maple.error;
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 /** "14 Mar 2011" from YYYY-MM-DD. */
@@ -192,7 +193,7 @@ export function SectionHead({ icon, title, sub, note, right }: { icon: IconName;
   return (
     <View style={s.head}>
       <View style={s.headIcon}>
-        <Icon name={icon} size={22} color={PURPLE} />
+        <Icon name={icon} size={22} color={BRAND_BLUE} />
       </View>
       <View style={s.flex}>
         <Text style={s.headTitle}>
@@ -249,7 +250,7 @@ const s = StyleSheet.create({
   field: { gap: 6 },
   label: { fontSize: 14, fontWeight: '500', color: L.navy },
   star: { color: RED },
-  box: { height: 40, flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 14, borderRadius: 8, borderWidth: 1, borderColor: '#D5DCE7', backgroundColor: L.white },
+  box: { height: 40, flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 14, borderRadius: 8, borderWidth: 1, borderColor: Maple.borderStrong, backgroundColor: L.white },
   boxBare: { width: 250, height: 40, borderRadius: 20 },
   boxError: { borderColor: RED },
   phoneBox: { paddingLeft: 0 },
@@ -257,7 +258,7 @@ const s = StyleSheet.create({
   value: { flex: 1, minWidth: 0, fontSize: 14.5, color: L.ink },
   placeholder: { color: L.muted },
   error: { fontSize: 12, color: RED },
-  code: { height: 38, flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 12, borderRightWidth: 1, borderRightColor: '#D5DCE7' },
+  code: { height: 38, flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 12, borderRightWidth: 1, borderRightColor: Maple.borderStrong },
   flag: { fontSize: 15 },
   codeText: { fontSize: 14, color: L.ink },
   scrim: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20, backgroundColor: 'rgba(11,26,63,0.35)' },
@@ -276,20 +277,20 @@ const s = StyleSheet.create({
   done: { height: 42, alignItems: 'center', justifyContent: 'center', borderRadius: 10, backgroundColor: L.blue },
   doneText: { fontSize: 15, fontWeight: '600', color: L.white },
   head: { flexDirection: 'row', alignItems: 'center', gap: 14 },
-  headIcon: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center', borderRadius: 12, backgroundColor: LAVENDER },
+  headIcon: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center', borderRadius: 12, backgroundColor: BRAND_SOFT },
   headTitle: { fontSize: 20, fontWeight: '700', color: L.navy },
   headNote: { fontSize: 17, fontWeight: '500', color: L.body },
   headSub: { marginTop: 2, fontSize: 14, color: L.body },
   check: { flexDirection: 'row', alignItems: 'flex-start', gap: 10 },
-  checkBox: { width: 22, height: 22, alignItems: 'center', justifyContent: 'center', borderRadius: 6, borderWidth: 1.5, borderColor: '#B6C0CF', backgroundColor: L.white },
+  checkBox: { width: 22, height: 22, alignItems: 'center', justifyContent: 'center', borderRadius: 6, borderWidth: 1.5, borderColor: Maple.borderStrong, backgroundColor: L.white },
   checkOn: { borderColor: L.blue, backgroundColor: L.blue },
   checkText: { flex: 1, fontSize: 14, lineHeight: 20, color: L.ink },
   steps: { alignItems: 'center', paddingVertical: 4 },
   stepWrap: { flexDirection: 'row', alignItems: 'center' },
-  stepLine: { width: 44, height: 1.5, marginHorizontal: 8, backgroundColor: '#C9D2E0' },
+  stepLine: { width: 44, height: 1.5, marginHorizontal: 8, backgroundColor: Maple.borderStrong },
   stepLineP: { width: 18, marginHorizontal: 4 },
   step: { flexDirection: 'row', alignItems: 'center', gap: 10, height: 52, paddingHorizontal: 6 },
-  stepDot: { width: 34, height: 34, alignItems: 'center', justifyContent: 'center', borderRadius: 17, borderWidth: 1.5, borderColor: '#C9D2E0', backgroundColor: L.white },
+  stepDot: { width: 34, height: 34, alignItems: 'center', justifyContent: 'center', borderRadius: 17, borderWidth: 1.5, borderColor: Maple.borderStrong, backgroundColor: L.white },
   stepDotOn: { borderColor: L.blue, backgroundColor: L.blue },
   stepDotDone: { borderColor: L.green, backgroundColor: L.green },
   stepNum: { fontSize: 15, fontWeight: '600', color: L.ink },

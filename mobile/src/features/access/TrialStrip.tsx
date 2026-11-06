@@ -2,11 +2,12 @@ import { router } from 'expo-router';
 import { Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
-import { Breakpoints, Radius, Spacing, type Theme, Type } from '@/constants/theme';
+import { Breakpoints, Spacing, type Theme, Type } from '@/constants/theme';
 import { useStyles } from '@/hooks/use-styles';
 import { useAccess } from '@/lib/access/access-context';
 import { type StripState, stripMessage } from '@/lib/access/strip';
 import { dayLabel } from '@/lib/access/trial';
+import { Radii } from '@/constants/maple';
 
 /** A slim strip over every page: browsing free, days left of the free month, or that it has ended, with the next step. */
 export function TrialStrip() {
@@ -45,7 +46,7 @@ function makeStyles(t: Theme) {
     stripEnded: { backgroundColor: t.dangerSoft },
     text: { ...Type.caption, color: t.accentText, fontWeight: '600', flexShrink: 1 },
     textEnded: { color: t.danger },
-    button: { paddingHorizontal: Spacing.three, paddingVertical: 4, borderRadius: Radius.pill, backgroundColor: t.accent },
+    button: { paddingHorizontal: Spacing.three, paddingVertical: 4, borderRadius: Radii.control, backgroundColor: t.accent },
     buttonEnded: { backgroundColor: t.danger },
     buttonText: { ...Type.caption, color: t.onAccent, fontWeight: '700' },
   });

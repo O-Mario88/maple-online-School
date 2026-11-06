@@ -15,12 +15,13 @@ import type { BatchRow } from '@/mock/command-center/pf-payments';
 
 import { amount, type FormAsk, FormModal } from './FinForm';
 import { CheckList, FinDesk, FinHead, FinPanel, FinPhone, FinStats, FinTabs, num, PhoneRow, type Promo, ProviderBadge, RingLegend, ugx } from './FinKit';
+import { Maple } from '@/constants/maple';
 
 type D = CommandData['platformFinance']['payments'];
 const PER_PAGE = 10;
 const TABS = ['Overview', 'Provider Settlements', 'Reconciliation', 'Differences & Exceptions', 'Payout Batches', 'Refunds & Chargebacks', 'Bank Deposits', 'History'] as const;
 const STATUS_TONE: Readonly<Record<ReconStatus, Tone>> = { Reconciled: 'green', Difference: 'orange', Investigate: 'red', 'Pending Match': 'blue' };
-const PROMO: Promo = { icon: 'building', color: '#1E6BF0', title: 'Settlement & Reconciliation', body: 'Match platform payments, fees, refunds and bank deposits.' };
+const PROMO: Promo = { icon: 'building', color: Maple.blue, title: 'Settlement & Reconciliation', body: 'Match platform payments, fees, refunds and bank deposits.' };
 const RANGES = ['Oct 1 – Oct 31, 2026', 'Sep 1 – Sep 30, 2026'];
 
 function useSettlements(d: D) {
@@ -135,7 +136,7 @@ function cols(d: D): readonly Column<BatchRow>[] {
       width: 116,
       render: (b) => (
         <View style={styles.inline}>
-          <ProviderBadge name={b.provider} color={d.providerColor[b.provider] ?? '#8792B0'} size={20} />
+          <ProviderBadge name={b.provider} color={d.providerColor[b.provider] ?? Maple.faint} size={20} />
           <Text style={styles.cellStrong} numberOfLines={1}>
             {b.provider}
           </Text>
@@ -161,10 +162,10 @@ function Flow({ d, phone = false }: { d: D; phone?: boolean }) {
       <ComboChart
         labels={f.labels}
         bars={[
-          { name: 'Expected Settlement', color: '#4F86F7', values: f.expected },
-          { name: 'Actual Bank Deposit', color: '#A78BFA', values: f.deposit },
+          { name: 'Expected Settlement', color: Maple.blue, values: f.expected },
+          { name: 'Actual Bank Deposit', color: Maple.blueLine, values: f.deposit },
         ]}
-        line={{ name: 'Reconciled Value', color: '#22A55A', values: f.reconciled, dots: true }}
+        line={{ name: 'Reconciled Value', color: Maple.successText, values: f.reconciled, dots: true }}
         max={600}
         lineMax={600}
         rightAxis={false}
@@ -175,9 +176,9 @@ function Flow({ d, phone = false }: { d: D; phone?: boolean }) {
       <View style={styles.legend}>
         {(
           [
-            ['Expected Settlement', '#4F86F7'],
-            ['Actual Bank Deposit', '#A78BFA'],
-            ['Reconciled Value', '#22A55A'],
+            ['Expected Settlement', Maple.blue],
+            ['Actual Bank Deposit', Maple.blueLine],
+            ['Reconciled Value', Maple.successText],
           ] as const
         ).map(([l, c]) => (
           <View key={l} style={styles.inline}>
@@ -259,7 +260,7 @@ function ProviderChips({ u }: { u: U }) {
           const on = u.provider === c.label;
           return (
             <Pressable key={c.label} style={[styles.chip, on && styles.chipOn]} onPress={() => u.setProvider(c.label)} accessibilityRole="tab" accessibilityState={{ selected: on }} accessibilityLabel={`${c.label}, ${c.count}`}>
-              {c.label !== 'All Providers' ? <ProviderBadge name={c.label} color={u.d.providerColor[c.label] ?? '#8792B0'} size={20} /> : null}
+              {c.label !== 'All Providers' ? <ProviderBadge name={c.label} color={u.d.providerColor[c.label] ?? Maple.faint} size={20} /> : null}
               <Text style={[styles.chipText, on && styles.chipTextOn]}>{`${c.label} (${c.count})`}</Text>
             </Pressable>
           );
@@ -332,7 +333,7 @@ export function SettlementsPhone({ c }: { c: CommandData }) {
       {u.rows.map((b) => (
         <PhoneRow
           key={b.id}
-          lead={<ProviderBadge name={b.provider} color={u.d.providerColor[b.provider] ?? '#8792B0'} size={36} />}
+          lead={<ProviderBadge name={b.provider} color={u.d.providerColor[b.provider] ?? Maple.faint} size={36} />}
           title={b.id}
           sub={`${b.provider} • ${b.period} • expected ${ugx(expected(b))}${variance(b) ? ` • variance ${ugx(variance(b))}` : ''}`}
           pill={<Pill label={reconStatus(b)} tone={STATUS_TONE[reconStatus(b)]} size={11} />}

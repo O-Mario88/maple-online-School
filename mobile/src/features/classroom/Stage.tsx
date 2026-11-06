@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
@@ -13,6 +13,7 @@ import type {
 } from '@/lib/excalidraw-livekit';
 import type { IconName } from '@/lib/icons';
 import { toast } from '@/lib/toast';
+import { Maple } from '@/constants/maple';
 
 const REACTIONS = ['👏', '👍', '❤️', '😂', '🎉'] as const;
 
@@ -274,7 +275,7 @@ const styles = StyleSheet.create({
     gap: 2,
     paddingHorizontal: 6,
     borderRadius: 12,
-    backgroundColor: '#1B2230',
+    backgroundColor: Maple.navy,
   },
   // Phones put the bar under the video and crop the printed one away.
   videoCompact: { aspectRatio: 932 / 410 },
@@ -290,7 +291,7 @@ const styles = StyleSheet.create({
     height: 'auto',
     paddingVertical: 6,
     justifyContent: 'space-between',
-    backgroundColor: '#111827',
+    backgroundColor: Maple.navy,
   },
   controlText: { fontSize: 11, color: Brand.surface },
   reaction: { position: 'absolute', right: 30, bottom: 90, fontSize: 48 },
@@ -319,7 +320,7 @@ const styles = StyleSheet.create({
     backgroundColor: Brand.video,
   },
   tileActive: { borderWidth: 2, borderColor: Brand.blue },
-  tilePinnedPip: { borderWidth: 2, borderColor: '#22C55E' },
+  tilePinnedPip: { borderWidth: 2, borderColor: Maple.success },
   pipStripTag: {
     position: 'absolute',
     left: 6,
@@ -330,7 +331,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
     paddingVertical: 2,
   },
-  pipStripText: { fontSize: 10, fontWeight: '700', color: '#FFFFFF' },
-  moreTile: { alignItems: 'center', justifyContent: 'center', gap: 4, backgroundColor: '#1F2937' },
+  pipStripText: { fontSize: 10, fontWeight: '700', color: Maple.surface },
+  moreTile: { alignItems: 'center', justifyContent: 'center', gap: 4, backgroundColor: Maple.navy },
   moreText: { fontSize: 14, fontWeight: '700', color: Brand.surface },
 });

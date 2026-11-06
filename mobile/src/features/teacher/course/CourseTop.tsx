@@ -17,6 +17,7 @@ import { toast } from "@/lib/toast";
 import type { CourseBuilder } from "@/mock/teacher-course";
 
 import type { Builder } from "./useCourseBuilder";
+import { Maple } from '@/constants/maple';
 
 /** The course's title row: thumbnail, title, status, details and the save and publish buttons. */
 export function CourseHeader({ c, b }: { c: CourseBuilder; b: Builder }) {
@@ -290,7 +291,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: Maple.surface,
   },
   headerP: { flexDirection: "row", alignItems: "center", gap: 10 },
   thumbP: { width: 52, height: 50, borderRadius: 6 },
@@ -315,7 +316,7 @@ const styles = StyleSheet.create({
   },
   addModuleText: { fontSize: 10.5, fontWeight: "600", color: BLUE },
   module: { paddingVertical: 6 },
-  moduleLine: { borderTopWidth: 1, borderColor: "#EEF2F8" },
+  moduleLine: { borderTopWidth: 1, borderColor: Maple.blueSelected },
   moduleHead: {
     flexDirection: "row",
     alignItems: "center",
@@ -338,7 +339,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
     borderRadius: 6,
   },
-  lessonOn: { backgroundColor: "#EAF1FD" },
+  lessonOn: { backgroundColor: Maple.blueSelected },
   lessonMain: { flex: 1, flexDirection: "row", alignItems: "center", gap: 8 },
   quizIcon: {
     width: 13,
@@ -346,9 +347,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 3,
-    backgroundColor: "#F5A300",
+    backgroundColor: Maple.warning,
   },
-  quizMark: { fontSize: 9, fontWeight: "800", color: "#FFFFFF" },
+  quizMark: { fontSize: 9, fontWeight: "800", color: Maple.surface },
   lessonNum: { width: 20, fontSize: 10.5, color: BODY },
   lessonTitle: { flex: 1, fontSize: 10.5, color: INK, letterSpacing: -0.1 },
   addLesson: {

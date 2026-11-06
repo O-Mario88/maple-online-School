@@ -90,6 +90,13 @@ describe('plan levels: Basic, then Pro, then Premium', () => {
     expect(featureOpen('stepByStep', locked)).toBe(false);
   });
 
+  test('career guidance deepens with the plan: personalised links from Pro, the Career Compass with Premium', () => {
+    expect(featureOpen('careerPersonal', on('basic'))).toBe(false);
+    expect(featureOpen('careerPersonal', on('pro'))).toBe(true);
+    expect(featureOpen('careerCompass', on('pro'))).toBe(false);
+    expect(featureOpen('careerCompass', on('premium'))).toBe(true);
+  });
+
   test('with nothing to check (no plans in this build), features stay open', () => {
     expect(featureOpen('videoExplainer', null)).toBe(true);
   });

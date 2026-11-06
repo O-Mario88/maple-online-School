@@ -13,7 +13,7 @@ const TIER_RANK: Readonly<Record<Tier, number>> = { basic: 1, pro: 2, premium: 3
 const TIERS: readonly Tier[] = ['basic', 'pro', 'premium'];
 
 /** Features inside a page and the plan level each needs. */
-export const FEATURE_TIERS = { stepByStep: 'pro', videoExplainer: 'premium', privateTutor: 'premium' } as const satisfies Readonly<Record<string, Tier>>;
+export const FEATURE_TIERS = { stepByStep: 'pro', videoExplainer: 'premium', privateTutor: 'premium', careerPersonal: 'pro', careerCompass: 'premium' } as const satisfies Readonly<Record<string, Tier>>;
 export type Feature = keyof typeof FEATURE_TIERS;
 
 export interface Plan {

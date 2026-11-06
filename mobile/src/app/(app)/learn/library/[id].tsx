@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useMemo } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { useShell } from '@/components/ui';
 import type { Home } from '@/features/learner/home/HomeFrame';
@@ -9,8 +9,10 @@ import { readerFor } from '@/features/learner/reader/readerFor';
 import { READER_REF_WIDTH, ReaderDesk, ReaderPhone } from '@/features/learner/reader/ReaderViews';
 import { useBookReader } from '@/features/learner/reader/useBookReader';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
-import { RefScale } from '@/features/public/home/RefScale';
+import { HomeCanvas } from '@/features/learner/home/HomeFrame';
 import { mockData } from '@/lib/mock';
+import { Maple } from '@/constants/maple';
+import { PageScroll } from '@/components/shell/PageScroll';
 
 /** Digital Library › any book or resource (`/learn/library/[id]`): read, highlight, take notes, listen and check understanding. */
 export default function LibraryReaderScreen() {
@@ -39,20 +41,19 @@ export default function LibraryReaderScreen() {
 function ReaderView({ r, h }: { r: ReaderData; h: Home }) {
   const x = useBookReader(r);
   const { wide } = useShell();
-  const { width } = useWindowDimensions();
   if (!wide) return <ReaderPhone x={x} h={h} />;
   return (
-    <ScrollView style={styles.bg}>
-      <RefScale width={width} refWidth={READER_REF_WIDTH}>
+    <PageScroll style={styles.bg}>
+      <HomeCanvas refWidth={READER_REF_WIDTH}>
         <ReaderDesk x={x} h={h} />
-      </RefScale>
-    </ScrollView>
+      </HomeCanvas>
+    </PageScroll>
   );
 }
 
 const styles = StyleSheet.create({
-  bg: { backgroundColor: '#EEF3FA' },
+  bg: { backgroundColor: Maple.blueSoft },
   missing: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 12, padding: 24 },
-  missingTitle: { fontSize: 20, fontWeight: '800', color: '#0B1424' },
-  backText: { fontSize: 15, fontWeight: '600', color: '#1463F3' },
+  missingTitle: { fontSize: 20, fontWeight: '800', color: Maple.navy },
+  backText: { fontSize: 15, fontWeight: '600', color: Maple.blue },
 });

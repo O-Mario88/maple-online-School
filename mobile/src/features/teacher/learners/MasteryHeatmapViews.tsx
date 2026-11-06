@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { useState } from 'react';
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 
@@ -19,22 +19,23 @@ import type {
 import { MASTERY_REF_WIDTH, s as deskS } from './MasteryHeatmapViews.styles';
 import { phoneS } from './MasteryHeatmapViews.phoneStyles';
 import { PhoneScroll } from '@/features/teacher/frame/PhoneScroll';
+import { Maple } from '@/constants/maple';
 
 export { MASTERY_REF_WIDTH };
 
 const TIER_COLORS: Readonly<Record<HeatCellTier, { bg: string; fg: string }>> = {
-  darkGreen: { bg: '#22C55E', fg: '#052E16' },
+  darkGreen: { bg: Maple.success, fg: '#052E16' },
   lightGreen: { bg: '#9AE6B4', fg: '#064E3B' },
   yellow: { bg: '#FDE68A', fg: '#78350F' },
   orange: { bg: '#FDBA74', fg: '#7C2D12' },
-  red: { bg: '#FCA5A5', fg: '#7F1D1D' },
+  red: { bg: '#FCA5A5', fg: Maple.errorText },
 };
 
 function overallTone(score: number): { fg: string; bar: string } {
-  if (score >= 80) return { fg: '#0F172A', bar: '#16A34A' };
-  if (score >= 68) return { fg: '#B45309', bar: '#F59E0B' };
+  if (score >= 80) return { fg: Maple.navy, bar: Maple.successText };
+  if (score >= 68) return { fg: Maple.warningText, bar: Maple.warning };
   if (score >= 60) return { fg: '#C2410C', bar: '#EA580C' };
-  return { fg: '#DC2626', bar: '#EF4444' };
+  return { fg: Maple.error, bar: Maple.error };
 }
 
 /**
@@ -96,7 +97,7 @@ export function MasteryHeatmapDesk({ m, me, phone = false }: { m: MasteryHeatmap
                   key={item.label}
                   style={[s.sideItem, on && s.sideItemOn]}
                   onPress={() => setActiveSide(item.label)}>
-                  <Icon name={item.icon} size={15} color={on ? BLUE : '#475569'} />
+                  <Icon name={item.icon} size={15} color={on ? BLUE : Maple.body} />
                   <Text style={[s.sideText, on && s.sideTextOn]} numberOfLines={1}>
                     {item.label}
                   </Text>
@@ -185,7 +186,7 @@ export function MasteryHeatmapDesk({ m, me, phone = false }: { m: MasteryHeatmap
                   <Icon name={k.icon} size={22} color={k.color} />
                 ) : (
                   <View style={[s.kpiIconCircle, { backgroundColor: k.color }]}>
-                    <Icon name={k.icon} size={14} color="#FFFFFF" />
+                    <Icon name={k.icon} size={14} color={Maple.surface} />
                   </View>
                 )}
                 <View style={{ gap: 1 }}>
@@ -322,11 +323,11 @@ export function MasteryHeatmapDesk({ m, me, phone = false }: { m: MasteryHeatmap
                   {m.competencies.map((comp) => {
                     const bg =
                       comp.avgTone === 'red'
-                        ? '#FEE2E2'
+                        ? Maple.errorSoft
                         : comp.avgTone === 'yellow'
                           ? '#FEF9C3'
-                          : '#ECFDF5';
-                    const fg = comp.avgTone === 'red' ? '#B91C1C' : '#1E293B';
+                          : Maple.successSoft;
+                    const fg = comp.avgTone === 'red' ? Maple.error : Maple.navy;
                     return (
                       <View key={comp.key} style={s.colComp}>
                         <View style={[s.avgCell, { backgroundColor: bg }]}>
@@ -336,12 +337,12 @@ export function MasteryHeatmapDesk({ m, me, phone = false }: { m: MasteryHeatmap
                     );
                   })}
                   <View style={[s.overallCell, s.colOverall]}>
-                    <Text style={[s.overallPct, { color: '#B45309' }]}>{m.overallAvg}%</Text>
+                    <Text style={[s.overallPct, { color: Maple.warningText }]}>{m.overallAvg}%</Text>
                     <View style={s.overallTrack}>
                       <View
                         style={[
                           s.overallFill,
-                          { width: `${m.overallAvg}%`, backgroundColor: '#F59E0B' },
+                          { width: `${m.overallAvg}%`, backgroundColor: Maple.warning },
                         ]}
                       />
                     </View>
@@ -353,11 +354,11 @@ export function MasteryHeatmapDesk({ m, me, phone = false }: { m: MasteryHeatmap
             {/* Legend Row */}
             <View style={s.legendRow}>
               {[
-                { color: '#22C55E', label: '≥ 85% Mastered' },
+                { color: Maple.success, label: '≥ 85% Mastered' },
                 { color: '#86EFAC', label: '70–84% On Track' },
-                { color: '#F59E0B', label: '55–69% Needs Support' },
-                { color: '#EF4444', label: '< 55% At Risk' },
-                { color: '#94A3B8', label: 'Not Enough Data' },
+                { color: Maple.warning, label: '55–69% Needs Support' },
+                { color: Maple.error, label: '< 55% At Risk' },
+                { color: Maple.muted, label: 'Not Enough Data' },
               ].map((item) => (
                 <View key={item.label} style={s.legendItem}>
                   <View style={[s.legendSquare, { backgroundColor: item.color }]} />
@@ -378,11 +379,11 @@ export function MasteryHeatmapDesk({ m, me, phone = false }: { m: MasteryHeatmap
               {/* 1. Red At-Risk Card */}
               <View style={[s.insightCard, s.insightCardRed]}>
                 <View style={s.insightTopRow}>
-                  <View style={[s.insightBadge, { backgroundColor: '#EF4444' }]}>
+                  <View style={[s.insightBadge, { backgroundColor: Maple.error }]}>
                     <Text style={s.insightBadgeText}>!</Text>
                   </View>
                   <View style={{ flex: 1, gap: 2 }}>
-                    <Text style={[s.insightHeading, { color: '#B91C1C' }]}>
+                    <Text style={[s.insightHeading, { color: Maple.error }]}>
                       5 students at risk
                     </Text>
                     <Text style={s.insightBody}>
@@ -396,7 +397,7 @@ export function MasteryHeatmapDesk({ m, me, phone = false }: { m: MasteryHeatmap
                     setSelectedStudentId('m-8');
                     toast('Focused on At-Risk students (David M., James T.).');
                   }}>
-                  <Text style={[s.insightBtnText, { color: '#DC2626' }]}>
+                  <Text style={[s.insightBtnText, { color: Maple.error }]}>
                     View At-Risk Students
                   </Text>
                 </Pressable>
@@ -405,7 +406,7 @@ export function MasteryHeatmapDesk({ m, me, phone = false }: { m: MasteryHeatmap
               {/* 2. Amber Common Gaps Card */}
               <View style={[s.insightCard, s.insightCardAmber]}>
                 <View style={s.insightTopRow}>
-                  <View style={[s.insightBadge, { backgroundColor: '#F59E0B' }]}>
+                  <View style={[s.insightBadge, { backgroundColor: Maple.warning }]}>
                     <Text style={s.insightBadgeText}>!</Text>
                   </View>
                   <View style={{ flex: 1, gap: 2 }}>
@@ -418,7 +419,7 @@ export function MasteryHeatmapDesk({ m, me, phone = false }: { m: MasteryHeatmap
                   </View>
                 </View>
                 <Pressable
-                  style={[s.insightBtn, { borderColor: '#BFDBFE' }]}
+                  style={[s.insightBtn, { borderColor: Maple.blueLine }]}
                   onPress={() =>
                     toast('Generated Trigonometry & Equations Class Intervention Plan!')
                   }>
@@ -431,11 +432,11 @@ export function MasteryHeatmapDesk({ m, me, phone = false }: { m: MasteryHeatmap
               {/* 3. Green Celebrate Progress Card */}
               <View style={[s.insightCard, s.insightCardGreen]}>
                 <View style={s.insightTopRow}>
-                  <View style={[s.insightBadge, { backgroundColor: '#16A34A' }]}>
+                  <View style={[s.insightBadge, { backgroundColor: Maple.successText }]}>
                     <Text style={s.insightBadgeText}>★</Text>
                   </View>
                   <View style={{ flex: 1, gap: 2 }}>
-                    <Text style={[s.insightHeading, { color: '#166534' }]}>
+                    <Text style={[s.insightHeading, { color: Maple.successText }]}>
                       Celebrate progress
                     </Text>
                     <Text style={s.insightBody}>
@@ -444,7 +445,7 @@ export function MasteryHeatmapDesk({ m, me, phone = false }: { m: MasteryHeatmap
                   </View>
                 </View>
                 <Pressable
-                  style={[s.insightBtn, { borderColor: '#BFDBFE' }]}
+                  style={[s.insightBtn, { borderColor: Maple.blueLine }]}
                   onPress={() => {
                     setSelectedStudentId('m-7');
                     toast('Viewing High Performers (Sarah L. 92%, Grace A. 88%, Amina K. 87%).');
@@ -480,19 +481,19 @@ export function MasteryHeatmapDesk({ m, me, phone = false }: { m: MasteryHeatmap
                   style={[
                     s.drawerStatusPill,
                     selectedStudent.status === 'On Track'
-                      ? { backgroundColor: '#DCFCE7' }
+                      ? { backgroundColor: Maple.successSoft }
                       : selectedStudent.status === 'At Risk'
-                        ? { backgroundColor: '#FEE2E2' }
-                        : { backgroundColor: '#FEF3C7' },
+                        ? { backgroundColor: Maple.errorSoft }
+                        : { backgroundColor: Maple.warningSoft },
                   ]}>
                   <Text
                     style={[
                       s.drawerStatusText,
                       selectedStudent.status === 'On Track'
-                        ? { color: '#15803D' }
+                        ? { color: Maple.successText }
                         : selectedStudent.status === 'At Risk'
-                          ? { color: '#DC2626' }
-                          : { color: '#B45309' },
+                          ? { color: Maple.error }
+                          : { color: Maple.warningText },
                     ]}>
                     {selectedStudent.status}
                   </Text>
@@ -525,7 +526,7 @@ export function MasteryHeatmapDesk({ m, me, phone = false }: { m: MasteryHeatmap
               {m.competencies.map((comp, idx) => {
                 const sc = selectedStudent.scores[idx] ?? 75;
                 const barColor =
-                  sc >= 80 ? '#16A34A' : sc >= 65 ? '#F59E0B' : '#EF4444';
+                  sc >= 80 ? Maple.successText : sc >= 65 ? Maple.warning : Maple.error;
                 return (
                   <View key={comp.key} style={s.breakdownRow}>
                     <Text style={s.breakdownLabel} numberOfLines={1}>
@@ -553,7 +554,7 @@ export function MasteryHeatmapDesk({ m, me, phone = false }: { m: MasteryHeatmap
             {/* 1. Send Intervention Pack */}
             <View style={s.packCard}>
               <View style={s.packHeader}>
-                <View style={[s.actionIconBox, { backgroundColor: '#DBEAFE' }]}>
+                <View style={[s.actionIconBox, { backgroundColor: Maple.blueSelected }]}>
                   <Icon name="book" size={14} color={BLUE} />
                 </View>
                 <View style={{ flex: 1, gap: 1 }}>
@@ -607,7 +608,7 @@ export function MasteryHeatmapDesk({ m, me, phone = false }: { m: MasteryHeatmap
                     `Sent auto-assembled Intervention Pack (Remedial Video + 5 Questions) to ${selectedStudent.name}!`,
                   )
                 }>
-                <Icon name="send" size={12} color="#FFFFFF" />
+                <Icon name="send" size={12} color={Maple.surface} />
                 <Text style={s.sendPackBtnText}>Send Intervention Pack</Text>
               </Pressable>
             </View>
@@ -615,8 +616,8 @@ export function MasteryHeatmapDesk({ m, me, phone = false }: { m: MasteryHeatmap
             {/* 2. Send Parent Voice Update */}
             <View style={s.actionCard}>
               <View style={s.packHeader}>
-                <View style={[s.actionIconBox, { backgroundColor: '#DCFCE7' }]}>
-                  <Icon name="phone" size={14} color="#16A34A" />
+                <View style={[s.actionIconBox, { backgroundColor: Maple.successSoft }]}>
+                  <Icon name="phone" size={14} color={Maple.successText} />
                 </View>
                 <View style={{ flex: 1, gap: 1 }}>
                   <View style={s.actionTitleRow}>
@@ -644,8 +645,8 @@ export function MasteryHeatmapDesk({ m, me, phone = false }: { m: MasteryHeatmap
             {/* 3. Create Small Group */}
             <View style={s.actionCard}>
               <View style={s.packHeader}>
-                <View style={[s.actionIconBox, { backgroundColor: '#F3E8FF' }]}>
-                  <Icon name="people" size={14} color="#9333EA" />
+                <View style={[s.actionIconBox, { backgroundColor: Maple.blueSelected }]}>
+                  <Icon name="people" size={14} color={Maple.blue} />
                 </View>
                 <View style={{ flex: 1, gap: 1 }}>
                   <Text style={s.actionTitle}>Create Small Group</Text>
@@ -673,7 +674,7 @@ export function MasteryHeatmapDesk({ m, me, phone = false }: { m: MasteryHeatmap
 
 export function MasteryHeatmapPhone({ m, me }: { m: MasteryHeatmap; me: TeacherMe }) {
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: '#EAF1FB' }}>
+    <ScrollView style={{ flex: 1, backgroundColor: Maple.blueSelected }}>
       <TeacherPhoneTop me={me} />
       <MasteryHeatmapDesk m={m} me={me} phone />
     </ScrollView>

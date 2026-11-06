@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { type Href, router } from 'expo-router';
 import { type ReactNode, useCallback } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
@@ -10,10 +10,15 @@ import type { IconName } from '@/lib/icons';
 import { useClasses } from '@/lib/school/queries';
 import { useSwitcher } from '@/lib/switcher-context';
 import type { TeacherDest } from '@/lib/teacher-home';
+import { openMenuPage } from '@/lib/menu-nav';
 
 import { BLUE, BODY, INK, LINE, RED } from './TeacherParts';
+import { Maple } from '@/constants/maple';
+import { MapleLogo } from '@/components/brand/MapleLogo';
 
-const LEAF = require('@/assets/images/maple-leaf.png') as number;
+
+/** The teacher top bar's height at the designs' scale. */
+export const TEACHER_BAR_HEIGHT = 62;
 
 /** Follows a teacher link. "analytics" opens the first class's learners view, or Classes when there is none yet. */
 export function useTeacherGo(): (dest: TeacherDest) => void {
@@ -22,7 +27,7 @@ export function useTeacherGo(): (dest: TeacherDest) => void {
   return useCallback(
     (dest: TeacherDest) => {
       if (dest !== 'analytics') {
-        router.push(dest);
+        openMenuPage(dest);
         return;
       }
       if (first) router.push({ pathname: '/learners/[id]', params: { id: String(first.id), title: first.title } });
@@ -79,7 +84,7 @@ export interface TeacherMe {
 
 function Bell({ count, size = 22 }: { count: number; size?: number }) {
   return (
-    <Pressable onPress={() => router.push('/inbox')} accessibilityRole="button" accessibilityLabel={`Notifications, ${count} unread`} hitSlop={8}>
+    <Pressable onPress={() => openMenuPage('/inbox')} accessibilityRole="button" accessibilityLabel={`Notifications, ${count} unread`} hitSlop={8}>
       <Icon name="bell" size={size} color={INK} />
       {count > 0 ? (
         <View style={styles.badge}>
@@ -92,12 +97,8 @@ function Bell({ count, size = 22 }: { count: number; size?: number }) {
 
 function Logo({ small = false }: { small?: boolean }) {
   return (
-    <Pressable style={styles.logo} onPress={() => router.push('/')} accessibilityRole="link" accessibilityLabel="Maple home">
-      <Image source={LEAF} style={small ? styles.leafSmall : styles.leaf} contentFit="contain" />
-      <View>
-        <Text style={small ? styles.brandSmall : styles.brand}>Maple</Text>
-        <Text style={small ? styles.brandSubSmall : styles.brandSub}>Global Online School</Text>
-      </View>
+    <Pressable style={styles.logo} onPress={() => openMenuPage('/')} accessibilityRole="link" accessibilityLabel="Maple home">
+      <MapleLogo markStyle={small ? styles.leafSmall : styles.leaf} />
     </Pressable>
   );
 }
@@ -139,7 +140,7 @@ export function TeacherTopBar({
       </View>
       <View style={styles.search}>
         <Icon name="search" size={15} color={BODY} />
-        <TextInput style={styles.searchInput} placeholder={placeholder} placeholderTextColor="#6B7385" accessibilityLabel="Search" />
+        <TextInput style={styles.searchInput} placeholder={placeholder} placeholderTextColor={Maple.secondary} accessibilityLabel="Search" />
         {tabsVariant === 'live' ? null : <Text style={styles.kbd}>⌘K</Text>}
       </View>
       <LanguageMenu style={styles.lang}>
@@ -202,7 +203,7 @@ export function TeacherSideNav({ title, items, active, onItem, dense = false, ch
           const on = n.label === active;
           return (
             <Pressable key={n.label} style={[styles.sideItem, dense && styles.sideItemDense, on && styles.sideOn]} onPress={() => pick(n)} accessibilityRole="link" accessibilityState={{ selected: on }}>
-              <Icon name={n.icon} size={18} color={on ? BLUE : '#3D4656'} />
+              <Icon name={n.icon} size={18} color={on ? BLUE : Maple.body} />
               <Text style={[styles.sideText, dense && styles.sideTextDense, on && styles.sideTextOn]} numberOfLines={1}>
                 {n.label}
               </Text>
@@ -262,7 +263,7 @@ export function TeacherGrowSideNav({
           onPress={() => go(n.go)}
           accessibilityRole="link"
           accessibilityState={{ selected: on }}>
-          <Icon name={n.icon} size={15} color={on ? BLUE : '#3D4656'} />
+          <Icon name={n.icon} size={15} color={on ? BLUE : Maple.body} />
           <Text style={[styles.growSideText, on && styles.sideTextOn]} numberOfLines={1}>
             {n.label}
           </Text>
@@ -308,7 +309,7 @@ export function TeacherPhoneTop({ me }: { me: TeacherMe }) {
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
-  bar: { height: 62, flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 16, borderRadius: 10, backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: LINE },
+  bar: { height: TEACHER_BAR_HEIGHT, flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 16, borderRadius: 10, backgroundColor: Maple.surface, borderWidth: 1, borderColor: LINE },
   logo: { flexDirection: 'row', alignItems: 'center', gap: 7 },
   leaf: { width: 36, height: 38 },
   leafSmall: { width: 28, height: 30 },
@@ -318,17 +319,17 @@ const styles = StyleSheet.create({
   brandSubSmall: { fontSize: 7.5, fontWeight: '600', color: INK },
   tabs: { flexDirection: 'row', marginLeft: 6 },
   tab: { minWidth: 50, paddingHorizontal: 6, height: 60, alignItems: 'center', justifyContent: 'center', gap: 4 },
-  tabOn: { backgroundColor: '#EEF4FF' },
+  tabOn: { backgroundColor: Maple.blueSoft },
   tabText: { fontSize: 10.5, color: INK, letterSpacing: -0.1 },
   tabTextOn: { color: BLUE, fontWeight: '600' },
-  tabLine: { position: 'absolute', left: 8, right: 8, bottom: 0, height: 2.5, borderRadius: 2, backgroundColor: BLUE },
-  search: { flex: 1, minWidth: 120, height: 34, flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 9, borderRadius: 8, backgroundColor: '#F2F6FC', borderWidth: 1, borderColor: LINE },
+  tabLine: { position: 'absolute', left: 8, right: 8, bottom: 0, height: 3, borderRadius: 2, backgroundColor: BLUE },
+  search: { flex: 1, minWidth: 120, height: 34, flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 9, borderRadius: 8, backgroundColor: Maple.blueSoft, borderWidth: 1, borderColor: LINE },
   searchInput: { flex: 1, minWidth: 0, height: 32, paddingVertical: 0, fontSize: 11, color: INK },
-  kbd: { fontSize: 10, fontWeight: '600', color: BODY, paddingHorizontal: 5, paddingVertical: 2, borderRadius: 4, backgroundColor: '#E3EAF5' },
+  kbd: { fontSize: 10, fontWeight: '600', color: BODY, paddingHorizontal: 5, paddingVertical: 2, borderRadius: 4, backgroundColor: Maple.blueSelected },
   lang: { flexDirection: 'row', alignItems: 'center', gap: 5 },
   langText: { fontSize: 12.5, fontWeight: '600', color: INK },
   badge: { position: 'absolute', top: -6, right: -7, minWidth: 16, height: 16, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4, borderRadius: 8, backgroundColor: RED },
-  badgeText: { fontSize: 10, fontWeight: '700', color: '#FFFFFF' },
+  badgeText: { fontSize: 10, fontWeight: '700', color: Maple.surface },
   me: { flexDirection: 'row', alignItems: 'center', gap: 8, marginLeft: 6 },
   avatar: { width: 38, height: 38, borderRadius: 19 },
   meName: { fontSize: 13, fontWeight: '700', color: INK },
@@ -340,8 +341,8 @@ const styles = StyleSheet.create({
   sideTitleDense: { fontSize: 15 },
   sideList: { gap: 3 },
   sideItem: { height: 36, flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 8, borderRadius: 8 },
-  sideOn: { backgroundColor: '#E3EDFF' },
-  sideText: { flex: 1, fontSize: 12.5, color: '#2B3445', letterSpacing: -0.2 },
+  sideOn: { backgroundColor: Maple.blueSelected },
+  sideText: { flex: 1, fontSize: 12.5, color: Maple.navy, letterSpacing: -0.2 },
   sideTextOn: { color: BLUE, fontWeight: '600' },
   sideTextDense: { fontSize: 11, letterSpacing: -0.35 },
   sideDense: { paddingHorizontal: 6 },
@@ -351,9 +352,9 @@ const styles = StyleSheet.create({
   growHeading: { fontSize: 12.5, fontWeight: '800', color: INK, marginLeft: 8, marginBottom: 6 },
   growList: { gap: 2 },
   growSideItem: { height: 31, flexDirection: 'row', alignItems: 'center', gap: 9, paddingHorizontal: 8, borderRadius: 7 },
-  growSideText: { flex: 1, fontSize: 11.5, color: '#2B3445', letterSpacing: -0.1 },
+  growSideText: { flex: 1, fontSize: 11.5, color: Maple.navy, letterSpacing: -0.1 },
   growDivider: { height: 1, backgroundColor: LINE, marginVertical: 9 },
-  phoneTop: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 14, backgroundColor: '#FFFFFF', borderBottomWidth: 1, borderColor: LINE },
+  phoneTop: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 14, backgroundColor: Maple.surface, borderBottomWidth: 1, borderColor: LINE },
   phoneMe: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   phoneAvatar: { width: 32, height: 32, borderRadius: 16 },
   phoneText: { maxWidth: 92 },

@@ -3,6 +3,7 @@ import type { Tier } from '@/lib/access/trial';
 import type { IconName } from '@/lib/icons';
 
 import { photos } from './photos';
+import { Maple } from '@/constants/maple';
 
 export interface PayPlan {
   id: string;
@@ -42,7 +43,7 @@ export const plans: Readonly<Record<'learner' | 'teacher' | 'school', readonly P
       phoneBlurb: 'Recorded lessons, past papers\nand digital library.',
       deskBlurb: 'Recorded lessons, past\npapers and digital library.',
       icon: 'layers',
-      tint: '#1463F3',
+      tint: Maple.blue,
       features: ['Recorded lessons (all subjects)', 'Past papers & mark schemes', 'Digital library & study resources', 'Track your learning progress', 'No ads'],
     },
     {
@@ -54,7 +55,7 @@ export const plans: Readonly<Record<'learner' | 'teacher' | 'school', readonly P
       phoneBlurb: 'Live classes, assignments and\nstep-by-step past paper\nsolutions (no video).',
       deskBlurb: 'Live classes, assignments and\nstep-by-step past paper solutions.',
       icon: 'cap',
-      tint: '#C98A0B',
+      tint: Maple.warning,
       popular: true,
       features: ['Everything in Basic', 'Join live classes (scheduled & revision)', 'Step-by-step past paper solutions', 'Submit assignments & get feedback', 'Exam preparation & study planners'],
     },
@@ -68,7 +69,7 @@ export const plans: Readonly<Record<'learner' | 'teacher' | 'school', readonly P
       phoneBlurb: 'Everything in Pro, plus\na private tutor and\nvideo explainers.',
       deskBlurb: 'Everything in Pro, plus\na private tutor and video explainers.',
       icon: 'diamond',
-      tint: '#7C3AED',
+      tint: Maple.blue,
       features: ['Everything in Pro Study Pass', 'Your own private tutor', 'Question interpretation videos', 'Projects and study squads', 'Personalized learning plan'],
     },
   ],
@@ -79,7 +80,7 @@ export const plans: Readonly<Record<'learner' | 'teacher' | 'school', readonly P
       monthly: 35000,
       blurb: 'AI subject studio, subject builder, the resource library and live classes.',
       icon: 'cap',
-      tint: '#C98A0B',
+      tint: Maple.warning,
       popular: true,
       features: ['AI subject studio', 'Subject builder', 'Resource library', 'Schedule and host live classes'],
     },
@@ -89,7 +90,7 @@ export const plans: Readonly<Record<'learner' | 'teacher' | 'school', readonly P
       monthly: 60000,
       blurb: 'Everything in Teacher Pro, plus more AI credits and promoted listings.',
       icon: 'star',
-      tint: '#7C3AED',
+      tint: Maple.blue,
       features: ['Everything in Teacher Pro', 'More AI subject credits', 'Promoted storefront listings', 'Priority support'],
     },
   ],
@@ -100,7 +101,7 @@ export const plans: Readonly<Record<'learner' | 'teacher' | 'school', readonly P
       monthly: 3000,
       blurb: 'Per learner: classes, timetable, attendance, report cards and fees.',
       icon: 'layers',
-      tint: '#C98A0B',
+      tint: Maple.warning,
       popular: true,
       features: ['Classes, rosters and timetable', 'Attendance and registers', 'Report cards', 'Fees and the student ledger'],
     },
@@ -110,7 +111,7 @@ export const plans: Readonly<Record<'learner' | 'teacher' | 'school', readonly P
       monthly: 5000,
       blurb: 'Per learner: everything in Standard, plus live classes and the full library.',
       icon: 'star',
-      tint: '#7C3AED',
+      tint: Maple.blue,
       features: ['Everything in School Standard', 'Live classes for every class', 'The full Maple library', 'Priority support'],
     },
   ],
@@ -124,7 +125,7 @@ export const freePlan: PayPlan & { items: readonly { label: string; href: string
   blurb: '5 lessons, 1 live class and 10 past papers a month, and every library book. With ads.',
   phoneBlurb: '5 lessons, 1 live class and\n10 past papers a month, every\nlibrary book. With ads.',
   icon: 'gift',
-  tint: '#16A34A',
+  tint: Maple.successText,
   features: ['5 video lessons a month', '1 live class a month', '10 past papers a month', 'Every book in the Digital Library'],
   items: [
     { label: '5 video lessons a month', href: '/learn/lesson?id=l1' },
@@ -177,8 +178,8 @@ export const payWith = 'MTN Mobile Money · +256 772 123 456';
 
 /** Sample ads for the free tier, from made-up local sponsors. Illustrative. */
 export const ads: readonly { id: string; sponsor: string; title: string; body: string; cta: string; icon: IconName; tint: string }[] = [
-  { id: 'ad1', sponsor: 'Mwalimu Stationers', title: 'Back-to-school sets from UGX 15,000', body: 'Exercise books, geometry sets and pens. Free delivery in Kampala.', cta: 'Shop now', icon: 'book', tint: '#1463F3' },
-  { id: 'ad2', sponsor: 'Nile Book Centre', title: 'UCE and UACE revision guides, 20% off', body: 'Every subject, every board, this week only.', cta: 'See offers', icon: 'library', tint: '#7C3AED' },
-  { id: 'ad3', sponsor: 'BrightPath Holiday Camps', title: 'Holiday revision camps', body: 'Two weeks of revision in Mbarara, Gulu and Mbale.', cta: 'Learn more', icon: 'school', tint: '#16A34A' },
-  { id: 'ad4', sponsor: 'SunStudy Lamps', title: 'Study after dark', body: 'Solar study lamps from UGX 45,000, charged in a day.', cta: 'Order now', icon: 'bolt', tint: '#C98A0B' },
+  { id: 'ad1', sponsor: 'Mwalimu Stationers', title: 'Back-to-school sets from UGX 15,000', body: 'Exercise books, geometry sets and pens. Free delivery in Kampala.', cta: 'Shop now', icon: 'book', tint: Maple.blue },
+  { id: 'ad2', sponsor: 'Nile Book Centre', title: 'UCE and UACE revision guides, 20% off', body: 'Every subject, every board, this week only.', cta: 'See offers', icon: 'library', tint: Maple.blue },
+  { id: 'ad3', sponsor: 'BrightPath Holiday Camps', title: 'Holiday revision camps', body: 'Two weeks of revision in Mbarara, Gulu and Mbale.', cta: 'Learn more', icon: 'school', tint: Maple.successText },
+  { id: 'ad4', sponsor: 'SunStudy Lamps', title: 'Study after dark', body: 'Solar study lamps from UGX 45,000, charged in a day.', cta: 'Order now', icon: 'bolt', tint: Maple.warning },
 ];

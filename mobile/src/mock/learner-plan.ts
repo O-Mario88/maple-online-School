@@ -1,9 +1,11 @@
 /** Sample data for My Personalized Learning Plan: the goal, the journey, this week's focus, each subject, advice and what to watch next. Illustrative. */
 import type { Href } from 'expo-router';
 
+import type { Session } from '@/features/learner/plan/schedule';
 import type { IconName } from '@/lib/icons';
 
 import { photos } from './photos';
+import { Maple } from '@/constants/maple';
 
 export const learnerPlan = {
   hero: photos.learnerHome['sdash-boy'],
@@ -18,11 +20,13 @@ export const learnerPlan = {
   style: 'Visual + Practice',
   styles: ['Visual + Practice', 'Reading + Practice', 'Listening + Practice', 'Practice first'],
   phases: [
-    { title: 'Build Foundations', from: 1, to: 6 },
-    { title: 'Strengthen Skills', from: 7, to: 12 },
-    { title: 'Exam Practice', from: 13, to: 20 },
-    { title: 'Final Revision', from: 21, to: 24 },
+    { title: 'Build Foundations', from: 1, to: 6, about: 'Get the core of every subject in place.' },
+    { title: 'Improve Subject Mastery', from: 7, to: 12, about: 'Complete core topics and practice questions.' },
+    { title: 'Mock Practice & Revision', from: 13, to: 20, about: 'Attempt full past papers and review.' },
+    { title: 'Final Preparation', from: 21, to: 24, about: 'Revise all subjects, focus on weak areas and build exam confidence.' },
   ],
+  /** What reaching the goal takes, in one line. */
+  goalNote: 'Complete key topics, practice past papers, and achieve at least 70% overall.',
   focus: [
     { id: 'f1', text: 'Complete 3 lessons in Mathematics', done: true, href: '/learn/lessons?subject=Mathematics' as Href },
     { id: 'f2', text: 'Watch: Forces and Motion (Physics)', done: false, href: '/learn/lesson?id=vl-p1' as Href },
@@ -30,10 +34,10 @@ export const learnerPlan = {
     { id: 'f4', text: 'Submit assignment: Essay Writing (English)', done: false, href: '/learn/assignments' as Href },
   ],
   subjects: [
-    { name: 'Mathematics', icon: 'sigma' as IconName, tint: '#1463F3', progress: 0.75, next: 'Quadratic equations' },
-    { name: 'Physics', icon: 'atom' as IconName, tint: '#7C3AED', progress: 0.58, next: 'Motion and forces' },
-    { name: 'Chemistry', icon: 'flask' as IconName, tint: '#0F9D58', progress: 0.7, next: 'Chemical bonding' },
-    { name: 'Biology', icon: 'leaf' as IconName, tint: '#16A34A', progress: 0.88, next: 'Human physiology' },
+    { name: 'Mathematics', icon: 'sigma' as IconName, tint: Maple.blue, progress: 0.75, next: 'Quadratic equations' },
+    { name: 'Physics', icon: 'atom' as IconName, tint: Maple.blue, progress: 0.58, next: 'Motion and forces' },
+    { name: 'Chemistry', icon: 'flask' as IconName, tint: Maple.successText, progress: 0.7, next: 'Chemical bonding' },
+    { name: 'Biology', icon: 'leaf' as IconName, tint: Maple.successText, progress: 0.88, next: 'Human physiology' },
     { name: 'English', icon: 'book' as IconName, tint: '#DB2777', progress: 0.62, next: 'Essay writing & comprehension' },
   ],
   advisor: {
@@ -52,16 +56,61 @@ export const learnerPlan = {
     { day: 'Sat', items: ['Revision bootcamp · 2 h'] },
     { day: 'Sun', items: ['Rest, then plan next week · 15 min'] },
   ],
+  /** The learner's goals on the way to the main goal. */
   milestones: [
-    { title: 'Finish Build Foundations', due: 'Week 6', done: true },
-    { title: 'Score 70% in a Mathematics paper', due: 'Week 10', done: false },
-    { title: 'Complete all Physics mechanics lessons', due: 'Week 12', done: false },
-    { title: 'Sit three full mock papers', due: 'Week 20', done: false },
-    { title: 'Final revision of every subject', due: 'Week 24', done: false },
+    { id: 'g1', title: 'Finish Build Foundations', week: 6, done: true, progress: 1 },
+    { id: 'g2', title: 'Score 70% in a Mathematics paper', week: 10, done: false, progress: 0.7 },
+    { id: 'g3', title: 'Complete all Physics mechanics lessons', week: 12, done: false, progress: 0 },
+    { id: 'g4', title: 'Sit three full mock papers', week: 20, done: false, progress: 0 },
+    { id: 'g5', title: 'Final revision of every subject', week: 24, done: false, progress: 0 },
   ],
+  /** This week's study sessions (the plan repeats weekly until it's adjusted). */
+  sessions: [
+    { day: 'Mon', start: '15:00', end: '15:45', subject: 'Mathematics', topic: 'Quadratic equations', kind: 'study' },
+    { day: 'Mon', start: '15:45', end: '16:00', subject: '', topic: 'Rest, stretch or take a short walk', kind: 'break' },
+    { day: 'Mon', start: '16:00', end: '16:30', subject: 'Physics', topic: 'Motion and forces', kind: 'study' },
+    { day: 'Tue', start: '15:00', end: '15:45', subject: 'Chemistry', topic: 'Chemical bonding', kind: 'study' },
+    { day: 'Tue', start: '16:30', end: '17:15', subject: 'Mathematics', topic: 'Quadratic equations', kind: 'study' },
+    { day: 'Wed', start: '16:00', end: '17:00', subject: 'Mathematics', topic: 'Live class: Algebra', kind: 'study' },
+    { day: 'Wed', start: '17:15', end: '17:45', subject: 'Biology', topic: 'Human physiology', kind: 'study' },
+    { day: 'Thu', start: '15:00', end: '15:30', subject: 'Physics', topic: 'Forces review', kind: 'study' },
+    { day: 'Thu', start: '15:45', end: '16:30', subject: 'Chemistry', topic: 'Past paper questions', kind: 'study' },
+    { day: 'Fri', start: '15:00', end: '15:40', subject: 'English', topic: 'Essay writing', kind: 'study' },
+    { day: 'Fri', start: '15:50', end: '16:20', subject: 'Biology', topic: 'Cells revision', kind: 'study' },
+    { day: 'Sat', start: '09:00', end: '10:00', subject: 'Biology', topic: 'Revision bootcamp', kind: 'study' },
+    { day: 'Sat', start: '10:15', end: '11:05', subject: 'English', topic: 'Comprehension practice', kind: 'study' },
+  ] as Session[],
+  /** What to do next, from the learner's progress. */
   tips: [
-    'Watch one Physics lesson a day this week: Forces and Motion is a good start.',
-    'Try ten Chemistry past paper questions before Thursday’s session.',
-    'Biology is strong: one review lesson a week is enough to keep it there.',
-  ],
+    {
+      id: 't1',
+      title: 'Watch one Physics lesson daily',
+      sub: 'Focus on Forces and Motion to build a strong foundation.',
+      subject: 'Physics',
+      action: 'lesson',
+      href: '/learn/lesson?id=vl-p1' as Href,
+    },
+    {
+      id: 't2',
+      title: 'Try ten Chemistry past paper questions',
+      sub: 'Complete them before Thursday’s session.',
+      subject: 'Chemistry',
+      action: 'practice',
+      href: '/learn/past-papers' as Href,
+    },
+    {
+      id: 't3',
+      title: 'Keep Biology on track',
+      sub: 'You’re doing well — one review lesson a week is enough.',
+      subject: 'Biology',
+      action: 'review',
+      href: '/learn/lessons?subject=Biology' as Href,
+    },
+  ] as readonly { id: string; title: string; sub: string; subject: string; action: 'lesson' | 'practice' | 'review'; href: Href }[],
+  /** What each recommended video is for. */
+  picks: { 'vl-p1': 'Lessons', 'vl-c1': 'Lessons', 'vl-m4': 'Practice', 'vl-m6': 'Revision' } as Readonly<
+    Record<string, 'Lessons' | 'Practice' | 'Revision'>
+  >,
+  /** Subjects that can join the plan. */
+  addable: ['ICT', 'Geography', 'History', 'Agriculture', 'Entrepreneurship'],
 };

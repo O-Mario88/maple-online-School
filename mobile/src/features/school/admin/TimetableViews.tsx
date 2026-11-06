@@ -9,6 +9,7 @@ import type { MockData } from '@/mock';
 import type { Lesson, Slot, Subject } from '@/mock/school-admin';
 
 import { AdminDesk, AdminPhone, Cell, type Column, DataTable, Face, MiniBtn, PageHead, SelectBox, Segments, useChoice } from '../kit/AdminKit';
+import { Maple } from '@/constants/maple';
 
 type Admin = MockData['schoolAdmin'];
 type TT = Admin['timetable'];
@@ -58,7 +59,7 @@ function LessonTile({ a, l, on, dim, onPress }: { a: Admin; l: Lesson; on: boole
   const free = l.teacher === '—';
   return (
     <Pressable
-      style={({ hovered }) => [styles.tile, { backgroundColor: free ? '#F4F6FA' : t.soft }, on && styles.tileOn, dim && styles.dim, hovered && !on && styles.tileHover]}
+      style={({ hovered }) => [styles.tile, { backgroundColor: free ? Maple.blueSoft : t.soft }, on && styles.tileOn, dim && styles.dim, hovered && !on && styles.tileHover]}
       onPress={onPress}
       accessibilityRole="button"
       accessibilityState={{ selected: on }}
@@ -371,7 +372,7 @@ const styles = StyleSheet.create({
   gridHead: { flexDirection: 'row', gap: 6 },
   gridRow: { flexDirection: 'row', gap: 6, minHeight: 72 },
   gridRowBreak: { minHeight: 38 },
-  timeCol: { width: 96, justifyContent: 'center', alignItems: 'center', borderRadius: 8, backgroundColor: '#F4F7FC' },
+  timeCol: { width: 96, justifyContent: 'center', alignItems: 'center', borderRadius: 8, backgroundColor: Maple.blueSoft },
   dayCol: { flex: 1, minWidth: 0 },
   headTime: { paddingVertical: 12, fontSize: 14, fontWeight: '600', color: NAVY },
   dow: { textAlign: 'center', paddingTop: 6, fontSize: 14, fontWeight: '700', color: NAVY },
@@ -379,12 +380,12 @@ const styles = StyleSheet.create({
   time: { fontSize: 12.5, color: NAVY },
   tile: { flex: 1, gap: 2, paddingVertical: 8, paddingHorizontal: 9, borderRadius: 8, borderWidth: 1.5, borderColor: 'transparent' },
   tileOn: { borderColor: BLUE, backgroundColor: WHITE },
-  tileHover: { borderColor: '#BFD3F7' },
+  tileHover: { borderColor: Maple.blueLine },
   dim: { opacity: 0.3 },
   tileHead: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   tileTitle: { flex: 1, fontSize: 13.5, fontWeight: '700' },
   tileLine: { fontSize: 12, color: BODY },
-  breakTile: { flex: 1, alignItems: 'center', justifyContent: 'center', borderRadius: 8, backgroundColor: '#EEF1F6' },
+  breakTile: { flex: 1, alignItems: 'center', justifyContent: 'center', borderRadius: 8, backgroundColor: Maple.blueSelected },
   breakText: { fontSize: 13, color: BODY },
   side: { width: 300, gap: 16 },
   panel: { gap: 12, padding: 14 },
@@ -394,7 +395,7 @@ const styles = StyleSheet.create({
   unschedTitle: { fontSize: 14.5, fontWeight: '700', color: NAVY },
   unschedMeta: { fontSize: 12.5, color: BODY },
   empty: { fontSize: 13.5, color: BODY, paddingVertical: 10 },
-  conflict: { flexDirection: 'row', alignItems: 'center', gap: 10, padding: 10, borderRadius: 10, backgroundColor: '#FFF4F5' },
+  conflict: { flexDirection: 'row', alignItems: 'center', gap: 10, padding: 10, borderRadius: 10, backgroundColor: Maple.errorSoft },
   details: { gap: 10, padding: 16 },
   detailsHead: { flexDirection: 'row', alignItems: 'center', gap: 14, marginVertical: 4 },
   swatch: { width: 42, height: 42, borderRadius: 8 },
@@ -426,6 +427,6 @@ const styles = StyleSheet.create({
   phoneLesson: { flex: 1, minWidth: 0, flexDirection: 'row', alignItems: 'flex-start', gap: 8, paddingVertical: 12, paddingHorizontal: 14, borderRadius: 12, borderLeftWidth: 5 },
   phoneLessonTitle: { fontSize: 16, fontWeight: '700', color: NAVY },
   phoneLessonMeta: { marginTop: 2, fontSize: 13.5, color: BODY },
-  phoneBreak: { flexDirection: 'row', alignItems: 'center', gap: 30, height: 44, paddingHorizontal: 14, borderRadius: 12, backgroundColor: '#E9EDF4' },
+  phoneBreak: { flexDirection: 'row', alignItems: 'center', gap: 30, height: 44, paddingHorizontal: 14, borderRadius: 12, backgroundColor: Maple.blueSelected },
   phoneBreakText: { fontSize: 15, color: NAVY },
 });

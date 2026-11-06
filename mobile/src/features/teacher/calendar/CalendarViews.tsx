@@ -30,6 +30,7 @@ import {
 } from './CalendarGrid';
 import { ScheduleLiveModal } from './ScheduleLiveModal';
 import { type CalendarController, type CalendarMode, useTeacherCalendar } from './useTeacherCalendar';
+import { Maple } from '@/constants/maple';
 
 /** The calendar reference's desktop width, laid out in its pixels and scaled via RefScale. */
 export const CALENDAR_REF_WIDTH = 1180;
@@ -163,7 +164,7 @@ export function CalendarDesk({
                   accessibilityRole="button"
                   accessibilityState={{ expanded: ctl.adding }}
                   accessibilityLabel="Add Event">
-                  <Icon name="plus" size={14} color="#FFFFFF" />
+                  <Icon name="plus" size={14} color={Maple.surface} />
                   <Text style={styles.addEventBtnText}>Add Event</Text>
                 </Pressable>
               </View>
@@ -220,7 +221,7 @@ export function CalendarPhone({
             accessibilityRole="button"
             accessibilityState={{ expanded: ctl.adding }}
             accessibilityLabel="Add Event">
-            <Icon name="plus" size={14} color="#FFFFFF" />
+            <Icon name="plus" size={14} color={Maple.surface} />
             <Text style={styles.phoneAddBtnText}>Add</Text>
           </Pressable>
         </View>
@@ -351,7 +352,7 @@ const styles = StyleSheet.create({
     borderRadius: 7,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -367,7 +368,7 @@ const styles = StyleSheet.create({
     borderRadius: 7,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     paddingHorizontal: 6,
     gap: 4,
   },
@@ -395,10 +396,10 @@ const styles = StyleSheet.create({
     right: 0,
     paddingVertical: 4,
     borderRadius: 8,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     borderWidth: 1,
     borderColor: LINE,
-    shadowColor: '#0B1424',
+    shadowColor: Maple.navy,
     shadowOpacity: 0.12,
     shadowRadius: 12,
     shadowOffset: { width: 0, height: 4 },
@@ -408,7 +409,7 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
   },
   monthOptionOn: {
-    backgroundColor: '#EEF4FF',
+    backgroundColor: Maple.blueSoft,
   },
   monthOptionText: {
     fontSize: 11.5,
@@ -426,7 +427,7 @@ const styles = StyleSheet.create({
     borderRadius: 7,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#F8FAFD',
+    backgroundColor: Maple.subtle,
   },
   modeBtn: {
     height: 26,
@@ -436,7 +437,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   modeBtnOn: {
-    backgroundColor: '#DCEAFE',
+    backgroundColor: Maple.blueSelected,
   },
   modeBtnText: {
     fontSize: 11.5,
@@ -459,7 +460,7 @@ const styles = StyleSheet.create({
   addEventBtnText: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   bottomRow: {
     flexDirection: 'row',
@@ -468,7 +469,7 @@ const styles = StyleSheet.create({
   },
   phoneRoot: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
   },
   phoneScroll: {
     paddingHorizontal: 14,
@@ -499,7 +500,7 @@ const styles = StyleSheet.create({
   phoneAddBtnText: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   phoneMonthBar: {
     flexDirection: 'row',
@@ -528,7 +529,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -538,7 +539,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },

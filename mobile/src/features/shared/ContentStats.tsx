@@ -2,10 +2,11 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
 import { type Engagement, formatCount, ratingLabel, statsSpoken } from '@/lib/engagement';
+import { Maple } from '@/constants/maple';
 
-const MUTED = '#64748B';
-const BODY = '#475569';
-const STAR = '#F5B731';
+const MUTED = Maple.secondary;
+const BODY = Maple.body;
+const STAR = Maple.warning;
 
 interface ContentStatsProps {
   e: Engagement;

@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { type ReactNode } from 'react';
 import { Pressable, type StyleProp, StyleSheet, Text, View, type ViewStyle } from 'react-native';
 import Svg, { Circle, Path, Rect } from 'react-native-svg';
@@ -9,6 +9,7 @@ import { PremiumTiles } from '@/features/portal/Premium';
 import { BLUE, BODY, GREEN, LINE, MUTED, NAVY, RED, TONES, type Tone, WHITE } from '@/features/portal/tokens';
 import type { IconName } from '@/lib/icons';
 import { toast } from '@/lib/toast';
+import { Maple } from '@/constants/maple';
 
 export interface Kpi {
   label: string;
@@ -244,19 +245,19 @@ export function exportMenu(what: string): void {
 
 /** A small round flag drawn from its stripes, so no country photo is needed. */
 const FLAGS: Readonly<Record<string, { stripes: readonly string[]; vertical?: boolean; dot?: string }>> = {
-  UG: { stripes: ['#000', '#FCDC04', '#D90000', '#000', '#FCDC04', '#D90000'], dot: '#FFFFFF' },
-  KE: { stripes: ['#000', '#FFFFFF', '#BB0000', '#FFFFFF', '#006600'], dot: '#BB0000' },
-  TZ: { stripes: ['#1EB53A', '#FCD116', '#000', '#FCD116', '#00A3DD'] },
-  NG: { stripes: ['#008751', '#FFFFFF', '#008751'], vertical: true },
-  GH: { stripes: ['#CE1126', '#FCD116', '#006B3F'], dot: '#000' },
-  RW: { stripes: ['#00A1DE', '#00A1DE', '#FAD201', '#20603D'] },
-  ZA: { stripes: ['#DE3831', '#FFFFFF', '#007A4D', '#FFFFFF', '#002395'] },
-  ET: { stripes: ['#078930', '#FCDD09', '#DA121A'], dot: '#0F47AF' },
-  ZM: { stripes: ['#198A00', '#198A00', '#DE2010', '#000', '#EF7D00'], vertical: true },
-  US: { stripes: ['#B22234', '#FFFFFF', '#B22234', '#FFFFFF', '#B22234', '#FFFFFF', '#B22234'], dot: '#3C3B6E' },
-  GB: { stripes: ['#012169', '#FFFFFF', '#C8102E', '#FFFFFF', '#012169'] },
-  SG: { stripes: ['#EF3340', '#FFFFFF'] },
-  XX: { stripes: ['#B8C2D9', '#DDE3F0'] },
+  UG: { stripes: ['#000', '#FCDC04', Maple.error, '#000', '#FCDC04', Maple.error], dot: Maple.surface },
+  KE: { stripes: ['#000', Maple.surface, Maple.errorText, Maple.surface, Maple.successText], dot: Maple.errorText },
+  TZ: { stripes: [Maple.success, Maple.warning, '#000', Maple.warning, '#00A3DD'] },
+  NG: { stripes: [Maple.successText, Maple.surface, Maple.successText], vertical: true },
+  GH: { stripes: [Maple.error, Maple.warning, Maple.successText], dot: '#000' },
+  RW: { stripes: ['#00A1DE', '#00A1DE', '#FAD201', Maple.successText] },
+  ZA: { stripes: [Maple.error, Maple.surface, Maple.successText, Maple.surface, Maple.blueHover] },
+  ET: { stripes: [Maple.successText, '#FCDD09', Maple.error], dot: Maple.blueHover },
+  ZM: { stripes: [Maple.successText, Maple.successText, Maple.error, '#000', Maple.warning], vertical: true },
+  US: { stripes: [Maple.error, Maple.surface, Maple.error, Maple.surface, Maple.error, Maple.surface, Maple.error], dot: '#3C3B6E' },
+  GB: { stripes: ['#012169', Maple.surface, Maple.error, Maple.surface, '#012169'] },
+  SG: { stripes: [Maple.error, Maple.surface] },
+  XX: { stripes: [Maple.blueLine, Maple.blueSelected] },
 };
 
 export function Flag({ code, size = 18 }: { code: string; size?: number }) {
@@ -278,11 +279,11 @@ export function Flag({ code, size = 18 }: { code: string; size?: number }) {
 export function ScoreRing({ score, size = 38, stroke = 4, max = 100, label }: { score: number; size?: number; stroke?: number; max?: number; label?: string }) {
   const r = (size - stroke) / 2;
   const c = 2 * Math.PI * r;
-  const color = score >= 80 ? '#22A55A' : score >= 70 ? '#F59E0B' : RED;
+  const color = score >= 80 ? Maple.successText : score >= 70 ? Maple.warning : RED;
   return (
     <View style={{ width: size, height: size }} accessible accessibilityLabel={`${label ?? 'Score'} ${score} of ${max}`}>
       <Svg width={size} height={size}>
-        <Circle cx={size / 2} cy={size / 2} r={r} stroke="#EEF2F8" strokeWidth={stroke} fill="none" />
+        <Circle cx={size / 2} cy={size / 2} r={r} stroke={Maple.blueSelected} strokeWidth={stroke} fill="none" />
         <Circle
           cx={size / 2}
           cy={size / 2}
@@ -305,8 +306,8 @@ export function ScoreRing({ score, size = 38, stroke = 4, max = 100, label }: { 
 export type CheckState = 'ok' | 'warn' | 'fail';
 
 const CHECK: Readonly<Record<CheckState, { color: string; icon: IconName }>> = {
-  ok: { color: '#22A55A', icon: 'check' },
-  warn: { color: '#F59E0B', icon: 'alert' },
+  ok: { color: Maple.successText, icon: 'check' },
+  warn: { color: Maple.warning, icon: 'alert' },
   fail: { color: RED, icon: 'close' },
 };
 
@@ -455,7 +456,7 @@ const styles = StyleSheet.create({
   statValuePhone: { fontSize: 19 },
   statValuePhoneLong: { fontSize: 15 },
   statBarRow: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 4 },
-  statBar: { flex: 1, height: 6, borderRadius: 3, backgroundColor: '#EEF2F8', overflow: 'hidden' },
+  statBar: { flex: 1, height: 6, borderRadius: 3, backgroundColor: Maple.blueSelected, overflow: 'hidden' },
   statBarFill: { height: 6, borderRadius: 3 },
   statBarText: { fontSize: 11.5, fontWeight: '600', color: GREEN },
   deltaRow: { flexDirection: 'row', alignItems: 'center', gap: 3, marginTop: 2 },
@@ -483,7 +484,7 @@ const styles = StyleSheet.create({
   outline: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, height: 40, paddingHorizontal: 14, borderRadius: 9, borderWidth: 1, borderColor: LINE, backgroundColor: WHITE },
   outlineSmall: { height: 32, paddingHorizontal: 10, borderRadius: 8, gap: 6 },
   outlineSquare: { width: 40, paddingHorizontal: 0 },
-  outlineHover: { backgroundColor: '#F4F8FF' },
+  outlineHover: { backgroundColor: Maple.blueSoft },
   outlineText: { flexShrink: 1, fontSize: 13, fontWeight: '600', color: NAVY, textAlign: 'center' },
   outlineTextSmall: { fontSize: 12.5 },
   range: { justifyContent: 'flex-start' },
@@ -511,11 +512,11 @@ const styles = StyleSheet.create({
   personName: { fontSize: 11.5, fontWeight: '600', color: NAVY },
   personSubRow: { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 1 },
   personSub: { flexShrink: 1, fontSize: 10.5, color: BODY },
-  initials: { alignItems: 'center', justifyContent: 'center', backgroundColor: '#5B6FB5' },
+  initials: { alignItems: 'center', justifyContent: 'center', backgroundColor: Maple.blue },
   initialsText: { fontWeight: '700', color: WHITE },
   hbar: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 4 },
   hbarLabel: { width: 96, fontSize: 12.5, color: NAVY },
-  hbarTrack: { flex: 1, height: 10, borderRadius: 5, backgroundColor: '#EEF2F8', overflow: 'hidden' },
+  hbarTrack: { flex: 1, height: 10, borderRadius: 5, backgroundColor: Maple.blueSelected, overflow: 'hidden' },
   hbarFill: { height: 10, borderRadius: 5 },
   hbarValue: { width: 52, textAlign: 'right', fontSize: 12.5, fontWeight: '600', color: NAVY },
 });

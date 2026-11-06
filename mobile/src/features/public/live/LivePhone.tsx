@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
@@ -11,10 +11,11 @@ import { sharePage } from '@/lib/save-text';
 import { Brand } from '../palette';
 import { LiveBooking, register, type Session } from './LiveBooking';
 import { AboutLive, card, LearnList, MoreLive, TeacherCard } from './LiveCards';
+import { Maple } from '@/constants/maple';
+import { MapleLogo } from '@/components/brand/MapleLogo';
 
 const TABS = ['Overview', 'Syllabus', 'Teacher', 'Reviews'] as const;
 type Tab = (typeof TABS)[number];
-const LEAF = require('@/assets/images/maple-leaf.png') as number;
 const REGISTER_BAR = 76;
 
 function TopBar() {
@@ -25,11 +26,7 @@ function TopBar() {
         <Icon name="chevronLeft" size={24} color={Brand.ink} />
       </Pressable>
       <View style={styles.logo}>
-        <Image source={LEAF} style={styles.leaf} contentFit="contain" />
-        <View>
-          <Text style={styles.logoName}>Maple</Text>
-          <Text style={styles.logoTag}>Global Online School</Text>
-        </View>
+        <MapleLogo markStyle={styles.leaf} />
       </View>
       <View style={styles.topActions}>
         <Pressable onPress={() => setSaved((v) => !v)} accessibilityRole="button" accessibilityLabel={saved ? 'Remove from saved' : 'Save'} hitSlop={8}>
@@ -140,7 +137,7 @@ export function LivePhone({ s }: { s: Session }) {
 }
 
 const styles = StyleSheet.create({
-  flex: { flex: 1, backgroundColor: '#F7F9FC' },
+  flex: { flex: 1, backgroundColor: Maple.blueSoft },
   top: { height: 52, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 14, backgroundColor: Brand.surface },
   logo: { flexDirection: 'row', alignItems: 'center', gap: 5 },
   leaf: { width: 30, height: 30 },
@@ -148,7 +145,7 @@ const styles = StyleSheet.create({
   logoTag: { fontSize: 7, color: Brand.ink },
   topActions: { flexDirection: 'row', alignItems: 'center', gap: 16 },
   hero: { height: 196, marginHorizontal: 10, marginTop: 4, borderRadius: 14, overflow: 'hidden', backgroundColor: '#0A2A55' },
-  badge: { position: 'absolute', left: 10, top: 10, paddingHorizontal: 9, paddingVertical: 4, borderRadius: 12, backgroundColor: '#E5484D' },
+  badge: { position: 'absolute', left: 10, top: 10, paddingHorizontal: 9, paddingVertical: 4, borderRadius: 12, backgroundColor: Maple.error },
   badgeText: { fontSize: 10.5, fontWeight: '700', color: Brand.surface },
   play: { position: 'absolute', alignSelf: 'center', top: 72, width: 52, height: 52, borderRadius: 26, borderWidth: 5, borderColor: 'rgba(255,255,255,0.45)', backgroundColor: Brand.blue, alignItems: 'center', justifyContent: 'center' },
   playIcon: { fontSize: 18, color: Brand.surface, marginLeft: 3 },
@@ -156,19 +153,19 @@ const styles = StyleSheet.create({
   title: { marginTop: 16, fontSize: 22, lineHeight: 27, fontWeight: '700', color: Brand.ink, letterSpacing: -0.3 },
   info: { marginTop: 12, gap: 10 },
   infoRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 12 },
-  infoText: { fontSize: 13, lineHeight: 18, color: '#3D4656' },
+  infoText: { fontSize: 13, lineHeight: 18, color: Maple.body },
   box: { marginHorizontal: 12, padding: 16, ...card },
   bookingBox: { marginTop: 18 },
-  tabs: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 22, paddingHorizontal: 16, borderBottomWidth: 1, borderBottomColor: '#E6EAF1' },
+  tabs: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 22, paddingHorizontal: 16, borderBottomWidth: 1, borderBottomColor: Maple.disabledSurface },
   tab: { paddingVertical: 10 },
   tabText: { fontSize: 14, color: Brand.ink },
   tabTextOn: { color: Brand.blue, fontWeight: '600' },
-  tabLine: { position: 'absolute', left: 0, right: 0, bottom: -1, height: 2.5, borderRadius: 2, backgroundColor: Brand.blue },
+  tabLine: { position: 'absolute', left: 0, right: 0, bottom: -1, height: 3, borderRadius: 2, backgroundColor: Brand.blue },
   section: { paddingHorizontal: 16, paddingTop: 18, paddingBottom: 22 },
   readMore: { marginTop: 8 },
   readMoreText: { fontSize: 13.5, fontWeight: '500', color: Brand.blue },
   reviewScore: { fontSize: 26, fontWeight: '700', color: Brand.ink, marginBottom: 6 },
-  registerBar: { position: 'absolute', left: 0, right: 0, bottom: 0, paddingTop: 10, paddingHorizontal: 16, backgroundColor: '#F7F9FC', borderTopWidth: 1, borderTopColor: '#E6EAF1' },
+  registerBar: { position: 'absolute', left: 0, right: 0, bottom: 0, paddingTop: 10, paddingHorizontal: 16, backgroundColor: Maple.blueSoft, borderTopWidth: 1, borderTopColor: Maple.disabledSurface },
   registerBtn: { height: 52, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, borderRadius: 10, backgroundColor: Brand.blue },
   registerText: { fontSize: 16, fontWeight: '600', color: Brand.surface },
 });

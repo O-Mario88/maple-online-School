@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
@@ -10,8 +10,9 @@ import type { IconName } from '@/lib/icons';
 
 import type { Category, ListTab, SchoolSort } from './schoolNetwork';
 import { ExamsTab, InstitutionsTab, JourneyCard, LinkCard, PricingCard, RecsTab, VacanciesTab } from './SchoolPanels';
-import { LAVENDER, PrefsSheet, ProfileSheet, PURPLE, SchoolCardView } from './SchoolParts';
+import { BRAND_SOFT, PrefsSheet, ProfileSheet, BRAND_BLUE, SchoolCardView } from './SchoolParts';
 import { type Net, type NetTab, type SN, useSchoolNetwork } from './useSchoolNetwork';
+import { Maple, Radii } from '@/constants/maple';
 
 const TABS: readonly { key: NetTab; label: string; icon: IconName }[] = [
   { key: 'discover', label: 'Discover Schools', icon: 'building' },
@@ -26,7 +27,7 @@ const CATEGORIES: readonly { key: Category; label: string; icon: IconName; color
   { key: 'top', label: 'Top Performing', icon: 'chart' },
   { key: 'online', label: 'Online Schools', icon: 'screen' },
   { key: 'boarding', label: 'Boarding Schools', icon: 'building' },
-  { key: 'scholarships', label: 'Scholarships', icon: 'award', color: '#E8A317' },
+  { key: 'scholarships', label: 'Scholarships', icon: 'award', color: Maple.warning },
 ];
 const LISTS: readonly { key: ListTab; label: string }[] = [
   { key: 'recommended', label: 'Recommended for You' },
@@ -103,7 +104,7 @@ function FilterRow({ x }: { x: SN }) {
 function Banner({ x, phone = false }: { x: SN; phone?: boolean }) {
   return (
     <View style={[s.banner, phone && s.bannerP]}>
-      <LinearGradient colors={['#5457DF', '#7B6CEB', '#B8B1F4']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />
+      <LinearGradient colors={[Maple.blue, Maple.blue, Maple.blueLine]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />
       <View style={phone ? undefined : s.bannerText}>
         <Text style={[s.bannerTitle, phone && s.bannerTitleP]}>{'Find the Right School\nFor Your Learning Journey'}</Text>
         <Text style={s.bannerSub}>Explore Maple-powered schools, compare them and apply with confidence.</Text>
@@ -123,7 +124,7 @@ function Categories({ x, phone = false }: { x: SN; phone?: boolean }) {
         const on = x.category === c.key;
         return (
           <Pressable key={c.key} style={[s.cat, phone ? s.catP : s.catD, on && s.catOn]} onPress={() => x.setCategory(c.key)} accessibilityRole="button" accessibilityState={{ selected: on }}>
-            <Icon name={c.icon} size={24} color={c.color ?? PURPLE} />
+            <Icon name={c.icon} size={24} color={c.color ?? BRAND_BLUE} />
             <Text style={s.catTitle}>{c.label}</Text>
             <Text style={s.catCount}>{`${x.net.categoryCounts[c.key]} schools`}</Text>
           </Pressable>
@@ -195,7 +196,7 @@ function Funnel({ x, phone = false }: { x: SN; phone?: boolean }) {
               {i > 0 && !phone ? <Icon name="chevronRight" size={16} color={L.muted} /> : null}
               <View style={s.step}>
                 <View style={[s.stepIcon, i === x.net.funnel.length - 1 && s.stepDone]}>
-                  <Icon name={f.icon} size={20} color={i === x.net.funnel.length - 1 ? L.green : PURPLE} />
+                  <Icon name={f.icon} size={20} color={i === x.net.funnel.length - 1 ? L.green : BRAND_BLUE} />
                 </View>
                 <Text style={s.stepTitle}>{f.title}</Text>
                 <Text style={s.small}>{f.sub}</Text>
@@ -222,7 +223,7 @@ function Funnel({ x, phone = false }: { x: SN; phone?: boolean }) {
             </View>
             <Pressable style={s.continue} onPress={() => x.apply(school.id)} accessibilityRole="button">
               <Text style={s.outlineText}>{app.submitted ? 'View Application' : 'Continue Application'}</Text>
-              <Icon name="arrowRight" size={15} color={PURPLE} />
+              <Icon name="arrowRight" size={15} color={BRAND_BLUE} />
             </Pressable>
           </>
         ) : (
@@ -281,14 +282,14 @@ interface Props {
 export function SchoolNetworkDesk({ net, avatar, profile }: Props) {
   const x = useSchoolNetwork(net, profile);
   return (
-    <LightFrame placeholder="Search schools, programs, subjects, exam centres, or vacancies..." avatar={avatar}>
+    <LightFrame>
       <View style={s.heroPhoto} pointerEvents="none">
         <Image source={net.hero} style={StyleSheet.absoluteFill} contentFit="cover" />
         <LinearGradient colors={[L.canvas, 'rgba(246,248,253,0)']} start={{ x: 0, y: 0.5 }} end={{ x: 0.3, y: 0.5 }} style={StyleSheet.absoluteFill} />
       </View>
       <View style={s.head}>
         <View style={s.headIcon}>
-          <Icon name="building" size={28} color={PURPLE} />
+          <Icon name="building" size={28} color={BRAND_BLUE} />
         </View>
         <View>
           <Text style={s.title} accessibilityRole="header">
@@ -320,7 +321,7 @@ export function SchoolNetworkPhone({ net, avatar, profile }: Props) {
       <ScrollView contentContainerStyle={s.phone}>
         <View style={s.headP}>
           <View style={[s.headIcon, s.headIconP]}>
-            <Icon name="building" size={22} color={PURPLE} />
+            <Icon name="building" size={22} color={BRAND_BLUE} />
           </View>
           <View style={s.flex}>
             <Text style={s.titleP} accessibilityRole="header">
@@ -344,10 +345,10 @@ const s = StyleSheet.create({
   small: { fontSize: 12.5, lineHeight: 17, color: L.body },
   heroPhoto: { position: 'absolute', top: -20, right: -16, width: 470, height: 138, overflow: 'hidden' },
   head: { flexDirection: 'row', alignItems: 'center', gap: 16, height: 70 },
-  headIcon: { width: 56, height: 56, alignItems: 'center', justifyContent: 'center', borderRadius: 14, backgroundColor: LAVENDER },
+  headIcon: { width: 56, height: 56, alignItems: 'center', justifyContent: 'center', borderRadius: 14, backgroundColor: BRAND_SOFT },
   title: { fontSize: 32, lineHeight: 38, fontWeight: '800', color: L.navy },
   sub: { marginTop: 2, fontSize: 15, color: L.ink },
-  tabsCard: { alignSelf: 'flex-start', marginTop: 4, borderRadius: 12, backgroundColor: L.white, shadowColor: '#0B1A3F', shadowOpacity: 0.06, shadowRadius: 10, shadowOffset: { width: 0, height: 2 }, elevation: 2 },
+  tabsCard: { alignSelf: 'flex-start', marginTop: 4, borderRadius: 12, backgroundColor: L.white, shadowColor: Maple.navyDeep, shadowOpacity: 0.06, shadowRadius: 10, shadowOffset: { width: 0, height: 2 }, elevation: 2 },
   tabs: { flexDirection: 'row', paddingHorizontal: 8 },
   tabsP: { paddingHorizontal: 0 },
   tab: { height: 48, flexDirection: 'row', alignItems: 'center', gap: 9, paddingHorizontal: 16 },
@@ -364,14 +365,14 @@ const s = StyleSheet.create({
   bannerText: { width: 268 },
   bannerTitle: { fontSize: 21.5, lineHeight: 27, fontWeight: '800', color: L.white },
   bannerTitleP: { fontSize: 20, lineHeight: 25 },
-  bannerSub: { marginTop: 6, fontSize: 13.5, lineHeight: 18, color: '#EEF0FF' },
+  bannerSub: { marginTop: 6, fontSize: 13.5, lineHeight: 18, color: Maple.blueSoft },
   bannerForm: { flex: 1, gap: 12 },
   searchBox: { height: 42, flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 16, borderRadius: 21, backgroundColor: L.white },
   searchInput: { flex: 1, height: 40, fontSize: 13.5, color: L.ink },
   filterRow: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 6 },
   more: { height: 38, flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 12, borderRadius: 10, backgroundColor: L.white },
   moreText: { fontSize: 13, color: L.ink },
-  searchBtn: { height: 38, paddingHorizontal: 16, alignItems: 'center', justifyContent: 'center', borderRadius: 21, borderWidth: 2, borderColor: L.white, backgroundColor: PURPLE },
+  searchBtn: { height: 38, paddingHorizontal: 16, alignItems: 'center', justifyContent: 'center', borderRadius: Radii.control, borderWidth: 2, borderColor: L.white, backgroundColor: BRAND_BLUE },
   searchBtnText: { fontSize: 14, fontWeight: '600', color: L.white },
   cats: { flexDirection: 'row', gap: 10 },
   cat: { height: 84, alignItems: 'center', justifyContent: 'center', gap: 3, borderRadius: 12, borderWidth: 1, borderColor: L.line, backgroundColor: L.white },
@@ -390,8 +391,8 @@ const s = StyleSheet.create({
   gridP: { flexDirection: 'column' },
   empty: { alignItems: 'center', gap: 8, padding: 28, borderRadius: 14, borderWidth: 1, borderColor: L.line, backgroundColor: L.white },
   emptyTitle: { fontSize: 16, fontWeight: '700', color: L.navy },
-  outline: { paddingHorizontal: 14, height: 34, alignItems: 'center', justifyContent: 'center', borderRadius: 8, borderWidth: 1.5, borderColor: PURPLE },
-  outlineText: { fontSize: 13, fontWeight: '600', color: PURPLE },
+  outline: { paddingHorizontal: 14, height: 34, alignItems: 'center', justifyContent: 'center', borderRadius: 8, borderWidth: 1.5, borderColor: BRAND_BLUE },
+  outlineText: { fontSize: 13, fontWeight: '600', color: BRAND_BLUE },
   funnel: { flexDirection: 'row', gap: 22, padding: 20, borderRadius: 16, borderWidth: 1, borderColor: L.line, backgroundColor: L.white },
   funnelP: { flexDirection: 'column' },
   cardTitle: { fontSize: 18.5, fontWeight: '700', color: L.navy },
@@ -399,8 +400,8 @@ const s = StyleSheet.create({
   stepsP: { flexWrap: 'wrap', rowGap: 12 },
   stepWrap: { flex: 1, minWidth: 96, flexDirection: 'row', alignItems: 'center' },
   step: { flex: 1, alignItems: 'center', gap: 3 },
-  stepIcon: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center', borderRadius: 22, backgroundColor: LAVENDER },
-  stepDone: { backgroundColor: '#DDF4E4' },
+  stepIcon: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center', borderRadius: 22, backgroundColor: BRAND_SOFT },
+  stepDone: { backgroundColor: Maple.successSoft },
   stepTitle: { fontSize: 12.5, fontWeight: '600', color: L.navy, textAlign: 'center' },
   mine: { gap: 10, justifyContent: 'center' },
   mineD: { width: 250, paddingLeft: 22, borderLeftWidth: 1, borderLeftColor: L.line },
@@ -409,9 +410,9 @@ const s = StyleSheet.create({
   mineTitle: { fontSize: 14.5, fontWeight: '700', color: L.navy },
   mineRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 },
   minePct: { fontSize: 13, fontWeight: '700', color: L.navy },
-  bar: { height: 6, borderRadius: 3, backgroundColor: '#E6EBF3' },
+  bar: { height: 6, borderRadius: 3, backgroundColor: Maple.blueSelected },
   barFill: { height: 6, borderRadius: 3, backgroundColor: L.blue },
-  continue: { height: 38, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, borderRadius: 19, borderWidth: 1.5, borderColor: PURPLE },
+  continue: { height: 38, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, borderRadius: Radii.control, borderWidth: 1.5, borderColor: BRAND_BLUE },
   phoneRoot: { flex: 1, backgroundColor: L.canvas },
   phone: { gap: 16, padding: 16, paddingBottom: 110 },
   headP: { flexDirection: 'row', alignItems: 'center', gap: 12 },

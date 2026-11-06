@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { ScrollView, StyleSheet, useWindowDimensions } from 'react-native';
+import { StyleSheet, useWindowDimensions } from 'react-native';
 
 import { useShell } from '@/components/ui';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
@@ -11,6 +11,7 @@ import {
   MasteryHeatmapPhone,
 } from '@/features/teacher/learners/MasteryHeatmapViews';
 import { mockData } from '@/lib/mock';
+import { PageScroll } from '@/components/shell/PageScroll';
 
 /** Inventory 46: Class Mastery Heatmap & 1-Click Intervention Centre (`/(teacher)/learners`). */
 export default function TeacherLearnersScreen() {
@@ -30,11 +31,11 @@ export default function TeacherLearnersScreen() {
   const m = mock.teacher.masteryHeatmap;
   if (!wide) return <MasteryHeatmapPhone m={m} me={me} />;
   return (
-    <ScrollView style={styles.bg}>
+    <PageScroll style={styles.bg}>
       <RefScale width={width} refWidth={MASTERY_REF_WIDTH}>
         <MasteryHeatmapDesk m={m} me={me} />
       </RefScale>
-    </ScrollView>
+    </PageScroll>
   );
 }
 

@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
@@ -14,6 +14,7 @@ import { Cell, type Column, DataTable, PageHead, Search, SelectBox, useChoice, u
 import type { IconName } from '@/lib/icons';
 import { toast } from '@/lib/toast';
 import type { AnnouncementRow, Audience } from '@/mock/command-center/comms';
+import { Maple } from '@/constants/maple';
 
 type M = CommandData['comms'];
 type Status = AnnouncementRow['status'];
@@ -430,7 +431,7 @@ const styles = StyleSheet.create({
   panelTitle: { fontSize: 15.5, fontWeight: '800', color: NAVY },
   hero: { width: 72, height: 58, borderRadius: 8 },
   detailTitle: { fontSize: 14.5, fontWeight: '800', color: NAVY },
-  bodyBox: { padding: 12, borderRadius: 10, backgroundColor: '#F4F7FC' },
+  bodyBox: { padding: 12, borderRadius: 10, backgroundColor: Maple.blueSoft },
   body: { fontSize: 12.5, lineHeight: 20, color: NAVY },
   facts: { flexDirection: 'row', gap: 10 },
   fact: { flex: 1, minWidth: 0, gap: 3 },

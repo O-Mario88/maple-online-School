@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { ScrollView, StyleSheet, useWindowDimensions } from 'react-native';
+import { StyleSheet, useWindowDimensions } from 'react-native';
 
 import { useShell } from '@/components/ui';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
@@ -11,6 +11,7 @@ import {
 } from '@/features/teacher/earnings/EarningsViews';
 import { CANVAS } from '@/features/teacher/frame/TeacherParts';
 import { mockData } from '@/lib/mock';
+import { PageScroll } from '@/components/shell/PageScroll';
 
 /** Inventory 50: Teacher Earnings, Escrow Ledger & Instant Mobile-Money Payouts (`/(teacher)/earnings`). */
 export default function EarningsScreen() {
@@ -28,11 +29,11 @@ export default function EarningsScreen() {
   const e = mock.teacher.earningsLedger;
   if (!wide) return <EarningsPhone e={e} me={me} />;
   return (
-    <ScrollView style={styles.bg}>
+    <PageScroll style={styles.bg}>
       <RefScale width={width} refWidth={EARNINGS_REF_WIDTH}>
         <EarningsDesk e={e} me={me} />
       </RefScale>
-    </ScrollView>
+    </PageScroll>
   );
 }
 

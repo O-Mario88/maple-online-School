@@ -3,6 +3,7 @@ import type { IconName } from '@/lib/icons';
 import type { TeacherDest } from '@/lib/teacher-home';
 
 import { photos } from './photos';
+import { Maple } from '@/constants/maple';
 
 const p = photos.courseBuilder;
 
@@ -80,13 +81,13 @@ export const courseBuilder = {
   ] as BuilderModule[],
   video: { frame: p.video, length: 755 },
   marks: [
-    { at: 0, label: 'Introduction', icon: 'playFill', color: '#1463F3' },
-    { at: 80, label: 'Learning objectives', icon: 'flag', color: '#E5484D' },
-    { at: 165, label: 'Understanding place value', icon: 'bolt', color: '#F0A000' },
-    { at: 310, label: 'Worked example 1', icon: 'check', color: '#1F9D55' },
-    { at: 450, label: 'Practice question (Interactive)', icon: 'hand', color: '#7C4DDB' },
-    { at: 615, label: 'Common mistakes', icon: 'alert', color: '#F0A000' },
-    { at: 700, label: 'Summary & next steps', icon: 'check', color: '#1F9D55' },
+    { at: 0, label: 'Introduction', icon: 'playFill', color: Maple.blue },
+    { at: 80, label: 'Learning objectives', icon: 'flag', color: Maple.error },
+    { at: 165, label: 'Understanding place value', icon: 'bolt', color: Maple.warning },
+    { at: 310, label: 'Worked example 1', icon: 'check', color: Maple.successText },
+    { at: 450, label: 'Practice question (Interactive)', icon: 'hand', color: Maple.blue },
+    { at: 615, label: 'Common mistakes', icon: 'alert', color: Maple.warning },
+    { at: 700, label: 'Summary & next steps', icon: 'check', color: Maple.successText },
   ] as Mark[],
   blocks: [
     { kind: 'video', label: 'Video', icon: p.blocks.video },

@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { type ReactNode, useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
@@ -9,6 +9,7 @@ import { formatMoney } from '@/lib/finance/fees';
 import type { MockData } from '@/mock';
 
 import { Brand, CARD_SHADOW } from '../palette';
+import { Maple } from '@/constants/maple';
 
 type Digest = MockData['publicPages']['parentDigest'];
 
@@ -269,7 +270,7 @@ const styles = StyleSheet.create({
   play: { width: 40, height: 40, borderRadius: 20, backgroundColor: Brand.blue, alignItems: 'center', justifyContent: 'center' },
   playIcon: { fontSize: 15, color: Brand.surface },
   wave: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 2, height: 28, overflow: 'hidden' },
-  bar: { width: 3, borderRadius: 2, backgroundColor: '#C7D7FE' },
+  bar: { width: 3, borderRadius: 2, backgroundColor: Maple.blueLine },
   barPlayed: { backgroundColor: Brand.blue },
   time: { fontSize: 12, color: Brand.body, fontVariant: ['tabular-nums'], paddingRight: 8 },
   subject: { flexDirection: 'row', alignItems: 'center', gap: 10 },
@@ -283,7 +284,7 @@ const styles = StyleSheet.create({
   highlightPhoto: { width: '100%', aspectRatio: 106 / 120, borderRadius: 8 },
   caption: { fontSize: 11, color: Brand.ink },
   feeBox: { gap: 8, padding: 14, borderRadius: 10, backgroundColor: Brand.canvas },
-  feeStatus: { fontSize: 11, fontWeight: '700', color: '#8A5A00', backgroundColor: Brand.amberSoft, paddingHorizontal: 8, paddingVertical: 3, borderRadius: 6, overflow: 'hidden' },
+  feeStatus: { fontSize: 11, fontWeight: '700', color: Maple.warningText, backgroundColor: Brand.amberSoft, paddingHorizontal: 8, paddingVertical: 3, borderRadius: 6, overflow: 'hidden' },
   feeStatusPaid: { color: Brand.green, backgroundColor: Brand.greenSoft },
   balance: { color: Brand.live },
   pay: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, minHeight: 48, borderRadius: 10, backgroundColor: Brand.blue },

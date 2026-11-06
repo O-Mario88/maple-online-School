@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { useMemo, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
@@ -16,18 +16,19 @@ import type { PayableRow } from '@/mock/command-center/pf-commercial';
 
 import { amount, type FormAsk, FormModal } from './FinForm';
 import { FinDesk, FinHead, FinPanel, FinPhone, FinStats, FinTabs, num, PhoneRow, type Promo, RingLegend, SumLine, ugx } from './FinKit';
+import { Maple } from '@/constants/maple';
 
 type D = CommandData['platformFinance']['commercial'];
 const PER_PAGE = 10;
 const TABS = ['Overview', 'Teacher Payables', 'Payouts', 'Reserves & Holds', 'Disputes', 'Liability Register', 'Reports', 'Settings'] as const;
 const STATUS_TONE: Readonly<Record<Eligibility, Tone>> = { Eligible: 'green', 'Below Minimum': 'grey', 'On Hold': 'orange', Dispute: 'red' };
-const PROMO: Promo = { icon: 'people', color: '#1E6BF0', title: 'Teacher Payables', body: 'Track teacher earnings, payouts, reserves, disputes and liabilities.' };
+const PROMO: Promo = { icon: 'people', color: Maple.blue, title: 'Teacher Payables', body: 'Track teacher earnings, payouts, reserves, disputes and liabilities.' };
 const RANGES = ['Last 10 Months', 'This Quarter', 'Year to Date'];
 const FILTERS = { subject: ['All Subjects', 'Mathematics', 'Physics', 'English', 'Chemistry', 'Biology', 'ICT', 'Primary'], status: ['All Statuses', 'Eligible', 'Below Minimum', 'On Hold', 'Dispute'] } as const;
 const PARTS = [
-  { key: 'awaiting', label: 'Awaiting Release', color: '#2563EB' },
-  { key: 'reserve', label: 'Reserves / Holds', color: '#F5B731' },
-  { key: 'dispute', label: 'Disputes', color: '#E5484D' },
+  { key: 'awaiting', label: 'Awaiting Release', color: Maple.blue },
+  { key: 'reserve', label: 'Reserves / Holds', color: Maple.warning },
+  { key: 'dispute', label: 'Disputes', color: Maple.error },
 ] as const;
 
 const journalText = (e: readonly EntryLine[]) => e.map((l) => `${l.debit ? 'Dr' : 'Cr'} ${l.account} ${num(l.debit || l.credit)}`).join(', ');
@@ -241,10 +242,10 @@ function Trend({ d, phone = false }: { d: D; phone?: boolean }) {
       <ComboChart
         labels={f.labels}
         bars={[
-          { name: 'Earnings', color: '#3B82F6', values: f.earnings },
-          { name: 'Payouts', color: '#A78BFA', values: f.payouts },
+          { name: 'Earnings', color: Maple.blue, values: f.earnings },
+          { name: 'Payouts', color: Maple.blueLine, values: f.payouts },
         ]}
-        line={{ name: 'Outstanding Payables', color: '#22A55A', values: f.outstanding, dots: true }}
+        line={{ name: 'Outstanding Payables', color: Maple.successText, values: f.outstanding, dots: true }}
         max={400}
         lineMax={400}
         rightAxis={false}
@@ -255,9 +256,9 @@ function Trend({ d, phone = false }: { d: D; phone?: boolean }) {
       <View style={styles.legend}>
         {(
           [
-            ['Earnings', '#3B82F6'],
-            ['Payouts', '#A78BFA'],
-            ['Outstanding Payables', '#22A55A'],
+            ['Earnings', Maple.blue],
+            ['Payouts', Maple.blueLine],
+            ['Outstanding Payables', Maple.successText],
           ] as const
         ).map(([l, c]) => (
           <View key={l} style={styles.inline}>

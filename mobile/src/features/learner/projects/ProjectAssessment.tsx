@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { type ReactNode, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
@@ -9,17 +9,18 @@ import { DOMAINS, GENERIC_SKILLS, identifierFor, LEARNING_OUTCOMES, RACE, raceTo
 import { overallIdentifier } from '@/lib/projects';
 
 import type { Page, Project } from './useProjects';
+import { Maple } from '@/constants/maple';
 
-const INK = '#0B1424';
-const BODY = '#4A5263';
-const BLUE = '#1463F3';
+const INK = Maple.navy;
+const BODY = Maple.body;
+const BLUE = Maple.blue;
 const TILE: Record<string, { bg: string; fg: string }> = {
-  relevance: { bg: '#E3F6E9', fg: '#15803D' },
-  accuracy: { bg: '#E6EEFC', fg: '#1450C8' },
-  coherence: { bg: '#FDF1DC', fg: '#B45309' },
-  excellence: { bg: '#F1E8FD', fg: '#6D28D9' },
+  relevance: { bg: Maple.successSoft, fg: Maple.successText },
+  accuracy: { bg: Maple.blueSelected, fg: Maple.blueHover },
+  coherence: { bg: Maple.warningSoft, fg: Maple.warningText },
+  excellence: { bg: Maple.blueSelected, fg: Maple.blue },
 };
-const KUSVA_BAR = [BLUE, '#22A35A', '#8B5CF6'];
+const KUSVA_BAR = [BLUE, Maple.successText, Maple.blue];
 const TABS = ['KUSVA', 'Generic Skills', 'Graduate Profile'] as const;
 type Tab = (typeof TABS)[number];
 
@@ -34,7 +35,7 @@ function Row({ icon, label, id, color }: { icon: number; label: string; id: numb
         <Text style={styles.rowLabel} numberOfLines={1}>
           {label}
         </Text>
-        <Bar value={id / 3} color={color ?? ID_TONE[identifier.id].bar} track="#E6EBF2" height={5} />
+        <Bar value={id / 3} color={color ?? ID_TONE[identifier.id].bar} track={Maple.blueSelected} height={5} />
       </View>
       <Text style={styles.rowNum}>{id}</Text>
       <View style={styles.pill}>
@@ -92,7 +93,7 @@ export function ProjectAssessment({ page, p, onClose }: { page: Page; p: Project
           <View style={styles.totalRow}>
             <View style={styles.flex}>
               <Text style={styles.totalLabel}>Total RACE Score</Text>
-              <Bar value={total.score / total.max} color="#22A35A" track="#E6EBF2" height={9} />
+              <Bar value={total.score / total.max} color={Maple.successText} track={Maple.blueSelected} height={9} />
             </View>
             <Text style={styles.total}>{`${total.score} / ${total.max}`}</Text>
           </View>
@@ -139,8 +140,8 @@ export function ProjectAssessment({ page, p, onClose }: { page: Page; p: Project
 const styles = StyleSheet.create({
   flex: { flex: 1 },
   head: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  title: { fontSize: 14, fontWeight: '700', color: '#0B2A6B' },
-  info: { marginTop: 8, padding: 8, borderRadius: 6, backgroundColor: '#F1F5FB', fontSize: 11, lineHeight: 15, color: BODY },
+  title: { fontSize: 14, fontWeight: '700', color: Maple.blueHover },
+  info: { marginTop: 8, padding: 8, borderRadius: 6, backgroundColor: Maple.blueSoft, fontSize: 11, lineHeight: 15, color: BODY },
   tiles: { flexDirection: 'row', gap: 5, marginTop: 14 },
   tile: { flex: 1, height: 83, alignItems: 'center', justifyContent: 'center', gap: 3, borderRadius: 8 },
   tileIcon: { width: 21, height: 20 },
@@ -149,13 +150,13 @@ const styles = StyleSheet.create({
   totalRow: { flexDirection: 'row', alignItems: 'flex-end', gap: 30, marginTop: 14 },
   totalLabel: { marginBottom: 8, fontSize: 12, fontWeight: '600', color: INK },
   total: { fontSize: 15, fontWeight: '700', color: INK },
-  empty: { marginTop: 14, padding: 12, borderRadius: 8, backgroundColor: '#F5F8FC', fontSize: 12, lineHeight: 17, color: BODY },
+  empty: { marginTop: 14, padding: 12, borderRadius: 8, backgroundColor: Maple.blueSoft, fontSize: 12, lineHeight: 17, color: BODY },
   section: { marginTop: 14 },
-  sectionTitle: { fontSize: 13.5, fontWeight: '700', color: '#0B2A6B' },
+  sectionTitle: { fontSize: 13.5, fontWeight: '700', color: Maple.blueHover },
   perfTitle: { marginTop: 22 },
   tabs: { flexDirection: 'row', gap: 4, marginTop: 10 },
-  tab: { flex: 1, height: 28, alignItems: 'center', justifyContent: 'center', borderRadius: 5, backgroundColor: '#F1F4F9' },
-  tabOn: { borderWidth: 1, borderColor: BLUE, backgroundColor: '#FFFFFF' },
+  tab: { flex: 1, height: 28, alignItems: 'center', justifyContent: 'center', borderRadius: 5, backgroundColor: Maple.blueSoft },
+  tabOn: { borderWidth: 1, borderColor: BLUE, backgroundColor: Maple.surface },
   tabText: { fontSize: 11, color: BODY },
   tabTextOn: { color: BLUE, fontWeight: '700' },
   rows: { gap: 9, marginTop: 10 },
@@ -164,7 +165,7 @@ const styles = StyleSheet.create({
   rowLabel: { marginBottom: 5, fontSize: 11, color: INK },
   rowNum: { width: 14, fontSize: 13.5, fontWeight: '700', color: INK, textAlign: 'center' },
   pill: { width: 74 },
-  feedback: { marginTop: 18, padding: 10, borderRadius: 8, backgroundColor: '#EAF6EE' },
+  feedback: { marginTop: 18, padding: 10, borderRadius: 8, backgroundColor: Maple.successSoft },
   fbHead: { flexDirection: 'row', alignItems: 'center' },
   fbTitle: { fontSize: 12.5, fontWeight: '700', color: INK },
   overall: { paddingHorizontal: 8, paddingVertical: 2, borderRadius: 9, fontSize: 10, fontWeight: '600', overflow: 'hidden' },
@@ -172,5 +173,5 @@ const styles = StyleSheet.create({
   fbPhoto: { width: 36, height: 36, borderRadius: 18 },
   fbName: { fontSize: 10.5, fontWeight: '600', color: INK },
   fbDate: { fontSize: 9.5, color: BODY },
-  fbText: { marginTop: 3, fontSize: 10.5, lineHeight: 15, color: '#2B3445' },
+  fbText: { marginTop: 3, fontSize: 10.5, lineHeight: 15, color: Maple.navy },
 });

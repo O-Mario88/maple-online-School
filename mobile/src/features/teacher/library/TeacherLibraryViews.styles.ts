@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 
 import { BLUE, BODY, INK, LINE } from '@/features/teacher/frame/TeacherParts';
+import { Maple } from '@/constants/maple';
 
 /** Styles for TeacherLibraryViews (kept apart so the view file stays readable). */
 export const TEACHER_LIBRARY_REF_WIDTH = 1220;
@@ -10,7 +11,7 @@ export const s = StyleSheet.create({
     width: TEACHER_LIBRARY_REF_WIDTH,
     padding: 12,
     gap: 10,
-    backgroundColor: '#EAF1FB',
+    backgroundColor: Maple.blueSelected,
   },
   body: {
     flexDirection: 'row',
@@ -23,7 +24,7 @@ export const s = StyleSheet.create({
     borderRadius: 9,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     padding: 9,
     gap: 5,
     marginTop: 8,
@@ -40,7 +41,7 @@ export const s = StyleSheet.create({
   storageTrack: {
     height: 5,
     borderRadius: 2.5,
-    backgroundColor: '#E2E8F0',
+    backgroundColor: Maple.border,
     overflow: 'hidden',
   },
   storageFill: {
@@ -52,8 +53,8 @@ export const s = StyleSheet.create({
     height: 26,
     borderRadius: 6,
     borderWidth: 1,
-    borderColor: '#BFDBFE',
-    backgroundColor: '#F8FAFF',
+    borderColor: Maple.blueLine,
+    backgroundColor: Maple.blueSoft,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -102,7 +103,7 @@ export const s = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
   },
   outlineTopBtnText: {
     fontSize: 10.5,
@@ -121,7 +122,7 @@ export const s = StyleSheet.create({
   uploadTopBtnText: {
     fontSize: 10.5,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
 
   /* 6 Categories Row */
@@ -138,12 +139,12 @@ export const s = StyleSheet.create({
     borderRadius: 9,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
   },
   categoryTileOn: {
     borderColor: BLUE,
     borderWidth: 1.5,
-    backgroundColor: '#F3F8FF',
+    backgroundColor: Maple.blueSoft,
   },
   categoryIconBox: {
     width: 30,
@@ -192,7 +193,7 @@ export const s = StyleSheet.create({
     borderRadius: 5,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
   },
   miniNewFolderText: {
     fontSize: 8.5,
@@ -211,7 +212,7 @@ export const s = StyleSheet.create({
     borderRadius: 7,
   },
   leftFolderRowOn: {
-    backgroundColor: '#E3EDFF',
+    backgroundColor: Maple.blueSelected,
   },
   folderShapeSmall: {
     width: 18,
@@ -264,7 +265,7 @@ export const s = StyleSheet.create({
     borderRadius: 7,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
   },
   searchInput: {
     flex: 1,
@@ -281,7 +282,7 @@ export const s = StyleSheet.create({
     borderRadius: 7,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
   },
   ctrlBtnText: {
     fontSize: 9.5,
@@ -297,14 +298,14 @@ export const s = StyleSheet.create({
     borderRadius: 7,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
   },
   viewToggleWrap: {
     flexDirection: 'row',
     borderRadius: 7,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
     padding: 2,
   },
   viewIconBtn: {
@@ -315,7 +316,7 @@ export const s = StyleSheet.create({
     justifyContent: 'center',
   },
   viewIconBtnOn: {
-    backgroundColor: '#DCE8FF',
+    backgroundColor: Maple.blueSelected,
   },
 
   /* 4 Subfolder Cards */
@@ -328,7 +329,7 @@ export const s = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     padding: 8,
     gap: 6,
   },
@@ -372,7 +373,7 @@ export const s = StyleSheet.create({
   miniTypeBadgeText: {
     fontSize: 6.5,
     fontWeight: '800',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   subFolderTitle: {
     fontSize: 9.5,
@@ -395,12 +396,12 @@ export const s = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     overflow: 'hidden',
   },
   thumbBox: {
     height: 58,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
     borderBottomWidth: 1,
     borderBottomColor: LINE,
     padding: 6,
@@ -423,7 +424,7 @@ export const s = StyleSheet.create({
     width: 18,
     height: 18,
     borderRadius: 4,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     borderWidth: 1,
     borderColor: LINE,
     alignItems: 'center',
@@ -437,19 +438,19 @@ export const s = StyleSheet.create({
     height: 4,
     width: '85%',
     borderRadius: 2,
-    backgroundColor: '#CBD5E1',
+    backgroundColor: Maple.borderStrong,
   },
   mockLineMed: {
     height: 3.5,
     width: '65%',
     borderRadius: 2,
-    backgroundColor: '#E2E8F0',
+    backgroundColor: Maple.border,
   },
   mockLineShort: {
     height: 3.5,
     width: '45%',
     borderRadius: 2,
-    backgroundColor: '#E2E8F0',
+    backgroundColor: Maple.border,
   },
   thumbDots: {
     position: 'absolute',
@@ -471,7 +472,7 @@ export const s = StyleSheet.create({
   thumbVideoDurText: {
     fontSize: 7.5,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   fileCardBody: {
     flexDirection: 'row',
@@ -490,7 +491,7 @@ export const s = StyleSheet.create({
   fileKindBadgeText: {
     fontSize: 6.5,
     fontWeight: '900',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   fileCardTitle: {
     fontSize: 9,
@@ -540,7 +541,7 @@ export const s = StyleSheet.create({
   newCollectionBtnText: {
     fontSize: 10,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   collectionsRow: {
     flexDirection: 'row',
@@ -551,7 +552,7 @@ export const s = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     padding: 8,
     gap: 6,
   },
@@ -601,11 +602,11 @@ export const s = StyleSheet.create({
     height: 20,
     borderRadius: 10,
     borderWidth: 1.5,
-    borderColor: '#FFFFFF',
+    borderColor: Maple.surface,
   },
   extraCountCircle: {
     marginLeft: 4,
-    backgroundColor: '#F1F5F9',
+    backgroundColor: Maple.blueSoft,
     borderRadius: 8,
     paddingHorizontal: 5,
     paddingVertical: 1.5,
@@ -629,7 +630,7 @@ export const s = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
     padding: 8,
     gap: 3,
     position: 'relative',
@@ -641,7 +642,7 @@ export const s = StyleSheet.create({
     width: 16,
     height: 16,
     borderRadius: 8,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     borderWidth: 1,
     borderColor: LINE,
     alignItems: 'center',
@@ -675,8 +676,8 @@ export const s = StyleSheet.create({
     height: 52,
     borderRadius: 4,
     borderWidth: 1,
-    borderColor: '#CBD5E1',
-    backgroundColor: '#FFFFFF',
+    borderColor: Maple.borderStrong,
+    backgroundColor: Maple.surface,
     alignItems: 'center',
     justifyContent: 'center',
     position: 'relative',
@@ -687,7 +688,7 @@ export const s = StyleSheet.create({
     bottom: 4,
     left: 20,
     width: 1,
-    backgroundColor: '#64748B',
+    backgroundColor: Maple.secondary,
   },
   graphAxisH: {
     position: 'absolute',
@@ -695,7 +696,7 @@ export const s = StyleSheet.create({
     right: 4,
     bottom: 16,
     height: 1,
-    backgroundColor: '#64748B',
+    backgroundColor: Maple.secondary,
   },
   graphDiagLine: {
     width: 42,
@@ -719,7 +720,7 @@ export const s = StyleSheet.create({
   wordBigTileText: {
     fontSize: 13,
     fontWeight: '900',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   inspectorFileTitle: {
     fontSize: 11.5,
@@ -778,7 +779,7 @@ export const s = StyleSheet.create({
     gap: 4,
   },
   tagPill: {
-    backgroundColor: '#E0ECFF',
+    backgroundColor: Maple.blueSelected,
     borderRadius: 4,
     paddingHorizontal: 6,
     paddingVertical: 1.5,
@@ -800,7 +801,7 @@ export const s = StyleSheet.create({
     borderRadius: 5,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -819,7 +820,7 @@ export const s = StyleSheet.create({
   openFileBtnText: {
     fontSize: 10.5,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   inspectorBottomBtns: {
     flexDirection: 'row',
@@ -831,7 +832,7 @@ export const s = StyleSheet.create({
     borderRadius: 6,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -848,7 +849,7 @@ export const s = StyleSheet.create({
     borderRadius: 6,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -894,7 +895,7 @@ export const s = StyleSheet.create({
     borderRadius: 5,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#F8FAFF',
+    backgroundColor: Maple.blueSoft,
     alignItems: 'center',
     justifyContent: 'center',
   },

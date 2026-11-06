@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
@@ -6,10 +6,11 @@ import { formatMoney } from '@/lib/finance/fees';
 import type { MockData } from '@/mock';
 
 import { Brand, CARD_SHADOW } from '../palette';
+import { Maple } from '@/constants/maple';
 
 type Invoice = MockData['publicPages']['invoicePage'];
 
-const WHATSAPP_GREEN = '#25D366';
+const WHATSAPP_GREEN = Maple.success;
 
 /** Page header: logo, "secure payment", and WhatsApp help. */
 export function CheckoutHeader({ wide }: { wide: boolean }) {

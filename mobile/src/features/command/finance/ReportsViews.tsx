@@ -14,12 +14,13 @@ import { toast } from '@/lib/toast';
 
 import { type FormAsk, FormModal } from './FinForm';
 import { FinDesk, FinHead, FinPanel, FinPhone, FinStats, FinTabs, num, type Promo, RingLegend, SumLine, ugx } from './FinKit';
+import { Maple } from '@/constants/maple';
 
 type C = CommandData['platformFinance'];
 const TABS = ['Overview', 'Profit & Loss (P&L)', 'Balance Sheet', 'Cash Flow', 'Changes in Equity', 'General Ledger', 'Management Reports', 'Audit & Compliance'] as const;
 const KINDS: readonly ReportKind[] = ['Profit & Loss', 'Balance Sheet', 'Cash Flow', 'Changes in Equity', 'General Ledger'];
-const STREAM_COLORS = ['#2563EB', '#22A55A', '#F5B731', '#8B5CF6'] as const;
-const PROMO: Promo = { icon: 'chart', color: '#1E6BF0', title: 'Financial Reports', body: "Auditable financial statements, ledgers and management reports for Maple." };
+const STREAM_COLORS = [Maple.blue, Maple.successText, Maple.warning, Maple.blue] as const;
+const PROMO: Promo = { icon: 'chart', color: Maple.blue, title: 'Financial Reports', body: "Auditable financial statements, ledgers and management reports for Maple." };
 
 const pct = (now: number, then: number) => (then ? ((now - then) / Math.abs(then)) * 100 : 0);
 const signed = (n: number) => `${n < 0 ? '(' : '+'}${num(Math.abs(n))}${n < 0 ? ')' : ''}`;
@@ -85,10 +86,10 @@ function Trend({ u, phone = false }: { u: U; phone?: boolean }) {
       <ComboChart
         labels={f.labels}
         bars={[
-          { name: 'Revenue', color: '#3B82F6', values: f.revenue },
-          { name: 'Expenses', color: '#A78BFA', values: f.expenses },
+          { name: 'Revenue', color: Maple.blue, values: f.revenue },
+          { name: 'Expenses', color: Maple.blueLine, values: f.expenses },
         ]}
-        line={{ name: 'Net Profit', color: '#22A55A', values: f.revenue.map((v, i) => v - f.expenses[i]), dots: true }}
+        line={{ name: 'Net Profit', color: Maple.successText, values: f.revenue.map((v, i) => v - f.expenses[i]), dots: true }}
         max={1200}
         lineMax={1200}
         rightAxis={false}
@@ -99,9 +100,9 @@ function Trend({ u, phone = false }: { u: U; phone?: boolean }) {
       <View style={styles.legend}>
         {(
           [
-            ['Revenue', '#3B82F6'],
-            ['Expenses', '#A78BFA'],
-            ['Net Profit', '#22A55A'],
+            ['Revenue', Maple.blue],
+            ['Expenses', Maple.blueLine],
+            ['Net Profit', Maple.successText],
           ] as const
         ).map(([l, col]) => (
           <View key={l} style={styles.inline}>

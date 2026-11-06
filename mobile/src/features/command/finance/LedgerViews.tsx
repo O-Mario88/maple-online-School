@@ -17,6 +17,7 @@ import type { LedgerEntry } from '@/mock/command-center/pf-ledger';
 
 import { amount, type FormAsk, FormModal } from './FinForm';
 import { ActionGrid, FinDesk, FinHead, FinPanel, FinPhone, FinStats, FinTabs, num, PhoneRow, type Promo, RingLegend, SumLine, ugx } from './FinKit';
+import { Maple } from '@/constants/maple';
 
 type D = CommandData['platformFinance']['ledger'];
 const PER_PAGE = 5;
@@ -24,7 +25,7 @@ const TABS = ['Overview', 'Chart of Accounts', 'Journals', 'General Ledger', 'Tr
 const STATUS_TONE: Readonly<Record<LedgerEntry['status'], Tone>> = { Draft: 'grey', Posted: 'green', Reversing: 'orange' };
 const PERIOD_TONE: Readonly<Record<Period['status'], Tone>> = { Open: 'green', Closing: 'orange', Closed: 'grey' };
 const TB_LABEL = { Asset: 'Assets', Liability: 'Liabilities', Equity: 'Equity (opening)', Income: 'Revenue', Expense: 'Expenses' } as const;
-const PROMO: Promo = { icon: 'book', color: '#1E6BF0', title: 'General Ledger', body: 'Chart of accounts, journals, ledger, trial balance, bank reconciliation and financial periods.' };
+const PROMO: Promo = { icon: 'book', color: Maple.blue, title: 'General Ledger', body: 'Chart of accounts, journals, ledger, trial balance, bank reconciliation and financial periods.' };
 const RANGES = ['Last 10 Months', 'Year to Date'];
 const FILTERS = { source: ['All Journals', 'Manual', 'Auto', 'Subscriptions', 'Payables', 'Expenses', 'Payroll', 'Bank'] } as const;
 
@@ -231,8 +232,8 @@ function IncomeChart({ d, phone = false }: { d: D; phone?: boolean }) {
       <ComboChart
         labels={f.labels}
         bars={[
-          { name: 'Revenue', color: '#3B82F6', values: f.revenue },
-          { name: 'Expenses', color: '#A78BFA', values: f.expenses },
+          { name: 'Revenue', color: Maple.blue, values: f.revenue },
+          { name: 'Expenses', color: Maple.blueLine, values: f.expenses },
         ]}
         max={1200}
         rightAxis={false}
@@ -243,8 +244,8 @@ function IncomeChart({ d, phone = false }: { d: D; phone?: boolean }) {
       <View style={styles.legend}>
         {(
           [
-            ['Revenue', '#3B82F6'],
-            ['Expenses', '#A78BFA'],
+            ['Revenue', Maple.blue],
+            ['Expenses', Maple.blueLine],
           ] as const
         ).map(([l, c]) => (
           <View key={l} style={styles.inline}>
@@ -268,8 +269,8 @@ function Snapshot({ u, phone = false }: { u: U; phone?: boolean }) {
         center={`UGX ${(s.assets / 1e9).toFixed(2)}B`}
         caption="Total Assets"
         parts={[
-          { label: 'Liabilities', value: s.liabilities, color: '#E5484D', display: `${num(s.liabilities)} (${((s.liabilities / s.assets) * 100).toFixed(1)}%)` },
-          { label: 'Equity', value: s.equity, color: '#2563EB', display: `${num(s.equity)} (${((s.equity / s.assets) * 100).toFixed(1)}%)` },
+          { label: 'Liabilities', value: s.liabilities, color: Maple.error, display: `${num(s.liabilities)} (${((s.liabilities / s.assets) * 100).toFixed(1)}%)` },
+          { label: 'Equity', value: s.equity, color: Maple.blue, display: `${num(s.equity)} (${((s.equity / s.assets) * 100).toFixed(1)}%)` },
         ]}
       />
       <SumLine icon={s.assets === s.liabilities + s.equity ? 'check' : 'alert'} tone={s.assets === s.liabilities + s.equity ? 'green' : 'red'} label="Assets = Liabilities + Equity" value={ugx(s.assets)} />

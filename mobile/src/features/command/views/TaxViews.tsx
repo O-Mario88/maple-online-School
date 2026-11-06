@@ -14,13 +14,14 @@ import { Cell, type Column, DataTable, PageHead, Search, useChoice, useSelection
 import type { IconName } from '@/lib/icons';
 import { toast } from '@/lib/toast';
 import { dateLabel, type TaxRow } from '@/mock/command-center/billing';
+import { Maple } from '@/constants/maple';
 
 type B = CommandData['billing'];
 const PER_PAGE = 10;
 const TAX_LABEL: Readonly<Record<TaxType, string>> = { VAT: 'VAT (18%)', WHT: 'Withholding (6%)', DST: 'Digital Services (2%)' };
 const SHORT: Readonly<Record<TaxType, string>> = { VAT: 'VAT (18%)', WHT: 'WHT (6%)', DST: 'DST (2%)' };
 const STATUS: Readonly<Record<EfrisStatus, { label: string; tone: Tone }>> = { Submitted: { label: 'Collected', tone: 'green' }, Pending: { label: 'Pending', tone: 'orange' }, Failed: { label: 'eFRIS Failed', tone: 'red' } };
-const COLORS = { VAT: '#1E6BF0', WHT: '#22A55A', DST: '#EC4899', Other: '#F59E0B' } as const;
+const COLORS = { VAT: Maple.blue, WHT: Maple.successText, DST: '#EC4899', Other: Maple.warning } as const;
 const FILING_ICON: Readonly<Record<Tone, IconName>> = { red: 'alert', orange: 'alert', blue: 'clock', green: 'check', purple: 'clock', grey: 'clock' };
 const ugx = (n: number) => n.toLocaleString('en-US');
 

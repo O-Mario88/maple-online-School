@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 
@@ -14,6 +14,7 @@ import { toast } from '@/lib/toast';
 import type { VerificationKyc } from '@/mock/teacher-verification';
 import { VERIFICATION_REF_WIDTH, s as deskS } from './VerificationViews.styles';
 import { phoneS } from './VerificationViews.phoneStyles';
+import { Maple } from '@/constants/maple';
 
 export { VERIFICATION_REF_WIDTH };
 
@@ -258,7 +259,7 @@ export function VerificationDesk({ v, me, phone = false }: { v: VerificationKyc;
                   style={s.smallDropzone}
                   onPress={() => toast('Added additional teaching credential.')}>
                   <View style={s.plusCircleBlue}>
-                    <Icon name="plus" size={12} color="#FFFFFF" />
+                    <Icon name="plus" size={12} color={Maple.surface} />
                   </View>
                   <Text style={s.dropzoneTitle}>Add Additional Certificate</Text>
                   <Text style={s.dropzoneSub}>Upload more documents (optional)</Text>
@@ -304,7 +305,7 @@ export function VerificationDesk({ v, me, phone = false }: { v: VerificationKyc;
                     'Submitted KYC & Educator Credentials for verification! Review takes <24 hours.',
                   )
                 }>
-                <Icon name="send" size={13} color="#FFFFFF" />
+                <Icon name="send" size={13} color={Maple.surface} />
                 <Text style={s.submitVerifyBtnText}>Submit for Verification</Text>
               </Pressable>
             </View>
@@ -319,7 +320,7 @@ export function VerificationDesk({ v, me, phone = false }: { v: VerificationKyc;
               <View style={s.rightAvatarWrap}>
                 <Image source={v.avatar} style={s.rightAvatar} contentFit="cover" />
                 <View style={s.avatarShieldBadge}>
-                  <Icon name="shield" size={9} color="#FFFFFF" />
+                  <Icon name="shield" size={9} color={Maple.surface} />
                 </View>
               </View>
               <View style={{ flex: 1, gap: 1 }}>
@@ -338,7 +339,7 @@ export function VerificationDesk({ v, me, phone = false }: { v: VerificationKyc;
             {/* Cream Callout */}
             <View style={s.becomeCallout}>
               <View style={s.goldShieldCircle}>
-                <Icon name="shield" size={16} color="#FFFFFF" />
+                <Icon name="shield" size={16} color={Maple.surface} />
               </View>
               <View style={{ flex: 1, gap: 2 }}>
                 <Text style={s.becomeTitle}>Become a Verified Educator</Text>
@@ -353,7 +354,7 @@ export function VerificationDesk({ v, me, phone = false }: { v: VerificationKyc;
               {v.benefits.map((b) => (
                 <View key={b.title} style={s.benefitItem}>
                   <View style={s.benefitIconCircle}>
-                    <Icon name={b.icon} size={13} color="#16A34A" />
+                    <Icon name={b.icon} size={13} color={Maple.successText} />
                   </View>
                   <View style={{ flex: 1, gap: 1 }}>
                     <Text style={s.benefitTitle}>{b.title}</Text>
@@ -440,7 +441,7 @@ export function VerificationDesk({ v, me, phone = false }: { v: VerificationKyc;
 
 export function VerificationPhone({ v, me }: { v: VerificationKyc; me: TeacherMe }) {
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: '#EAF1FB' }}>
+    <ScrollView style={{ flex: 1, backgroundColor: Maple.blueSelected }}>
       <TeacherPhoneTop me={me} />
       <VerificationDesk v={v} me={me} phone />
     </ScrollView>

@@ -8,13 +8,14 @@ import { BLUE, BODY, LINE, NAVY, WHITE } from '@/features/portal/tokens';
 import type { IconName } from '@/lib/icons';
 
 import { longDate, type SubState, ugx } from './useSubscription';
+import { Maple } from '@/constants/maple';
 
-const PURPLE = '#5B3FD9';
+const BRAND_BLUE = Maple.blue;
 
 export function Head({ icon, title, right, sub }: { icon: IconName; title: string; right?: ReactNode; sub?: string }) {
   return (
     <View style={s.head}>
-      <Icon name={icon} size={19} color={PURPLE} />
+      <Icon name={icon} size={19} color={BRAND_BLUE} />
       <Text style={s.headTitle}>
         {title}
         {sub ? <Text style={s.headSub}>{` ${sub}`}</Text> : null}
@@ -31,7 +32,7 @@ export function CapacityBanner({ x }: { x: SubState }) {
   const full = x.alert >= 100;
   return (
     <View style={[s.banner, full && s.bannerFull]} accessibilityLiveRegion="polite">
-      <Icon name="alert" size={18} color={full ? '#B91C1C' : '#B45309'} />
+      <Icon name="alert" size={18} color={full ? Maple.error : Maple.warningText} />
       <Text style={s.bannerText}>{full ? `You’ve reached ${x.current.learners} learners. Everyone keeps learning; add seats or upgrade to enrol more.` : `You’re at ${x.learnerPct}% of your ${x.current.learners} learners.`}</Text>
       <Btn label="See options" kind="soft" height={34} onPress={() => x.setTab('Plans & Upgrades')} />
     </View>
@@ -42,7 +43,7 @@ export function CurrentPlan({ x }: { x: SubState }) {
   return (
     <Card style={s.planCard}>
       <View style={s.planTop}>
-        <LinearGradient colors={['#ECE7FE', '#DCD3FB']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />
+        <LinearGradient colors={[Maple.blueSelected, Maple.blueSelected]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />
         <View style={s.planIcon}>
           <Icon name="layers" size={24} color={WHITE} />
         </View>
@@ -80,7 +81,7 @@ export function CurrentPlan({ x }: { x: SubState }) {
 function Fact({ icon, label, value }: { icon: IconName; label: string; value: string }) {
   return (
     <View style={s.fact}>
-      <Icon name={icon} size={20} color={PURPLE} />
+      <Icon name={icon} size={20} color={BRAND_BLUE} />
       <View>
         <Text style={s.small}>{label}</Text>
         <Text style={s.factValue}>{value}</Text>
@@ -121,7 +122,7 @@ export function Usage({ x, title = 'Usage & Allowances' }: { x: SubState; title?
               <View style={s.flex} />
               <Text style={s.usagePct}>{`${u.pct}%`}</Text>
             </View>
-            <Bar value={Math.min(1, u.pct / 100)} color={u.pct >= 90 ? '#EF4444' : BLUE} height={6} />
+            <Bar value={Math.min(1, u.pct / 100)} color={u.pct >= 90 ? Maple.error : BLUE} height={6} />
           </View>
         </View>
       ))}
@@ -208,7 +209,7 @@ export function ChangeSheet({ x }: { x: SubState }) {
           ))}
           {c.issues.map((i) => (
             <View key={i} style={s.issue}>
-              <Icon name="alert" size={16} color="#B45309" />
+              <Icon name="alert" size={16} color={Maple.warningText} />
               <Text style={s.issueText}>{i}</Text>
             </View>
           ))}
@@ -232,12 +233,12 @@ const s = StyleSheet.create({
   headTitle: { fontSize: 16, fontWeight: '700', color: NAVY },
   headSub: { fontSize: 14, fontWeight: '500', color: BODY },
   card: { gap: 10, padding: 18 },
-  banner: { flexDirection: 'row', alignItems: 'center', gap: 10, padding: 12, borderRadius: 12, borderWidth: 1, borderColor: '#FCD9A8', backgroundColor: '#FFF8EC' },
-  bannerFull: { borderColor: '#FBC6C6', backgroundColor: '#FFF4F4' },
+  banner: { flexDirection: 'row', alignItems: 'center', gap: 10, padding: 12, borderRadius: 12, borderWidth: 1, borderColor: '#FCD9A8', backgroundColor: Maple.warningSoft },
+  bannerFull: { borderColor: Maple.errorSoft, backgroundColor: Maple.errorSoft },
   bannerText: { flex: 1, fontSize: 13.5, color: NAVY },
   planCard: { overflow: 'hidden', padding: 0 },
   planTop: { flexDirection: 'row', gap: 14, padding: 18 },
-  planIcon: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center', borderRadius: 12, backgroundColor: PURPLE },
+  planIcon: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center', borderRadius: 12, backgroundColor: BRAND_BLUE },
   planName: { fontSize: 22, fontWeight: '800', color: NAVY },
   planLine: { marginTop: 4, fontSize: 13, lineHeight: 18, color: NAVY },
   planBody: { gap: 14, padding: 18 },
@@ -247,16 +248,16 @@ const s = StyleSheet.create({
   factValue: { marginTop: 2, fontSize: 15.5, fontWeight: '700', color: NAVY },
   linkRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   link: { fontSize: 13, fontWeight: '600', color: BLUE },
-  pending: { fontSize: 13, color: '#B45309' },
+  pending: { fontSize: 13, color: Maple.warningText },
   big: { fontSize: 26, fontWeight: '800', color: NAVY },
   bigOf: { fontSize: 18, fontWeight: '500', color: BODY },
   usageRow: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 4 },
   usageLabel: { width: 150 },
   usageBar: { flex: 1, gap: 6 },
   usagePct: { fontSize: 12.5, fontWeight: '700', color: NAVY },
-  sumRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12, paddingVertical: 4, borderBottomWidth: 1, borderBottomColor: '#EEF2F8' },
+  sumRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12, paddingVertical: 4, borderBottomWidth: 1, borderBottomColor: Maple.blueSelected },
   sumValue: { fontSize: 13.5, fontWeight: '700', color: NAVY },
-  invRow: { flexDirection: 'row', alignItems: 'center', gap: 8, minHeight: 36, borderBottomWidth: 1, borderBottomColor: '#EEF2F8' },
+  invRow: { flexDirection: 'row', alignItems: 'center', gap: 8, minHeight: 36, borderBottomWidth: 1, borderBottomColor: Maple.blueSelected },
   invHead: { minHeight: 30 },
   th: { fontSize: 12, fontWeight: '600', color: BODY },
   td: { fontSize: 12.5, color: NAVY },
@@ -267,6 +268,6 @@ const s = StyleSheet.create({
   scrim: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20, backgroundColor: 'rgba(17,28,78,0.35)' },
   sheet: { width: '100%', maxWidth: 480, gap: 12, padding: 22, borderRadius: 16, backgroundColor: WHITE },
   sheetTitle: { flex: 1, fontSize: 18, fontWeight: '700', color: NAVY },
-  issue: { flexDirection: 'row', alignItems: 'flex-start', gap: 8, padding: 10, borderRadius: 10, backgroundColor: '#FFF8EC' },
+  issue: { flexDirection: 'row', alignItems: 'flex-start', gap: 8, padding: 10, borderRadius: 10, backgroundColor: Maple.warningSoft },
   issueText: { flex: 1, fontSize: 13, lineHeight: 18, color: NAVY },
 });

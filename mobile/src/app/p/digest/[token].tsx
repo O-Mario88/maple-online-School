@@ -1,7 +1,7 @@
 import { useLocalSearchParams } from 'expo-router';
 import Head from 'expo-router/head';
 import { type ReactNode, useMemo, useState } from 'react';
-import { ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { StyleSheet, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { EmptyState } from '@/components/ui';
@@ -12,9 +12,11 @@ import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { LightOnly } from '@/hooks/use-theme';
 import { readDigestToken } from '@/lib/digest-link';
 import { mockData } from '@/lib/mock';
+import { Maple } from '@/constants/maple';
+import { PageScroll } from '@/components/shell/PageScroll';
 
 const MAX_WIDTH = 1180;
-const PAGE_BACKGROUND = '#E8EEF8';
+const PAGE_BACKGROUND = Maple.blueSelected;
 
 function Private({ children }: { children: ReactNode }) {
   return (
@@ -67,7 +69,7 @@ export default function ParentDigestScreen() {
 
   return (
     <Private>
-      <ScrollView style={styles.flex} contentContainerStyle={styles.page}>
+      <PageScroll style={styles.flex} contentContainerStyle={styles.page}>
         <View style={styles.inner}>
           <DigestHeader validUntil={d.validUntil} wide={wide} />
           <DigestHero d={d} wide={wide} />
@@ -98,7 +100,7 @@ export default function ParentDigestScreen() {
           )}
           <SupportBar d={d} />
         </View>
-      </ScrollView>
+      </PageScroll>
     </Private>
   );
 }

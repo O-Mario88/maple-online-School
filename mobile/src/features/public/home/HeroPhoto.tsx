@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
@@ -7,6 +7,7 @@ import { VideoSheet } from '@/features/shared/VideoSheet';
 
 import { Brand, CARD_SHADOW } from '../palette';
 import type { Landing } from './types';
+import { Maple } from '@/constants/maple';
 
 // The hero photo is the reference's x 620–1536, y 57–570, so it is 916×513.
 // It already carries the "Anytime Anywhere Together" note and the sticky note;
@@ -110,7 +111,7 @@ const styles = StyleSheet.create({
   statIcon: { width: 26, height: 26, borderRadius: 7, alignItems: 'center', justifyContent: 'center' },
   statText: { flexShrink: 1 },
   statValue: { fontSize: 14.5, lineHeight: 17, fontWeight: '700', color: Brand.ink },
-  statLabel: { fontSize: 9.5, lineHeight: 13, color: '#4A5263' },
+  statLabel: { fontSize: 9.5, lineHeight: 13, color: Maple.body },
   story: {
     flexDirection: 'row',
     alignItems: 'center',

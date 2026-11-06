@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
+import { FuturePathCard } from '@/features/learner/careers/CareerLinks';
 import { LearnerPhoneTop } from '@/features/learner/dashboard/DashPhone';
 
 import {
@@ -15,7 +16,7 @@ import {
   UpcomingLiveClassesCard,
   WeekAchievementsCard,
 } from './HomeCards';
-import { type Home, HomeHeader, HomeSidebar } from './HomeFrame';
+import { type Home } from './HomeFrame';
 import {
   CompletedReadingCard,
   ContinueReadingCard,
@@ -23,6 +24,7 @@ import {
   MyTodoWeekCard,
   ThisWeekCard,
 } from './HomeSide';
+import { Maple } from '@/constants/maple';
 
 /** The learner home reference's desktop (1280 wide, sidebar included). */
 export const HOME_REF_WIDTH = 1280;
@@ -34,8 +36,6 @@ function Card({ style, children }: { style?: object; children: ReactNode }) {
 export function HomeDesk({ h }: { h: Home; now?: Date }) {
   return (
     <View style={styles.canvas}>
-      <HomeSidebar h={h} />
-      <HomeHeader h={h} />
       <View style={styles.body}>
         {/* Main Center Column */}
         <View style={styles.centerCol}>
@@ -87,6 +87,9 @@ export function HomeDesk({ h }: { h: Home; now?: Date }) {
             <ThisWeekCard h={h} />
           </Card>
           <Card>
+            <FuturePathCard />
+          </Card>
+          <Card>
             <MyTodoWeekCard h={h} />
           </Card>
           <Card>
@@ -113,6 +116,9 @@ export function HomePhone({ h }: { h: Home; now?: Date }) {
         <KpiRow h={h} phone />
         <Card>
           <ThisWeekCard h={h} />
+        </Card>
+        <Card>
+          <FuturePathCard />
         </Card>
         <Card>
           <MySubjectsCard h={h} phone />
@@ -159,7 +165,7 @@ const styles = StyleSheet.create({
   canvas: {
     width: HOME_REF_WIDTH,
     minHeight: 865,
-    backgroundColor: '#EEF3FA',
+    backgroundColor: Maple.blueSoft,
   },
   body: {
     marginLeft: 187,
@@ -215,13 +221,13 @@ const styles = StyleSheet.create({
   card: {
     padding: 12,
     borderRadius: 11,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     borderWidth: 1,
-    borderColor: '#E5ECF5',
+    borderColor: Maple.blueSelected,
   },
   phoneRoot: {
     flex: 1,
-    backgroundColor: '#EEF3FA',
+    backgroundColor: Maple.blueSoft,
   },
   phone: {
     gap: 12,

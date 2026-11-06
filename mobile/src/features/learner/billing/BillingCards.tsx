@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { type Href, router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, Share, StyleSheet, Text, View } from 'react-native';
@@ -8,13 +8,15 @@ import { Bar } from '@/features/learner/dashboard/DashParts';
 import { CREDIT_MINUTES, type Cycle, CYCLES, packSaving, planPrice } from '@/lib/billing';
 import { formatMoney } from '@/lib/finance/fees';
 import type { IconName } from '@/lib/icons';
+import { openMenuPage } from '@/lib/menu-nav';
 
 import type { BillingState, Plan } from './useBilling';
+import { Maple } from '@/constants/maple';
 
-const NAVY = '#0F1B3D';
-const BODY = '#4A5263';
-const BLUE = '#1463F3';
-const GREEN = '#16A34A';
+const NAVY = Maple.navy;
+const BODY = Maple.body;
+const BLUE = Maple.blue;
+const GREEN = Maple.successText;
 const ugx = (n: number) => formatMoney(n, 'UGX');
 
 export function Card({ title, right, children, style }: { title?: string; right?: React.ReactNode; children: React.ReactNode; style?: object }) {
@@ -51,8 +53,8 @@ export function AccountSide({ s }: { s: BillingState }) {
         {ACCOUNT.map((a) => {
           const on = a.href == null;
           return (
-            <Pressable key={a.label} style={[styles.sideItem, on && styles.sideOn]} onPress={() => (a.href ? router.push(a.href) : undefined)} accessibilityRole="link" accessibilityState={{ selected: on }}>
-              <Icon name={a.icon} size={17} color={on ? BLUE : '#3B4456'} />
+            <Pressable key={a.label} style={[styles.sideItem, on && styles.sideOn]} onPress={() => (a.href ? openMenuPage(a.href) : undefined)} accessibilityRole="link" accessibilityState={{ selected: on }}>
+              <Icon name={a.icon} size={17} color={on ? BLUE : Maple.body} />
               <Text style={[styles.sideText, on && styles.sideTextOn]}>{a.label}</Text>
             </Pressable>
           );
@@ -116,7 +118,7 @@ export function CurrentPlan({ s }: { s: BillingState }) {
         {s.hub.included.map((f) => (
           <View key={f} style={styles.incItem}>
             <View style={styles.tick}>
-              <Icon name="check" size={11} color="#FFFFFF" />
+              <Icon name="check" size={11} color={Maple.surface} />
             </View>
             <Text style={styles.incText}>{f}</Text>
           </View>
@@ -196,7 +198,7 @@ function PlanCard({ s, p }: { s: BillingState; p: Plan }) {
         {p.features.map((f) => (
           <View key={f.label} style={styles.feature}>
             <View style={[styles.tickSm, !f.on && styles.tickOff]}>
-              <Icon name="check" size={9} color={f.on ? '#FFFFFF' : '#B8C0CD'} />
+              <Icon name="check" size={9} color={f.on ? Maple.surface : Maple.borderStrong} />
             </View>
             <Text style={[styles.featureText, !f.on && styles.featureOff]}>{f.label}</Text>
           </View>
@@ -382,7 +384,7 @@ export function PhoneOverview({ s }: { s: BillingState }) {
           <Image source={s.hub.icons.credits} style={styles.coins} contentFit="contain" />
           <View style={styles.flex}>
             <Text style={styles.balance}>{`${s.balance} Credits`}</Text>
-            <Bar value={s.balance / total} color={GREEN} track="#E4ECF6" height={7} />
+            <Bar value={s.balance / total} color={GREEN} track={Maple.blueSelected} height={7} />
             <Text style={styles.balanceSub}>{`Each credit = ${CREDIT_MINUTES} minutes of 1-to-1 tutoring`}</Text>
           </View>
         </View>
@@ -395,111 +397,111 @@ const styles = StyleSheet.create({
   flex: { flex: 1 },
   blue: { color: BLUE },
   zTop: { zIndex: 5 },
-  card: { gap: 12, padding: 16, borderRadius: 12, borderWidth: 1, borderColor: '#E8EEF6', backgroundColor: '#FFFFFF' },
+  card: { gap: 12, padding: 16, borderRadius: 12, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface },
   cardHead: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   cardTitle: { flex: 1, fontSize: 16, fontWeight: '700', color: NAVY, letterSpacing: -0.2 },
   side: { flex: 1, gap: 14, paddingHorizontal: 12, paddingVertical: 14 },
   sideTitle: { marginBottom: 8, marginLeft: 8, fontSize: 15, fontWeight: '700', color: NAVY },
   sideItem: { height: 36, flexDirection: 'row', alignItems: 'center', gap: 11, paddingHorizontal: 9, borderRadius: 7 },
-  sideOn: { backgroundColor: '#E3ECFB' },
-  sideText: { fontSize: 12, color: '#2B3445', letterSpacing: -0.15 },
+  sideOn: { backgroundColor: Maple.blueSelected },
+  sideText: { fontSize: 12, color: Maple.navy, letterSpacing: -0.15 },
   sideTextOn: { fontWeight: '500', color: BLUE },
-  referral: { gap: 8, padding: 16, borderRadius: 10, backgroundColor: '#E5EEFB' },
+  referral: { gap: 8, padding: 16, borderRadius: 10, backgroundColor: Maple.blueSelected },
   gift: { alignSelf: 'center', width: 130, height: 65 },
   refTitle: { fontSize: 17, fontWeight: '800', color: NAVY, letterSpacing: -0.3 },
   refText: { fontSize: 11.5, lineHeight: 16, color: BODY },
-  help: { gap: 8, padding: 14, borderRadius: 10, borderWidth: 1, borderColor: '#E3E9F2', backgroundColor: '#FFFFFF' },
+  help: { gap: 8, padding: 14, borderRadius: 10, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface },
   helpHead: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   helpTitle: { fontSize: 14, fontWeight: '700', color: NAVY },
-  primary: { height: 34, alignItems: 'center', justifyContent: 'center', borderRadius: 6, backgroundColor: '#0B6BFF' },
-  primaryText: { fontSize: 12.5, fontWeight: '600', color: '#FFFFFF' },
-  outline: { height: 34, alignItems: 'center', justifyContent: 'center', borderRadius: 6, borderWidth: 1, borderColor: '#9BB8EC' },
-  outlineSm: { height: 32, justifyContent: 'center', paddingHorizontal: 14, borderRadius: 6, borderWidth: 1, borderColor: '#9BB8EC' },
+  primary: { height: 34, alignItems: 'center', justifyContent: 'center', borderRadius: 6, backgroundColor: Maple.blue },
+  primaryText: { fontSize: 12.5, fontWeight: '600', color: Maple.surface },
+  outline: { height: 34, alignItems: 'center', justifyContent: 'center', borderRadius: 6, borderWidth: 1, borderColor: Maple.blueLine },
+  outlineSm: { height: 32, justifyContent: 'center', paddingHorizontal: 14, borderRadius: 6, borderWidth: 1, borderColor: Maple.blueLine },
   outlineText: { fontSize: 12.5, fontWeight: '600', color: BLUE },
   chip: { paddingHorizontal: 9, paddingVertical: 3, borderRadius: 6, fontSize: 11.5, fontWeight: '600', overflow: 'hidden' },
-  chipGreen: { backgroundColor: '#DDF5E5', color: '#15803D' },
-  chipAmber: { backgroundColor: '#FEF3C7', color: '#92400E' },
+  chipGreen: { backgroundColor: Maple.successSoft, color: Maple.successText },
+  chipAmber: { backgroundColor: Maple.warningSoft, color: '#92400E' },
   planCard: { height: 286 },
-  planInner: { flexDirection: 'row', gap: 16, padding: 12, borderRadius: 10, borderWidth: 1, borderColor: '#EAF0F7' },
-  trophyTile: { width: 58, height: 64, alignItems: 'center', justifyContent: 'center', borderRadius: 10, backgroundColor: '#FFF2DC' },
+  planInner: { flexDirection: 'row', gap: 16, padding: 12, borderRadius: 10, borderWidth: 1, borderColor: Maple.blueSelected },
+  trophyTile: { width: 58, height: 64, alignItems: 'center', justifyContent: 'center', borderRadius: 10, backgroundColor: Maple.warningSoft },
   trophyTileP: { width: 46, height: 50 },
   trophy: { width: 36, height: 36 },
   trophyP: { width: 28, height: 28 },
   planTitle: { fontSize: 17, fontWeight: '800', color: NAVY, letterSpacing: -0.3 },
   planDesc: { marginTop: 4, maxWidth: 270, fontSize: 12, lineHeight: 16, color: BODY },
-  planPrice: { marginTop: 8, fontSize: 18, fontWeight: '800', color: '#0B4DDB' },
+  planPrice: { marginTop: 8, fontSize: 18, fontWeight: '800', color: Maple.blue },
   planUnit: { fontSize: 15, fontWeight: '400', color: NAVY },
   renew: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 6 },
   renewText: { fontSize: 12, color: BODY },
   pending: { marginTop: 6, fontSize: 11.5, fontWeight: '600', color: '#92400E' },
-  included: { flexDirection: 'row', flexWrap: 'wrap', borderRadius: 10, borderWidth: 1, borderColor: '#EAF0F7' },
+  included: { flexDirection: 'row', flexWrap: 'wrap', borderRadius: 10, borderWidth: 1, borderColor: Maple.blueSelected },
   incItem: { width: '25%', flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 6, paddingVertical: 10 },
-  tick: { width: 22, height: 22, alignItems: 'center', justifyContent: 'center', borderRadius: 11, borderWidth: 3, borderColor: '#D3F1DC', backgroundColor: GREEN },
+  tick: { width: 22, height: 22, alignItems: 'center', justifyContent: 'center', borderRadius: 11, borderWidth: 3, borderColor: Maple.successSoft, backgroundColor: GREEN },
   incText: { flex: 1, fontSize: 10.5, color: BODY, letterSpacing: -0.2 },
   walletCard: { height: 286 },
-  topUp: { height: 30, justifyContent: 'center', paddingHorizontal: 18, borderRadius: 6, backgroundColor: '#0B6BFF' },
+  topUp: { height: 30, justifyContent: 'center', paddingHorizontal: 18, borderRadius: 6, backgroundColor: Maple.blue },
   balanceRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  walletTile: { width: 50, height: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 10, backgroundColor: '#F1E8FD' },
+  walletTile: { width: 50, height: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 10, backgroundColor: Maple.blueSelected },
   walletIcon: { width: 32, height: 32 },
   coins: { width: 42, height: 42 },
   balance: { fontSize: 18, fontWeight: '800', color: NAVY },
   balanceSub: { marginTop: 3, fontSize: 11.5, color: BODY },
   packs: { flexDirection: 'row', gap: 8 },
-  pack: { flex: 1, minHeight: 72, alignItems: 'center', justifyContent: 'center', gap: 3, borderRadius: 8, borderWidth: 1, borderColor: '#E3E9F2' },
-  packOn: { borderWidth: 1.5, borderColor: '#5B92F5', backgroundColor: '#F5F9FF' },
+  pack: { flex: 1, minHeight: 72, alignItems: 'center', justifyContent: 'center', gap: 3, borderRadius: 8, borderWidth: 1, borderColor: Maple.blueSelected },
+  packOn: { borderWidth: 1.5, borderColor: Maple.blue, backgroundColor: Maple.blueSoft },
   packCredits: { fontSize: 12.5, fontWeight: '600', color: NAVY },
   packPrice: { fontSize: 12, color: BODY },
-  save: { paddingHorizontal: 6, paddingVertical: 2, borderRadius: 5, backgroundColor: '#DDF5E5', fontSize: 10.5, fontWeight: '500', color: '#15803D', overflow: 'hidden' },
-  auto: { flexDirection: 'row', alignItems: 'center', gap: 10, padding: 10, borderRadius: 8, backgroundColor: '#F2F6FC' },
+  save: { paddingHorizontal: 6, paddingVertical: 2, borderRadius: 5, backgroundColor: Maple.successSoft, fontSize: 10.5, fontWeight: '500', color: Maple.successText, overflow: 'hidden' },
+  auto: { flexDirection: 'row', alignItems: 'center', gap: 10, padding: 10, borderRadius: 8, backgroundColor: Maple.blueSoft },
   bolt: { width: 16, height: 26 },
   autoTitle: { fontSize: 12, fontWeight: '700', color: NAVY },
   autoText: { marginTop: 2, fontSize: 10.5, lineHeight: 14, color: BODY },
-  switch: { width: 36, height: 20, justifyContent: 'center', paddingHorizontal: 2, borderRadius: 10, backgroundColor: '#D5DDEA' },
-  switchOn: { backgroundColor: '#0B6BFF' },
-  knob: { width: 16, height: 16, borderRadius: 8, backgroundColor: '#FFFFFF' },
+  switch: { width: 36, height: 20, justifyContent: 'center', paddingHorizontal: 2, borderRadius: 10, backgroundColor: Maple.blueLine },
+  switchOn: { backgroundColor: Maple.blue },
+  knob: { width: 16, height: 16, borderRadius: 8, backgroundColor: Maple.surface },
   knobOn: { alignSelf: 'flex-end' },
   plansCard: { height: 522 },
   plansHead: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   link: { fontSize: 12, fontWeight: '500', color: BLUE },
-  cycles: { flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: '#E8EEF6' },
+  cycles: { flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: Maple.blueSelected },
   cycle: { height: 36, flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 18, borderBottomWidth: 2, borderBottomColor: 'transparent' },
   cycleP: { paddingHorizontal: 8, gap: 5 },
-  cycleOn: { borderBottomColor: '#0B6BFF' },
+  cycleOn: { borderBottomColor: Maple.blue },
   cycleText: { fontSize: 12, color: BODY },
   cycleTextOn: { fontWeight: '600', color: BLUE },
   planRow: { flexDirection: 'row', gap: 10, marginTop: 8 },
   planCol: { flexDirection: 'column', gap: 18, marginTop: 18 },
-  plan: { flex: 1, gap: 4, padding: 12, borderRadius: 10, borderWidth: 1, borderColor: '#E8EEF6', backgroundColor: '#FFFFFF' },
-  planPopular: { borderWidth: 1.5, borderColor: '#3B82F6', borderTopLeftRadius: 0, borderTopRightRadius: 0 },
-  popular: { position: 'absolute', top: -20, left: -1.5, right: -1.5, height: 20, paddingTop: 3, borderTopLeftRadius: 6, borderTopRightRadius: 6, backgroundColor: '#0B6BFF', fontSize: 10.5, fontWeight: '600', color: '#FFFFFF', textAlign: 'center', overflow: 'hidden' },
+  plan: { flex: 1, gap: 4, padding: 12, borderRadius: 10, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface },
+  planPopular: { borderWidth: 1.5, borderColor: Maple.blue, borderTopLeftRadius: 0, borderTopRightRadius: 0 },
+  popular: { position: 'absolute', top: -20, left: -1.5, right: -1.5, height: 20, paddingTop: 3, borderTopLeftRadius: 6, borderTopRightRadius: 6, backgroundColor: Maple.blue, fontSize: 10.5, fontWeight: '600', color: Maple.surface, textAlign: 'center', overflow: 'hidden' },
   planName: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   planIcon: { width: 22, height: 22 },
   planNameText: { flex: 1, fontSize: 12, fontWeight: '700', color: NAVY, letterSpacing: -0.2 },
   planBlurb: { marginTop: 6, minHeight: 32, fontSize: 11, lineHeight: 16, color: BODY },
   price: { marginTop: 10, fontSize: 17, fontWeight: '800', color: NAVY },
   per: { fontSize: 11.5, color: BODY },
-  planBtn: { height: 32, alignItems: 'center', justifyContent: 'center', marginVertical: 12, borderRadius: 6, borderWidth: 1.5, borderColor: '#3B82F6' },
-  planBtnOn: { height: 32, alignItems: 'center', justifyContent: 'center', marginVertical: 12, borderRadius: 6, backgroundColor: '#0B6BFF' },
+  planBtn: { height: 32, alignItems: 'center', justifyContent: 'center', marginVertical: 12, borderRadius: 6, borderWidth: 1.5, borderColor: Maple.blue },
+  planBtnOn: { height: 32, alignItems: 'center', justifyContent: 'center', marginVertical: 12, borderRadius: 6, backgroundColor: Maple.blue },
   planBtnText: { fontSize: 12.5, fontWeight: '600', color: BLUE },
   features: { gap: 7 },
   feature: { flexDirection: 'row', alignItems: 'flex-start', gap: 8 },
   tickSm: { width: 15, height: 15, alignItems: 'center', justifyContent: 'center', borderRadius: 8, backgroundColor: GREEN },
-  tickOff: { borderWidth: 1.5, borderColor: '#C9D0DB', backgroundColor: '#FFFFFF' },
+  tickOff: { borderWidth: 1.5, borderColor: Maple.borderStrong, backgroundColor: Maple.surface },
   featureText: { flex: 1, fontSize: 11, lineHeight: 15, color: NAVY },
-  featureOff: { color: '#A4ACB9' },
+  featureOff: { color: Maple.muted },
   methods: { gap: 8 },
-  method: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 8, borderRadius: 8, borderWidth: 1, borderColor: '#EAF0F7', backgroundColor: '#FFFFFF' },
+  method: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 8, borderRadius: 8, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface },
   raised: { zIndex: 5 },
   logo: { width: 44, height: 38 },
   methodLabel: { fontSize: 12, fontWeight: '600', color: NAVY },
   methodSub: { marginTop: 2, fontSize: 11, color: BODY },
-  menu: { position: 'absolute', top: 22, right: 0, width: 150, paddingVertical: 4, borderRadius: 8, borderWidth: 1, borderColor: '#E1E7F0', backgroundColor: '#FFFFFF', zIndex: 10 },
+  menu: { position: 'absolute', top: 22, right: 0, width: 150, paddingVertical: 4, borderRadius: 8, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface, zIndex: 10 },
   menuItem: { height: 30, justifyContent: 'center', paddingHorizontal: 12 },
   menuText: { fontSize: 12, color: NAVY },
   menuNote: { paddingHorizontal: 12, paddingVertical: 8, fontSize: 11.5, color: BODY },
-  danger: { color: '#B91C1C' },
+  danger: { color: Maple.error },
   addMethod: { flexDirection: 'row', alignItems: 'center', gap: 5 },
-  pill: { paddingHorizontal: 8, paddingVertical: 3, borderRadius: 6, backgroundColor: '#EEF4FF' },
+  pill: { paddingHorizontal: 8, paddingVertical: 3, borderRadius: 6, backgroundColor: Maple.blueSoft },
   pillText: { fontSize: 11.5, color: BLUE },
   buy: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 4 },
   buyIcon: { width: 36, height: 36 },
@@ -512,8 +514,8 @@ const styles = StyleSheet.create({
   phonePlanTitle: { fontSize: 14, fontWeight: '700', color: NAVY },
   phonePlanPrice: { marginTop: 3, fontSize: 13.5, fontWeight: '800', color: NAVY },
   planUnitP: { fontWeight: '400' },
-  featRow: { flexDirection: 'row', justifyContent: 'space-between', paddingTop: 10, borderTopWidth: 1, borderTopColor: '#EEF1F6' },
+  featRow: { flexDirection: 'row', justifyContent: 'space-between', paddingTop: 10, borderTopWidth: 1, borderTopColor: Maple.blueSelected },
   feat: { alignItems: 'center', gap: 4 },
-  featIcon: { width: 30, height: 30, alignItems: 'center', justifyContent: 'center', borderRadius: 15, backgroundColor: '#DDF5E5' },
+  featIcon: { width: 30, height: 30, alignItems: 'center', justifyContent: 'center', borderRadius: 15, backgroundColor: Maple.successSoft },
   featText: { fontSize: 10.5, color: NAVY, textAlign: 'center' },
 });

@@ -5,6 +5,7 @@
  */
 import type { IconName } from '@/lib/icons';
 import { type Portal, PORTAL_LABELS } from '@/lib/navigation';
+import { Maple } from '@/constants/maple';
 
 export interface Mode {
   key: string;
@@ -19,7 +20,7 @@ export interface Mode {
   photo?: number;
 }
 
-const BLUE = '#1463F3';
+const BLUE = Maple.blue;
 const PORTAL_ICONS: Readonly<Record<Portal, IconName>> = { learner: 'cap', teacher: 'school', parent: 'people', school: 'grid', command: 'settings' };
 
 export function modesFrom(portals: readonly Portal[], designed: readonly Mode[] | undefined): Mode[] {

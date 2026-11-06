@@ -1,13 +1,14 @@
 import { StyleSheet, Text, View } from 'react-native';
 
 import { parseDoc, parseMath } from '@/lib/assignment-work';
+import { Maple } from '@/constants/maple';
 
-export const INK = '#0B1424';
-export const BODY = '#4A5263';
-export const BLUE = '#1463F3';
-export const GREEN = '#22A35A';
-export const RED = '#E5484D';
-export const ORANGE = '#F28C28';
+export const INK = Maple.navy;
+export const BODY = Maple.body;
+export const BLUE = Maple.blue;
+export const GREEN = Maple.successText;
+export const RED = Maple.error;
+export const ORANGE = Maple.warning;
 
 function Frac({ num, den, size, color }: { num: string; den: string; size: number; color: string }) {
   const s = size * 0.82;

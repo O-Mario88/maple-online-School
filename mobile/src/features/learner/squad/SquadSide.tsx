@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Modal, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
@@ -8,11 +8,12 @@ import type { IconName } from '@/lib/icons';
 
 import { invite } from './SquadCards';
 import type { Room, SquadState } from './useSquad';
+import { Maple } from '@/constants/maple';
 
-const INK = '#0B1424';
-const NAVY = '#0B2A6B';
-const BODY = '#4A5263';
-const BLUE = '#1463F3';
+const INK = Maple.navy;
+const NAVY = Maple.blueHover;
+const BODY = Maple.body;
+const BLUE = Maple.blue;
 
 export type Dialog = 'discover' | 'join' | 'create' | null;
 export const openSquad = (id: string) => router.push({ pathname: '/learn/squads/[id]', params: { id } });
@@ -47,7 +48,7 @@ export function SquadSide({ room, s, onDialog }: { room: Room; s: SquadState; on
         </View>
         {MENU.map((m, i) => (
           <Pressable key={m.label} style={[styles.menuItem, i === 0 && styles.menuOn]} onPress={() => (m.dialog ? onDialog(m.dialog) : s.setTab('Overview'))} accessibilityRole="button" accessibilityState={{ selected: i === 0 }}>
-            <Icon name={m.icon} size={17} color={i === 0 ? BLUE : '#3B4456'} />
+            <Icon name={m.icon} size={17} color={i === 0 ? BLUE : Maple.body} />
             <Text style={[styles.menuText, i === 0 && styles.menuTextOn]}>{m.label}</Text>
           </Pressable>
         ))}
@@ -134,7 +135,7 @@ export function SquadDialogs({ room, s, dialog, onClose }: { room: Room; s: Squa
               <TextInput style={styles.input} value={code} onChangeText={(t) => {
                   setCode(t);
                   setError(null);
-                }} placeholder="e.g. MATH-6K2Q" placeholderTextColor="#8A93A6" autoCapitalize="characters" autoFocus accessibilityLabel="Squad code" />
+                }} placeholder="e.g. MATH-6K2Q" placeholderTextColor={Maple.faint} autoCapitalize="characters" autoFocus accessibilityLabel="Squad code" />
               {error ? <Text style={styles.error}>{error}</Text> : null}
               <Pressable style={styles.primary} onPress={join} accessibilityRole="button">
                 <Text style={styles.primaryText}>Join Squad</Text>
@@ -143,7 +144,7 @@ export function SquadDialogs({ room, s, dialog, onClose }: { room: Room; s: Squa
           ) : dialog === 'create' ? (
             <>
               <Text style={styles.dialogText}>Squads have 5 to 8 learners and a teacher moderator. Your teacher approves new squads before anyone can join.</Text>
-              <TextInput style={styles.input} value={name} onChangeText={setName} placeholder="Squad name, e.g. Biology Buddies" placeholderTextColor="#8A93A6" autoFocus accessibilityLabel="Squad name" />
+              <TextInput style={styles.input} value={name} onChangeText={setName} placeholder="Squad name, e.g. Biology Buddies" placeholderTextColor={Maple.faint} autoFocus accessibilityLabel="Squad name" />
               <Pressable
                 style={[styles.primary, !name.trim() && styles.disabled]}
                 disabled={!name.trim()}
@@ -183,37 +184,37 @@ export function SquadDialogs({ room, s, dialog, onClose }: { room: Room; s: Squa
 const styles = StyleSheet.create({
   flex: { flex: 1 },
   side: { gap: 10 },
-  panel: { gap: 4, padding: 12, borderRadius: 10, backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#EAEFF6' },
+  panel: { gap: 4, padding: 12, borderRadius: 10, backgroundColor: Maple.surface, borderWidth: 1, borderColor: Maple.blueSelected },
   brand: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 8 },
   brandIcon: { width: 40, height: 40 },
   brandText: { fontSize: 18, fontWeight: '700', color: NAVY },
   menuItem: { height: 34, flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 10, borderRadius: 6 },
-  menuOn: { backgroundColor: '#E6EEFC' },
-  menuText: { fontSize: 13, color: '#2B3445' },
+  menuOn: { backgroundColor: Maple.blueSelected },
+  menuText: { fontSize: 13, color: Maple.navy },
   menuTextOn: { fontWeight: '500', color: BLUE },
   headRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 10, marginBottom: 6 },
   head: { fontSize: 13, fontWeight: '700', color: NAVY },
   headBig: { fontSize: 15, fontWeight: '700', color: NAVY },
   link: { fontSize: 11, color: BLUE },
-  chip: { paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4, borderWidth: 1, borderColor: '#DCE3EE', fontSize: 10, color: INK },
+  chip: { paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4, borderWidth: 1, borderColor: Maple.blueLine, fontSize: 10, color: INK },
   squad: { height: 40, flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 6, borderRadius: 6 },
-  squadOn: { backgroundColor: '#E6EEFC' },
+  squadOn: { backgroundColor: Maple.blueSelected },
   squadIcon: { width: 30, height: 30 },
-  squadName: { flex: 1, fontSize: 12, color: '#2B3445', letterSpacing: -0.15 },
+  squadName: { flex: 1, fontSize: 12, color: Maple.navy, letterSpacing: -0.15 },
   squadNameOn: { fontSize: 12, fontWeight: '600', color: NAVY, letterSpacing: -0.15 },
   stat: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 4 },
   statIcon: { width: 32, height: 32 },
   statN: { fontSize: 16, fontWeight: '700', color: INK },
   statLabel: { fontSize: 10.5, color: BODY },
-  action: { height: 34, flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 4, paddingHorizontal: 12, borderRadius: 6, backgroundColor: '#EEF4FF' },
+  action: { height: 34, flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 4, paddingHorizontal: 12, borderRadius: 6, backgroundColor: Maple.blueSoft },
   actionText: { fontSize: 12, fontWeight: '500', color: BLUE },
   scrim: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20, backgroundColor: 'rgba(8,12,20,0.5)' },
-  dialog: { width: '100%', maxWidth: 420, gap: 10, padding: 18, borderRadius: 14, backgroundColor: '#FFFFFF' },
+  dialog: { width: '100%', maxWidth: 420, gap: 10, padding: 18, borderRadius: 14, backgroundColor: Maple.surface },
   dialogText: { fontSize: 12.5, lineHeight: 18, color: BODY },
-  input: { height: 42, paddingVertical: 0, paddingHorizontal: 12, borderRadius: 8, borderWidth: 1, borderColor: '#DCE3EE', fontSize: 14, color: INK },
-  error: { fontSize: 12, color: '#B91C1C' },
-  primary: { height: 42, alignItems: 'center', justifyContent: 'center', borderRadius: 8, backgroundColor: '#0B6BFF' },
-  primaryText: { fontSize: 13.5, fontWeight: '600', color: '#FFFFFF' },
+  input: { height: 42, paddingVertical: 0, paddingHorizontal: 12, borderRadius: 8, borderWidth: 1, borderColor: Maple.blueLine, fontSize: 14, color: INK },
+  error: { fontSize: 12, color: Maple.error },
+  primary: { height: 42, alignItems: 'center', justifyContent: 'center', borderRadius: 8, backgroundColor: Maple.blue },
+  primaryText: { fontSize: 13.5, fontWeight: '600', color: Maple.surface },
   disabled: { opacity: 0.45 },
-  discover: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 10, borderRadius: 8, borderWidth: 1, borderColor: '#EEF1F6' },
+  discover: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 10, borderRadius: 8, borderWidth: 1, borderColor: Maple.blueSelected },
 });

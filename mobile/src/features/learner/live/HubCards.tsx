@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { type Href, router } from 'expo-router';
 import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -11,9 +11,10 @@ import { addDays, clock12, dayParts } from '@/lib/live-hub';
 
 import { BLUE, BODY, GREEN, INK, LiveBadge } from './HubSchedule';
 import type { Hub, HubState, Tutor } from './useLiveHub';
+import { Maple } from '@/constants/maple';
 
 const ugx = (n: number) => formatMoney(n, 'UGX');
-const STAR = '#F5A524';
+const STAR = Maple.warning;
 
 export function Head({ title, link, onLink, sub, small = false }: { title: string; link?: string; onLink?: () => void; sub?: string; small?: boolean }) {
   return (
@@ -147,7 +148,7 @@ function ClassButton({ c, s, phone = false }: { c: LiveClass; s: HubState; phone
   if (s.action(c) === 'join')
     return (
       <Pressable style={[styles.classBtn, styles.classJoin, phone && styles.classBtnP]} onPress={() => router.push(`/learn/live-room?id=${c.id}`)} accessibilityRole="button" accessibilityLabel={`Join ${c.title}`}>
-        <Icon name="video" size={15} color="#FFFFFF" />
+        <Icon name="video" size={15} color={Maple.surface} />
         <Text style={[styles.classBtnText, styles.white]}>Join</Text>
       </Pressable>
     );
@@ -275,7 +276,7 @@ export function WeekRow({ hub, x, s, phone = false }: { hub: Hub; x: Hub['thisWe
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
-  white: { color: '#FFFFFF' },
+  white: { color: Maple.surface },
   head: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   headTitle: { fontSize: 17, fontWeight: '700', color: INK, letterSpacing: -0.2 },
   headTitleS: { fontSize: 15 },
@@ -283,13 +284,13 @@ const styles = StyleSheet.create({
   link: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   linkText: { fontSize: 12.5, color: BLUE },
   linkTextS: { fontSize: 11 },
-  tutor: { width: 136, padding: 8, borderRadius: 8, borderWidth: 1, borderColor: '#E8EDF4', backgroundColor: '#FFFFFF' },
+  tutor: { width: 136, padding: 8, borderRadius: 8, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface },
   tutorP: { width: 104, padding: 0, borderWidth: 0, backgroundColor: 'transparent' },
   tutorPhoto: { width: 120, height: 93, borderRadius: 6 },
   tutorPhotoP: { width: 104, height: 66, borderRadius: 6 },
-  online: { position: 'absolute', right: 3, bottom: 3, flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 6, paddingVertical: 2, borderRadius: 9, backgroundColor: '#E3F6E9' },
+  online: { position: 'absolute', right: 3, bottom: 3, flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 6, paddingVertical: 2, borderRadius: 9, backgroundColor: Maple.successSoft },
   onlineDot: { width: 7, height: 7, borderRadius: 4, backgroundColor: GREEN },
-  onlineText: { fontSize: 10.5, color: '#14532D' },
+  onlineText: { fontSize: 10.5, color: Maple.successText },
   tutorName: { marginTop: 8, fontSize: 14, fontWeight: '700', color: INK },
   tutorNameP: { marginTop: 6, fontSize: 11.5 },
   tutorSub: { marginTop: 3, fontSize: 12.5, color: BODY },
@@ -298,36 +299,36 @@ const styles = StyleSheet.create({
   metaText: { flexShrink: 1, fontSize: 11.5, color: BODY },
   price: { marginTop: 8, fontSize: 14.5, fontWeight: '700', color: INK },
   priceP: { marginTop: 4, fontSize: 11.5 },
-  book: { height: 29, alignItems: 'center', justifyContent: 'center', marginTop: 8, borderRadius: 4, backgroundColor: '#0B6BFF' },
+  book: { height: 29, alignItems: 'center', justifyContent: 'center', marginTop: 8, borderRadius: 4, backgroundColor: Maple.blue },
   bookP: { height: 26, marginTop: 6 },
   joinBooked: { backgroundColor: GREEN },
-  bookText: { fontSize: 13, fontWeight: '500', color: '#FFFFFF' },
+  bookText: { fontSize: 13, fontWeight: '500', color: Maple.surface },
   bookTextP: { fontSize: 11.5 },
   scrim: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 16, backgroundColor: 'rgba(8,12,20,0.55)' },
-  sheet: { width: '100%', maxWidth: 420, padding: 20, borderRadius: 14, backgroundColor: '#FFFFFF' },
+  sheet: { width: '100%', maxWidth: 420, padding: 20, borderRadius: 14, backgroundColor: Maple.surface },
   sheetTitle: { fontSize: 17, fontWeight: '700', color: INK },
   sheetTutor: { flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 14, marginBottom: 8 },
   sheetPhoto: { width: 64, height: 64, borderRadius: 32 },
-  sheetRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 10, borderTopWidth: 1, borderTopColor: '#EEF1F6' },
+  sheetRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 10, borderTopWidth: 1, borderTopColor: Maple.blueSelected },
   sheetKey: { fontSize: 13, color: BODY },
   sheetValue: { fontSize: 13, fontWeight: '600', color: INK },
-  confirm: { height: 46, alignItems: 'center', justifyContent: 'center', marginTop: 12, borderRadius: 8, backgroundColor: '#0B6BFF' },
-  confirmText: { fontSize: 15, fontWeight: '600', color: '#FFFFFF' },
+  confirm: { height: 46, alignItems: 'center', justifyContent: 'center', marginTop: 12, borderRadius: 8, backgroundColor: Maple.blue },
+  confirmText: { fontSize: 15, fontWeight: '600', color: Maple.surface },
   cancel: { height: 40, alignItems: 'center', justifyContent: 'center', marginTop: 4 },
-  classCard: { width: 147, borderRadius: 8, borderWidth: 1, borderColor: '#E8EDF4', backgroundColor: '#FFFFFF', overflow: 'hidden' },
+  classCard: { width: 147, borderRadius: 8, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface, overflow: 'hidden' },
   thumb: { width: 147, height: 74 },
   thumbBadge: { position: 'absolute', left: 6, top: 6, width: 44, height: 18, backgroundColor: 'transparent' },
   classBody: { padding: 9 },
   classSubject: { fontSize: 13.5, fontWeight: '600', color: INK },
-  classTitle: { marginTop: 3, fontSize: 13, color: '#2B3445' },
+  classTitle: { marginTop: 3, fontSize: 13, color: Maple.navy },
   classDomain: { marginTop: 5 },
   classWhen: { marginTop: 5, fontSize: 12.5, color: BODY },
   teacher: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   face: { width: 16, height: 16, marginTop: 5, borderRadius: 8 },
-  classBtn: { height: 33, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 7, marginTop: 10, borderRadius: 4, borderWidth: 1, borderColor: '#BBD0F4', backgroundColor: '#FFFFFF' },
+  classBtn: { height: 33, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 7, marginTop: 10, borderRadius: 4, borderWidth: 1, borderColor: Maple.blueLine, backgroundColor: Maple.surface },
   classBtnP: { width: 64, marginTop: 0 },
-  classJoin: { borderWidth: 0, backgroundColor: '#0B6BFF' },
-  classDone: { borderColor: '#B9E3C8', backgroundColor: '#F0FAF3' },
+  classJoin: { borderWidth: 0, backgroundColor: Maple.blue },
+  classDone: { borderColor: '#B9E3C8', backgroundColor: Maple.successSoft },
   classBtnText: { fontSize: 12.5, fontWeight: '500', color: BLUE },
   classRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   thumbP: { width: 44, height: 44, borderRadius: 8 },
@@ -338,16 +339,16 @@ const styles = StyleSheet.create({
   campIcon: { width: 58, height: 58 },
   campTop: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   campTitle: { flexShrink: 1, fontSize: 13 },
-  ongoing: { paddingHorizontal: 6, paddingVertical: 3, borderRadius: 5, backgroundColor: '#E5F6EB', fontSize: 11.5, fontWeight: '500', color: '#15803D', overflow: 'hidden' },
-  campBar: { width: '100%', maxWidth: 236, height: 4, marginTop: 9, borderRadius: 2, backgroundColor: '#E3E8F0', overflow: 'hidden' },
+  ongoing: { paddingHorizontal: 6, paddingVertical: 3, borderRadius: 5, backgroundColor: Maple.successSoft, fontSize: 11.5, fontWeight: '500', color: Maple.successText, overflow: 'hidden' },
+  campBar: { width: '100%', maxWidth: 236, height: 4, marginTop: 9, borderRadius: 2, backgroundColor: Maple.blueSelected, overflow: 'hidden' },
   campFill: { height: 4, borderRadius: 2, backgroundColor: GREEN },
   campBtn: { width: 82, height: 32, alignItems: 'center', justifyContent: 'center', borderRadius: 5 },
-  soft: { backgroundColor: '#E6EEFB' },
+  soft: { backgroundColor: Maple.blueSelected },
   week: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   weekDate: { width: 72 },
   weekDateP: { width: 64 },
   weekDay: { fontSize: 13, color: INK },
   weekIcon: { width: 38, height: 38 },
-  addBtn: { height: 30, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 5, paddingHorizontal: 9, borderRadius: 5, borderWidth: 1, borderColor: 'transparent', backgroundColor: '#E6EEFB' },
+  addBtn: { height: 30, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 5, paddingHorizontal: 9, borderRadius: 5, borderWidth: 1, borderColor: 'transparent', backgroundColor: Maple.blueSelected },
   addText: { fontSize: 12, fontWeight: '500', color: BLUE },
 });

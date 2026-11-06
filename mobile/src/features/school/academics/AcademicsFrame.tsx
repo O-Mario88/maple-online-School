@@ -1,4 +1,3 @@
-import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
@@ -10,18 +9,19 @@ import { BLUE, BODY, CANVAS, LINE, NAVY, RED, TEXT, WHITE } from '@/features/por
 import { initials } from '@/lib/school/admin-me';
 import { useSwitcher } from '@/lib/switcher-context';
 import type { NavItem } from '@/mock/portal';
+import { openMenuPage } from '@/lib/menu-nav';
+import { Maple } from '@/constants/maple';
+import { MapleLogo } from '@/components/brand/MapleLogo';
 
-const LEAF = require('@/assets/images/maple-leaf.png') as number;
-const AVATAR = '#4B4FE0';
+const AVATAR = Maple.blue;
 
 /** The full-height sidebar: logo, links (the current one solid blue) and the set-up progress card. */
 function Side({ nav, active, progress }: { nav: readonly NavItem[]; active: string; progress: number }) {
   return (
     <View style={styles.side}>
       <Pressable style={styles.logo} onPress={() => router.push('/')} accessibilityRole="link" accessibilityLabel="Maple home">
-        <Image source={LEAF} style={styles.leaf} contentFit="contain" />
-        <View>
-          <Text style={styles.brand}>Maple</Text>
+        <View style={styles.logoStack}>
+          <MapleLogo size={32} />
           <Text style={styles.brandSub}>School Management</Text>
         </View>
       </Pressable>
@@ -32,7 +32,7 @@ function Side({ nav, active, progress }: { nav: readonly NavItem[]; active: stri
             <Pressable
               key={n.label}
               style={({ hovered }) => [styles.item, on && styles.itemOn, hovered && !on && styles.itemHover]}
-              onPress={() => router.push(n.href as never)}
+              onPress={() => openMenuPage(n.href as never)}
               accessibilityRole="menuitem"
               accessibilityState={{ selected: on }}
               accessibilityLabel={n.label}>
@@ -121,6 +121,7 @@ export function AcademicsFrame({
 const styles = StyleSheet.create({
   flex: { flex: 1 },
   root: { flex: 1, flexDirection: 'row', minHeight: '100%', backgroundColor: CANVAS },
+  logoStack: { gap: 4 },
   side: { width: 202, paddingBottom: 20, backgroundColor: WHITE, borderRightWidth: 1, borderColor: LINE },
   logo: { flexDirection: 'row', alignItems: 'center', gap: 8, height: 60, paddingHorizontal: 22 },
   leaf: { width: 38, height: 40 },
@@ -129,19 +130,19 @@ const styles = StyleSheet.create({
   nav: { gap: 5, paddingHorizontal: 12, paddingTop: 16 },
   item: { flexDirection: 'row', alignItems: 'center', gap: 18, height: 44, paddingHorizontal: 16, borderRadius: 10 },
   itemOn: { backgroundColor: BLUE },
-  itemHover: { backgroundColor: '#F2F6FD' },
+  itemHover: { backgroundColor: Maple.blueSoft },
   itemText: { fontSize: 14.5, color: TEXT },
   itemTextOn: { color: WHITE, fontWeight: '600' },
-  setup: { marginHorizontal: 18, padding: 16, gap: 6, borderRadius: 14, borderWidth: 1, borderColor: LINE, backgroundColor: '#F4F7FD' },
+  setup: { marginHorizontal: 18, padding: 16, gap: 6, borderRadius: 14, borderWidth: 1, borderColor: LINE, backgroundColor: Maple.blueSoft },
   setupTitle: { marginTop: 6, fontSize: 15, fontWeight: '700', color: NAVY },
   setupBody: { fontSize: 13, lineHeight: 18, color: TEXT },
   setupPct: { marginTop: 8, fontSize: 11, fontWeight: '600', color: NAVY },
   setupBar: { backgroundColor: WHITE },
   right: { flex: 1, minWidth: 0 },
   top: { flexDirection: 'row', alignItems: 'center', gap: 22, height: 60, paddingLeft: 34, paddingRight: 36, backgroundColor: WHITE, borderBottomWidth: 1, borderColor: LINE },
-  school: { flexDirection: 'row', alignItems: 'center', gap: 10, height: 38, maxWidth: 320, paddingHorizontal: 14, borderRadius: 12, backgroundColor: '#F3F6FB' },
+  school: { flexDirection: 'row', alignItems: 'center', gap: 10, height: 38, maxWidth: 320, paddingHorizontal: 14, borderRadius: 12, backgroundColor: Maple.blueSoft },
   schoolName: { flexShrink: 1, fontSize: 15, fontWeight: '700', color: NAVY },
-  search: { flexDirection: 'row', alignItems: 'center', gap: 10, width: 386, height: 38, paddingHorizontal: 16, borderRadius: 19, borderWidth: 1, borderColor: '#D9E1EE', backgroundColor: WHITE },
+  search: { flexDirection: 'row', alignItems: 'center', gap: 10, width: 386, height: 38, paddingHorizontal: 16, borderRadius: 19, borderWidth: 1, borderColor: Maple.blueLine, backgroundColor: WHITE },
   searchInput: { flex: 1, height: 38, paddingVertical: 0, fontSize: 14, color: NAVY },
   dot: { position: 'absolute', top: -1, right: -1, width: 9, height: 9, borderRadius: 5, borderWidth: 1.5, borderColor: WHITE, backgroundColor: RED },
   me: { flexDirection: 'row', alignItems: 'center', gap: 8 },

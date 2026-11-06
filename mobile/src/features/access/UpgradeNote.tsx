@@ -5,6 +5,7 @@ import { Icon } from '@/components/icon';
 import { Radius, Spacing, type Theme } from '@/constants/theme';
 import { useStyles } from '@/hooks/use-styles';
 import type { Tier } from '@/lib/access/trial';
+import { Radii } from '@/constants/maple';
 
 /** The plan each level is sold as. */
 export const TIER_NAMES: Readonly<Record<Tier, string>> = { basic: 'Basic', pro: 'Pro Study Pass', premium: 'Premium + Tutoring' };
@@ -34,7 +35,7 @@ function makeStyles(t: Theme) {
     text: { flex: 1, fontSize: 14, lineHeight: 20, color: t.text },
     textCompact: { fontSize: 12.5, lineHeight: 17 },
     strong: { fontWeight: '600' },
-    button: { paddingHorizontal: 14, paddingVertical: 8, borderRadius: Radius.pill, backgroundColor: t.accent },
+    button: { paddingHorizontal: 14, paddingVertical: 8, borderRadius: Radii.control, backgroundColor: t.accent },
     buttonText: { fontSize: 13, fontWeight: '600', color: t.onAccent },
   });
 }

@@ -11,6 +11,7 @@ import type { MockData } from '@/mock';
 import { AdminDesk, AdminPhone, BigButton, Cell, type Column, DataTable, Face, Legend, ListCard, ListRow, PageHead, SelectBox, Segments, type Stat, StatGrid, useChoice } from '../kit/AdminKit';
 import { Donut, DonutLabel, LineChart } from '../kit/Charts';
 import { ScannerPanel } from './Scanner';
+import { Maple } from '@/constants/maple';
 
 type Admin = MockData['schoolAdmin'];
 type Att = Admin['attendance'];
@@ -50,7 +51,7 @@ export function AttendanceDesk({ a }: { a: Admin }) {
     { label: 'Grade', flex: 1.3, render: (x) => <Cell strong>{x.grade}</Cell> },
     { label: 'Total', flex: 0.7, align: 'center', render: (x) => <Cell>{x.enrolled}</Cell> },
     { label: 'Present', flex: 1.05, align: 'center', render: (x) => <Cell strong color={GREEN}>{x.present}</Cell> },
-    { label: 'Late', flex: 0.6, align: 'center', render: (x) => <Cell strong color="#D97F06">{x.late}</Cell> },
+    { label: 'Late', flex: 0.6, align: 'center', render: (x) => <Cell strong color={Maple.warning}>{x.late}</Cell> },
     { label: 'Absent', flex: 1, align: 'center', render: (x) => <Cell strong color={RED}>{x.absent}</Cell> },
     { label: 'Rate', flex: 1, align: 'center', render: (x) => <Pill label={x.rate} tone="green" size={12.5} /> },
   ];
@@ -80,18 +81,18 @@ export function AttendanceDesk({ a }: { a: Admin }) {
               <View style={styles.overview}>
                 <Donut
                   slices={[
-                    { value: o.present, color: '#22A55A' },
-                    { value: o.late, color: '#F7A21B' },
-                    { value: o.absent, color: '#EF3B4D' },
+                    { value: o.present, color: Maple.successText },
+                    { value: o.late, color: Maple.warning },
+                    { value: o.absent, color: Maple.error },
                   ]}
                   size={128}
                   stroke={18}>
                   <DonutLabel value={o.rate} caption="Present" size={21} />
                 </Donut>
                 <View style={styles.flex}>
-                  <Legend color="#22A55A" label="Present" value={o.present.toLocaleString('en-US')} style={styles.ovRow} />
-                  <Legend color="#F7A21B" label="Late" value={String(o.late)} style={styles.ovRow} />
-                  <Legend color="#EF3B4D" label="Absent" value={String(o.absent)} style={styles.ovRow} />
+                  <Legend color={Maple.successText} label="Present" value={o.present.toLocaleString('en-US')} style={styles.ovRow} />
+                  <Legend color={Maple.warning} label="Late" value={String(o.late)} style={styles.ovRow} />
+                  <Legend color={Maple.error} label="Absent" value={String(o.absent)} style={styles.ovRow} />
                   <View style={styles.ovTotal}>
                     <Text style={styles.ovTotalText}>Total</Text>
                     <Text style={styles.ovTotalNum}>{o.total.toLocaleString('en-US')}</Text>
@@ -104,8 +105,8 @@ export function AttendanceDesk({ a }: { a: Admin }) {
               <LineChart
                 labels={at.trend.labels}
                 series={[
-                  { name: 'Students', color: '#1E6BF0', values: at.trend.students },
-                  { name: 'Teachers', color: '#8B3CF0', values: at.trend.teachers },
+                  { name: 'Students', color: Maple.blue, values: at.trend.students },
+                  { name: 'Teachers', color: Maple.blue, values: at.trend.teachers },
                 ]}
                 min={90}
                 max={100}
@@ -113,8 +114,8 @@ export function AttendanceDesk({ a }: { a: Admin }) {
                 format={(n) => `${Math.round(n)}%`}
               />
               <View style={styles.legendRow}>
-                <Legend color="#1E6BF0" label="Students (Avg. 94.2%)" />
-                <Legend color="#8B3CF0" label="Teachers (Avg. 97.6%)" />
+                <Legend color={Maple.blue} label="Students (Avg. 94.2%)" />
+                <Legend color={Maple.blue} label="Teachers (Avg. 97.6%)" />
               </View>
             </Card>
             <Card style={[styles.block, styles.flex]}>
@@ -256,18 +257,18 @@ export function AttendancePhone({ a }: { a: Admin }) {
         <View style={styles.overview}>
           <Donut
             slices={[
-              { value: o.present, color: '#22A55A' },
-              { value: o.late, color: '#F7A21B' },
-              { value: o.absent, color: '#EF3B4D' },
+              { value: o.present, color: Maple.successText },
+              { value: o.late, color: Maple.warning },
+              { value: o.absent, color: Maple.error },
             ]}
             size={130}
             stroke={18}>
             <DonutLabel value={o.rate} caption="Present" size={21} />
           </Donut>
           <View style={styles.flex}>
-            <Legend color="#22A55A" label="Present" value={o.present.toLocaleString('en-US')} style={styles.ovRow} />
-            <Legend color="#F7A21B" label="Late" value={String(o.late)} style={styles.ovRow} />
-            <Legend color="#EF3B4D" label="Absent" value={String(o.absent)} style={styles.ovRow} />
+            <Legend color={Maple.successText} label="Present" value={o.present.toLocaleString('en-US')} style={styles.ovRow} />
+            <Legend color={Maple.warning} label="Late" value={String(o.late)} style={styles.ovRow} />
+            <Legend color={Maple.error} label="Absent" value={String(o.absent)} style={styles.ovRow} />
           </View>
         </View>
       </Card>

@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import * as Linking from 'expo-linking';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
@@ -10,6 +10,7 @@ import type { ShortEntry } from '@/mock/public';
 
 import { Brand } from '../palette';
 import { Caption } from './ShortCard';
+import { Maple, Radii } from '@/constants/maple';
 
 const CLIP_SECONDS = 60;
 const TICK_MS = 1000;
@@ -142,7 +143,7 @@ const styles = StyleSheet.create({
   headActions: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   subject: { fontSize: 16, fontWeight: '700', color: Brand.surface },
   meta: { fontSize: 12, color: 'rgba(255,255,255,0.85)' },
-  followDark: { paddingHorizontal: 14, paddingVertical: 6, borderRadius: 999, borderWidth: 1, borderColor: 'rgba(255,255,255,0.7)' },
+  followDark: { paddingHorizontal: 14, paddingVertical: 6, borderRadius: Radii.control, borderWidth: 1, borderColor: 'rgba(255,255,255,0.7)' },
   followDarkText: { fontSize: 13, fontWeight: '600', color: Brand.surface },
   close: { fontSize: 20, color: Brand.surface },
   emoji: { position: 'absolute', alignSelf: 'center', top: '18%', fontSize: 130 },
@@ -160,7 +161,7 @@ const styles = StyleSheet.create({
   title: { fontSize: 20, fontWeight: '800', color: Brand.ink },
   desc: { fontSize: 14, lineHeight: 20, color: Brand.body },
   teacherRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  avatar: { width: 44, height: 44, borderRadius: 22, backgroundColor: '#8D5524', alignItems: 'center', justifyContent: 'center' },
+  avatar: { width: 44, height: 44, borderRadius: 22, backgroundColor: Maple.warningText, alignItems: 'center', justifyContent: 'center' },
   avatarText: { fontSize: 16, fontWeight: '700', color: Brand.surface },
   teacherName: { fontSize: 14, fontWeight: '700', color: Brand.ink },
   muted: { fontSize: 12, color: Brand.muted },

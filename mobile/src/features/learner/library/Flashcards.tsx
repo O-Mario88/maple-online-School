@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { useState } from 'react';
 import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 
@@ -9,20 +9,21 @@ import { deckProgress, nextCard, RATINGS, type Rating } from '@/lib/library/shel
 import type { IconName } from '@/lib/icons';
 
 import type { Hub } from './useShelf';
+import { Maple } from '@/constants/maple';
 
-const INK = '#0B1424';
-const NAVY = '#0B2A6B';
-const BODY = '#4A5263';
-const BLUE = '#1463F3';
+const INK = Maple.navy;
+const NAVY = Maple.blueHover;
+const BODY = Maple.body;
+const BLUE = Maple.blue;
 
 type DeckKey = keyof Hub['reader']['decks'];
 const DECKS: readonly DeckKey[] = ['My Decks', 'Class Decks', 'Saved'];
 
 const TONE: Record<Rating, { bg: string; fg: string; icon: IconName }> = {
-  again: { bg: '#FDECEE', fg: '#E11D48', icon: 'heart' },
-  hard: { bg: '#FEF3E2', fg: '#B45309', icon: 'edit' },
-  good: { bg: '#E8F0FE', fg: BLUE, icon: 'check' },
-  easy: { bg: '#E6F6EC', fg: '#15803D', icon: 'thumbUp' },
+  again: { bg: Maple.errorSoft, fg: Maple.error, icon: 'heart' },
+  hard: { bg: Maple.warningSoft, fg: Maple.warningText, icon: 'edit' },
+  good: { bg: Maple.blueSelected, fg: BLUE, icon: 'check' },
+  easy: { bg: Maple.successSoft, fg: Maple.successText, icon: 'thumbUp' },
 };
 
 type Speech = { speechSynthesis?: { speak: (u: unknown) => void; cancel: () => void }; SpeechSynthesisUtterance?: new (t: string) => unknown };
@@ -105,7 +106,7 @@ function Card({ f }: { f: DeckState }) {
         <View style={styles.cardTop}>
           <Text style={styles.count}>{`${f.i + 1} / ${f.d.cards.length}`}</Text>
           <Pressable style={styles.star} onPress={f.toggleStar} accessibilityRole="button" accessibilityLabel={f.starred ? 'Unstar card' : 'Star card'} accessibilityState={{ selected: f.starred }}>
-            <Icon name="star" size={15} color={f.starred ? '#F59E0B' : '#C3CAD6'} />
+            <Icon name="star" size={15} color={f.starred ? Maple.warning : Maple.borderStrong} />
           </Pressable>
         </View>
         <View style={styles.qRow}>
@@ -181,23 +182,23 @@ const styles = StyleSheet.create({
   title: { fontSize: 17, fontWeight: '700', color: INK },
   tabs: { flexDirection: 'row', gap: 4 },
   tab: { flex: 1, height: 32, alignItems: 'center', justifyContent: 'center', borderRadius: 5 },
-  tabOn: { backgroundColor: '#E8F0FE' },
+  tabOn: { backgroundColor: Maple.blueSelected },
   tabText: { fontSize: 12, color: INK },
   tabTextOn: { fontWeight: '600', color: BLUE },
   pickerWrap: { flexDirection: 'row', alignItems: 'center', gap: 8, zIndex: 4 },
-  picker: { flex: 1, height: 34, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 10, borderRadius: 6, borderWidth: 1, borderColor: '#DCE3EE', backgroundColor: '#FFFFFF' },
+  picker: { flex: 1, height: 34, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 10, borderRadius: 6, borderWidth: 1, borderColor: Maple.blueLine, backgroundColor: Maple.surface },
   pickerText: { flex: 1, fontSize: 11.5, color: INK },
   muted: { color: BODY },
-  progressBox: { width: 40, height: 22, alignItems: 'center', justifyContent: 'center', borderRadius: 11, backgroundColor: '#EEF4FF' },
+  progressBox: { width: 40, height: 22, alignItems: 'center', justifyContent: 'center', borderRadius: 11, backgroundColor: Maple.blueSoft },
   progressText: { fontSize: 10.5, fontWeight: '700', color: BLUE },
-  menu: { position: 'absolute', top: 38, left: 0, right: 48, paddingVertical: 4, borderRadius: 8, borderWidth: 1, borderColor: '#E1E7F0', backgroundColor: '#FFFFFF' },
+  menu: { position: 'absolute', top: 38, left: 0, right: 48, paddingVertical: 4, borderRadius: 8, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface },
   menuItem: { height: 30, justifyContent: 'center', paddingHorizontal: 12 },
   menuText: { fontSize: 12, color: INK },
   menuOn: { fontWeight: '700', color: BLUE },
   cardRow: { flexDirection: 'row', alignItems: 'center' },
-  arrow: { width: 28, height: 28, alignItems: 'center', justifyContent: 'center', marginRight: -12, borderRadius: 14, borderWidth: 1, borderColor: '#E1E7F0', backgroundColor: '#FFFFFF', zIndex: 2 },
+  arrow: { width: 28, height: 28, alignItems: 'center', justifyContent: 'center', marginRight: -12, borderRadius: 14, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface, zIndex: 2 },
   arrowRight: { marginRight: 0, marginLeft: -12 },
-  card: { flex: 1, minHeight: 250, paddingHorizontal: 22, paddingVertical: 14, borderRadius: 8, borderWidth: 1, borderColor: '#E8EDF4', backgroundColor: '#FFFFFF' },
+  card: { flex: 1, minHeight: 250, paddingHorizontal: 22, paddingVertical: 14, borderRadius: 8, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface },
   cardTop: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
   count: { fontSize: 11, color: BODY },
   star: { position: 'absolute', right: 0 },
@@ -205,17 +206,17 @@ const styles = StyleSheet.create({
   answer: { marginTop: 18 },
   tags: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginTop: 'auto', paddingTop: 14 },
   tag: { paddingHorizontal: 8, paddingVertical: 3, borderRadius: 4, fontSize: 10.5, overflow: 'hidden' },
-  tagBlue: { backgroundColor: '#E8F0FE', color: BLUE },
-  tagGreen: { backgroundColor: '#E6F6EC', color: '#15803D' },
+  tagBlue: { backgroundColor: Maple.blueSelected, color: BLUE },
+  tagGreen: { backgroundColor: Maple.successSoft, color: Maple.successText },
   ratings: { flexDirection: 'row', gap: 8 },
   rate: { flex: 1, height: 62, alignItems: 'center', justifyContent: 'center', gap: 2, borderRadius: 6 },
   rateLabel: { fontSize: 12, fontWeight: '600' },
   rateNext: { fontSize: 10, color: BODY },
-  auto: { gap: 8, padding: 12, borderRadius: 8, borderWidth: 1, borderColor: '#EEF1F6' },
+  auto: { gap: 8, padding: 12, borderRadius: 8, borderWidth: 1, borderColor: Maple.blueSelected },
   autoHead: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   autoIcon: { width: 22, height: 22 },
   autoTitle: { fontSize: 12.5, fontWeight: '600', color: INK },
   autoText: { fontSize: 11.5, lineHeight: 17, color: BODY },
-  autoBtn: { height: 34, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, borderRadius: 6, borderWidth: 1, borderColor: '#DCE3EE' },
+  autoBtn: { height: 34, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, borderRadius: 6, borderWidth: 1, borderColor: Maple.blueLine },
   autoBtnText: { fontSize: 12, fontWeight: '500', color: BLUE },
 });

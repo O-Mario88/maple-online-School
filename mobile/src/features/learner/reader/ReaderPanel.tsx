@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { type ReactNode, useState } from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
@@ -10,8 +10,9 @@ import type { Question } from '@/mock/book-reader';
 import { BLUE, BODY, INK, LINE, NAVY, WHITE } from './ReaderBody';
 import { gradeQuiz, lookUp } from './reader';
 import type { Reader } from './useBookReader';
+import { Maple } from '@/constants/maple';
 
-const MUTED = '#8A94A8';
+const MUTED = Maple.faint;
 const TABS = ['Learn', 'Notes', 'Highlights', 'More'] as const;
 type Tool = 'Dictionary' | 'Translate' | 'Summarize' | 'Ask AI Tutor';
 const TOOLS: readonly { name: Tool; sub: string; icon: IconName }[] = [
@@ -93,9 +94,9 @@ function ToolPanel({ x, tool }: { x: Reader; tool: Tool }) {
 function Learn({ x, onQuiz, onActivity }: { x: Reader; onQuiz: (kind: 'quick' | 'chapter') => void; onActivity: () => void }) {
   const [tool, setTool] = useState<Tool | null>(null);
   const practice: readonly [IconName, string, string, string, () => void][] = [
-    ['chart', '#22A55A', 'Quick Questions', `Test your understanding (${x.r.quickQuestions.length} questions)`, () => onQuiz('quick')],
-    ['clipboard', '#7C3AED', 'Chapter Quiz', 'A short quiz on this chapter', () => onQuiz('chapter')],
-    ['edit', '#F08A24', 'Activity / Project', 'A practical task to apply what you’ve learned', onActivity],
+    ['chart', Maple.successText, 'Quick Questions', `Test your understanding (${x.r.quickQuestions.length} questions)`, () => onQuiz('quick')],
+    ['clipboard', Maple.blue, 'Chapter Quiz', 'A short quiz on this chapter', () => onQuiz('chapter')],
+    ['edit', Maple.warning, 'Activity / Project', 'A practical task to apply what you’ve learned', onActivity],
   ];
   return (
     <>
@@ -110,7 +111,7 @@ function Learn({ x, onQuiz, onActivity }: { x: Reader; onQuiz: (kind: 'quick' | 
         <View style={styles.tools}>
           {TOOLS.map((t) => (
             <Pressable key={t.name} style={[styles.tool, tool === t.name && styles.toolOn]} onPress={() => setTool(tool === t.name ? null : t.name)} accessibilityRole="button" accessibilityState={{ expanded: tool === t.name }} accessibilityLabel={t.name}>
-              <Icon name={t.icon} size={22} color={t.name === 'Ask AI Tutor' ? '#7C3AED' : BLUE} />
+              <Icon name={t.icon} size={22} color={t.name === 'Ask AI Tutor' ? Maple.blue : BLUE} />
               <View style={styles.flex}>
                 <Text style={styles.toolName}>{t.name}</Text>
                 <Text style={styles.tiny}>{t.sub}</Text>
@@ -120,7 +121,7 @@ function Learn({ x, onQuiz, onActivity }: { x: Reader; onQuiz: (kind: 'quick' | 
         </View>
         {tool ? <ToolPanel key={tool} x={x} tool={tool} /> : null}
       </Section>
-      <Section icon="timer" title="Practice & Check" color="#F08A24">
+      <Section icon="timer" title="Practice & Check" color={Maple.warning}>
         {practice.map(([icon, color, title, sub, fn]) => (
           <Pressable key={title} style={({ hovered }) => [styles.row, hovered && styles.hover]} onPress={fn} accessibilityRole="button" accessibilityLabel={title}>
             <Icon name={icon} size={22} color={color} />
@@ -144,7 +145,7 @@ function Learn({ x, onQuiz, onActivity }: { x: Reader; onQuiz: (kind: 'quick' | 
               </View>
             ) : (
               <View style={[styles.thumb, styles.docThumb]}>
-                <Icon name="doc" size={24} color={res.kind === 'pdf' ? '#E5484D' : BLUE} />
+                <Icon name="doc" size={24} color={res.kind === 'pdf' ? Maple.error : BLUE} />
               </View>
             )}
             <View style={styles.flex}>
@@ -278,7 +279,7 @@ export function QuizModal({ title, questions, onClose }: { title: string; questi
           </View>
           <ScrollView contentContainerStyle={styles.quiz}>
             {done && result ? (
-              <View style={[styles.result, { backgroundColor: result.passed ? '#E6F7EC' : '#FEF2F2' }]}>
+              <View style={[styles.result, { backgroundColor: result.passed ? Maple.successSoft : Maple.errorSoft }]}>
                 <Text style={styles.resultBig}>{`${result.score} / ${result.total}  ·  ${result.pct}%`}</Text>
                 <Text style={styles.body}>{result.passed ? 'Well done! Your score is on your dashboard and in your parent’s portal.' : 'Read the chapter again and try once more. You need 60% to pass.'}</Text>
               </View>
@@ -341,13 +342,13 @@ export function ActivityModal({ x, open, onClose }: { x: Reader; open: boolean; 
 const styles = StyleSheet.create({
   flex: { flex: 1, minWidth: 0 },
   inline: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  hover: { backgroundColor: '#F1F5FC' },
+  hover: { backgroundColor: Maple.blueSoft },
   body: { fontSize: 13, lineHeight: 19, color: INK },
   tiny: { fontSize: 11.5, lineHeight: 16, color: BODY },
-  error: { fontSize: 12.5, color: '#E5484D' },
+  error: { fontSize: 12.5, color: Maple.error },
   panel: { gap: 12 },
   tabs: { flexDirection: 'row', gap: 6 },
-  tab: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 4, height: 38, borderRadius: 10, backgroundColor: '#EEF3FB' },
+  tab: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 4, height: 38, borderRadius: 10, backgroundColor: Maple.blueSoft },
   tabOn: { backgroundColor: BLUE },
   tabText: { fontSize: 13.5, fontWeight: '600', color: NAVY },
   tabTextOn: { color: WHITE },
@@ -356,14 +357,14 @@ const styles = StyleSheet.create({
   sectionTitle: { fontSize: 16, fontWeight: '800', color: NAVY },
   tools: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   tool: { flexDirection: 'row', alignItems: 'center', gap: 10, width: '48.5%', padding: 10, borderRadius: 10, borderWidth: 1, borderColor: LINE },
-  toolOn: { borderColor: BLUE, backgroundColor: '#EEF4FF' },
+  toolOn: { borderColor: BLUE, backgroundColor: Maple.blueSoft },
   toolName: { fontSize: 13, fontWeight: '700', color: NAVY },
-  toolBox: { gap: 8, padding: 10, borderRadius: 10, backgroundColor: '#F4F7FC' },
+  toolBox: { gap: 8, padding: 10, borderRadius: 10, backgroundColor: Maple.blueSoft },
   field: { height: 40, paddingHorizontal: 10, borderRadius: 8, borderWidth: 1, borderColor: LINE, fontSize: 13, color: INK, backgroundColor: WHITE },
   tall: { height: 76, paddingTop: 8, textAlignVertical: 'top' },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
   chip: { paddingHorizontal: 10, paddingVertical: 6, borderRadius: 16, borderWidth: 1, borderColor: LINE, backgroundColor: WHITE },
-  chipOn: { borderColor: BLUE, backgroundColor: '#EAF1FE' },
+  chipOn: { borderColor: BLUE, backgroundColor: Maple.blueSoft },
   chipText: { fontSize: 12.5, color: NAVY },
   chipTextOn: { fontWeight: '700', color: BLUE },
   askBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, alignSelf: 'flex-start', height: 34, paddingHorizontal: 14, borderRadius: 8, backgroundColor: BLUE },
@@ -371,19 +372,19 @@ const styles = StyleSheet.create({
   row: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 10, borderRadius: 10, borderWidth: 1, borderColor: LINE },
   rowTitle: { fontSize: 13.5, fontWeight: '700', color: NAVY },
   thumb: { width: 76, height: 48, borderRadius: 8 },
-  docThumb: { alignItems: 'center', justifyContent: 'center', backgroundColor: '#EEF3FB' },
+  docThumb: { alignItems: 'center', justifyContent: 'center', backgroundColor: Maple.blueSoft },
   playOver: { position: 'absolute', left: 26, top: 12, width: 24, height: 24, borderRadius: 12, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(10,20,40,0.6)' },
-  note: { gap: 2, padding: 10, borderRadius: 10, backgroundColor: '#FFF9E6' },
-  mark: { flexDirection: 'row', alignItems: 'flex-start', gap: 8, padding: 10, borderRadius: 10, backgroundColor: '#FFF6C9' },
+  note: { gap: 2, padding: 10, borderRadius: 10, backgroundColor: Maple.warningSoft },
+  mark: { flexDirection: 'row', alignItems: 'flex-start', gap: 8, padding: 10, borderRadius: 10, backgroundColor: Maple.warningSoft },
   backdrop: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20, backgroundColor: 'rgba(10,20,50,0.45)' },
   box: { width: '100%', maxWidth: 560, maxHeight: '90%', gap: 12, padding: 20, borderRadius: 16, backgroundColor: WHITE },
   modalTitle: { fontSize: 18, fontWeight: '800', color: NAVY },
   quiz: { gap: 14 },
   question: { gap: 6 },
   option: { paddingHorizontal: 12, paddingVertical: 9, borderRadius: 9, borderWidth: 1, borderColor: LINE },
-  optionOn: { borderColor: BLUE, backgroundColor: '#EAF1FE' },
-  optionRight: { borderColor: '#22A55A', backgroundColor: '#E6F7EC' },
-  optionWrong: { borderColor: '#E5484D', backgroundColor: '#FEF2F2' },
+  optionOn: { borderColor: BLUE, backgroundColor: Maple.blueSoft },
+  optionRight: { borderColor: Maple.successText, backgroundColor: Maple.successSoft },
+  optionWrong: { borderColor: Maple.error, backgroundColor: Maple.errorSoft },
   result: { gap: 4, padding: 12, borderRadius: 10 },
   resultBig: { fontSize: 20, fontWeight: '800', color: NAVY },
   submit: { height: 44, borderRadius: 10, alignItems: 'center', justifyContent: 'center', backgroundColor: BLUE },

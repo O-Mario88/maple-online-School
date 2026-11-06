@@ -3,26 +3,27 @@ import { Pressable, type StyleProp, StyleSheet, Text, View, type ViewStyle } fro
 
 import { Icon } from '@/components/icon';
 import type { IconName } from '@/lib/icons';
+import { Maple } from '@/constants/maple';
 
 /** The teacher references' palette (light-only, like the other reference pages). */
-export const INK = '#0B1424';
-export const BODY = '#4A5263';
-export const MUTED = '#6B7385';
-export const BLUE = '#1463F3';
-export const LINE = '#E6ECF5';
-export const CANVAS = '#EAF1FB';
-export const GREEN = '#1F9D55';
-export const RED = '#E5484D';
+export const INK = Maple.navy;
+export const BODY = Maple.body;
+export const MUTED = Maple.secondary;
+export const BLUE = Maple.blue;
+export const LINE = Maple.blueSelected;
+export const CANVAS = Maple.blueSelected;
+export const GREEN = Maple.successText;
+export const RED = Maple.error;
 
 export type Tone = 'red' | 'amber' | 'green' | 'blue' | 'purple' | 'grey';
 
 const TONES: Readonly<Record<Tone, { bg: string; fg: string }>> = {
-  red: { bg: '#FDECEC', fg: '#D93036' },
-  amber: { bg: '#FFF3E0', fg: '#C25E00' },
-  green: { bg: '#E6F6EC', fg: '#1F8A4C' },
-  blue: { bg: '#E8F0FE', fg: BLUE },
-  purple: { bg: '#F1EAFD', fg: '#6F3FD0' },
-  grey: { bg: '#EEF1F6', fg: BODY },
+  red: { bg: Maple.errorSoft, fg: Maple.error },
+  amber: { bg: Maple.warningSoft, fg: Maple.warningText },
+  green: { bg: Maple.successSoft, fg: Maple.successText },
+  blue: { bg: Maple.blueSelected, fg: BLUE },
+  purple: { bg: Maple.blueSelected, fg: Maple.blue },
+  grey: { bg: Maple.blueSelected, fg: BODY },
 };
 
 /** A white card with the references' thin border. */
@@ -65,7 +66,7 @@ export function toneColor(tone: Tone): string {
 export function IconTile({ icon, color, size = 44, soft = false }: { icon: IconName; color: string; size?: number; soft?: boolean }) {
   return (
     <View style={[styles.tile, { width: size, height: size, borderRadius: size * 0.26, backgroundColor: soft ? `${color}1F` : color }]}>
-      <Icon name={icon} size={Math.round(size * 0.5)} color={soft ? color : '#FFFFFF'} />
+      <Icon name={icon} size={Math.round(size * 0.5)} color={soft ? color : Maple.surface} />
     </View>
   );
 }
@@ -93,7 +94,7 @@ interface TButtonProps {
 /** A filled or outlined button in the references' blue. */
 export function TButton({ label, icon, onPress, variant = 'solid', style, iconRight = false, small = false }: TButtonProps) {
   const solid = variant === 'solid';
-  const fg = solid ? '#FFFFFF' : BLUE;
+  const fg = solid ? Maple.surface : BLUE;
   return (
     <Pressable style={({ pressed }) => [styles.btn, small && styles.btnSmall, solid ? styles.btnSolid : styles.btnOutline, pressed && styles.pressed, style]} onPress={onPress} accessibilityRole="button" accessibilityLabel={label}>
       {icon && !iconRight ? <Icon name={icon} size={16} color={fg} /> : null}
@@ -104,7 +105,7 @@ export function TButton({ label, icon, onPress, variant = 'solid', style, iconRi
 }
 
 const styles = StyleSheet.create({
-  panel: { padding: 16, borderRadius: 12, backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: LINE },
+  panel: { padding: 16, borderRadius: 12, backgroundColor: Maple.surface, borderWidth: 1, borderColor: LINE },
   head: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   headTitle: { fontWeight: '700', color: INK },
   link: { fontSize: 13, fontWeight: '600', color: BLUE },
@@ -114,10 +115,10 @@ const styles = StyleSheet.create({
   pillTextSmall: { fontSize: 9.5 },
   tile: { alignItems: 'center', justifyContent: 'center' },
   step: { alignItems: 'center', justifyContent: 'center', backgroundColor: BLUE },
-  stepText: { fontWeight: '700', color: '#FFFFFF' },
+  stepText: { fontWeight: '700', color: Maple.surface },
   btn: { height: 38, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, paddingHorizontal: 16, borderRadius: 8 },
   btnSolid: { backgroundColor: BLUE },
-  btnOutline: { backgroundColor: '#FFFFFF', borderWidth: 1.5, borderColor: BLUE },
+  btnOutline: { backgroundColor: Maple.surface, borderWidth: 1.5, borderColor: BLUE },
   btnText: { fontSize: 13.5, fontWeight: '600' },
   btnSmall: { height: 33, gap: 6, paddingHorizontal: 10 },
   btnTextSmall: { fontSize: 11 },

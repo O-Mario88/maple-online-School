@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { type ComponentRef, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
@@ -8,6 +8,7 @@ import { Avatar, Btn, Card, CardHead, CountBadge, IconTile, Pill, PlayButton, Wa
 import { BLUE, BODY, GREEN, LINE, MUTED, NAVY, RED, SELECT, SOFT, WHITE } from '@/features/portal/tokens';
 import { toast } from '@/lib/toast';
 import type { ChatMessage, ParentPortal, Thread } from '@/mock/portal';
+import { Maple } from '@/constants/maple';
 
 type Messages = ParentPortal['messages'];
 
@@ -364,7 +365,7 @@ const styles = StyleSheet.create({
   flex: { flex: 1, minWidth: 0 },
   hover: { backgroundColor: SOFT },
   gapCard: { gap: 18 },
-  channel: { alignItems: 'center', justifyContent: 'center', backgroundColor: '#E6F0FF' },
+  channel: { alignItems: 'center', justifyContent: 'center', backgroundColor: Maple.blueSelected },
   thread: { flexDirection: 'row', alignItems: 'flex-start', gap: 14, paddingHorizontal: 16, paddingVertical: 16, borderBottomWidth: 1, borderColor: LINE },
   threadPhone: { paddingHorizontal: 0, paddingVertical: 14 },
   threadOn: { backgroundColor: SELECT },
@@ -373,7 +374,7 @@ const styles = StyleSheet.create({
   threadName: { flex: 1, minWidth: 0, fontSize: 16, fontWeight: '700', color: NAVY },
   threadNamePhone: { fontSize: 16.5 },
   threadTime: { fontSize: 13.5, color: BODY },
-  threadMeta: { fontSize: 14, color: '#5371B5' },
+  threadMeta: { fontSize: 14, color: Maple.blue },
   threadMetaPhone: { fontSize: 14.5 },
   threadPreview: { flex: 1, minWidth: 0, fontSize: 13.5, color: BODY },
   threadPreviewPhone: { fontSize: 14.5 },
@@ -381,7 +382,7 @@ const styles = StyleSheet.create({
   chat: { flex: 1, minWidth: 0 },
   chatHead: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 16, paddingVertical: 16, borderBottomWidth: 1, borderColor: LINE },
   chatName: { fontSize: 18, fontWeight: '700', color: NAVY },
-  chatMeta: { fontSize: 13, color: '#5371B5' },
+  chatMeta: { fontSize: 13, color: Maple.blue },
   online: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   onlineDot: { width: 9, height: 9, borderRadius: 5, backgroundColor: GREEN },
   offlineDot: { backgroundColor: MUTED },
@@ -390,15 +391,15 @@ const styles = StyleSheet.create({
   moreBtn: { width: 50, height: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 12, borderWidth: 1, borderColor: LINE },
   chatBody: { gap: 14, padding: 20 },
   bubble: { maxWidth: '86%', gap: 10, paddingHorizontal: 18, paddingTop: 14, paddingBottom: 10, borderRadius: 16 },
-  bubbleTheirs: { alignSelf: 'flex-start', backgroundColor: '#F1F5FC', borderTopLeftRadius: 4 },
-  bubbleMine: { alignSelf: 'flex-end', backgroundColor: '#DCEBFF', borderTopRightRadius: 4 },
-  bubbleText: { fontSize: 15, lineHeight: 22, color: '#26335F' },
+  bubbleTheirs: { alignSelf: 'flex-start', backgroundColor: Maple.blueSoft, borderTopLeftRadius: 4 },
+  bubbleMine: { alignSelf: 'flex-end', backgroundColor: Maple.blueSelected, borderTopRightRadius: 4 },
+  bubbleText: { fontSize: 15, lineHeight: 22, color: Maple.body },
   bubbleFoot: { flexDirection: 'row', alignSelf: 'flex-end', alignItems: 'center', gap: 6 },
   bubbleTime: { fontSize: 12, color: MUTED },
   voice: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   voiceTime: { fontSize: 14, color: BODY },
   file: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 12, borderRadius: 12, backgroundColor: WHITE },
-  pdf: { width: 40, height: 44, borderRadius: 8, alignItems: 'center', justifyContent: 'center', backgroundColor: '#E5383B' },
+  pdf: { width: 40, height: 44, borderRadius: 8, alignItems: 'center', justifyContent: 'center', backgroundColor: Maple.error },
   fileName: { fontSize: 14.5, fontWeight: '700', color: NAVY },
   fileSize: { fontSize: 13, color: BODY },
   compose: { flexDirection: 'row', alignItems: 'center', gap: 14, paddingHorizontal: 18, paddingVertical: 14, borderTopWidth: 1, borderColor: LINE },
@@ -422,19 +423,19 @@ const styles = StyleSheet.create({
   day: { flex: 1, minWidth: 0, alignItems: 'stretch', gap: 8, paddingHorizontal: 5, paddingVertical: 10, borderRadius: 12, borderWidth: 1, borderColor: LINE },
   dow: { textAlign: 'center', fontSize: 15, fontWeight: '700', color: NAVY },
   date: { textAlign: 'center', marginTop: -6, marginBottom: 4, fontSize: 13.5, color: BODY },
-  slot: { alignItems: 'center', justifyContent: 'center', height: 40, borderRadius: 8, backgroundColor: '#EEF4FD' },
+  slot: { alignItems: 'center', justifyContent: 'center', height: 40, borderRadius: 8, backgroundColor: Maple.blueSoft },
   slotOn: { backgroundColor: BLUE },
-  slotText: { fontSize: 13.5, fontWeight: '500', color: '#2552B5' },
+  slotText: { fontSize: 13.5, fontWeight: '500', color: Maple.blueHover },
   slotTextOn: { color: WHITE, fontWeight: '700' },
   slotPhone: { height: 48 },
   slotTextPhone: { fontSize: 13, lineHeight: 16, textAlign: 'center' },
   modes: { flexDirection: 'row', gap: 10 },
   mode: { flex: 1, minWidth: 0, flexDirection: 'row', alignItems: 'center', gap: 8, height: 74, paddingHorizontal: 10, borderRadius: 12, borderWidth: 1, borderColor: LINE, backgroundColor: WHITE },
-  modeOn: { borderColor: BLUE, borderWidth: 1.5, backgroundColor: '#EEF4FE' },
+  modeOn: { borderColor: BLUE, borderWidth: 1.5, backgroundColor: Maple.blueSoft },
   modeIcon: { width: 38, height: 38, borderRadius: 19, alignItems: 'center', justifyContent: 'center' },
-  modeIconOn: { backgroundColor: '#DCE8FD' },
+  modeIconOn: { backgroundColor: Maple.blueSelected },
   modeText: { flex: 1, minWidth: 0, fontSize: 13.5, color: BODY },
-  modeTextOn: { color: '#2552B5', fontWeight: '600' },
+  modeTextOn: { color: Maple.blueHover, fontWeight: '600' },
   modePhone: { flexDirection: 'column', justifyContent: 'center', gap: 4, height: 96, paddingHorizontal: 6 },
   modeTextPhone: { flex: 0, textAlign: 'center', fontSize: 13 },
   bookBtnText: { fontSize: 17 },
@@ -442,7 +443,7 @@ const styles = StyleSheet.create({
   meetingTop: { flexDirection: 'row', alignItems: 'flex-start', gap: 14 },
   meetingName: { fontSize: 16.5, fontWeight: '700', color: NAVY },
   meetingSubject: { fontSize: 14.5, fontWeight: '400', color: BODY },
-  meetingMeta: { fontSize: 14.5, color: '#5371B5' },
+  meetingMeta: { fontSize: 14.5, color: Maple.blue },
   meetingWhen: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 4 },
   confirmed: { paddingHorizontal: 14, paddingVertical: 8 },
   meetingBtns: { flexDirection: 'row', gap: 12 },

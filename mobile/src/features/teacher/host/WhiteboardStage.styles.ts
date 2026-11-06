@@ -1,13 +1,14 @@
 import { StyleSheet } from 'react-native';
+import { Maple } from '@/constants/maple';
 
 export const s = StyleSheet.create({
   col: { flex: 1, gap: 8, minWidth: 0 },
   stageCard: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: Maple.border,
     overflow: 'hidden',
   },
   toolbar: {
@@ -16,9 +17,9 @@ export const s = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#E8EEF7',
+    borderBottomColor: Maple.blueSelected,
     gap: 5,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
   },
   toolGroup: { flexDirection: 'row', alignItems: 'center', gap: 3 },
   toolBtn: {
@@ -37,16 +38,16 @@ export const s = StyleSheet.create({
     gap: 3,
   },
   toolBtnOn: {
-    backgroundColor: '#EBF2FF',
+    backgroundColor: Maple.blueSoft,
   },
   pointerGlyph: {
     fontSize: 13,
     fontWeight: '700',
-    color: '#475569',
+    color: Maple.body,
     lineHeight: 15,
   },
   pointerGlyphOn: {
-    color: '#1463F3',
+    color: Maple.blue,
   },
   penWrap: { alignItems: 'center', gap: 1 },
   penBar: { width: 12, height: 2.5, borderRadius: 2 },
@@ -54,27 +55,27 @@ export const s = StyleSheet.create({
     width: 12,
     height: 11,
     borderWidth: 1.5,
-    borderColor: '#334155',
+    borderColor: Maple.body,
     borderRadius: 2,
   },
   shapeCircle: {
     width: 12,
     height: 12,
     borderWidth: 1.5,
-    borderColor: '#334155',
+    borderColor: Maple.body,
     borderRadius: 6,
   },
   toolTextGlyph: {
     fontWeight: '700',
     fontSize: 13,
-    color: '#334155',
+    color: Maple.body,
   },
   formulaGlyph: {
     fontWeight: '700',
     fontSize: 12,
-    color: '#334155',
+    color: Maple.body,
     borderWidth: 1,
-    borderColor: '#94A3B8',
+    borderColor: Maple.faint,
     borderRadius: 3,
     paddingHorizontal: 3,
     lineHeight: 14,
@@ -82,7 +83,7 @@ export const s = StyleSheet.create({
   toolSep: {
     width: 1,
     height: 18,
-    backgroundColor: '#E2E8F0',
+    backgroundColor: Maple.border,
     marginHorizontal: 3,
   },
   colorGroup: { flexDirection: 'row', alignItems: 'center', gap: 6 },
@@ -95,7 +96,7 @@ export const s = StyleSheet.create({
   },
   colorDotSelected: {
     borderWidth: 1.5,
-    borderColor: '#94A3B8',
+    borderColor: Maple.faint,
   },
   colorDot: {
     width: 12,
@@ -110,23 +111,23 @@ export const s = StyleSheet.create({
     height: 24,
     borderRadius: 6,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
-    backgroundColor: '#F8FAFC',
+    borderColor: Maple.border,
+    backgroundColor: Maple.blueSoft,
   },
   zoomText: {
     fontWeight: '600',
     fontSize: 10.5,
-    color: '#334155',
+    color: Maple.body,
   },
   expandBtn: {
     width: 24,
     height: 24,
     borderRadius: 6,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: Maple.border,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
   },
 
   /* Split Stage Body */
@@ -141,7 +142,7 @@ export const s = StyleSheet.create({
     flexDirection: 'row',
     paddingHorizontal: 18,
     paddingVertical: 14,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     gap: 10,
   },
   wbLeftCol: {
@@ -151,13 +152,13 @@ export const s = StyleSheet.create({
   wbTitle: {
     fontWeight: '500',
     fontSize: 15.5,
-    color: '#1E293B',
+    color: Maple.navy,
     fontStyle: 'italic',
   },
   wbMainEq: {
     fontWeight: '700',
     fontSize: 19,
-    color: '#0F172A',
+    color: Maple.navy,
     fontStyle: 'italic',
     marginLeft: 18,
     marginTop: 2,
@@ -175,58 +176,58 @@ export const s = StyleSheet.create({
   wbStepRedLabel: {
     fontWeight: '600',
     fontSize: 13,
-    color: '#DC2626',
+    color: Maple.error,
     fontStyle: 'italic',
   },
   wbStepRedText: {
     fontWeight: '500',
     fontSize: 12.5,
-    color: '#DC2626',
+    color: Maple.error,
     fontStyle: 'italic',
     lineHeight: 16,
   },
   wbStepSubDark: {
     fontWeight: '500',
     fontSize: 12.5,
-    color: '#1E293B',
+    color: Maple.navy,
     fontStyle: 'italic',
     marginLeft: 44,
   },
   wbStepBlueLabel: {
     fontWeight: '600',
     fontSize: 13,
-    color: '#1D4ED8',
+    color: Maple.blue,
     fontStyle: 'italic',
   },
   wbStepBlueText: {
     fontWeight: '500',
     fontSize: 13,
-    color: '#1D4ED8',
+    color: Maple.blue,
     fontStyle: 'italic',
   },
   wbFactorEq: {
     fontWeight: '600',
     fontSize: 14,
-    color: '#0F172A',
+    color: Maple.navy,
     fontStyle: 'italic',
     marginLeft: 32,
   },
   wbStepGreenLabel: {
     fontWeight: '600',
     fontSize: 13,
-    color: '#15803D',
+    color: Maple.successText,
     fontStyle: 'italic',
   },
   wbStepGreenText: {
     fontWeight: '500',
     fontSize: 13,
-    color: '#15803D',
+    color: Maple.successText,
     fontStyle: 'italic',
   },
   wbZeroLine: {
     fontWeight: '500',
     fontSize: 13,
-    color: '#0F172A',
+    color: Maple.navy,
     fontStyle: 'italic',
     marginLeft: 42,
   },
@@ -235,8 +236,8 @@ export const s = StyleSheet.create({
     marginLeft: 32,
     alignSelf: 'flex-start',
     borderWidth: 1.5,
-    borderColor: '#22C55E',
-    backgroundColor: '#F0FDF4',
+    borderColor: Maple.success,
+    backgroundColor: Maple.successSoft,
     borderRadius: 6,
     paddingHorizontal: 12,
     paddingVertical: 6,
@@ -244,7 +245,7 @@ export const s = StyleSheet.create({
   wbSolutionsText: {
     fontWeight: '600',
     fontSize: 13.5,
-    color: '#0F172A',
+    color: Maple.navy,
     fontStyle: 'italic',
   },
 
@@ -256,8 +257,8 @@ export const s = StyleSheet.create({
   },
   wbCalloutBox: {
     borderWidth: 1.5,
-    borderColor: '#2563EB',
-    backgroundColor: '#F8FAFF',
+    borderColor: Maple.blue,
+    backgroundColor: Maple.blueSoft,
     borderRadius: 6,
     paddingHorizontal: 10,
     paddingVertical: 6,
@@ -266,7 +267,7 @@ export const s = StyleSheet.create({
   wbCalloutText: {
     fontWeight: '500',
     fontSize: 11,
-    color: '#1D4ED8',
+    color: Maple.blue,
     fontStyle: 'italic',
     lineHeight: 14,
   },
@@ -283,7 +284,7 @@ export const s = StyleSheet.create({
     height: 18,
     borderRightWidth: 1.5,
     borderBottomWidth: 1.5,
-    borderColor: '#2563EB',
+    borderColor: Maple.blue,
     borderBottomRightRadius: 14,
   },
   wbCurveArrowHead: {
@@ -291,7 +292,7 @@ export const s = StyleSheet.create({
     bottom: -3,
     left: 6,
     fontSize: 10,
-    color: '#2563EB',
+    color: Maple.blue,
   },
 
   /* Parabola Graph */
@@ -306,12 +307,12 @@ export const s = StyleSheet.create({
     top: 4,
     bottom: 8,
     width: 1.5,
-    backgroundColor: '#334155',
+    backgroundColor: Maple.body,
     alignItems: 'center',
   },
   axisArrowUp: {
     fontSize: 7,
-    color: '#334155',
+    color: Maple.body,
     marginTop: -5,
   },
   yAxisLabel: {
@@ -321,7 +322,7 @@ export const s = StyleSheet.create({
     fontWeight: '600',
     fontSize: 10,
     fontStyle: 'italic',
-    color: '#0F172A',
+    color: Maple.navy,
   },
   xAxis: {
     position: 'absolute',
@@ -329,7 +330,7 @@ export const s = StyleSheet.create({
     right: 6,
     top: 76,
     height: 1.5,
-    backgroundColor: '#334155',
+    backgroundColor: Maple.body,
     justifyContent: 'center',
   },
   axisArrowRight: {
@@ -337,7 +338,7 @@ export const s = StyleSheet.create({
     right: -3,
     top: -4.5,
     fontSize: 7,
-    color: '#334155',
+    color: Maple.body,
   },
   xAxisLabel: {
     position: 'absolute',
@@ -346,7 +347,7 @@ export const s = StyleSheet.create({
     fontWeight: '600',
     fontSize: 10,
     fontStyle: 'italic',
-    color: '#0F172A',
+    color: Maple.navy,
   },
   parabolaViewport: {
     position: 'absolute',
@@ -362,7 +363,7 @@ export const s = StyleSheet.create({
     height: 130,
     marginTop: -58,
     borderWidth: 2,
-    borderColor: '#1D4ED8',
+    borderColor: Maple.blue,
     borderRadius: 46,
     backgroundColor: 'transparent',
   },
@@ -372,14 +373,14 @@ export const s = StyleSheet.create({
     width: 7,
     height: 7,
     borderRadius: 3.5,
-    backgroundColor: '#EF4444',
+    backgroundColor: Maple.error,
   },
   rootLabel: {
     position: 'absolute',
     top: 81,
     fontWeight: '600',
     fontSize: 10.5,
-    color: '#0F172A',
+    color: Maple.navy,
   },
 
   /* Sticky Note */
@@ -396,13 +397,13 @@ export const s = StyleSheet.create({
   stickyTitle: {
     fontWeight: '600',
     fontSize: 11.5,
-    color: '#1E293B',
+    color: Maple.navy,
     fontStyle: 'italic',
   },
   stickyEq: {
     fontWeight: '500',
     fontSize: 11,
-    color: '#0F172A',
+    color: Maple.navy,
     fontStyle: 'italic',
   },
   stickyBottomRow: {
@@ -413,14 +414,14 @@ export const s = StyleSheet.create({
   stickyCheck: {
     fontWeight: '700',
     fontSize: 15,
-    color: '#16A34A',
+    color: Maple.successText,
   },
   liveStrokeTag: {
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 6,
     paddingVertical: 2,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
   },
   liveStrokeText: {
     fontWeight: '600',
@@ -430,9 +431,9 @@ export const s = StyleSheet.create({
   /* Synchronized PDF Stage */
   pdfPane: {
     flex: 0.92,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
     borderLeftWidth: 1,
-    borderLeftColor: '#E8EEF7',
+    borderLeftColor: Maple.blueSelected,
     padding: 10,
     justifyContent: 'space-between',
   },
@@ -440,15 +441,15 @@ export const s = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 5,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     borderRadius: 7,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: Maple.border,
     paddingHorizontal: 7,
     paddingVertical: 5,
   },
   pdfBadge: {
-    backgroundColor: '#FEE2E2',
+    backgroundColor: Maple.errorSoft,
     borderRadius: 4,
     paddingHorizontal: 4,
     paddingVertical: 1.5,
@@ -456,18 +457,18 @@ export const s = StyleSheet.create({
   pdfBadgeText: {
     fontWeight: '700',
     fontSize: 7.5,
-    color: '#EF4444',
+    color: Maple.error,
   },
   pdfFilename: {
     flex: 1,
     fontWeight: '600',
     fontSize: 10,
-    color: '#1E293B',
+    color: Maple.navy,
   },
   pdfPageCount: {
     fontWeight: '500',
     fontSize: 9.5,
-    color: '#64748B',
+    color: Maple.secondary,
   },
   pdfNavBtns: {
     flexDirection: 'row',
@@ -479,18 +480,18 @@ export const s = StyleSheet.create({
     height: 18,
     borderRadius: 4,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: Maple.border,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
   },
   pdfSlideCard: {
     flex: 1,
     marginVertical: 8,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: Maple.border,
     padding: 14,
     justifyContent: 'center',
     gap: 5,
@@ -498,21 +499,21 @@ export const s = StyleSheet.create({
   pdfHeading: {
     fontWeight: '700',
     fontSize: 15,
-    color: '#0F172A',
+    color: Maple.navy,
   },
   pdfPrompt: {
     fontWeight: '400',
     fontSize: 11.5,
-    color: '#334155',
+    color: Maple.body,
   },
   pdfEquation: {
     fontWeight: '700',
     fontSize: 16,
-    color: '#0F172A',
+    color: Maple.navy,
     marginBottom: 6,
   },
   pdfStepsBox: {
-    backgroundColor: '#EEF4FF',
+    backgroundColor: Maple.blueSoft,
     borderRadius: 8,
     padding: 10,
     gap: 4,
@@ -520,7 +521,7 @@ export const s = StyleSheet.create({
   pdfStepsTitle: {
     fontWeight: '700',
     fontSize: 11.5,
-    color: '#0F172A',
+    color: Maple.navy,
     marginBottom: 2,
   },
   pdfStepRow: {
@@ -531,25 +532,25 @@ export const s = StyleSheet.create({
   pdfStepNum: {
     fontWeight: '600',
     fontSize: 10.5,
-    color: '#334155',
+    color: Maple.body,
     width: 12,
   },
   pdfStepText: {
     flex: 1,
     fontWeight: '400',
     fontSize: 10.5,
-    color: '#334155',
+    color: Maple.body,
     lineHeight: 14,
   },
   pdfFooter: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     alignSelf: 'flex-start',
     borderRadius: 7,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: Maple.border,
     paddingHorizontal: 6,
     paddingVertical: 4,
   },
@@ -572,7 +573,7 @@ export const s = StyleSheet.create({
     height: '100%',
     borderRadius: 10,
     overflow: 'hidden',
-    backgroundColor: '#0F172A',
+    backgroundColor: Maple.navy,
     position: 'relative',
   },
   // Pinned to the tile's edges: a 100% height does not resolve inside flex-stretched tiles on iOS and Android.
@@ -586,7 +587,7 @@ export const s = StyleSheet.create({
   // Phone versions are whole styles, not overrides of `flex: 1`: inside a scroll view the web reads a
   // `flex: 0` override as zero height, which hid the board.
   colPhone: { gap: 8 },
-  stageCardPhone: { backgroundColor: '#FFFFFF', borderRadius: 12, borderWidth: 1, borderColor: '#E2E8F0', overflow: 'hidden' },
+  stageCardPhone: { backgroundColor: Maple.surface, borderRadius: 12, borderWidth: 1, borderColor: Maple.border, overflow: 'hidden' },
   toolbarPhone: { height: 'auto', flexWrap: 'wrap', rowGap: 6, paddingVertical: 6 },
   stageBodyPhone: { flexDirection: 'row', flex: 1 },
   phoneStrip: { gap: 8, paddingVertical: 2 },
@@ -604,7 +605,7 @@ export const s = StyleSheet.create({
     justifyContent: 'center',
   },
   tileDots: {
-    color: '#FFFFFF',
+    color: Maple.surface,
     fontSize: 12,
     fontWeight: '700',
   },
@@ -625,22 +626,22 @@ export const s = StyleSheet.create({
     width: 18,
     height: 18,
     borderRadius: 9,
-    backgroundColor: '#16A34A',
+    backgroundColor: Maple.successText,
     alignItems: 'center',
     justifyContent: 'center',
   },
   micBadgeRed: {
-    backgroundColor: '#EF4444',
+    backgroundColor: Maple.error,
   },
   teacherTileName: {
     fontWeight: '600',
     fontSize: 10.5,
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   tileMoreDots: {
     fontWeight: '700',
     fontSize: 10,
-    color: '#CBD5E1',
+    color: Maple.borderStrong,
   },
 
   /* Student 2-row Grid */
@@ -657,7 +658,7 @@ export const s = StyleSheet.create({
     flex: 1,
     borderRadius: 8,
     overflow: 'hidden',
-    backgroundColor: '#1E293B',
+    backgroundColor: Maple.navy,
     position: 'relative',
   },
   tileTopMenuSmall: {
@@ -672,7 +673,7 @@ export const s = StyleSheet.create({
     justifyContent: 'center',
   },
   tileDotsSmall: {
-    color: '#FFFFFF',
+    color: Maple.surface,
     fontSize: 10,
     fontWeight: '700',
   },
@@ -699,13 +700,13 @@ export const s = StyleSheet.create({
   studentTileName: {
     fontWeight: '500',
     fontSize: 9.5,
-    color: '#FFFFFF',
+    color: Maple.surface,
     maxWidth: 66,
   },
   othersTile: {
     flex: 1,
     borderRadius: 8,
-    backgroundColor: '#334155',
+    backgroundColor: Maple.body,
     alignItems: 'center',
     justifyContent: 'center',
     gap: 4,
@@ -721,6 +722,6 @@ export const s = StyleSheet.create({
   othersText: {
     fontWeight: '600',
     fontSize: 10,
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
 });

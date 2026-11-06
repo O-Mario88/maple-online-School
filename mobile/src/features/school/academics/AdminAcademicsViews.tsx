@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
@@ -14,6 +14,7 @@ import type { AdminTable } from '@/mock/portal';
 
 import { AcademicsFrame } from './AcademicsFrame';
 import type { AcademicsPage } from './academicsShape';
+import { Maple } from '@/constants/maple';
 
 const HERO = require('@/assets/images/academics-hero.png') as number;
 
@@ -38,15 +39,15 @@ const isStatus = (label: string) => label === 'Status';
 /** The look of each part of the structure: its icon and colours (tile tint, icon), as the design draws them. */
 // `wide` is each stat card's share of the row, as the design sizes them (longer labels get wider cards).
 const PART: Readonly<Record<string, { icon: IconName; tint: string; ink: string; one: string; tab: IconName; wide: number }>> = {
-  campuses: { icon: 'building', tint: '#E6EFFD', ink: '#2A6AE8', one: 'Campus', tab: 'building', wide: 178 },
-  years: { icon: 'calendar', tint: '#E3F5EA', ink: '#22A55A', one: 'Academic Year', tab: 'calendar', wide: 195 },
-  terms: { icon: 'book', tint: '#F1EAFE', ink: '#8B3CF0', one: 'Term', tab: 'calendar', wide: 165 },
-  streams: { icon: 'people', tint: '#E6EFFD', ink: '#2A6AE8', one: 'Grade Level', tab: 'people', wide: 180 },
-  subjects: { icon: 'grid', tint: '#FFF3E3', ink: '#F59E0B', one: 'Subject', tab: 'grid', wide: 163 },
-  grading: { icon: 'star', tint: '#F1EAFE', ink: '#8B3CF0', one: 'Grading Scale', tab: 'chart', wide: 167 },
+  campuses: { icon: 'building', tint: Maple.blueSelected, ink: Maple.blue, one: 'Campus', tab: 'building', wide: 178 },
+  years: { icon: 'calendar', tint: Maple.successSoft, ink: Maple.successText, one: 'Academic Year', tab: 'calendar', wide: 195 },
+  terms: { icon: 'book', tint: Maple.blueSoft, ink: Maple.blue, one: 'Term', tab: 'calendar', wide: 165 },
+  streams: { icon: 'people', tint: Maple.blueSelected, ink: Maple.blue, one: 'Grade Level', tab: 'people', wide: 180 },
+  subjects: { icon: 'grid', tint: Maple.warningSoft, ink: Maple.warning, one: 'Subject', tab: 'grid', wide: 163 },
+  grading: { icon: 'star', tint: Maple.blueSoft, ink: Maple.blue, one: 'Grading Scale', tab: 'chart', wide: 167 },
   competency: { icon: 'layers', tint: '#DFF6F3', ink: '#14A39A', one: 'Competency Area', tab: 'layers', wide: 192 },
 };
-const TERMS_TILE = { icon: 'calendar' as IconName, tint: '#FFF3E3', ink: '#F59E0B' };
+const TERMS_TILE = { icon: 'calendar' as IconName, tint: Maple.warningSoft, ink: Maple.warning };
 
 function Tile({ icon, tint, ink, size, radius = 12 }: { icon: IconName; tint: string; ink: string; size: number; radius?: number }) {
   return (
@@ -142,7 +143,7 @@ function Hero() {
   return (
     <View style={styles.hero}>
       <Image source={HERO} style={styles.heroPhoto} contentFit="cover" contentPosition="right" accessibilityIgnoresInvertColors />
-      <LinearGradient colors={['#EEF4FD', 'rgba(238,244,253,0)']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.heroFade} />
+      <LinearGradient colors={[Maple.blueSoft, 'rgba(238,244,253,0)']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.heroFade} />
       <View style={styles.heroIcon}>
         <Icon name="cap" size={40} color={BLUE} />
       </View>
@@ -265,39 +266,39 @@ export function AdminAcademicsDesk({ a, act }: { a: Academics; act?: AcademicsAc
               title="Subjects & Subject Matrix"
               body="Configure subjects, codes and assign them to each grade level."
               icon="book"
-              tint="#E3EDFD"
+              tint={Maple.blueSelected}
               ink={BLUE}
-              wash="#EEF4FE"
+              wash={Maple.blueSoft}
               onOpen={() => setTab('Subjects & Matrix')}
               stats={[
-                { icon: 'layers', tint: '#E6EFFD', ink: '#2A6AE8', value: count('subjects'), label: 'Subjects' },
-                { icon: 'grid', tint: '#E6EFFD', ink: '#2A6AE8', value: a.matrices, label: 'Subject Matrices' },
+                { icon: 'layers', tint: Maple.blueSelected, ink: Maple.blue, value: count('subjects'), label: 'Subjects' },
+                { icon: 'grid', tint: Maple.blueSelected, ink: Maple.blue, value: a.matrices, label: 'Subject Matrices' },
               ]}
             />
             <Summary
               title="Grading Scales"
               body="Define grading scales and performance descriptors."
               icon="chart"
-              tint="#FFEBD2"
-              ink="#F28C0F"
-              wash="#FFF6EC"
+              tint={Maple.warningSoft}
+              ink={Maple.warning}
+              wash={Maple.warningSoft}
               onOpen={() => setTab('Grading Scales')}
               stats={[
-                { icon: 'star', tint: '#FFF3E3', ink: '#F59E0B', value: count('grading'), label: 'Grading Scales' },
-                { icon: 'check', tint: '#E3F5EA', ink: '#22A55A', value: inUse, label: 'In Use' },
+                { icon: 'star', tint: Maple.warningSoft, ink: Maple.warning, value: count('grading'), label: 'Grading Scales' },
+                { icon: 'check', tint: Maple.successSoft, ink: Maple.successText, value: inUse, label: 'In Use' },
               ]}
             />
             <Summary
               title="Competency Framework"
               body="Set competency areas, standards and learning outcomes."
               icon="layers"
-              tint="#EDE4FD"
-              ink="#7A3BE6"
-              wash="#F6F1FE"
+              tint={Maple.blueSelected}
+              ink={Maple.blue}
+              wash={Maple.blueSoft}
               onOpen={() => setTab('Competency Framework')}
               stats={[
-                { icon: 'layers', tint: '#F1EAFE', ink: '#8B3CF0', value: count('competency'), label: 'Competency Areas' },
-                { icon: 'flag', tint: '#F1EAFE', ink: '#8B3CF0', value: standards, label: 'Standards' },
+                { icon: 'layers', tint: Maple.blueSoft, ink: Maple.blue, value: count('competency'), label: 'Competency Areas' },
+                { icon: 'flag', tint: Maple.blueSoft, ink: Maple.blue, value: standards, label: 'Standards' },
               ]}
             />
           </View>
@@ -412,15 +413,15 @@ const styles = StyleSheet.create({
   flex: { flex: 1, minWidth: 0 },
   pressed: { opacity: 0.85 },
   tile: { alignItems: 'center', justifyContent: 'center' },
-  hero: { flexDirection: 'row', alignItems: 'center', gap: 20, height: 124, marginTop: 2, paddingHorizontal: 12, borderRadius: 16, overflow: 'hidden', backgroundColor: '#EEF4FD' },
+  hero: { flexDirection: 'row', alignItems: 'center', gap: 20, height: 124, marginTop: 2, paddingHorizontal: 12, borderRadius: 16, overflow: 'hidden', backgroundColor: Maple.blueSoft },
   heroPhoto: { position: 'absolute', top: 0, right: 0, bottom: 0, width: 610 },
   heroFade: { position: 'absolute', top: 0, bottom: 0, right: 470, width: 140 },
-  heroIcon: { width: 70, height: 70, borderRadius: 16, alignItems: 'center', justifyContent: 'center', backgroundColor: '#DCE8FB' },
+  heroIcon: { width: 70, height: 70, borderRadius: 16, alignItems: 'center', justifyContent: 'center', backgroundColor: Maple.blueSelected },
   title: { fontSize: 38, fontWeight: '800', color: NAVY, letterSpacing: -0.8 },
   subtitle: { marginTop: 4, fontSize: 16, color: TEXT },
-  tabCard: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', height: 50, marginTop: -2, paddingHorizontal: 2, borderRadius: 14, backgroundColor: WHITE, borderWidth: 1, borderColor: LINE, shadowColor: '#1B2B5A', shadowOpacity: 0.06, shadowRadius: 10, shadowOffset: { width: 0, height: 3 } },
+  tabCard: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', height: 50, marginTop: -2, paddingHorizontal: 2, borderRadius: 14, backgroundColor: WHITE, borderWidth: 1, borderColor: LINE, shadowColor: Maple.navy, shadowOpacity: 0.06, shadowRadius: 10, shadowOffset: { width: 0, height: 3 } },
   tab: { flexDirection: 'row', alignItems: 'center', gap: 8, height: 46, paddingHorizontal: 13, borderRadius: 10 },
-  tabOn: { backgroundColor: '#EAF1FE' },
+  tabOn: {},
   tabText: { fontSize: 14, color: NAVY },
   tabTextOn: { color: BLUE, fontWeight: '700' },
   tabLine: { position: 'absolute', left: 14, right: 14, bottom: -3, height: 3, borderRadius: 2, backgroundColor: BLUE },
@@ -434,12 +435,12 @@ const styles = StyleSheet.create({
   tableHead: { flexDirection: 'row', alignItems: 'center', gap: 14 },
   tableTitle: { fontSize: 19, fontWeight: '800', color: NAVY },
   tableSub: { marginTop: 2, fontSize: 13.5, color: TEXT },
-  addBtn: { flexDirection: 'row', alignItems: 'center', gap: 6, height: 38, paddingHorizontal: 14, borderRadius: 10, borderWidth: 1, borderColor: '#D3E0F7', backgroundColor: '#F1F6FF' },
+  addBtn: { flexDirection: 'row', alignItems: 'center', gap: 6, height: 38, paddingHorizontal: 14, borderRadius: 10, borderWidth: 1, borderColor: Maple.blueLine, backgroundColor: Maple.blueSoft },
   addText: { fontSize: 14.5, fontWeight: '700', color: BLUE },
   table: { borderRadius: 10, borderWidth: 1, borderColor: LINE, overflow: 'hidden' },
   tr: { flexDirection: 'row', alignItems: 'center', gap: 8, minHeight: 40, paddingHorizontal: 14, borderBottomWidth: 1, borderColor: LINE },
   trLast: { borderBottomWidth: 0 },
-  th: { backgroundColor: '#F2F6FD' },
+  th: { backgroundColor: Maple.blueSoft },
   thText: { fontSize: 13.5, fontWeight: '700', color: NAVY },
   td: { fontSize: 14, color: TEXT },
   tdName: { color: NAVY, fontWeight: '700' },
@@ -449,7 +450,7 @@ const styles = StyleSheet.create({
   summaryHead: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 16, paddingLeft: 14, paddingRight: 12, borderRadius: 12 },
   summaryTitle: { fontSize: 18.5, fontWeight: '800', color: NAVY, letterSpacing: -0.3 },
   summaryBody: { marginTop: 4, fontSize: 14, lineHeight: 19, color: TEXT },
-  chevron: { width: 38, height: 38, borderRadius: 19, alignItems: 'center', justifyContent: 'center', backgroundColor: WHITE, shadowColor: '#1B2B5A', shadowOpacity: 0.08, shadowRadius: 6, shadowOffset: { width: 0, height: 2 } },
+  chevron: { width: 38, height: 38, borderRadius: 19, alignItems: 'center', justifyContent: 'center', backgroundColor: WHITE, shadowColor: Maple.navy, shadowOpacity: 0.08, shadowRadius: 6, shadowOffset: { width: 0, height: 2 } },
   summaryStats: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 14, paddingTop: 18, paddingBottom: 10 },
   summaryStat: { flex: 1, minWidth: 0, flexDirection: 'row', alignItems: 'center', gap: 14 },
   summaryLine: { paddingLeft: 26, borderLeftWidth: 1, borderColor: LINE },

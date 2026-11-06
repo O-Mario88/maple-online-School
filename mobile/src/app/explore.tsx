@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -15,6 +15,8 @@ import { type CatalogueFilters, type CatalogueSort, facetCounts, filterCatalogue
 import { mockData } from '@/lib/mock';
 import type { CatalogueEntry, catalogueFacets } from '@/mock/public';
 import { LightOnly } from '@/hooks/use-theme';
+import { Maple } from '@/constants/maple';
+import { PageScroll } from '@/components/shell/PageScroll';
 
 const SORTS: readonly { value: CatalogueSort; label: string }[] = [
   { value: 'popular', label: 'Popularity' },
@@ -69,7 +71,7 @@ function Controls({ list, setList, sort, setSort }: ControlsProps) {
           const on = (v === 'List') === list;
           return (
             <Pressable key={v} style={[styles.view, on && styles.viewOn]} onPress={() => setList(v === 'List')} accessibilityRole="tab" accessibilityState={{ selected: on }}>
-              <Icon name={v === 'Grid' ? 'grid' : 'list'} size={13} color={on ? Brand.surface : '#4A5263'} />
+              <Icon name={v === 'Grid' ? 'grid' : 'list'} size={13} color={on ? Brand.surface : Maple.body} />
               <Text style={[styles.viewText, on && styles.viewTextOn]}>{v}</Text>
             </Pressable>
           );
@@ -113,7 +115,7 @@ export default function ExploreScreen() {
           <RefScale width={width}>
             <HomeNav wide tall fullWidth links={EXPLORE_LINKS} active="Explore" />
           </RefScale>
-          <ScrollView style={styles.scroll}>
+          <PageScroll style={styles.scroll}>
             <RefScale width={width}>
               <View style={styles.deskBody}>
                 <View style={styles.sidebar}>
@@ -144,7 +146,7 @@ export default function ExploreScreen() {
                 </View>
               </View>
             </RefScale>
-          </ScrollView>
+          </PageScroll>
         </SafeAreaView>
       </LightOnly>
     );
@@ -158,7 +160,7 @@ export default function ExploreScreen() {
     <LightOnly>
       <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
         <HomeNav wide={false} active="Explore" />
-        <ScrollView style={styles.scroll} contentContainerStyle={styles.phone}>
+        <PageScroll style={styles.scroll} contentContainerStyle={styles.phone}>
           <Text style={styles.titlePhone} accessibilityRole="header">
             Explore Subjects, Live Classes & Past Papers
           </Text>
@@ -188,7 +190,7 @@ export default function ExploreScreen() {
               ))}
             </View>
           )}
-        </ScrollView>
+        </PageScroll>
       </SafeAreaView>
     </LightOnly>
   );
@@ -196,38 +198,38 @@ export default function ExploreScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: Brand.surface },
-  scroll: { backgroundColor: '#FAFBFD' },
+  scroll: { backgroundColor: Maple.blueSoft },
 
   // Desktop, in the reference's pixels (body starts under the 80px bar).
   deskBody: { flexDirection: 'row', minHeight: 900 },
-  sidebar: { width: 332, paddingTop: 32, paddingLeft: 35, paddingRight: 26, paddingBottom: 40, backgroundColor: Brand.surface, borderRightWidth: 1, borderRightColor: '#EDF0F5' },
+  sidebar: { width: 332, paddingTop: 32, paddingLeft: 35, paddingRight: 26, paddingBottom: 40, backgroundColor: Brand.surface, borderRightWidth: 1, borderRightColor: Maple.disabledSurface },
   main: { width: 1204, paddingTop: 33, paddingLeft: 34, paddingRight: 42, paddingBottom: 48 },
   head: { height: 111.4 },
   title: { fontSize: 26, lineHeight: 32, fontWeight: '700', color: Brand.ink, letterSpacing: -0.3 },
-  sub: { marginTop: 12, fontSize: 16, lineHeight: 22, color: '#4A5263' },
-  count: { position: 'absolute', right: 0, top: -2, fontSize: 14, lineHeight: 18, color: '#6B7385' },
+  sub: { marginTop: 12, fontSize: 16, lineHeight: 22, color: Maple.body },
+  count: { position: 'absolute', right: 0, top: -2, fontSize: 14, lineHeight: 18, color: Maple.secondary },
   deskControls: { position: 'absolute', right: 0, top: 45 },
   grid: { flexDirection: 'row', flexWrap: 'wrap', columnGap: 26, rowGap: 20, width: DESK_COLUMNS * DESK_CARD + 3 * 26 },
   gridList: { flexDirection: 'column' },
 
   controls: { flexDirection: 'row', alignItems: 'center' },
   views: { flexDirection: 'row', gap: 5 },
-  view: { height: 36, flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 13, borderRadius: 7, backgroundColor: '#F1F3F7' },
+  view: { height: 36, flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 13, borderRadius: 7, backgroundColor: Maple.canvas },
   viewOn: { backgroundColor: Brand.blue },
-  viewText: { fontSize: 13.5, fontWeight: '500', color: '#4A5263' },
+  viewText: { fontSize: 13.5, fontWeight: '500', color: Maple.body },
   viewTextOn: { color: Brand.surface },
-  sortLabel: { marginLeft: 19, fontSize: 13.5, color: '#4A5263' },
-  sort: { width: 143, height: 42, marginLeft: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 13, borderRadius: 8, borderWidth: 1, borderColor: '#DFE4EC', backgroundColor: Brand.surface },
+  sortLabel: { marginLeft: 19, fontSize: 13.5, color: Maple.body },
+  sort: { width: 143, height: 42, marginLeft: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 13, borderRadius: 8, borderWidth: 1, borderColor: Maple.border, backgroundColor: Brand.surface },
   sortText: { fontSize: 13.5, fontWeight: '500', color: Brand.ink },
 
   // Phones and tablets.
   phone: { padding: PHONE_GAP, paddingBottom: 40 },
   titlePhone: { fontSize: 24, lineHeight: 29, fontWeight: '700', color: Brand.ink, letterSpacing: -0.3 },
-  subPhone: { marginTop: 6, fontSize: 15, lineHeight: 21, color: '#4A5263' },
+  subPhone: { marginTop: 6, fontSize: 15, lineHeight: 21, color: Maple.body },
   searchPhone: { marginTop: 14 },
   phoneBar: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 8, marginTop: 10 },
-  filtersBtn: { height: 36, flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 12, borderRadius: 7, backgroundColor: '#F1F3F7' },
-  drawer: { marginTop: 12, padding: 14, paddingTop: 0, borderRadius: 10, backgroundColor: Brand.surface, borderWidth: 1, borderColor: '#EDF0F5' },
-  countPhone: { marginTop: 12, marginBottom: 10, fontSize: 13, color: '#6B7385' },
+  filtersBtn: { height: 36, flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 12, borderRadius: 7, backgroundColor: Maple.canvas },
+  drawer: { marginTop: 12, padding: 14, paddingTop: 0, borderRadius: 10, backgroundColor: Brand.surface, borderWidth: 1, borderColor: Maple.disabledSurface },
+  countPhone: { marginTop: 12, marginBottom: 10, fontSize: 13, color: Maple.secondary },
   gridPhone: { flexDirection: 'row', flexWrap: 'wrap', gap: PHONE_GAP },
 });

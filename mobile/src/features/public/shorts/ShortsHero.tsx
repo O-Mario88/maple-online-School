@@ -1,10 +1,11 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Platform, StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
 
 import { Brand, HERO_GRADIENT } from '../palette';
+import { Maple } from '@/constants/maple';
 
 const SCRIPT_FONT = Platform.select({ web: '"Segoe Print", "Bradley Hand", cursive', default: undefined });
 
@@ -57,7 +58,7 @@ const styles = StyleSheet.create({
   promise: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   promiseText: { fontSize: 12, color: Brand.body },
   art: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', gap: 12 },
-  script: { fontSize: 22, lineHeight: 28, color: '#5B6B8C', transform: [{ rotate: '-8deg' }] },
+  script: { fontSize: 22, lineHeight: 28, color: Maple.secondary, transform: [{ rotate: '-8deg' }] },
   learner: { fontSize: 150 },
   photo: { width: 300, height: 270, borderRadius: 16, marginVertical: -24, marginRight: -24 },
 });

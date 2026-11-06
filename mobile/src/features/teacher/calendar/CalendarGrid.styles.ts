@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 
 import { BLUE, BODY, INK, LINE, MUTED } from '@/features/teacher/frame/TeacherParts';
+import { Maple } from '@/constants/maple';
 
 /** Height of one hour row in the week grid. */
 export const ROW_H = 44;
@@ -12,14 +13,14 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: LINE,
     borderRadius: 10,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     overflow: 'hidden',
   },
   headerRow: {
     flexDirection: 'row',
     borderBottomWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FAFCFF',
+    backgroundColor: Maple.blueSoft,
   },
   timeHeaderCell: {
     width: 62,
@@ -35,7 +36,7 @@ export const styles = StyleSheet.create({
     borderColor: LINE,
   },
   dayHeaderToday: {
-    backgroundColor: '#DCEAFE',
+    backgroundColor: Maple.blueSelected,
   },
   dayHeaderShort: {
     fontSize: 11,
@@ -65,7 +66,7 @@ export const styles = StyleSheet.create({
     borderRightWidth: 1,
     borderColor: LINE,
     position: 'relative',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
   },
   timeCell: {
     position: 'absolute',
@@ -86,7 +87,7 @@ export const styles = StyleSheet.create({
     right: 4,
     height: 19,
     borderRadius: 4,
-    backgroundColor: '#DC2626',
+    backgroundColor: Maple.error,
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 10,
@@ -94,7 +95,7 @@ export const styles = StyleSheet.create({
   nowBadgeText: {
     fontSize: 9,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   daysArea: {
     flex: 1,
@@ -105,7 +106,7 @@ export const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: 1,
-    backgroundColor: '#EEF2F8',
+    backgroundColor: Maple.blueSelected,
   },
   columnsRow: {
     flex: 1,
@@ -114,14 +115,14 @@ export const styles = StyleSheet.create({
   dayCol: {
     flex: 1,
     borderRightWidth: 1,
-    borderColor: '#EEF2F8',
+    borderColor: Maple.blueSelected,
     position: 'relative',
   },
   dayColToday: {
     backgroundColor: 'rgba(220, 234, 254, 0.16)',
   },
   personalCol: {
-    backgroundColor: '#F3F6FB',
+    backgroundColor: Maple.blueSoft,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -132,7 +133,7 @@ export const styles = StyleSheet.create({
   personalText: {
     fontSize: 11.5,
     fontWeight: '600',
-    color: '#475569',
+    color: Maple.body,
   },
   eventBlock: {
     position: 'absolute',
@@ -176,13 +177,13 @@ export const styles = StyleSheet.create({
     width: 7,
     height: 7,
     borderRadius: 3.5,
-    backgroundColor: '#DC2626',
+    backgroundColor: Maple.error,
     marginLeft: -3.5,
   },
   nowLine: {
     flex: 1,
     height: 1.5,
-    backgroundColor: '#EF4444',
+    backgroundColor: Maple.error,
   },
   filterBar: {
     flexDirection: 'row',
@@ -235,10 +236,10 @@ export const styles = StyleSheet.create({
     width: 210,
     paddingVertical: 4,
     borderRadius: 8,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     borderWidth: 1,
     borderColor: LINE,
-    shadowColor: '#0B1424',
+    shadowColor: Maple.navy,
     shadowOpacity: 0.12,
     shadowRadius: 12,
     shadowOffset: { width: 0, height: 4 },
@@ -248,7 +249,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 7,
   },
   tzOptionOn: {
-    backgroundColor: '#EEF4FF',
+    backgroundColor: Maple.blueSoft,
   },
   tzOptionText: {
     fontSize: 11.5,
@@ -262,7 +263,7 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: LINE,
     borderRadius: 10,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     padding: 12,
     gap: 10,
   },
@@ -285,7 +286,7 @@ export const styles = StyleSheet.create({
     padding: 5,
     gap: 3,
     borderRightWidth: 1,
-    borderColor: '#EEF2F8',
+    borderColor: Maple.blueSelected,
   },
   monthCellNum: {
     fontSize: 10.5,
@@ -341,7 +342,7 @@ export const styles = StyleSheet.create({
     color: INK,
   },
   stripNumOn: {
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   phoneTimeline: {
     flexDirection: 'row',
@@ -373,7 +374,7 @@ export const styles = StyleSheet.create({
     right: 4,
     height: 19,
     borderRadius: 4,
-    backgroundColor: '#DC2626',
+    backgroundColor: Maple.error,
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 10,
@@ -387,7 +388,7 @@ export const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: 1,
-    backgroundColor: '#EEF2F8',
+    backgroundColor: Maple.blueSelected,
   },
   phoneEventCard: {
     position: 'absolute',
@@ -429,12 +430,12 @@ export const styles = StyleSheet.create({
     width: 7,
     height: 7,
     borderRadius: 3.5,
-    backgroundColor: '#DC2626',
+    backgroundColor: Maple.error,
   },
   personalPhoneCard: {
     padding: 24,
     borderRadius: 10,
-    backgroundColor: '#F3F6FB',
+    backgroundColor: Maple.blueSoft,
     alignItems: 'center',
     gap: 6,
     marginVertical: 12,

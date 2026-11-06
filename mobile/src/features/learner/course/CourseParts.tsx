@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
@@ -7,20 +7,21 @@ import { DomainChip } from '@/features/learner/cbc/CbcParts';
 import { Bar, panel } from '@/features/learner/dashboard/DashParts';
 import { toast } from '@/lib/toast';
 import type { MockData } from '@/mock';
+import { Maple } from '@/constants/maple';
 
 export type Course = MockData['learner']['courseOverview'];
 type Module = Course['modules'][number];
 type Lesson = Course['current']['lessons'][number];
 
-const INK = '#0B1424';
-const BODY = '#4A5263';
-const BLUE = '#1463F3';
+const INK = Maple.navy;
+const BODY = Maple.body;
+const BLUE = Maple.blue;
 export { panel };
 
 export function Tick({ size = 22 }: { size?: number }) {
   return (
-    <View style={{ width: size, height: size, borderRadius: size / 2, backgroundColor: '#16A34A', alignItems: 'center', justifyContent: 'center' }}>
-      <Icon name="check" size={size * 0.62} color="#FFFFFF" />
+    <View style={{ width: size, height: size, borderRadius: size / 2, backgroundColor: Maple.successText, alignItems: 'center', justifyContent: 'center' }}>
+      <Icon name="check" size={size * 0.62} color={Maple.surface} />
     </View>
   );
 }
@@ -39,7 +40,7 @@ export function ModuleCard({ m, on, saved, onPress, onSave, phone = false }: { m
         </Text>
         <View style={styles.mBarRow}>
           <View style={styles.flex}>
-            <Bar value={m.progress} color={done ? '#14B8A6' : BLUE} track="#E8ECF2" height={5} />
+            <Bar value={m.progress} color={done ? '#14B8A6' : BLUE} track={Maple.disabledSurface} height={5} />
           </View>
           <Text style={styles.mPct}>{`${Math.round(m.progress * 100)}%`}</Text>
         </View>
@@ -49,7 +50,7 @@ export function ModuleCard({ m, on, saved, onPress, onSave, phone = false }: { m
         <Tick size={20} />
       ) : (
         <Pressable style={[styles.dl, saved && styles.dlOn]} onPress={onSave} accessibilityRole="button" accessibilityLabel={saved ? `Module ${m.n} saved for offline` : `Download module ${m.n} for offline`} hitSlop={6}>
-          <Icon name={saved ? 'check' : 'download'} size={16} color={saved ? '#FFFFFF' : BLUE} />
+          <Icon name={saved ? 'check' : 'download'} size={16} color={saved ? Maple.surface : BLUE} />
         </Pressable>
       )}
       <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={`Open module ${m.n}`} hitSlop={6}>
@@ -76,7 +77,7 @@ export function LessonRow({ l }: { l: Lesson }) {
       {current ? (
         <Pressable style={styles.cont} accessibilityRole="button" onPress={() => router.push('/learn/lesson')}>
           <Text style={styles.contText}>Continue</Text>
-          <Icon name="arrowRight" size={15} color="#FFFFFF" />
+          <Icon name="arrowRight" size={15} color={Maple.surface} />
         </Pressable>
       ) : null}
       {l.status === 'todo' ? <View style={styles.todo} /> : null}
@@ -87,7 +88,7 @@ export function LessonRow({ l }: { l: Lesson }) {
 /** A thick ring showing a share (drawn with borders; good to the nearest quarter). */
 export function Ring({ value, size = 92 }: { value: number; size?: number }) {
   const q = Math.round(value * 4);
-  const c = (i: number) => (i < q ? BLUE : '#E1E9F6');
+  const c = (i: number) => (i < q ? BLUE : Maple.blueSelected);
   return (
     <View style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }}>
       <View style={{ position: 'absolute', width: size, height: size, borderRadius: size / 2, borderWidth: 9, borderTopColor: c(0), borderRightColor: c(1), borderBottomColor: c(2), borderLeftColor: c(3), transform: [{ rotate: '45deg' }] }} />
@@ -101,7 +102,7 @@ export function ProgressCard({ c }: { c: Course }) {
   const rows = [
     { dot: '#14B8A6', text: `${b.completed} lessons completed` },
     { dot: BLUE, text: `${b.inProgress} in progress` },
-    { dot: '#C9D2E0', text: `${b.notStarted} not started` },
+    { dot: Maple.borderStrong, text: `${b.notStarted} not started` },
   ];
   return (
     <View style={[styles.side, styles.progress]}>
@@ -193,9 +194,9 @@ export function ResourcesCard({ c }: { c: Course }) {
 const styles = StyleSheet.create({
   flex: { flex: 1 },
   gap8: { gap: 10 },
-  module: { height: 78, flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 12, ...panel, borderRadius: 10, borderWidth: 1, borderColor: '#EDF0F5' },
+  module: { height: 78, flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 12, ...panel, borderRadius: 10, borderWidth: 1, borderColor: Maple.disabledSurface },
   moduleP: { height: 66, paddingHorizontal: 10 },
-  moduleOn: { borderWidth: 2, borderColor: '#4C8DF6', backgroundColor: '#F4F8FF' },
+  moduleOn: { borderWidth: 2, borderColor: Maple.blue, backgroundColor: Maple.blueSoft },
   mOpen: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 12 },
   mIcon: { width: 50, height: 50, borderRadius: 25 },
   mIconP: { width: 42, height: 42, borderRadius: 21 },
@@ -204,20 +205,20 @@ const styles = StyleSheet.create({
   mTitleLong: { fontSize: 11.5 },
   mBarRow: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 6 },
   mPct: { width: 32, fontSize: 11, color: INK, textAlign: 'right' },
-  dl: { width: 32, height: 32, borderRadius: 16, borderWidth: 1, borderColor: '#D5E2F7', alignItems: 'center', justifyContent: 'center', backgroundColor: '#FFFFFF' },
+  dl: { width: 32, height: 32, borderRadius: 16, borderWidth: 1, borderColor: Maple.blueSelected, alignItems: 'center', justifyContent: 'center', backgroundColor: Maple.surface },
   dlOn: { backgroundColor: BLUE, borderColor: BLUE },
-  lesson: { height: 68, flexDirection: 'row', alignItems: 'center', gap: 13, paddingHorizontal: 7, borderRadius: 8, borderWidth: 1, borderColor: '#EDF0F5', backgroundColor: '#FFFFFF' },
-  lessonOn: { borderWidth: 2, borderColor: '#4C8DF6', backgroundColor: '#F4F8FF' },
+  lesson: { height: 68, flexDirection: 'row', alignItems: 'center', gap: 13, paddingHorizontal: 7, borderRadius: 8, borderWidth: 1, borderColor: Maple.disabledSurface, backgroundColor: Maple.surface },
+  lessonOn: { borderWidth: 2, borderColor: Maple.blue, backgroundColor: Maple.blueSoft },
   thumb: { width: 76, height: 54, borderRadius: 4 },
   lTitle: { fontSize: 13.5, fontWeight: '500', color: INK },
   lMeta: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 5 },
   lMetaText: { fontSize: 12, color: BODY },
-  cont: { width: 118, height: 38, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, borderRadius: 6, backgroundColor: '#0B6BFF' },
-  contText: { fontSize: 13.5, fontWeight: '500', color: '#FFFFFF' },
-  todo: { width: 18, height: 18, borderRadius: 9, backgroundColor: '#E3E8F0', marginRight: 16 },
+  cont: { width: 118, height: 38, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, borderRadius: 6, backgroundColor: Maple.blue },
+  contText: { fontSize: 13.5, fontWeight: '500', color: Maple.surface },
+  todo: { width: 18, height: 18, borderRadius: 9, backgroundColor: Maple.blueSelected, marginRight: 16 },
   ringText: { fontSize: 18, fontWeight: '700', color: INK },
   side: { padding: 16, paddingTop: 18, ...panel, borderRadius: 10 },
-  progress: { backgroundColor: '#F2F7FE' },
+  progress: { backgroundColor: Maple.blueSoft },
   sideTitle: { fontSize: 15.5, fontWeight: '700', color: INK },
   progressRow: { flexDirection: 'row', alignItems: 'center', gap: 22, marginTop: 10 },
   legend: { flexDirection: 'row', alignItems: 'center', gap: 8 },
@@ -228,8 +229,8 @@ const styles = StyleSheet.create({
   small: { marginTop: 3, fontSize: 11, color: BODY },
   faces: { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 14 },
   facesImg: { width: 196, height: 37 },
-  moreFaces: { width: 30, height: 30, borderRadius: 15, backgroundColor: '#EAF1FE', textAlign: 'center', lineHeight: 30, fontSize: 11, color: BLUE, overflow: 'hidden' },
-  join: { height: 38, marginTop: 12, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, borderRadius: 7, backgroundColor: '#EAF1FE' },
+  moreFaces: { width: 30, height: 30, borderRadius: 15, backgroundColor: Maple.blueSoft, textAlign: 'center', lineHeight: 30, fontSize: 11, color: BLUE, overflow: 'hidden' },
+  join: { height: 38, marginTop: 12, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, borderRadius: 7, backgroundColor: Maple.blueSoft },
   joinText: { fontSize: 12.5, fontWeight: '500', color: BLUE },
   seeAll: { fontSize: 11.5, color: BLUE },
   badges: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 14 },
@@ -239,7 +240,7 @@ const styles = StyleSheet.create({
   badgeDetail: { marginTop: 3, fontSize: 10.5, color: BODY, textAlign: 'center' },
   resources: { padding: 16, ...panel, borderRadius: 10 },
   files: { flexDirection: 'row', gap: 10, marginTop: 14 },
-  file: { flex: 1, height: 78, padding: 10, borderRadius: 6, borderWidth: 1, borderColor: '#EDF0F5' },
+  file: { flex: 1, height: 78, padding: 10, borderRadius: 6, borderWidth: 1, borderColor: Maple.disabledSurface },
   fileTop: { flexDirection: 'row', gap: 8 },
   fileIcon: { width: 22, height: 22 },
   fileTitle: { fontSize: 10.5, fontWeight: '500', color: INK },

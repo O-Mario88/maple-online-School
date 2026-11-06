@@ -9,6 +9,7 @@ import type { CalendarEventItem, CategoryMeta, TeacherCalendar } from '@/mock/te
 
 import type { CalendarController } from './useTeacherCalendar';
 import { ROW_H, styles } from './CalendarGrid.styles';
+import { Maple } from '@/constants/maple';
 
 const START_HOUR = 8;
 
@@ -71,7 +72,7 @@ export function DesktopWeekGrid({ c, ctl }: { c: TeacherCalendar; ctl: CalendarC
                 return (
                   <View key={d.index} style={[styles.dayCol, styles.personalCol]}>
                     <View style={styles.personalBadge}>
-                      <Icon name="coffee" size={20} color="#64748B" />
+                      <Icon name="coffee" size={20} color={Maple.secondary} />
                       <Text style={styles.personalText}>Personal Time</Text>
                     </View>
                   </View>
@@ -103,7 +104,7 @@ export function DesktopWeekGrid({ c, ctl }: { c: TeacherCalendar; ctl: CalendarC
                           {e.timeLabel}
                         </Text>
                         <View style={styles.eventTitleRow}>
-                          {e.bolt ? <Icon name="bolt" size={11} color="#16A34A" /> : null}
+                          {e.bolt ? <Icon name="bolt" size={11} color={Maple.successText} /> : null}
                           <Text style={[styles.eventTitle, { color: cat.titleColor }]} numberOfLines={1}>
                             {e.title}
                           </Text>
@@ -215,8 +216,8 @@ export function CalendarFilterBar({ c, ctl }: { c: TeacherCalendar; ctl: Calenda
               accessibilityRole="checkbox"
               accessibilityState={{ checked }}
               accessibilityLabel={cat.label}>
-              <View style={[styles.checkbox, { backgroundColor: checked ? cat.checkBg : '#FFFFFF', borderColor: cat.checkBg }]}>
-                {checked ? <Icon name="check" size={11} color="#FFFFFF" /> : null}
+              <View style={[styles.checkbox, { backgroundColor: checked ? cat.checkBg : Maple.surface, borderColor: cat.checkBg }]}>
+                {checked ? <Icon name="check" size={11} color={Maple.surface} /> : null}
               </View>
               <Text style={styles.filterLabel}>{cat.label}</Text>
             </Pressable>
@@ -304,7 +305,7 @@ export function PhoneDayTimeline({
   if (day?.personal) {
     return (
       <View style={styles.personalPhoneCard}>
-        <Icon name="coffee" size={24} color="#64748B" />
+        <Icon name="coffee" size={24} color={Maple.secondary} />
         <Text style={styles.personalPhoneTitle}>Personal Time (Sunday)</Text>
         <Text style={styles.personalPhoneSub}>No school classes or tutoring sessions scheduled today.</Text>
       </View>
@@ -351,7 +352,7 @@ export function PhoneDayTimeline({
               accessibilityRole="button"
               accessibilityLabel={`${e.phoneTitle ?? e.title}, ${e.phoneTime ?? e.timeLabel}`}>
               <View style={[styles.phoneEventIcon, { backgroundColor: e.bolt ? 'transparent' : cat.iconBg }]}>
-                <Icon name={e.icon} size={e.bolt ? 16 : 12} color={e.bolt ? '#16A34A' : '#FFFFFF'} />
+                <Icon name={e.icon} size={e.bolt ? 16 : 12} color={e.bolt ? Maple.successText : Maple.surface} />
               </View>
               <View style={styles.flex}>
                 <Text style={[styles.phoneEventTitle, { color: cat.titleColor }]} numberOfLines={1}>

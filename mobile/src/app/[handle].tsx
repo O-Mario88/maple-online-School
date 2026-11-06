@@ -13,6 +13,7 @@ import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { parseHandle } from '@/lib/booking';
 import { LightOnly } from '@/hooks/use-theme';
 import { mockData } from '@/lib/mock';
+import { PageScroll } from '@/components/shell/PageScroll';
 
 const MAX_WIDTH = 1440;
 const BOOKING = 420;
@@ -70,7 +71,7 @@ export default function TeacherStorefrontScreen() {
     <LightOnly>
     <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
       <HomeNav wide={wide} active="For Teachers" />
-      <ScrollView ref={scroll} contentContainerStyle={styles.page}>
+      <PageScroll ref={scroll} contentContainerStyle={styles.page}>
         <View style={styles.inner}>
           <TeacherHeader t={t} wide={wide} />
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.tabs}>
@@ -109,7 +110,7 @@ export default function TeacherStorefrontScreen() {
             <ReviewsRow t={t} />
           </View>
         </View>
-      </ScrollView>
+      </PageScroll>
     </SafeAreaView>
     </LightOnly>
   );

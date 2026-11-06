@@ -4,10 +4,11 @@ import { StyleSheet, View } from 'react-native';
 import { HeroActions, HeroCopy } from './home/HeroCopy';
 import { HeroPhotoDesktop, HeroPhotoPhone } from './home/HeroPhoto';
 import type { Landing } from './home/types';
+import { Maple } from '@/constants/maple';
 
 /** The hero's height in the reference (y 57 to 572). */
 export const HERO_HEIGHT = 515;
-const HERO_SKY = ['#FFFFFF', '#F8FAFE', '#DCEEFA'] as const;
+const HERO_SKY = [Maple.surface, Maple.blueSoft, Maple.blueSelected] as const;
 
 /** Desktop hero, laid out in the reference's pixels (render it inside RefScale). */
 export function HomeHeroDesktop({ landing }: { landing: Landing }) {

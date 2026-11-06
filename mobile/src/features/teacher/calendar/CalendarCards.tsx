@@ -10,6 +10,7 @@ import type { SyncProvider, TeacherCalendar } from '@/mock/teacher-calendar';
 
 import type { CalendarController } from './useTeacherCalendar';
 import { styles } from './CalendarCards.styles';
+import { Maple } from '@/constants/maple';
 
 /** Custom brand mark for Google, Outlook, and Apple Calendar rows. */
 function ProviderLogo({ id }: { id: SyncProvider['id'] }) {
@@ -25,7 +26,7 @@ function ProviderLogo({ id }: { id: SyncProvider['id'] }) {
   if (id === 'outlook') {
     return (
       <View style={styles.outlookLogo}>
-        <Icon name="calendar" size={13} color="#FFFFFF" />
+        <Icon name="calendar" size={13} color={Maple.surface} />
       </View>
     );
   }
@@ -55,7 +56,7 @@ export function PillSwitch({
       style={[
         styles.switchTrack,
         large && styles.switchTrackLg,
-        { backgroundColor: value ? color : '#CBD5E1' },
+        { backgroundColor: value ? color : Maple.borderStrong },
       ]}
       onPress={() => onChange(!value)}
       accessibilityRole="switch"
@@ -88,7 +89,7 @@ export function SidebarAvailableCard({ c, ctl }: { c: TeacherCalendar; ctl: Cale
           Show yourself as available for 15-minute instant help sessions.
         </Text>
         <View style={styles.nextSlotBox}>
-          <Icon name="bolt" size={16} color="#F59E0B" />
+          <Icon name="bolt" size={16} color={Maple.warning} />
           <View style={styles.flex}>
             <Text style={styles.nextSlotLabel}>Next available slot:</Text>
             <Text style={styles.nextSlotTime}>
@@ -173,7 +174,7 @@ export function AvailabilitySettingsCard({ c, ctl }: { c: TeacherCalendar; ctl: 
       <View style={styles.availToggleBox}>
         <View style={styles.availToggleHead}>
           <View style={styles.greenCheckCircle}>
-            <Icon name="check" size={12} color="#FFFFFF" />
+            <Icon name="check" size={12} color={Maple.surface} />
           </View>
           <Text style={styles.availToggleTitle}>Available Now for 15-Min Instant Help</Text>
           <PillSwitch
@@ -232,10 +233,10 @@ export function AvailabilitySettingsCard({ c, ctl }: { c: TeacherCalendar; ctl: 
 export function UpcomingEventsCard({ c }: { c: TeacherCalendar }) {
   const go = useTeacherGo();
   const catColors: Record<string, { bg: string; fg: string }> = {
-    school: { bg: '#DCEAFE', fg: '#1D63ED' },
-    tutoring: { bg: '#FEF0C7', fg: '#D97706' },
-    external: { bg: '#E2E8F0', fg: '#475569' },
-    instant: { bg: '#DCFCE7', fg: '#1F9D55' },
+    school: { bg: Maple.blueSelected, fg: Maple.blue },
+    tutoring: { bg: Maple.warningSoft, fg: Maple.warning },
+    external: { bg: Maple.border, fg: Maple.body },
+    instant: { bg: Maple.successSoft, fg: Maple.successText },
   };
   return (
     <Panel style={styles.bottomCard}>
@@ -285,7 +286,7 @@ export function PhoneInstantHelpCard({ ctl }: { ctl: CalendarController }) {
   return (
     <View style={styles.phoneInstantCard}>
       <View style={styles.phoneInstantTop}>
-        <Icon name="bolt" size={20} color="#16A34A" />
+        <Icon name="bolt" size={20} color={Maple.successText} />
         <View style={styles.flex}>
           <Text style={styles.phoneInstantTitle}>Available Now for Instant Help</Text>
           <Text style={styles.phoneInstantSub}>Available for 15-minute sessions</Text>
@@ -404,7 +405,7 @@ export function AddEventPanel({ c, ctl }: { c: TeacherCalendar; ctl: CalendarCon
 
       {ctl.collision ? (
         <View style={styles.clashBanner}>
-          <Icon name="alert" size={16} color="#B45309" />
+          <Icon name="alert" size={16} color={Maple.warningText} />
           <View style={styles.flex}>
             <Text style={styles.clashTitle}>
               {`Collision detected: ${ctl.collision.title} (${ctl.collision.timeLabel})`}
@@ -418,7 +419,7 @@ export function AddEventPanel({ c, ctl }: { c: TeacherCalendar; ctl: CalendarCon
                   onPress={() => ctl.addEventAt(slot.day, slot.start)}
                   accessibilityRole="button"
                   accessibilityLabel={`Schedule at ${slot.label}`}>
-                  <Icon name="check" size={12} color="#166534" />
+                  <Icon name="check" size={12} color={Maple.successText} />
                   <Text style={styles.freeSlotText}>{slot.label}</Text>
                 </Pressable>
               ))}
@@ -427,7 +428,7 @@ export function AddEventPanel({ c, ctl }: { c: TeacherCalendar; ctl: CalendarCon
         </View>
       ) : (
         <View style={styles.clearBanner}>
-          <Icon name="check" size={15} color="#166534" />
+          <Icon name="check" size={15} color={Maple.successText} />
           <Text style={styles.clearText}>
             {`No collision on ${c.days[ctl.newDay]?.short} ${c.days[ctl.newDay]?.label} at ${formatHourLabel(ctl.newStart)}.`}
           </Text>

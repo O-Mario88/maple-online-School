@@ -1,6 +1,6 @@
 import Head from 'expo-router/head';
 import { useMemo } from 'react';
-import { ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { StyleSheet, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { RefScale } from '@/features/public/home/RefScale';
@@ -11,6 +11,8 @@ import { PricingDetails, PricingTop, PricingTopPhone } from '@/features/public/s
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { LightOnly } from '@/hooks/use-theme';
 import { mockData } from '@/lib/mock';
+import { Maple } from '@/constants/maple';
+import { PageScroll } from '@/components/shell/PageScroll';
 
 /** From this width the page is the reference itself, scaled to fit. */
 const DESKTOP_MIN = 1200;
@@ -36,12 +38,12 @@ export default function InstitutionPricingScreen() {
         {head}
         <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
           <PhoneBar />
-          <ScrollView contentContainerStyle={styles.page}>
+          <PageScroll contentContainerStyle={styles.page}>
             <View style={styles.phone}>
               <PricingTopPhone d={d} />
               <PricingDetails d={d} phone />
             </View>
-          </ScrollView>
+          </PageScroll>
         </SafeAreaView>
       </LightOnly>
     );
@@ -54,12 +56,12 @@ export default function InstitutionPricingScreen() {
         <RefScale width={width}>
           <HomeNav wide tall fullWidth links={PAPER_LINKS} active="For Schools" searchPlaceholder="Search..." />
         </RefScale>
-        <ScrollView style={styles.page}>
+        <PageScroll style={styles.page}>
           <RefScale width={width}>
             <PricingTop d={d} />
             <PricingDetails d={d} />
           </RefScale>
-        </ScrollView>
+        </PageScroll>
       </SafeAreaView>
     </LightOnly>
   );
@@ -67,6 +69,6 @@ export default function InstitutionPricingScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: Brand.surface },
-  page: { backgroundColor: '#F7F9FE', paddingBottom: 40 },
+  page: { backgroundColor: Maple.blueSoft, paddingBottom: 40 },
   phone: { width: '100%', maxWidth: PHONE_MAX, alignSelf: 'center', gap: 18, padding: 16 },
 });

@@ -1,6 +1,6 @@
 import { type Href, router } from 'expo-router';
 import { useMemo } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Icon } from '@/components/icon';
@@ -13,21 +13,12 @@ import { HomeNav } from '../HomeNav';
 import { Brand } from '../palette';
 import { PhoneBar } from '../PhoneBar';
 import { InfoSection } from './InfoBlocks';
+import { PageScroll } from '@/components/shell/PageScroll';
 
 type PageKey = keyof MockData['publicPages']['infoPages'];
 
 const DESKTOP_MIN = 900;
 const COLUMN = 1120;
-const FOOTER: readonly { label: string; href: string }[] = [
-  { label: 'Pricing', href: '/pricing' },
-  { label: 'Curriculums', href: '/curriculums' },
-  { label: 'For Teachers', href: '/teachers' },
-  { label: 'For Schools', href: '/schools' },
-  { label: 'About', href: '/about' },
-  { label: 'Help', href: '/help' },
-  { label: 'Terms of Service', href: '/terms' },
-  { label: 'Privacy Policy', href: '/privacy' },
-];
 
 const go = (href: string) => router.push(href as Href);
 
@@ -44,7 +35,7 @@ export function InfoPage({ page }: { page: PageKey }) {
     <LightOnly>
       <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
         {wide ? <HomeNav wide active={p.nav} /> : <PhoneBar />}
-        <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
+        <PageScroll style={styles.scroll} contentContainerStyle={styles.content}>
           <View style={[styles.column, { width: Math.min(width, COLUMN) }, !wide && styles.columnPhone]}>
             <View style={[styles.hero, !wide && styles.heroPhone]}>
               <View style={styles.eyebrow}>
@@ -73,16 +64,8 @@ export function InfoPage({ page }: { page: PageKey }) {
             {p.blocks.map((b, i) => (
               <InfoSection key={`${b.kind}-${i}`} block={b} wide={wide} plans={mock.publicPages.pricingPlans} />
             ))}
-            <View style={styles.footer} accessibilityRole="menu">
-              {FOOTER.map((f) => (
-                <Pressable key={f.href} onPress={() => go(f.href)} accessibilityRole="link" hitSlop={6}>
-                  <Text style={styles.footLink}>{f.label}</Text>
-                </Pressable>
-              ))}
-            </View>
-            <Text style={styles.copyright}>© 2026 Maple Global Online School</Text>
           </View>
-        </ScrollView>
+        </PageScroll>
       </SafeAreaView>
     </LightOnly>
   );
@@ -106,7 +89,4 @@ const styles = StyleSheet.create({
   primaryText: { fontSize: 15, fontWeight: '700', color: Brand.surface },
   secondary: { height: 46, paddingHorizontal: 22, alignItems: 'center', justifyContent: 'center', borderRadius: 10, borderWidth: 1, borderColor: Brand.line, backgroundColor: Brand.surface },
   secondaryText: { fontSize: 15, fontWeight: '600', color: Brand.ink },
-  footer: { flexDirection: 'row', flexWrap: 'wrap', gap: 18, paddingTop: 20, borderTopWidth: 1, borderTopColor: Brand.line },
-  footLink: { fontSize: 13.5, fontWeight: '600', color: Brand.body },
-  copyright: { fontSize: 12, color: Brand.muted },
 });
