@@ -27,6 +27,7 @@ import (
 	"github.com/O-Mario88/maple-online-School/api/internal/library"
 	"github.com/O-Mario88/maple-online-School/api/internal/livesessions"
 	"github.com/O-Mario88/maple-online-School/api/internal/messages"
+	"github.com/O-Mario88/maple-online-School/api/internal/network"
 	"github.com/O-Mario88/maple-online-School/api/internal/platform/postgres"
 	"github.com/O-Mario88/maple-online-School/api/internal/reports"
 	"github.com/O-Mario88/maple-online-School/api/internal/school"
@@ -81,13 +82,14 @@ func run() error {
 	watch := insights.NewHandler(insights.NewPostgresStore(pool), auth.RequireUser)
 	talk := messages.NewHandler(messages.NewPostgresStore(pool), auth.RequireUser)
 	compass := careers.NewHandler(careers.NewPostgresStore(pool), auth.RequireUser)
+	directory := network.NewHandler(network.NewPostgresStore(pool), auth.RequireUser)
 	join := signup.NewHandler(signup.NewPostgresStore(pool), signup.Signer{Key: cfg.JWTSigningKey}, mailer(cfg.SMTP), cfg.AppURL)
 
 	handler, err := server.NewRouter(server.Options{
 		Pinger:            pool,
 		CORSOrigins:       cfg.CORSOrigins,
 		TrustProxyHeaders: cfg.TrustProxyHeaders,
-		Modules:           []func(chi.Router){auth.Mount, work.Mount, classes.Mount, cards.Mount, week.Mount, schools.Mount, catalog.Mount, plans.Mount, live.Mount, join.Mount, shelf.Mount, fees.Mount, households.Mount, notes.Mount, watch.Mount, talk.Mount, compass.Mount},
+		Modules:           []func(chi.Router){auth.Mount, work.Mount, classes.Mount, cards.Mount, week.Mount, schools.Mount, catalog.Mount, plans.Mount, live.Mount, join.Mount, shelf.Mount, fees.Mount, households.Mount, notes.Mount, watch.Mount, talk.Mount, compass.Mount, directory.Mount},
 	})
 	if err != nil {
 		return err

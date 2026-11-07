@@ -5,8 +5,8 @@ import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-nati
 import { Icon } from '@/components/icon';
 import { L } from '@/features/learner/frame/LightFrame';
 import type { IconName } from '@/lib/icons';
-import type { SchoolCard } from '@/mock/school-network';
 
+import type { ExamCentre, SchoolCard } from './networkData';
 import type { SchoolPrefs, Stay } from './schoolNetwork';
 import { Maple } from '@/constants/maple';
 
@@ -15,6 +15,42 @@ export const BRAND_SOFT = Maple.blueSoft;
 const STAR = Maple.warning;
 
 export const ugx = (n: number) => `UGX ${n.toLocaleString('en-US')}`;
+
+/** "4.8 (286 reviews)", or a plain note until a school has reviews. */
+export const ratingText = (c: SchoolCard) => (c.rating === null ? 'No reviews yet' : `${c.rating.toFixed(1)} (${c.reviews} reviews)`);
+
+/** What a verified exam centre offers external candidates. */
+export function examNote(e: ExamCentre): string {
+  if (!e.external) return 'Registers its own learners only';
+  const parts = ['Accepts external candidates', e.deadline ? `register by ${e.deadline}` : 'ask the school when to register', e.feeUGX !== null ? ugx(e.feeUGX) : 'fee on request'];
+  return parts.join(' · ');
+}
+
+/** The school's crest, or its initials on a tile until it uploads one. */
+export function Crest({ c, size = 40 }: { c: SchoolCard; size?: number }) {
+  if (c.crest) return <Image decorative source={c.crest} style={{ width: size, height: size }} contentFit="contain" />;
+  const initials = c.name
+    .split(/\s+/)
+    .filter((w) => /^[A-Za-z]/.test(w))
+    .slice(0, 2)
+    .map((w) => w[0].toUpperCase())
+    .join('');
+  return (
+    <View style={[s.initials, { width: size, height: size, borderRadius: size / 4 }]} accessibilityLabel={`${c.name} crest`}>
+      <Text style={[s.initialsText, { fontSize: size * 0.38 }]}>{initials}</Text>
+    </View>
+  );
+}
+
+/** The campus photo, or a soft tile with a building until the school uploads one. */
+export function Campus({ c, style }: { c: SchoolCard; style: object[] }) {
+  if (c.photo) return <Image source={c.photo} style={style} contentFit="cover" accessibilityLabel={`${c.name} campus`} />;
+  return (
+    <View style={[...style, s.campusBlank]} accessibilityLabel={`${c.name} campus photo not added yet`}>
+      <Icon name="building" size={34} color={BRAND_BLUE} />
+    </View>
+  );
+}
 
 export function Tag({ text }: { text: string }) {
   return <Text style={s.tag}>{text}</Text>;
@@ -48,12 +84,12 @@ export function SchoolCardView({ c, saved, onSave, onView, onApply, reason, phon
   return (
     <View style={[s.card, phone && s.cardP]}>
       <View>
-        <Image source={c.photo} style={[s.photo, phone && s.photoP]} contentFit="cover" accessibilityLabel={`${c.name} campus`} />
+        <Campus c={c} style={[s.photo, phone ? s.photoP : {}]} />
         <Pressable style={s.heart} onPress={onSave} hitSlop={8} accessibilityRole="button" accessibilityState={{ selected: saved }} accessibilityLabel={saved ? `Remove ${c.name} from saved` : `Save ${c.name}`}>
           <Icon name={saved ? 'heartFill' : 'heart'} size={18} color={saved ? Maple.error : L.ink} />
         </Pressable>
         <View style={s.crest}>
-          <Image decorative source={c.crest} style={s.crestImg} contentFit="contain" />
+          <Crest c={c} />
         </View>
       </View>
       <View style={s.cardBody}>
@@ -66,12 +102,18 @@ export function SchoolCardView({ c, saved, onSave, onView, onApply, reason, phon
         <View style={s.placeRow}>
           <Icon name="pin" size={13} color={L.body} />
           <Text style={s.place}>{c.mode === 'Online' ? 'Online' : `${c.town}, Uganda`}</Text>
-          {c.mode === 'Online' ? null : <Text style={s.km}>{`${c.km} km`}</Text>}
+          {c.mode === 'Online' || c.km === null ? null : <Text style={s.km}>{`${c.km} km`}</Text>}
         </View>
         <View style={s.placeRow}>
-          <Icon name="star" size={14} color={STAR} />
-          <Text style={s.rating}>{c.rating.toFixed(1)}</Text>
-          <Text style={s.place}>{`(${c.reviews} reviews)`}</Text>
+          <Icon name="star" size={14} color={c.rating === null ? L.muted : STAR} />
+          {c.rating === null ? (
+            <Text style={s.place}>No reviews yet</Text>
+          ) : (
+            <>
+              <Text style={s.rating}>{c.rating.toFixed(1)}</Text>
+              <Text style={s.place}>{`(${c.reviews} reviews)`}</Text>
+            </>
+          )}
         </View>
         <View style={s.tags}>
           {c.tags.map((t) => (
@@ -90,9 +132,9 @@ export function SchoolCardView({ c, saved, onSave, onView, onApply, reason, phon
           </View>
         ) : null}
         <View style={s.stats}>
-          <Stat icon="chart" value={`${c.passRate}%`} label={c.passLabel} />
+          <Stat icon="chart" value={c.passRate === null ? '—' : `${c.passRate}%`} label={c.passLabel} />
           <Stat icon="people" value={c.learners.toLocaleString('en-US')} label="Learners" />
-          <Stat icon="building" value={`Est. ${c.est}`} label="" />
+          {c.est === null ? null : <Stat icon="building" value={`Est. ${c.est}`} label="" />}
         </View>
         <View style={s.buttons}>
           <Pressable style={s.view} onPress={onView} accessibilityRole="button" accessibilityLabel={`View ${c.name} profile`}>
@@ -140,8 +182,8 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 export function ProfileSheet({ c, saved, onSave, onApply, onClose }: { c: SchoolCard; saved: boolean; onSave: () => void; onApply: () => void; onClose: () => void }) {
   return (
     <Sheet title={c.name} onClose={onClose}>
-      <Image decorative source={c.photo} style={s.profilePhoto} contentFit="cover" />
-      <Text style={s.body}>{`${c.mode === 'Online' ? 'Online school' : `${c.town}, ${c.district}`} · ${c.stay} · ${c.mode} · ${c.rating.toFixed(1)} (${c.reviews} reviews)`}</Text>
+      <Campus c={c} style={[s.profilePhoto]} />
+      <Text style={s.body}>{`${c.mode === 'Online' ? 'Online school' : `${c.town}, ${c.district}`} · ${c.stay} · ${c.mode} · ${ratingText(c)}`}</Text>
       <Text style={s.body}>{c.blurb}</Text>
       <Section title="Programs and levels">
         <View style={s.tags}>
@@ -151,26 +193,26 @@ export function ProfileSheet({ c, saved, onSave, onApply, onClose }: { c: School
         </View>
       </Section>
       <Section title="Results">
-        <Text style={s.body}>{`${c.passRate}% ${c.passLabel}`}</Text>
+        <Text style={s.body}>{c.passRate === null ? 'This school hasn’t published a pass rate yet.' : `${c.passRate}% ${c.passLabel}`}</Text>
         <Text style={s.note}>{c.passSource}</Text>
       </Section>
       <Section title="Admissions">
         <Text style={s.body}>{`Opens ${c.admissions.opens} · Deadline ${c.admissions.deadline}`}</Text>
-        <Text style={s.body}>{`Fees ${ugx(c.admissions.feesUGX[0])} – ${ugx(c.admissions.feesUGX[1])} per term`}</Text>
-        <Text style={s.note}>{`You’ll need: ${c.admissions.requirements.join(', ')}`}</Text>
+        <Text style={s.body}>{c.admissions.feesUGX ? `Fees ${ugx(c.admissions.feesUGX[0])} – ${ugx(c.admissions.feesUGX[1])} per term` : 'Fees on request'}</Text>
+        {c.admissions.requirements.length ? <Text style={s.note}>{`You’ll need: ${c.admissions.requirements.join(', ')}`}</Text> : null}
       </Section>
       <Section title="Exam services">
         {c.exam ? (
           <>
             <Text style={s.body}>{`Verified ${c.exam.boards.join(', ')} centre for ${c.exam.exams.join(' and ')}`}</Text>
-            <Text style={s.note}>{c.exam.external ? `Accepts external candidates · register by ${c.exam.deadline} · ${ugx(c.exam.feeUGX)}` : 'Registers its own learners only'}</Text>
+            <Text style={s.note}>{examNote(c.exam)}</Text>
           </>
         ) : (
           <Text style={s.note}>Not an exam centre.</Text>
         )}
       </Section>
       <Section title="Facilities">
-        <Text style={s.body}>{c.facilities.join(' · ')}</Text>
+        <Text style={s.body}>{c.facilities.length ? c.facilities.join(' · ') : 'Not listed yet.'}</Text>
       </Section>
       <Text style={s.note}>Looking at this profile is private. The school only sees how many people viewed it, never who.</Text>
       <View style={s.sheetActions}>
@@ -236,6 +278,9 @@ const s = StyleSheet.create({
   heart: { position: 'absolute', top: 8, right: 8, width: 32, height: 32, alignItems: 'center', justifyContent: 'center', borderRadius: 16, backgroundColor: L.white },
   crest: { position: 'absolute', left: 14, bottom: -24, width: 56, height: 52, alignItems: 'center', justifyContent: 'center', borderRadius: 10, backgroundColor: L.white, shadowColor: Maple.navyDeep, shadowOpacity: 0.12, shadowRadius: 6, shadowOffset: { width: 0, height: 2 }, elevation: 3 },
   crestImg: { width: 40, height: 40 },
+  initials: { alignItems: 'center', justifyContent: 'center', backgroundColor: BRAND_SOFT },
+  initialsText: { fontWeight: '800', color: BRAND_BLUE },
+  campusBlank: { alignItems: 'center', justifyContent: 'center', backgroundColor: Maple.blueSoft },
   cardBody: { gap: 5, paddingHorizontal: 14, paddingTop: 8, paddingBottom: 12 },
   nameRow: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingLeft: 62 },
   name: { flexShrink: 1, fontSize: 13, letterSpacing: -0.3, fontWeight: '700', color: L.navy },

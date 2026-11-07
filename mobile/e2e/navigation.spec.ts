@@ -71,6 +71,8 @@ async function go(page: Page, link: Locator, path: string, frameItem: Locator): 
 }
 
 async function expectSmooth(page: Page): Promise<void> {
+  // On a fast build the moves can finish before enough frames are sampled; keep sampling until there are.
+  await expect.poll(() => page.evaluate(() => window.navProbe?.frames ?? 0)).toBeGreaterThan(MIN_FRAMES);
   const r = await page.evaluate(() => ({ same: window.sameVisit === true, frames: window.navProbe?.frames ?? 0, dark: window.navProbe?.dark ?? -1 }));
   expect(r.same, 'the app reloaded instead of moving within it').toBe(true);
   expect(r.dark, `${r.dark} of ${r.frames} sampled frames were dark`).toBe(0);

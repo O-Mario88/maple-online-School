@@ -1,19 +1,22 @@
 import { Image } from '@/components/picture';
 import { router } from 'expo-router';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Icon } from '@/components/icon';
 import { LanguageMenu } from '@/components/shell/LanguageMenu';
+import { useMe } from '@/lib/auth/auth-context';
 import { useSwitcher } from '@/lib/switcher-context';
-import { Maple } from '@/constants/maple';
+import { Maple, TypeScale } from '@/constants/maple';
 import { MapleLogo } from '@/components/brand/MapleLogo';
 
 const INK = Maple.navy;
 
-/** The learner's phone top bar: logo, optional language globe, notifications and the avatar that opens the mode switcher. */
-export function LearnerPhoneTop({ avatar, globe = false }: { avatar: number; globe?: boolean }) {
+/** The learner's phone top bar: logo, optional language globe, notifications and the avatar (or initial) that opens the mode switcher. */
+export function LearnerPhoneTop({ avatar, globe = false }: { avatar?: number; globe?: boolean }) {
   const switcher = useSwitcher();
+  const me = useMe();
+  const initial = (me.data?.full_name ?? 'Learner').slice(0, 1).toUpperCase();
   const insets = useSafeAreaInsets();
   return (
     <View style={[styles.top, { paddingTop: insets.top, height: 56 + insets.top }]}>
@@ -31,7 +34,13 @@ export function LearnerPhoneTop({ avatar, globe = false }: { avatar: number; glo
           <View style={styles.redDot} />
         </Pressable>
         <Pressable onPress={switcher?.open} accessibilityRole="button" accessibilityLabel="Switch mode">
-          <Image decorative source={avatar} style={styles.avatar} />
+          {avatar ? (
+            <Image decorative source={avatar} style={styles.avatar} />
+          ) : (
+            <View style={[styles.avatar, styles.avatarBlank]}>
+              <Text style={styles.avatarText}>{initial}</Text>
+            </View>
+          )}
         </Pressable>
       </View>
     </View>
@@ -47,4 +56,6 @@ const styles = StyleSheet.create({
   topRight: { flexDirection: 'row', alignItems: 'center', gap: 18 },
   redDot: { position: 'absolute', top: 0, right: 0, width: 8, height: 8, borderRadius: 4, backgroundColor: Maple.error },
   avatar: { width: 36, height: 36, borderRadius: 18 },
+  avatarBlank: { alignItems: 'center', justifyContent: 'center', backgroundColor: Maple.blueSoft },
+  avatarText: { ...TypeScale.cardTitle, color: Maple.blue },
 });

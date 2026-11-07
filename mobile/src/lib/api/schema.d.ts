@@ -5019,10 +5019,596 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/network/schools/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Verified Maple schools in the School Network
+         * @description Only schools that are active, verified by Maple and have published a profile are listed. Results go by name; the app ranks them itself.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description 1-based page number; 20 items per page */
+                    page?: components["parameters"]["Page"];
+                    /** @description Words in the name */
+                    q?: string;
+                    district?: string;
+                    curriculum?: string;
+                    level?: string;
+                    category?: "all" | "top" | "online" | "boarding" | "scholarships";
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description One page of schools */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            count: number;
+                            next?: string | null;
+                            previous?: string | null;
+                            results: components["schemas"]["NetworkSchool"][];
+                        };
+                    };
+                };
+                400: components["responses"]["BadRequest"];
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/network/schools/{id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        /**
+         * A listed school's profile
+         * @description Adds one to the school's view count. Who viewed is never stored or shown to the school.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The profile */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["NetworkSchool"];
+                    };
+                };
+                404: components["responses"]["NotFound"];
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/network/schools/{id}/save/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        /** Save a school (private to you) */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Saved */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["NetworkSaveResult"];
+                    };
+                };
+                404: components["responses"]["NotFound"];
+                429: components["responses"]["TooManyRequests"];
+            };
+        };
+        post?: never;
+        /** Remove a school from your saved schools */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Removed */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["NetworkSaveResult"];
+                    };
+                };
+                404: components["responses"]["NotFound"];
+                429: components["responses"]["TooManyRequests"];
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/network/schools/{id}/applications/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Start an application to a school
+         * @description Nothing about you is shared until you submit. Starting again returns the same application.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Your existing application */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["NetworkApplication"];
+                    };
+                };
+                /** @description Started */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["NetworkApplication"];
+                    };
+                };
+                404: components["responses"]["NotFound"];
+                429: components["responses"]["TooManyRequests"];
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/network/schools/{id}/insights/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        /**
+         * Totals about interest in the school, for its own leaders
+         * @description Counts only: no names, lists, exports or events. Any figure that fewer than min_cohort people are behind is null.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The totals */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["NetworkInsights"];
+                    };
+                };
+                403: components["responses"]["Forbidden"];
+                404: components["responses"]["NotFound"];
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/network/saves/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Your saved schools */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Most recent first */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            count: number;
+                            results: {
+                                /** Format: int64 */
+                                school: number;
+                                /** Format: date-time */
+                                saved_at: string;
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/network/applications/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Your applications to schools */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Most recent first */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            count: number;
+                            results: components["schemas"]["NetworkApplication"][];
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/network/applications/{id}/submit/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Send your application, sharing only what you filled in here */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["NetworkSubmission"];
+                };
+            };
+            responses: {
+                /** @description Submitted */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["NetworkApplication"];
+                    };
+                };
+                400: components["responses"]["BadRequest"];
+                404: components["responses"]["NotFound"];
+                /** @description Already submitted */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                429: components["responses"]["TooManyRequests"];
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        NetworkSchool: {
+            /** Format: int64 */
+            id: number;
+            slug: string;
+            name: string;
+            town: string;
+            district: string;
+            curricula: string[];
+            levels: string[];
+            /** @enum {string} */
+            stay: "Day" | "Boarding" | "Day & Boarding";
+            /** @enum {string} */
+            mode: "Physical" | "Hybrid" | "Online";
+            programs: string[];
+            facilities: string[];
+            blurb: string;
+            /** @description The published pass rate and where it comes from */
+            pass_rate: {
+                rate: number;
+                board: string;
+                exam: string;
+                year: number;
+                source: string;
+            } | null;
+            learners: number;
+            established: number | null;
+            scholarships: boolean;
+            admissions: {
+                /**
+                 * Format: date
+                 * @description Null when admissions are open all year
+                 */
+                opens: string | null;
+                /**
+                 * Format: date
+                 * @description Null when admissions are rolling
+                 */
+                deadline: string | null;
+                /** Format: int64 */
+                fee_min_ugx: number | null;
+                /** Format: int64 */
+                fee_max_ugx: number | null;
+                requirements: string[];
+            };
+            /** @description Only when Maple has verified the centre with the exam board */
+            exam_centre: {
+                boards: string[];
+                exams: string[];
+                /** @description Takes external (private) candidates */
+                external: boolean;
+                /** Format: date */
+                register_by: string | null;
+                /** Format: int64 */
+                fee_ugx: number | null;
+            } | null;
+            vacancies: {
+                /** Format: int64 */
+                id: number;
+                title: string;
+                kind: string;
+                /** Format: date */
+                closes_on: string;
+                subjects: string[];
+            }[];
+            /** @description The school's application form */
+            apply: {
+                intake: string | null;
+                /**
+                 * Format: int64
+                 * @description Application fee
+                 */
+                fee_ugx: number | null;
+                /** @description What applicants can apply for */
+                programs: string[];
+                /** @description Documents the school needs, one attached file each */
+                documents: {
+                    id: string;
+                    label: string;
+                }[];
+            };
+            /**
+             * Format: int64
+             * @description Total profile views; null when fewer than the minimum cohort
+             */
+            views: number | null;
+            /** Format: date-time */
+            listed_at: string;
+        };
+        NetworkSaveResult: {
+            /** Format: int64 */
+            school: number;
+            saved: boolean;
+        };
+        NetworkApplicant: {
+            first: string;
+            middle?: string;
+            last: string;
+            /**
+             * Format: date
+             * @description The learner must be 5 to 25
+             */
+            dob: string;
+            gender: string;
+            nationality: string;
+        };
+        NetworkGuardian: {
+            name: string;
+            relationship: string;
+            /** @description A Ugandan number; stored as +256 and nine digits */
+            phone: string;
+            email?: string;
+            occupation?: string;
+            address: string;
+        };
+        NetworkCurrentSchool: {
+            school?: string;
+            grade?: string;
+            year?: string;
+        };
+        NetworkAcademic: {
+            stream: string;
+            subjects?: string[];
+            ple_aggregate: number;
+            ple_index: string;
+            ple_year: number;
+            /** @enum {string} */
+            boarding?: "" | "Day" | "Boarding" | "Day & Boarding";
+            needs?: string;
+        };
+        /** @description The file name only, until Maple stores uploads */
+        NetworkAttachedDocument: {
+            id: string;
+            file: string;
+        };
+        /** @description Exactly what the applicant sent; fields left empty are not stored */
+        NetworkShared: {
+            applying_for: string;
+            applicant: components["schemas"]["NetworkApplicant"];
+            guardian: components["schemas"]["NetworkGuardian"];
+            current?: components["schemas"]["NetworkCurrentSchool"];
+            academic: components["schemas"]["NetworkAcademic"];
+            documents: components["schemas"]["NetworkAttachedDocument"][];
+        };
+        NetworkApplication: {
+            /** Format: int64 */
+            id: number;
+            /** Format: int64 */
+            school: number;
+            school_name: string;
+            /** @enum {string} */
+            status: "started" | "submitted";
+            shared: components["schemas"]["NetworkShared"] | null;
+            /** Format: date-time */
+            started_at: string;
+            /** Format: date-time */
+            submitted_at: string | null;
+        };
+        /** @description The school's four-step application form. Every required document needs a file, and only those. */
+        NetworkSubmission: {
+            /** @description Must be true to share this application with the school */
+            consent: boolean;
+            /** @description One of the school's apply.programs */
+            applying_for: string;
+            applicant: components["schemas"]["NetworkApplicant"];
+            guardian: components["schemas"]["NetworkGuardian"];
+            current?: components["schemas"]["NetworkCurrentSchool"];
+            academic: components["schemas"]["NetworkAcademic"];
+            documents: components["schemas"]["NetworkAttachedDocument"][];
+        };
+        NetworkInsights: {
+            /** Format: int64 */
+            school: number;
+            min_cohort: number;
+            totals: {
+                /** Format: int64 */
+                profile_views: number | null;
+                /** Format: int64 */
+                saves: number | null;
+                /** Format: int64 */
+                application_starts: number | null;
+                /** Format: int64 */
+                application_submissions: number | null;
+                /** Format: int64 */
+                enrolments: number | null;
+            };
+        };
         ThreadSummary: {
             /** Format: int64 */
             id: number;

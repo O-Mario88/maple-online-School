@@ -83,4 +83,24 @@ describe('School Network', () => {
     expect(sortSchools(ALL, 'passRate').map((s) => s.id)).toEqual(['lakeview', 'riverside', 'greenhill', 'online']);
     expect(sortSchools(ALL, 'relevance')).toEqual(ALL);
   });
+
+  // Real schools may not know the learner's distance, have reviews yet or have published a pass rate.
+  const unknown = school({ id: 'unknown', km: null, rating: null, reviews: 0, passRate: null });
+  const WITH_UNKNOWN = [unknown, ...ALL];
+
+  test('a school with no known distance is never "near me" and sorts last by distance', () => {
+    expect(inCategory(unknown, 'near')).toBe(false);
+    expect(sortSchools(WITH_UNKNOWN, 'distance').map((s) => s.id).at(-1)).toBe('unknown');
+  });
+
+  test('a school with no reviews or no published pass rate sorts last by rating or pass rate, and is not "top performing"', () => {
+    expect(sortSchools(WITH_UNKNOWN, 'rating').map((s) => s.id).at(-1)).toBe('unknown');
+    expect(sortSchools(WITH_UNKNOWN, 'passRate').map((s) => s.id).at(-1)).toBe('unknown');
+    expect(inCategory(unknown, 'top')).toBe(false);
+  });
+
+  test('a matching school with no rating still gets recommended, after rated ones with the same fit', () => {
+    const rated = school({ id: 'rated', rating: 4.1 });
+    expect(listFor([unknown, rated], 'recommended', { curriculum: 'UNEB' }).map((s) => s.id)).toEqual(['rated', 'unknown']);
+  });
 });

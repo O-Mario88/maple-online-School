@@ -1,4 +1,3 @@
-import { Image } from '@/components/picture';
 import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
@@ -7,13 +6,13 @@ import { LearnerPhoneTop } from '@/features/learner/dashboard/DashPhone';
 import { ProgressRing } from '@/features/learner/exam/ExamNav';
 import { L, LightFrame } from '@/features/learner/frame/LightFrame';
 import { toast } from '@/lib/toast';
-import type { SchoolCard } from '@/mock/school-network';
 
 import { STEPS } from './applicationForm';
 import { StepsBar } from './ApplyParts';
 import { AcademicStep, ApplicantStep, DocumentsStep, ReviewStep } from './ApplySteps';
-import { BRAND_SOFT, BRAND_BLUE, Tag, ugx } from './SchoolParts';
-import { type Apply, useApply } from './useApply';
+import type { SchoolCard } from './networkData';
+import { BRAND_SOFT, BRAND_BLUE, Campus, Crest, Tag, ugx } from './SchoolParts';
+import { type Apply, type ApplyActions, message, useApply } from './useApply';
 import type { Net } from './useSchoolNetwork';
 import { Maple, Radii } from '@/constants/maple';
 import { PAGE_TITLE } from '@/lib/fonts/type';
@@ -23,12 +22,12 @@ function SchoolMini({ c, saved, onSave }: { c: SchoolCard; saved: boolean; onSav
   return (
     <View style={s.card0}>
       <View>
-        <Image source={c.photo} style={s.photo} contentFit="cover" accessibilityLabel={`${c.name} campus`} />
+        <Campus c={c} style={[s.photo]} />
         <Pressable style={s.heart} onPress={onSave} hitSlop={8} accessibilityRole="button" accessibilityState={{ selected: saved }} accessibilityLabel={saved ? `Remove ${c.name} from saved` : `Save ${c.name}`}>
           <Icon name={saved ? 'heartFill' : 'heart'} size={18} color={saved ? Maple.error : L.ink} />
         </Pressable>
         <View style={s.crest}>
-          <Image decorative source={c.crest} style={s.crestImg} contentFit="contain" />
+          <Crest c={c} size={46} />
         </View>
       </View>
       <View style={s.miniBody}>
@@ -55,8 +54,8 @@ function SchoolMini({ c, saved, onSave }: { c: SchoolCard; saved: boolean; onSav
 function Summary({ a }: { a: Apply }) {
   const rows: readonly [string, string, boolean?][] = [
     ['Program', a.form.applyingFor],
-    ['Intake', a.net.apply.intake],
-    ['Application Fee', ugx(a.net.apply.feeUGX), true],
+    ['Intake', a.net.apply.intake ?? 'Ask the school'],
+    ['Application Fee', a.net.apply.feeUGX === null ? 'None' : ugx(a.net.apply.feeUGX), true],
   ];
   return (
     <View style={s.card}>
@@ -166,9 +165,9 @@ function Actions({ a, phone }: { a: Apply; phone: boolean }) {
             <Text style={s.laterText}>Back</Text>
           </Pressable>
         ) : null}
-        <Pressable style={[s.primary, phone && s.flex]} onPress={last ? a.submit : a.next} accessibilityRole="button">
+        <Pressable style={[s.primary, phone && s.flex, a.sending && s.primaryOff]} onPress={last ? a.submit : a.next} disabled={a.sending} accessibilityRole="button">
           <Text style={s.primaryText} numberOfLines={1}>
-            {nextLabel}
+            {a.sending ? 'Sending…' : nextLabel}
           </Text>
           <Icon name="arrowRight" size={17} color={L.white} />
         </Pressable>
@@ -181,23 +180,33 @@ interface Props {
   net: Net;
   school: SchoolCard;
   avatar?: number;
+  /** Real builds pass the API actions; design builds keep everything on the page. */
+  actions?: ApplyActions;
 }
 
-function useSaved(net: Net, id: string) {
+function useSaved(net: Net, id: string, actions?: ApplyActions) {
   const [saved, setSaved] = useState(net.saved.includes(id));
   return {
     saved,
     toggle: () => {
+      const said = saved ? 'Removed from your saved schools.' : 'Saved. Only you can see your saved schools; the school sees a total.';
       setSaved(!saved);
-      toast(saved ? 'Removed from your saved schools.' : 'Saved. Only you can see your saved schools; the school sees a total.');
+      if (!actions) return toast(said);
+      actions.setSaved(id, !saved).then(
+        () => toast(said),
+        (e: unknown) => {
+          setSaved(saved);
+          toast(message(e));
+        },
+      );
     },
   };
 }
 
 /** Apply to a school on wide screens: the reference, in the light learner frame. */
-export function ApplyDesk({ net, school, avatar }: Props) {
-  const a = useApply(net, school);
-  const fav = useSaved(net, school.id);
+export function ApplyDesk({ net, school, avatar, actions }: Props) {
+  const a = useApply(net, school, actions);
+  const fav = useSaved(net, school.id, actions);
   return (
     <LightFrame>
       <View style={s.cols}>
@@ -234,12 +243,12 @@ export function ApplyDesk({ net, school, avatar }: Props) {
 }
 
 /** Apply to a school on phones: the same form, one column, with the summary under it. */
-export function ApplyPhone({ net, school, avatar }: Props) {
-  const a = useApply(net, school);
-  const fav = useSaved(net, school.id);
+export function ApplyPhone({ net, school, avatar, actions }: Props) {
+  const a = useApply(net, school, actions);
+  const fav = useSaved(net, school.id, actions);
   return (
     <View style={s.phoneRoot}>
-      {avatar ? <LearnerPhoneTop avatar={avatar} /> : null}
+      <LearnerPhoneTop avatar={avatar} />
       <ScrollView contentContainerStyle={s.phone} keyboardShouldPersistTaps="handled">
         <Pressable style={s.backLink} onPress={a.backToProfile} accessibilityRole="link">
           <Icon name="arrowLeft" size={18} color={BRAND_BLUE} />
@@ -305,6 +314,7 @@ const s = StyleSheet.create({
   later: { height: 46, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, paddingHorizontal: 22, borderRadius: 23, borderWidth: 1.5, borderColor: Maple.blueLine, backgroundColor: L.white },
   laterText: { fontSize: 15, fontWeight: '600', color: BRAND_BLUE },
   backBtn: { height: 46, paddingHorizontal: 22, alignItems: 'center', justifyContent: 'center', borderRadius: Radii.control, backgroundColor: BRAND_SOFT },
+  primaryOff: { opacity: 0.6 },
   primary: { height: 46, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, paddingHorizontal: 26, borderRadius: Radii.control, backgroundColor: L.blue },
   primaryText: { fontSize: 15, fontWeight: '600', color: L.white },
   doneCard: { alignItems: 'center', paddingVertical: 36 },

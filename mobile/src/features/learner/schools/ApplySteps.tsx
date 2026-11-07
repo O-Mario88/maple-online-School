@@ -5,7 +5,7 @@ import { L } from '@/features/learner/frame/LightFrame';
 
 import type { StepKey } from './applicationForm';
 import { Check, DateField, dayLabel, Field, PhoneField, Row, SectionHead, Select } from './ApplyParts';
-import { BRAND_SOFT, BRAND_BLUE, ugx } from './SchoolParts';
+import { BRAND_SOFT, BRAND_BLUE } from './SchoolParts';
 import type { Apply } from './useApply';
 import { Maple } from '@/constants/maple';
 import { Palette } from '@/constants/palette';
@@ -134,7 +134,7 @@ export function DocumentsStep({ a }: { a: Apply }) {
           </View>
         );
       })}
-      <Text style={s.small}>In this preview, Attach adds a sample file.</Text>
+      <Text style={s.small}>{a.docsNote}</Text>
     </View>
   );
 }
@@ -176,7 +176,7 @@ export function ReviewStep({ a }: { a: Apply }) {
       </View>
       <View style={s.notice}>
         <Icon name="wallet" size={18} color={BRAND_BLUE} />
-        <Text style={s.noticeText}>{`Application fee: ${ugx(a.net.apply.feeUGX)}, non-refundable, paid when you submit. In this preview no payment is taken.`}</Text>
+        <Text style={s.noticeText}>{a.feeNote}</Text>
       </View>
       <Check checked={f.consent} onPress={() => a.set({ consent: !f.consent })} label={`I confirm these details are true, and I agree to share this application with ${a.school.name} only.`} error={a.errors.consent} />
     </View>

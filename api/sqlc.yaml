@@ -11,3 +11,7 @@ sql:
         out: internal/platform/dbgen
         sql_package: pgx/v5
         emit_empty_slices: true
+        overrides:
+          # School Network totals are NULL when too few people are behind them.
+          - db_type: "network_cohort_count"
+            go_type: { import: "github.com/jackc/pgx/v5/pgtype", type: "Int8" }

@@ -11,7 +11,7 @@ import type { IconName } from '@/lib/icons';
 import type { Category, ListTab, SchoolSort } from './schoolNetwork';
 import { ExamsTab, InstitutionsTab, JourneyCard, LinkCard, PricingCard, RecsTab, VacanciesTab } from './SchoolPanels';
 import { BRAND_SOFT, PrefsSheet, ProfileSheet, BRAND_BLUE, SchoolCardView } from './SchoolParts';
-import { type Net, type NetTab, type SN, useSchoolNetwork } from './useSchoolNetwork';
+import { type Net, type NetActions, type NetTab, type SN, useSchoolNetwork } from './useSchoolNetwork';
 import { Maple, Radii } from '@/constants/maple';
 import { PAGE_TITLE } from '@/lib/fonts/type';
 
@@ -277,17 +277,21 @@ interface Props {
   avatar?: number;
   /** A school whose profile opens straight away (from the form's back link). */
   profile?: string;
+  /** Real builds pass the API actions; design builds keep everything on the page. */
+  actions?: NetActions;
 }
 
 /** School Network on wide screens: the reference, in the light learner frame. */
-export function SchoolNetworkDesk({ net, avatar, profile }: Props) {
-  const x = useSchoolNetwork(net, profile);
+export function SchoolNetworkDesk({ net, avatar, profile, actions }: Props) {
+  const x = useSchoolNetwork(net, profile, actions);
   return (
     <LightFrame>
-      <View style={s.heroPhoto} pointerEvents="none">
-        <Image decorative source={net.hero} style={StyleSheet.absoluteFill} contentFit="cover" />
-        <LinearGradient colors={[L.canvas, 'rgba(246,248,253,0)']} start={{ x: 0, y: 0.5 }} end={{ x: 0.3, y: 0.5 }} style={StyleSheet.absoluteFill} />
-      </View>
+      {net.hero ? (
+        <View style={s.heroPhoto} pointerEvents="none">
+          <Image decorative source={net.hero} style={StyleSheet.absoluteFill} contentFit="cover" />
+          <LinearGradient colors={[L.canvas, 'rgba(246,248,253,0)']} start={{ x: 0, y: 0.5 }} end={{ x: 0.3, y: 0.5 }} style={StyleSheet.absoluteFill} />
+        </View>
+      ) : null}
       <View style={s.head}>
         <View style={s.headIcon}>
           <Icon name="building" size={28} color={BRAND_BLUE} />
@@ -314,11 +318,11 @@ export function SchoolNetworkDesk({ net, avatar, profile }: Props) {
 }
 
 /** School Network on phones: the same page, stacked. */
-export function SchoolNetworkPhone({ net, avatar, profile }: Props) {
-  const x = useSchoolNetwork(net, profile);
+export function SchoolNetworkPhone({ net, avatar, profile, actions }: Props) {
+  const x = useSchoolNetwork(net, profile, actions);
   return (
     <View style={s.phoneRoot}>
-      {avatar ? <LearnerPhoneTop avatar={avatar} /> : null}
+      <LearnerPhoneTop avatar={avatar} />
       <ScrollView contentContainerStyle={s.phone}>
         <View style={s.headP}>
           <View style={[s.headIcon, s.headIconP]}>
