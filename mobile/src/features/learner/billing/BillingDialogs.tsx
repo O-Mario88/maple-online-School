@@ -325,7 +325,7 @@ const styles = StyleSheet.create({
   tBtnTextOn: { color: '#FFFFFF' },
   kinds: { flexDirection: 'row', gap: 8 },
   kind: { flex: 1, alignItems: 'center', gap: 4, padding: 10, borderRadius: 10, borderWidth: 1, borderColor: '#E3E9F2' },
-  input: { height: 44, paddingHorizontal: 12, borderRadius: 8, borderWidth: 1, borderColor: '#DCE3EE', fontSize: 15, color: NAVY },
+  input: { height: 44, paddingVertical: 0, paddingHorizontal: 12, borderRadius: 8, borderWidth: 1, borderColor: '#DCE3EE', fontSize: 15, color: NAVY },
   error: { fontSize: 12, color: '#B91C1C' },
   receipt: { gap: 4, padding: 14, borderRadius: 10, borderWidth: 1, borderColor: '#E3E9F2', backgroundColor: '#FBFCFE' },
   receiptHead: { fontSize: 13, fontWeight: '700', color: NAVY },

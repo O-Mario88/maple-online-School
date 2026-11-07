@@ -1,35 +1,41 @@
-import { Badge, Banner, Button, Card, Row } from '@/components/ui';
+import { useMemo } from 'react';
+import { ScrollView, StyleSheet, useWindowDimensions } from 'react-native';
+
+import { useShell } from '@/components/ui';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
-import type { DocState } from '@/mock/teacher';
-import { toast } from '@/lib/toast';
+import { RefScale } from '@/features/public/home/RefScale';
+import { CANVAS } from '@/features/teacher/frame/TeacherParts';
+import {
+  VERIFICATION_REF_WIDTH,
+  VerificationDesk,
+  VerificationPhone,
+} from '@/features/teacher/verification/VerificationViews';
+import { mockData } from '@/lib/mock';
 
-const STATE = {
-  verified: { label: 'Verified', tone: 'good' },
-  in_review: { label: 'In review', tone: 'info' },
-  needed: { label: 'Needed', tone: 'warning' },
-} as const satisfies Record<DocState, { label: string; tone: 'good' | 'info' | 'warning' }>;
-
-/** Inventory 49: identity and teaching credentials for the verified badge and payouts. */
+/** Inventory 49: Teacher Verification & KYC Credentials Upload (`/(teacher)/verification`). */
 export default function VerificationScreen() {
+  const mock = useMemo(() => mockData(), []);
+  const { wide } = useShell();
+  const { width } = useWindowDimensions();
+  if (!mock) {
+    return (
+      <PreviewScreen title="Verification" subtitle="Your ID and qualifications unlock the verified badge and instant payouts">
+        {() => null}
+      </PreviewScreen>
+    );
+  }
+  const me = mock.teacher.teacherHome.me;
+  const v = mock.teacher.verificationKyc;
+  if (!wide) return <VerificationPhone v={v} me={me} />;
   return (
-    <PreviewScreen title="Verification" subtitle="Your ID and qualifications unlock the verified badge and instant payouts">
-      {(m) => (
-        <>
-          <Banner tone="info" title="2 of 4 checks done" body="We check documents within two working days." />
-          <Card icon="check">
-            {m.teacher.verification.map((d) => (
-              <Row
-                key={d.doc}
-                icon={d.state === 'verified' ? 'check' : d.state === 'in_review' ? 'clock' : 'alert'}
-                title={d.doc}
-                detail={d.detail}
-                badge={<Badge label={STATE[d.state].label} tone={STATE[d.state].tone} />}
-              />
-            ))}
-          </Card>
-          <Button label="Upload police clearance" icon="camera" onPress={() => toast('Choose a photo or PDF of your police clearance certificate.')} />
-        </>
-      )}
-    </PreviewScreen>
+    <ScrollView style={styles.bg}>
+      <RefScale width={width} refWidth={VERIFICATION_REF_WIDTH}>
+        <VerificationDesk v={v} me={me} />
+      </RefScale>
+    </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  bg: { backgroundColor: CANVAS },
+});

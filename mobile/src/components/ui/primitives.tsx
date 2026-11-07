@@ -10,6 +10,9 @@ import { Elevation, Radius, Spacing, type Theme, Type } from '@/constants/theme'
 import { useStyles } from '@/hooks/use-styles';
 import type { IconName } from '@/lib/icons';
 
+/** The narrowest a row's text gets before its badge or buttons move below it. */
+const ROW_TEXT_MIN = 120;
+
 export function Heading({ children }: { children: ReactNode }) {
   const { styles } = useStyles(makeStyles);
   return (
@@ -89,8 +92,12 @@ export function Row({ title, detail, icon, badge, onPress, accessibilityHint }: 
         <Text style={styles.rowTitle}>{title}</Text>
         {detail ? <Text style={styles.muted}>{detail}</Text> : null}
       </View>
-      {badge}
-      {onPress ? <Icon name="chevronRight" size={16} color={theme.textMuted} /> : null}
+      {badge || onPress ? (
+        <View style={styles.rowEnd}>
+          {badge}
+          {onPress ? <Icon name="chevronRight" size={16} color={theme.textMuted} /> : null}
+        </View>
+      ) : null}
     </>
   );
   if (!onPress) {
@@ -252,7 +259,8 @@ function makeStyles(t: Theme) {
     },
     cardTitle: { ...Type.heading, color: t.text },
     cardSubtitle: { ...Type.small, color: t.textSecondary },
-    row: { flexDirection: 'row', alignItems: 'center', gap: Spacing.three, minHeight: 52, paddingVertical: Spacing.two },
+    // When the right-hand side (a badge, price or buttons) doesn't fit beside the text, it moves to its own line.
+    row: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: Spacing.three, rowGap: Spacing.two, minHeight: 52, paddingVertical: Spacing.two },
     rowPressable: { marginHorizontal: -Spacing.two, paddingHorizontal: Spacing.two, borderRadius: Radius.md },
     rowHover: { backgroundColor: t.backgroundSelected },
     rowIcon: {
@@ -263,7 +271,16 @@ function makeStyles(t: Theme) {
       alignItems: 'center',
       justifyContent: 'center',
     },
-    rowText: { flex: 1, gap: 2 },
+    rowText: { flexGrow: 1, flexShrink: 1, flexBasis: ROW_TEXT_MIN, minWidth: 0, gap: 2 },
+    rowEnd: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      alignItems: 'center',
+      justifyContent: 'flex-end',
+      gap: Spacing.two,
+      flexShrink: 1,
+      marginLeft: 'auto',
+    },
     rowTitle: { ...Type.bodyStrong, color: t.text },
     badge: { borderRadius: Radius.pill, paddingHorizontal: 10, paddingVertical: 3, alignSelf: 'flex-start' },
     badgeText: { ...Type.caption },

@@ -278,6 +278,19 @@ export const photos = {
     'res-2': require('./images/lhome-res-2.png') as Photo,
     'res-3': require('./images/lhome-res-3.png') as Photo,
     'res-4': require('./images/lhome-res-4.png') as Photo,
+    'sdash-boy': require('./images/sdash-hero-boy.jpg') as Photo,
+    'sdash-mountain': require('./images/sdash-hero-mountain.jpg') as Photo,
+    'sdash-sidebar-books': require('./images/sdash-sidebar-books.jpg') as Photo,
+    'sdash-rec-1': require('./images/sdash-rec-1.jpg') as Photo,
+    'sdash-rec-2': require('./images/sdash-rec-2.jpg') as Photo,
+    'sdash-rec-3': require('./images/sdash-rec-3.jpg') as Photo,
+    'sdash-rec-4': require('./images/sdash-rec-4.jpg') as Photo,
+    'sdash-cont-book': require('./images/sdash-cont-book.jpg') as Photo,
+    'sdash-comp-book': require('./images/sdash-comp-book.jpg') as Photo,
+    'pdash-mary-hero': require('./images/pdash-hero-mary.jpg') as Photo,
+    'pdash-mary-avatar': require('./images/pdash-mary-avatar.jpg') as Photo,
+    'pdash-hero-books': require('./images/pdash-hero-books.jpg') as Photo,
+    'pdash-sidebar-promo': require('./images/pdash-sidebar-promo.jpg') as Photo,
   } as Readonly<Record<string, Photo>>,
   /** Graded feedback reference: the annotated page (zoom buttons removed), page thumbnails, teacher video frame and face, next-step icons. */
   feedback: {
@@ -505,6 +518,55 @@ export const photos = {
     apple: require('./images/signin-apple.png') as Photo,
     passkey: require('./images/signin-passkey.png') as Photo,
   },
+  /** Teacher home reference: Sarah's avatar, the live-class thumbnail and the flagged learners' faces. */
+  teacherHome: {
+    sarah: require('./images/teacher-home-sarah.png') as Photo,
+    live: require('./images/teacher-home-live.jpg') as Photo,
+    emmanuel: require('./images/teacher-home-emmanuel.png') as Photo,
+    grace: require('./images/teacher-home-grace.png') as Photo,
+    peter: require('./images/teacher-home-peter.png') as Photo,
+    aisha: require('./images/teacher-home-aisha.png') as Photo,
+    daniel: require('./images/teacher-home-daniel.png') as Photo,
+  },
+  /** AI course studio reference: the course cover, the sample lesson frame and the sidebar art. */
+  studio: {
+    cover: require('./images/studio-cover.jpg') as Photo,
+    video: require('./images/studio-video.jpg') as Photo,
+    robot: require('./images/studio-robot.png') as Photo,
+    spark: require('./images/studio-spark.png') as Photo,
+  },
+  /** Host console reference: each video tile (cut above its printed name) and the chat faces. */
+  teacherHost: {
+    teacher: require('./images/host-tile-teacher.jpg') as Photo,
+    john: require('./images/host-tile-john.jpg') as Photo,
+    grace: require('./images/host-tile-grace.jpg') as Photo,
+    daniel: require('./images/host-tile-daniel.jpg') as Photo,
+    mary: require('./images/host-tile-mary.jpg') as Photo,
+    peter: require('./images/host-tile-peter.jpg') as Photo,
+    sarah: require('./images/host-tile-sarah.jpg') as Photo,
+    amina: require('./images/host-tile-amina.jpg') as Photo,
+    james: require('./images/host-tile-james.jpg') as Photo,
+    chatAmina: require('./images/host-chat-amina.png') as Photo,
+    chatDaniel: require('./images/host-chat-daniel.png') as Photo,
+    chatSarah: require('./images/host-chat-sarah.png') as Photo,
+  },
+  /** Course builder reference: the course thumbnail, the lesson video still and the content-block icons. */
+  courseBuilder: {
+    thumb: require('./images/builder-thumb.jpg') as Photo,
+    video: require('./images/builder-video.jpg') as Photo,
+    blocks: {
+      video: require('./images/builder-block-video.png') as Photo,
+      text: require('./images/builder-block-text.png') as Photo,
+      image: require('./images/builder-block-image.png') as Photo,
+      pdf: require('./images/builder-block-pdf.png') as Photo,
+      quiz: require('./images/builder-block-quiz.png') as Photo,
+      interactive: require('./images/builder-block-interactive.png') as Photo,
+      youtube: require('./images/builder-block-youtube.png') as Photo,
+      drive: require('./images/builder-block-drive.png') as Photo,
+      link: require('./images/builder-block-link.png') as Photo,
+      discussion: require('./images/builder-block-discussion.png') as Photo,
+    },
+  },
   /** Phones: just the teacher and learners (x 470–805, y 110–420), without the printed cards. */
   schoolsHeroPhone: require('./images/schools-hero-phone.jpg') as Photo,
   crests: {
@@ -530,6 +592,15 @@ export const photos = {
     applePay: require('./images/pay-applepay.jpg') as Photo,
     googlePay: require('./images/pay-googlepay.jpg') as Photo,
     qr: require('./images/pay-qr.jpg') as Photo,
+  },
+  /** The Pricing design's "We Accept" logos, cut from its reference. */
+  pricingAccepts: {
+    mtn: require('./images/pricing-accept-mtn.png') as Photo,
+    airtel: require('./images/pricing-accept-airtel.png') as Photo,
+    mpesa: require('./images/pricing-accept-mpesa.png') as Photo,
+    visa: require('./images/pricing-accept-visa.png') as Photo,
+    mastercard: require('./images/pricing-accept-mastercard.png') as Photo,
+    applePay: require('./images/pricing-accept-applepay.png') as Photo,
   },
   teacherBanner: require('./images/teacher-banner.jpg') as Photo,
   teacherAvatar: require('./images/teacher-avatar.jpg') as Photo,

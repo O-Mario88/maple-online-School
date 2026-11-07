@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
+import { UpgradeNote } from '@/features/access/UpgradeNote';
+import { useAccess } from '@/lib/access/access-context';
 
 import { BLUE, BODY, GREEN, INK, letter, MATH, RED } from './ExamParts';
 import type { ExamState, Question } from './useExam';
@@ -11,6 +13,15 @@ const TABS = ['Explanation', 'Marking Scheme', 'Related Topic'] as const;
 type Tab = (typeof TABS)[number];
 
 function Steps({ q, phone }: { q: Question; phone: boolean }) {
+  const open = useAccess().hasFeature('stepByStep');
+  if (!open) {
+    return (
+      <>
+        <Text style={styles.heading}>Step-by-step solution</Text>
+        <UpgradeNote what="Step-by-step past paper solutions" needs="pro" compact={phone} />
+      </>
+    );
+  }
   return (
     <>
       <Text style={styles.heading}>Step-by-step solution</Text>

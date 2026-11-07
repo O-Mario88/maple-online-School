@@ -13,6 +13,21 @@ export function formatMoney(minor: number, currency: string): string {
   return `${currency} ${Math.round(minor).toLocaleString('en-US')}`;
 }
 
+const COMPACT_STEPS: readonly (readonly [number, string])[] = [
+  [1_000_000_000, 'B'],
+  [1_000_000, 'M'],
+  [1_000, 'K'],
+];
+
+/** A short amount for small tiles ("UGX 7.1B", "UGX 420K"); amounts under 10,000 stay exact. */
+export function formatMoneyCompact(minor: number, currency: string): string {
+  const amount = Math.round(minor);
+  if (Math.abs(amount) < 10_000) return formatMoney(amount, currency);
+  const [size, suffix] = COMPACT_STEPS.find(([step]) => Math.abs(amount) >= step) ?? COMPACT_STEPS[2];
+  const value = Number((amount / size).toPrecision(3));
+  return `${currency} ${value}${suffix}`;
+}
+
 interface MembershipLike {
   institution_id: number;
   institution_name: string;

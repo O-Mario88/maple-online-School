@@ -12,7 +12,8 @@ export function RefScale({ width, refWidth = REF_WIDTH, children }: { width: num
   const [height, setHeight] = useState(0);
   const scale = width / refWidth;
   return (
-    <View style={[styles.outer, { width, height: height * scale }]}>
+    // Until the content is measured the box keeps its natural height: a clipped box of no height is never drawn on phones, so it would never be measured.
+    <View style={[styles.outer, { width, height: height ? height * scale : undefined }]}>
       <View style={[styles.inner, { width: refWidth, transform: [{ scale }] }]} onLayout={(e) => setHeight(e.nativeEvent.layout.height)}>
         {children}
       </View>

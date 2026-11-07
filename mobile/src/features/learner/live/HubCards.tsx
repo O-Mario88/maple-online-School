@@ -1,10 +1,11 @@
 import { Image } from 'expo-image';
-import { router } from 'expo-router';
+import { type Href, router } from 'expo-router';
 import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Icon } from '@/components/icon';
 import { DomainChip } from '@/features/learner/cbc/CbcParts';
+import { useAccess } from '@/lib/access/access-context';
 import { formatMoney } from '@/lib/finance/fees';
 import { addDays, clock12, dayParts } from '@/lib/live-hub';
 
@@ -43,7 +44,13 @@ function Online() {
 /** A tutor who can help now: book a 15-minute rescue, or join it once booked. */
 export function TutorCard({ hub, t, s, phone = false }: { hub: Hub; t: Tutor; s: HubState; phone?: boolean }) {
   const booked = s.bookedWith(t);
-  const button = booked ? (
+  // A private tutor comes with Premium; other plans see where to get it.
+  const premium = useAccess().hasFeature('privateTutor');
+  const button = !premium ? (
+    <Pressable style={[styles.book, phone && styles.bookP]} onPress={() => router.push('/plans?need=premium' as Href)} accessibilityRole="button" accessibilityLabel={`A private tutor like ${t.name} comes with Premium`}>
+      <Text style={[styles.bookText, phone && styles.bookTextP]}>{phone ? 'Premium' : 'With Premium'}</Text>
+    </Pressable>
+  ) : booked ? (
     <Pressable style={[styles.book, phone && styles.bookP, styles.joinBooked]} onPress={() => router.push('/learn/live-room')} accessibilityRole="button" accessibilityLabel={`Join your session with ${t.name}`}>
       <Text style={styles.bookText}>{phone ? 'Join' : 'Join Session'}</Text>
     </Pressable>
@@ -139,7 +146,7 @@ function when(hub: Hub, c: LiveClass) {
 function ClassButton({ c, s, phone = false }: { c: LiveClass; s: HubState; phone?: boolean }) {
   if (s.action(c) === 'join')
     return (
-      <Pressable style={[styles.classBtn, styles.classJoin, phone && styles.classBtnP]} onPress={() => router.push('/learn/live-room')} accessibilityRole="button" accessibilityLabel={`Join ${c.title}`}>
+      <Pressable style={[styles.classBtn, styles.classJoin, phone && styles.classBtnP]} onPress={() => router.push(`/learn/live-room?id=${c.id}`)} accessibilityRole="button" accessibilityLabel={`Join ${c.title}`}>
         <Icon name="video" size={15} color="#FFFFFF" />
         <Text style={[styles.classBtnText, styles.white]}>Join</Text>
       </Pressable>
@@ -232,7 +239,7 @@ export function BootcampRow({ b }: { b: Camp }) {
         )}
       </View>
       {ongoing ? (
-        <Pressable style={[styles.campBtn, styles.classJoin]} onPress={() => router.push('/learn/live-room')} accessibilityRole="button" accessibilityLabel={`Join ${b.title}`}>
+        <Pressable style={[styles.campBtn, styles.classJoin]} onPress={() => router.push(`/learn/live-room?id=${b.id}`)} accessibilityRole="button" accessibilityLabel={`Join ${b.title}`}>
           <Text style={[styles.classBtnText, styles.white]}>Join Now</Text>
         </Pressable>
       ) : (

@@ -325,6 +325,6 @@ const styles = StyleSheet.create({
   post: { marginBottom: 10, padding: 10, borderRadius: 8, backgroundColor: '#F5F8FC' },
   postWho: { fontSize: 11, fontWeight: '700', color: NAVY },
   reply: { flexDirection: 'row', gap: 8, marginTop: 6 },
-  replyInput: { flex: 1, height: 36, paddingHorizontal: 10, borderRadius: 6, borderWidth: 1, borderColor: '#DCE3EE', fontSize: 12.5, color: INK },
+  replyInput: { flex: 1, height: 36, paddingVertical: 0, paddingHorizontal: 10, borderRadius: 6, borderWidth: 1, borderColor: '#DCE3EE', fontSize: 12.5, color: INK },
   send: { width: 36, height: 36, alignItems: 'center', justifyContent: 'center', borderRadius: 6, backgroundColor: '#0B6BFF' },
 });

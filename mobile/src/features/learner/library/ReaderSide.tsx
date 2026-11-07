@@ -136,7 +136,7 @@ export function ReadingLists({ hub, toast, phone = false }: { hub: Hub; toast: (
       </View>
       <View style={[styles.listRow, phone && styles.listCol]}>
         {hub.reader.lists.map((l, i) => (
-          <Pressable key={l.title} style={[styles.list, phone && styles.listP]} onPress={() => toast(`${l.title} • ${l.count} from ${l.who}`)} accessibilityRole="button">
+          <Pressable key={l.title} style={phone ? styles.listP : styles.list} onPress={() => toast(`${l.title} • ${l.count} from ${l.who}`)} accessibilityRole="button">
             <View style={[styles.listIconBox, { backgroundColor: LIST_TONES[i] }]}>
               <Image source={l.icon} style={styles.listIcon} contentFit="contain" />
             </View>
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
   flex: { flex: 1 },
   searchCol: { gap: 12 },
   search: { height: 34, flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 12, borderRadius: 6, borderWidth: 1, borderColor: '#DCE3EE', backgroundColor: '#FFFFFF' },
-  searchInput: { flex: 1, height: 32, fontSize: 12, color: INK },
+  searchInput: { flex: 1, height: 32, paddingVertical: 0, fontSize: 12, color: INK },
   types: { flexDirection: 'row', gap: 5 },
   typesP: { flexWrap: 'wrap' },
   type: { height: 30, justifyContent: 'center', paddingHorizontal: 9, borderRadius: 5, borderWidth: 1, borderColor: '#DCE3EE', backgroundColor: '#FFFFFF' },
@@ -195,9 +195,10 @@ const styles = StyleSheet.create({
   autoBtnText: { fontSize: 13, fontWeight: '500', color: '#FFFFFF' },
   lists: { gap: 12 },
   listRow: { flexDirection: 'row', gap: 12 },
-  listCol: { flexDirection: 'column' },
+  listCol: { flexDirection: 'column', gap: 8 },
   list: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 12, padding: 10, borderRadius: 8, borderWidth: 1, borderColor: '#EEF1F6', backgroundColor: '#FFFFFF' },
-  listP: { flex: 0 },
+  // Phones: a whole style (a `flex: 0` override collapses the rows on the web).
+  listP: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 10, borderRadius: 8, borderWidth: 1, borderColor: '#EEF1F6', backgroundColor: '#FFFFFF' },
   listIconBox: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center', borderRadius: 8 },
   listIcon: { width: 30, height: 30 },
   listTitle: { fontSize: 12, fontWeight: '500', color: INK },

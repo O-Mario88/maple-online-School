@@ -4,11 +4,12 @@ import { Pressable, StyleSheet, Text, TextInput, useWindowDimensions, View } fro
 
 import { Icon } from '@/components/icon';
 import { LanguageMenu } from '@/components/shell/LanguageMenu';
+import { useStartFree } from '@/lib/auth/auth-context';
 
 import { Brand } from './palette';
 
 /** The homepage reference's top bar links, in its order. */
-const LINKS = ['Home', 'Courses', 'Live Classes', 'Curriculums', 'For Schools', 'For Teachers', 'Pricing', 'About'] as const;
+const LINKS = ['Home', 'Subjects', 'Live Classes', 'Curriculums', 'For Schools', 'For Teachers', 'Pricing', 'About'] as const;
 /** The Explore reference's top bar links, in its order. */
 export const EXPLORE_LINKS = ['Home', 'Explore', 'Live Classes', 'Curriculums', 'For Schools', 'For Teachers', 'Pricing'] as const;
 /** The past paper reference's links: Past Papers joins the bar. */
@@ -21,7 +22,7 @@ const ALL_LINKS_WIDTH = 1280;
 const SHORT_LINKS = 6;
 const LINK_ROUTES: Readonly<Record<NavLink, Href>> = {
   Home: '/welcome',
-  Courses: '/explore',
+  Subjects: '/explore',
   Explore: '/explore',
   'Live Classes': { pathname: '/explore', params: { kind: 'live' } },
   'Past Papers': { pathname: '/explore', params: { kind: 'paper' } },
@@ -59,6 +60,8 @@ interface HomeNavProps {
  */
 export function HomeNav({ wide, active = 'Home', fullWidth = false, links: own, tall = false, searchPlaceholder }: HomeNavProps) {
   const { width } = useWindowDimensions();
+  // Visitors start free, without an account; they sign up later, once they trust Maple.
+  const startFree = useStartFree();
   const all = own ?? LINKS;
   const links = fullWidth || width >= ALL_LINKS_WIDTH ? all : all.slice(0, SHORT_LINKS);
   const t = tall && wide;
@@ -118,7 +121,7 @@ export function HomeNav({ wide, active = 'Home', fullWidth = false, links: own, 
         <Pressable style={[styles.signIn, t && styles.signInTall, !wide && styles.btnNarrow]} accessibilityRole="button" onPress={() => router.push('/sign-in')}>
           <Text style={[styles.signInText, t && styles.btnTextTall]}>Sign in</Text>
         </Pressable>
-        <Pressable style={[styles.start, t && styles.startTall, !wide && styles.btnNarrow]} accessibilityRole="button" onPress={() => router.push('/sign-up')}>
+        <Pressable style={[styles.start, t && styles.startTall, !wide && styles.btnNarrow]} accessibilityRole="button" onPress={() => (startFree ? startFree() : router.push('/sign-up'))}>
           <Text style={[styles.startText, t && styles.btnTextTall]}>Get started</Text>
         </Pressable>
       </View>
@@ -170,7 +173,7 @@ const styles = StyleSheet.create({
   searchBtn: { marginRight: 28 },
   searchBtnTall: { marginRight: 33 },
   searchBox: { width: 285, height: 37, flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 14, marginRight: 24, borderRadius: 9, borderWidth: 1, borderColor: '#E3E8F0', backgroundColor: '#FAFBFD' },
-  searchInput: { flex: 1, height: 35, fontSize: 13, color: Brand.ink },
+  searchInput: { flex: 1, height: 35, paddingVertical: 0, fontSize: 13, color: Brand.ink },
   lang: { flexDirection: 'row', alignItems: 'center', gap: 7, marginRight: 23 },
   langTall: { marginRight: 14 },
   signIn: { width: 86, height: 38, alignItems: 'center', justifyContent: 'center', borderRadius: 6, borderWidth: 1, borderColor: '#DCE3EE', marginRight: 11 },
@@ -180,5 +183,5 @@ const styles = StyleSheet.create({
   startTall: { width: 120, height: 46, borderRadius: 8 },
   startText: { fontSize: 13.5, fontWeight: '600', color: Brand.surface },
   btnTextTall: { fontSize: 14.5 },
-  btnNarrow: { width: undefined, height: 36, paddingHorizontal: 12, marginRight: 0 },
+  btnNarrow: { width: 'auto', height: 36, paddingHorizontal: 12, marginRight: 0 },
 });

@@ -6,9 +6,9 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Icon } from '@/components/icon';
 import { Button, ErrorText, Field } from '@/components/ui';
 import { Brand } from '@/features/public/palette';
-import { useAuth } from '@/lib/auth/auth-context';
+import { useAuth, useStartFree } from '@/lib/auth/auth-context';
 import type { IconName } from '@/lib/icons';
-import { MOCK_DATA } from '@/lib/mock';
+import { MOCK_DATA, mockApi } from '@/lib/mock';
 import type { MockData } from '@/mock';
 
 type Art = MockData['publicPages']['signInArt'];
@@ -100,6 +100,8 @@ function EmailForm({ onBack, phone }: { onBack: () => void; phone: boolean }) {
 
 /** The sign-in card: Sign In / Create Account tabs, the ways in, and the security note. Desktop sizes are the reference's pixels. */
 export function SignInCard({ art, phone = false }: { art?: Art; phone?: boolean }) {
+  const { signIn } = useAuth();
+  const startFree = useStartFree();
   const [mode, setMode] = useState<'pick' | 'email'>('pick');
   const [soon, setSoon] = useState<string | null>(null);
   const p = phone;
@@ -110,6 +112,12 @@ export function SignInCard({ art, phone = false }: { art?: Art; phone?: boolean 
     } else {
       setSoon(`${m.title} is coming soon. Use Continue with Email for now.`);
     }
+  };
+  const demoLogin = async (key: 'student' | 'teacher' | 'parent' | 'institution' | 'admin') => {
+    const mock = mockApi();
+    if (!mock) return;
+    const acc = mock.shared.setActiveDemoAccount(key);
+    await signIn(acc.email, 'demo1234');
   };
 
   return (
@@ -158,6 +166,11 @@ export function SignInCard({ art, phone = false }: { art?: Art; phone?: boolean 
         </>
       )}
 
+      {startFree ? (
+        <Pressable onPress={startFree} accessibilityRole="button" style={styles.browseFree}>
+          <Text style={[styles.link, p && styles.linkP]}>Not ready to sign up? Browse free resources first</Text>
+        </Pressable>
+      ) : null}
       <View style={[styles.secure, p && styles.secureP]}>
         <Icon name="shield" size={p ? 24 : 30} color={Brand.blue} />
         <View style={styles.flex}>
@@ -165,6 +178,29 @@ export function SignInCard({ art, phone = false }: { art?: Art; phone?: boolean 
           <Text style={[styles.secureText, p && styles.secureTextP]}>We use industry-standard encryption to keep your data safe. No passwords required.</Text>
         </View>
       </View>
+      {MOCK_DATA ? (
+        <View style={styles.demoBar}>
+          <Text style={styles.demoTitle}>1-Tap Dummy Accounts (Test All 5 Portals):</Text>
+          <View style={styles.demoRow}>
+            {([
+              { key: 'student', label: 'Student' },
+              { key: 'teacher', label: 'Teacher' },
+              { key: 'parent', label: 'Parent' },
+              { key: 'institution', label: 'Institution' },
+              { key: 'admin', label: 'Platform Admin' },
+            ] as const).map((item) => (
+              <Pressable
+                key={item.key}
+                style={styles.demoPill}
+                onPress={() => void demoLogin(item.key)}
+                accessibilityRole="button"
+                accessibilityLabel={`Sign in as ${item.label} dummy account`}>
+                <Text style={styles.demoPillText}>{item.label}</Text>
+              </Pressable>
+            ))}
+          </View>
+        </View>
+      ) : null}
       {MOCK_DATA && p ? (
         <Link href="/welcome" style={[styles.link, styles.preview, p && styles.linkP]} accessibilityRole="link">
           Design preview: public pages
@@ -176,7 +212,7 @@ export function SignInCard({ art, phone = false }: { art?: Art; phone?: boolean 
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
-  card: { width: 552, height: 877, paddingHorizontal: 35, paddingTop: 22, paddingBottom: 30, borderRadius: 14, backgroundColor: Brand.surface, shadowColor: '#0F2350', shadowOpacity: 0.12, shadowRadius: 24, shadowOffset: { width: 0, height: 8 } },
+  card: { width: 552, minHeight: 877, paddingHorizontal: 35, paddingTop: 22, paddingBottom: 30, borderRadius: 14, backgroundColor: Brand.surface, shadowColor: '#0F2350', shadowOpacity: 0.12, shadowRadius: 24, shadowOffset: { width: 0, height: 8 } },
   cardP: { width: '100%', height: 'auto', paddingHorizontal: 14, paddingTop: 8, paddingBottom: 16, borderRadius: 14 },
   tabs: { flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: '#E6EAF1' },
   tab: { flex: 1, alignItems: 'center', paddingVertical: 14 },
@@ -216,6 +252,12 @@ const styles = StyleSheet.create({
   form: { gap: 14, marginTop: 24 },
   formLinks: { flexDirection: 'row', justifyContent: 'space-between' },
   link: { fontSize: 14, fontWeight: '600', color: Brand.blue, paddingVertical: 6 },
+  browseFree: { alignSelf: 'center', marginTop: 4 },
   linkP: { fontSize: 13 },
   preview: { marginTop: 10, textAlign: 'center' },
+  demoBar: { marginTop: 12, padding: 10, borderRadius: 10, borderWidth: 1, borderColor: '#DCE6F5', backgroundColor: '#F8FBFF', gap: 6 },
+  demoTitle: { fontSize: 11.5, fontWeight: '700', color: '#334E7B' },
+  demoRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
+  demoPill: { paddingHorizontal: 10, paddingVertical: 5, borderRadius: 999, backgroundColor: '#1463F3' },
+  demoPillText: { fontSize: 11.5, fontWeight: '700', color: '#FFFFFF' },
 });

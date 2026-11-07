@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
-import { formatMoney } from '@/lib/finance/fees';
 import type { MockData } from '@/mock';
 
 import { Brand } from '../palette';
@@ -180,7 +179,6 @@ export function Related({ course }: { course: Course }) {
             <Text style={styles.strong}>{r.title}</Text>
             <Text style={styles.muted}>{r.meta}</Text>
             <Text style={styles.body}>{`★ ${r.rating} (${r.reviews})`}</Text>
-            <Text style={styles.strong}>{formatMoney(r.priceUGX, 'UGX')}</Text>
           </View>
         </Pressable>
       ))}
@@ -189,7 +187,7 @@ export function Related({ course }: { course: Course }) {
 }
 
 const styles = StyleSheet.create({
-  flex: { flex: 1 },
+  flex: { flex: 1, minWidth: 0 },
   muted: { fontSize: 12, color: Brand.muted },
   body: { fontSize: 13, lineHeight: 19, color: Brand.body },
   strong: { fontSize: 14, fontWeight: '600', color: Brand.ink },
@@ -214,7 +212,7 @@ const styles = StyleSheet.create({
   teacherAvatar: { width: 96, height: 96, borderRadius: 48, backgroundColor: '#8D5524', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
   fill: { width: '100%', height: '100%' },
   teacherInitials: { fontSize: 30, fontWeight: '700', color: Brand.surface },
-  teacherStats: { flexDirection: 'row', gap: 20, marginTop: 8 },
+  teacherStats: { flexDirection: 'row', flexWrap: 'wrap', columnGap: 20, rowGap: 8, marginTop: 8 },
   stat: { fontSize: 18, fontWeight: '800', color: Brand.ink },
   outline: { alignItems: 'center', paddingVertical: 10, borderRadius: 8, borderWidth: 1, borderColor: Brand.line },
   outlineSmall: { paddingHorizontal: 14, paddingVertical: 8, borderRadius: 8, borderWidth: 1, borderColor: Brand.blue },

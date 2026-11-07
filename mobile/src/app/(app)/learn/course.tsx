@@ -43,7 +43,7 @@ function Heading({ c, phone = false }: { c: Course; phone?: boolean }) {
     <>
       <Pressable style={styles.back} onPress={back} accessibilityRole="link">
         <Icon name="chevronLeft" size={14} color={BLUE} />
-        <Text style={styles.backText}>Back to Courses</Text>
+        <Text style={styles.backText}>Back to Subjects</Text>
       </Pressable>
       <View style={styles.chips}>
         <Image source={c.subjectIcon} style={styles.subjIcon} />
@@ -208,7 +208,7 @@ function Phone({ c, s }: { c: Course; s: State }) {
 /** Inventory 12: a course overview with the 3-tap module map, offline downloads, progress and the study squad. */
 export default function CourseScreen() {
   const mock = useMemo(() => mockData(), []);
-  if (!mock) return <PreviewScreen title="Course">{() => null}</PreviewScreen>;
+  if (!mock) return <PreviewScreen title="Subject">{() => null}</PreviewScreen>;
   return <CourseView c={mock.learner.courseOverview} />;
 }
 

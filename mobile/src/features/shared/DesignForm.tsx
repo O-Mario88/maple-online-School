@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
   choiceTextOn: { color: FORM.blue, fontWeight: '700' },
   pair: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
   field: { flexGrow: 1, flexBasis: 200, gap: 4 },
-  input: { height: 42, paddingHorizontal: 12, borderRadius: 8, borderWidth: 1, borderColor: '#DCE3EE', fontSize: 14, color: FORM.ink, backgroundColor: '#FFFFFF' },
+  input: { height: 42, paddingVertical: 0, paddingHorizontal: 12, borderRadius: 8, borderWidth: 1, borderColor: '#DCE3EE', fontSize: 14, color: FORM.ink, backgroundColor: '#FFFFFF' },
   error: { fontSize: 12.5, color: '#B42318' },
   good: { fontSize: 12.5, color: '#15803D' },
   primary: { height: 44, alignItems: 'center', justifyContent: 'center', borderRadius: 8, backgroundColor: FORM.blue },

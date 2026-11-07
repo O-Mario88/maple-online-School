@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "expo-router/entry",
   "dependencies": {
+    "@expo-google-fonts/inter": "^0.4.2",
     "@expo/ui": "~58.0.25",
     "@tanstack/react-query": "^5.105.0",
     "@types/jest": "30.0.0",
@@ -53,6 +54,7 @@
     "typecheck": "tsc --noEmit",
     "api:types": "npx --yes -p openapi-typescript@7.13.0 -p typescript@5.9.3 openapi-typescript ../openapi/maple.yaml -o src/lib/api/schema.d.ts",
     "web:mock": "EXPO_PUBLIC_MOCK_DATA=true expo start --web --port 8081",
+    "web:designs": "EXPO_PUBLIC_DESIGN_DATA=true expo start --web --port 8082",
     "start:mock": "EXPO_PUBLIC_MOCK_DATA=true expo start",
     "check:no-mock": "node scripts/check-no-mock.mjs"
   },

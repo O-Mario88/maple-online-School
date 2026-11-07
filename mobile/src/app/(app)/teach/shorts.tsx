@@ -18,7 +18,7 @@ export default function ShortsCreatorScreen() {
           </Card>
           <Card title="Your short" icon="play">
             <Field label="Title" value={title} onChangeText={setTitle} />
-            <Field label="Subject and course" value="Mathematics · S3 Algebra and Functions" editable={false} />
+            <Field label="Subject" value="Mathematics · S3 Algebra and Functions" editable={false} />
             <Button label="Upload a vertical video instead" icon="download" variant="secondary" onPress={() => toast('Choose a vertical video up to 60 seconds.')} />
             <Button label="Publish to Shorts" icon="check" onPress={() => toast('Short sent for a quick check. It appears in Maple Shorts once approved.')} />
           </Card>

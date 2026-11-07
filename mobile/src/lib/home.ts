@@ -41,3 +41,12 @@ export function humanize(value: string): string {
   const words = value.replace(/_/g, ' ');
   return words.charAt(0).toUpperCase() + words.slice(1);
 }
+
+const TITLES = /^(dr|mr|mrs|ms|miss|prof|rev|hon|sir)\.?$/i;
+
+/** How to greet someone: their first name, or their title and surname ("Dr. Mukasa"). */
+export function addressName(fullName: string): string {
+  const parts = fullName.trim().split(/\s+/);
+  if (parts.length < 2) return fullName.trim();
+  return TITLES.test(parts[0]) ? `${parts[0]} ${parts[parts.length - 1]}` : parts[0];
+}

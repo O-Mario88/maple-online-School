@@ -64,7 +64,7 @@ export default function SchoolsScreen() {
       {head}
       <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
         <RefScale width={width}>
-          <HomeNav wide tall fullWidth links={PAPER_LINKS} active="For Schools" searchPlaceholder="Search courses, teachers, or past papers..." />
+          <HomeNav wide tall fullWidth links={PAPER_LINKS} active="For Schools" searchPlaceholder="Search subjects, teachers, or past papers..." />
         </RefScale>
         <ScrollView style={styles.page}>
           <RefScale width={width} refWidth={SCHOOLS_REF_WIDTH}>

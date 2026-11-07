@@ -1,24 +1,38 @@
 import { Image } from 'expo-image';
+import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { type ReactNode, useState } from 'react';
-import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
-import { Bar } from '@/features/learner/dashboard/DashParts';
-import { ProgressRing } from '@/features/learner/exam/ExamNav';
+import { PremiumTiles } from '@/features/portal/Premium';
 import type { IconName } from '@/lib/icons';
-import { ID_TONE } from '@/features/learner/cbc/CbcParts';
-import { identifierFor } from '@/lib/cbc';
+import { toast } from '@/lib/toast';
+import type { AssignmentProjectTab } from '@/mock/learner-home';
 
 import { BLUE, BODY, type Home, INK } from './HomeFrame';
+import { styles } from './HomeCards.styles';
 
-const SERIF = Platform.select({ ios: 'Georgia', android: 'serif', default: 'Georgia, "Times New Roman", serif' });
-const GREEN = '#16A34A';
+const WAVE_BARS = [6, 12, 9, 16, 20, 13, 8, 15, 22, 18, 10, 14, 19, 11, 7, 14, 17, 10, 13, 8, 5, 9, 6, 4];
 
-export function CardHead({ icon, color, title, link, onLink, children }: { icon: IconName; color: string; title: string; link?: string; onLink?: () => void; children?: ReactNode }) {
+export function CardHead({
+  icon,
+  color,
+  title,
+  link,
+  onLink,
+  children,
+}: {
+  icon?: IconName;
+  color?: string;
+  title: string;
+  link?: string;
+  onLink?: () => void;
+  children?: ReactNode;
+}) {
   return (
     <View style={styles.head}>
-      <Icon name={icon} size={16} color={color} />
+      {icon ? <Icon name={icon} size={15} color={color ?? BLUE} /> : null}
       <Text style={styles.headTitle} numberOfLines={1}>
         {title}
       </Text>
@@ -27,311 +41,492 @@ export function CardHead({ icon, color, title, link, onLink, children }: { icon:
       {link ? (
         <Pressable style={styles.link} onPress={onLink} accessibilityRole="link" hitSlop={8}>
           <Text style={styles.linkText}>{link}</Text>
-          <Icon name="arrowRight" size={12} color={BLUE} />
         </Pressable>
       ) : null}
     </View>
   );
 }
 
-export function Tabs<T extends string>({ tabs, on, setOn }: { tabs: readonly T[]; on: T; setOn: (t: T) => void }) {
+/** Hero Banner matching Image 1: student photo on left, Welcome back Daniel + This Week pill, quote + mountain sunrise on right. */
+export function Hero({ h, phone = false }: { h: Home; phone?: boolean }) {
+  const x = h.hero;
+  if (phone) return <HeroPhone h={h} />;
   return (
-    <View style={styles.tabs} accessibilityRole="tablist">
-      {tabs.map((t) => (
-        <Pressable key={t} style={[styles.tab, t === on && styles.tabOn]} onPress={() => setOn(t)} accessibilityRole="tab" accessibilityState={{ selected: t === on }}>
-          <Text style={[styles.tabText, t === on && styles.tabTextOn]}>{t}</Text>
-          {t === on ? <View style={styles.tabLine} /> : null}
-        </Pressable>
-      ))}
-    </View>
+    <LinearGradient
+      colors={['#0A1F47', '#13356E', '#1F4B8E', '#3A639C']}
+      locations={[0, 0.45, 0.78, 1]}
+      start={{ x: 0, y: 0.2 }}
+      end={{ x: 1, y: 0.8 }}
+      style={styles.hero}>
+      <Image source={x.mountainPhoto} style={styles.heroMountain} contentFit="cover" />
+      <Image
+        source={x.studentPhoto}
+        style={styles.heroPhoto}
+        contentFit="cover"
+        accessibilityLabel={`${h.name} smiling`}
+      />
+      <View style={styles.heroCopy}>
+        <Text style={styles.heroTitle}>{x.title}</Text>
+        <Text style={styles.heroSub}>{x.sub}</Text>
+        <View style={styles.weekPill}>
+          <Icon name="calendar" size={12} color="#93C5FD" />
+          <Text style={styles.weekPillText}>
+            <Text style={styles.weekPillBold}>This Week: </Text>
+            {h.weekRange}
+          </Text>
+        </View>
+      </View>
+      <View style={styles.quoteWrap}>
+        <Text style={styles.quoteMark}>“</Text>
+        <Text style={styles.quoteText}>{x.quote}</Text>
+      </View>
+    </LinearGradient>
   );
 }
 
-export function Hero({ h, greeting }: { h: Home; greeting: string }) {
+/** Phones: the photo and the greeting side by side over the mountain (the desktop row of photo, greeting and quote is 440px wide). */
+function HeroPhone({ h }: { h: Home }) {
   const x = h.hero;
   return (
-    <View style={styles.hero}>
-      <Image source={x.image} style={styles.fill} contentFit="cover" accessibilityLabel="A smiling girl resting her chin on her hand" />
-      <View style={styles.heroCopy}>
-        <Text style={styles.hello}>{`${greeting},`}</Text>
-        <Text style={styles.name}>{`${h.name} 👋`}</Text>
-        <Text style={styles.heroSub}>{x.sub}</Text>
-      </View>
-      <Text style={styles.quote}>{x.quote}</Text>
-      <View style={styles.level}>
-        <Image source={x.crown} style={styles.crown} />
-        <Text style={styles.levelText}>{`Level ${x.level}`}</Text>
-        <View style={styles.levelBar}>
-          <Bar value={x.xp / x.xpNext} color={BLUE} track="#E1E9F6" height={7} />
-        </View>
-        <Text style={styles.xp}>{`${x.xp} / ${x.xpNext} XP`}</Text>
-      </View>
-      <View style={styles.streak}>
-        <Image source={x.fire} style={styles.fire} />
-        <View>
-          <Text style={styles.streakNum}>{x.streak}</Text>
-          <Text style={styles.streakText}>Day Streak</Text>
-        </View>
+    <View style={styles.heroPhone}>
+      <Image source={x.mountainPhoto} style={styles.heroPhoneMountain} contentFit="cover" />
+      <LinearGradient
+        colors={['rgba(10,31,71,0.92)', 'rgba(19,53,110,0.55)']}
+        start={{ x: 0, y: 0.5 }}
+        end={{ x: 1, y: 0.5 }}
+        style={styles.heroPhoneShade}
+      />
+      <Image source={x.studentPhoto} style={styles.heroPhonePhoto} contentFit="cover" accessibilityLabel={`${h.name} smiling`} />
+      <View style={styles.heroPhoneCopy}>
+        <Text style={styles.heroPhoneTitle}>{x.title}</Text>
+        <Text style={styles.heroPhoneSub}>{x.phoneSub ?? x.sub}</Text>
       </View>
     </View>
   );
 }
 
-export function QuickActions({ h }: { h: Home }) {
+/** 6 KPI Summary Cards Row (`89% Overall Progress`, `3 Achievements`, `6 Active Classes`, `4 Assignments Due`, `2 Tests This Week`, `1 Project in Progress`). */
+export function KpiRow({ h, phone = false }: { h: Home; phone?: boolean }) {
+  if (phone) return <KpiGridPhone h={h} />;
   return (
-    <View style={styles.quick}>
-      {h.quick.map((q) => (
-        <Pressable key={q.label} style={styles.quickItem} onPress={() => router.push(q.href)} accessibilityRole="link">
-          <Image source={q.icon} style={styles.quickIcon} />
-          <Text style={styles.quickText} numberOfLines={1}>
-            {q.label}
-          </Text>
+    <View style={styles.kpiRow}>
+      {h.kpis.map((k) => (
+        <Pressable
+          key={k.id}
+          style={[styles.kpiCard, k.delta && styles.kpiCardWide]}
+          onPress={() => router.push(k.href)}
+          accessibilityRole="link"
+          accessibilityLabel={`${k.value} ${k.label}`}>
+          <View style={[styles.kpiIconWrap, { backgroundColor: k.bg }]}>
+            <Icon name={k.icon} size={17} color={k.color} />
+          </View>
+          <View style={styles.flex}>
+            <Text style={styles.kpiVal}>{k.value}</Text>
+            <Text style={styles.kpiLabel} numberOfLines={1}>
+              {k.label}
+            </Text>
+          </View>
+          {k.delta ? (
+            <View style={styles.kpiDeltaCol}>
+              <View style={styles.kpiDeltaPill}>
+                <Text style={styles.kpiDeltaText}>{`↑ ${k.delta}`}</Text>
+              </View>
+              {k.deltaSub ? <Text style={styles.kpiDeltaSub}>{k.deltaSub}</Text> : null}
+            </View>
+          ) : null}
         </Pressable>
       ))}
     </View>
   );
 }
 
-type LearnTab = keyof Home['learning'];
+/** Phones: the six numbers as premium tiles, two to a row (the change sits under the figure). */
+function KpiGridPhone({ h }: { h: Home }) {
+  return <PremiumTiles title="My Progress" subtitle="How your learning is going this week." minHeight={146} items={h.kpis.map((k) => ({ label: k.label, value: k.value, icon: k.icon, tone: 'blue' as const, color: k.color, delta: k.delta, caption: k.deltaSub, onPress: () => router.push(k.href) }))} />;
+}
 
-export function MyLearning({ h }: { h: Home }) {
-  const tabs = Object.keys(h.learning) as LearnTab[];
-  const [on, setOn] = useState<LearnTab>(tabs[0]);
+const SUBJECT_TABS = ['All Subjects', 'This Term', 'Trend'] as const;
+type SubjectTab = (typeof SUBJECT_TABS)[number];
+
+/** My Subjects card with 6 pastel subject tiles (`Mathematics`, `English`, `Science`, `Social Studies`, `ICT`, `Agriculture`). */
+export function MySubjectsCard({ h, phone = false }: { h: Home; phone?: boolean }) {
+  const [tab, setTab] = useState<SubjectTab>('All Subjects');
   return (
     <View>
-      <CardHead icon="people" color="#5B3FD9" title="My Learning" link="View All" onLink={() => router.push('/learn/explore')}>
-        <Tabs tabs={tabs} on={on} setOn={setOn} />
-      </CardHead>
-      <View style={styles.courses}>
-        {h.learning[on].map((c) => (
-          <View key={c.subject + c.topic} style={styles.course}>
-            <Image source={c.thumb} style={styles.courseThumb} contentFit="cover" />
-            <View style={styles.courseBody}>
-              <Text style={styles.courseSubject}>{c.subject}</Text>
-              <Text style={styles.courseTopic} numberOfLines={1}>
-                {c.topic}
-              </Text>
-              <View style={styles.courseBar}>
-                <View style={styles.flex}>
-                  <Bar value={c.progress} color={BLUE} track="#E1E9F6" height={7} />
-                </View>
-                <Text style={styles.coursePct}>{`${Math.round(c.progress * 100)}%`}</Text>
-              </View>
-              <Pressable style={styles.continue} onPress={() => router.push('/learn/course')} accessibilityRole="button" accessibilityLabel={`${c.progress === 1 ? 'Review' : c.progress === 0 ? 'Start' : 'Continue'} ${c.subject}: ${c.topic}`}>
-                <View style={styles.playDot}>
-                  <Icon name="playFill" size={8} color="#FFFFFF" />
-                </View>
-                <Text style={styles.continueText}>{c.progress === 1 ? 'Review' : c.progress === 0 ? 'Start' : 'Continue'}</Text>
+      {/* Phones: the subject tabs sit under the title, where they have the full width. */}
+      <View style={phone ? styles.headPhone : styles.head}>
+        <Text style={styles.sectionTitle}>My Subjects</Text>
+        {phone ? null : <View style={styles.flex} />}
+        <View style={styles.pillTabs} accessibilityRole="tablist">
+          {SUBJECT_TABS.map((t) => {
+            const on = t === tab;
+            return (
+              <Pressable
+                key={t}
+                style={[styles.pillTab, on && styles.pillTabOn]}
+                onPress={() => setTab(t)}
+                accessibilityRole="tab"
+                accessibilityState={{ selected: on }}>
+                <Text style={[styles.pillTabText, on && styles.pillTabTextOn]}>{t}</Text>
               </Pressable>
+            );
+          })}
+        </View>
+      </View>
+      {/* Phones: two rows of three, so each name, score and change has room. */}
+      <View style={phone ? styles.subjectsGridPhone : styles.subjectsGrid}>
+        {h.subjects.map((s) => (
+          <Pressable
+            key={s.id}
+            style={[phone ? styles.subjectTilePhone : styles.subjectTile, phone ? { backgroundColor: `${s.color}1A`, borderColor: `${s.color}26` } : { backgroundColor: s.bg }]}
+            onPress={() => router.push(s.href)}
+            accessibilityRole="link"
+            accessibilityLabel={`${s.subject}: ${s.score}, up ${s.delta}`}>
+            <View style={[styles.subjectIconBox, { backgroundColor: s.iconBg }]}>
+              <Icon name={s.icon} size={15} color={s.color} />
             </View>
-          </View>
+            <Text style={[phone ? styles.subjectNamePhone : styles.subjectName, phone && { color: s.color }]} numberOfLines={phone ? 2 : 1}>
+              {s.subject}
+            </Text>
+            <View style={phone ? styles.subjectScoreRowPhone : styles.subjectScoreRow}>
+              <Text style={[phone ? styles.subjectScorePhone : styles.subjectScore, phone && { color: s.color }]}>{s.score}</Text>
+              <Text style={phone ? styles.subjectDeltaPhone : styles.subjectDelta}>{`↑${s.delta}`}</Text>
+            </View>
+          </Pressable>
         ))}
       </View>
     </View>
   );
 }
 
-function SessionCard({ photo, title, topic, when, time, teacher, action, onPress }: { photo: number; title: string; topic: string; when: string; time: string; teacher: string; action: string; onPress: () => void }) {
+/** Voice note card from Daniel's teacher (`Ms. Sarah N. • Mathematics Teacher`). */
+export function TeacherVoiceCard({ h, phone = false }: { h: Home; phone?: boolean }) {
+  const [playing, setPlaying] = useState(false);
+  const m = h.teacherMessage;
   return (
-    <View style={styles.session}>
-      <Image source={photo} style={styles.sessionPhoto} />
-      <View style={styles.flex}>
-        <Text style={styles.sessionTitle}>{title}</Text>
-        <Text style={styles.sessionSub}>{topic}</Text>
-        <Text style={styles.sessionWhen}>{`${when}  •  ${time}`}</Text>
-        <Text style={styles.sessionSub}>{`with ${teacher}`}</Text>
+    // Phones: the quote wraps onto its own row under the player.
+    <View style={phone ? styles.voiceCardInnerPhone : styles.voiceCardInner}>
+      <Image source={m.avatar} style={styles.teacherAvatar} contentFit="cover" />
+      <View style={phone ? styles.voiceCenterPhone : styles.voiceCenter}>
+        <Text style={styles.voiceHeading}>{m.heading}</Text>
+        <Text style={styles.voiceTeacher}>{m.teacher}</Text>
+        <View style={styles.playerRow}>
+          <Pressable
+            style={styles.playBtn}
+            onPress={() => {
+              setPlaying((p) => !p);
+              toast(playing ? 'Paused teacher voice note.' : "Playing Ms. Sarah N.'s voice note...");
+            }}
+            accessibilityRole="button"
+            accessibilityLabel={playing ? 'Pause teacher message' : 'Play teacher message'}>
+            <Icon name={playing ? 'pause' : 'playFill'} size={12} color="#FFFFFF" />
+          </Pressable>
+          <View style={styles.waveRow}>
+            {WAVE_BARS.map((height, idx) => (
+              <View
+                key={idx}
+                style={[
+                  styles.waveBar,
+                  {
+                    height,
+                    backgroundColor: playing || idx < 14 ? BLUE : '#CBD5E1',
+                  },
+                ]}
+              />
+            ))}
+          </View>
+          <Text style={styles.durationText}>{playing ? '0:08 / 0:20' : m.duration}</Text>
+        </View>
       </View>
-      <Pressable style={styles.join} onPress={onPress} accessibilityRole="button" accessibilityLabel={`${action}: ${title}`}>
-        <Icon name={action === 'Join Class' ? 'video' : 'live'} size={13} color="#FFFFFF" />
-        <Text style={styles.joinText}>{action}</Text>
+      <View style={phone ? styles.voiceQuoteBoxPhone : styles.voiceQuoteBox}>
+        <Text style={styles.voiceQuoteWatermark}>“</Text>
+        <Text style={styles.voiceQuoteText}>{m.quote}</Text>
+      </View>
+    </View>
+  );
+}
+
+/** Upcoming Live Classes card (`Live in 2h Mathematics Live Class`, `Tue 27 Oct Science Revision`, `Thu 29 Oct English Reading Clinic`). */
+export function UpcomingLiveClassesCard({ h }: { h: Home }) {
+  return (
+    <View>
+      <CardHead icon="live" color={BLUE} title="Upcoming Live Classes" link="View All" onLink={() => router.push('/learn/live')} />
+      <View style={styles.liveList}>
+        {h.upcomingLiveClasses.map((c) => (
+          <Pressable
+            key={c.id}
+            style={[styles.liveRow, c.liveSoon && styles.liveRowHighlight]}
+            onPress={() => router.push(c.href)}
+            accessibilityRole="link"
+            accessibilityLabel={`${c.title}, ${c.time}`}>
+            {c.liveSoon ? (
+              <View style={styles.liveInBadge}>
+                <Icon name="video" size={11} color="#E5484D" />
+                <Text style={styles.liveInText}>{c.badge}</Text>
+              </View>
+            ) : (
+              <View style={styles.liveDateCell}>
+                <View style={styles.liveCalIcon}>
+                  <Icon name="calendar" size={12} color={BLUE} />
+                </View>
+                <View>
+                  <Text style={styles.liveDow}>{c.dayDow}</Text>
+                  <Text style={styles.liveDate}>{c.dayDate}</Text>
+                </View>
+              </View>
+            )}
+            <View style={styles.flex}>
+              <Text style={styles.liveTitle} numberOfLines={1}>
+                {c.title}
+              </Text>
+              <Text style={styles.liveTime} numberOfLines={1}>
+                {c.time}
+              </Text>
+            </View>
+            <Icon name="chevronRight" size={13} color={BODY} />
+          </Pressable>
+        ))}
+      </View>
+    </View>
+  );
+}
+
+const AP_TABS: readonly AssignmentProjectTab[] = ['All (7)', 'Assignments (4)', 'Projects (1)', 'Tests (2)'];
+
+/** My Assignments & Projects card with filter pills and 4 items. */
+export function AssignmentsProjectsCard({ h }: { h: Home }) {
+  const [tab, setTab] = useState<AssignmentProjectTab>('All (7)');
+  const rows =
+    tab === 'All (7)'
+      ? h.assignmentsAndProjects
+      : h.assignmentsAndProjects.filter((r) => r.tab === tab);
+  return (
+    <View>
+      <CardHead
+        icon="clipboard"
+        color={BLUE}
+        title="My Assignments & Projects"
+        link="View All"
+        onLink={() => router.push('/learn/assignments')}
+      />
+      <View style={styles.apTabs} accessibilityRole="tablist">
+        {AP_TABS.map((t) => {
+          const on = t === tab;
+          return (
+            <Pressable
+              key={t}
+              style={[styles.apTab, on && styles.apTabOn]}
+              onPress={() => setTab(t)}
+              accessibilityRole="tab"
+              accessibilityState={{ selected: on }}>
+              <Text style={[styles.apTabText, on && styles.apTabTextOn]}>{t}</Text>
+            </Pressable>
+          );
+        })}
+      </View>
+      <View style={styles.apList}>
+        {rows.map((r) => (
+          <Pressable
+            key={r.id}
+            style={styles.apRow}
+            onPress={() => router.push(r.href)}
+            accessibilityRole="link"
+            accessibilityLabel={`${r.title}, ${r.sub}, ${r.status}`}>
+            <View style={[styles.apIcon, { backgroundColor: r.bg }]}>
+              <Icon name={r.icon} size={13} color={r.color} />
+            </View>
+            <View style={styles.flex}>
+              <Text style={styles.apTitle} numberOfLines={1}>
+                {r.title}
+              </Text>
+              <Text style={styles.apSub} numberOfLines={1}>
+                {r.sub}
+              </Text>
+            </View>
+            <View style={[styles.statusPill, r.tone === 'good' ? styles.statusGood : styles.statusDanger]}>
+              <Text style={[styles.statusText, r.tone === 'good' ? styles.statusTextGood : styles.statusTextDanger]}>
+                {r.status}
+              </Text>
+            </View>
+            <Icon name="chevronRight" size={12} color={BODY} />
+          </Pressable>
+        ))}
+      </View>
+    </View>
+  );
+}
+
+/** Recent Work card (`End of Topic Test – Fractions 92%`, `Reading Comprehension 85%`, `Investigating Soil Types (AoI) 88%`, `Community Health Project Submitted`). */
+export function RecentWorkCard({ h }: { h: Home }) {
+  return (
+    <View>
+      <CardHead
+        icon="clipboard"
+        color={BLUE}
+        title="Recent Work"
+        link="View All"
+        onLink={() => router.push('/learn/passport')}
+      />
+      <View style={styles.rwList}>
+        {h.recentWork.map((r) => {
+          const graded = r.status === 'Graded';
+          return (
+            <Pressable
+              key={r.id}
+              style={styles.rwRow}
+              onPress={() => router.push(r.href)}
+              accessibilityRole="link"
+              accessibilityLabel={`${r.title}, ${r.sub}, ${r.status} ${r.score}`}>
+              <View style={[styles.apIcon, { backgroundColor: r.bg }]}>
+                <Icon name={r.icon} size={13} color={r.color} />
+              </View>
+              <View style={styles.flex}>
+                <Text style={styles.apTitle} numberOfLines={1}>
+                  {r.title}
+                </Text>
+                <Text style={styles.apSub} numberOfLines={1}>
+                  {r.sub}
+                </Text>
+              </View>
+              <View style={[styles.statusPill, graded ? styles.statusGood : styles.statusInfo]}>
+                <Text style={[styles.statusText, graded ? styles.statusTextGood : styles.statusTextInfo]}>
+                  {r.status}
+                </Text>
+              </View>
+              <Text style={styles.rwScore}>{r.score}</Text>
+            </Pressable>
+          );
+        })}
+      </View>
+    </View>
+  );
+}
+
+/** This Week's Achievements card. */
+export function WeekAchievementsCard({ h }: { h: Home }) {
+  return (
+    <View style={styles.flex}>
+      <CardHead icon="trophy" color="#F59E0B" title="This Week's Achievements" />
+      <View style={styles.achList}>
+        {h.weekAchievements.map((a) => (
+          <View key={a.id} style={styles.achRow}>
+            <View style={styles.achCheck}>
+              <Icon name="check" size={11} color="#FFFFFF" />
+            </View>
+            <Text style={styles.achText}>{a.text}</Text>
+            <Text style={styles.achDate}>{a.date}</Text>
+          </View>
+        ))}
+      </View>
+      <Pressable
+        style={styles.achFooter}
+        onPress={() => router.push('/learn/passport')}
+        accessibilityRole="link"
+        accessibilityLabel="View All Achievements">
+        <Text style={styles.linkText}>View All Achievements</Text>
+        <Icon name="arrowRight" size={12} color={BLUE} />
       </Pressable>
     </View>
   );
 }
 
-export function UpcomingLive({ h }: { h: Home }) {
-  const c = h.liveClass;
+/** My Learning Journey 6-step horizontal stepper. */
+export function LearningJourneyCard({ h, phone = false }: { h: Home; phone?: boolean }) {
+  if (phone) return <LearningJourneyPhone h={h} />;
   return (
     <View>
-      <CardHead icon="live" color="#E5484D" title="Upcoming Live Classes" link="View All" onLink={() => router.push('/learn/live')} />
-      <SessionCard photo={c.photo} title={c.subject} topic={c.topic} when={c.when} time={c.time} teacher={c.teacher} action="Join Class" onPress={() => router.push('/learn/live-room')} />
-    </View>
-  );
-}
-
-export function UpcomingTutoring({ h }: { h: Home }) {
-  const t = h.tutoring;
-  return (
-    <View>
-      <CardHead icon="person" color="#F28C28" title="Upcoming Live Tutoring" link="View All" onLink={() => router.push('/learn/live')} />
-      <SessionCard photo={t.photo} title={t.title} topic={t.topic} when={t.when} time={t.time} teacher={t.teacher} action="Join Session" onPress={() => router.push('/learn/live-room')} />
-    </View>
-  );
-}
-
-export function MyProgress({ h, phone = false }: { h: Home; phone?: boolean }) {
-  return (
-    <View style={[styles.rings, phone && styles.ringsP]}>
-      {h.progress.map((p) => (
-        <View key={p.subject} style={styles.ring} accessible accessibilityLabel={`${p.subject}: ${Math.round(p.value * 100)}%, ${identifierFor(p.value * 100, 100).label}`}>
-          <ProgressRing value={p.value} size={phone ? 54 : 64} stroke={phone ? 5 : 6} color={p.color} track={`${p.color}22`} labelSize={phone ? 12 : 15} />
-          <View style={styles.ringLabel}>
-            <Text style={[styles.ringText, phone && styles.ringTextP]}>{phone ? p.short : p.subject}</Text>
-            <Text style={[styles.ringId, { color: ID_TONE[identifierFor(p.value * 100, 100).id].fg }]}>{identifierFor(p.value * 100, 100).label}</Text>
-          </View>
-        </View>
-      ))}
-    </View>
-  );
-}
-
-export function ResultRow({ r, phone = false }: { r: Home['results'][number]; phone?: boolean }) {
-  const g = identifierFor(r.percent, 100);
-  const good = g.id === 3;
-  return (
-    <View style={[styles.result, phone && styles.resultP]} accessible accessibilityLabel={`${r.title}, ${r.date}, ${r.percent}%, identifier ${g.id}, ${g.label}`}>
-      <Image source={r.icon} style={phone ? styles.resultIconP : styles.resultIcon} />
-      <View style={styles.flex}>
-        <Text style={styles.resultTitle}>{r.title}</Text>
-        {phone ? <Text style={styles.resultDate}>{r.date}</Text> : null}
-      </View>
-      {phone ? null : <Text style={styles.resultDate}>{r.date}</Text>}
-      <Text style={[styles.resultPct, { color: good ? GREEN : '#D97706' }]}>{`${r.percent}%`}</Text>
-      <View style={[styles.grade, good ? styles.gradeGood : styles.gradeWarn]}>
-        <Text style={[styles.gradeText, { color: good ? GREEN : '#D97706' }]}>{g.id}</Text>
-      </View>
-    </View>
-  );
-}
-
-type LibTab = keyof Home['library'];
-
-export function MyLibrary({ h }: { h: Home }) {
-  const tabs = Object.keys(h.library) as LibTab[];
-  const [on, setOn] = useState<LibTab>(tabs[0]);
-  return (
-    <View>
-      <CardHead icon="book" color="#E5484D" title="My Library" link="View All" onLink={() => router.push('/learn/library')}>
-        <Tabs tabs={tabs} on={on} setOn={setOn} />
-      </CardHead>
-      <View style={styles.books}>
-        {h.library[on].map((b) => (
-          <Pressable key={b.title} style={styles.book} onPress={() => router.push('/learn/library')} accessibilityRole="link" accessibilityLabel={`${b.title}, ${b.meta}`}>
-            <Image source={b.thumb} style={styles.bookThumb} contentFit="cover" />
-            <Text style={styles.bookTitle}>{b.title}</Text>
-            <Text style={styles.bookMeta}>{b.meta}</Text>
-          </Pressable>
-        ))}
-      </View>
-    </View>
-  );
-}
-
-export function MyProjects({ h }: { h: Home }) {
-  return (
-    <View>
-      <CardHead icon="star" color="#F28C28" title="My Projects" link="View All" onLink={() => router.push('/learn/projects')} />
-      <View style={styles.projects}>
-        {h.projects.map((p) => (
-          <Pressable key={p.title} style={styles.project} onPress={() => router.push('/learn/projects')} accessibilityRole="link" accessibilityLabel={`${p.title}, ${p.subject}, ${p.due}, ${Math.round(p.progress * 100)}% done`}>
-            <Text style={styles.projectTitle} numberOfLines={1}>
-              {p.title}
-            </Text>
-            <Text style={styles.projectSub} numberOfLines={1}>
-              {p.subject}
-            </Text>
-            <Text style={styles.due}>{p.due}</Text>
-            <View style={styles.projectBar}>
-              <View style={styles.flex}>
-                <Bar value={p.progress} color={p.color} track="#E1E9F6" height={6} />
+      <Text style={styles.sectionTitle}>My Learning Journey</Text>
+      <View style={styles.journeyRow}>
+        <View style={styles.journeyTrack} />
+        <View style={styles.journeyTrackDone} />
+        {h.learningJourney.map((s) => {
+          const isDone = s.state === 'done';
+          const isCurrent = s.state === 'current';
+          return (
+            <View key={s.id} style={styles.journeyStep}>
+              <View
+                style={[
+                  styles.journeyCircle,
+                  isDone && styles.journeyCircleDone,
+                  isCurrent && styles.journeyCircleCurrent,
+                ]}>
+                <Icon
+                  name={s.icon}
+                  size={13}
+                  color={isDone || isCurrent ? '#FFFFFF' : '#64748B'}
+                />
               </View>
-              <Text style={styles.projectPct}>{`${Math.round(p.progress * 100)}%`}</Text>
+              <Text style={[styles.journeyTitle, isCurrent && { color: INK, fontWeight: '800' }]}>
+                {s.title}
+              </Text>
+              <Text style={styles.journeySub}>{s.sub}</Text>
             </View>
+          );
+        })}
+      </View>
+    </View>
+  );
+}
+
+/** Phones: the six steps as a vertical list (six 62px steps don't fit across a phone card). */
+function LearningJourneyPhone({ h }: { h: Home }) {
+  const last = h.learningJourney.length - 1;
+  return (
+    <View>
+      <Text style={styles.sectionTitle}>My Learning Journey</Text>
+      <View style={styles.journeyListPhone}>
+        {h.learningJourney.map((s, i) => {
+          const isDone = s.state === 'done';
+          const isCurrent = s.state === 'current';
+          return (
+            <View key={s.id} style={styles.journeyRowPhone}>
+              <View style={styles.journeyRailPhone}>
+                <View style={[styles.journeyCircle, isDone && styles.journeyCircleDone, isCurrent && styles.journeyCircleCurrent]}>
+                  <Icon name={s.icon} size={13} color={isDone || isCurrent ? '#FFFFFF' : '#64748B'} />
+                </View>
+                {i < last ? <View style={[styles.journeyLinePhone, isDone && styles.journeyLineDonePhone]} /> : null}
+              </View>
+              <View style={styles.journeyTextPhone}>
+                <Text style={[styles.journeyTitlePhone, isCurrent && styles.journeyTitleCurrentPhone]}>{s.title}</Text>
+                <Text style={styles.journeySubPhone}>{s.sub}</Text>
+              </View>
+            </View>
+          );
+        })}
+      </View>
+    </View>
+  );
+}
+
+/** Recommended for You 4-item card. */
+export function RecommendedCard({ h }: { h: Home }) {
+  return (
+    <View>
+      <CardHead
+        icon="star"
+        color="#F59E0B"
+        title="Recommended for You"
+        link="View All"
+        onLink={() => router.push('/learn/library')}
+      />
+      <View style={styles.recGrid}>
+        {h.recommendedItems.map((it) => (
+          <Pressable
+            key={it.id}
+            style={styles.recCard}
+            onPress={() => router.push(it.href)}
+            accessibilityRole="link"
+            accessibilityLabel={`${it.title}, ${it.sub}`}>
+            <Image source={it.thumb} style={styles.recThumb} contentFit="cover" />
+            <Text style={styles.recTitle} numberOfLines={2}>
+              {it.title}
+            </Text>
+            <Text style={[styles.recSub, { color: it.subColor }]} numberOfLines={1}>
+              {it.sub}
+            </Text>
           </Pressable>
         ))}
       </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  flex: { flex: 1 },
-  fill: { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0 },
-  head: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  headTitle: { fontSize: 15.5, fontWeight: '700', color: INK, letterSpacing: -0.2 },
-  link: { flexDirection: 'row', alignItems: 'center', gap: 6 },
-  linkText: { fontSize: 11.5, color: BLUE },
-  tabs: { flexDirection: 'row', gap: 5, marginLeft: 10 },
-  tab: { height: 25, justifyContent: 'center', paddingHorizontal: 8, borderRadius: 5, backgroundColor: '#F1F4F9' },
-  tabOn: { backgroundColor: '#E6EEFC' },
-  tabText: { fontSize: 11, color: BODY },
-  tabTextOn: { color: BLUE, fontWeight: '600' },
-  tabLine: { position: 'absolute', left: 0, right: 0, bottom: -4, height: 2, backgroundColor: BLUE },
-  hero: { height: 173, borderRadius: 12, overflow: 'hidden', backgroundColor: '#DCE9F7' },
-  heroCopy: { position: 'absolute', left: 207, top: 17 },
-  hello: { fontSize: 15.5, fontWeight: '600', color: INK },
-  name: { marginTop: 1, fontSize: 30, fontWeight: '800', color: INK, letterSpacing: -0.6 },
-  heroSub: { marginTop: 4, fontSize: 15.5, color: '#3D4656' },
-  quote: { position: 'absolute', left: 540, top: 38, fontFamily: SERIF, fontStyle: 'italic', fontSize: 16, lineHeight: 22, color: '#1E2A44', textAlign: 'right' },
-  level: { position: 'absolute', left: 206, top: 122, width: 426, height: 40, flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 9, borderRadius: 8, backgroundColor: '#FFFFFF' },
-  crown: { width: 26, height: 26 },
-  levelText: { fontSize: 14, fontWeight: '700', color: INK, marginRight: 8, flexShrink: 0 },
-  levelBar: { flex: 1 },
-  xp: { marginLeft: 6, fontSize: 12, color: INK, flexShrink: 0 },
-  streak: { position: 'absolute', left: 648, top: 107, width: 110, height: 55, flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 12, borderRadius: 10, backgroundColor: '#FFFFFF' },
-  fire: { width: 28, height: 32 },
-  streakNum: { fontSize: 18, lineHeight: 20, fontWeight: '700', color: INK },
-  streakText: { fontSize: 11.5, color: INK },
-  quick: { height: 70, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 4, borderRadius: 10, backgroundColor: '#FFFFFF' },
-  quickItem: { flex: 1, alignItems: 'center', gap: 8 },
-  quickIcon: { width: 42, height: 42 },
-  quickText: { fontSize: 10.5, color: INK },
-  courses: { flexDirection: 'row', gap: 12, marginTop: 18 },
-  course: { width: 133, borderRadius: 8, borderWidth: 1, borderColor: '#E8EDF4', backgroundColor: '#FFFFFF', overflow: 'hidden' },
-  courseThumb: { width: 133, height: 68 },
-  courseBody: { padding: 9 },
-  courseSubject: { fontSize: 12.5, fontWeight: '700', color: INK },
-  courseTopic: { marginTop: 3, fontSize: 10.5, color: BODY },
-  courseBar: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 12 },
-  coursePct: { fontSize: 11, color: INK },
-  continue: { height: 26, flexDirection: 'row', alignItems: 'center', gap: 9, marginTop: 8, paddingHorizontal: 8, borderRadius: 5, backgroundColor: '#E6EEFC' },
-  playDot: { width: 15, height: 15, alignItems: 'center', justifyContent: 'center', borderRadius: 8, backgroundColor: BLUE },
-  continueText: { fontSize: 11.5, fontWeight: '600', color: BLUE },
-  session: { flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 16, padding: 12, borderRadius: 8, borderWidth: 1, borderColor: '#E8EDF4' },
-  sessionPhoto: { width: 58, height: 56, borderRadius: 6 },
-  sessionTitle: { fontSize: 12.5, fontWeight: '700', color: INK },
-  sessionSub: { marginTop: 3, fontSize: 11, color: BODY },
-  sessionWhen: { marginTop: 3, fontSize: 10.5, color: INK },
-  join: { height: 24, flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 9, borderRadius: 4, backgroundColor: '#0B6BFF' },
-  joinText: { fontSize: 11, fontWeight: '500', color: '#FFFFFF' },
-  rings: { flexDirection: 'row', justifyContent: 'space-around', marginTop: 12 },
-  ringsP: { marginTop: 10, justifyContent: 'space-between' },
-  ring: { alignItems: 'center', gap: 8 },
-  ringLabel: { alignItems: 'center' },
-  ringId: { marginTop: 1, fontSize: 10, fontWeight: '600' },
-  ringText: { fontSize: 12.5, color: INK },
-  ringTextP: { fontSize: 11 },
-  result: { height: 31, flexDirection: 'row', alignItems: 'center', gap: 10 },
-  resultP: { height: 44 },
-  resultIcon: { width: 18, height: 18 },
-  resultIconP: { width: 28, height: 28 },
-  resultTitle: { fontSize: 12, color: INK },
-  resultDate: { width: 86, fontSize: 11, color: BODY },
-  resultPct: { width: 34, fontSize: 12.5, fontWeight: '700', textAlign: 'right' },
-  grade: { width: 22, height: 22, alignItems: 'center', justifyContent: 'center', borderRadius: 4 },
-  gradeGood: { backgroundColor: '#DDF3E5' },
-  gradeWarn: { backgroundColor: '#FDEBD3' },
-  gradeText: { fontSize: 11.5, fontWeight: '700' },
-  books: { flexDirection: 'row', gap: 12, marginTop: 14 },
-  book: { width: 120 },
-  bookThumb: { width: 120, height: 56, borderRadius: 5 },
-  bookTitle: { marginTop: 6, fontSize: 11, color: INK },
-  bookMeta: { marginTop: 1, fontSize: 9.5, color: BODY },
-  projects: { flexDirection: 'row', gap: 8, marginTop: 14 },
-  project: { flex: 1, padding: 9, borderRadius: 8, borderWidth: 1, borderColor: '#E8EDF4' },
-  projectTitle: { fontSize: 10.5, fontWeight: '600', color: INK },
-  projectSub: { marginTop: 3, fontSize: 10.5, color: BODY },
-  due: { alignSelf: 'flex-start', marginTop: 8, paddingHorizontal: 5, paddingVertical: 2, borderRadius: 3, backgroundColor: '#FDE2E2', fontSize: 10, color: '#E5484D', overflow: 'hidden' },
-  projectBar: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 14 },
-  projectPct: { fontSize: 10.5, color: INK },
-});

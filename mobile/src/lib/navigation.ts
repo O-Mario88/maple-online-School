@@ -27,6 +27,8 @@ export interface Person {
 export interface NavItem {
   key: string;
   label: string;
+  /** A shorter label for the phone tab bar, where a fifth of the screen is all there is. */
+  short?: string;
   /** An app path; every one has a route file (navigation.test.ts checks). */
   href: string;
   icon: IconName;
@@ -69,14 +71,17 @@ const lessons: NavItem = { ...item('lessons', 'Lessons', '/learn/live', 'play'),
 const library: NavItem = { ...item('library', 'Library', '/learn/library', 'library'), also: ['/learn/library'] };
 const curriculum = item('curriculum', 'Curriculum', '/curriculum', 'map');
 const fees = item('fees', 'Fees', '/fees', 'wallet');
-const school = item('school', 'School set-up', '/admin/onboarding', 'school');
+const school = item('school', 'Set-up', '/admin/onboarding', 'school');
 const messages = item('messages', 'Messages', '/messages', 'chat');
 
 // Order matters: on phones the first four (or five) become tabs.
+// The plans page: where the free month continues, and where people land once it has ended.
+const pricing = p('pricing', 'Pricing', '/plans', 'wallet');
+
 const MENUS: Readonly<Record<Portal, readonly NavItem[]>> = {
   learner: [
     home,
-    p('explore', 'Learn', '/learn/explore', 'book'),
+    p('explore', 'Explore', '/learn/explore', 'search'),
     { ...lessons, label: 'Classes', icon: 'person' },
     // Ported to the API: the designed page in every build.
     { key: 'assignments', label: 'Assignments', href: '/learn/assignments', icon: 'clipboard' },
@@ -91,6 +96,7 @@ const MENUS: Readonly<Record<Portal, readonly NavItem[]>> = {
     p('offline', 'Offline', '/learn/offline', 'cloud'),
     curriculum,
     fees,
+    pricing,
     p('billing', 'Billing', '/learn/billing', 'wallet'),
     p('account', 'My account', '/learn/account', 'person'),
   ],
@@ -100,16 +106,21 @@ const MENUS: Readonly<Record<Portal, readonly NavItem[]>> = {
     lessons,
     messages,
     item('grading', 'Marking', '/teach/grading', 'check'),
+    p('assignments-new', 'Create assignment', '/teach/assignments/new', 'clipboard'),
+    p('attendance-register', 'Attendance register', '/teach/attendance', 'calendar'),
+    p('learners-heatmap', 'Mastery heatmap', '/teach/learners', 'chart'),
     library,
     curriculum,
     p('studio', 'AI studio', '/teach/studio', 'sparkle'),
-    p('course-editor', 'Course builder', '/teach/course-editor', 'book'),
+    p('course-editor', 'Subject builder', '/teach/course-editor', 'book'),
     p('host', 'Live host', '/teach/host', 'live'),
     p('shorts-creator', 'Shorts creator', '/teach/shorts', 'play'),
     p('class-spaces', 'Class spaces', '/teach/class-spaces', 'people'),
     p('storefront', 'Storefront', '/teach/storefront', 'person'),
     p('earnings', 'Earnings', '/teach/earnings', 'wallet'),
+    pricing,
     p('verification', 'Verification', '/teach/verification', 'check'),
+    p('teacher-library', 'Resource library', '/teach/library', 'folder'),
   ],
   parent: [
     { ...home, label: 'Family' },
@@ -124,28 +135,60 @@ const MENUS: Readonly<Record<Portal, readonly NavItem[]>> = {
   school: [
     { ...home, label: 'Dashboard' },
     school,
-    fees,
+    // Design builds open the school-admin references; real builds keep the live fees and library pages.
+    { ...fees, designHref: '/admin/finance/fees' },
     lessons,
-    library,
+    { ...library, designHref: '/admin/library' },
     messages,
     curriculum,
-    p('rosters', 'Rosters', '/admin/rosters', 'people'),
-    p('timetable', 'Timetable', '/admin/timetable', 'calendar'),
-    p('attendance-monitor', 'Attendance', '/admin/attendance', 'check'),
-    p('academics', 'Academic year', '/admin/academics', 'map'),
-    p('accounting', 'Accounting', '/admin/accounting', 'chart'),
+    item('rosters', 'Rosters', '/admin/rosters', 'people'),
+    item('timetable', 'Timetable', '/admin/timetable', 'calendar'),
+    item('attendance-monitor', 'Attendance', '/admin/attendance', 'check'),
+    p('qr-scanner', 'QR scanner', '/admin/scan', 'scan'),
+    item('report-cards', 'Report cards', '/admin/report-cards', 'clipboard'),
+    item('academics', 'Academic year', '/admin/academics', 'map'),
+    item('ledger', 'Student ledger', '/admin/finance/ledger', 'wallet'),
+    p('accounting', 'Accounting', '/admin/finance/accounting', 'chart'),
+    p('chart-of-accounts', 'Chart of accounts', '/admin/finance/chart-of-accounts', 'clipboard'),
+    p('journal-entries', 'Journal entries', '/admin/finance/journal-entries', 'doc'),
+    pricing,
     p('admin-settings', 'Roles and audit', '/admin/settings', 'person'),
   ],
   command: [
+    // Design builds open the Maple Command references; real builds keep the live home and curriculum.
     { ...home, label: 'Overview' },
-    p('trust', 'Trust and safety', '/command/trust', 'flag'),
+    p('executive', 'Executive overview', '/command/overview', 'chart'),
+    { ...p('trust', 'Trust and safety', '/command/trust', 'flag'), short: 'Trust' },
+    p('trust-queue', 'Verification queue', '/command/trust-queue', 'check'),
     p('institutions', 'Schools', '/command/institutions', 'school'),
-    p('revenue', 'Revenue', '/command/revenue', 'chart'),
-    p('payouts', 'Payouts', '/command/payouts', 'wallet'),
-    curriculum,
+    p('revenue', 'Revenue', '/command/finance/revenue', 'chart'),
+    p('payouts', 'Payouts', '/command/finance/payouts', 'wallet'),
+    p('invoices', 'Invoices', '/command/finance/invoices', 'receipt'),
+    p('tax', 'Tax and compliance', '/command/finance/tax', 'percent'),
+    p('pf-subscriptions', 'Subscriptions', '/command/finance/subscriptions', 'sync'),
+    p('pf-transactions', 'Payment transactions', '/command/finance/transactions', 'wallet'),
+    p('pf-settlements', 'Settlements', '/command/finance/settlements', 'layers'),
+    p('pf-receivables', 'Receivables', '/command/finance/receivables', 'database'),
+    p('pf-recognition', 'Revenue recognition', '/command/finance/revenue-recognition', 'layers'),
+    p('pf-contracts', 'Contracts', '/command/finance/contracts', 'doc'),
+    p('pf-teacher-payables', 'Teacher payables', '/command/finance/teacher-payables', 'people'),
+    p('pf-expenses', 'Corporate expenses', '/command/finance/expenses', 'wallet'),
+    p('pf-payroll', 'Corporate payroll', '/command/finance/payroll', 'people'),
+    p('pf-ledger', 'General ledger', '/command/finance/accounting', 'book'),
+    p('pf-forecast', 'Forecasting', '/command/finance/forecast', 'chart'),
+    p('pf-reports', 'Financial reports', '/command/finance/reports', 'doc'),
+    p('pf-profitability', 'Profitability', '/command/finance/profitability', 'chart'),
+    p('pf-integrations', 'Integrations', '/command/finance/integrations', 'link'),
+    { ...curriculum, designHref: '/command/curricula' },
     library,
     p('ops', 'Operations', '/command/ops', 'live'),
     p('security', 'Security', '/command/security', 'alert'),
+    p('audit-logs', 'Audit logs', '/command/security/audit-logs', 'clipboard'),
+    p('data-requests', 'Data requests', '/command/security/data-requests', 'lock'),
+    p('support', 'Support', '/command/security/support', 'help'),
+    p('communications', 'Communications', '/command/communications', 'chat'),
+    p('announcements', 'Announcements', '/command/communications/announcements', 'megaphone'),
+    p('broadcasts', 'Broadcasts', '/command/communications/broadcasts', 'send'),
   ],
 };
 
@@ -181,7 +224,7 @@ export const PUBLIC_PREVIEWS = [
   { href: '/@sarah-kimani', route: '[handle]', label: 'Teacher storefront', icon: 'person' },
   { href: '/live/p7-maths-revision-bootcamp', route: 'live/[slug]', label: 'Live bootcamp', icon: 'live' },
   { href: '/past-papers/uneb-uce/mathematics/2025', route: 'past-papers/[board]/[subject]/[year]', label: 'Past paper (free question)', icon: 'book' },
-  { href: '/courses/complete-mathematics-primary-7', route: 'courses/[slug]', label: 'Course page', icon: 'book' },
+  { href: '/courses/complete-mathematics-primary-7', route: 'courses/[slug]', label: 'Subject page', icon: 'book' },
   { href: '/event', label: 'Live event', icon: 'live' },
   { href: '/digest', label: 'Weekly digest', icon: 'chat' },
   { href: '/p/digest/eyJjaGlsZCI6ImFpc2hhLW5hbXV0ZWJpIiwid2VlayI6IjIwMjYtMTEtMDIiLCJleHAiOjE3OTQ4NjI3NDAwMDB9.demo-signature', route: 'p/digest/[token]', label: 'Parent Sunday digest', icon: 'chat' },

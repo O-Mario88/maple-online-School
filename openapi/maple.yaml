@@ -420,17 +420,77 @@ paths:
   /api/v1/scheduling/terms/:
     get:
       summary: Terms of the user's schools
-      responses: { "200": { description: "{count, results: Term[]}" } }
+      responses:
+        "200":
+          description: The terms
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [count, results]
+                properties:
+                  count: { type: integer }
+                  results: { type: array, items: { $ref: "#/components/schemas/Term" } }
     post:
       summary: Add a term (school leaders); making it active deactivates the others
-      responses: { "201": { description: The term }, "403": { $ref: "#/components/responses/Forbidden" }, "409": { description: Name already used } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, start_date, end_date]
+              properties:
+                institution: { type: integer, format: int64, description: Needed only by leaders of more than one school }
+                name: { type: string, maxLength: 100 }
+                start_date: { type: string, format: date }
+                end_date: { type: string, format: date }
+                is_active: { type: boolean }
+      responses:
+        "201":
+          description: The term
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Term" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "409": { description: Name already used }
   /api/v1/scheduling/rooms/:
     get:
       summary: Rooms of the user's schools (staff)
-      responses: { "200": { description: "{count, results: Room[]}" } }
+      responses:
+        "200":
+          description: The rooms
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [count, results]
+                properties:
+                  count: { type: integer }
+                  results: { type: array, items: { $ref: "#/components/schemas/Room" } }
     post:
       summary: Add a room (school leaders)
-      responses: { "201": { description: The room }, "403": { $ref: "#/components/responses/Forbidden" } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, capacity]
+              properties:
+                institution: { type: integer, format: int64, description: Needed only by leaders of more than one school }
+                name: { type: string, maxLength: 100 }
+                capacity: { type: integer, minimum: 1, maximum: 5000 }
+      responses:
+        "201":
+          description: The room
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Room" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "409": { description: Name already used }
   /api/v1/scheduling/timetable/:
     get:
       summary: Timetable slots the user can see
@@ -475,11 +535,46 @@ paths:
               schema: { $ref: "#/components/schemas/Slot" }
         "400": { $ref: "#/components/responses/BadRequest" }
         "403": { $ref: "#/components/responses/Forbidden" }
-        "409": { description: "Clash: {code: clash, detail, clashes[]}" }
+        "409":
+          description: The lesson clashes with the class's, teacher's or room's timetable
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [code, detail, clashes]
+                properties:
+                  code: { type: string, enum: [clash] }
+                  detail: { type: string }
+                  clashes:
+                    type: array
+                    items:
+                      type: object
+                      required: [slot, class_title, reason]
+                      properties:
+                        slot: { type: integer, format: int64 }
+                        class_title: { type: string }
+                        reason: { type: string }
+  /api/v1/scheduling/timetable/{id}/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    delete:
+      summary: Remove a lesson from the timetable (school leaders)
+      responses:
+        "204": { description: Removed }
+        "404": { $ref: "#/components/responses/NotFound" }
   /api/v1/institutions/:
     get:
       summary: Schools the user belongs to
-      responses: { "200": { description: "{count, results: Institution[]}" } }
+      responses:
+        "200":
+          description: The schools
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [count, results]
+                properties:
+                  count: { type: integer }
+                  results: { type: array, items: { $ref: "#/components/schemas/School" } }
     post:
       summary: Register a school; the caller (a school-admin or Maple admin account) becomes its headteacher
       requestBody:
@@ -544,12 +639,40 @@ paths:
   /api/v1/institution-memberships/:
     get:
       summary: Memberships the user can see (their own, plus their schools' for leaders)
-      responses: { "200": { description: "{count, results: InstitutionMembership[]}" } }
+      responses:
+        "200":
+          description: The memberships
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [count, results]
+                properties:
+                  count: { type: integer }
+                  results: { type: array, items: { $ref: "#/components/schemas/SchoolMember" } }
   /api/v1/institution-memberships/{id}/:
     parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
     patch:
       summary: Change a member's role or status (school leaders)
-      responses: { "200": { description: The membership }, "403": { $ref: "#/components/responses/Forbidden" }, "409": { description: Would remove the school's last active leader } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                role: { type: string, description: A school role, such as subject_teacher or student }
+                status: { type: string, enum: [active, suspended] }
+      responses:
+        "200":
+          description: The membership
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SchoolMember" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { description: Would remove the school's last active leader }
   /api/v1/institution-memberships/{id}/accept/:
     parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
     post:
@@ -792,7 +915,18 @@ paths:
   /api/v1/curriculum/class-levels/:
     get:
       summary: Class levels (S1, S2 …)
-      responses: { "200": { description: "{count, results: ClassLevel[]}" }, "401": { $ref: "#/components/responses/Unauthorized" } }
+      responses:
+        "200":
+          description: The class levels
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [count, results]
+                properties:
+                  count: { type: integer }
+                  results: { type: array, items: { $ref: "#/components/schemas/ClassLevel" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
   /api/v1/curriculum/subjects/:
     get:
       summary: Subjects with their topics
@@ -1641,6 +1775,59 @@ components:
         kind: { type: string, enum: [approach, components, exam, alternative, elective_limit, principal_subjects, subject_groups, combinations] }
         classes: { type: array, items: { type: string } }
         note: { type: string }
+    School:
+      type: object
+      required: [id, name, country_code, school_level, curriculum_track, primary_color, secondary_color, subscription_plan, is_active, created_at]
+      properties:
+        id: { type: integer, format: int64 }
+        name: { type: string }
+        country_code: { type: string }
+        school_level: { type: string }
+        curriculum_track: { type: string }
+        primary_color: { type: string }
+        secondary_color: { type: string }
+        subscription_plan: { type: string }
+        is_active: { type: boolean }
+        created_at: { type: string, format: date-time }
+    ClassLevel:
+      type: object
+      required: [id, name, level, internal_canonical_grade]
+      properties:
+        id: { type: integer, format: int64 }
+        name: { type: string }
+        level: { type: integer, format: int64, description: The education level (nursery, primary, O-Level, A-Level) }
+        internal_canonical_grade: { type: integer, description: "Orders levels across curricula: P1 = 1, S1 = 8" }
+    Term:
+      type: object
+      required: [id, institution, name, start_date, end_date, is_active]
+      properties:
+        id: { type: integer, format: int64 }
+        institution: { type: integer, format: int64 }
+        name: { type: string }
+        start_date: { type: string, format: date }
+        end_date: { type: string, format: date }
+        is_active: { type: boolean }
+    Room:
+      type: object
+      required: [id, institution, name, capacity]
+      properties:
+        id: { type: integer, format: int64 }
+        institution: { type: integer, format: int64 }
+        name: { type: string }
+        capacity: { type: integer }
+    SchoolMember:
+      type: object
+      required: [id, user, full_name, email, institution, institution_name, role, status, joined_at]
+      properties:
+        id: { type: integer, format: int64 }
+        user: { type: integer, format: int64 }
+        full_name: { type: string }
+        email: { type: string }
+        institution: { type: integer, format: int64 }
+        institution_name: { type: string }
+        role: { type: string }
+        status: { type: string, enum: [pending, active, suspended] }
+        joined_at: { type: string, format: date-time }
     Slot:
       type: object
       required: [id, institution, term, assigned_class, class_title, day_of_week, start_time, end_time, room, room_name, teacher, teacher_name, is_draft]

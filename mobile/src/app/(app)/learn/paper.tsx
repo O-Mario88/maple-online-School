@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Icon } from '@/components/icon';
 import { useShell } from '@/components/ui';
+import { UpgradeNote } from '@/features/access/UpgradeNote';
 import { LearnerPhoneTop } from '@/features/learner/dashboard/DashPhone';
 import { Legend, NavGrid, NavStrip, Progress, SubmitButton } from '@/features/learner/exam/ExamNav';
 import { AnswerBox, BLUE, BODY, Crumbs, INK, leaveExam, ORANGE, QuestionBody, QuestionHead, RED, SectionTabs, TimerCard } from '@/features/learner/exam/ExamParts';
@@ -12,6 +13,7 @@ import { type Exam, type ExamState, useExam } from '@/features/learner/exam/useE
 import { walkthroughLabel, WalkthroughPlayer } from '@/features/learner/exam/Walkthrough';
 import { RefScale } from '@/features/public/home/RefScale';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
+import { useAccess } from '@/lib/access/access-context';
 import { mockData } from '@/lib/mock';
 
 /** The exam reference's page (x 18–1166, y 78–1002 at 1536 wide); the desktop layout uses its pixels. */
@@ -38,6 +40,7 @@ function NavButtons({ s, phone = false }: { s: ExamState; phone?: boolean }) {
 }
 
 function WalkthroughButton({ s, onPress, phone = false }: { s: ExamState; onPress: () => void; phone?: boolean }) {
+  if (!useAccess().hasFeature('videoExplainer')) return <UpgradeNote what="The question video explainer" needs="premium" compact={phone} />;
   return (
     <Pressable style={phone ? styles.watchP : styles.watch} onPress={onPress} accessibilityRole="button">
       <View style={phone ? styles.watchPlayP : styles.watchPlay}>

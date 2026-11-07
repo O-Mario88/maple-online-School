@@ -18,7 +18,7 @@ const MAX_WIDTH = 1440;
 const BOOKING = 420;
 
 type Section = 'about' | 'courses' | 'shorts' | 'reviews';
-const TAB_SECTION: Readonly<Record<string, Section>> = { Overview: 'about', 'Courses (8)': 'courses', 'Maple Shorts (42)': 'shorts', 'Reviews (2.3K)': 'reviews' };
+const TAB_SECTION: Readonly<Record<string, Section>> = { Overview: 'about', 'Subjects (8)': 'courses', 'Maple Shorts (42)': 'shorts', 'Reviews (2.3K)': 'reviews' };
 
 function NotFound({ wide }: { wide: boolean }) {
   return (

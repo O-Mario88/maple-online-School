@@ -4,7 +4,7 @@
  */
 import { Grid, Stat } from '@/components/ui';
 import type { Me } from '@/lib/api/client';
-import { formatMoney, financeSchools } from '@/lib/finance/fees';
+import { formatMoney, formatMoneyCompact, financeSchools } from '@/lib/finance/fees';
 import { useInvoices, useSummary } from '@/lib/finance/queries';
 import { collectionRate, familyBalance } from '@/lib/home';
 import { useAssignments, useGrades, useSubmissions } from '@/lib/learning/queries';
@@ -44,14 +44,14 @@ function SchoolStats({ user }: { user: Me }) {
     <Grid min={150}>
       <Stat
         label="Fees collected"
-        value={s ? formatMoney(s.collected_minor, s.currency) : DASH}
+        value={s ? formatMoneyCompact(s.collected_minor, s.currency) : DASH}
         detail={s ? `${Math.round(collectionRate(s) * 100)}% of billed` : undefined}
         icon="wallet"
         tone="good"
       />
       <Stat
         label="Outstanding"
-        value={s ? formatMoney(s.outstanding_minor, s.currency) : DASH}
+        value={s ? formatMoneyCompact(s.outstanding_minor, s.currency) : DASH}
         detail={s && s.pending_payments > 0 ? `${s.pending_payments} payments pending` : undefined}
         icon="alert"
         tone={s && s.outstanding_minor > 0 ? 'warning' : 'neutral'}

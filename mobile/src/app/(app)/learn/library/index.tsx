@@ -201,9 +201,10 @@ export default function LibraryHubScreen() {
 }
 
 function LibraryView({ hub, h }: { hub: Hub; h: Home }) {
-  const params = useLocalSearchParams<{ subject?: string; q?: string }>();
+  const params = useLocalSearchParams<{ subject?: string; q?: string; publisher?: string }>();
   const subject = hub.subjects.some((x) => x.name === params.subject) ? params.subject : undefined;
-  const s = useShelf(hub, { subject, query: typeof params.q === 'string' ? params.q.slice(0, MAX_QUERY) : undefined });
+  const publisher = hub.filters.publishers.find((x) => x === params.publisher);
+  const s = useShelf(hub, { subject, query: typeof params.q === 'string' ? params.q.slice(0, MAX_QUERY) : undefined, publisher });
   const { wide } = useShell();
   const { width } = useWindowDimensions();
   const [filters, setFilters] = useState(false);

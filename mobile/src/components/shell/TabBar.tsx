@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Icon } from '@/components/icon';
 import { Spacing, type Theme, Type } from '@/constants/theme';
 import { useStyles } from '@/hooks/use-styles';
-import { MOCK_DATA } from '@/lib/mock';
+import { DESIGN_DATA } from '@/lib/mock';
 import { activeKey, navFor, tabBar } from '@/lib/navigation';
 import { usePortal } from '@/lib/portal-context';
 
@@ -15,7 +15,7 @@ export function TabBar() {
   const insets = useSafeAreaInsets();
   const pathname = usePathname();
   const { portal } = usePortal();
-  const all = navFor(portal, MOCK_DATA);
+  const all = navFor(portal, DESIGN_DATA);
   const { tabs, more } = tabBar(all);
   const active = activeKey(all, pathname);
   const items = more ? [...tabs, { key: 'more', label: 'More', href: '/more', icon: 'more' as const }] : tabs;
@@ -37,8 +37,8 @@ export function TabBar() {
             <View style={[styles.pill, selected && styles.pillOn]}>
               <Icon name={item.icon} size={22} color={color} />
             </View>
-            <Text style={[styles.label, { color }]} numberOfLines={1}>
-              {item.label}
+            <Text style={[styles.label, { color }]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.85}>
+              {item.short ?? item.label}
             </Text>
           </Pressable>
         );
@@ -60,6 +60,7 @@ function makeStyles(t: Theme) {
     tab: { flex: 1, alignItems: 'center', gap: 2, minHeight: 48 },
     pill: { width: 56, height: 30, borderRadius: 15, alignItems: 'center', justifyContent: 'center' },
     pillOn: { backgroundColor: t.accentSoft },
-    label: { ...Type.caption, fontSize: 12 },
+    // 11px so "Assignments" fits a fifth of a 375px phone; iOS and Android may shrink it a little more.
+    label: { ...Type.caption, fontSize: 11 },
   });
 }

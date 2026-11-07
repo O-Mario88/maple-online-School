@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
-import type { CatalogueFilters, PriceBand } from '@/lib/catalogue';
+import type { CatalogueFilters } from '@/lib/catalogue';
 
 import { Brand } from '../palette';
 
@@ -17,13 +17,6 @@ export interface ExploreGroup {
   /** The reference draws a minus on some open groups and a chevron on others. */
   toggle: 'minus' | 'chevron';
 }
-
-const PRICES: readonly { value: PriceBand; label: string }[] = [
-  { value: 'any', label: 'Any price' },
-  { value: 'free', label: 'Free' },
-  { value: 'under50k', label: 'Under UGX 50,000' },
-  { value: 'under100k', label: 'Under UGX 100,000' },
-];
 
 /** Each change is applied to the latest filters, so quick taps never overwrite each other. */
 type Update = (change: (prev: CatalogueFilters) => CatalogueFilters) => void;
@@ -75,7 +68,7 @@ export function SearchBox({ filters, onChange, style }: { filters: CatalogueFilt
         style={styles.input}
         value={filters.query}
         onChangeText={(query) => onChange((f) => ({ ...f, query }))}
-        placeholder="Search for courses, topics..."
+        placeholder="Search for subjects, topics..."
         placeholderTextColor="#8A92A3"
         accessibilityLabel="Search the catalogue"
       />
@@ -104,29 +97,13 @@ export function ExploreFilters({ filters, groups, onChange, hideSearch = false }
       {groups.map((g) => (
         <Group key={g.key} group={g} selected={filters[g.key]} onToggle={(v) => toggle(g.key, v)} />
       ))}
-      <View style={styles.group}>
-        <View style={styles.groupHead}>
-          <Text style={styles.groupTitle}>Price</Text>
-        </View>
-        <View style={styles.options}>
-          {PRICES.map((p) => {
-            const on = filters.price === p.value;
-            return (
-              <Pressable key={p.value} style={styles.option} onPress={() => onChange((f) => ({ ...f, price: p.value }))} accessibilityRole="radio" accessibilityState={{ selected: on }}>
-                <View style={[styles.radio, on && styles.radioOn]} />
-                <Text style={styles.optionText}>{p.label}</Text>
-              </Pressable>
-            );
-          })}
-        </View>
-      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   search: { flexDirection: 'row', alignItems: 'center', height: 45, marginTop: 16, borderRadius: 8, borderWidth: 1, borderColor: '#DFE4EC', backgroundColor: Brand.surface },
-  input: { flex: 1, height: 43, paddingHorizontal: 15, fontSize: 13.5, color: Brand.ink },
+  input: { flex: 1, height: 43, paddingVertical: 0, paddingHorizontal: 15, fontSize: 13.5, color: Brand.ink },
   searchBtn: { width: 45, height: 43, alignItems: 'center', justifyContent: 'center', borderLeftWidth: 1, borderLeftColor: '#DFE4EC' },
   group: { marginTop: 22 },
   groupHead: { height: 22, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingRight: 2 },

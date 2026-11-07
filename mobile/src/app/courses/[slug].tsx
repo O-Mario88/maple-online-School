@@ -42,15 +42,15 @@ export default function CourseLandingScreen() {
   const [tab, setTab] = useState('Overview');
 
   if (!mock) {
-    return <PreviewScreen title="Course">{() => null}</PreviewScreen>;
+    return <PreviewScreen title="Subject">{() => null}</PreviewScreen>;
   }
   const course = mock.publicPages.coursePage;
   if (slug !== course.slug) {
     return (
       <LightOnly>
       <SafeAreaView style={styles.safe}>
-        <HomeNav wide={wide} active="Courses" />
-        <EmptyState icon="search" title="Course not found" body="This link may be old. Search for the course instead." />
+        <HomeNav wide={wide} active="Subjects" />
+        <EmptyState icon="search" title="Subject not found" body="This link may be old. Search for the subject instead." />
       </SafeAreaView>
       </LightOnly>
     );
@@ -69,7 +69,7 @@ export default function CourseLandingScreen() {
   return (
     <LightOnly>
     <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
-      <HomeNav wide={wide} active="Courses" />
+      <HomeNav wide={wide} active="Subjects" />
       <ScrollView ref={scroll} contentContainerStyle={styles.page}>
         <View style={styles.inner}>
           <View style={[styles.row, wide && styles.rowWide]}>

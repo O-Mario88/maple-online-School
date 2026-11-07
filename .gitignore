@@ -64,4 +64,9 @@ maple_backend/media/*
 playwright-report/
 test-results/
 playwright/.cache/
+.playwright-mcp/
+.claude-flow/
+.claude/
+.swarm/
+ruvector.db
 .local/

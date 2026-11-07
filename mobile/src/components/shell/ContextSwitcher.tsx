@@ -6,26 +6,18 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Icon } from '@/components/icon';
 import { Breakpoints } from '@/constants/theme';
-import type { IconName } from '@/lib/icons';
-import { mockData } from '@/lib/mock';
-import { type Portal, PORTAL_LABELS } from '@/lib/navigation';
+import { useAuth } from '@/lib/auth/auth-context';
+import { mockApi, mockData } from '@/lib/mock';
+import type { Portal } from '@/lib/navigation';
 import { usePortal } from '@/lib/portal-context';
 import { SwitcherContext } from '@/lib/switcher-context';
+import { type Mode, modesFrom } from '@/lib/switcher-modes';
 
-interface Mode {
-  key: string;
-  portal: Portal;
-  title: string;
-  tagline: string;
-  detail: string;
-  short: string;
-  icon: IconName;
-  tint: string;
-  tile?: number;
-  photo?: number;
-}
 interface Account {
+  key?: 'student' | 'teacher' | 'parent' | 'institution' | 'admin';
+  portal?: Portal;
   name: string;
+  email?: string;
   role: string;
   photo: number;
   current: boolean;
@@ -33,13 +25,14 @@ interface Account {
 
 const BLUE = '#1463F3';
 const INK = '#0B1424';
-const PORTAL_ICONS: Readonly<Record<Portal, IconName>> = { learner: 'cap', teacher: 'school', parent: 'people', school: 'grid', command: 'settings' };
-
-/** Design builds show the reference's four modes and two accounts; real builds list the person's own portals. */
+/**
+ * Design builds show the reference's modes and accounts; the real app lists the person's own
+ * modes, in the design's cards when there is design data.
+ */
 function modesFor(portals: readonly Portal[]): Mode[] {
-  const designed = mockData()?.shared.contexts;
+  const designed = mockApi()?.shared.contexts;
   if (designed) return [...designed];
-  return portals.map((p) => ({ key: p, portal: p, title: `${PORTAL_LABELS[p]} Mode`, tagline: '', detail: '', short: '', icon: PORTAL_ICONS[p], tint: BLUE }));
+  return modesFrom(portals, mockData()?.shared.contexts);
 }
 
 function Tile({ m, phone }: { m: Mode; phone: boolean }) {
@@ -76,25 +69,43 @@ function ModeCard({ m, on, phone, onPress }: { m: Mode; on: boolean; phone: bool
   );
 }
 
-function Accounts({ list }: { list: readonly Account[] }) {
+function Accounts({
+  list,
+  activePortal,
+  onSelect,
+}: {
+  list: readonly Account[];
+  activePortal: Portal;
+  onSelect: (a: Account) => void;
+}) {
   return (
     <>
       <View style={styles.divider}>
         <View style={styles.line} />
-        <Text style={styles.dividerText}>Your Accounts</Text>
+        <Text style={styles.dividerText}>Your Dummy Test Accounts</Text>
         <View style={styles.line} />
       </View>
       <View style={styles.accounts}>
-        {list.map((a, i) => (
-          <View key={a.name} style={[styles.account, i > 0 && styles.accountRule]}>
-            <Image source={a.photo} style={styles.face} />
-            <View style={styles.flex}>
-              <Text style={styles.accName}>{a.name}</Text>
-              <Text style={styles.accRole}>{a.role}</Text>
-            </View>
-            {a.current ? <Text style={styles.current}>Current</Text> : null}
-          </View>
-        ))}
+        {list.map((a, i) => {
+          const isCurrent = a.portal ? a.portal === activePortal : a.current;
+          return (
+            <Pressable
+              key={a.name}
+              style={[styles.account, i > 0 && styles.accountRule]}
+              onPress={() => onSelect(a)}
+              accessibilityRole="button"
+              accessibilityLabel={`Switch to ${a.name} (${a.role})`}>
+              <Image source={a.photo} style={styles.face} />
+              <View style={styles.flex}>
+                <Text style={styles.accName}>{a.name}</Text>
+                <Text style={styles.accRole}>{a.role}</Text>
+              </View>
+              <Text style={isCurrent ? styles.current : styles.switchPill}>
+                {isCurrent ? 'Current' : 'Switch'}
+              </Text>
+            </Pressable>
+          );
+        })}
       </View>
     </>
   );
@@ -103,8 +114,9 @@ function Accounts({ list }: { list: readonly Account[] }) {
 /** The 1-tap role and school switcher: a sheet that slides up on phones and sits centred on wide screens (built to its reference). */
 export function SwitcherProvider({ children }: { children: ReactNode }) {
   const { portal, portals, setPortal } = usePortal();
+  const { signOut } = useAuth();
   const modes = modesFor(portals);
-  const accounts = mockData()?.shared.accounts;
+  const accounts = mockApi()?.shared.accounts;
   const [visible, setVisible] = useState(false);
   const [chosen, setChosen] = useState<string | null>(null);
   const { width } = useWindowDimensions();
@@ -117,6 +129,15 @@ export function SwitcherProvider({ children }: { children: ReactNode }) {
   const choose = (m: Mode) => {
     setChosen(m.key);
     setPortal(m.portal);
+    setVisible(false);
+    router.replace('/');
+  };
+  const chooseAccount = (a: Account) => {
+    if (a.key) mockApi()?.shared.setActiveDemoAccount(a.key);
+    if (a.portal) {
+      setChosen(null);
+      setPortal(a.portal);
+    }
     setVisible(false);
     router.replace('/');
   };
@@ -145,12 +166,23 @@ export function SwitcherProvider({ children }: { children: ReactNode }) {
               {modes.map((m) => (
                 <ModeCard key={m.key} m={m} on={m.key === current?.key} phone={phone} onPress={() => choose(m)} />
               ))}
-              {wide && accounts ? <Accounts list={accounts} /> : null}
+              {accounts ? <Accounts list={accounts} activePortal={portal} onSelect={chooseAccount} /> : null}
               <Pressable style={[styles.add, phone && styles.addP]} onPress={() => setVisible(false)} accessibilityRole="button">
                 <View style={styles.addIcon}>
                   <Icon name="plus" size={phone ? 13 : 15} color={BLUE} />
                 </View>
                 <Text style={[styles.addText, phone && styles.addTextP]}>Add Another Account</Text>
+              </Pressable>
+              {/* The designed pages have no sign-out of their own, so the real app offers it here. */}
+              <Pressable
+                style={[styles.signOut, phone && styles.addP]}
+                onPress={() => {
+                  setVisible(false);
+                  void signOut();
+                }}
+                accessibilityRole="button">
+                <Icon name="logout" size={phone ? 13 : 15} color={INK} />
+                <Text style={[styles.addText, phone && styles.addTextP]}>Sign out</Text>
               </Pressable>
             </ScrollView>
           </View>
@@ -204,8 +236,10 @@ const styles = StyleSheet.create({
   accName: { fontSize: 15.5, fontWeight: '600', color: INK },
   accRole: { marginTop: 2, fontSize: 13.5, color: '#3D4656' },
   current: { paddingHorizontal: 13, paddingVertical: 5, borderRadius: 999, backgroundColor: '#E5F0FF', fontSize: 13.5, fontWeight: '500', color: BLUE, overflow: 'hidden' },
+  switchPill: { paddingHorizontal: 13, paddingVertical: 5, borderRadius: 999, backgroundColor: '#F3F6FB', fontSize: 13.5, fontWeight: '600', color: '#3D4656', overflow: 'hidden' },
   add: { height: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 12, borderRadius: 10, borderWidth: 1, borderColor: '#DCE6F5', backgroundColor: '#EEF4FF' },
   addP: { height: 42, marginTop: 4, borderColor: '#EEF4FF' },
+  signOut: { height: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, borderRadius: 10, borderWidth: 1, borderColor: '#DCE6F5' },
   addIcon: { width: 20, height: 20, borderRadius: 10, borderWidth: 1.5, borderColor: BLUE, alignItems: 'center', justifyContent: 'center' },
   addText: { fontSize: 15, fontWeight: '500', color: INK },
   addTextP: { fontSize: 12.5 },

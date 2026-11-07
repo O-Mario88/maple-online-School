@@ -1,15 +1,30 @@
 import { router } from 'expo-router';
+import { useMemo } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { Avatar, Button, Card, EmptyState, ErrorText, Loading, Screen } from '@/components/ui';
+import { Avatar, Button, Card, EmptyState, ErrorText, Loading, Screen, useShell } from '@/components/ui';
 import { Radius, Spacing, type Theme, Type } from '@/constants/theme';
 import { useStyles } from '@/hooks/use-styles';
 import { useMe } from '@/lib/auth/auth-context';
 import { timeAgo } from '@/lib/inbox/inbox';
 import { type ThreadSummary, useThreads } from '@/lib/messages/queries';
+import { mockData } from '@/lib/mock';
+import { usePortal } from '@/lib/portal-context';
+import { MessagesDesk, MessagesPhone } from '@/features/parent/messages/MessagesViews';
 
-/** Conversations between the school and families (inventory screen 57). */
+/** Conversations between the school and families (inventory screen 57); parents in a design build see the Messaging & Meeting Booker reference. */
 export default function MessagesScreen() {
+  const mock = useMemo(() => mockData(), []);
+  const { portal } = usePortal();
+  const { wide } = useShell();
+  if (mock && portal === 'parent') {
+    const p = mock.portal.parent;
+    return wide ? <MessagesDesk p={p} /> : <MessagesPhone p={p} />;
+  }
+  return <SchoolMessages />;
+}
+
+function SchoolMessages() {
   const threads = useThreads();
   const me = useMe();
   const canStart = me.data ? me.data.children.length > 0 || me.data.memberships.some((m) => m.status === 'active' && m.role !== 'student') : false;

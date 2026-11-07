@@ -25,9 +25,8 @@ const TAG: Record<string, { bg: string; fg: string }> = {
   'Mixed Subjects': { bg: '#E6EEFC', fg: '#1450C8' },
 };
 
-/** Books whose reader opens a sample book (only Mathematics for O-Level has sample pages). */
-const READER_SAMPLE: Record<string, string> = { fractions: 'maths-olevel' };
-export const openBook = (id: string) => router.push({ pathname: '/learn/library/[id]', params: { id: READER_SAMPLE[id] ?? id } });
+/** Every book, video and resource opens in the book reader. */
+export const openBook = (id: string) => router.push({ pathname: '/learn/library/[id]', params: { id } });
 const typeLabel = (t: string) => (t === 'E-books' ? 'eBook' : t.replace(/s$/, ''));
 const LEAF = require('@/assets/images/maple-leaf.png') as number;
 
@@ -348,7 +347,7 @@ const styles = StyleSheet.create({
   heroTag: { marginTop: 2, fontSize: 17.5, color: '#FFFFFF' },
   heroText: { marginTop: 9, fontSize: 12.5, lineHeight: 17, color: '#FFFFFF' },
   heroSearch: { height: 33, flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 12, paddingLeft: 10, borderRadius: 4, backgroundColor: '#FFFFFF', overflow: 'hidden' },
-  heroInput: { flex: 1, height: 32, fontSize: 11.5, color: INK },
+  heroInput: { flex: 1, height: 32, paddingVertical: 0, fontSize: 11.5, color: INK },
   heroBtn: { width: 38, height: 33, alignItems: 'center', justifyContent: 'center', backgroundColor: '#0B6BFF' },
   subjects: { flexDirection: 'row', gap: 6 },
   subject: { flex: 1, height: 74, alignItems: 'center', justifyContent: 'center', gap: 2, borderRadius: 8, backgroundColor: '#F4F8FC', borderWidth: 1, borderColor: '#EAEFF6' },

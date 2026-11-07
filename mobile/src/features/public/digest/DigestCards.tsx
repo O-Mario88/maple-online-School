@@ -224,7 +224,7 @@ export function SupportBar({ d }: { d: Digest }) {
       <View style={styles.heart}>
         <Text style={styles.heartText}>♥</Text>
       </View>
-      <View style={styles.flex}>
+      <View style={styles.supportCopy}>
         <Text style={styles.title}>{`Keep Supporting ${first}`}</Text>
         <Text style={styles.body}>{`Your support makes a big difference. Encourage ${first} to keep practising and completing her weekly assignments.`}</Text>
       </View>
@@ -292,7 +292,9 @@ const styles = StyleSheet.create({
   support: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 16, padding: 18, borderRadius: 16, backgroundColor: Brand.surface, ...CARD_SHADOW },
   heart: { width: 46, height: 46, borderRadius: 23, backgroundColor: Brand.liveSoft, alignItems: 'center', justifyContent: 'center' },
   heartText: { fontSize: 22, color: Brand.live },
-  supportActions: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
+  // A real starting width, so on a phone the buttons move onto their own line instead of pushing off-screen.
+  supportCopy: { flexGrow: 1, flexShrink: 1, flexBasis: 220, minWidth: 0 },
+  supportActions: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, flexShrink: 1, maxWidth: '100%' },
   supportBtn: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 14, paddingVertical: 10, borderRadius: 8, borderWidth: 1, borderColor: Brand.line },
   supportText: { fontSize: 12, fontWeight: '600', color: Brand.ink },
 });

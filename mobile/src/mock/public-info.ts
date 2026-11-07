@@ -1,10 +1,11 @@
 /**
  * Sample copy for the public information pages the top bar and footers link to:
  * Pricing, Curriculums, For Teachers, About, Terms of Service and Privacy Policy.
- * Pricing reads the same study pass plans as the learner's Billing page.
+ * Pricing shows the Free plan, then the same study pass plans as the learner's Billing page.
  */
 import type { IconName } from '@/lib/icons';
 
+import { freePlan } from './access';
 import { billingHub } from './billing-hub';
 
 export type InfoCard = { icon: IconName; title: string; body: string; href?: string; link?: string };
@@ -35,7 +36,7 @@ const pricing: InfoPageData = {
   title: 'Simple study passes for every learner',
   sub: 'Start free with sample lessons, then pick a pass. Pay by MTN MoMo, Airtel Money, M-Pesa or card, and save when you pay for a term or a year.',
   cta: { label: 'Start Free', href: '/sign-up' },
-  second: { label: 'Browse courses', href: '/explore' },
+  second: { label: 'Browse subjects', href: '/explore' },
   blocks: [
     { kind: 'plans', title: 'Study passes', sub: 'Every pass includes the full catalogue for your curriculum. Cancel any time.' },
     {
@@ -51,7 +52,7 @@ const pricing: InfoPageData = {
       kind: 'faq',
       title: 'Questions about paying',
       items: [
-        { q: 'Can I try before I pay?', a: 'Yes. Every course has free sample lessons and one free past paper question a day, with no card needed.' },
+        { q: 'Can I try before I pay?', a: 'Yes. Every subject has free sample lessons and one free past paper question a day, with no card needed.' },
         { q: 'How do I pay with mobile money?', a: 'Choose MTN MoMo or Airtel Money at checkout and approve the prompt on your phone. Your receipt arrives straight away.' },
         { q: 'Can I switch passes?', a: 'Upgrade at any time and only pay the difference. Downgrades start at your next renewal.' },
       ],
@@ -65,16 +66,16 @@ const curriculums: InfoPageData = {
   eyebrow: 'Curriculums',
   title: 'Lessons mapped to the curriculum you sit',
   sub: 'Every lesson, quiz and past paper on Maple is tagged to its exam board, so learners study exactly what they will be tested on.',
-  cta: { label: 'Find your course', href: '/explore' },
+  cta: { label: 'Find your subject', href: '/explore' },
   blocks: [
     {
       kind: 'cards',
       title: 'Boards we teach',
       cards: [
-        { icon: 'map', title: 'UNEB (Uganda)', body: 'PLE, UCE and UACE, including the new lower secondary competency-based curriculum.', href: '/explore?q=UNEB', link: 'UNEB courses' },
-        { icon: 'map', title: 'KCSE and CBC (Kenya)', body: 'Form 1 to Form 4 for KCSE, and junior school learning areas for CBC.', href: '/explore?q=KCSE', link: 'KCSE courses' },
-        { icon: 'map', title: 'WAEC (West Africa)', body: 'WASSCE revision for SS1 to SS3 with past papers and marking schemes.', href: '/explore?q=WAEC', link: 'WAEC courses' },
-        { icon: 'globe', title: 'Cambridge IGCSE and A Level', body: 'International syllabuses taught by examiners, with practical support for sciences.', href: '/explore?q=Cambridge', link: 'Cambridge courses' },
+        { icon: 'map', title: 'UNEB (Uganda)', body: 'PLE, UCE and UACE, including the new lower secondary competency-based curriculum.', href: '/explore?q=UNEB', link: 'UNEB subjects' },
+        { icon: 'map', title: 'KCSE and CBC (Kenya)', body: 'Form 1 to Form 4 for KCSE, and junior school learning areas for CBC.', href: '/explore?q=KCSE', link: 'KCSE subjects' },
+        { icon: 'map', title: 'WAEC (West Africa)', body: 'WASSCE revision for SS1 to SS3 with past papers and marking schemes.', href: '/explore?q=WAEC', link: 'WAEC subjects' },
+        { icon: 'globe', title: 'Cambridge IGCSE and A Level', body: 'International syllabuses taught by examiners, with practical support for sciences.', href: '/explore?q=Cambridge', link: 'Cambridge subjects' },
       ],
     },
     {
@@ -93,7 +94,7 @@ const teachers: InfoPageData = {
   nav: 'For Teachers',
   icon: 'cap',
   eyebrow: 'For teachers',
-  title: 'Teach live, sell courses and get paid on Maple',
+  title: 'Teach live, sell subjects and get paid on Maple',
   sub: 'Your own storefront, a classroom built for teaching, and payouts to mobile money every week.',
   cta: { label: 'Apply to teach', href: '/sign-up' },
   second: { label: 'See a teacher storefront', href: '/@sarah-kimani' },
@@ -102,7 +103,7 @@ const teachers: InfoPageData = {
       kind: 'cards',
       title: 'Everything you need to teach online',
       cards: [
-        { icon: 'person', title: 'Your storefront', body: 'A public page with your courses, reviews and booking calendar. Direct bookings through your link are commission-free.' },
+        { icon: 'person', title: 'Your storefront', body: 'A public page with your subjects, reviews and booking calendar. Direct bookings through your link are commission-free.' },
         { icon: 'live', title: 'Live classroom', body: 'Whiteboard, breakout rooms, polls and recordings, built to run well on mobile data.' },
         { icon: 'wallet', title: 'Weekly payouts', body: 'Earnings are paid every Friday to MTN MoMo, Airtel Money or your bank.' },
       ],
@@ -113,7 +114,7 @@ const teachers: InfoPageData = {
       steps: [
         { title: 'Apply', body: 'Tell us what you teach and upload your teaching certificate.' },
         { title: 'Get verified', body: 'We check your documents within two working days and add the verified badge.' },
-        { title: 'Publish and teach', body: 'Set your prices, publish your first course and open your calendar.' },
+        { title: 'Publish and teach', body: 'Set your prices, publish your first subject and open your calendar.' },
       ],
     },
   ],
@@ -154,7 +155,7 @@ const terms: InfoPageData = {
         { title: 'Your account', body: 'You must give accurate details when you sign up. Learners under 18 need a parent or guardian to agree to these terms for them.' },
         { title: 'Study passes and payments', body: 'Passes renew at the end of each cycle until you cancel. Prices include applicable taxes. Refunds are available within 7 days of a first purchase.' },
         { title: 'Using Maple safely', body: 'Be kind, keep conversations on Maple and do not share contact details with learners. We may remove content or accounts that break these rules.' },
-        { title: 'Content', body: 'Lessons and resources are for your personal study. Teachers keep the rights to the courses they publish.' },
+        { title: 'Content', body: 'Lessons and resources are for your personal study. Teachers keep the rights to the subjects they publish.' },
         { title: 'Contact', body: 'Questions about these terms can be sent from the Help page.' },
       ],
     },
@@ -182,4 +183,8 @@ const privacy: InfoPageData = {
 };
 
 export const infoPages = { pricing, curriculums, teachers, about, terms, privacy };
-export const pricingPlans = billingHub.plans;
+/** The Free plan first, then the study passes. */
+export const pricingPlans = [
+  { id: 'free', name: freePlan.name, monthly: 0, blurb: freePlan.blurb, popular: false, features: [...freePlan.features.map((label) => ({ label, on: true })), { label: 'Shows ads', on: true }] },
+  ...billingHub.plans,
+];

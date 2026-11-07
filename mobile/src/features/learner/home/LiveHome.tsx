@@ -3,6 +3,7 @@ import { type ReactNode, useMemo } from 'react';
 import { Linking, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
+import { PremiumTile } from '@/features/portal/Premium';
 import { Segmented, useShell } from '@/components/ui';
 import { useAuth } from '@/lib/auth/auth-context';
 import { greeting } from '@/lib/home';
@@ -54,18 +55,9 @@ function Card({ title, link, children }: { title: string; link?: { label: string
   );
 }
 
+/** One number in the premium tile look, tinted with its own colour. */
 function Stat({ icon, tint, value, label }: { icon: IconName; tint: string; value: string; label: string }) {
-  return (
-    <View style={styles.stat}>
-      <View style={[styles.statIcon, { backgroundColor: tint }]}>
-        <Icon name={icon} size={18} color="#FFFFFF" />
-      </View>
-      <View>
-        <Text style={styles.statValue}>{value}</Text>
-        <Text style={styles.muted}>{label}</Text>
-      </View>
-    </View>
-  );
+  return <PremiumTile item={{ label, value, icon, tone: 'blue', color: tint }} minHeight={128} style={styles.stat} />;
 }
 
 const QUICK: readonly { icon: IconName; label: string; href: Href }[] = [
@@ -210,10 +202,8 @@ const styles = StyleSheet.create({
   heroBody: { fontSize: 14, color: '#E1EAFE' },
   heroButton: { alignSelf: 'flex-start', flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 6, paddingHorizontal: 18, paddingVertical: 10, borderRadius: 8, backgroundColor: '#FFFFFF' },
   heroButtonText: { fontSize: 14, fontWeight: '700', color: BLUE },
-  stats: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
-  stat: { flexGrow: 1, flexBasis: 140, flexDirection: 'row', alignItems: 'center', gap: 10, padding: 14, borderRadius: 12, backgroundColor: '#FFFFFF' },
-  statIcon: { width: 38, height: 38, alignItems: 'center', justifyContent: 'center', borderRadius: 10 },
-  statValue: { fontSize: 20, fontWeight: '800', color: INK },
+  stats: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, padding: 14, borderRadius: 16, borderWidth: 1, borderColor: '#E3E9F4', backgroundColor: '#FFFFFF' },
+  stat: { flexGrow: 1, flexBasis: 100 },
   columns: { gap: 16 },
   columnsWide: { flexDirection: 'row', alignItems: 'flex-start' },
   col: { gap: 16 },

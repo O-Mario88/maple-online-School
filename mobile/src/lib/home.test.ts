@@ -1,4 +1,4 @@
-import { collectionRate, familyBalance, greeting, humanize } from './home';
+import { addressName, collectionRate, familyBalance, greeting, humanize } from './home';
 
 describe('greeting', () => {
   it('follows the time of day', () => {
@@ -41,5 +41,19 @@ describe('humanize', () => {
   it('turns an API word into a label', () => {
     expect(humanize('subject_teacher')).toBe('Subject teacher');
     expect(humanize('mother')).toBe('Mother');
+  });
+});
+
+describe('addressName', () => {
+  it('uses the first name', () => {
+    expect(addressName('Sarah Nakato')).toBe('Sarah');
+  });
+  it('keeps a title with the surname', () => {
+    expect(addressName('Dr. James Mukasa')).toBe('Dr. Mukasa');
+    expect(addressName('Prof Amina Kato')).toBe('Prof Kato');
+  });
+  it('falls back to the whole name when there is only one word', () => {
+    expect(addressName('Daniel')).toBe('Daniel');
+    expect(addressName('Dr.')).toBe('Dr.');
   });
 });

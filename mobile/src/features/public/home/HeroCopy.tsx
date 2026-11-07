@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
+import { useStartFree } from '@/lib/auth/auth-context';
 
 import { Brand, CARD_SHADOW } from '../palette';
 import type { Landing } from './types';
@@ -27,6 +28,8 @@ export function HeroCopy({ landing, phone = false }: { landing: Landing; phone?:
 
 /** "Choose a curriculum", the search box and the four promises under it. */
 export function HeroActions({ landing, phone = false }: { landing: Landing; phone?: boolean }) {
+  // Visitors start free, without an account; they sign up later, once they trust Maple.
+  const startFree = useStartFree();
   const [board, setBoard] = useState(landing.curricula[0].code);
   const chips = landing.curricula.map((c, i) => {
     const on = c.code === board;
@@ -66,10 +69,10 @@ export function HeroActions({ landing, phone = false }: { landing: Landing; phon
       <View style={[styles.searchRow, phone && styles.searchRowPhone]}>
         <View style={[styles.search, phone && styles.searchPhone]}>
           <Icon name="search" size={18} color={Brand.ink} />
-          <TextInput style={styles.searchInput} placeholder="Search for courses, subjects, or skills..." placeholderTextColor={Brand.muted} accessibilityLabel="Search courses" />
+          <TextInput style={styles.searchInput} placeholder="Search for subjects, topics, or skills..." placeholderTextColor={Brand.muted} accessibilityLabel="Search subjects" />
         </View>
-        <Pressable style={[styles.explore, phone && styles.explorePhone]} accessibilityRole="button" onPress={() => router.push('/explore')}>
-          <Text style={styles.exploreText}>Explore Courses</Text>
+        <Pressable style={[styles.explore, phone && styles.explorePhone]} accessibilityRole="button" onPress={() => (startFree ? startFree() : router.push('/explore'))}>
+          <Text style={styles.exploreText}>Explore Subjects</Text>
           <Icon name="arrowRight" size={16} color={Brand.surface} />
         </Pressable>
       </View>
@@ -97,7 +100,7 @@ const styles = StyleSheet.create({
   headlinePhone: { marginTop: 10, fontSize: 38, lineHeight: 42, letterSpacing: -1 },
   accent: { color: Brand.blue },
   sub: { marginTop: 14, maxWidth: 480, fontSize: 18.5, lineHeight: 23.5, color: '#3D4656' },
-  subPhone: { marginTop: 12, maxWidth: undefined, fontSize: 16.5, lineHeight: 23 },
+  subPhone: { marginTop: 12, maxWidth: '100%', fontSize: 16.5, lineHeight: 23 },
 
   actions: { width: 680 },
   actionsPhone: { gap: 0 },
@@ -126,7 +129,7 @@ const styles = StyleSheet.create({
   tick: { position: 'absolute', top: -5, right: -5, width: 15, height: 15, borderRadius: 8, borderWidth: 1.5, borderColor: Brand.surface, backgroundColor: Brand.blue, alignItems: 'center', justifyContent: 'center' },
 
   searchRow: { flexDirection: 'row', gap: 10, marginTop: 15, width: 661 },
-  searchRowPhone: { flexDirection: 'column', width: undefined, marginTop: 12, paddingHorizontal: 16 },
+  searchRowPhone: { flexDirection: 'column', width: 'auto', marginTop: 12, paddingHorizontal: 16 },
   search: {
     width: 464,
     height: 51,
@@ -138,10 +141,10 @@ const styles = StyleSheet.create({
     backgroundColor: Brand.surface,
     ...CARD_SHADOW,
   },
-  searchPhone: { width: undefined },
-  searchInput: { flex: 1, height: 48, fontSize: 13.5, color: Brand.ink },
+  searchPhone: { width: 'auto' },
+  searchInput: { flex: 1, height: 48, paddingVertical: 0, fontSize: 13.5, color: Brand.ink },
   explore: { width: 187, height: 51, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, borderRadius: 7, backgroundColor: Brand.blue },
-  explorePhone: { width: undefined },
+  explorePhone: { width: 'auto' },
   exploreText: { fontSize: 14.5, fontWeight: '600', color: Brand.surface },
 
   trust: { flexDirection: 'row', gap: 19, marginTop: 24 },

@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
   scrim: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20, backgroundColor: 'rgba(8,12,20,0.5)' },
   dialog: { width: '100%', maxWidth: 420, gap: 10, padding: 18, borderRadius: 14, backgroundColor: '#FFFFFF' },
   dialogText: { fontSize: 12.5, lineHeight: 18, color: BODY },
-  input: { height: 42, paddingHorizontal: 12, borderRadius: 8, borderWidth: 1, borderColor: '#DCE3EE', fontSize: 14, color: INK },
+  input: { height: 42, paddingVertical: 0, paddingHorizontal: 12, borderRadius: 8, borderWidth: 1, borderColor: '#DCE3EE', fontSize: 14, color: INK },
   error: { fontSize: 12, color: '#B91C1C' },
   primary: { height: 42, alignItems: 'center', justifyContent: 'center', borderRadius: 8, backgroundColor: '#0B6BFF' },
   primaryText: { fontSize: 13.5, fontWeight: '600', color: '#FFFFFF' },
