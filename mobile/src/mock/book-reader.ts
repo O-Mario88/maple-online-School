@@ -52,7 +52,7 @@ export const book = {
   subject: 'Social Studies',
   level: 'Primary 6',
   rating: 4.8,
-  readers: 1246,
+  stats: { uploader: 'Mrs. Harriet Akello', views: 1_246, rating: 4.8, likes: 318, comments: 42 },
   format: 'eBook',
   kind: 'book' as const,
   unit: 'page' as const,

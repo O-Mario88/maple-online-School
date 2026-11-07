@@ -136,9 +136,19 @@ export const ICONS = {
   arrowDown: { ios: 'arrow.down', material: 'arrow_downward' },
   diamond: { ios: 'diamond', material: 'diamond' },
   tick: { ios: 'checkmark', material: 'check' },
+  target: { ios: 'scope', material: 'target' },
+  atom: { ios: 'atom', material: 'science' },
+  leaf: { ios: 'leaf', material: 'eco' },
+  bulb: { ios: 'lightbulb', material: 'lightbulb' },
+  restart: { ios: 'arrow.counterclockwise', material: 'restart_alt' },
   crown: { ios: 'crown', material: 'crown' },
   rocket: { ios: 'paperplane', material: 'rocket_launch' },
   gift: { ios: 'gift', material: 'redeem' },
+  heartFill: { ios: 'heart.fill', material: 'favorite' },
+  briefcase: { ios: 'briefcase', material: 'work' },
+  award: { ios: 'rosette', material: 'military_tech' },
+  pointer: { ios: 'cursorarrow.rays', material: 'ads_click' },
+  sealCheck: { ios: 'checkmark.seal.fill', material: 'verified' },
 } as const;
 
 export type IconName = keyof typeof ICONS;

@@ -62,11 +62,11 @@ export function AppShell({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (pricingPage && ended) markPricingSeen();
   }, [pricingPage, ended, markPricingSeen]);
-  // The learner home, Projects, Library and Explore draw their own sidebar (their references); other learner pages use the top bar.
+  // The learner home, Projects, Library, Explore, Video Lessons, My Plan, the School Network and its application form draw their own sidebar (their references); other learner pages use the top bar.
   // The teacher home, AI studio, course builder, calendar and live host draw their own top bar and sidebar too.
   const learnerFrame =
     portal === 'learner' &&
-    (path === '/' || path === '/learn/projects' || path === '/learn/library' || path.startsWith('/learn/library/') || path === '/learn/live-room' || path === '/learn/explore');
+    (path === '/' || path === '/learn/projects' || path === '/learn/library' || path.startsWith('/learn/library/') || path === '/learn/live-room' || path === '/learn/explore' || path === '/learn/lessons' || path === '/learn/plan' || path === '/learn/schools' || path === '/learn/apply');
   // The parent home, Academics, Messages and Settings, and the school Onboarding and Academics pages draw their own frame too.
   const parentFrame = portal === 'parent' && (path === '/' || PARENT_REF_PATHS.includes(path));
   const schoolFrame = isSchoolRefPath(path) || isCommandRefPath(path);

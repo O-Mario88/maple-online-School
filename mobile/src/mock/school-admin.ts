@@ -620,14 +620,14 @@ export const settings = {
     ],
   } as Readonly<Record<string, readonly (readonly [string, boolean])[]>>,
   plan: {
-    name: 'Pro Plan',
-    until: 'Valid until Oct 31, 2026',
-    price: 'UGX 350,000 / month',
-    students: 850,
-    limit: 1000,
-    features: ['Up to 1,000 students (850 used)', 'All academic and finance modules', 'Mobile money integration', 'Accounting reports (QuickBooks/Xero)', 'Parent app access', 'Priority support'],
-    next: 'Oct 31, 2026',
-    amount: 'UGX 350,000',
+    name: 'Maple Growth',
+    until: 'Renews Dec 10, 2026',
+    price: 'UGX 3,500,000 / term',
+    students: 486,
+    limit: 700,
+    features: ['Up to 700 learners (486 used)', 'Complete digital school, live classes and library', 'Full double-entry accounting', 'Admissions campaigns & analytics', 'School Network listing', 'Priority support'],
+    next: 'Dec 10, 2026',
+    amount: 'UGX 3,500,000',
     method: 'MTN Mobile Money (****3456)',
   },
   log: [
@@ -753,3 +753,8 @@ export const attendance = {
 
 /** The school's books for the Chart of Accounts and Journal Entries pages. */
 export * as books from './school-books';
+export { comparison, institutionPricing, planCards, planVersions, subscription } from './institution-plans';
+export { schoolGrowth } from './school-growth';
+export { admissionsHub } from './school-admissions';
+export { schoolProfile } from './school-profile';
+export { schoolCommunity } from './school-community';

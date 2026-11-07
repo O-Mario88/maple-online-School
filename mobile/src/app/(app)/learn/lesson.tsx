@@ -61,7 +61,9 @@ export default function LessonScreen() {
   return (
     <PreviewScreen back title="Lesson">
       {(m) => {
-        const lesson = m.learner.courses.flatMap((c) => c.modules.flatMap((mod) => mod.lessons)).find((l) => l.id === id) ?? { title: m.learner.nextUp.title, minutes: 18 };
+        const video = m.learner.videoHub.lessons.find((l) => l.id === id);
+        const lesson = (video && { title: video.title, minutes: video.seconds / 60 }) ??
+          m.learner.courses.flatMap((c) => c.modules.flatMap((mod) => mod.lessons)).find((l) => l.id === id) ?? { title: m.learner.nextUp.title, minutes: 18 };
         return (
           <>
             <LessonPlayer title={lesson.title} seconds={lesson.minutes * 60} quality={quality} at={jump} />

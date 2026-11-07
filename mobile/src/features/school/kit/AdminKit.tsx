@@ -15,6 +15,7 @@ import type { NavItem } from '@/mock/portal';
 export const ADMIN_NAV: readonly NavItem[] = [
   { label: 'Dashboard', icon: 'home', href: '/' },
   { label: 'Students', icon: 'people', href: '/admin/rosters' },
+  { label: 'Admissions', icon: 'clipboard', href: '/admin/admissions' },
   { label: 'Academics', icon: 'cap', href: '/admin/academics' },
   { label: 'Timetable', icon: 'calendar', href: '/admin/timetable' },
   { label: 'Attendance', icon: 'qr', href: '/admin/attendance' },
@@ -23,9 +24,13 @@ export const ADMIN_NAV: readonly NavItem[] = [
   { label: 'Fees & Finance', icon: 'wallet', href: '/admin/finance/fees' },
   { label: 'Student Ledger', icon: 'doc', href: '/admin/finance/ledger' },
   { label: 'Accounting', icon: 'chart', href: '/admin/finance/accounting' },
+  { label: 'School Growth', icon: 'pulse', href: '/admin/growth' },
+  { label: 'Community', icon: 'people', href: '/admin/community' },
   { label: 'Rosters', icon: 'columns', href: '/admin/rosters' },
   { label: 'Communication', icon: 'chat', href: '/messages' },
+  { label: 'School Profile', icon: 'building', href: '/admin/school-profile' },
   { label: 'Settings', icon: 'settings', href: '/admin/settings' },
+  { label: 'Subscription & Billing', icon: 'receipt', href: '/admin/subscription' },
 ];
 
 export interface AdminMe {

@@ -203,7 +203,7 @@ export const PARENT_NAV: readonly NavItem[] = [
   { label: 'Academics', icon: 'book', href: '/family/academics' },
   { label: 'Messages', icon: 'chat', href: '/messages' },
   { label: 'Calendar', icon: 'calendar', href: '/family/attendance' },
-  { label: 'Resources', icon: 'library', href: '/learn/library' },
+  { label: 'Library', icon: 'library', href: '/learn/library' },
   { label: 'Settings', icon: 'settings', href: '/family/settings' },
 ];
 

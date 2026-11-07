@@ -16,6 +16,7 @@ const TABS: readonly { label: string; href: Href; icon: IconName; match: readonl
   { label: 'Home', href: '/', icon: 'home', match: ['/'] },
   { label: 'Explore', href: '/learn/explore', icon: 'search', match: ['/learn'] },
   { label: 'Classes', href: '/learn/live', icon: 'person', match: ['/lessons', '/learn/live'] },
+  { label: 'Videos', href: '/learn/lessons', icon: 'playFill', match: ['/learn/lessons', '/learn/lesson'] },
   { label: 'Assignments', href: '/learn/assignments', icon: 'chart', match: ['/learn/assignments'] },
   { label: 'Progress', href: '/learn/progress', icon: 'chart', match: ['/learn/progress'] },
   { label: 'Library', href: '/learn/library', icon: 'library', match: ['/learn/library', '/library'] },

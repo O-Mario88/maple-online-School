@@ -32,14 +32,14 @@ export function useTeacherGo(): (dest: TeacherDest) => void {
   );
 }
 
-export type TopTab = 'Home' | 'Classes' | 'Students' | 'Assignments' | 'Resources' | 'Analytics' | 'Earnings' | 'Studio' | 'Calendar' | 'Live';
+export type TopTab = 'Home' | 'Classes' | 'Students' | 'Assignments' | 'Library' | 'Analytics' | 'Earnings' | 'Studio' | 'Calendar' | 'Live';
 
 const TABS: readonly { label: TopTab; icon: IconName; go: TeacherDest }[] = [
   { label: 'Home', icon: 'home', go: '/' },
   { label: 'Classes', icon: 'book', go: '/learn/live' },
   { label: 'Students', icon: 'people', go: '/teach/learners' as TeacherDest },
   { label: 'Assignments', icon: 'clipboard', go: '/teach/assignments/new' as TeacherDest },
-  { label: 'Resources', icon: 'folder', go: '/teach/library' as TeacherDest },
+  { label: 'Library', icon: 'folder', go: '/teach/library' as TeacherDest },
   { label: 'Analytics', icon: 'chart', go: 'analytics' },
   { label: 'Earnings', icon: 'wallet', go: '/teach/earnings' },
   { label: 'Studio', icon: 'sparkle', go: '/teach/studio' },
@@ -52,7 +52,7 @@ const CALENDAR_TABS: readonly { label: TopTab; icon: IconName; go: TeacherDest }
   { label: 'Assignments', icon: 'clipboard', go: '/teach/assignments/new' as TeacherDest },
   { label: 'Studio', icon: 'sparkle', go: '/teach/studio' },
   { label: 'Calendar', icon: 'calendar', go: '/teach/calendar' },
-  { label: 'Resources', icon: 'folder', go: '/teach/library' as TeacherDest },
+  { label: 'Library', icon: 'folder', go: '/teach/library' as TeacherDest },
   { label: 'Analytics', icon: 'chart', go: 'analytics' },
   { label: 'Earnings', icon: 'wallet', go: '/teach/earnings' },
 ];
@@ -236,7 +236,7 @@ const DEFAULT_GROW_NAV: readonly SideItem[] = [
   { label: 'Storefront', icon: 'grid', go: '/teach/storefront' },
   { label: 'Promotions', icon: 'send', go: '/teach/storefront' },
   { label: 'Reviews', icon: 'star', go: '/teach/storefront' },
-  { label: 'Resources', icon: 'book', go: '/teach/library' as TeacherDest },
+  { label: 'Library', icon: 'book', go: '/teach/library' as TeacherDest },
   { label: 'Verification', icon: 'shield', go: '/teach/verification' },
   { label: 'Settings', icon: 'settings', go: '/teach/storefront' },
 ];

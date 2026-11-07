@@ -28,7 +28,7 @@ export const storefrontEditor = {
     { label: 'Storefront', icon: 'grid' as IconName, go: '/teach/storefront' as TeacherDest },
     { label: 'Promotions', icon: 'send' as IconName, go: '/teach/storefront' as TeacherDest },
     { label: 'Reviews', icon: 'star' as IconName, go: '/teach/storefront' as TeacherDest },
-    { label: 'Resources', icon: 'book' as IconName, go: '/teach/library' as TeacherDest },
+    { label: 'Library', icon: 'book' as IconName, go: '/teach/library' as TeacherDest },
     { label: 'Settings', icon: 'settings' as IconName, go: '/teach/storefront' as TeacherDest },
   ],
   avatar: photos.teacherHome.sarah,

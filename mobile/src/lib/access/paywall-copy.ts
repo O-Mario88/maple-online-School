@@ -44,8 +44,8 @@ export function paywallCopy(state: PaywallState): PaywallCopy {
         title: `Upgrade to ${state.plan}`,
         subtitle:
           state.tier === 'premium'
-            ? 'A private tutor and question interpretation video explainers come with Premium. Everything you have now stays open.'
-            : 'Live classes, study squads and step-by-step past paper solutions come with Pro and above. Everything you have now stays open.',
+            ? 'A private tutor, question interpretation videos, projects and study squads come with Premium. Everything you have now stays open.'
+            : 'Live classes and step-by-step past paper solutions come with Pro and above. Everything you have now stays open.',
       };
   }
 }

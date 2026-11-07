@@ -145,6 +145,11 @@ export const pastPapers = [
     paper: 'Paper 1',
     minutes: 150,
     attempts: 3412,
+    uploader: 'Mr. Daniel Ssempala',
+    views: 18_420,
+    rating: 4.8,
+    likes: 2_310,
+    comments: 186,
     questions: [
       { n: 1, text: 'Factorise completely: 6x² − 13x + 6', options: ['(2x − 3)(3x − 2)', '(6x − 1)(x − 6)', '(3x + 2)(2x + 3)', '(2x + 3)(3x − 2)'], answer: 0, marks: 3, walkthrough: '2 min · Mr. Ssempala' },
       { n: 2, text: 'Solve 2x + 3y = 12 and x − y = 1', options: ['x = 3, y = 2', 'x = 2, y = 3', 'x = 4, y = 3', 'x = 3, y = 1'], answer: 0, marks: 4, walkthrough: '2 min · Mr. Ssempala' },
@@ -152,9 +157,9 @@ export const pastPapers = [
       { n: 4, text: 'Find the gradient of the line through (1, 2) and (4, 11)', options: ['2', '3', '9', '1/3'], answer: 1, marks: 2, walkthrough: '1 min · Mr. Ssempala' },
     ] as MockQuestion[],
   },
-  { id: 'pp-uce-bio-2025', board: 'UNEB', exam: 'UCE', subject: 'Biology', year: 2025, paper: 'Paper 1', minutes: 150, attempts: 2210, questions: [] as MockQuestion[] },
-  { id: 'pp-ple-sci-2025', board: 'UNEB', exam: 'PLE', subject: 'Integrated Science', year: 2025, paper: 'Paper 1', minutes: 135, attempts: 5120, questions: [] as MockQuestion[] },
-  { id: 'pp-uace-chem-2024', board: 'UNEB', exam: 'UACE', subject: 'Chemistry', year: 2024, paper: 'Paper 2', minutes: 180, attempts: 860, questions: [] as MockQuestion[] },
+  { id: 'pp-uce-bio-2025', board: 'UNEB', exam: 'UCE', subject: 'Biology', year: 2025, paper: 'Paper 1', minutes: 150, attempts: 2210, uploader: 'Ms. Grace Atim', views: 9_860, rating: 4.7, likes: 1_140, comments: 92, questions: [] as MockQuestion[] },
+  { id: 'pp-ple-sci-2025', board: 'UNEB', exam: 'PLE', subject: 'Integrated Science', year: 2025, paper: 'Paper 1', minutes: 135, attempts: 5120, uploader: 'Ms. Nambasa', views: 24_300, rating: 4.9, likes: 3_480, comments: 241, questions: [] as MockQuestion[] },
+  { id: 'pp-uace-chem-2024', board: 'UNEB', exam: 'UACE', subject: 'Chemistry', year: 2024, paper: 'Paper 2', minutes: 180, attempts: 860, uploader: 'Dr. Ruth Namusoke', views: 3_720, rating: 4.6, likes: 412, comments: 37, questions: [] as MockQuestion[] },
 ];
 
 export const shorts = [
@@ -356,6 +361,9 @@ export { assignmentFeedback } from './assignment-feedback';
 export { learnerHome } from './learner-home';
 export { projectsPage } from './projects';
 export { libraryHub } from './library-hub';
+export { learnerPlan } from './learner-plan';
+export { videoHub } from './learner-video';
+export { schoolNetwork } from './school-network';
 export { progressMap } from './progress-map';
 export { squadRoom } from './squad-room';
 export { billingHub } from './billing-hub';

@@ -23,9 +23,18 @@ describe('which pages open a resource', () => {
     }
   });
 
-  test('live classes and study squads need Pro or above', () => {
-    for (const path of ['/learn/live-room', '/learn/squads/s1']) {
-      expect(resourceFor(path, 'learner')).toEqual({ source: 'maple', needs: 'pro' });
+  test('live classes need Pro or above', () => {
+    expect(resourceFor('/learn/live-room', 'learner')).toEqual({ source: 'maple', needs: 'pro' });
+  });
+
+  test('the School Network is open on every plan, free included: browsing schools never needs a subscription', () => {
+    expect(resourceFor('/learn/schools', 'learner')).toBeNull();
+    expect(resourceFor('/learn/apply', 'learner')).toBeNull();
+  });
+
+  test('projects, study squads and the personalized learning plan need Premium', () => {
+    for (const path of ['/learn/projects', '/learn/squads', '/learn/squads/s1', '/learn/plan']) {
+      expect(resourceFor(path, 'learner')).toEqual({ source: 'maple', needs: 'premium' });
     }
   });
 

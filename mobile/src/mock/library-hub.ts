@@ -1,9 +1,11 @@
 /** Sample data for the learner's Digital Library and its reader. Fractions are written "2/3" (drawn stacked). */
+import type { Engagement } from '@/lib/engagement';
+
 import { photos } from './photos';
 
 const l = (n: string): number => photos.library[n];
 
-export interface ShelfBook {
+export interface ShelfBook extends Engagement {
   id: string;
   title: string;
   subject: string;
@@ -13,8 +15,20 @@ export interface ShelfBook {
   type: 'E-books' | 'Audiobooks' | 'Videos' | 'Articles' | 'Practice Papers' | 'Teacher Guides' | 'Flashcards';
   language: string;
   publisher: string;
-  rating: number;
   cover: number;
+}
+
+/** Who uploads library books, taken in turn. */
+const UPLOADERS = ['Ms. Achieng', 'Mr. Okello', 'Ms. Nambasa', 'Mr. Tumusiime', 'Mrs. Harriet Akello'];
+
+/** A small stable number from an id, so each book's sample figures never change. */
+const seedOf = (id: string): number => [...id].reduce((h, c) => (h * 31 + c.charCodeAt(0)) % 100_003, 7);
+
+/** Sample views, likes and comments for a book, steady per id. */
+function usage(id: string): Omit<Engagement, 'rating'> {
+  const n = seedOf(id);
+  const views = 1_200 + (n % 18_000);
+  return { uploader: UPLOADERS[n % UPLOADERS.length], views, likes: Math.round(views * (0.06 + (n % 7) / 100)), comments: 8 + (n % 140) };
 }
 
 const book = (id: string, title: string, subject: string, tag: string, cover: number, rating: number, over: Partial<ShelfBook> = {}): ShelfBook => ({
@@ -28,6 +42,7 @@ const book = (id: string, title: string, subject: string, tag: string, cover: nu
   publisher: 'Maple',
   rating,
   cover,
+  ...usage(id),
   ...over,
 });
 

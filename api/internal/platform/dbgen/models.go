@@ -620,6 +620,87 @@ type MsgThread struct {
 	LastMessageAt pgtype.Timestamptz
 }
 
+type NetworkApplication struct {
+	ID          int64
+	SchoolID    int64
+	UserID      int64
+	Status      string
+	Shared      []byte
+	ConsentText pgtype.Text
+	ConsentedAt pgtype.Timestamptz
+	StartedAt   pgtype.Timestamptz
+	SubmittedAt pgtype.Timestamptz
+}
+
+type NetworkExamCentre struct {
+	SchoolID   int64
+	Boards     []string
+	Exams      []string
+	External   bool
+	RegisterBy pgtype.Date
+	FeeUgx     pgtype.Int8
+	VerifiedAt pgtype.Timestamptz
+	VerifiedBy pgtype.Int8
+}
+
+type NetworkProfile struct {
+	SchoolID           int64
+	Slug               string
+	Town               string
+	District           string
+	Curricula          []string
+	Levels             []string
+	Stay               string
+	Mode               string
+	Programs           []string
+	Facilities         []string
+	Blurb              string
+	PassRate           pgtype.Int2
+	PassBoard          pgtype.Text
+	PassExam           pgtype.Text
+	PassYear           pgtype.Int2
+	PassSource         pgtype.Text
+	Learners           int32
+	Established        pgtype.Int2
+	Scholarships       bool
+	AdmissionsOpens    pgtype.Date
+	AdmissionsDeadline pgtype.Date
+	FeeMinUgx          pgtype.Int8
+	FeeMaxUgx          pgtype.Int8
+	Requirements       []string
+	ApplyIntake        pgtype.Text
+	ApplyFeeUgx        pgtype.Int8
+	ApplyPrograms      []string
+	ApplyDocuments     []byte
+	VerifiedAt         pgtype.Timestamptz
+	VerifiedBy         pgtype.Int8
+	PublishedAt        pgtype.Timestamptz
+	CreatedAt          pgtype.Timestamptz
+	UpdatedAt          pgtype.Timestamptz
+}
+
+type NetworkProfileView struct {
+	SchoolID int64
+	Day      pgtype.Date
+	Views    int32
+}
+
+type NetworkSafe struct {
+	UserID    int64
+	SchoolID  int64
+	CreatedAt pgtype.Timestamptz
+}
+
+type NetworkVacancy struct {
+	ID        int64
+	SchoolID  int64
+	Title     string
+	Kind      string
+	ClosesOn  pgtype.Date
+	Subjects  []string
+	CreatedAt pgtype.Timestamptz
+}
+
 type ParentPortalParentstudentlink struct {
 	ID               int64
 	RelationshipType string

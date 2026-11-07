@@ -23,7 +23,7 @@ const outline: Outline = {
   related: [{ title: 'Fractions in 5 minutes', meta: 'Video • 5 min', kind: 'video' }],
 };
 
-const shelf = (over: Partial<Parameters<typeof buildReaderBook>[0]> = {}) => ({ id: 'fractions', title: 'Fractions and Decimals', subject: 'Mathematics', level: 'Primary 6', type: 'E-books', rating: 4.8, cover: 7, publisher: 'Maple', ...over });
+const shelf = (over: Partial<Parameters<typeof buildReaderBook>[0]> = {}) => ({ id: 'fractions', title: 'Fractions and Decimals', subject: 'Mathematics', level: 'Primary 6', type: 'E-books', rating: 4.8, cover: 7, publisher: 'Maple', uploader: 'Ms. Achieng', views: 1_200, likes: 80, comments: 9, ...over });
 
 describe('resource kinds', () => {
   test('library types map to reader kinds', () => {
