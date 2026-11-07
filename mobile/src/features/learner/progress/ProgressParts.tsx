@@ -20,7 +20,7 @@ const pct = (done: number, total: number) => (total === 0 ? 0 : Math.round((done
 export function GreatProgress({ p, s, phone = false }: { p: Progress; s: ProgressState; phone?: boolean }) {
   return (
     <View style={[styles.great, phone && styles.greatP]}>
-      <Image source={p.trophy} style={styles.trophy} contentFit="contain" />
+      <Image decorative source={p.trophy} style={styles.trophy} contentFit="contain" />
       <View style={styles.flex}>
         <Text style={styles.greatTitle}>{`Great progress, ${p.learner}!`}</Text>
         <Text style={styles.greatSub}>{`You've mastered ${p.termMastered} skills this term.`}</Text>
@@ -40,7 +40,7 @@ export function SubjectTabs({ s }: { s: ProgressState }) {
         const on = i === s.subjectIndex;
         return (
           <Pressable key={x.name} style={styles.tab} onPress={() => s.setSubject(i)} accessibilityRole="tab" accessibilityState={{ selected: on }}>
-            <Image source={x.icon} style={styles.tabIcon} contentFit="contain" />
+            <Image decorative source={x.icon} style={styles.tabIcon} contentFit="contain" />
             <View>
               <Text style={styles.tabName}>{x.name}</Text>
               <Text style={styles.tabCount}>{`${x.done} / ${x.total} skills`}</Text>
@@ -85,7 +85,7 @@ export function Milestone({ p, s }: { p: Progress; s: ProgressState }) {
   return (
     <View style={styles.box}>
       <View style={styles.milestoneTop}>
-        <Image source={p.milestoneIcon} style={styles.milestoneIcon} contentFit="contain" />
+        <Image decorative source={p.milestoneIcon} style={styles.milestoneIcon} contentFit="contain" />
         <View style={styles.flex}>
           <Text style={styles.boxTitle}>Your Next Milestone</Text>
           {m ? (
@@ -124,7 +124,7 @@ export function Achievements({ p, s, limit = 4 }: { p: Progress; s: ProgressStat
       </View>
       {p.achievements.slice(0, limit).map((a) => (
         <View key={a.title} style={styles.ach}>
-          <Image source={a.icon} style={styles.achIcon} contentFit="contain" />
+          <Image decorative source={a.icon} style={styles.achIcon} contentFit="contain" />
           <View style={styles.flex}>
             <Text style={styles.achTitle}>{a.title}</Text>
             <Text style={styles.achSub}>{a.sub}</Text>
@@ -162,7 +162,7 @@ export function BySubject({ s }: { s: ProgressState }) {
       <View style={styles.subjList}>
         {s.subjects.map((x, i) => (
           <Pressable key={x.name} style={styles.subjRow} onPress={() => s.setSubject(i)} accessibilityRole="button" accessibilityLabel={`${x.name}: ${pct(x.done, x.total)}%`}>
-            <Image source={x.icon} style={styles.subjIcon} contentFit="contain" />
+            <Image decorative source={x.icon} style={styles.subjIcon} contentFit="contain" />
             <View style={styles.flex}>
               <Text style={styles.subjName}>{x.name}</Text>
               <Bar value={x.done / x.total} color={x.color} track={Maple.blueSelected} height={5} />
@@ -237,7 +237,7 @@ export function Goals({ p, s }: { p: Progress; s: ProgressState }) {
       </View>
       {p.goals.map((g) => (
         <Pressable key={g.title} style={styles.goal} onPress={() => (g.subject >= 0 ? s.openNode(g.subject, g.node) : router.push('/learn/library'))} accessibilityRole="button" accessibilityLabel={`${g.title}: ${g.done} of ${g.total} ${g.unit}`}>
-          <Image source={g.icon} style={styles.goalIcon} contentFit="contain" />
+          <Image decorative source={g.icon} style={styles.goalIcon} contentFit="contain" />
           <Text style={styles.goalTitle}>{g.title}</Text>
           <Text style={styles.goalCount}>{`${g.done} / ${g.total} ${g.unit}`}</Text>
         </Pressable>
@@ -367,7 +367,7 @@ export function SideView({ p, s }: { p: Progress; s: ProgressState }) {
           <View style={styles.badgeGrid}>
             {p.achievements.map((a) => (
               <View key={a.title} style={styles.badgeCard}>
-                <Image source={a.icon} style={styles.badgeImg} contentFit="contain" />
+                <Image decorative source={a.icon} style={styles.badgeImg} contentFit="contain" />
                 <Text style={styles.achTitle}>{a.title}</Text>
                 <Text style={styles.achSub}>{`${a.sub} • ${a.when}`}</Text>
               </View>
@@ -381,7 +381,7 @@ export function SideView({ p, s }: { p: Progress; s: ProgressState }) {
           <Text style={styles.boxTitleSm}>Goals</Text>
           {p.goals.map((g) => (
             <View key={g.title} style={styles.histRow}>
-              <Image source={g.icon} style={styles.goalIcon} contentFit="contain" />
+              <Image decorative source={g.icon} style={styles.goalIcon} contentFit="contain" />
               <View style={styles.flex}>
                 <Text style={styles.achTitle}>{g.title}</Text>
                 <Bar value={g.done / g.total} color={Maple.blue} track={Maple.blueSelected} height={6} />

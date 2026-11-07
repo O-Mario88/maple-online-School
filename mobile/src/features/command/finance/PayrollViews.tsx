@@ -189,7 +189,7 @@ function cols(u: U): readonly Column<StaffRow>[] {
       flex: 1,
       render: (s) => (
         <View style={styles.inline}>
-          <Image source={s.photo} style={styles.avatar} contentFit="cover" accessibilityIgnoresInvertColors />
+          <Image decorative source={s.photo} style={styles.avatar} contentFit="cover" accessibilityIgnoresInvertColors />
           <Text style={styles.cellStrong} numberOfLines={1}>{s.name}</Text>
         </View>
       ),
@@ -406,7 +406,7 @@ export function PayrollPhone({ c }: { c: CommandData }) {
       <Approvals u={u} />
       <Statutory u={u} />
       {u.rows.map((s) => (
-        <PhoneRow key={s.id} lead={<Image source={s.photo} style={styles.avatarLg} contentFit="cover" />} title={s.name} sub={`${s.id} • ${s.department} • ${s.employment} • net ${u.masked ? MASK : ugx(payslip(s).net)}`} onPress={() => u.showPayslip(s)} />
+        <PhoneRow key={s.id} lead={<Image decorative source={s.photo} style={styles.avatarLg} contentFit="cover" />} title={s.name} sub={`${s.id} • ${s.department} • ${s.employment} • net ${u.masked ? MASK : ugx(payslip(s).net)}`} onPress={() => u.showPayslip(s)} />
       ))}
       {u.tab === 'Payroll Journals' ? <Journal u={u} /> : null}
       <Breakdown u={u} phone />

@@ -136,7 +136,7 @@ export function AttendanceDesk({ r, me, phone = false }: { r: AttendanceRegister
           </Pressable>
 
           <View style={s.courseCard}>
-            <Image source={r.courseThumb} style={s.courseThumb} contentFit="cover" />
+            <Image decorative source={r.courseThumb} style={s.courseThumb} contentFit="cover" />
             <View style={{ flex: 1, gap: 1 }}>
               <Text style={s.courseTitle}>{r.course}</Text>
               <Text style={s.courseSub}>{r.topic}</Text>
@@ -310,7 +310,7 @@ export function AttendanceDesk({ r, me, phone = false }: { r: AttendanceRegister
                   <Text style={[s.tdNum, s.colNum]}>{st.num}</Text>
 
                   <View style={[s.studentCell, s.colStudent]}>
-                    <Image source={st.photo} style={s.avatar} contentFit="cover" />
+                    <Image decorative source={st.photo} style={s.avatar} contentFit="cover" />
                     <View style={{ gap: 1 }}>
                       <Text style={s.studentName}>{st.name}</Text>
                       <Text style={s.studentCohort}>{st.cohort}</Text>
@@ -395,7 +395,7 @@ export function AttendanceDesk({ r, me, phone = false }: { r: AttendanceRegister
 
             {/* Video Preview Box */}
             <View style={s.videoBox}>
-              <Image source={r.videoThumb} style={StyleSheet.absoluteFill} contentFit="cover" />
+              <Image decorative source={r.videoThumb} style={StyleSheet.absoluteFill} contentFit="cover" />
               <View style={s.videoBoardOverlay}>
                 <Text style={s.videoBoardEq}>x² − 5x + 6 = 0</Text>
                 <Text style={s.videoBoardSub}>(x − 2)(x − 3) = 0</Text>
@@ -435,7 +435,7 @@ export function AttendanceDesk({ r, me, phone = false }: { r: AttendanceRegister
                   style={s.chapterRow}
                   onPress={() => toast(`Jumped recording to ${ch.timestamp} — ${ch.title.replace('\n', ' ')}`)}>
                   <Text style={s.chapterTime}>{ch.timestamp}</Text>
-                  <Image source={ch.thumb} style={s.chapterThumb} contentFit="cover" />
+                  <Image decorative source={ch.thumb} style={s.chapterThumb} contentFit="cover" />
                   <View style={{ flex: 1 }}>
                     <Text style={s.chapterTitle}>{ch.title}</Text>
                     <Text style={s.chapterDur}>{ch.duration}</Text>
@@ -454,7 +454,7 @@ export function AttendanceDesk({ r, me, phone = false }: { r: AttendanceRegister
             </View>
 
             <View style={s.overrideStudentRow}>
-              <Image source={overrideStudent.photo} style={s.overrideAvatar} contentFit="cover" />
+              <Image decorative source={overrideStudent.photo} style={s.overrideAvatar} contentFit="cover" />
               <View>
                 <Text style={s.overrideName}>{overrideStudent.name}</Text>
                 <Text style={s.overrideCohort}>{overrideStudent.cohort}</Text>

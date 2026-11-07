@@ -24,6 +24,7 @@ import {
   WEEKDAYS,
 } from './schedule';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 type ViewMode = 'week' | 'day' | 'list';
 const DAY_NAMES: Readonly<Record<string, string>> = {
@@ -244,7 +245,7 @@ function StayOnTrack({ x }: { x: SP }) {
 
 /** The donut's own colours, so no two slices look alike whatever the subjects' colours are. */
 // Every slice must differ from the others: two subjects in one colour can't be told apart.
-const CHART_COLORS = [Maple.blue, Maple.successText, Maple.warning, '#DB2777', '#0891B2', '#65A30D', Maple.error];
+const CHART_COLORS = [Maple.blue, Maple.successText, Maple.warning, Palette.pink600, Palette.cyan700, Palette.lime800, Maple.error];
 const R = 62;
 const CIRC = 2 * Math.PI * R;
 

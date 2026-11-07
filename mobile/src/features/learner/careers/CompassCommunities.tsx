@@ -89,7 +89,7 @@ function Card({ g, p, phone }: { g: Community; p: GP; phone: boolean }) {
     <View style={[s.card, phone ? s.cardP : s.cardD]}>
       <View>
         {g.photo ? (
-          <Image source={g.photo} style={s.photo} contentFit="cover" />
+          <Image decorative source={g.photo} style={s.photo} contentFit="cover" />
         ) : (
           <LinearGradient colors={[Maple.blueSelected, Maple.blueSelected]} style={[s.photo, s.photoArt]}>
             <Icon name={TOPIC_ICON[g.topic] ?? 'people'} size={40} color={BRAND_BLUE} />
@@ -139,7 +139,7 @@ function Side({ x, p }: { x: Compass; p: GP }) {
             </View>
             <Text style={cs.small}>Don’t see the group you need? Ask Maple to start one for learners with the same interest.</Text>
           </View>
-          <Image source={x.cc.photos.art.startCommunity} style={s.startArt} contentFit="contain" />
+          <Image decorative source={x.cc.photos.art.startCommunity} style={s.startArt} contentFit="contain" />
         </View>
         <Pressable style={s.wideOutline} onPress={() => p.setSheet('start')} accessibilityRole="button">
           <Text style={s.outlineText}>Create a Community</Text>
@@ -148,7 +148,7 @@ function Side({ x, p }: { x: Compass; p: GP }) {
       </View>
       <SideCard title="Upcoming Live Group Session" icon="calendar">
         <View style={s.session}>
-          <Image source={gs.photo} style={s.sessionPhoto} contentFit="cover" />
+          <Image decorative source={gs.photo} style={s.sessionPhoto} contentFit="cover" />
           <View style={s.flex}>
             <Text style={s.sessionTitle}>{gs.title}</Text>
             <View style={s.inline}>

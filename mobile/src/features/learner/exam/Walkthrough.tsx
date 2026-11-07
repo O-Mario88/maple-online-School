@@ -121,7 +121,7 @@ export function WalkthroughPlayer({ q, frame, onClose, onExpand }: { q: Question
         ) : null}
       </View>
       <Pressable style={styles.frame} onPress={p.toggle} accessibilityRole="button" accessibilityLabel={p.running ? 'Pause walkthrough' : 'Play walkthrough'}>
-        <Image source={frame} style={StyleSheet.absoluteFill} contentFit="cover" />
+        <Image decorative source={frame} style={StyleSheet.absoluteFill} contentFit="cover" />
         {q.walkthrough.board ? null : <Board q={q} />}
         <LinearGradient colors={['rgba(16,20,30,0)', 'rgba(16,20,30,0.85)']} style={styles.fade} />
         {cc && p.running ? <Text style={styles.caption}>{q.walkthrough.caption}</Text> : null}

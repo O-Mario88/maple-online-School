@@ -15,6 +15,7 @@ import type { MockData } from '@/mock';
 import { ChalkThumb, LessonMenu, LessonStats, Picker, StatusChip } from './LessonParts';
 import { clock, continueWatching, filterLessons, learningPath, type LessonSort, type LessonTab, lessonStatus, subjectProgress, topicsOf, type VideoLessonItem } from './videoLessons';
 import { Maple } from '@/constants/maple';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
 type Hub = MockData['learner']['videoHub'];
 
@@ -156,7 +157,7 @@ function LessonRow({ v, l }: { v: V; l: VideoLessonItem }) {
           <ChalkThumb l={l} height={78} />
         </View>
         <View style={s.flex}>
-          <Text style={s.cardTitle} numberOfLines={2}>
+          <Text style={s.cardTitle} numberOfLines={3}>
             {l.title}
           </Text>
           <Text style={s.cardMeta}>{`Lesson ${l.n} • ${Math.round(l.seconds / 60)} min • ${l.topic}`}</Text>
@@ -332,7 +333,7 @@ export function VideoLessonsDesk({ hub, avatar, subject }: { hub: Hub; avatar?: 
   return (
     <LightFrame>
       <View style={s.heroPhoto} pointerEvents="none">
-        <Image source={hub.hero} style={StyleSheet.absoluteFill} contentFit="cover" contentPosition="right" />
+        <Image decorative source={hub.hero} style={StyleSheet.absoluteFill} contentFit="cover" contentPosition="right" />
         <LinearGradient colors={[L.canvas, 'rgba(246,248,253,0)']} start={{ x: 0, y: 0.5 }} end={{ x: 0.45, y: 0.5 }} style={StyleSheet.absoluteFill} />
       </View>
       <View style={s.head}>
@@ -340,7 +341,7 @@ export function VideoLessonsDesk({ hub, avatar, subject }: { hub: Hub; avatar?: 
           <Icon name="playFill" size={28} color={L.blue} />
         </View>
         <View>
-          <Text style={s.title} accessibilityRole="header">
+          <Text style={s.title} {...PAGE_TITLE}>
             Video Lessons
           </Text>
           <Text style={s.sub}>Watch, learn and master topics with high-quality, exam-focused video lessons.</Text>
@@ -376,7 +377,7 @@ export function VideoLessonsPhone({ hub, avatar, subject }: { hub: Hub; avatar?:
             <Icon name="playFill" size={22} color={L.blue} />
           </View>
           <View style={s.flex}>
-            <Text style={s.titleP} accessibilityRole="header">
+            <Text style={s.titleP} {...PAGE_TITLE}>
               Video Lessons
             </Text>
             <Text style={s.subP}>Exam-focused lessons to watch at your own pace.</Text>
@@ -469,7 +470,7 @@ const s = StyleSheet.create({
   rows: { marginTop: 12, gap: 10 },
   row: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 8, borderRadius: 12, borderWidth: 1, borderColor: L.line, backgroundColor: L.white },
   rowMain: { flex: 1, minWidth: 0, flexDirection: 'row', alignItems: 'center', gap: 12 },
-  rowThumb: { width: 128 },
+  rowThumb: { width: '34%', maxWidth: 128 },
   more: { marginTop: 14, alignSelf: 'center' },
   moreText: { fontSize: 14.5, fontWeight: '600', color: L.blue },
   empty: { paddingVertical: 26, fontSize: 14, color: L.body, textAlign: 'center' },

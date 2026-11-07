@@ -14,6 +14,7 @@ import type {
 import type { IconName } from '@/lib/icons';
 import { toast } from '@/lib/toast';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 const REACTIONS = ['👏', '👍', '❤️', '😂', '🎉'] as const;
 
@@ -133,7 +134,7 @@ export function Stage({
           accessibilityRole="button"
           accessibilityState={{ selected: c.on }}
           accessibilityLabel={c.label}>
-          <Icon name={c.icon} size={20} color={c.danger ? '#FF6B6B' : Brand.surface} />
+          <Icon name={c.icon} size={20} color={c.danger ? Palette.red400e : Brand.surface} />
           <Text style={styles.controlText} numberOfLines={1}>
             {compact ? (SHORT_LABELS[c.label] ?? c.label.split(' ')[0]) : c.label}
           </Text>
@@ -163,7 +164,7 @@ export function Stage({
             />
           </View>
         ) : (
-          <Image
+          <Image decorative
             source={photo}
             style={StyleSheet.absoluteFill}
             contentFit="cover"
@@ -220,7 +221,7 @@ export function Stage({
             style={[styles.tile, styles.tilePinnedPip]}
             onPress={() => setPipInCorner(true)}
             accessibilityLabel={`${teacher} pinned PiP camera`}>
-            <Image
+            <Image decorative
               source={teacherAvatar ?? tiles[0]?.photo ?? photo}
               style={StyleSheet.absoluteFill}
               contentFit="cover"
@@ -235,7 +236,7 @@ export function Stage({
             key={t.name}
             style={[styles.tile, i === 0 && styles.tileActive]}
             accessibilityLabel={`${t.name}${t.speaking ? ', speaking' : ''}`}>
-            <Image source={t.photo} style={StyleSheet.absoluteFill} contentFit="cover" />
+            <Image decorative source={t.photo} style={StyleSheet.absoluteFill} contentFit="cover" />
           </View>
         ))}
         <View

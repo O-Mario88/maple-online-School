@@ -1,7 +1,7 @@
 import { Image } from '@/components/picture';
 import { type Href, router } from 'expo-router';
 import { type ReactNode, useCallback } from 'react';
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Pressable, StyleSheet, Text, TextInput, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Icon } from '@/components/icon';
@@ -14,6 +14,7 @@ import { openMenuPage } from '@/lib/menu-nav';
 
 import { BLUE, BODY, INK, LINE, RED } from './TeacherParts';
 import { Maple } from '@/constants/maple';
+import { isNarrowPhone } from '@/lib/layout';
 import { MapleLogo } from '@/components/brand/MapleLogo';
 
 
@@ -95,10 +96,10 @@ function Bell({ count, size = 22 }: { count: number; size?: number }) {
   );
 }
 
-function Logo({ small = false }: { small?: boolean }) {
+function Logo({ small = false, markOnly = false }: { small?: boolean; markOnly?: boolean }) {
   return (
     <Pressable style={styles.logo} onPress={() => openMenuPage('/')} accessibilityRole="link" accessibilityLabel="Maple home">
-      <MapleLogo markStyle={small ? styles.leafSmall : styles.leaf} />
+      <MapleLogo markStyle={small ? styles.leafSmall : styles.leaf} markOnly={markOnly} />
     </Pressable>
   );
 }
@@ -150,7 +151,7 @@ export function TeacherTopBar({
       </LanguageMenu>
       <Bell count={me.notifications} />
       <Pressable style={styles.me} onPress={switcher?.open} accessibilityRole="button" accessibilityLabel={`${me.name}, ${me.mode}. Switch mode`}>
-        <Image source={me.avatar} style={styles.avatar} />
+        <Image decorative source={me.avatar} style={styles.avatar} />
         <View style={styles.meText}>
           <Text style={styles.meName} numberOfLines={1}>
             {me.name}
@@ -288,16 +289,17 @@ export function TeacherGrowSideNav({
 export function TeacherPhoneTop({ me }: { me: TeacherMe }) {
   const switcher = useSwitcher();
   const insets = useSafeAreaInsets();
+  const { width } = useWindowDimensions();
   return (
     <View style={[styles.phoneTop, { paddingTop: insets.top, height: 60 + insets.top }]}>
       <Pressable onPress={() => router.push('/more' as Href)} accessibilityRole="button" accessibilityLabel="Menu" hitSlop={8}>
         <Icon name="menu" size={22} color={INK} />
       </Pressable>
-      <Logo small />
+      <Logo small markOnly={isNarrowPhone(width)} />
       <View style={styles.flex} />
       <Bell count={me.notifications} size={21} />
       <Pressable style={styles.phoneMe} onPress={switcher?.open} accessibilityRole="button" accessibilityLabel={`${me.name}. Switch mode`}>
-        <Image source={me.avatar} style={styles.phoneAvatar} />
+        <Image decorative source={me.avatar} style={styles.phoneAvatar} />
         <View style={styles.phoneText}>
           <Text style={styles.phoneName} numberOfLines={1}>{me.name}</Text>
           <Text style={styles.phoneMode} numberOfLines={1}>{me.mode}</Text>
@@ -355,9 +357,9 @@ const styles = StyleSheet.create({
   growSideText: { flex: 1, fontSize: 11.5, color: Maple.navy, letterSpacing: -0.1 },
   growDivider: { height: 1, backgroundColor: LINE, marginVertical: 9 },
   phoneTop: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 14, backgroundColor: Maple.surface, borderBottomWidth: 1, borderColor: LINE },
-  phoneMe: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  phoneMe: { flexDirection: 'row', alignItems: 'center', gap: 6, flexShrink: 1, minWidth: 0 },
   phoneAvatar: { width: 32, height: 32, borderRadius: 16 },
-  phoneText: { maxWidth: 92 },
+  phoneText: { maxWidth: 92, flexShrink: 1, minWidth: 0 },
   phoneName: { fontSize: 11.5, fontWeight: '700', color: INK },
   phoneMode: { fontSize: 9.5, color: BODY },
 });

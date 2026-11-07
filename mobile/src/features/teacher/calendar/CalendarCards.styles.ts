@@ -2,6 +2,7 @@ import { StyleSheet } from 'react-native';
 
 import { BLUE, BODY, INK, LINE, MUTED } from '@/features/teacher/frame/TeacherParts';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 export const styles = StyleSheet.create({
   flex: { flex: 1 },
@@ -345,7 +346,7 @@ export const styles = StyleSheet.create({
     borderRadius: 12,
     backgroundColor: Maple.successSoft,
     borderWidth: 1,
-    borderColor: '#BBE7C9',
+    borderColor: Palette.green300f,
     gap: 10,
     marginTop: 8,
   },
@@ -462,11 +463,11 @@ export const styles = StyleSheet.create({
   clashTitle: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#92400E',
+    color: Palette.orange800b,
   },
   clashBody: {
     fontSize: 11,
-    color: '#92400E',
+    color: Palette.orange800b,
     marginTop: 2,
   },
   freeSlotsRow: {
@@ -499,7 +500,7 @@ export const styles = StyleSheet.create({
     borderRadius: 8,
     backgroundColor: Maple.successSoft,
     borderWidth: 1,
-    borderColor: '#86EFAC',
+    borderColor: Palette.green300,
   },
   clearText: {
     flex: 1,

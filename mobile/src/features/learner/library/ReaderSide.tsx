@@ -48,7 +48,7 @@ export function ShelfTiles({ hub, current }: { hub: Hub; current: string }) {
         const on = t.name === current;
         return (
           <Pressable key={t.name} style={[styles.tile, i === 0 && styles.tileFirst, on && styles.tileOn]} onPress={() => toLibrary(i < 5 ? { subject: t.name } : {})} accessibilityRole="link" accessibilityLabel={`${t.name}, ${t.count}`}>
-            <Image source={t.icon} style={styles.tileIcon} contentFit="contain" />
+            <Image decorative source={t.icon} style={styles.tileIcon} contentFit="contain" />
             <View>
               <Text style={styles.tileName}>{t.name}</Text>
               <Text style={styles.tileCount}>{t.count}</Text>
@@ -91,7 +91,7 @@ export function Recommended({ hub }: { hub: Hub }) {
           const b = hub.books.find((x) => x.title === r.title);
           return (
             <Pressable key={r.title} style={styles.rec} onPress={() => (b ? openBook(b.id) : toLibrary({ q: r.title }))} accessibilityRole="link">
-              <Image source={r.cover} style={styles.recCover} contentFit="cover" />
+              <Image decorative source={r.cover} style={styles.recCover} contentFit="cover" />
               <View style={styles.flex}>
                 <Text style={styles.recTitle}>{r.title}</Text>
                 <Text style={styles.recMeta}>{r.meta}</Text>
@@ -111,7 +111,7 @@ export function AutoCard({ hub, onDecks }: { hub: Hub; onDecks: () => void }) {
   return (
     <View style={styles.auto}>
       <View style={styles.autoHead}>
-        <Image source={hub.reader.deckIcon} style={styles.autoIcon} contentFit="contain" />
+        <Image decorative source={hub.reader.deckIcon} style={styles.autoIcon} contentFit="contain" />
         <View style={styles.flex}>
           <Text style={styles.autoTitle}>Auto-Generated Flashcards</Text>
           <Text style={styles.autoText}>Flashcards created from your recent classes and notes.</Text>
@@ -139,7 +139,7 @@ export function ReadingLists({ hub, toast, phone = false }: { hub: Hub; toast: (
         {hub.reader.lists.map((l, i) => (
           <Pressable key={l.title} style={phone ? styles.listP : styles.list} onPress={() => toast(`${l.title} • ${l.count} from ${l.who}`)} accessibilityRole="button">
             <View style={[styles.listIconBox, { backgroundColor: LIST_TONES[i] }]}>
-              <Image source={l.icon} style={styles.listIcon} contentFit="contain" />
+              <Image decorative source={l.icon} style={styles.listIcon} contentFit="contain" />
             </View>
             <View style={styles.flex}>
               <Text style={styles.listTitle}>{l.title}</Text>

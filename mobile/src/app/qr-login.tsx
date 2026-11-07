@@ -198,7 +198,7 @@ function Desktop({ q, pin, onLogin }: { q: Qr; pin: Pin; onLogin: () => void }) 
             </View>
           </View>
         ))}
-        <Image source={q.art.kids} style={styles.kids} contentFit="contain" />
+        <Image decorative source={q.art.kids} style={styles.kids} contentFit="contain" />
         <Text style={styles.motto}>Learn • Grow • Belong</Text>
         <Text style={styles.mottoSub}>A brighter future together.</Text>
         <View style={styles.helpWrap}>

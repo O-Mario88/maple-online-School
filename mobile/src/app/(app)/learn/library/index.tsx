@@ -14,6 +14,7 @@ import { HomeCanvas } from '@/features/learner/home/HomeFrame';
 import { mockData } from '@/lib/mock';
 import { Maple } from '@/constants/maple';
 import { PageScroll } from '@/components/shell/PageScroll';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
 /** The library reference's desktop (x 0–1276 of 1536, sidebar included), laid out in its pixels. */
 const LIB_REF_WIDTH = 1276;
@@ -160,7 +161,7 @@ function Phone({ hub, h, s, onFilters }: { hub: Hub; h: Home; s: ShelfState; onF
       <LearnerPhoneTop avatar={h.avatar} />
       <PageScroll contentContainerStyle={styles.phone} keyboardShouldPersistTaps="handled">
         <View>
-          <Text style={styles.titleP} accessibilityRole="header">
+          <Text style={styles.titleP} {...PAGE_TITLE}>
             Digital Library
           </Text>
           <Text style={styles.subP}>Read. Explore. Learn. Grow.</Text>

@@ -2,6 +2,7 @@ import { StyleSheet } from 'react-native';
 
 import { BLUE, BODY, GREEN, INK, LINE, MUTED } from '@/features/teacher/frame/TeacherParts';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 export const styles = StyleSheet.create({
   flex: { flex: 1 },
@@ -483,7 +484,7 @@ export const styles = StyleSheet.create({
     borderRadius: 9,
     backgroundColor: Maple.successSoft,
     borderWidth: 1,
-    borderColor: '#BBF7D0',
+    borderColor: Palette.green200,
   },
   statusCheckCircle: {
     width: 20,
@@ -635,7 +636,7 @@ export const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: Maple.warningSoft,
     borderWidth: 1,
-    borderColor: '#FDE68A',
+    borderColor: Palette.yellow300,
     gap: 6,
   },
   altHead: {
@@ -668,7 +669,7 @@ export const styles = StyleSheet.create({
     borderRadius: 7,
     backgroundColor: Maple.surface,
     borderWidth: 1,
-    borderColor: '#F3E8C8',
+    borderColor: Palette.amber200b,
   },
   altRowOn: {
     borderColor: BLUE,

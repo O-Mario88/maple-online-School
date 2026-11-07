@@ -6,6 +6,7 @@ import { ParentDesk, ParentPhoneTop } from '@/features/portal/PortalFrame';
 import { Btn, Card, UnderTabs } from '@/features/portal/PortalParts';
 import { BLUE, BODY, CANVAS, LINE, MUTED, NAVY, WHITE } from '@/features/portal/tokens';
 import { toast } from '@/lib/toast';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 import type { ChatMessage, ParentPortal, Thread } from '@/mock/portal';
 
 import {
@@ -53,7 +54,7 @@ export function MessagesDesk({ p }: { p: ParentPortal }) {
   }, [inbox.list, query]);
   return (
     <ParentDesk list={p.children} me={p.me} search="Search messages, teachers, or announcements..." active="Messages">
-      <Text style={styles.title} accessibilityRole="header">
+      <Text style={styles.title} {...PAGE_TITLE}>
         Messages
       </Text>
       <Text style={styles.subtitle}>{"Communicate with your child's teachers, receive school announcements, and book meetings."}</Text>

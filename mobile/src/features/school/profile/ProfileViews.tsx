@@ -226,7 +226,7 @@ function Facilities({ x }: { x: X }) {
       <Chips options={['Robotics lab', 'Computer labs', 'Science laboratories', 'Library', 'Boarding houses', 'Sports field', 'Music room', 'Chapel']} on={x.facilities} onPress={x.toggleFacility} />
       <View style={s.gallery}>
         {x.p.gallery.map((g, i) => (
-          <Image key={i} source={g} style={s.galleryPhoto} contentFit="cover" />
+          <Image decorative key={i} source={g} style={s.galleryPhoto} contentFit="cover" />
         ))}
         <Pressable style={[s.galleryPhoto, s.addPhoto]} onPress={() => toast('Photos are checked by Maple before they appear on your profile.')} accessibilityRole="button" accessibilityLabel="Add photos">
           <Icon name="plus" size={22} color={BRAND_BLUE} />
@@ -287,13 +287,13 @@ function Preview({ x }: { x: X }) {
       </Card>
       <Card style={[s.preview, phoneView && s.previewPhone]}>
         <View>
-          <Image source={pv.photo} style={s.previewPhoto} contentFit="cover" />
+          <Image decorative source={pv.photo} style={s.previewPhoto} contentFit="cover" />
           <View style={s.verified}>
             <Icon name="check" size={13} color={GREEN} />
             <Text style={s.verifiedText}>Verified Institution</Text>
           </View>
           <View style={s.crest}>
-            <Image source={pv.crest} style={s.crestImg} contentFit="contain" />
+            <Image decorative source={pv.crest} style={s.crestImg} contentFit="contain" />
           </View>
         </View>
         <View style={s.previewBody}>

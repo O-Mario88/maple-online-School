@@ -12,6 +12,7 @@ import { toast } from '@/lib/toast';
 
 import { TeachPanel } from './TeachPanel';
 import { Maple } from '@/constants/maple';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
 const INK = Maple.navy;
 const BODY = Maple.body;
@@ -97,7 +98,7 @@ export function LiveClasses() {
   return (
     <ScrollView style={styles.bg} contentContainerStyle={[styles.page, wide && styles.pageWide]}>
       <View style={styles.hero}>
-        <Text style={styles.h1} accessibilityRole="header">
+        <Text style={styles.h1} {...PAGE_TITLE}>
           Classes
         </Text>
         <Text style={styles.body}>Join your live classes, see what’s coming up, and catch up on replays.</Text>

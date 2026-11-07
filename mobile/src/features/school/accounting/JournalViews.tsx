@@ -17,6 +17,7 @@ import { canEdit, type EntryStatus, entryTotals, type JournalLine, nextEntryId, 
 import { BooksDesk, BooksHead } from './BooksFrame';
 import { EntryModal } from './BooksModals';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 type Admin = MockData['schoolAdmin'];
 const PER_PAGE = 10;
@@ -460,7 +461,7 @@ const styles = StyleSheet.create({
   num: { width: 16 },
   amt: { width: 78, textAlign: 'right' },
   attach: { flexDirection: 'row', alignItems: 'center', gap: 10, padding: 10, borderRadius: 10, borderWidth: 1, borderColor: LINE },
-  reverse: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 5, minHeight: 34, paddingHorizontal: 6, borderRadius: 8, borderWidth: 1, borderColor: '#FCA5A5', backgroundColor: Maple.errorSoft },
+  reverse: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 5, minHeight: 34, paddingHorizontal: 6, borderRadius: 8, borderWidth: 1, borderColor: Palette.red300e, backgroundColor: Maple.errorSoft },
   reverseText: { fontSize: 12, fontWeight: '600', color: RED },
   quick: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
   quickBtn: { flexDirection: 'row', alignItems: 'center', gap: 10, width: '48%', padding: 10, borderRadius: 10, borderWidth: 1, borderColor: LINE },

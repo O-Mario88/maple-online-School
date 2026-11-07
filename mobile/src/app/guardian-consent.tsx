@@ -15,6 +15,7 @@ import type { IconName } from '@/lib/icons';
 import { mockData } from '@/lib/mock';
 import { Maple } from '@/constants/maple';
 import { PageScroll } from '@/components/shell/PageScroll';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
 const DESKTOP_MIN = 900;
 // The reference's desktop frame: 1178 × 1010 (bar at (18, 14), photo panel at (18, 142), middle column x 398–902, right x 913–1153).
@@ -55,10 +56,10 @@ function Heading({ c, phone = false }: { c: Consent; phone?: boolean }) {
   return (
     <>
       <View style={styles.headRow}>
-        <Image source={c.art.header} style={phone ? styles.headIconP : styles.headIcon} />
+        <Image decorative source={c.art.header} style={phone ? styles.headIconP : styles.headIcon} />
         <Text style={[styles.eyebrow, phone && styles.eyebrowP]}>GUARDIAN CONSENT REQUIRED</Text>
       </View>
-      <Text style={[styles.title, phone && styles.titleP]} accessibilityRole="header">
+      <Text style={[styles.title, phone && styles.titleP]} {...PAGE_TITLE}>
         {phone ? 'Let’s get your parent\nor guardian’s permission' : 'Let’s get your parent or guardian’s\npermission'}
       </Text>
       <Text style={[styles.body, phone && styles.bodyP]}>{`Because you’re under the age of digital majority in ${c.country}, we need a parent or guardian to confirm your account.${phone ? '' : ' We’ll send them a verification link.'}`}</Text>

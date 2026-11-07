@@ -12,6 +12,7 @@ import { identifierFor } from '@/lib/cbc';
 import { mmss, waveform } from '@/lib/feedback';
 import type { MockData } from '@/mock';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 export type Feedback = MockData['learner']['assignmentFeedback'];
 const DARK_GREEN = Maple.successText;
@@ -106,7 +107,7 @@ export function TeacherCard({ f, phone = false }: { f: Feedback; phone?: boolean
   return (
     <View>
       <View style={styles.teacher}>
-        <Image source={t.photo} style={phone ? styles.teacherPhotoP : styles.teacherPhoto} />
+        <Image decorative source={t.photo} style={phone ? styles.teacherPhotoP : styles.teacherPhoto} />
         <View style={styles.flex}>
           <View style={styles.nameRow}>
             <Text style={[styles.teacherName, phone && styles.teacherNameP]}>{t.name}</Text>
@@ -210,7 +211,7 @@ const styles = StyleSheet.create({
   scoreId: { marginTop: 6 },
   seenTitle: { marginTop: 10, fontSize: 11.5, fontWeight: '700', color: INK },
   seen: { flexDirection: 'row', flexWrap: 'wrap', gap: 5, marginTop: 6 },
-  verdict: { fontSize: 15.5, fontWeight: '700', color: '#1F3A2B' },
+  verdict: { fontSize: 15.5, fontWeight: '700', color: Palette.green950b },
   verdictText: { marginTop: 5, fontSize: 11, lineHeight: 16, color: BODY },
   rubricHead: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   rubricTotal: { fontSize: 17, fontWeight: '700', color: DARK_GREEN },

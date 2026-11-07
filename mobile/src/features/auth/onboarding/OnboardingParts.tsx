@@ -47,7 +47,7 @@ export function RoleCards({ w, o, phone = false }: { w: Wizard; o: Onboarding; p
         const on = r.key === o.role;
         return (
           <Pressable key={r.key} style={[styles.role, phone && styles.roleP, on && styles.roleOn]} onPress={() => o.setRole(r.key)} accessibilityRole="radio" accessibilityState={{ selected: on }} accessibilityLabel={r.title}>
-            {phone ? null : <Image source={r.photo} style={styles.rolePhoto} contentFit="cover" />}
+            {phone ? null : <Image decorative source={r.photo} style={styles.rolePhoto} contentFit="cover" />}
             <View style={[styles.roleIcon, phone && styles.roleIconP]}>
               <Icon name={r.icon} size={phone ? 26 : 24} color={r.tint} />
             </View>
@@ -77,7 +77,7 @@ export function Select({ label, onPress, lead, children, phone = false, chevron 
 }
 
 export function CountryFlag({ country, size = 26 }: { country: Onboarding['country']; size?: number }) {
-  if ('flag' in country && country.flag) return <Image source={country.flag} style={{ width: size, height: size * 0.62 }} />;
+  if ('flag' in country && country.flag) return <Image decorative source={country.flag} style={{ width: size, height: size * 0.62 }} />;
   return <Text style={{ fontSize: size * 0.7 }}>{'flagEmoji' in country ? country.flagEmoji : ''}</Text>;
 }
 
@@ -105,7 +105,7 @@ export function Summary({ o }: { o: Onboarding }) {
   const rows: { icon: IconName; label: string; value: string; lead?: ReactNode }[] = [
     { icon: 'people', label: 'Role', value: o.roleTitle },
     { icon: 'flag', label: 'Country', value: o.country.name, lead: <CountryFlag country={o.country} size={24} /> },
-    { icon: 'school', label: 'Curriculum', value: o.curriculum.code, lead: <Image source={o.curriculum.crest} style={styles.crest} /> },
+    { icon: 'school', label: 'Curriculum', value: o.curriculum.code, lead: <Image decorative source={o.curriculum.crest} style={styles.crest} /> },
     { icon: 'calendar', label: 'Grade', value: o.grade },
     { icon: 'notes', label: 'Subjects', value: o.subjects.length === 0 ? 'None yet' : o.subjects.length === 1 ? o.subjects[0] : `${o.subjects[0]} +${o.subjects.length - 1}` },
   ];

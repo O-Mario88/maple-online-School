@@ -170,7 +170,7 @@ export function ActionQueue({ h, phone = false }: { h: TeacherHome; phone?: bool
           <Pressable key={q.title} style={[styles.queueRow, i > 0 && styles.divider]} onPress={() => go(q.go)} accessibilityRole="button" accessibilityLabel={`${q.title}, ${q.detail}, ${q.tag}`}>
             <IconTile icon={q.icon} color={q.color} size={phone ? 32 : 36} soft />
             <View style={styles.flex}>
-              <Text style={[styles.rowTitle, phone && styles.rowTitleP]} numberOfLines={phone ? 1 : undefined}>
+              <Text style={[styles.rowTitle, phone && styles.rowTitleP]} numberOfLines={phone ? 2 : undefined}>
                 {phone ? (q.phoneTitle ?? q.title) : q.title}
               </Text>
               <Text style={[styles.rowSub, phone && q.tone === 'red' && i === 0 && styles.redText]}>{phone ? q.phoneDetail : q.detail}</Text>
@@ -200,7 +200,7 @@ export function FlaggedStudents({ h, sent, intervene, phone = false }: { h: Teac
               <Image source={f.photo} style={styles.face} accessibilityLabel={f.name} />
               <View style={phone ? styles.flex : styles.flagName}>
                 <Text style={styles.rowTitle}>{f.name}</Text>
-                <Text style={styles.rowSub} numberOfLines={1}>{f.course}</Text>
+                <Text style={styles.rowSub} numberOfLines={2}>{f.course}</Text>
               </View>
               <Pill label={`${f.score}%`} tone={scoreTone} />
               {phone ? null : (

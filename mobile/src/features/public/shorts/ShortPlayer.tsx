@@ -54,7 +54,7 @@ export function ShortPlayer({ clip, courseSlug, onClose }: { clip: ShortEntry; c
   return (
     <View style={styles.wrap}>
       <View style={[styles.video, { backgroundColor: clip.tint }]}>
-        {clip.photo ? <Image source={clip.photo} style={StyleSheet.absoluteFill} contentFit="cover" /> : null}
+        {clip.photo ? <Image decorative source={clip.photo} style={StyleSheet.absoluteFill} contentFit="cover" /> : null}
         <View style={styles.head}>
           {clip.photo ? (
             <View />

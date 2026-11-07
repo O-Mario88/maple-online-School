@@ -2,11 +2,12 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import type { MockData } from '@/mock';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 export type Dash = MockData['learner']['dashboard'];
 
 /** The soft white card the dashboard reference uses everywhere. */
-export const panel = { borderRadius: 14, backgroundColor: Maple.surface, shadowColor: '#0F2350', shadowOpacity: 0.06, shadowRadius: 14, shadowOffset: { width: 0, height: 4 } } as const;
+export const panel = { borderRadius: 14, backgroundColor: Maple.surface, shadowColor: Palette.blue950j, shadowOpacity: 0.06, shadowRadius: 14, shadowOffset: { width: 0, height: 4 } } as const;
 
 export function Bar({ value, color = Maple.success, track = 'rgba(255,255,255,0.35)', height = 6 }: { value: number; color?: string; track?: string; height?: number }) {
   return (

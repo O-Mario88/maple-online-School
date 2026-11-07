@@ -88,7 +88,7 @@ export function PaymentMethods({ methods, totalUGX, invoice, learner }: { method
     const on = method === m;
     return (
       <Pressable key={m} style={[big ? styles.bigTile : styles.tile, on && styles.tileOn]} onPress={() => choose(m)} accessibilityRole="radio" accessibilityState={{ selected: on }} accessibilityLabel={LABELS[m]}>
-        <Image source={source} style={big ? styles.bigTileImage : styles.tileImage} contentFit={big ? 'cover' : 'contain'} />
+        <Image decorative source={source} style={big ? styles.bigTileImage : styles.tileImage} contentFit={big ? 'cover' : 'contain'} />
         {big ? null : <Text style={styles.tileLabel}>{m === 'card' ? 'Debit or Credit Card' : LABELS[m]}</Text>}
         {on ? <View style={styles.tick}><Icon name="check" size={14} color={Brand.surface} /></View> : null}
       </Pressable>

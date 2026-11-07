@@ -11,6 +11,7 @@ import type { RoleName } from '@/mock/school-admin';
 
 import { AdminDesk, AdminPhone, Cell, type Column, DataTable, Face, ListCard, ListRow, MenuRow, MiniBtn, PageHead, Pager, Search, SelectBox, StatusCell, useChoice, useSelection } from '../kit/AdminKit';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 type Admin = MockData['schoolAdmin'];
 type S = Admin['settings'];
@@ -21,7 +22,7 @@ type LogRow = S['log'][number];
 function UserFace({ u, size = 30 }: { u: User; size?: number }) {
   if (u.avatar) return <Face source={u.avatar} size={size} />;
   return (
-    <View style={[styles.initial, { width: size, height: size, borderRadius: size / 2, backgroundColor: u.status === 'Pending' ? '#E2459A' : BLUE }]}>
+    <View style={[styles.initial, { width: size, height: size, borderRadius: size / 2, backgroundColor: u.status === 'Pending' ? Palette.pink500 : BLUE }]}>
       <Text style={styles.initialText}>{u.n}</Text>
     </View>
   );

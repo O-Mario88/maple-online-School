@@ -11,6 +11,7 @@ import type { RosterRow, RosterStatus } from '@/mock/school-admin';
 import { AdminDesk, AdminPhone, Cell, type Column, DataTable, ListCard, ListRow, MiniBtn, PageHead, Search, Segments, StatusCell, Steps, useSelection } from '../kit/AdminKit';
 import { Donut, DonutLabel } from '../kit/Charts';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 type Admin = MockData['schoolAdmin'];
 type Roster = Admin['roster'];
@@ -148,7 +149,7 @@ function EmailField({ value, onChange }: { value: string; onChange: (v: string) 
         if (isEmail(v)) onChange(v.trim());
       }}
       placeholder="Add parent email"
-      placeholderTextColor="#E7A3AB"
+      placeholderTextColor={Palette.red300}
       autoCapitalize="none"
       keyboardType="email-address"
       accessibilityLabel="Parent email"
@@ -430,7 +431,7 @@ const styles = StyleSheet.create({
   reviewSearch: { width: 240 },
   td: { fontSize: 13.5, color: BODY },
   emailInput: { height: 32, paddingVertical: 0, paddingHorizontal: 10, borderRadius: 7, borderWidth: 1, borderColor: LINE, fontSize: 13, color: NAVY, backgroundColor: WHITE },
-  emailBad: { borderColor: '#F3A1AB', backgroundColor: Maple.errorSoft },
+  emailBad: { borderColor: Palette.red300b, backgroundColor: Maple.errorSoft },
   footer: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingTop: 4 },
   footerText: { fontSize: 14, color: BODY },
   phoneCard: { gap: 12, padding: 16 },

@@ -9,6 +9,7 @@ import type { TeacherHome } from '@/mock/teacher-home';
 
 import { ugx } from './HomeCards';
 import { Maple } from '@/constants/maple';
+import { prefersReducedMotion } from '@/lib/motion';
 
 const BAR_MAX = 62;
 const DAY = 24 * 60 * 60 * 1000;
@@ -140,7 +141,7 @@ export function TodaySchedule({ h }: { h: TeacherHome }) {
             </Pressable>
           ))}
         </ScrollView>
-        <Pressable style={styles.slotArrow} onPress={() => scroller.current?.scrollToEnd({ animated: true })} accessibilityRole="button" accessibilityLabel="Show later sessions">
+        <Pressable style={styles.slotArrow} onPress={() => scroller.current?.scrollToEnd({ animated: !prefersReducedMotion() })} accessibilityRole="button" accessibilityLabel="Show later sessions">
           <Icon name="chevronRight" size={16} color={BLUE} />
         </Pressable>
       </View>

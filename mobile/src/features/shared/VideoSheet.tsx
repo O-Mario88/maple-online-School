@@ -5,6 +5,7 @@ import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Icon } from '@/components/icon';
 import { PlayerControls, usePlayback } from '@/features/learner/exam/Walkthrough';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 function Player({ poster, title, seconds, onClose }: { poster?: number; title: string; seconds: number; onClose: () => void }) {
   const p = usePlayback(seconds);
@@ -21,7 +22,7 @@ function Player({ poster, title, seconds, onClose }: { poster?: number; title: s
         </Pressable>
       </View>
       <Pressable style={styles.video} onPress={p.toggle} accessibilityRole="button" accessibilityLabel={p.running ? 'Pause' : 'Play'}>
-        {poster ? <Image source={poster} style={StyleSheet.absoluteFill} contentFit="cover" /> : null}
+        {poster ? <Image decorative source={poster} style={StyleSheet.absoluteFill} contentFit="cover" /> : null}
         {p.running ? null : (
           <View style={styles.play}>
             <Icon name="playFill" size={26} color={Maple.surface} />
@@ -57,7 +58,7 @@ const styles = StyleSheet.create({
   sheet: { width: '100%', maxWidth: 820, borderRadius: 12, backgroundColor: Maple.navy, overflow: 'hidden' },
   head: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 14, paddingVertical: 10 },
   title: { flex: 1, fontSize: 14, fontWeight: '600', color: Maple.surface },
-  video: { width: '100%', aspectRatio: 16 / 9, alignItems: 'center', justifyContent: 'center', backgroundColor: '#000000' },
+  video: { width: '100%', aspectRatio: 16 / 9, alignItems: 'center', justifyContent: 'center', backgroundColor: Palette.black },
   play: { width: 64, height: 64, alignItems: 'center', justifyContent: 'center', borderRadius: 32, backgroundColor: 'rgba(11,107,255,0.92)' },
   caption: { position: 'absolute', bottom: 14, paddingHorizontal: 10, paddingVertical: 4, borderRadius: 4, backgroundColor: 'rgba(0,0,0,0.6)', fontSize: 13, color: Maple.surface },
 });

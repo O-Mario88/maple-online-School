@@ -159,7 +159,7 @@ export function Preview({ p, style }: { p: Profile; style?: StyleProp<ViewStyle>
   return (
     <Panel title="Preview" style={[styles.previewPanel, style]}>
       <View style={styles.previewCard}>
-        <Image source={p.crest} style={styles.previewCrest} contentFit="contain" />
+        <Image decorative source={p.crest} style={styles.previewCrest} contentFit="contain" />
         <Text style={[styles.previewName, isHex(p.primary) && { color: p.primary }]} numberOfLines={2}>
           {p.name || 'Your school'}
         </Text>
@@ -170,7 +170,7 @@ export function Preview({ p, style }: { p: Profile; style?: StyleProp<ViewStyle>
           <Icon name="people" size={18} color={BODY} />
           <Text style={styles.previewMetaText}>{p.type}</Text>
         </View>
-        <Image source={p.banner} style={styles.previewBanner} contentFit="cover" />
+        <Image decorative source={p.banner} style={styles.previewBanner} contentFit="cover" />
       </View>
     </Panel>
   );
@@ -209,7 +209,7 @@ export function CurriculumCard({ o, phone = false }: { o: Onboarding; phone?: bo
               accessibilityState={{ checked: on }}
               accessibilityLabel={`${c.name}: ${c.body.replace('\n', ' ')}`}>
               <View style={styles.curriculumHead}>
-                {c.flag ? <Image source={c.flag} style={styles.flag} contentFit="cover" /> : <Icon name="doc" size={24} color={BLUE} />}
+                {c.flag ? <Image decorative source={c.flag} style={styles.flag} contentFit="cover" /> : <Icon name="doc" size={24} color={BLUE} />}
                 <Text style={styles.curriculumName}>{c.name}</Text>
               </View>
               <Text style={styles.curriculumBody}>{c.body}</Text>

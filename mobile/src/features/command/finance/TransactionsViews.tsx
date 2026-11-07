@@ -16,6 +16,7 @@ import type { TxnRow } from '@/mock/command-center/pf-payments';
 import { amount, type FormAsk, FormModal } from './FinForm';
 import { CheckList, FinDesk, FinHead, FinPanel, FinPhone, FinStats, FinTabs, num, PhoneRow, type Promo, ProviderBadge, RingLegend, short, ugx } from './FinKit';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 type D = CommandData['platformFinance']['payments'];
 const PER_PAGE = 10;
@@ -23,7 +24,7 @@ const TABS = ['Overview', 'All Transactions', 'Collections', 'Refunds', 'Chargeb
 const STATUS_TONE: Readonly<Record<TxnStatus, Tone>> = { Successful: 'green', Pending: 'orange', Failed: 'red', Refunded: 'purple', Chargeback: 'red' };
 const TYPE_TONE: Readonly<Record<string, Tone>> = { Subscription: 'purple', 'Learner Plan': 'blue', 'Subject Purchase': 'purple', 'School Fee': 'blue', 'Manual Payment': 'green' };
 const PROMO: Promo = { icon: 'wallet', color: Maple.blue, title: 'Payment Operations', body: 'Track, reconcile and manage all payments across providers.' };
-const PROVIDER_COLORS = [Maple.blue, Maple.warning, '#0BA4DB', Maple.warning, Maple.blue, Maple.successText, Maple.faint];
+const PROVIDER_COLORS = [Maple.blue, Maple.warning, Palette.sky600c, Maple.warning, Maple.blue, Maple.successText, Maple.faint];
 const CURRENCY = ['UGX (All)', 'UGX', 'KES', 'USD'];
 
 function useTxns(d: D) {

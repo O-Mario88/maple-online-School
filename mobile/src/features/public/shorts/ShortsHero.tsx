@@ -6,6 +6,7 @@ import { Icon } from '@/components/icon';
 
 import { Brand, HERO_GRADIENT } from '../palette';
 import { Maple } from '@/constants/maple';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
 const SCRIPT_FONT = Platform.select({ web: '"Segoe Print", "Bradley Hand", cursive', default: undefined });
 
@@ -14,7 +15,7 @@ export function ShortsHero({ promises, wide, photo }: { promises: readonly strin
   return (
     <LinearGradient colors={HERO_GRADIENT} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.hero}>
       <View style={[styles.copy, wide && styles.copyWide]}>
-        <Text style={[styles.title, wide && styles.titleWide]} accessibilityRole="header">
+        <Text style={[styles.title, wide && styles.titleWide]} {...PAGE_TITLE}>
           {'Maple '}
           <Text style={styles.accent}>Shorts</Text>
         </Text>

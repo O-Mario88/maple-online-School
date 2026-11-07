@@ -10,6 +10,7 @@ import type { IconName } from '@/lib/icons';
 
 import { type Hub, type HubState, type Session, TABS } from './useLiveHub';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 export const INK = Maple.navy;
 export const BODY = Maple.body;
@@ -68,7 +69,7 @@ export function ScheduleRow({ hub, x, s, phone = false, showDay = false }: { hub
         <Text style={[styles.timeStart, phone && styles.timeStartP]}>{phone ? clock12(x.start).replace(' ', '\n') : clock12(x.start)}</Text>
         {phone ? null : <Text style={styles.timeEnd}>{`– ${clock12(x.end)}`}</Text>}
       </View>
-      <Image source={hub.icons[x.icon]} style={phone ? styles.iconP : styles.icon} />
+      <Image decorative source={hub.icons[x.icon]} style={phone ? styles.iconP : styles.icon} />
       <View style={styles.flex}>
         {live ? <LiveBadge /> : null}
         <Text style={[styles.title, phone && styles.titleP]} numberOfLines={1}>
@@ -198,7 +199,7 @@ const styles = StyleSheet.create({
   fill: { backgroundColor: Maple.blue },
   outline: { borderWidth: 1, borderColor: Maple.blueLine, backgroundColor: Maple.surface },
   soft: { backgroundColor: Maple.blueSelected },
-  done: { borderWidth: 1, borderColor: '#B9E3C8', backgroundColor: Maple.successSoft },
+  done: { borderWidth: 1, borderColor: Palette.green300d, backgroundColor: Maple.successSoft },
   btnText: { fontSize: 13, fontWeight: '500' },
   btnTextP: { fontSize: 11.5 },
   row: { minHeight: 60, flexDirection: 'row', alignItems: 'center', gap: 12 },

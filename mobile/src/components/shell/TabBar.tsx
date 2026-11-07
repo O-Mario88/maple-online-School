@@ -42,7 +42,8 @@ export function TabBar() {
               style={styles.tab}
               accessibilityRole="tab"
               accessibilityState={{ selected }}
-              accessibilityLabel={item.label}>
+              // The name it's read by is the label it shows (WCAG 2.5.3).
+              accessibilityLabel={item.short ?? item.label}>
               <View style={[styles.pill, selected && styles.pillOn]}>
                 <Icon name={item.icon} size={22} color={color} />
               </View>

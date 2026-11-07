@@ -10,6 +10,7 @@ import { BLUE, BODY, GREEN, LINE, MUTED, NAVY, RED, TONES, type Tone, WHITE } fr
 import type { IconName } from '@/lib/icons';
 import { toast } from '@/lib/toast';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 export interface Kpi {
   label: string;
@@ -217,7 +218,7 @@ export function CmdSelect({ value, options, onChange, width, label }: { value: s
       onPress={() => onChange(options[(options.indexOf(value) + 1) % options.length])}
       accessibilityRole="button"
       accessibilityLabel={`${label ?? 'Filter'}: ${value}. Tap to change`}>
-      <Text style={styles.cmdSelectText} numberOfLines={1}>
+      <Text style={styles.cmdSelectText} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.85}>
         {value}
       </Text>
       <Icon name="chevronDown" size={13} color={NAVY} />
@@ -230,7 +231,7 @@ export function RangeBox({ value, options, onChange, width }: { value: string; o
   return (
     <Pressable style={[styles.outline, styles.range, width ? { width } : null]} onPress={() => onChange(options[(options.indexOf(value) + 1) % options.length])} accessibilityRole="button" accessibilityLabel={`Period: ${value}. Tap to change`}>
       <Icon name="calendar" size={17} color={BLUE} />
-      <Text style={[styles.outlineText, styles.flex]} numberOfLines={1}>
+      <Text style={[styles.outlineText, styles.flex]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.85}>
         {value}
       </Text>
       <Icon name="chevronDown" size={14} color={NAVY} />
@@ -245,17 +246,17 @@ export function exportMenu(what: string): void {
 
 /** A small round flag drawn from its stripes, so no country photo is needed. */
 const FLAGS: Readonly<Record<string, { stripes: readonly string[]; vertical?: boolean; dot?: string }>> = {
-  UG: { stripes: ['#000', '#FCDC04', Maple.error, '#000', '#FCDC04', Maple.error], dot: Maple.surface },
-  KE: { stripes: ['#000', Maple.surface, Maple.errorText, Maple.surface, Maple.successText], dot: Maple.errorText },
-  TZ: { stripes: [Maple.success, Maple.warning, '#000', Maple.warning, '#00A3DD'] },
+  UG: { stripes: [Palette.black, Palette.yellow600b, Maple.error, Palette.black, Palette.yellow600b, Maple.error], dot: Maple.surface },
+  KE: { stripes: [Palette.black, Maple.surface, Maple.errorText, Maple.surface, Maple.successText], dot: Maple.errorText },
+  TZ: { stripes: [Maple.success, Maple.warning, Palette.black, Maple.warning, Palette.sky600b] },
   NG: { stripes: [Maple.successText, Maple.surface, Maple.successText], vertical: true },
-  GH: { stripes: [Maple.error, Maple.warning, Maple.successText], dot: '#000' },
-  RW: { stripes: ['#00A1DE', '#00A1DE', '#FAD201', Maple.successText] },
+  GH: { stripes: [Maple.error, Maple.warning, Maple.successText], dot: Palette.black },
+  RW: { stripes: [Palette.sky600, Palette.sky600, Palette.yellow600, Maple.successText] },
   ZA: { stripes: [Maple.error, Maple.surface, Maple.successText, Maple.surface, Maple.blueHover] },
-  ET: { stripes: [Maple.successText, '#FCDD09', Maple.error], dot: Maple.blueHover },
-  ZM: { stripes: [Maple.successText, Maple.successText, Maple.error, '#000', Maple.warning], vertical: true },
-  US: { stripes: [Maple.error, Maple.surface, Maple.error, Maple.surface, Maple.error, Maple.surface, Maple.error], dot: '#3C3B6E' },
-  GB: { stripes: ['#012169', Maple.surface, Maple.error, Maple.surface, '#012169'] },
+  ET: { stripes: [Maple.successText, Palette.yellow600c, Maple.error], dot: Maple.blueHover },
+  ZM: { stripes: [Maple.successText, Maple.successText, Maple.error, Palette.black, Maple.warning], vertical: true },
+  US: { stripes: [Maple.error, Maple.surface, Maple.error, Maple.surface, Maple.error, Maple.surface, Maple.error], dot: Palette.indigo800 },
+  GB: { stripes: [Palette.blue900, Maple.surface, Maple.error, Maple.surface, Palette.blue900] },
   SG: { stripes: [Maple.error, Maple.surface] },
   XX: { stripes: [Maple.blueLine, Maple.blueSelected] },
 };
@@ -409,7 +410,7 @@ export function PersonCell({ avatar, name, sub, flag, size = 32 }: { avatar?: nu
 }
 
 export function PhotoDot({ source, size = 32 }: { source: number; size?: number }) {
-  return <Image source={source} style={{ width: size, height: size, borderRadius: size / 2 }} contentFit="cover" />;
+  return <Image decorative source={source} style={{ width: size, height: size, borderRadius: size / 2 }} contentFit="cover" />;
 }
 
 /** Initials in a blue circle, for people without a photo. */

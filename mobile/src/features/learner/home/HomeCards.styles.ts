@@ -46,7 +46,8 @@ export const styles = StyleSheet.create({
   },
   kpiCard: {
     flex: 1,
-    height: 54,
+    minHeight: 54,
+    paddingVertical: 6,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
@@ -74,6 +75,7 @@ export const styles = StyleSheet.create({
   },
   kpiLabel: {
     fontSize: 9.5,
+    lineHeight: 12,
     color: BODY,
   },
   kpiDeltaCol: {

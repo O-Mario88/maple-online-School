@@ -261,7 +261,20 @@ export function setActiveDemoByPortal(portal: DemoPortal) {
 }
 
 export function setActiveDemoByEmail(email: string) {
-  const lower = email.toLowerCase();
+  const lower = email.trim().toLowerCase();
+  // A demo address is its own account. Every one ends in @maple.school, so the guesses below
+  // only read the name before the @ (reading all of it made every demo account the school's).
+  const exact = (Object.keys(demoAccounts) as DemoAccountKey[]).find((k) => demoAccounts[k].email === lower);
+  if (exact) {
+    activeDemoKey = exact;
+    return demoAccounts[activeDemoKey];
+  }
+  const name = lower.split('@')[0] ?? '';
+  return setActiveDemoByName(name);
+}
+
+/** The demo account a typed-in address most likely means, from the name before its @. */
+function setActiveDemoByName(lower: string) {
   if (lower.includes('teacher') || lower.includes('sarah') || lower.includes('tutor')) {
     activeDemoKey = 'teacher';
   } else if (lower.includes('parent') || lower.includes('grace') || lower.includes('family') || lower.includes('mary')) {

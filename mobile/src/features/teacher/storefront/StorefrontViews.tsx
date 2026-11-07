@@ -96,7 +96,7 @@ export function StorefrontDesk({ sf, me, phone = false }: { sf: StorefrontEditor
             <View style={s.profileBasicsBody}>
               {/* Avatar + Camera Badge */}
               <View style={s.avatarWrap}>
-                <Image source={sf.avatar} style={s.bigAvatar} contentFit="cover" />
+                <Image decorative source={sf.avatar} style={s.bigAvatar} contentFit="cover" />
                 <Pressable
                   style={s.cameraBadge}
                   onPress={() => toast('Uploading new profile portrait.')}>
@@ -182,7 +182,7 @@ export function StorefrontDesk({ sf, me, phone = false }: { sf: StorefrontEditor
             <Panel style={[s.card, { flex: 1 }]}>
               <Text style={s.cardTitle}>Intro Video</Text>
               <View style={s.videoFrame}>
-                <Image source={sf.videoThumb} style={StyleSheet.absoluteFill} contentFit="cover" />
+                <Image decorative source={sf.videoThumb} style={StyleSheet.absoluteFill} contentFit="cover" />
                 <View style={s.videoCloseCircle}>
                   <Icon name="close" size={9} color={Maple.surface} />
                 </View>
@@ -415,7 +415,7 @@ export function StorefrontDesk({ sf, me, phone = false }: { sf: StorefrontEditor
                   Build skills. Gain confidence. Achieve more.
                 </Text>
               </View>
-              <Image
+              <Image decorative
                 source={sf.bannerTeacher}
                 style={s.heroTeacherImg}
                 contentFit="cover"
@@ -424,7 +424,7 @@ export function StorefrontDesk({ sf, me, phone = false }: { sf: StorefrontEditor
 
             {/* Profile Identity Strip */}
             <View style={s.previewProfileStrip}>
-              <Image
+              <Image decorative
                 source={sf.avatar}
                 style={s.previewProfileAvatar}
                 contentFit="cover"
@@ -491,7 +491,7 @@ export function StorefrontDesk({ sf, me, phone = false }: { sf: StorefrontEditor
               </View>
 
               <View style={s.miniVideoBox}>
-                <Image
+                <Image decorative
                   source={sf.videoThumb}
                   style={StyleSheet.absoluteFill}
                   contentFit="cover"

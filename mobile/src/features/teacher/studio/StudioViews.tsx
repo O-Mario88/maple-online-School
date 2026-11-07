@@ -10,6 +10,7 @@ import type { StudioNew } from '@/mock/teacher-studio';
 import { AddContent, PhoneSources, Processing, type StudioRun, useStudioRun } from './StudioInput';
 import { type ReviewTab, PhoneReview, ReviewCourse, useCourseDraft } from './StudioReview';
 import { Maple } from '@/constants/maple';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
 /** The studio reference's desktop (top bar to the end of step 3), laid out in its pixels and scaled. */
 export const STUDIO_REF_WIDTH = 1180;
@@ -70,7 +71,7 @@ function SideCards({ s, onTemplates }: { s: StudioNew; onTemplates: () => void }
   return (
     <View style={styles.sideCards}>
       <View style={styles.promo}>
-        <Image source={p.spark} style={styles.spark} contentFit="contain" />
+        <Image decorative source={p.spark} style={styles.spark} contentFit="contain" />
         <Text style={styles.promoTitle}>{p.title}</Text>
         {p.points.map((x) => (
           <View key={x} style={styles.point}>
@@ -134,7 +135,7 @@ export function StudioDesk({ s, me }: { s: StudioNew; me: TeacherMe }) {
         <View style={styles.main}>
           <View style={styles.header}>
             <View style={styles.flex}>
-              <Text style={styles.title} accessibilityRole="header">
+              <Text style={styles.title} {...PAGE_TITLE}>
                 Create a New Subject with AI
               </Text>
               <Text style={styles.subtitle}>Upload your content or paste a link and let AI build a complete, interactive subject in 60 seconds.</Text>
@@ -177,7 +178,7 @@ export function StudioPhone({ s, me }: { s: StudioNew; me: TeacherMe }) {
       <TeacherPhoneTop me={me} />
       <ScrollView contentContainerStyle={styles.phone}>
         <View>
-          <Text style={styles.titleP} accessibilityRole="header">
+          <Text style={styles.titleP} {...PAGE_TITLE}>
             AI Subject Studio
           </Text>
           <Text style={styles.subP}>Turn any content into an interactive subject in 60 seconds.</Text>

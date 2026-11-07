@@ -145,7 +145,7 @@ const COLS: readonly Column<AnnouncementRow>[] = [
     flex: 2.3,
     render: (a) => (
       <View style={styles.inline}>
-        <Image source={a.thumb} style={styles.thumb} contentFit="cover" />
+        <Image decorative source={a.thumb} style={styles.thumb} contentFit="cover" />
         <View style={styles.flex}>
           <Text style={styles.rowTitle} numberOfLines={1}>
             {a.title}
@@ -263,7 +263,7 @@ function DetailsPanel({ u, m, onClose }: { u: U; m: M; onClose?: () => void }) {
         ) : null}
       </View>
       <View style={styles.inline}>
-        <Image source={a.thumb} style={styles.hero} contentFit="cover" />
+        <Image decorative source={a.thumb} style={styles.hero} contentFit="cover" />
         <View style={styles.flex}>
           <Text style={styles.detailTitle}>{a.title}</Text>
           <Text style={styles.tiny}>{a.publishedAt ?? oneLine(a.date)}</Text>
@@ -389,7 +389,7 @@ export function AnnouncementsPhone({ c }: { c: CommandData }) {
           }}
           accessibilityRole="button"
           accessibilityLabel={`${a.title}, ${a.status}, ${a.audience}`}>
-          <Image source={a.thumb} style={styles.cardThumb} contentFit="cover" />
+          <Image decorative source={a.thumb} style={styles.cardThumb} contentFit="cover" />
           <View style={[styles.flex, styles.cardBody]}>
             <Text style={styles.rowTitle}>{a.title}</Text>
             <Text style={styles.tiny} numberOfLines={2}>

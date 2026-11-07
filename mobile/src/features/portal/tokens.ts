@@ -1,4 +1,5 @@
 import { Categorical, Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 /**
  * The palette of the parent and school-admin references (November 2026): deep navy headings,
@@ -26,7 +27,7 @@ export const TONES: Readonly<Record<Tone, { solid: string; soft: string; text: s
   red: { solid: Maple.error, soft: Maple.errorSoft, text: Maple.errorText },
   orange: { solid: Maple.warning, soft: Maple.warningSoft, text: Maple.warningText },
   // Was purple: Maple has one accent, so this category tone is teal.
-  purple: { solid: Categorical.teal, soft: '#E6F4F2', text: '#0B7A6E' },
+  purple: { solid: Categorical.teal, soft: Palette.teal100b, text: Palette.teal900 },
   green: { solid: Maple.success, soft: Maple.successSoft, text: Maple.successText },
   grey: { solid: Maple.muted, soft: Maple.blueSelected, text: Maple.secondary },
 };

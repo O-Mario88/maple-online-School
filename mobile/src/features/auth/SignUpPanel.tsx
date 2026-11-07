@@ -7,6 +7,7 @@ import { Brand } from '@/features/public/palette';
 import type { IconName } from '@/lib/icons';
 import type { MockData } from '@/mock';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 type Art = MockData['publicPages']['signUpArt'];
 
@@ -22,14 +23,14 @@ const STATS: readonly { icon: IconName; value?: string; label: string }[] = [
   { icon: 'book', value: '10,000+', label: 'Books & Resources' },
   { icon: 'globe', label: 'Across\nUganda & Beyond' },
 ];
-const NAVY = ['#0B2350', Maple.blueHover] as const;
+const NAVY = [Palette.blue950h, Maple.blueHover] as const;
 const DARK = Maple.navy;
 
 /** Desktop: the photo panel with "Join Maple", four promises, a parent's quote and the reach numbers (reference pixels). */
 export function SignUpPanel({ art, width, height }: { art?: Art; width: number; height: number }) {
   return (
     <View style={[styles.panel, { width, height }]}>
-      {art ? <Image source={art.panel} style={StyleSheet.absoluteFill} contentFit="cover" contentPosition="left" /> : <LinearGradient colors={NAVY} style={StyleSheet.absoluteFill} />}
+      {art ? <Image decorative source={art.panel} style={StyleSheet.absoluteFill} contentFit="cover" contentPosition="left" /> : <LinearGradient colors={NAVY} style={StyleSheet.absoluteFill} />}
       <Text style={styles.join} accessibilityRole="header">
         {'Join '}
         <Text style={styles.accent}>Maple</Text>
@@ -39,7 +40,7 @@ export function SignUpPanel({ art, width, height }: { art?: Art; width: number; 
         {PROMISES.map((p, i) => (
           <View key={p.title} style={styles.promise}>
             {art ? (
-              <Image source={art[`promise-${i + 1}`]} style={styles.circle} contentFit="contain" />
+              <Image decorative source={art[`promise-${i + 1}`]} style={styles.circle} contentFit="contain" />
             ) : (
               <View style={[styles.circle, { backgroundColor: p.tint }]}>
                 <Icon name={p.icon} size={26} color={Brand.surface} />
@@ -53,7 +54,7 @@ export function SignUpPanel({ art, width, height }: { art?: Art; width: number; 
         ))}
       </View>
       <View style={styles.quote}>
-        {art ? <Image source={art.face} style={styles.face} contentFit="cover" /> : <View style={styles.face} />}
+        {art ? <Image decorative source={art.face} style={styles.face} contentFit="cover" /> : <View style={styles.face} />}
         <Text style={styles.mark}>“</Text>
         <View style={styles.quoteBody}>
           <Text style={styles.quoteText}>“Maple has made learning so easy for my daughter. The live classes and resources really help.”</Text>
@@ -74,7 +75,7 @@ export function SignUpPanel({ art, width, height }: { art?: Art; width: number; 
 }
 
 const styles = StyleSheet.create({
-  panel: { overflow: 'hidden', borderBottomLeftRadius: 14, borderBottomRightRadius: 14, backgroundColor: '#0B2350' },
+  panel: { overflow: 'hidden', borderBottomLeftRadius: 14, borderBottomRightRadius: 14, backgroundColor: Palette.blue950h },
   join: { position: 'absolute', left: 35, top: 86, fontSize: 64, lineHeight: 74, fontWeight: '800', color: Brand.surface, letterSpacing: -1.6 },
   accent: { color: Maple.blue },
   sub: { position: 'absolute', left: 38, top: 172, fontSize: 24, lineHeight: 31.5, color: Maple.blueSoft },

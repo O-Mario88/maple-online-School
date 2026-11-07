@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SchoolHall } from '@/components/art/SchoolHall';
 import { Button, ModeButton } from '@/components/ui';
 import { Maple, TypeScale } from '@/constants/maple';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
 /** Space above the title on phones, below the status bar. */
 const PHONE_TOP = 16;
@@ -20,7 +21,7 @@ export function MessagesHero({ phone, canStart }: { phone: boolean; canStart: bo
       <LinearGradient colors={[Maple.navyDeep, Maple.blue]} start={{ x: 0, y: 0.2 }} end={{ x: 1, y: 0.9 }} style={StyleSheet.absoluteFill} />
       {phone ? null : <SchoolHall style={styles.art} />}
       <View style={styles.titleRow}>
-        <Text style={styles.title} accessibilityRole="header">
+        <Text style={styles.title} {...PAGE_TITLE}>
           Messages
         </Text>
         <View style={[styles.rule, phone && styles.rulePhone]} />

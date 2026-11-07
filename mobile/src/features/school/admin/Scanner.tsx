@@ -13,6 +13,8 @@ import type { ScanMode, ScanResult } from '@/mock/school-admin';
 
 import { initialScanState, type ScanLog, scanReducer } from './scanState';
 import { Maple } from '@/constants/maple';
+import { useReducedMotion } from '@/lib/motion';
+import { Palette } from '@/constants/palette';
 
 type Admin = MockData['schoolAdmin'];
 
@@ -50,11 +52,16 @@ export function useScanner(a: Admin) {
 /** The camera window: corner brackets and a sweeping line; tapping it reads the next badge. */
 function Viewfinder({ onScan, tint, big = false }: { onScan: () => void; tint: string | null; big?: boolean }) {
   const [sweep] = useState(() => new Animated.Value(0));
+  const still = useReducedMotion();
   useEffect(() => {
+    if (still) {
+      sweep.setValue(0.5);
+      return undefined;
+    }
     const loop = Animated.loop(Animated.timing(sweep, { toValue: 1, duration: 1800, easing: Easing.inOut(Easing.quad), useNativeDriver: true }));
     loop.start();
     return () => loop.stop();
-  }, [sweep]);
+  }, [sweep, still]);
   const size = big ? 260 : 170;
   return (
     <Pressable style={[styles.finder, { height: size + 40 }, big && styles.finderBig, tint ? { borderColor: tint } : null]} onPress={onScan} accessibilityRole="button" accessibilityLabel="Scan a QR badge">
@@ -77,7 +84,7 @@ function ResultCard({ s, onAgain }: { s: ScanLog; onAgain: () => void }) {
   const r = RESULT[s.result];
   return (
     <View style={[styles.result, { backgroundColor: r.soft, borderColor: r.color }]} accessibilityLiveRegion="polite">
-      <Image source={s.person.avatar} style={styles.resultFace} contentFit="cover" />
+      <Image decorative source={s.person.avatar} style={styles.resultFace} contentFit="cover" />
       <View style={styles.flex}>
         <View style={styles.resultHead}>
           <View style={[styles.resultBadge, { backgroundColor: r.color }]}>
@@ -235,7 +242,7 @@ const styles = StyleSheet.create({
   time: { fontSize: 12, color: BODY },
   resultName: { marginTop: 4, fontSize: 16, fontWeight: '800', color: NAVY },
   resultMsg: { marginTop: 4, fontSize: 13, fontWeight: '600' },
-  screen: { flex: 1, backgroundColor: '#081230' },
+  screen: { flex: 1, backgroundColor: Palette.blue950c },
   screenBody: { flexGrow: 1, gap: 14, width: '100%', maxWidth: SCANNER_MAX_WIDTH, alignSelf: 'center' },
   screenHead: { flexDirection: 'row', alignItems: 'center', gap: 14, paddingHorizontal: 18 },
   screenTitle: { fontSize: 20, fontWeight: '800', color: WHITE },

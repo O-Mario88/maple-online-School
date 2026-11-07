@@ -117,7 +117,7 @@ export function ResourcesCard({ w, s }: { w: Work; s: WorkState }) {
       <View style={styles.resources}>
         {w.resources.map((r) => (
           <View key={r.title} style={styles.resource}>
-            <Image source={r.icon} style={styles.resIcon} />
+            <Image decorative source={r.icon} style={styles.resIcon} />
             <View style={styles.flex}>
               <Text style={styles.resTitle}>{r.title}</Text>
               <Text style={styles.resMeta}>{r.meta}</Text>

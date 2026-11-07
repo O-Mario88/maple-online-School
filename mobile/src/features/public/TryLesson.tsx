@@ -10,10 +10,11 @@ import { scoreQuiz } from '@/lib/quiz';
 import type { SampleLesson } from './home/types';
 import { Brand, CARD_SHADOW } from './palette';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 const POINTS = [
-  { label: 'Real lesson content', icon: 'play' as const, color: '#3E7A97' },
-  { label: 'Instant feedback', icon: 'check' as const, color: '#3E7A97' },
+  { label: 'Real lesson content', icon: 'play' as const, color: Palette.sky700 },
+  { label: 'Instant feedback', icon: 'check' as const, color: Palette.sky700 },
   { label: 'Personalized next steps', icon: 'check' as const, color: Maple.successText },
 ];
 
@@ -124,7 +125,7 @@ export function TryLesson({ lesson, phone = false }: { lesson: SampleLesson; pho
       </View>
 
       <Pressable style={[styles.video, phone && styles.videoPhone]} onPress={() => setPlaying(true)} accessibilityRole="button" accessibilityLabel={`Play the sample lesson: ${lesson.title}`}>
-        <Image source={lesson.photo} style={StyleSheet.absoluteFill} contentFit="cover" />
+        <Image decorative source={lesson.photo} style={StyleSheet.absoluteFill} contentFit="cover" />
       </Pressable>
       <VideoSheet visible={playing} poster={lesson.photo} title={lesson.title} seconds={180} onClose={() => setPlaying(false)} />
 
@@ -192,7 +193,7 @@ const styles = StyleSheet.create({
   qKind: { paddingHorizontal: 5, paddingVertical: 1.5, borderRadius: 4, backgroundColor: Maple.blueSelected, fontSize: 8, color: Maple.body },
   question: { marginTop: 8, fontSize: 11, lineHeight: 15.5, fontWeight: '600', color: Brand.ink },
   options: { gap: 2, marginTop: 9 },
-  option: { flexDirection: 'row', alignItems: 'center', gap: 8, height: 22, paddingHorizontal: 7, borderRadius: 4, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Brand.surface },
+  option: { flexDirection: 'row', alignItems: 'center', gap: 8, height: 24, paddingHorizontal: 7, borderRadius: 4, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Brand.surface },
   optionOn: { borderColor: Maple.blueLine, backgroundColor: Maple.blueSoft },
   radio: { width: 9, height: 9, borderRadius: 5, borderWidth: 1, borderColor: Maple.borderStrong },
   radioOn: { borderWidth: 3, borderColor: Brand.blue },

@@ -28,7 +28,7 @@ function NorthTile({ k }: { k: O['northStar'][number] }) {
   return (
     <View style={[styles.north, { backgroundColor: t.soft + 'B0', borderColor: t.soft }]} accessible accessibilityLabel={`${k.label}: ${k.value}, up ${k.delta}, ${k.from}`}>
       <Icon name={k.icon} size={30} color={t.solid} />
-      <Text style={[styles.northLabel, { color: t.text }]} numberOfLines={2}>
+      <Text style={[styles.northLabel, { color: t.text }]} numberOfLines={3}>
         {k.label}
       </Text>
       <Text style={[styles.northValue, { color: t.text }, k.value.length > 8 && styles.northValueLong]} numberOfLines={1}>
@@ -167,7 +167,7 @@ function ClassCard({ k, width }: { k: O['live']['classes'][number]; width: numbe
   return (
     <Pressable style={[styles.classCard, { width }]} onPress={() => toast(`Joining ${k.title} with ${k.teacher} as a silent observer.`)} accessibilityRole="button" accessibilityLabel={`${k.title} with ${k.teacher}, ${k.students} students, live`}>
       <View>
-        <Image source={k.photo} style={styles.classPhoto} contentFit="cover" />
+        <Image decorative source={k.photo} style={styles.classPhoto} contentFit="cover" />
         <View style={styles.liveBadge}>
           <View style={styles.liveBadgeDot} />
           <Text style={styles.liveBadgeText}>LIVE</Text>
@@ -177,7 +177,7 @@ function ClassCard({ k, width }: { k: O['live']['classes'][number]; width: numbe
           <Text style={styles.studentsText}>{k.students}</Text>
         </View>
       </View>
-      <Text style={styles.classTitle} numberOfLines={1}>
+      <Text style={styles.classTitle} numberOfLines={2}>
         {k.title}
       </Text>
       <Text style={styles.classTeacher} numberOfLines={1}>
@@ -312,10 +312,10 @@ function Activity({ o, phone = false }: { o: O; phone?: boolean }) {
         <View key={a.title} style={styles.act}>
           <IconTile icon={a.icon} tone={a.tone} size={34} radius={9} iconSize={18} />
           <View style={styles.flex}>
-            <Text style={styles.actTitle} numberOfLines={1}>
+            <Text style={styles.actTitle} numberOfLines={2}>
               {a.title}
             </Text>
-            <Text style={styles.actBody} numberOfLines={2}>
+            <Text style={styles.actBody} numberOfLines={3}>
               {a.body}
             </Text>
           </View>

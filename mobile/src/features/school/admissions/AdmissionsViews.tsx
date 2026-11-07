@@ -154,7 +154,7 @@ function Campaigns({ x }: { x: X }) {
       <CardHead title={`Active Campaigns (${x.campaigns.filter((c) => c.status === 'Active').length})`} size={16} link="View All" onLink={() => x.setTab('Campaigns')} />
       {x.campaigns.map((c) => (
         <View key={c.id} style={s.campaign}>
-          <Image source={c.photo} style={s.campaignPhoto} contentFit="cover" />
+          <Image decorative source={c.photo} style={s.campaignPhoto} contentFit="cover" />
           <View style={s.flex}>
             <View style={s.row}>
               <Text style={[s.strong, s.flex]} numberOfLines={1}>

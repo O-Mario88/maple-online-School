@@ -9,6 +9,7 @@ import { useStartFree } from '@/lib/auth/auth-context';
 import { Brand, CARD_SHADOW } from '../palette';
 import type { Landing } from './types';
 import { Maple } from '@/constants/maple';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
 /** Each curriculum chip's width in the reference, in order. */
 const CHIP_WIDTHS = [117, 87, 100, 100, 103, 122] as const;
@@ -18,7 +19,7 @@ export function HeroCopy({ landing, phone = false }: { landing: Landing; phone?:
   return (
     <View style={phone ? styles.colPhone : styles.col}>
       <Text style={[styles.eyebrow, phone && styles.eyebrowPhone]}>{landing.eyebrow.toUpperCase()}</Text>
-      <Text style={[styles.headline, phone && styles.headlinePhone]} accessibilityRole="header">
+      <Text style={[styles.headline, phone && styles.headlinePhone]} {...PAGE_TITLE}>
         {`${landing.headline.lead}\n${landing.headline.pre}`}
         <Text style={styles.accent}>{landing.headline.accent}</Text>
       </Text>
@@ -42,7 +43,7 @@ export function HeroActions({ landing, phone = false }: { landing: Landing; phon
         accessibilityRole="radio"
         accessibilityState={{ selected: on }}
         accessibilityLabel={`${c.code}, ${c.region}`}>
-        <Image source={c.badge} style={styles.badge} />
+        <Image decorative source={c.badge} style={styles.badge} />
         <View>
           <Text style={styles.chipCode}>{c.code}</Text>
           <Text style={styles.chipRegion}>{`(${c.region})`}</Text>

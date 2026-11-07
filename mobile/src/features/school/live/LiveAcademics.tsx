@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
 import { EmptyState, ErrorText, Screen, useShell } from '@/components/ui';
-import { ACADEMICS_NAV, ACADEMICS_QUICK_ACTIONS, ACADEMICS_SECTIONS, ACADEMICS_TABLES, ACADEMICS_TABS, type AcademicsPage } from '@/features/school/academics/academicsShape';
+import { ACADEMICS_NAV, ACADEMICS_QUICK_ACTIONS, ACADEMICS_SECTIONS, ACADEMICS_TABLES, ACADEMICS_TABS, academicsAction, type AcademicsPage } from '@/features/school/academics/academicsShape';
 import { AdminAcademicsDesk, AdminAcademicsPhone, type AcademicsActions } from '@/features/school/academics/AdminAcademicsViews';
 import { BLUE } from '@/features/portal/tokens';
 import { api } from '@/lib/api/client';
@@ -18,7 +18,6 @@ import { useClasses, useClassLevels, useSchools } from '@/lib/school/queries';
 import { rosterGroups } from '@/lib/school/roster';
 import { useMembers } from '@/lib/school/roster-queries';
 import { useTerms } from '@/lib/school/timetable-queries';
-import { toast } from '@/lib/toast';
 
 import { AddGradeSheet, AddTermSheet } from './AcademicsForms';
 
@@ -84,11 +83,12 @@ function SchoolAcademics({ school }: { school: SchoolRef }) {
 
   const act: AcademicsActions = {
     onAction: (action) => {
-      if (action === 'Add Term' || action === 'Create Term' || action === 'Add Academic Year' || action === 'New Academic Year') return setSheet('term');
-      if (action === 'Add Grade') return setSheet('grade');
-      if (action === 'Add Subject' || action === 'Manage Matrix') return router.push('/curriculum');
-      toast(`${action} isn't available yet.`);
+      const target = academicsAction(action);
+      if (target === 'curriculum') router.push('/curriculum');
+      else if (target) setSheet(target);
     },
+    // Buttons the API has no form for yet are drawn disabled instead of answering with a toast.
+    isAvailable: (action) => academicsAction(action) !== null,
   };
 
   return (

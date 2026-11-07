@@ -38,7 +38,10 @@
     ],
     "experiments": {
       "typedRoutes": true,
-      "reactCompiler": true
+      "reactCompiler": true,
+      "chunking": {
+        "mode": "granular"
+      }
     }
   }
 }

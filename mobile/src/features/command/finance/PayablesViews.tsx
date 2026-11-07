@@ -214,7 +214,7 @@ function cols(): readonly Column<PayableRow>[] {
       flex: 1,
       render: (t) => (
         <View style={styles.inline}>
-          <Image source={t.photo} style={styles.avatar} contentFit="cover" accessibilityIgnoresInvertColors />
+          <Image decorative source={t.photo} style={styles.avatar} contentFit="cover" accessibilityIgnoresInvertColors />
           <View style={styles.flex}>
             <Text style={styles.cellStrong} numberOfLines={1}>{t.name}</Text>
             <Text style={styles.cell} numberOfLines={1}>{t.subject}</Text>
@@ -404,7 +404,7 @@ export function PayablesPhone({ c }: { c: CommandData }) {
       {u.rows.map((t) => (
         <PhoneRow
           key={t.id}
-          lead={<Image source={t.photo} style={styles.avatarLg} contentFit="cover" />}
+          lead={<Image decorative source={t.photo} style={styles.avatarLg} contentFit="cover" />}
           title={t.name}
           sub={`${t.subject} • owed ${ugx(owed(t))} • can withdraw ${ugx(withdrawable(t))}${t.dispute ? ` • dispute ${ugx(t.dispute)}` : ''}`}
           pill={<Pill label={eligibility(t)} tone={STATUS_TONE[eligibility(t)]} size={11} />}

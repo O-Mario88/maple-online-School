@@ -14,6 +14,7 @@ import { parseHandle } from '@/lib/booking';
 import { LightOnly } from '@/hooks/use-theme';
 import { mockData } from '@/lib/mock';
 import { PageScroll } from '@/components/shell/PageScroll';
+import { prefersReducedMotion } from '@/lib/motion';
 
 const MAX_WIDTH = 1440;
 const BOOKING = 420;
@@ -63,7 +64,7 @@ export default function TeacherStorefrontScreen() {
   const jump = (label: string) => {
     setTab(label);
     const y = offsets[TAB_SECTION[label] ?? 'about'];
-    if (y !== undefined) scroll.current?.scrollTo({ y: Math.max(y - 12, 0), animated: true });
+    if (y !== undefined) scroll.current?.scrollTo({ y: Math.max(y - 12, 0), animated: !prefersReducedMotion() });
   };
   const booking = <BookingCard t={t} refParam={params.ref} />;
 

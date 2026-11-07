@@ -2,6 +2,7 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { DOMAINS, type Domain, GENERIC_SKILLS, type GenericSkill, type Identifier, RACE, type RaceScore, raceTotal } from '@/lib/cbc';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 const INK = Maple.navy;
 const BODY = Maple.body;
@@ -11,7 +12,7 @@ export const DOMAIN_TONE: Record<Domain, { bg: string; fg: string }> = {
   values: { bg: Maple.blueSelected, fg: Maple.blue },
 };
 export const ID_TONE: Record<Identifier['id'], { bg: string; fg: string; bar: string }> = {
-  1: { bg: Maple.errorSoft, fg: '#C2410C', bar: Maple.error },
+  1: { bg: Maple.errorSoft, fg: Palette.orange700, bar: Maple.error },
   2: { bg: Maple.blueSelected, fg: Maple.blueHover, bar: Maple.blue },
   3: { bg: Maple.successSoft, fg: Maple.successText, bar: Maple.successText },
 };
@@ -94,7 +95,7 @@ const styles = StyleSheet.create({
   flex: { flex: 1 },
   chip: { alignSelf: 'flex-start', paddingHorizontal: 7, paddingVertical: 2, borderRadius: 4, fontSize: 10.5, fontWeight: '600', overflow: 'hidden' },
   value: { backgroundColor: Maple.blueSelected, color: Maple.blue },
-  skill: { flexDirection: 'row', alignItems: 'center', gap: 5, paddingLeft: 7, paddingRight: 3, paddingVertical: 2, borderRadius: 4, borderWidth: 1, borderColor: '#F3C99B', backgroundColor: Maple.warningSoft },
+  skill: { flexDirection: 'row', alignItems: 'center', gap: 5, paddingLeft: 7, paddingRight: 3, paddingVertical: 2, borderRadius: 4, borderWidth: 1, borderColor: Palette.amber300b, backgroundColor: Maple.warningSoft },
   skillText: { fontSize: 10.5, fontWeight: '600', color: Maple.warningText },
   skillId: { minWidth: 15, paddingHorizontal: 3, borderRadius: 3, fontSize: 10, fontWeight: '800', textAlign: 'center', overflow: 'hidden' },
   idPill: { alignSelf: 'flex-start', paddingHorizontal: 8, paddingVertical: 3, borderRadius: 4, fontSize: 10.5, fontWeight: '600', overflow: 'hidden' },

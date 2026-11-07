@@ -71,7 +71,7 @@ export function StatCards({ page, s, phone = false }: { page: Page; s: ProjectsS
             onPress={() => pick(x.key)}
             accessibilityRole="button"
             accessibilityLabel={`${count} ${x.label}${entry ? `, ${entry.percent}%` : ''}`}>
-            <Image source={page.statIcons[x.key]} style={styles.statIcon} />
+            <Image decorative source={page.statIcons[x.key]} style={styles.statIcon} />
             <View style={styles.flex}>
               <Text style={styles.statNum}>{count}</Text>
               <Text style={styles.statLabel}>{x.label}</Text>
@@ -107,7 +107,7 @@ function ProjectCard({ p, s, on, onOpen }: { p: Project; s: ProjectsState; on: b
       }}
       accessibilityRole="button"
       accessibilityState={{ selected: on }} accessibilityLabel={`${p.title}, ${p.subject}, ${STATUS_LABEL[p.status]}, ${p.date}, ${Math.round(p.progress * 100)}%`}>
-      <Image source={p.thumb} style={styles.thumb} contentFit="cover" />
+      <Image decorative source={p.thumb} style={styles.thumb} contentFit="cover" />
       <View style={styles.flex}>
         <View style={styles.cardTop}>
           <Text style={styles.cardTitle} numberOfLines={1}>

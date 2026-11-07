@@ -8,6 +8,7 @@ import { PageScroll } from '@/components/shell/PageScroll';
 import { Brand } from '@/features/public/palette';
 import { Maple } from '@/constants/maple';
 import { MapleLogo } from '@/components/brand/MapleLogo';
+import { useUiScaleRef } from '@/lib/ui-scale';
 
 /** The light blue page behind the sign-in, onboarding and consent references. */
 export const AUTH_SKY = Maple.blueSelected;
@@ -65,12 +66,13 @@ export function AuthPhoneTop() {
 export function FitScale({ refWidth, refHeight, children }: { refWidth: number; refHeight: number; children: ReactNode }) {
   const { width, height } = useWindowDimensions();
   const scale = Math.min(width / refWidth, height / refHeight);
+  const scaled = useUiScaleRef(scale);
   // The screen still fills the window exactly; on the web the site footer follows below it.
   return (
     <PageScroll style={styles.fitScroll} contentContainerStyle={{ minHeight: height }}>
       <View style={styles.fitOuter}>
         <View style={{ width: refWidth * scale, height: refHeight * scale }}>
-          <View style={[styles.fitInner, { width: refWidth, height: refHeight, transform: [{ scale }] }]}>{children}</View>
+          <View ref={scaled} style={[styles.fitInner, { width: refWidth, height: refHeight, transform: [{ scale }] }]}>{children}</View>
         </View>
       </View>
     </PageScroll>

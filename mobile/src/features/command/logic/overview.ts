@@ -1,4 +1,5 @@
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 /** Small rules behind the Executive Overview. */
 
@@ -16,9 +17,9 @@ const GOOD = 64;
 const FAIR = 55;
 
 const SHADES: Readonly<Record<RetentionLevel, { bg: string; text: string }>> = {
-  strong: { bg: '#C9EFD2', text: Maple.successText },
+  strong: { bg: Palette.green200b, text: Maple.successText },
   good: { bg: Maple.successSoft, text: Maple.successText },
-  fair: { bg: '#F6F4D2', text: '#5B5A16' },
+  fair: { bg: Palette.yellow200, text: Palette.yellow900 },
   weak: { bg: Maple.warningSoft, text: Maple.warningText },
   none: { bg: Maple.blueSoft, text: Maple.muted },
 };

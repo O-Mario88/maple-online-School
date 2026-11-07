@@ -11,6 +11,7 @@ import { answerProblem, MAX_ANSWER, submittedAnswer, trimDecimal } from '@/lib/l
 import { BLUE, BODY, GREEN, INK } from './MathText';
 import { Crumbs } from './WorkSide';
 import { Maple } from '@/constants/maple';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
 const LINE = Maple.blueSelected;
 const SOFT = Maple.blueSoft;
@@ -56,7 +57,7 @@ function Header({ a }: { a: Assessment }) {
   return (
     <View style={styles.gapSmall}>
       <View style={styles.titleRow}>
-        <Text style={styles.title} accessibilityRole="header">
+        <Text style={styles.title} {...PAGE_TITLE}>
           {a.title}
         </Text>
         <Text style={styles.kind}>{a.type.charAt(0).toUpperCase() + a.type.slice(1)}</Text>

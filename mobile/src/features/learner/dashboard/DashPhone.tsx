@@ -31,7 +31,7 @@ export function LearnerPhoneTop({ avatar, globe = false }: { avatar: number; glo
           <View style={styles.redDot} />
         </Pressable>
         <Pressable onPress={switcher?.open} accessibilityRole="button" accessibilityLabel="Switch mode">
-          <Image source={avatar} style={styles.avatar} />
+          <Image decorative source={avatar} style={styles.avatar} />
         </Pressable>
       </View>
     </View>

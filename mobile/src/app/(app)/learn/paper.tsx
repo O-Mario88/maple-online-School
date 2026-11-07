@@ -17,6 +17,8 @@ import { useAccess } from '@/lib/access/access-context';
 import { mockData } from '@/lib/mock';
 import { Maple } from '@/constants/maple';
 import { PageScroll } from '@/components/shell/PageScroll';
+import { PAGE_TITLE } from '@/lib/fonts/type';
+import { Palette } from '@/constants/palette';
 
 /** The exam reference's page (x 18–1166, y 78–1002 at 1536 wide); the desktop layout uses its pixels. */
 const EXAM_REF_WIDTH = 1148;
@@ -97,7 +99,7 @@ function Desktop({ exam, s, onExpand }: { exam: Exam; s: ExamState; onExpand: ()
       <View style={styles.crumbsPos}>
         <Crumbs items={exam.crumbs} />
       </View>
-      <Text style={styles.title} accessibilityRole="header">
+      <Text style={styles.title} {...PAGE_TITLE}>
         {exam.title}
       </Text>
       <Text style={styles.sub}>{exam.sub}</Text>
@@ -244,7 +246,7 @@ const styles = StyleSheet.create({
   crumbsPos: { position: 'absolute', left: 22, top: 20 },
   title: { position: 'absolute', left: 22, top: 46, fontSize: 29, fontWeight: '800', color: INK, letterSpacing: -0.6 },
   sub: { position: 'absolute', left: 22, top: 87, fontSize: 15, color: BODY },
-  exit: { position: 'absolute', left: 678, top: 37, width: 128, height: 40, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, borderRadius: 5, borderWidth: 1.5, borderColor: '#F3A9AB', backgroundColor: Maple.errorSoft },
+  exit: { position: 'absolute', left: 678, top: 37, width: 128, height: 40, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, borderRadius: 5, borderWidth: 1.5, borderColor: Palette.red300c, backgroundColor: Maple.errorSoft },
   exitText: { fontSize: 14, color: RED },
   timerPos: { position: 'absolute', left: 828, top: 20, width: 306 },
   sectionsPos: { position: 'absolute', left: 22, top: 123 },
@@ -252,7 +254,7 @@ const styles = StyleSheet.create({
   leftPanel: { left: 16, width: 416, padding: 15 },
   navPos: { position: 'absolute', left: 17, top: 621, width: 385 },
   flag: { position: 'absolute', left: 16, top: 672, height: 34, flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 12, borderRadius: 5, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface },
-  flagOn: { borderColor: '#F7C99A', backgroundColor: Maple.warningSoft },
+  flagOn: { borderColor: Palette.amber300c, backgroundColor: Maple.warningSoft },
   flagText: { fontSize: 13, color: INK },
   flagTextOn: { color: ORANGE },
   midPanel: { left: 437, width: 415, paddingTop: 12, paddingBottom: 50, paddingHorizontal: 10 },

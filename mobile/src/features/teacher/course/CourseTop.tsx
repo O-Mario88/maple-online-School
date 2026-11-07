@@ -18,6 +18,7 @@ import type { CourseBuilder } from "@/mock/teacher-course";
 
 import type { Builder } from "./useCourseBuilder";
 import { Maple } from '@/constants/maple';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
 /** The course's title row: thumbnail, title, status, details and the save and publish buttons. */
 export function CourseHeader({ c, b }: { c: CourseBuilder; b: Builder }) {
@@ -32,7 +33,7 @@ export function CourseHeader({ c, b }: { c: CourseBuilder; b: Builder }) {
       />
       <View style={styles.flex}>
         <View style={styles.titleRow}>
-          <Text style={styles.title} accessibilityRole="header">
+          <Text style={styles.title} {...PAGE_TITLE}>
             {k.title}
           </Text>
           <Pill

@@ -435,19 +435,19 @@ export function EarningsDesk({ e, me, phone = false }: { e: EarningsLedger; me: 
                       ) : null}
 
                       {m.key === 'mtn' ? (
-                        <Image
+                        <Image decorative
                           source={e.mtnLogo}
                           style={s.methodLogo}
                           contentFit="contain"
                         />
                       ) : m.key === 'airtel' ? (
-                        <Image
+                        <Image decorative
                           source={e.airtelLogo}
                           style={s.methodLogo}
                           contentFit="contain"
                         />
                       ) : m.key === 'mpesa' ? (
-                        <Image
+                        <Image decorative
                           source={e.mpesaLogo}
                           style={s.methodLogo}
                           contentFit="contain"

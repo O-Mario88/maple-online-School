@@ -11,6 +11,7 @@ import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { mockData } from '@/lib/mock';
 import { Maple } from '@/constants/maple';
 import { PageScroll } from '@/components/shell/PageScroll';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
 /** The billing reference's desktop panel (x 16–1170 of 1536), laid out in its pixels. */
 const BILLING_REF_WIDTH = 1154;
@@ -25,7 +26,7 @@ function Desktop({ s }: { s: BillingState }) {
         <AccountSide s={s} />
       </View>
       <View style={styles.main}>
-        <Text style={styles.title} accessibilityRole="header">
+        <Text style={styles.title} {...PAGE_TITLE}>
           Billing & Subscriptions
         </Text>
         <Text style={styles.sub}>Manage your study passes, tutoring credits, payment methods and purchase history.</Text>
@@ -62,7 +63,7 @@ function Phone({ s, avatar }: { s: BillingState; avatar: number }) {
     <View style={styles.phoneRoot}>
       <LearnerPhoneTop avatar={avatar} />
       <PageScroll contentContainerStyle={styles.phone}>
-        <Text style={styles.titleP} accessibilityRole="header">
+        <Text style={styles.titleP} {...PAGE_TITLE}>
           Billing & Subscriptions
         </Text>
         <View style={styles.tabs} accessibilityRole="tablist">

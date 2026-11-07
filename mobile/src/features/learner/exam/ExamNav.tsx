@@ -10,6 +10,7 @@ import { type QuestionState, questionState } from '@/lib/exam';
 import { BLUE, BODY, GREEN, INK, ORANGE, RED } from './ExamParts';
 import type { ExamState } from './useExam';
 import { Maple } from '@/constants/maple';
+import { prefersReducedMotion } from '@/lib/motion';
 
 const COLS = 5;
 const STRIP_ITEM = 38;
@@ -86,7 +87,7 @@ export function NavStrip({ s }: { s: ExamState }) {
   const ref = useRef<ComponentRef<typeof ScrollView>>(null);
   const current = s.sheet.current;
   useEffect(() => {
-    ref.current?.scrollTo({ x: Math.max(0, (current - 4) * (STRIP_ITEM + STRIP_GAP)), animated: true });
+    ref.current?.scrollTo({ x: Math.max(0, (current - 4) * (STRIP_ITEM + STRIP_GAP)), animated: !prefersReducedMotion() });
   }, [current]);
   return (
     <ScrollView ref={ref} horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.strip}>

@@ -19,7 +19,10 @@ export default function NewConversationScreen() {
   const me = useMe();
   const children = me.data?.children ?? [];
   const isParent = children.length > 0 && !params.student;
-  const [child, setChild] = useState<string>(params.student ?? String(children[0]?.user_id ?? ''));
+  // The person's own pick, else the learner in the address, else the first child once `me` has loaded
+  // (a state set from `me` on the first render stayed empty when the page was opened directly).
+  const [picked, setChild] = useState<string | null>(null);
+  const child = picked ?? params.student ?? String(children[0]?.user_id ?? '');
   const student = Number(child) || null;
   const contacts = useContacts(isParent ? student : null);
   const [staff, setStaff] = useState<string>('');

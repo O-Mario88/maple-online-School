@@ -11,6 +11,8 @@ import { ProgramSheet } from './CareerSheets';
 import { useDirectory } from './useDirectory';
 import type { CC } from './useCompass';
 import { Maple, Radii } from '@/constants/maple';
+import { PAGE_TITLE } from '@/lib/fonts/type';
+import { Palette } from '@/constants/palette';
 
 type View_ = 'overview' | 'programs' | 'events';
 const TABS: readonly { key: View_; label: string }[] = [
@@ -44,14 +46,14 @@ export function UniversityProfile({ cc, id, phone, start }: { cc: CC; id: string
         <Text style={s.link}>Universities & Programs</Text>
       </Pressable>
       <View style={s.card}>
-        <Image source={u.photo} style={[s.photo, phone && s.photoP]} contentFit="cover" />
+        <Image decorative source={u.photo} style={[s.photo, phone && s.photoP]} contentFit="cover" />
         <View style={[s.head, phone && s.headP]}>
           <View style={s.crestBox}>
-            <Image source={u.crest} style={s.crest} contentFit="contain" />
+            <Image decorative source={u.crest} style={s.crest} contentFit="contain" />
           </View>
           <View style={s.flex}>
             <View style={s.nameRow}>
-              <Text style={[s.title, phone && s.titleP]} accessibilityRole="header">
+              <Text style={[s.title, phone && s.titleP]} {...PAGE_TITLE}>
                 {u.name}
               </Text>
               {u.verification.status === 'verified' ? <Icon name="verified" size={20} color={L.blue} /> : null}
@@ -65,7 +67,7 @@ export function UniversityProfile({ cc, id, phone, start }: { cc: CC; id: string
             </View>
           </View>
           <Pressable style={s.save} onPress={() => d.toggleInstitution(u.id)} accessibilityRole="button" accessibilityState={{ selected: saved }}>
-            <Icon name={saved ? 'heartFill' : 'heart'} size={16} color={saved ? '#E5487F' : BRAND_BLUE} />
+            <Icon name={saved ? 'heartFill' : 'heart'} size={16} color={saved ? Palette.pink500b : BRAND_BLUE} />
             <Text style={s.saveText}>{saved ? 'Saved' : 'Save'}</Text>
           </Pressable>
         </View>

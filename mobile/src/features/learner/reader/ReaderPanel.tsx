@@ -138,7 +138,7 @@ function Learn({ x, onQuiz, onActivity }: { x: Reader; onQuiz: (kind: 'quick' | 
           <Pressable key={res.title} style={({ hovered }) => [styles.row, hovered && styles.hover]} onPress={() => toast(`${res.title}: opening the ${res.kind === 'video' ? 'video' : 'document'}.`)} accessibilityRole="button" accessibilityLabel={`${res.title}, ${res.meta}`}>
             {res.thumb ? (
               <View>
-                <Image source={res.thumb} style={styles.thumb} contentFit="cover" />
+                <Image decorative source={res.thumb} style={styles.thumb} contentFit="cover" />
                 <View style={styles.playOver}>
                   <Icon name="playFill" size={12} color={WHITE} />
                 </View>

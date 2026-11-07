@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 /** The host console reference's desktop width, laid out in its pixels and scaled. */
 export const HOST_REF_WIDTH = 1220;
@@ -232,7 +233,7 @@ export const d = StyleSheet.create({
   },
   allowDrawChipOn: {
     backgroundColor: Maple.successSoft,
-    borderColor: '#86EFAC',
+    borderColor: Palette.green300,
   },
   lockChipText: {
     fontWeight: '500',

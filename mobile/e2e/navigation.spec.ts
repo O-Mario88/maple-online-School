@@ -191,7 +191,8 @@ test.describe('on a phone', () => {
   });
 
   test('a new conversation opens once sent, and a broken link explains itself', async ({ page }) => {
-    await page.goto('/messages/new?as=learner');
+    // A parent starts a conversation with their child's school (a learner can't start one).
+    await page.goto('/messages/new?as=parent');
     await shown(page.getByRole('textbox', { name: 'Subject' })).fill('Homework this week');
     await shown(page.getByRole('textbox', { name: 'Message' })).fill('Could we talk about the maths homework?');
     await shown(page.getByRole('button', { name: 'Send', exact: true })).click();

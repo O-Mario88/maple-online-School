@@ -9,6 +9,7 @@ import type { CourseBuilder } from '@/mock/teacher-course';
 
 import type { Builder } from './useCourseBuilder';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 /** The selected lesson's settings, with delete (tap twice) and duplicate. */
 export function LessonSettingsPanel({ c, b, buttons = true }: { c: CourseBuilder; b: Builder; buttons?: boolean }) {
@@ -112,7 +113,7 @@ const styles = StyleSheet.create({
   buttons: { flexDirection: 'row', justifyContent: 'space-between', gap: 6, marginTop: 30 },
   btn: { height: 26, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 3, paddingHorizontal: 5, borderRadius: 6, borderWidth: 1, borderColor: LINE, backgroundColor: Maple.surface },
   btnText: { flexShrink: 1, fontSize: 8.5, fontWeight: '600', color: BLUE, letterSpacing: -0.15 },
-  danger: { borderColor: '#F3B5B7' },
+  danger: { borderColor: Palette.red200 },
   dangerOn: { backgroundColor: RED, borderColor: RED },
   dangerText: { color: RED },
   dangerTextOn: { color: Maple.surface },

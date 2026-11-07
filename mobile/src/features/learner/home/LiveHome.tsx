@@ -19,6 +19,7 @@ import { PORTAL_LABELS } from '@/lib/navigation';
 import { usePortal } from '@/lib/portal-context';
 import { toast } from '@/lib/toast';
 import { Maple } from '@/constants/maple';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
 const INK = Maple.navy;
 const BODY = Maple.body;
@@ -97,7 +98,7 @@ export function LiveHome({ firstName }: { firstName: string }) {
       ) : null}
       <View style={styles.hero}>
         <Text style={styles.eyebrow}>{now.toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' }).toUpperCase()}</Text>
-        <Text style={styles.h1} accessibilityRole="header">{`${greeting(now)}, ${firstName}`}</Text>
+        <Text style={styles.h1} {...PAGE_TITLE}>{`${greeting(now)}, ${firstName}`}</Text>
         <Text style={styles.heroBody}>{nextWork ? `Next up: ${nextWork.title}` : 'You’re all caught up. Explore your classes and library.'}</Text>
         <Pressable
           style={styles.heroButton}

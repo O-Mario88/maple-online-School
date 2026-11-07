@@ -19,3 +19,48 @@
   outline: 2px solid #2D4A6E;
   outline-offset: 2px;
 }
+
+/*
+ * Reduced motion: when the person asks their device for less motion, transitions and
+ * animations finish at once and scrolling jumps (lib/motion.ts covers native animations).
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/*
+ * Click areas: a control smaller than 24px (an icon button, a "View All" link, a row checkbox)
+ * gets an invisible layer that widens what a click or tap hits to 24px each way, centred on it,
+ * so it meets WCAG 2.5.8 without changing how it looks. Bigger controls are left alone.
+ * (React Native Web draws every view and text with position: relative, which this layer sizes from.)
+ */
+[role='button']::after,
+[role='link']::after,
+[role='tab']::after,
+[role='menuitem']::after,
+[role='checkbox']::after,
+[role='switch']::after,
+[role='radio']::after,
+a::after,
+button::after {
+  content: '';
+  position: absolute;
+  /* Above a following neighbour (a shelf under a "See All" link), which would otherwise cover it. */
+  z-index: 1;
+  /* Inside a scaled frame (lib/ui-scale.ts), 24px on screen is 24px divided by the frame's scale. */
+  top: min(0px, calc((100% - 24px / var(--ui-scale, 1)) / 2));
+  bottom: min(0px, calc((100% - 24px / var(--ui-scale, 1)) / 2));
+  left: min(0px, calc((100% - 24px / var(--ui-scale, 1)) / 2));
+  right: min(0px, calc((100% - 24px / var(--ui-scale, 1)) / 2));
+}
+/* A control holding other controls (a card with its own buttons) gets no layer, so it never covers them. */
+:is([role='button'], [role='link'], [role='tab'], [role='menuitem'], a, button):has([role='button'], [role='link'], [role='tab'], [role='menuitem'], [role='checkbox'], [role='switch'], [role='radio'], a, button, input, textarea, select)::after {
+  content: none;
+}

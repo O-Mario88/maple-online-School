@@ -2,6 +2,7 @@ import { StyleSheet } from 'react-native';
 
 import { BLUE, BODY, INK, LINE } from '@/features/teacher/frame/TeacherParts';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 /** Styles for MasteryHeatmapViews (kept apart so the view file stays readable). */
 export const MASTERY_REF_WIDTH = 1220;
@@ -494,11 +495,11 @@ export const s = StyleSheet.create({
   },
   insightCardAmber: {
     backgroundColor: Maple.warningSoft,
-    borderColor: '#FDE68A',
+    borderColor: Palette.yellow300,
   },
   insightCardGreen: {
     backgroundColor: Maple.successSoft,
-    borderColor: '#BBF7D0',
+    borderColor: Palette.green200,
   },
   insightTopRow: {
     flexDirection: 'row',

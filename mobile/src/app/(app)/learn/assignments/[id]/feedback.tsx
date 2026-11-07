@@ -18,6 +18,8 @@ import { identifierFor } from '@/lib/cbc';
 import { mockData } from '@/lib/mock';
 import { Maple } from '@/constants/maple';
 import { PageScroll } from '@/components/shell/PageScroll';
+import { PAGE_TITLE } from '@/lib/fonts/type';
+import { Palette } from '@/constants/palette';
 
 /** The feedback reference's page (x 18–1170 at 1536 wide); the desktop layout uses its pixels. */
 const FB_REF_WIDTH = 1152;
@@ -45,7 +47,7 @@ function NextSteps({ f, a }: { f: Feedback; a: Actions }) {
       {f.next.map((n, i) => (
         <View key={n.key} style={[styles.nextCard, i === 0 ? styles.nextFirst : styles.nextOther]}>
           <View style={styles.nextRow}>
-            <Image source={n.icon} style={styles.nextIcon} />
+            <Image decorative source={n.icon} style={styles.nextIcon} />
             <View style={styles.flex}>
               <Text style={styles.nextCardTitle}>{n.title}</Text>
               <Text style={styles.nextCardSub}>{n.sub}</Text>
@@ -70,7 +72,7 @@ function Desktop({ f, a }: { f: Feedback; a: Actions }) {
         <Crumbs items={f.crumbs} />
       </View>
       <View style={styles.titleRow}>
-        <Text style={styles.title} accessibilityRole="header">
+        <Text style={styles.title} {...PAGE_TITLE}>
           {f.title}
         </Text>
         <GradedChip />
@@ -139,7 +141,7 @@ function Phone({ f, a, avatar }: { f: Feedback; a: Actions; avatar: number }) {
       <PageScroll contentContainerStyle={styles.phone}>
         <Crumbs items={f.phoneCrumbs} phone />
         <View style={styles.titleRowP}>
-          <Text style={styles.titleP} accessibilityRole="header">
+          <Text style={styles.titleP} {...PAGE_TITLE}>
             {f.title.replace(': ', ':\n')}
           </Text>
           <GradedChip small />
@@ -295,7 +297,7 @@ const styles = StyleSheet.create({
   cardTitleP: { fontSize: 13.5, fontWeight: '700', color: INK },
   scoreRowP: { flexDirection: 'row', alignItems: 'center', gap: 14, marginTop: 10 },
   scoreP: { fontSize: 14, fontWeight: '700', color: INK },
-  verdictP: { marginTop: 4, fontSize: 15, fontWeight: '700', color: '#1F3A2B' },
+  verdictP: { marginTop: 4, fontSize: 15, fontWeight: '700', color: Palette.green950b },
   verdictTextP: { marginTop: 3, fontSize: 11.5, lineHeight: 16, color: BODY },
   fold: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 12, paddingTop: 12, borderTopWidth: 1, borderTopColor: Maple.blueSelected },
   foldText: { fontSize: 12.5, fontWeight: '700', color: INK },

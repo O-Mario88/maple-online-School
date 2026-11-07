@@ -13,6 +13,7 @@ import { ExamsTab, InstitutionsTab, JourneyCard, LinkCard, PricingCard, RecsTab,
 import { BRAND_SOFT, PrefsSheet, ProfileSheet, BRAND_BLUE, SchoolCardView } from './SchoolParts';
 import { type Net, type NetTab, type SN, useSchoolNetwork } from './useSchoolNetwork';
 import { Maple, Radii } from '@/constants/maple';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
 const TABS: readonly { key: NetTab; label: string; icon: IconName }[] = [
   { key: 'discover', label: 'Discover Schools', icon: 'building' },
@@ -284,7 +285,7 @@ export function SchoolNetworkDesk({ net, avatar, profile }: Props) {
   return (
     <LightFrame>
       <View style={s.heroPhoto} pointerEvents="none">
-        <Image source={net.hero} style={StyleSheet.absoluteFill} contentFit="cover" />
+        <Image decorative source={net.hero} style={StyleSheet.absoluteFill} contentFit="cover" />
         <LinearGradient colors={[L.canvas, 'rgba(246,248,253,0)']} start={{ x: 0, y: 0.5 }} end={{ x: 0.3, y: 0.5 }} style={StyleSheet.absoluteFill} />
       </View>
       <View style={s.head}>
@@ -292,7 +293,7 @@ export function SchoolNetworkDesk({ net, avatar, profile }: Props) {
           <Icon name="building" size={28} color={BRAND_BLUE} />
         </View>
         <View>
-          <Text style={s.title} accessibilityRole="header">
+          <Text style={s.title} {...PAGE_TITLE}>
             {net.title}
           </Text>
           <Text style={s.sub}>{net.sub}</Text>
@@ -324,7 +325,7 @@ export function SchoolNetworkPhone({ net, avatar, profile }: Props) {
             <Icon name="building" size={22} color={BRAND_BLUE} />
           </View>
           <View style={s.flex}>
-            <Text style={s.titleP} accessibilityRole="header">
+            <Text style={s.titleP} {...PAGE_TITLE}>
               {net.title}
             </Text>
             <Text style={s.small}>Verified schools, exam centres and teaching vacancies.</Text>

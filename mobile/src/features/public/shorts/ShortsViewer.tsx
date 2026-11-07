@@ -15,6 +15,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Brand } from '../palette';
 import { Caption } from './ShortCard';
 import { Maple, Radii } from '@/constants/maple';
+import { prefersReducedMotion } from '@/lib/motion';
 
 const CLIP_SECONDS = 60;
 const TICK_MS = 250;
@@ -127,7 +128,7 @@ function ShortPage({ clip, active, width, height, stage, courseSlug }: PageProps
     <View style={[styles.page, { width, height }]}>
       <View style={styles.stageRow}>
         <View style={[styles.video, { width: videoW, height: videoH, borderRadius: stage ? 12 : 0, backgroundColor: clip.tint }]}>
-          {clip.photo ? <Image source={clip.photo} style={StyleSheet.absoluteFill} contentFit="cover" /> : <Caption clip={clip} size={30} />}
+          {clip.photo ? <Image decorative source={clip.photo} style={StyleSheet.absoluteFill} contentFit="cover" /> : <Caption clip={clip} size={30} />}
           {/* Remounts when the short comes on screen, so it always starts from 0:00. */}
           <Playback key={active ? 'on' : 'off'} active={active} />
           <LinearGradient colors={['transparent', 'rgba(0,0,0,0.75)']} style={[styles.shade, { paddingBottom: 20 + bottomInset }]} pointerEvents="box-none">
@@ -193,7 +194,7 @@ export function ShortsViewer({ clips, startId, courseSlug, onChange, onClose }: 
 
   const go = useCallback(
     (delta: number) => {
-      list.current?.scrollToIndex({ index: stepClip(index, delta, clips.length), animated: true });
+      list.current?.scrollToIndex({ index: stepClip(index, delta, clips.length), animated: !prefersReducedMotion() });
     },
     [index, clips.length],
   );

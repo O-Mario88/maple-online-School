@@ -10,6 +10,7 @@ import { Icon } from '@/components/icon';
 import { Badge, Button, Field, IconButton, SearchField, Tabs } from '@/components/ui';
 import { Categorical, ControlHeight, Maple, Radii, Space, TypeScale } from '@/constants/maple';
 import type { IconName } from '@/lib/icons';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
 const SWATCHES: readonly (keyof typeof Maple)[] = [
   'blue', 'blueHover', 'blueSoft', 'blueSelected', 'navy', 'body', 'secondary', 'muted', 'faint',
@@ -39,7 +40,7 @@ export function Gallery() {
   if (crash) throw new Error('Simulated page error from the design-system gallery');
   return (
     <ScrollView style={s.page} contentContainerStyle={s.content}>
-      <Text style={s.pageTitle} accessibilityRole="header">
+      <Text style={s.pageTitle} {...PAGE_TITLE}>
         Maple Design System
       </Text>
       <Text style={s.lead}>One set of tokens and components for every Maple portal. Values live in constants/maple.ts.</Text>

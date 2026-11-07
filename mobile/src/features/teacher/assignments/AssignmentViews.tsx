@@ -433,7 +433,7 @@ export function AssignmentDesk({ a, me, phone = false }: { a: AssignmentBuilder;
                 <View style={[s.checkbox, checked && s.checkboxOn]}>
                   {checked ? <Text style={s.checkboxTick}>✓</Text> : null}
                 </View>
-                <Image source={c.thumb} style={s.classThumb} contentFit="cover" />
+                <Image decorative source={c.thumb} style={s.classThumb} contentFit="cover" />
                 <View style={{ flex: 1, gap: 1 }}>
                   <Text style={s.classTitle}>{c.title}</Text>
                   <Text style={s.classSub}>{c.subtitle}</Text>

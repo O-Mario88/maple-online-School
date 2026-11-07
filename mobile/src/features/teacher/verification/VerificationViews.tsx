@@ -318,7 +318,7 @@ export function VerificationDesk({ v, me, phone = false }: { v: VerificationKyc;
           <Panel style={s.rightCard}>
             <View style={s.profileTopRow}>
               <View style={s.rightAvatarWrap}>
-                <Image source={v.avatar} style={s.rightAvatar} contentFit="cover" />
+                <Image decorative source={v.avatar} style={s.rightAvatar} contentFit="cover" />
                 <View style={s.avatarShieldBadge}>
                   <Icon name="shield" size={9} color={Maple.surface} />
                 </View>

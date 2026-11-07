@@ -80,7 +80,7 @@ export function CoursesRow({ t }: { t: Storefront }) {
           <Pressable key={c.title} style={styles.course} onPress={() => router.push(`/courses/${t.courseSlug}`)} accessibilityRole="link" accessibilityLabel={`${c.title}, ${formatMoney(c.priceUGX, 'UGX')}`}>
             <View style={[styles.courseThumb, { backgroundColor: c.tint }]}>
               {c.photo ? (
-                <Image source={c.photo} style={styles.fill} contentFit="cover" />
+                <Image decorative source={c.photo} style={styles.fill} contentFit="cover" />
               ) : (
                 <>
                   <Icon name="chart" size={30} color="rgba(255,255,255,0.85)" />
@@ -112,7 +112,7 @@ export function ShortsRow({ t }: { t: Storefront }) {
         {t.shorts.map((s) => (
           <Pressable key={s.id} style={[styles.short, { backgroundColor: s.tint }, s.photo ? styles.shortPhoto : null]} onPress={() => router.push(`/shorts?id=${s.id}`)} accessibilityRole="link" accessibilityLabel={`${s.lead} ${s.highlight} ${s.tail}, free short`}>
             {s.photo ? (
-              <Image source={s.photo} style={StyleSheet.absoluteFill} contentFit="cover" />
+              <Image decorative source={s.photo} style={StyleSheet.absoluteFill} contentFit="cover" />
             ) : (
               <>
                 <Text style={styles.shortText}>{s.lead}</Text>

@@ -1,6 +1,7 @@
 import { Platform } from 'react-native';
 
 import { Categorical, Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 /**
  * The public site's palette, taken from the homepage reference: a bright,
@@ -25,8 +26,8 @@ export const Brand = {
   amberSoft: Maple.warningSoft,
   /** Was purple; Maple has one accent, so this tint is now a quiet teal for categories. */
   purple: Categorical.teal,
-  purpleSoft: '#E6F4F2',
-  sticky: '#FFE873',
+  purpleSoft: Palette.teal100b,
+  sticky: Palette.yellow400d,
   leaf: Maple.error,
   video: Maple.navy,
 } as const;
@@ -46,7 +47,7 @@ export const HERO_GRADIENT = [Maple.surface, Maple.blueSoft, Maple.blueSelected]
 /** The soft card shadow the reference designs use instead of outlines. */
 export const CARD_SHADOW = Platform.select({
   web: { boxShadow: '0 6px 24px rgba(15, 35, 80, 0.07)' },
-  default: { shadowColor: '#0F2350', shadowOpacity: 0.07, shadowRadius: 12, shadowOffset: { width: 0, height: 6 }, elevation: 3 },
+  default: { shadowColor: Palette.blue950j, shadowOpacity: 0.07, shadowRadius: 12, shadowOffset: { width: 0, height: 6 }, elevation: 3 },
 });
 
 /** Width at which the public pages switch to two columns. */

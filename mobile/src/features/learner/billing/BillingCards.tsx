@@ -12,6 +12,7 @@ import { openMenuPage } from '@/lib/menu-nav';
 
 import type { BillingState, Plan } from './useBilling';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 const NAVY = Maple.navy;
 const BODY = Maple.body;
@@ -62,7 +63,7 @@ export function AccountSide({ s }: { s: BillingState }) {
       </View>
       <View style={styles.flex} />
       <View style={styles.referral}>
-        <Image source={s.hub.icons.gift} style={styles.gift} contentFit="contain" />
+        <Image decorative source={s.hub.icons.gift} style={styles.gift} contentFit="contain" />
         <Text style={styles.refTitle}>{`Get ${ugx(s.hub.referral.reward)} Free Credit`}</Text>
         <Text style={styles.refText}>{`Invite a friend to join Maple and you'll both get ${ugx(s.hub.referral.reward)} tutoring credit.`}</Text>
         <Pressable style={styles.primary} onPress={() => inviteFriends(s)} accessibilityRole="button">
@@ -95,7 +96,7 @@ export function CurrentPlan({ s }: { s: BillingState }) {
     <Card title="Your Current Plan" right={<StatusChip s={s} />} style={styles.planCard}>
       <View style={styles.planInner}>
         <View style={styles.trophyTile}>
-          <Image source={s.hub.icons.trophy} style={styles.trophy} contentFit="contain" />
+          <Image decorative source={s.hub.icons.trophy} style={styles.trophy} contentFit="contain" />
         </View>
         <View style={styles.flex}>
           <Text style={styles.planTitle}>{p.title}</Text>
@@ -141,7 +142,7 @@ export function Wallet({ s, compact = false }: { s: BillingState; compact?: bool
       }>
       <View style={styles.balanceRow}>
         <View style={styles.walletTile}>
-          <Image source={s.hub.icons.wallet} style={styles.walletIcon} contentFit="contain" />
+          <Image decorative source={s.hub.icons.wallet} style={styles.walletIcon} contentFit="contain" />
         </View>
         <View style={styles.flex}>
           <Text style={styles.balance}>{`${s.balance} Credits`}</Text>
@@ -162,7 +163,7 @@ export function Wallet({ s, compact = false }: { s: BillingState; compact?: bool
         })}
       </View>
       <Pressable style={styles.auto} onPress={s.toggleAuto} accessibilityRole="switch" accessibilityState={{ checked: s.auto }}>
-        <Image source={s.hub.icons.bolt} style={styles.bolt} contentFit="contain" />
+        <Image decorative source={s.hub.icons.bolt} style={styles.bolt} contentFit="contain" />
         <View style={styles.flex}>
           <Text style={styles.autoTitle}>Auto Top-Up (Recommended)</Text>
           <Text style={styles.autoText}>{`Automatically add ${s.hub.credits.auto.add} credits when balance falls below ${s.hub.credits.auto.below} credits.`}</Text>
@@ -185,7 +186,7 @@ function PlanCard({ s, p }: { s: BillingState; p: Plan }) {
     <View style={[styles.plan, p.popular && styles.planPopular]}>
       {p.popular ? <Text style={styles.popular}>Most Popular</Text> : null}
       <View style={styles.planName}>
-        <Image source={p.icon} style={styles.planIcon} contentFit="contain" />
+        <Image decorative source={p.icon} style={styles.planIcon} contentFit="contain" />
         <Text style={styles.planNameText}>{p.name}</Text>
       </View>
       <Text style={styles.planBlurb}>{p.blurb}</Text>
@@ -242,7 +243,7 @@ function MethodRow({ s, id }: { s: BillingState; id: string }) {
   const m = s.method(id);
   return (
     <View style={[styles.method, menu && styles.raised]}>
-      <Image source={m.logo} style={styles.logo} contentFit="contain" />
+      <Image decorative source={m.logo} style={styles.logo} contentFit="contain" />
       <View style={styles.flex}>
         <Text style={styles.methodLabel}>{m.label}</Text>
         <Text style={styles.methodSub}>{m.sub}</Text>
@@ -318,7 +319,7 @@ export function Purchases({ s, limit }: { s: BillingState; limit?: number }) {
       }>
       {rows.map((r) => (
         <Pressable key={r.id} style={styles.buy} onPress={() => s.open({ kind: 'receipt', id: r.id })} accessibilityRole="button" accessibilityLabel={`${r.title}, ${ugx(r.amount)}, ${r.date}, paid. Open receipt`}>
-          <Image source={r.icon} style={styles.buyIcon} contentFit="contain" />
+          <Image decorative source={r.icon} style={styles.buyIcon} contentFit="contain" />
           <View style={styles.flex}>
             <Text style={styles.buyTitle}>{r.title}</Text>
             <Text style={styles.buyDate}>{r.date}</Text>
@@ -350,7 +351,7 @@ export function PhoneOverview({ s }: { s: BillingState }) {
       <Card title="Current Plan" right={<StatusChip s={s} />}>
         <Pressable style={styles.phonePlan} onPress={() => s.open({ kind: 'manage' })} accessibilityRole="button" accessibilityLabel={`${p.title}, manage plan`}>
           <View style={[styles.trophyTile, styles.trophyTileP]}>
-            <Image source={s.hub.icons.trophy} style={styles.trophyP} contentFit="contain" />
+            <Image decorative source={s.hub.icons.trophy} style={styles.trophyP} contentFit="contain" />
           </View>
           <View style={styles.flex}>
             <Text style={styles.phonePlanTitle}>{p.title}</Text>
@@ -381,7 +382,7 @@ export function PhoneOverview({ s }: { s: BillingState }) {
           </Pressable>
         }>
         <View style={styles.balanceRow}>
-          <Image source={s.hub.icons.credits} style={styles.coins} contentFit="contain" />
+          <Image decorative source={s.hub.icons.credits} style={styles.coins} contentFit="contain" />
           <View style={styles.flex}>
             <Text style={styles.balance}>{`${s.balance} Credits`}</Text>
             <Bar value={s.balance / total} color={GREEN} track={Maple.blueSelected} height={7} />
@@ -420,7 +421,7 @@ const styles = StyleSheet.create({
   outlineText: { fontSize: 12.5, fontWeight: '600', color: BLUE },
   chip: { paddingHorizontal: 9, paddingVertical: 3, borderRadius: 6, fontSize: 11.5, fontWeight: '600', overflow: 'hidden' },
   chipGreen: { backgroundColor: Maple.successSoft, color: Maple.successText },
-  chipAmber: { backgroundColor: Maple.warningSoft, color: '#92400E' },
+  chipAmber: { backgroundColor: Maple.warningSoft, color: Palette.orange800b },
   planCard: { height: 286 },
   planInner: { flexDirection: 'row', gap: 16, padding: 12, borderRadius: 10, borderWidth: 1, borderColor: Maple.blueSelected },
   trophyTile: { width: 58, height: 64, alignItems: 'center', justifyContent: 'center', borderRadius: 10, backgroundColor: Maple.warningSoft },
@@ -433,7 +434,7 @@ const styles = StyleSheet.create({
   planUnit: { fontSize: 15, fontWeight: '400', color: NAVY },
   renew: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 6 },
   renewText: { fontSize: 12, color: BODY },
-  pending: { marginTop: 6, fontSize: 11.5, fontWeight: '600', color: '#92400E' },
+  pending: { marginTop: 6, fontSize: 11.5, fontWeight: '600', color: Palette.orange800b },
   included: { flexDirection: 'row', flexWrap: 'wrap', borderRadius: 10, borderWidth: 1, borderColor: Maple.blueSelected },
   incItem: { width: '25%', flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 6, paddingVertical: 10 },
   tick: { width: 22, height: 22, alignItems: 'center', justifyContent: 'center', borderRadius: 11, borderWidth: 3, borderColor: Maple.successSoft, backgroundColor: GREEN },

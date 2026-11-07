@@ -8,6 +8,8 @@ import { RefScale } from '@/features/public/home/RefScale';
 
 import { C, LOGO, Pill, PlanIcon, Popular, per, type Pricing, STUDENT, ugx, usePricing } from './pricing-parts';
 import { Maple } from '@/constants/maple';
+import { PAGE_TITLE } from '@/lib/fonts/type';
+import { Palette } from '@/constants/palette';
 
 /** The phone reference is 863px wide; the page is laid out in its pixels (from just under its status bar) and scaled to the phone. */
 const REF_WIDTH = 863;
@@ -18,7 +20,7 @@ function Header({ p }: { p: Pricing }) {
       <View style={s.blob} />
       <Image source={STUDENT} style={s.photo} contentFit="contain" accessibilityLabel="A smiling Maple learner" />
       <View style={s.brand}>
-        <Image source={LOGO} style={s.leaf} contentFit="contain" />
+        <Image decorative source={LOGO} style={s.leaf} contentFit="contain" />
         <View>
           <Text style={s.brandName}>Maple</Text>
           <Text style={s.brandSub}>Global Online School</Text>
@@ -26,7 +28,7 @@ function Header({ p }: { p: Pricing }) {
       </View>
       <View style={s.heroText}>
         <Pill p={p} size={18} height={40} />
-        <Text style={s.title} accessibilityRole="header">
+        <Text style={s.title} {...PAGE_TITLE}>
           {p.copy.title}
         </Text>
         <Text style={s.sub}>{p.copy.phone ?? p.copy.subtitle}</Text>
@@ -177,7 +179,7 @@ const s = StyleSheet.create({
 
   pay: { marginTop: 48, marginLeft: 40, width: 783, height: 84, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 26, overflow: 'hidden', borderRadius: 17, backgroundColor: Maple.blue },
   payText: { fontSize: 29.5, fontWeight: '700', color: C.white },
-  payCurrent: { borderWidth: 2, borderColor: '#BBE5C8', backgroundColor: Maple.successSoft },
+  payCurrent: { borderWidth: 2, borderColor: Palette.green300e, backgroundColor: Maple.successSoft },
   payCurrentText: { color: C.green },
 
   promises: { marginTop: 36, marginLeft: 20, width: 823, height: 40, flexDirection: 'row', alignItems: 'center' },

@@ -12,6 +12,7 @@ import type { CalendarController } from './useTeacherCalendar';
 import { phoneStyles } from './ScheduleLiveModal.phoneStyles';
 import { styles as deskStyles } from './ScheduleLiveModal.styles';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 const THUMB = require('@/mock/images/builder-thumb.jpg') as number;
 const JAMES = require('@/mock/images/teacher-home-daniel.png') as number;
@@ -195,7 +196,7 @@ export function ScheduleLiveModal({
                 accessibilityRole="button"
                 accessibilityState={{ expanded: cohortOpen }}
                 accessibilityLabel={`Subject / Cohort: ${cohort.title}, ${cohort.subtitle}`}>
-                <Image source={THUMB} style={styles.cohortThumb} contentFit="cover" />
+                <Image decorative source={THUMB} style={styles.cohortThumb} contentFit="cover" />
                 <View style={styles.flex}>
                   <Text style={styles.cohortTitle}>{cohort.title}</Text>
                   <Text style={styles.cohortSub}>{cohort.subtitle}</Text>
@@ -453,7 +454,7 @@ export function ScheduleLiveModal({
               <View style={styles.coTeachersBox}>
                 {coTeachers.map((t) => (
                   <View key={t.id} style={styles.coTeacherChip}>
-                    <Image source={t.photo} style={styles.coTeacherAvatar} />
+                    <Image decorative source={t.photo} style={styles.coTeacherAvatar} />
                     <Text style={styles.coTeacherName}>{t.name}</Text>
                     <Pressable
                       onPress={() => removeCoTeacher(t.id)}
@@ -588,7 +589,7 @@ export function ScheduleLiveModal({
                 <View style={[styles.miniEvent, styles.miniEventGreen]}>
                   <Icon name="bolt" size={13} color={Maple.successText} />
                   <View style={styles.flex}>
-                    <Text style={[styles.miniEventTitle, { color: '#064E3B' }]}>Instant Help (Available)</Text>
+                    <Text style={[styles.miniEventTitle, { color: Palette.teal950 }]}>Instant Help (Available)</Text>
                     <Text style={[styles.miniEventSub, { color: Maple.successText }]}>8:00 – 8:45 AM</Text>
                   </View>
                 </View>
@@ -602,7 +603,7 @@ export function ScheduleLiveModal({
                     <Icon name="book" size={10} color={Maple.surface} />
                   </View>
                   <View style={styles.flex}>
-                    <Text style={[styles.miniEventTitle, { color: '#0F295C' }]}>
+                    <Text style={[styles.miniEventTitle, { color: Palette.blue900c }]}>
                       O-Level Mathematics Class (School)
                     </Text>
                     <Text style={[styles.miniEventSub, { color: Maple.blueHover }]}>9:00 – 10:00 AM</Text>

@@ -22,6 +22,8 @@ import { ParentSheetContext, useParentSheet } from './ParentSheet';
 import { AddChildClaimModal } from './ParentClaimModal';
 import { Maple } from '@/constants/maple';
 import { MapleLogo } from '@/components/brand/MapleLogo';
+import { PAGE_TITLE } from '@/lib/fonts/type';
+import { Palette } from '@/constants/palette';
 
 export { PARENT_HOME_REF_WIDTH };
 
@@ -40,7 +42,7 @@ function Card({ style, children }: { style?: object; children: ReactNode }) {
 function ParentSidebar({ p }: { p: ParentHomeData }) {
   const styles = useParentSheet();
   return (
-    <LinearGradient colors={['#0A1B3D', '#07122B']} style={styles.side}>
+    <LinearGradient colors={[Palette.blue950d, Palette.blue950b]} style={styles.side}>
       <Pressable style={styles.logo} onPress={() => openMenuPage('/')} accessibilityRole="link" accessibilityLabel="Maple home">
         <MapleLogo markStyle={styles.leaf} />
       </Pressable>
@@ -67,8 +69,8 @@ function ParentSidebar({ p }: { p: ParentHomeData }) {
           );
         })}
       </View>
-      <LinearGradient colors={['#122B5E', Maple.blueHover, '#3B4278']} style={styles.explorePromo}>
-        <Image source={p.sidebarBooksArt} style={styles.promoArt} contentFit="cover" />
+      <LinearGradient colors={[Palette.blue900d, Maple.blueHover, Palette.blue700]} style={styles.explorePromo}>
+        <Image decorative source={p.sidebarBooksArt} style={styles.promoArt} contentFit="cover" />
         <Text style={styles.promoTitle}>{'Explore. Learn.\nGrow.'}</Text>
         <Text style={styles.promoSub}>{'New subjects, books\nand live sessions\navailable now.'}</Text>
         <Pressable
@@ -128,7 +130,7 @@ function ParentHeader({ p, child }: { p: ParentHomeData; child: ParentChildProfi
         onPress={switcher?.open}
         accessibilityRole="button"
         accessibilityLabel={`${child.fullName}, ${child.tabGrade}. Switch mode`}>
-        <Image source={child.avatar} style={styles.avatar} />
+        <Image decorative source={child.avatar} style={styles.avatar} />
         <View>
           <Text style={styles.meName}>{child.fullName}</Text>
           <View style={styles.meSubRow}>
@@ -172,7 +174,7 @@ function ParentHeroBanner({
       <View style={styles.heroBody}>
         <View style={styles.heroTopRow}>
           <View style={styles.flex}>
-            <Text style={styles.heroWelcome}>{`Welcome back, ${activeChild.firstName}!`}</Text>
+            <Text style={styles.heroWelcome} {...PAGE_TITLE}>{`Welcome back, ${activeChild.firstName}!`}</Text>
             <Text style={styles.heroSub}>{"Here's how your learning is going this week."}</Text>
           </View>
           <View style={styles.weekRightCol}>
@@ -190,7 +192,7 @@ function ParentHeroBanner({
               </View>
               <Icon name="chevronDown" size={13} color={INK} />
             </Pressable>
-            <Image source={p.heroBooksArt} style={styles.heroBooksImg} contentFit="cover" />
+            <Image decorative source={p.heroBooksArt} style={styles.heroBooksImg} contentFit="cover" />
           </View>
         </View>
 
@@ -206,7 +208,7 @@ function ParentHeroBanner({
                 accessibilityRole="tab"
                 accessibilityState={{ selected: on }}
                 accessibilityLabel={`${c.tabName}, ${c.tabGrade}, ${c.school}`}>
-                <Image source={c.avatar} style={styles.childPillAvatar} />
+                <Image decorative source={c.avatar} style={styles.childPillAvatar} />
                 <View>
                   <Text style={[styles.childPillName, on && styles.childPillNameOn]}>{c.tabName}</Text>
                   <Text style={styles.childPillGrade}>{c.tabGrade}</Text>
@@ -237,7 +239,7 @@ function StudentProfileOverviewCard({ child, phone = false }: { child: ParentChi
         <View style={styles.profileTopRow}>
           {/* Student Avatar + Name + Grade/School + Active Learner Badge */}
           <View style={styles.profileIdentity}>
-            <Image source={child.avatar} style={styles.profileBigAvatar} contentFit="cover" />
+            <Image decorative source={child.avatar} style={styles.profileBigAvatar} contentFit="cover" />
             <View style={styles.profileTextCol}>
               <Text style={styles.profileName}>{child.fullName}</Text>
               <Text style={styles.profileSchool}>{child.gradeAndSchool}</Text>
@@ -332,7 +334,7 @@ function ParentTeacherVoiceCard({ child }: { child: ParentChildProfile }) {
   return (
     <Card>
       <View style={styles.voiceRow}>
-        <Image source={m.avatar} style={styles.teacherAvatar} contentFit="cover" />
+        <Image decorative source={m.avatar} style={styles.teacherAvatar} contentFit="cover" />
         <View style={styles.voiceMeta}>
           <Text style={styles.voiceTitle}>{m.heading}</Text>
           <Text style={styles.voiceSub}>{m.teacherName}</Text>
@@ -408,7 +410,7 @@ function ActivitiesAndRecentRow({ child }: { child: ParentChildProfile }) {
               </View>
               <View style={[styles.activityDot, { backgroundColor: a.dotColor }]} />
               <View style={styles.flex}>
-                <Text style={styles.activityTitle} numberOfLines={1}>
+                <Text style={styles.activityTitle} numberOfLines={2}>
                   {a.title}
                 </Text>
                 <Text style={styles.activityTime}>{a.time}</Text>
@@ -450,7 +452,7 @@ function ActivitiesAndRecentRow({ child }: { child: ParentChildProfile }) {
                   <Icon name="clipboard" size={14} color={w.iconColor} />
                 </View>
                 <View style={styles.flex}>
-                  <Text style={styles.activityTitle} numberOfLines={1}>
+                  <Text style={styles.activityTitle} numberOfLines={3}>
                     {w.title}
                   </Text>
                   <Text style={styles.activityTime}>{w.subject}</Text>
@@ -557,9 +559,9 @@ function ParentRightRail({ p, child }: { p: ParentHomeData; child: ParentChildPr
           onPress={() => router.push('/learn/library')}
           accessibilityRole="link"
           accessibilityLabel={`${cr.title}, ${cr.meta}, ${cr.percentLabel}`}>
-          <Image source={cr.thumb} style={styles.readingThumb} contentFit="cover" />
+          <Image decorative source={cr.thumb} style={styles.readingThumb} contentFit="cover" />
           <View style={styles.flex}>
-            <Text style={styles.readingTitle} numberOfLines={1}>
+            <Text style={styles.readingTitle} numberOfLines={2}>
               {cr.title}
             </Text>
             <Text style={styles.readingMeta}>{cr.meta}</Text>
@@ -597,12 +599,12 @@ function ParentRightRail({ p, child }: { p: ParentHomeData; child: ParentChildPr
               onPress={() => router.push('/learn/library')}
               accessibilityRole="link"
               accessibilityLabel={`${b.title}, ${b.meta}`}>
-              <Image source={b.thumb} style={styles.completedThumb} contentFit="cover" />
+              <Image decorative source={b.thumb} style={styles.completedThumb} contentFit="cover" />
               <View style={styles.flex}>
-                <Text style={styles.readingTitle} numberOfLines={1}>
+                <Text style={styles.readingTitle} numberOfLines={2}>
                   {b.title}
                 </Text>
-                <Text style={styles.readingMeta} numberOfLines={1}>
+                <Text style={styles.readingMeta} numberOfLines={2}>
                   {b.meta}
                 </Text>
               </View>

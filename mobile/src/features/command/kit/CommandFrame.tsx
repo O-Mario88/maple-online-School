@@ -15,6 +15,7 @@ import { openMenuPage } from '@/lib/menu-nav';
 import { SIDEBAR, SIDEBAR_ACTIVE, SIDEBAR_TEXT } from './tokens';
 import { Maple } from '@/constants/maple';
 import { MapleLogo } from '@/components/brand/MapleLogo';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
 
 export interface CmdMe {
@@ -220,7 +221,7 @@ function CmdMeChip({ me }: { me: CmdMe }) {
   const switcher = useSwitcher();
   return (
     <Pressable style={styles.me} onPress={switcher?.open} accessibilityRole="button" accessibilityLabel={`${me.name}, ${me.role}. Switch mode`}>
-      <Image source={me.avatar} style={styles.meAvatar} contentFit="cover" />
+      <Image decorative source={me.avatar} style={styles.meAvatar} contentFit="cover" />
       <View>
         <Text style={styles.meName}>{me.name}</Text>
         <Text style={styles.meRole}>{me.role}</Text>
@@ -309,7 +310,7 @@ export function CmdHead({ icon, title, subtitle, section, right, root = 'Maple C
             </>
           ) : null}
         </View>
-        <Text style={styles.title} accessibilityRole="header" numberOfLines={1}>
+        <Text style={styles.title} {...PAGE_TITLE} numberOfLines={1}>
           {title}
         </Text>
         <Text style={styles.subtitle} numberOfLines={2}>
@@ -331,7 +332,7 @@ export function CommandPhone({ me, children, footer }: { me: CmdMe; children: Re
           <>
             <Bell count={me.notifications} size={26} />
             <Pressable onPress={switcher?.open} accessibilityRole="button" accessibilityLabel={`${me.name}. Switch mode`}>
-              <Image source={me.avatar} style={styles.phoneAvatar} contentFit="cover" />
+              <Image decorative source={me.avatar} style={styles.phoneAvatar} contentFit="cover" />
             </Pressable>
           </>
         }

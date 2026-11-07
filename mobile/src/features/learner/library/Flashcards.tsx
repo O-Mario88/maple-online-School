@@ -164,7 +164,7 @@ export function Flashcards({ hub, f }: { hub: Hub; f: DeckState }) {
       <Ratings f={f} />
       <View style={styles.auto}>
         <View style={styles.autoHead}>
-          <Image source={hub.reader.autoIcon} style={styles.autoIcon} contentFit="contain" />
+          <Image decorative source={hub.reader.autoIcon} style={styles.autoIcon} contentFit="contain" />
           <Text style={styles.autoTitle}>Auto-Generated From Your Classes</Text>
         </View>
         <Text style={styles.autoText}>This deck was created from your recent live classes and notes on Fractions and Decimals.</Text>

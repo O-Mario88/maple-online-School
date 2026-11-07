@@ -8,6 +8,7 @@ import { Bar, panel } from '@/features/learner/dashboard/DashParts';
 import { toast } from '@/lib/toast';
 import type { MockData } from '@/mock';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 export type Course = MockData['learner']['courseOverview'];
 type Module = Course['modules'][number];
@@ -32,7 +33,7 @@ export function ModuleCard({ m, on, saved, onPress, onSave, phone = false }: { m
   return (
     <View style={[styles.module, phone && styles.moduleP, on && styles.moduleOn]}>
       <Pressable style={styles.mOpen} onPress={onPress} accessibilityRole="button" accessibilityState={{ selected: on }} accessibilityLabel={`Module ${m.n}: ${m.title}`}>
-      <Image source={m.icon} style={phone ? styles.mIconP : styles.mIcon} />
+      <Image decorative source={m.icon} style={phone ? styles.mIconP : styles.mIcon} />
       <View style={styles.flex}>
         <Text style={styles.mNum}>{`Module ${m.n}`}</Text>
         <Text style={[styles.mTitle, m.title.length > 26 && styles.mTitleLong]} numberOfLines={1}>
@@ -40,7 +41,7 @@ export function ModuleCard({ m, on, saved, onPress, onSave, phone = false }: { m
         </Text>
         <View style={styles.mBarRow}>
           <View style={styles.flex}>
-            <Bar value={m.progress} color={done ? '#14B8A6' : BLUE} track={Maple.disabledSurface} height={5} />
+            <Bar value={m.progress} color={done ? Palette.teal700 : BLUE} track={Maple.disabledSurface} height={5} />
           </View>
           <Text style={styles.mPct}>{`${Math.round(m.progress * 100)}%`}</Text>
         </View>
@@ -64,7 +65,7 @@ export function LessonRow({ l }: { l: Lesson }) {
   const current = l.status === 'current';
   return (
     <View style={[styles.lesson, current && styles.lessonOn]}>
-      <Image source={l.thumb} style={styles.thumb} />
+      <Image decorative source={l.thumb} style={styles.thumb} />
       <View style={styles.flex}>
         <Text style={styles.lTitle}>{l.title}</Text>
         <View style={styles.lMeta}>
@@ -100,7 +101,7 @@ export function Ring({ value, size = 92 }: { value: number; size?: number }) {
 export function ProgressCard({ c }: { c: Course }) {
   const b = c.progressBreakdown;
   const rows = [
-    { dot: '#14B8A6', text: `${b.completed} lessons completed` },
+    { dot: Palette.teal700, text: `${b.completed} lessons completed` },
     { dot: BLUE, text: `${b.inProgress} in progress` },
     { dot: Maple.borderStrong, text: `${b.notStarted} not started` },
   ];
@@ -134,7 +135,7 @@ export function SquadCard({ c, joined, onJoin }: { c: Course; joined: boolean; o
         <Icon name="arrowRight" size={16} color={BLUE} />
       </View>
       <View style={styles.faces}>
-        <Image source={c.squad.faces} style={styles.facesImg} contentFit="contain" />
+        <Image decorative source={c.squad.faces} style={styles.facesImg} contentFit="contain" />
         <Text style={styles.moreFaces}>{`+${c.squad.more}`}</Text>
       </View>
       <Pressable style={styles.join} onPress={onJoin} accessibilityRole="button">
@@ -155,7 +156,7 @@ export function BadgesCard({ c }: { c: Course }) {
       <View style={styles.badges}>
         {c.badges.map((b) => (
           <View key={b.title} style={styles.badge}>
-            <Image source={b.icon} style={styles.badgeIcon} contentFit="contain" />
+            <Image decorative source={b.icon} style={styles.badgeIcon} contentFit="contain" />
             <Text style={styles.badgeTitle}>{b.title}</Text>
             <Text style={styles.badgeDetail}>{b.detail}</Text>
           </View>
@@ -173,7 +174,7 @@ export function ResourcesCard({ c }: { c: Course }) {
         {c.resources.map((r) => (
           <Pressable key={r.title} style={styles.file} accessibilityRole="button" accessibilityLabel={`Download ${r.title}`} onPress={() => toast(`${r.title} saved for offline study`)}>
             <View style={styles.fileTop}>
-              <Image source={r.icon} style={styles.fileIcon} />
+              <Image decorative source={r.icon} style={styles.fileIcon} />
               <View style={styles.flex}>
                 <Text style={styles.fileTitle} numberOfLines={1}>
                   {r.title}

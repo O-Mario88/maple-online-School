@@ -53,7 +53,7 @@ export function SchoolCardView({ c, saved, onSave, onView, onApply, reason, phon
           <Icon name={saved ? 'heartFill' : 'heart'} size={18} color={saved ? Maple.error : L.ink} />
         </Pressable>
         <View style={s.crest}>
-          <Image source={c.crest} style={s.crestImg} contentFit="contain" />
+          <Image decorative source={c.crest} style={s.crestImg} contentFit="contain" />
         </View>
       </View>
       <View style={s.cardBody}>
@@ -140,7 +140,7 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 export function ProfileSheet({ c, saved, onSave, onApply, onClose }: { c: SchoolCard; saved: boolean; onSave: () => void; onApply: () => void; onClose: () => void }) {
   return (
     <Sheet title={c.name} onClose={onClose}>
-      <Image source={c.photo} style={s.profilePhoto} contentFit="cover" />
+      <Image decorative source={c.photo} style={s.profilePhoto} contentFit="cover" />
       <Text style={s.body}>{`${c.mode === 'Online' ? 'Online school' : `${c.town}, ${c.district}`} · ${c.stay} · ${c.mode} · ${c.rating.toFixed(1)} (${c.reviews} reviews)`}</Text>
       <Text style={s.body}>{c.blurb}</Text>
       <Section title="Programs and levels">

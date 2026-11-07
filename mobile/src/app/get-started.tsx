@@ -14,6 +14,7 @@ import { LightOnly } from '@/hooks/use-theme';
 import { mockData } from '@/lib/mock';
 import { Maple } from '@/constants/maple';
 import { PageScroll } from '@/components/shell/PageScroll';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
 const DESKTOP_MIN = 900;
 // The reference's desktop frame is 1178 × 1024 (the white bar at (18, 10), the page under it).
@@ -42,7 +43,7 @@ function Desktop({ w, o }: { w: Wizard; o: Onboarding }) {
       <View style={styles.page}>
         <Image source={w.note} style={styles.note} contentFit="contain" accessibilityLabel="Quality education for a brighter future" />
         <Text style={styles.eyebrow}>GET STARTED</Text>
-        <Text style={styles.title} accessibilityRole="header">
+        <Text style={styles.title} {...PAGE_TITLE}>
           Let’s set up your Maple experience
         </Text>
         <Text style={styles.sub}>A few quick steps to personalize your learning journey.</Text>
@@ -70,7 +71,7 @@ function Desktop({ w, o }: { w: Wizard; o: Onboarding }) {
             </View>
             <View style={styles.flex}>
               <Text style={styles.label}>Curriculum / Exam Board</Text>
-              <Select label={`Curriculum: ${o.curriculum.code}`} onPress={o.nextCurriculum} lead={<Image source={o.curriculum.crest} style={styles.crest} />}>
+              <Select label={`Curriculum: ${o.curriculum.code}`} onPress={o.nextCurriculum} lead={<Image decorative source={o.curriculum.crest} style={styles.crest} />}>
                 <Curriculum o={o} />
               </Select>
             </View>
@@ -120,7 +121,7 @@ function Phone({ w, o }: { w: Wizard; o: Onboarding }) {
       <AuthPhoneTop />
       <PageScroll contentContainerStyle={styles.phone}>
         <Steps phone />
-        <Text style={styles.titleP} accessibilityRole="header">
+        <Text style={styles.titleP} {...PAGE_TITLE}>
           {'Let’s set up your\nMaple experience'}
         </Text>
         <Text style={styles.subP}>A few quick steps to personalize your learning journey.</Text>
@@ -135,7 +136,7 @@ function Phone({ w, o }: { w: Wizard; o: Onboarding }) {
           <Select phone label={`Country: ${o.country.name}`} onPress={o.nextCountry} lead={<CountryFlag country={o.country} />}>
             <Text style={styles.selectText}>{o.country.name}</Text>
           </Select>
-          <Select phone label={`Curriculum: ${o.curriculum.code}`} onPress={o.nextCurriculum} lead={<Image source={o.curriculum.crest} style={styles.crest} />}>
+          <Select phone label={`Curriculum: ${o.curriculum.code}`} onPress={o.nextCurriculum} lead={<Image decorative source={o.curriculum.crest} style={styles.crest} />}>
             <Text style={styles.selectSmall} numberOfLines={1}>
               <Text style={styles.selectStrong}>{o.curriculum.code}</Text>
               {` (${o.curriculum.name})`}

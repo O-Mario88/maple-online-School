@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 /** Styles for ParentHomeViews (kept apart so the view file stays readable). */
 export const PARENT_HOME_REF_WIDTH = 1280;
@@ -863,7 +864,7 @@ export const styles = StyleSheet.create({
   },
   tipsCard: {
     backgroundColor: Maple.warningSoft,
-    borderColor: '#FDE68A',
+    borderColor: Palette.yellow300,
   },
   tipsList: {
     marginTop: 10,

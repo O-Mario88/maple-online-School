@@ -15,6 +15,7 @@ import { toggleScholarship, toggleScholarshipPlan } from './saved';
 import { filterScholarships, forMe, isOpen, levelCounts, NO_SCHOLARSHIP_FILTERS, type ScholarshipFilters, sortScholarships } from './scholarships';
 import type { Compass } from './useCompass';
 import { Maple, Radii } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 type Tab = 'all' | 'forMe' | 'saved' | 'applications';
 const PAGE = 4;
@@ -245,7 +246,7 @@ function Planner({ x, p, phone }: { x: Compass; p: SP; phone: boolean }) {
           <Icon name="arrowRight" size={14} color={L.white} />
         </Pressable>
       </View>
-      {!phone ? <Image source={x.cc.photos.art.planner} style={s.plannerArt} contentFit="contain" /> : null}
+      {!phone ? <Image decorative source={x.cc.photos.art.planner} style={s.plannerArt} contentFit="contain" /> : null}
     </View>
   );
 }
@@ -293,7 +294,7 @@ function Side({ x, p }: { x: Compass; p: SP }) {
             </View>
             <Text style={cs.small}>Get guidance on eligibility, required documents and a strong application.</Text>
           </View>
-          <Image source={x.cc.photos.art.help} style={s.helpArt} contentFit="contain" />
+          <Image decorative source={x.cc.photos.art.help} style={s.helpArt} contentFit="contain" />
         </View>
         <Pressable
           style={s.helpBtn}
@@ -412,7 +413,7 @@ const s = StyleSheet.create({
   statusClosed: { color: Maple.secondary, backgroundColor: Maple.blueSoft },
   deadline: { fontSize: 13, fontWeight: '500', color: L.navy },
   plan: { height: 36, flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 16, borderRadius: 18, borderWidth: 1.5, borderColor: BRAND_BLUE },
-  planned: { borderColor: '#BBE5C8', backgroundColor: Maple.successSoft },
+  planned: { borderColor: Palette.green300e, backgroundColor: Maple.successSoft },
   planText: { fontSize: 13.5, fontWeight: '700', color: BRAND_BLUE },
   plannedText: { color: Maple.successText },
   empty: { padding: 24, borderRadius: 14, borderWidth: 1, borderColor: L.line, backgroundColor: L.white },

@@ -13,6 +13,7 @@ import { Cell, type Column, DataTable, PageHead, Search, useChoice, useSelection
 import { toast } from '@/lib/toast';
 import type { RequestRow } from '@/mock/command-center/security';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 type S = CommandData['security'];
 const PER_PAGE = 12;
@@ -381,11 +382,11 @@ const styles = StyleSheet.create({
   scopeTitle: { fontSize: 12, fontWeight: '600', color: NAVY },
   checks: { gap: 10 },
   blocker: { flexDirection: 'row', alignItems: 'center', gap: 8, padding: 9, borderRadius: 8, backgroundColor: Maple.warningSoft },
-  blockerText: { flex: 1, fontSize: 12, color: '#92400E' },
+  blockerText: { flex: 1, fontSize: 12, color: Palette.orange800b },
   decided: { padding: 10, borderRadius: 8, backgroundColor: Maple.blueSoft, fontSize: 12.5, color: NAVY },
   decide: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 6 },
   approve: { flex: 1.5, minWidth: 0, height: 36, paddingHorizontal: 6 },
-  rejectBtn: { flex: 1, minHeight: 32, paddingVertical: 4, paddingHorizontal: 4, borderRadius: 8, borderWidth: 1, borderColor: '#FCA5A5', alignItems: 'center', justifyContent: 'center', backgroundColor: Maple.errorSoft },
+  rejectBtn: { flex: 1, minHeight: 32, paddingVertical: 4, paddingHorizontal: 4, borderRadius: 8, borderWidth: 1, borderColor: Palette.red300e, alignItems: 'center', justifyContent: 'center', backgroundColor: Maple.errorSoft },
   rejectText: { fontSize: 12, fontWeight: '600', color: RED, textAlign: 'center' },
   card: { gap: 8, padding: 12, borderRadius: 14, borderWidth: 1, borderColor: LINE, backgroundColor: WHITE },
 });

@@ -16,6 +16,7 @@ import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { mockData } from '@/lib/mock';
 import { Maple } from '@/constants/maple';
 import { PageScroll } from '@/components/shell/PageScroll';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
 /** The Projects reference is a full 1536-wide page, sidebar included; the desktop layout uses its pixels. */
 const PROJ_REF_WIDTH = 1536;
@@ -96,14 +97,14 @@ function NewProject({ page, s, open, onClose }: { page: Page; s: ProjectsState; 
 function Desktop({ page, h, s, onNew }: { page: Page; h: Home; s: ProjectsState; onNew: () => void }) {
   return (
     <View style={styles.canvas}>
-      <Image source={page.pageIcon} style={styles.pageIcon} />
+      <Image decorative source={page.pageIcon} style={styles.pageIcon} />
       <View style={styles.titleBlock}>
         <View style={styles.crumbs}>
           <Text style={styles.crumbLink}>Home</Text>
           <Icon name="chevronRight" size={11} color={BODY} />
           <Text style={styles.crumbOn}>Projects</Text>
         </View>
-        <Text style={styles.title} accessibilityRole="header">
+        <Text style={styles.title} {...PAGE_TITLE}>
           Projects
         </Text>
         <Text style={styles.sub}>Explore, create, and submit projects that build real-world skills and NCDC competencies.</Text>
@@ -160,7 +161,7 @@ function Phone({ page, h, s, onNew }: { page: Page; h: Home; s: ProjectsState; o
           <>
             <View style={styles.phoneHead}>
               <View style={styles.flex}>
-                <Text style={styles.titleP} accessibilityRole="header">
+                <Text style={styles.titleP} {...PAGE_TITLE}>
                   Projects
                 </Text>
                 <Text style={styles.subP}>Real-world projects that build your NCDC competencies.</Text>

@@ -1,7 +1,8 @@
 import { defineConfig } from '@playwright/test';
 
-// The browser tests run against the sample-data web build. Locally, point NAV_TEST_PORT at a mock
-// server that is already running (npm run web:mock serves 8081) to skip the start-up.
+// The browser tests run against the sample-data web build. `npm run test:nav` exports it and serves
+// it on NAV_TEST_PORT first (scripts/test-pages.mjs); `npx playwright test` alone starts a dev server,
+// or reuses whatever already answers on NAV_TEST_PORT (npm run web:mock serves 8081).
 const PORT = Number(process.env.NAV_TEST_PORT ?? 8089);
 const CI = Boolean(process.env.CI);
 
@@ -25,7 +26,8 @@ export default defineConfig({
     command: `npx expo start --web --port ${PORT}`,
     env: { EXPO_PUBLIC_MOCK_DATA: 'true', CI: '1' },
     url: `http://localhost:${PORT}`,
-    reuseExistingServer: !CI,
+    // test:nav serves an export on this port before Playwright starts, in CI as well.
+    reuseExistingServer: true,
     timeout: 300_000,
   },
 });

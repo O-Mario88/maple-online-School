@@ -43,7 +43,7 @@ export function SquadSide({ room, s, onDialog }: { room: Room; s: SquadState; on
     <View style={styles.side}>
       <View style={styles.panel}>
         <View style={styles.brand}>
-          <Image source={room.headerIcon} style={styles.brandIcon} contentFit="contain" />
+          <Image decorative source={room.headerIcon} style={styles.brandIcon} contentFit="contain" />
           <Text style={styles.brandText}>Study Squads</Text>
         </View>
         {MENU.map((m, i) => (
@@ -62,7 +62,7 @@ export function SquadSide({ room, s, onDialog }: { room: Room; s: SquadState; on
           const on = q.id === s.squad.id;
           return (
             <Pressable key={q.id} style={[styles.squad, on && styles.squadOn]} onPress={() => (on ? s.setTab('Overview') : openSquad(q.id))} accessibilityRole="link" accessibilityState={{ selected: on }}>
-              <Image source={q.icon} style={styles.squadIcon} contentFit="contain" />
+              <Image decorative source={q.icon} style={styles.squadIcon} contentFit="contain" />
               <Text style={[styles.squadName, on && styles.squadNameOn]} numberOfLines={1}>
                 {q.name}
               </Text>
@@ -77,7 +77,7 @@ export function SquadSide({ room, s, onDialog }: { room: Room; s: SquadState; on
         </View>
         {stats.map((x) => (
           <View key={x.label} style={styles.stat}>
-            <Image source={x.icon} style={styles.statIcon} contentFit="contain" />
+            <Image decorative source={x.icon} style={styles.statIcon} contentFit="contain" />
             <View>
               <Text style={styles.statN}>{x.n}</Text>
               <Text style={styles.statLabel}>{x.label}</Text>
@@ -166,7 +166,7 @@ export function SquadDialogs({ room, s, dialog, onClose }: { room: Room; s: Squa
                   openSquad(q.id);
                 }}
                 accessibilityRole="link">
-                <Image source={q.icon} style={styles.squadIcon} contentFit="contain" />
+                <Image decorative source={q.icon} style={styles.squadIcon} contentFit="contain" />
                 <View style={styles.flex}>
                   <Text style={styles.squadNameOn}>{q.name}</Text>
                   <Text style={styles.statLabel}>{`${q.members.length} of 8 members • ${q.level} • ${q.subject}`}</Text>

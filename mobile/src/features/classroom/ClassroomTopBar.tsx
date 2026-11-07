@@ -77,7 +77,7 @@ export function ClassroomTopBar({ title, board, students, teacher, teacherPhoto,
           </View>
           {wide ? (
             <View style={styles.chipBox}>
-              {teacherPhoto ? <Image source={teacherPhoto} style={styles.teacherFace} /> : null}
+              {teacherPhoto ? <Image decorative source={teacherPhoto} style={styles.teacherFace} /> : null}
               <Text style={[styles.chip, styles.chipBold]}>{teacher}</Text>
             </View>
           ) : null}

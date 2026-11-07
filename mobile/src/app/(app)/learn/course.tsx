@@ -16,6 +16,7 @@ import { domainOf } from '@/lib/cbc';
 import { mockData } from '@/lib/mock';
 import { Maple } from '@/constants/maple';
 import { PageScroll } from '@/components/shell/PageScroll';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
 const INK = Maple.navy;
 const BODY = Maple.body;
@@ -49,11 +50,11 @@ function Heading({ c, phone = false }: { c: Course; phone?: boolean }) {
         <Text style={styles.backText}>Back to Subjects</Text>
       </Pressable>
       <View style={styles.chips}>
-        <Image source={c.subjectIcon} style={styles.subjIcon} />
+        <Image decorative source={c.subjectIcon} style={styles.subjIcon} />
         <Text style={styles.subj}>{c.subject}</Text>
         <Text style={styles.level}>{c.level}</Text>
       </View>
-      <Text style={[styles.title, phone && styles.titleP]} accessibilityRole="header">
+      <Text style={[styles.title, phone && styles.titleP]} {...PAGE_TITLE}>
         {c.title}
       </Text>
     </>
@@ -65,7 +66,7 @@ function Stats({ c, phone = false }: { c: Course; phone?: boolean }) {
     <View style={[styles.stats, phone && styles.statsP]}>
       {c.stats.slice(0, phone ? 3 : 4).map((s) => (
         <View key={s.label} style={styles.stat}>
-          <Image source={s.icon} style={phone ? styles.statIconP : styles.statIcon} />
+          <Image decorative source={s.icon} style={phone ? styles.statIconP : styles.statIcon} />
           <View>
             <Text style={[styles.statValue, phone && styles.statValueP]}>{s.value}</Text>
             <Text style={styles.statLabel}>{s.label}</Text>

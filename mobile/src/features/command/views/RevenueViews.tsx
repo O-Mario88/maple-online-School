@@ -15,6 +15,7 @@ import { Cell, type Column, DataTable, PageHead, Search, useChoice, useSelection
 import { toast } from '@/lib/toast';
 import type { BatchRow, Provider } from '@/mock/command-center/finance';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 type F = CommandData['finance'];
 const PER_PAGE = 10;
@@ -23,7 +24,7 @@ const ugx = (n: number) => `UGX ${Math.round(n).toLocaleString('en-US')}`;
 const PROVIDER: Readonly<Record<Provider, { bg: string; fg: string; mark: string }>> = {
   Stripe: { bg: Maple.blue, fg: WHITE, mark: 'stripe' },
   Flutterwave: { bg: Maple.warningSoft, fg: Maple.warning, mark: 'FW' },
-  Paystack: { bg: '#0BA4DB', fg: WHITE, mark: '≡' },
+  Paystack: { bg: Palette.sky600c, fg: WHITE, mark: '≡' },
   'MTN MoMo': { bg: Maple.warning, fg: Maple.navy, mark: 'MTN' },
   'Airtel Money': { bg: Maple.error, fg: WHITE, mark: 'a' },
 };

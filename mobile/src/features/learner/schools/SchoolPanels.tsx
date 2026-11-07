@@ -8,6 +8,7 @@ import { toast } from '@/lib/toast';
 import { BRAND_SOFT, BRAND_BLUE, Tag, ugx } from './SchoolParts';
 import type { Net, SN } from './useSchoolNetwork';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 /** "Your Journey on Maple": discover, compare, apply, enrol. */
 export function JourneyCard({ net }: { net: Net }) {
@@ -104,7 +105,7 @@ export function RecsTab({ x }: { x: SN }) {
       {x.recommended.length ? (
         x.recommended.map((c) => (
           <View key={c.id} style={[s.card, s.row]}>
-            <Image source={c.crest} style={s.rowCrest} contentFit="contain" />
+            <Image decorative source={c.crest} style={s.rowCrest} contentFit="contain" />
             <View style={s.flex}>
               <Text style={s.rowTitle}>{c.name}</Text>
               {x.reasons(c).map((r) => (
@@ -136,7 +137,7 @@ export function ExamsTab({ x }: { x: SN }) {
       </View>
       {x.examCentres.map((c) => (
         <View key={c.id} style={[s.card, s.row]}>
-          <Image source={c.crest} style={s.rowCrest} contentFit="contain" />
+          <Image decorative source={c.crest} style={s.rowCrest} contentFit="contain" />
           <View style={s.flex}>
             <Text style={s.rowTitle}>{c.name}</Text>
             <Text style={s.small}>{`${c.town} · ${c.exam?.boards.join(', ')} · ${c.exam?.exams.join(' and ')}`}</Text>
@@ -165,7 +166,7 @@ export function VacanciesTab({ x }: { x: SN }) {
         const c = x.byId(v.schoolId);
         return (
           <View key={v.id} style={[s.card, s.row]}>
-            {c ? <Image source={c.crest} style={s.rowCrest} contentFit="contain" /> : null}
+            {c ? <Image decorative source={c.crest} style={s.rowCrest} contentFit="contain" /> : null}
             <View style={s.flex}>
               <Text style={s.rowTitle}>{v.title}</Text>
               <Text style={s.small}>{`${c?.name ?? ''} · ${v.type} · closes ${v.closes}`}</Text>
@@ -211,7 +212,7 @@ const s = StyleSheet.create({
   dots: { width: 0, height: 12, borderLeftWidth: 2, borderStyle: 'dotted', borderColor: Maple.blueLine },
   journeyTitle: { marginTop: 2, fontSize: 14.5, fontWeight: '700', color: L.navy },
   link: { flexDirection: 'row', alignItems: 'center', gap: 14, padding: 18, borderRadius: 16, borderWidth: 1 },
-  linkGreen: { borderColor: '#CDEFD8', backgroundColor: Maple.successSoft },
+  linkGreen: { borderColor: Palette.green200d, backgroundColor: Maple.successSoft },
   linkPurple: { borderColor: Maple.blueSelected, backgroundColor: Maple.blueSoft },
   linkTitle: { fontSize: 16.5, fontWeight: '700' },
   arrow: { width: 28, height: 28, alignItems: 'center', justifyContent: 'center', borderRadius: 14 },

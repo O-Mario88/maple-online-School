@@ -13,6 +13,7 @@ import { Icon } from '@/components/icon';
 import { Maple } from '@/constants/maple';
 import type { IconName } from '@/lib/icons';
 import { mockData } from '@/lib/mock';
+import { Palette } from '@/constants/palette';
 
 type Tone = 'blue' | 'green' | 'amber' | 'red' | 'teal' | 'slate';
 
@@ -21,8 +22,8 @@ const TONES: Readonly<Record<Tone, { fg: string; bg: string }>> = {
   green: { fg: Maple.successText, bg: Maple.successSoft },
   amber: { fg: Maple.warningText, bg: Maple.warningSoft },
   red: { fg: Maple.errorText, bg: Maple.errorSoft },
-  teal: { fg: '#0B7A6E', bg: '#E6F4F2' },
-  slate: { fg: Maple.secondary, bg: '#EEF1F6' },
+  teal: { fg: Palette.teal900, bg: Palette.teal100b },
+  slate: { fg: Maple.secondary, bg: Palette.blue100 },
 };
 
 /** The icon glyph fills about this much of its tile. */
@@ -35,10 +36,25 @@ function artFor(source: ImageProps['source']) {
   return mockData()?.iconArt.get(source);
 }
 
-export function Image(props: ImageProps) {
+/**
+ * Every image says what it shows, or says it is decoration. A photo beside its own caption, an
+ * avatar beside the person's name or a cover beside the title is `decorative`: screen readers skip
+ * it (an empty alt on the web). Anything else gets an `accessibilityLabel`, read out and used as alt.
+ */
+type Described = { accessibilityLabel: string; decorative?: false } | { decorative: true; accessibilityLabel?: undefined };
+export type MapleImageProps = Omit<ImageProps, 'accessibilityLabel' | 'alt' | 'accessible'> & Described;
+
+/**
+ * Screen readers skip a decorative image: an empty alt on the web, hidden on iOS and Android.
+ * expo-image's web image takes its alt from accessibilityLabel (not alt), so both are set.
+ */
+const DECORATIVE = { alt: '', accessibilityLabel: '', accessible: false, importantForAccessibility: 'no' } as const;
+
+export function Image({ decorative = false, ...props }: MapleImageProps) {
   const art = artFor(props.source);
-  if (!art) return <ExpoImage {...props} />;
-  return <IconTile icon={art.icon} tone={art.tone} style={props.style as ViewStyle} label={props.accessibilityLabel} />;
+  const label = decorative ? undefined : props.accessibilityLabel;
+  if (art) return <IconTile icon={art.icon} tone={art.tone} style={props.style as ViewStyle} label={label} />;
+  return <ExpoImage {...props} {...(decorative ? DECORATIVE : { alt: label, accessible: true })} />;
 }
 
 interface IconTileProps {

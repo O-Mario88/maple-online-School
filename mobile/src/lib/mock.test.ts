@@ -37,3 +37,18 @@ describe('demoPortalFromSearch', () => {
     expect(demoPortalFromSearch('?as=hacker')).toBeNull();
   });
 });
+
+describe('signing in to a demo account by email', () => {
+  const { demoAccounts, setActiveDemoByEmail } = jest.requireActual<typeof import('@/mock/shared')>('@/mock/shared');
+
+  it('each demo address signs in to its own account, not the school one (they all end in @maple.school)', () => {
+    for (const account of Object.values(demoAccounts)) expect(setActiveDemoByEmail(account.email).key).toBe(account.key);
+  });
+
+  it('other addresses are read by the name before the @', () => {
+    expect(setActiveDemoByEmail('sarah.k@gmail.com').key).toBe('teacher');
+    expect(setActiveDemoByEmail('head@kampala.school').key).toBe('student');
+    expect(setActiveDemoByEmail('principal.james@x.org').key).toBe('institution');
+    expect(setActiveDemoByEmail('amina@x.org').key).toBe('admin');
+  });
+});

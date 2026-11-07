@@ -13,6 +13,7 @@ import { Cell, type Column, DataTable, PageHead, Segments, useChoice } from '@/f
 import { toast } from '@/lib/toast';
 import type { IncidentRow } from '@/mock/command-center/ops';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 type O = CommandData['ops'];
 const SEV_TONE: Readonly<Record<Severity, Tone>> = { Critical: 'red', Warning: 'orange', Info: 'blue' };
@@ -198,7 +199,7 @@ function Health({ o, u, phone = false }: { o: O; u: U; phone?: boolean }) {
           parts={[
             { name: 'Good', color: Maple.success, values: o.quality.good },
             { name: 'Fair', color: Maple.warning, values: o.quality.fair },
-            { name: 'Poor', color: '#F87171', values: o.quality.poor },
+            { name: 'Poor', color: Palette.red400b, values: o.quality.poor },
           ]}
           height={phone ? 150 : 158}
         />

@@ -15,6 +15,7 @@ import { ResultsView } from './CompassResults';
 import { LIKERT, PREFERENCE_STATEMENTS } from './profile';
 import type { Compass } from './useCompass';
 import { Maple, Radii } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 const STEP_LABEL = { interests: 'Interests', work: 'Work Style', skills: 'Skills', preferences: 'Preferences', results: 'Results' } as const;
 const QUESTION = {
@@ -35,7 +36,7 @@ const PLACES: Readonly<Record<string, { label: string; icon: IconName }>> = {
   studio: { label: 'Studio', icon: 'image' },
 };
 const EXPLORE: readonly { icon: IconName; title: string; sub: string; color: string; tint: string }[] = [
-  { icon: 'heart', title: 'Your Interests', sub: 'Activities and topics you enjoy.', color: '#E5487F', tint: '#FDEEF4' },
+  { icon: 'heart', title: 'Your Interests', sub: 'Activities and topics you enjoy.', color: Palette.pink500b, tint: Palette.pink50 },
   { icon: 'bolt', title: 'Your Strengths', sub: 'Subjects you do well in.', color: Maple.warning, tint: Maple.warningSoft },
   { icon: 'layers', title: 'Your Work Style', sub: 'The places and ways you like to work.', color: Maple.blue, tint: Maple.blueSoft },
 ];
@@ -127,7 +128,7 @@ function AssessmentView({ x, phone }: { x: Compass; phone: boolean }) {
               <Icon name="arrowRight" size={15} color={L.white} />
             </Pressable>
           </View>
-          {!phone ? <Image source={x.cc.photos.art.assessment} style={s.clip} contentFit="contain" /> : null}
+          {!phone ? <Image decorative source={x.cc.photos.art.assessment} style={s.clip} contentFit="contain" /> : null}
         </View>
         <View style={[s.card, !phone && s.exploreD]}>
           <Text style={s.cardTitle}>What We Explore</Text>
@@ -211,7 +212,7 @@ function Tile({ label, photo, icon, on, onPress, phone }: { label: string; photo
   return (
     <Pressable style={[s.tile, phone ? s.tileP : s.tileD, on && s.tileOn]} onPress={onPress} accessibilityRole="checkbox" accessibilityState={{ checked: on }} accessibilityLabel={label}>
       {photo ? (
-        <Image source={photo} style={phone ? s.tilePhotoP : s.tilePhoto} contentFit="cover" />
+        <Image decorative source={photo} style={phone ? s.tilePhotoP : s.tilePhoto} contentFit="cover" />
       ) : (
         <View style={s.tileIcon}>
           <Icon name={icon ?? 'star'} size={26} color={BRAND_BLUE} />
@@ -241,7 +242,7 @@ function Wizard({ x, phone }: { x: Compass; phone: boolean }) {
           <Text style={cs.body}>Discover what excites you, your strengths and the kinds of careers you may enjoy.</Text>
           <Stepper x={x} phone={phone} />
         </View>
-        {!phone ? <Image source={x.cc.photos.interestsHero} style={s.wizArt} contentFit="contain" /> : null}
+        {!phone ? <Image decorative source={x.cc.photos.interestsHero} style={s.wizArt} contentFit="contain" /> : null}
       </View>
       <View style={s.card}>
         <Text style={[s.question, phone && s.questionP]}>{title}</Text>

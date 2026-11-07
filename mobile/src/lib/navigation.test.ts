@@ -1,4 +1,4 @@
-import { activeKey, navFor, navMode, portalsFor, PORTALS, CLASSROOM, type Person, PUBLIC_PREVIEWS, SHARED_PREVIEWS, onlyAllowed, tabBar, topBarSplit } from './navigation';
+import { activeKey, navFor, navMode, portalsFor, PORTALS, CLASSROOM, type Person, PUBLIC_PREVIEWS, SHARED_PREVIEWS, onlyAllowed, tabBar, TOP_BAR_MAX, topBarSplit } from './navigation';
 
 const person = (role: string, memberships: { role: string; status?: string }[] = [], children = 0): Person => ({
   role,
@@ -313,6 +313,12 @@ describe('where the menu goes', () => {
     expect(tabs.length + more.length).toBe(items.length);
     expect(topBarSplit(items, 99).tabs.map((i) => i.key)).not.toContain('explore');
   });
+
+  test('however wide the window, the top bar shows at most seven pages before More', () => {
+    const items = navFor('learner', true);
+    expect(topBarSplit(items, 99).tabs).toHaveLength(TOP_BAR_MAX);
+    expect(TOP_BAR_MAX).toBe(7);
+  });
 });
 
 describe('role-filtered menus', () => {
@@ -322,5 +328,35 @@ describe('role-filtered menus', () => {
     expect(out.map((i) => i.key)).not.toContain('plan');
     expect(out.find((i) => i.key === 'careers')?.children?.map((c) => c.key)).not.toContain('careers-counselor');
     expect(items.find((i) => i.key === 'plan')).toBeDefined();
+  });
+});
+
+describe('deployment menus', () => {
+  // A route file that still shows "Coming soon" in a deployment build (no sample data).
+  /// <reference types="node" />
+  const fs = jest.requireActual<typeof import('fs')>('fs');
+  const path = jest.requireActual<typeof import('path')>('path');
+  const APP = path.resolve(__dirname, '../app');
+  const routeFile = (href: string): string | null => {
+    const clean = href.split('?')[0].replace(/\/$/, '') || '/';
+    const rel = clean === '/' ? 'index' : clean.slice(1);
+    for (const dir of [path.join(APP, '(app)'), APP]) {
+      for (const f of [`${rel}.tsx`, `${rel}/index.tsx`]) if (fs.existsSync(path.join(dir, f))) return path.join(dir, f);
+    }
+    return null;
+  };
+  // It shows PreviewScreen and has no real-data page to show instead (`design ? <Design /> : <LiveX />`).
+  const comingSoon = (file: string) => {
+    const text = fs.readFileSync(file, 'utf8');
+    return /<PreviewScreen\b/.test(text) && !/:\s*<Live[A-Z]\w*/.test(text);
+  };
+
+  test.each(PORTALS)('every %s menu item in a deployment build opens a working page, never "Coming soon"', (portal) => {
+    const items = navFor(portal, false).flatMap((i) => [i, ...(i.children ?? [])]);
+    const previews = items.filter((i) => {
+      const file = routeFile(i.href);
+      return file !== null && comingSoon(file);
+    });
+    expect(previews.map((i) => `${i.label} (${i.href})`)).toEqual([]);
   });
 });

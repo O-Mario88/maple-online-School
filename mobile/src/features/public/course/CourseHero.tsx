@@ -10,6 +10,8 @@ import type { MockData } from '@/mock';
 import { Brand } from '../palette';
 import { crumbHref } from '@/features/public/HomeNav';
 import { Maple } from '@/constants/maple';
+import { PAGE_TITLE } from '@/lib/fonts/type';
+import { Palette } from '@/constants/palette';
 
 type Course = MockData['publicPages']['coursePage'];
 
@@ -20,7 +22,7 @@ function Trailer({ course, wide }: { course: Course; wide: boolean }) {
     // The reference frame already shows the trailer label and play button.
     return (
       <Pressable style={styles.video} onPress={() => setPlaying(true)} accessibilityRole="button" accessibilityLabel={`Play the subject trailer, ${course.trailer.length}`}>
-        <Image source={course.trailer.photo} style={StyleSheet.absoluteFill} contentFit="cover" />
+        <Image decorative source={course.trailer.photo} style={StyleSheet.absoluteFill} contentFit="cover" />
         {sheet}
       </Pressable>
     );
@@ -66,7 +68,7 @@ export function CourseHero({ course, wide }: { course: Course; wide: boolean }) 
             <Icon name="trophy" size={14} color={Brand.ink} />
             <Text style={styles.badgeText}>{course.badge}</Text>
           </View>
-          <Text style={[styles.title, wide && styles.titleWide]} accessibilityRole="header">
+          <Text style={[styles.title, wide && styles.titleWide]} {...PAGE_TITLE}>
             {course.title}
           </Text>
           <Text style={styles.sub}>{course.sub}</Text>
@@ -101,7 +103,7 @@ const styles = StyleSheet.create({
   rowWide: { flexDirection: 'row' },
   copy: { gap: 12 },
   copyWide: { flex: 1 },
-  badge: { flexDirection: 'row', alignItems: 'center', gap: 6, alignSelf: 'flex-start', paddingHorizontal: 12, paddingVertical: 5, borderRadius: 999, backgroundColor: '#FFE9A8' },
+  badge: { flexDirection: 'row', alignItems: 'center', gap: 6, alignSelf: 'flex-start', paddingHorizontal: 12, paddingVertical: 5, borderRadius: 999, backgroundColor: Palette.amber300f },
   badgeText: { fontSize: 13, fontWeight: '700', color: Brand.ink },
   title: { fontSize: 28, lineHeight: 34, fontWeight: '800', color: Brand.ink, letterSpacing: -0.6 },
   titleWide: { fontSize: 40, lineHeight: 46, letterSpacing: -1 },

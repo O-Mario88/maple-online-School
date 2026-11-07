@@ -9,12 +9,14 @@ import type { IconName } from '@/lib/icons';
 
 import type { Book, Hub } from './useShelf';
 import { Maple } from '@/constants/maple';
+import { useUiScaleRef } from '@/lib/ui-scale';
+import { Palette } from '@/constants/palette';
 
 const INK = Maple.navy;
 const NAVY = Maple.blueHover;
 const BODY = Maple.body;
 const BLUE = Maple.blue;
-const MARKS = ['#FDF0A6', '#C9F2D6', Maple.errorSoft, Maple.blueLine] as const;
+const MARKS = [Palette.yellow300b, Palette.green200c, Maple.errorSoft, Maple.blueLine] as const;
 const ZOOM_STEP = 10;
 
 type Block = Hub['reader']['content'][number][number];
@@ -62,7 +64,7 @@ export function BookHeader({ b, hub, rs, phone = false }: { b: Book; hub: Hub; r
   const [menu, setMenu] = useState(false);
   return (
     <View style={styles.bookHead}>
-      <Image source={b.cover} style={phone ? styles.coverP : styles.cover} contentFit="cover" />
+      <Image decorative source={b.cover} style={phone ? styles.coverP : styles.cover} contentFit="cover" />
       <View style={styles.flex}>
         <Text style={[styles.bookTitle, phone && styles.bookTitleP]}>{b.title}</Text>
         <Text style={styles.bookMeta}>{b.id === 'maths-olevel' ? hub.reader.publisherLine : `${b.publisher}  •  ${b.level}`}</Text>
@@ -227,10 +229,11 @@ export function PageView({ hub, rs, sample, phone = false }: { hub: Hub; rs: Rea
   const r = hub.reader;
   const blocks = sample ? r.content[rs.page] : undefined;
   const scale = rs.zoom / 100;
+  const scaled = useUiScaleRef(scale);
   const figure = sample && rs.page === 12 && !phone;
   return (
     <View style={[styles.page, phone && styles.pageP]}>
-      <View style={{ transform: [{ scale }], transformOrigin: 'top left', width: `${100 / scale}%` }}>
+      <View ref={scaled} style={{ transform: [{ scale }], transformOrigin: 'top left', width: `${100 / scale}%` }}>
         {blocks ? (
           <View style={[styles.blocks, figure && styles.blocksBeside]}>
             {blocks.map((blk, i) => (
@@ -258,7 +261,7 @@ export function PageView({ hub, rs, sample, phone = false }: { hub: Hub; rs: Rea
         ) : null}
         {rs.notes.map((n, i) => (
           <View key={i} style={styles.note}>
-            <Icon name="edit" size={12} color="#92400E" />
+            <Icon name="edit" size={12} color={Palette.orange800b} />
             <Text style={styles.noteText}>{n.text}</Text>
           </View>
         ))}
@@ -383,17 +386,17 @@ const styles = StyleSheet.create({
   takeText: { marginTop: 6, marginLeft: 26, fontSize: 12, color: BODY },
   preview: { gap: 8, paddingVertical: 40 },
   previewText: { fontSize: 12.5, lineHeight: 18, color: BODY },
-  sticky: { position: 'absolute', top: 18, right: 0, width: 132, padding: 12, backgroundColor: '#FDF2A6', transform: [{ rotate: '-7deg' }], shadowColor: INK, shadowOpacity: 0.12, shadowRadius: 6, shadowOffset: { width: 0, height: 3 } },
+  sticky: { position: 'absolute', top: 18, right: 0, width: 132, padding: 12, backgroundColor: Palette.yellow300c, transform: [{ rotate: '-7deg' }], shadowColor: INK, shadowOpacity: 0.12, shadowRadius: 6, shadowOffset: { width: 0, height: 3 } },
   stickyText: { fontSize: 12, lineHeight: 17, color: Maple.navy, fontStyle: 'italic' },
   figure: { position: 'absolute', top: 160, right: 6, alignItems: 'center', gap: 6 },
   pie: { width: 100, height: 100 },
   note: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 10, padding: 8, borderRadius: 6, backgroundColor: Maple.warningSoft },
-  noteText: { flex: 1, fontSize: 12, color: '#78350F' },
+  noteText: { flex: 1, fontSize: 12, color: Palette.orange900 },
   domain: { position: 'absolute', left: 18, bottom: 10 },
   pageNum: { position: 'absolute', right: 14, bottom: 10, fontSize: 11, color: INK },
   hbar: { height: 34, flexDirection: 'row', alignItems: 'center', gap: 14, marginTop: 8, paddingHorizontal: 12, borderRadius: 17, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface },
-  hiliter: { width: 22, height: 22, alignItems: 'center', justifyContent: 'center', borderRadius: 11, backgroundColor: '#FDF0A6' },
-  hiliterText: { fontSize: 11, fontWeight: '800', color: '#92400E' },
+  hiliter: { width: 22, height: 22, alignItems: 'center', justifyContent: 'center', borderRadius: 11, backgroundColor: Palette.yellow300b },
+  hiliterText: { fontSize: 11, fontWeight: '800', color: Palette.orange800b },
   dot: { width: 14, height: 14, borderRadius: 7 },
   dotOn: { borderWidth: 2, borderColor: INK },
   hItem: { flexDirection: 'row', alignItems: 'center', gap: 5 },

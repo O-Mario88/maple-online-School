@@ -15,6 +15,7 @@ import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { mockData } from '@/lib/mock';
 import { Maple } from '@/constants/maple';
 import { PageScroll } from '@/components/shell/PageScroll';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
 /** The progress reference's desktop panel (x 18–1168 of 1536), laid out in its pixels. */
 const PROGRESS_REF_WIDTH = 1150;
@@ -29,7 +30,7 @@ function Desktop({ p, s, onExpand }: { p: Progress; s: ProgressState; onExpand: 
     <View style={styles.canvas}>
       <View style={styles.head}>
         <View style={styles.flex}>
-          <Text style={styles.title} accessibilityRole="header">
+          <Text style={styles.title} {...PAGE_TITLE}>
             My Learning Progress
           </Text>
           <Text style={styles.sub}>Track your mastery, explore new skills, and see your growth across all subjects.</Text>
@@ -73,7 +74,7 @@ function SubjectPicker({ s }: { s: ProgressState }) {
   return (
     <View style={styles.pickerWrap}>
       <Pressable style={styles.picker} onPress={() => setOpen(!open)} accessibilityRole="button" accessibilityState={{ expanded: open }} accessibilityLabel={`Subject: ${s.subject.name}`}>
-        <Image source={s.subject.icon} style={styles.pickerIcon} contentFit="contain" />
+        <Image decorative source={s.subject.icon} style={styles.pickerIcon} contentFit="contain" />
         <Text style={styles.pickerText}>{s.subject.name}</Text>
         <Icon name="chevronDown" size={14} color={NAVY} />
       </Pressable>
@@ -88,7 +89,7 @@ function SubjectPicker({ s }: { s: ProgressState }) {
                 setOpen(false);
               }}
               accessibilityRole="menuitem">
-              <Image source={x.icon} style={styles.pickerIcon} contentFit="contain" />
+              <Image decorative source={x.icon} style={styles.pickerIcon} contentFit="contain" />
               <Text style={[styles.pickerText, i === s.subjectIndex && styles.blue]}>{`${x.name}  •  ${x.done}/${x.total}`}</Text>
             </Pressable>
           ))}
@@ -103,7 +104,7 @@ function Phone({ p, s, avatar }: { p: Progress; s: ProgressState; avatar: number
     <View style={styles.phoneRoot}>
       <LearnerPhoneTop avatar={avatar} />
       <PageScroll contentContainerStyle={styles.phone}>
-        <Text style={styles.titleP} accessibilityRole="header">
+        <Text style={styles.titleP} {...PAGE_TITLE}>
           My Learning Progress
         </Text>
         <View style={styles.tabsP} accessibilityRole="tablist">

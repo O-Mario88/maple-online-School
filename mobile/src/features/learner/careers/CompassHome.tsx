@@ -13,6 +13,8 @@ import { CareerPhotoCard } from './CompassCards';
 import type { CompassSection } from '@/lib/careers/sections';
 import type { Compass } from './useCompass';
 import { Maple, Radii } from '@/constants/maple';
+import { PAGE_TITLE } from '@/lib/fonts/type';
+import { Palette } from '@/constants/palette';
 
 const STATUS = { done: 'Completed', current: 'In progress', next: 'Next', later: 'Coming up' } as const;
 const OPPORTUNITIES: readonly { key: CompassSection; title: string; sub: string; icon: IconName }[] = [
@@ -28,7 +30,7 @@ function Hero({ x, phone }: { x: Compass; phone: boolean }) {
     <View style={[s.hero, phone && s.heroP]}>
       <LinearGradient colors={[Maple.blue, BRAND_BLUE, Maple.blue]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />
       <View style={phone ? s.heroPhotoP : s.heroPhoto} pointerEvents="none">
-        <Image source={phone ? p.heroPhone : p.hero} style={StyleSheet.absoluteFill} contentFit="cover" contentPosition="top" />
+        <Image decorative source={phone ? p.heroPhone : p.hero} style={StyleSheet.absoluteFill} contentFit="cover" contentPosition="top" />
         <LinearGradient colors={[Maple.blue, 'rgba(106,68,223,0.6)', 'rgba(106,68,223,0)']} locations={[0, 0.3, 0.7]} start={{ x: 0, y: 0.5 }} end={{ x: 1, y: 0.5 }} style={StyleSheet.absoluteFill} />
       </View>
       <View style={phone ? s.heroTextP : s.heroText}>
@@ -38,7 +40,7 @@ function Hero({ x, phone }: { x: Compass; phone: boolean }) {
             <Text style={s.kickerText}>Career Compass</Text>
           </View>
         ) : null}
-        <Text style={[s.heroTitle, phone && s.heroTitleP]}>{phone ? 'Find a Future\nThat Fits You' : 'Discover Your Path. Build Your Future.'}</Text>
+        <Text style={[s.heroTitle, phone && s.heroTitleP]} {...(phone ? { accessibilityRole: 'header' as const } : PAGE_TITLE)}>{phone ? 'Find a Future\nThat Fits You' : 'Discover Your Path. Build Your Future.'}</Text>
         <Text style={[s.heroSub, phone && s.heroSubP]}>
           {phone ? 'Explore careers, match your interests, get guidance and discover education opportunities.' : 'Explore careers, match your interests and strengths, get expert guidance and turn your studies into real opportunities.'}
         </Text>
@@ -92,7 +94,7 @@ function Bar({ value }: { value: number }) {
 /** Profile at a Glance / Career Snapshot: the closest career area and the top matches, from the learner's answers. */
 function Snapshot({ x, phone }: { x: Compass; phone: boolean }) {
   const top = x.areaScores[0];
-  const dots = [BRAND_BLUE, '#E5487F', Maple.warning];
+  const dots = [BRAND_BLUE, Palette.pink500b, Maple.warning];
   return (
     <Card title={phone ? 'Your Career Snapshot' : 'Your Profile at a Glance'} style={phone ? undefined : s.half}>
       <View style={[s.snap, phone && s.snapP]}>
@@ -220,7 +222,7 @@ const TILES: readonly { key: CompassSection | 'plan'; title: string; sub: string
   { key: 'plan', title: 'Plan Your Path', sub: 'Subjects, programs & goals', icon: 'map', tint: Maple.successSoft, color: Maple.successText },
   { key: 'counselor', title: 'Get Guidance', sub: 'Book a counselor', icon: 'people', tint: Maple.warningSoft, color: Maple.warning },
   { key: 'programs', title: 'Find Universities', sub: 'Compare programs', icon: 'building', tint: Maple.blueSoft, color: Maple.blue },
-  { key: 'scholarships', title: 'Scholarships', sub: 'Funding opportunities', icon: 'star', tint: '#FDEEF4', color: '#DB2777' },
+  { key: 'scholarships', title: 'Scholarships', sub: 'Funding opportunities', icon: 'star', tint: Palette.pink50, color: Palette.pink600 },
 ];
 
 function Tiles({ x }: { x: Compass }) {
@@ -242,7 +244,7 @@ function Glance({ x }: { x: Compass }) {
   const top = x.areaScores[0];
   const tile = (key: string) => x.cc.tiles.find((t) => t.key === key)?.label ?? key;
   const rows: readonly { icon: IconName; color: string; tint: string; title: string; sub: string }[] = [
-    { icon: 'heart', color: '#E5487F', tint: '#FDEEF4', title: 'Your Interests', sub: x.answers.interests.map(tile).join(', ') || 'Not chosen yet' },
+    { icon: 'heart', color: Palette.pink500b, tint: Palette.pink50, title: 'Your Interests', sub: x.answers.interests.map(tile).join(', ') || 'Not chosen yet' },
     { icon: 'bolt', color: Maple.warning, tint: Maple.warningSoft, title: 'Your Strengths', sub: x.answers.strengths.join(', ') || 'Not chosen yet' },
     { icon: 'building', color: Maple.blue, tint: Maple.blueSoft, title: 'Work Style', sub: x.answers.environments.join(', ') || 'Not chosen yet' },
   ];
@@ -268,7 +270,7 @@ function Glance({ x }: { x: Compass }) {
               </View>
               <View style={s.flex}>
                 <Text style={s.glanceTitle}>{r.title}</Text>
-                <Text style={s.small} numberOfLines={1}>
+                <Text style={s.small} numberOfLines={3}>
                   {r.sub}
                 </Text>
               </View>
@@ -304,7 +306,7 @@ function PathsCard({ x }: { x: Compass }) {
             </View>
             <View style={s.flex}>
               <Text style={s.pathTitle}>{a.label}</Text>
-              <Text style={s.small} numberOfLines={1}>
+              <Text style={s.small} numberOfLines={3}>
                 {examples.join(', ')}
               </Text>
             </View>
@@ -392,7 +394,7 @@ function ByInterest({ x }: { x: Compass }) {
             }}
             accessibilityRole="link"
             accessibilityLabel={a.label}>
-            <Image source={photo[a.id]} style={s.areaPhoto} contentFit="cover" />
+            <Image decorative source={photo[a.id]} style={s.areaPhoto} contentFit="cover" />
             <Text style={s.areaText}>{a.label}</Text>
           </Pressable>
         ))}
@@ -429,13 +431,13 @@ function EventsCard({ x }: { x: Compass }) {
         const [, m, d] = e.date.split('-').map(Number);
         return (
           <View key={e.id} style={s.event}>
-            <Image source={photoOf(e.host)} style={s.eventPhoto} contentFit="cover" />
+            <Image decorative source={photoOf(e.host)} style={s.eventPhoto} contentFit="cover" />
             <View style={s.dateTile}>
               <Text style={s.dateMonth}>{MONTHS[m - 1]}</Text>
               <Text style={s.dateDay}>{d}</Text>
             </View>
             <View style={s.flex}>
-              <Text style={s.eventTitle} numberOfLines={2}>
+              <Text style={s.eventTitle} numberOfLines={3}>
                 {e.title}
               </Text>
               <Text style={s.small}>{e.time}</Text>

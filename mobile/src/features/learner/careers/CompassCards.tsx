@@ -10,6 +10,8 @@ import type { Career } from '@/mock/career-compass';
 
 import { BRAND_SOFT, BRAND_BLUE } from './CareerParts';
 import { Maple, Radii } from '@/constants/maple';
+import { PAGE_TITLE } from '@/lib/fonts/type';
+import { Palette } from '@/constants/palette';
 
 export { BRAND_BLUE };
 /** The main study route into a career, e.g. "Degree · 4 years". */
@@ -26,7 +28,7 @@ export function SectionHead({ icon, title, sub, phone = false }: { icon: IconNam
         <Icon name={icon} size={phone ? 20 : 26} color={L.white} />
       </LinearGradient>
       <View style={s.flex}>
-        <Text style={[s.headTitle, phone && s.headTitleP]} accessibilityRole="header">
+        <Text style={[s.headTitle, phone && s.headTitleP]} {...PAGE_TITLE}>
           {title}
         </Text>
         <Text style={s.headSub}>{sub}</Text>
@@ -71,7 +73,7 @@ export function CareerPhotoCard({
   return (
     <View style={[s.card, compact ? s.cardCompact : (style ?? s.cardGrid)]}>
       <Pressable style={s.fill} onPress={onOpen} accessibilityRole="button" accessibilityLabel={`${c.title}. ${c.overview}`}>
-        <Image source={c.photo} style={compact ? s.photoCompact : s.photo} contentFit="cover" />
+        <Image decorative source={c.photo} style={compact ? s.photoCompact : s.photo} contentFit="cover" />
         <View style={s.cardBody}>
           <Text style={s.cardTitle} numberOfLines={1}>
             {c.title}
@@ -103,7 +105,7 @@ export function CareerListRow({ c, saved, onSave, onOpen }: { c: Career; saved: 
   return (
     <View>
       <Pressable style={s.row} onPress={onOpen} accessibilityRole="button" accessibilityLabel={`${c.title}. ${c.overview}`}>
-        <Image source={c.photo} style={s.rowPhoto} contentFit="cover" />
+        <Image decorative source={c.photo} style={s.rowPhoto} contentFit="cover" />
         <View style={s.flex}>
           <View style={s.rowHead}>
             <Text style={[s.cardTitle, s.flex]}>{c.title}</Text>
@@ -268,7 +270,7 @@ export function PurpleHero({ kicker, icon, title, sub, photo, buttons, phone = f
       <LinearGradient colors={[Maple.blue, BRAND_BLUE, Maple.blue]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />
       <View style={phone ? h.photoP : wide ? h.photoWide : h.photo} pointerEvents="none">
         {/* On phones the photo strip is narrow, so keep its left side, where the person is. */}
-        <Image source={photo} style={StyleSheet.absoluteFill} contentFit="cover" contentPosition={phone ? 'top left' : 'top'} />
+        <Image decorative source={photo} style={StyleSheet.absoluteFill} contentFit="cover" contentPosition={phone ? 'top left' : 'top'} />
         <LinearGradient colors={[Maple.blue, 'rgba(106,68,223,0.55)', 'rgba(106,68,223,0)']} locations={[0, 0.3, 0.7]} start={{ x: 0, y: 0.5 }} end={{ x: 1, y: 0.5 }} style={StyleSheet.absoluteFill} />
       </View>
       <View style={phone ? h.textP : h.text}>
@@ -394,7 +396,7 @@ const h = StyleSheet.create({
   pill: { position: 'absolute', top: 4, height: 32, flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 14, borderRadius: 16, backgroundColor: L.white },
   pillLeft: { left: 4 },
   pillRight: { right: 4 },
-  pillGold: { backgroundColor: '#FCD34D' },
+  pillGold: { backgroundColor: Palette.yellow400b },
   pillText: { fontSize: 12.5, fontWeight: '700', color: L.navy },
   pillTextGold: { color: Maple.warningText },
   pager: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 10 },

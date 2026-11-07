@@ -10,6 +10,7 @@ import { CANVAS as TEACHER_CANVAS } from '@/features/teacher/frame/TeacherParts'
 import { TEACHER_REF_WIDTH } from '@/features/teacher/home/TeacherHomeViews';
 import { mockData } from '@/lib/mock';
 import { activeLabel, type FramePortal } from '@/lib/portal-frame';
+import { useUiScaleRef } from '@/lib/ui-scale';
 
 /** The designed pages' sidebar width (PortalFrame's side style), before scaling. */
 const SIDE_WIDTH = 214;
@@ -103,9 +104,10 @@ function FrameSide({ frame, path }: { frame: 'school' | 'parent'; path: string }
  * measuring (onLayout is not reliable on web here).
  */
 function ScaledBar({ scale, width, height, children }: { scale: number; width: number; height: number; children: ReactNode }) {
+  const scaled = useUiScaleRef(scale);
   return (
     <View style={[styles.clip, { width, height: height * scale }]}>
-      <View style={[styles.scaled, { width: width / scale, height, transform: [{ scale }] }]}>{children}</View>
+      <View ref={scaled} style={[styles.scaled, { width: width / scale, height, transform: [{ scale }] }]}>{children}</View>
     </View>
   );
 }
@@ -115,9 +117,11 @@ function ScaledBar({ scale, width, height, children }: { scale: number; width: n
  * It scrolls on its own when the menu is taller than the window; the designed pages scroll it with the page.
  */
 function ScaledSide({ scale, children }: { scale: number; children: ReactNode }) {
+  const scaled = useUiScaleRef(scale);
   return (
     <View style={[styles.clip, { width: SIDE_WIDTH * scale }]}>
       <ScrollView
+        ref={scaled}
         style={[styles.scaled, styles.sideScroll, { height: `${100 / scale}%`, transform: [{ scale }] }]}
         contentContainerStyle={styles.sideContent}
         showsVerticalScrollIndicator={false}>

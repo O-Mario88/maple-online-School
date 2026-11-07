@@ -12,6 +12,8 @@ import { toast } from '@/lib/toast';
 
 import { LibraryStaff } from './LibraryStaff';
 import { Maple } from '@/constants/maple';
+import { PAGE_TITLE } from '@/lib/fonts/type';
+import { Palette } from '@/constants/palette';
 
 const INK = Maple.navy;
 const BODY = Maple.body;
@@ -24,8 +26,8 @@ const TILE: Readonly<Record<string, { icon: IconName; tint: string }>> = {
   mock_exam: { icon: 'clipboard', tint: Maple.warning },
   worksheet: { icon: 'edit', tint: Maple.successText },
   textbook: { icon: 'book', tint: Maple.blue },
-  notes: { icon: 'notes', tint: '#0EA5E9' },
-  slides: { icon: 'screen', tint: '#DB2777' },
+  notes: { icon: 'notes', tint: Palette.sky600d },
+  slides: { icon: 'screen', tint: Palette.pink600 },
 };
 const OTHER: { icon: IconName; tint: string } = { icon: 'library', tint: Maple.body };
 const tileFor = (type: string) => TILE[type] ?? OTHER;
@@ -180,7 +182,7 @@ export function LiveLibrary() {
   return (
     <ScrollView style={styles.bg} contentContainerStyle={[styles.page, wide && styles.pageWide]}>
       <View style={styles.hero}>
-        <Text style={styles.h1} accessibilityRole="header">
+        <Text style={styles.h1} {...PAGE_TITLE}>
           Library
         </Text>
         <Text style={styles.body}>Notes, textbooks, past papers and videos from your teachers and Maple.</Text>

@@ -3,8 +3,9 @@ import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-nati
 
 import { Icon } from '@/components/icon';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
-const INK = '#0B1F4D';
+const INK = Palette.blue950g;
 const BLUE = Maple.blue;
 
 interface SheetProps {

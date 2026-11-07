@@ -7,6 +7,7 @@ import { Brand } from '@/features/public/palette';
 import type { IconName } from '@/lib/icons';
 import type { MockData } from '@/mock';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 type Art = MockData['publicPages']['signInArt'];
 
@@ -22,13 +23,13 @@ const STATS: readonly { icon: IconName; value?: string; label: string }[] = [
   { icon: 'book', value: '10,000+', label: 'Resources' },
   { icon: 'globe', label: 'Across\nUganda & Beyond' },
 ];
-const NAVY = ['#0B2350', Maple.blueHover] as const;
+const NAVY = [Palette.blue950h, Maple.blueHover] as const;
 
 /** Desktop: the photo panel with the welcome, four promises, a parent's quote and the reach numbers (reference pixels). */
 export function SignInPanel({ art, width, height }: { art?: Art; width: number; height: number }) {
   return (
     <View style={[styles.panel, { width, height }]}>
-      {art ? <Image source={art.panel} style={StyleSheet.absoluteFill} contentFit="cover" /> : <LinearGradient colors={NAVY} style={StyleSheet.absoluteFill} />}
+      {art ? <Image decorative source={art.panel} style={StyleSheet.absoluteFill} contentFit="cover" /> : <LinearGradient colors={NAVY} style={StyleSheet.absoluteFill} />}
       <Text style={styles.welcome} accessibilityRole="header">
         {'Welcome to\n'}
         <Text style={styles.accent}>Maple</Text>
@@ -46,7 +47,7 @@ export function SignInPanel({ art, width, height }: { art?: Art; width: number; 
         ))}
       </View>
       <View style={styles.quote}>
-        {art ? <Image source={art.parent} style={styles.face} /> : <View style={styles.face} />}
+        {art ? <Image decorative source={art.parent} style={styles.face} /> : <View style={styles.face} />}
         <Text style={styles.mark}>“</Text>
         <View style={styles.quoteBody}>
           <Text style={styles.quoteText}>Maple has made learning so easy for my daughter. The live classes and past papers really help.</Text>
@@ -72,7 +73,7 @@ export function SignInPanel({ art, width, height }: { art?: Art; width: number; 
 }
 
 const styles = StyleSheet.create({
-  panel: { overflow: 'hidden', borderBottomLeftRadius: 14, borderBottomRightRadius: 14, backgroundColor: '#0B2350' },
+  panel: { overflow: 'hidden', borderBottomLeftRadius: 14, borderBottomRightRadius: 14, backgroundColor: Palette.blue950h },
   welcome: { position: 'absolute', left: 46, top: 94, fontSize: 55, lineHeight: 54, fontWeight: '800', color: Brand.surface, letterSpacing: -1.4 },
   accent: { color: Maple.blue },
   sub: { position: 'absolute', left: 46, top: 216, fontSize: 19.5, lineHeight: 28, color: Maple.blueSelected },

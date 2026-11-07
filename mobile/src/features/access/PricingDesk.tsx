@@ -9,6 +9,8 @@ import { openMenuPage } from '@/lib/menu-nav';
 
 import { C, LOGO, Pill, PlanIcon, Popular, per, type Pricing, STUDENT, ugx, usePricing } from './pricing-parts';
 import { Maple } from '@/constants/maple';
+import { PAGE_TITLE } from '@/lib/fonts/type';
+import { Palette } from '@/constants/palette';
 
 /** The desktop reference is 1672 × 941; the page is laid out in its pixels and scaled to the window. */
 const REF_WIDTH = 1672;
@@ -21,7 +23,7 @@ function TopBar({ p }: { p: Pricing }) {
   return (
     <View style={s.top}>
       <Pressable style={s.brand} onPress={() => router.push('/')} accessibilityRole="link" accessibilityLabel="Maple home">
-        <Image source={LOGO} style={s.leaf} contentFit="contain" />
+        <Image decorative source={LOGO} style={s.leaf} contentFit="contain" />
         <View>
           <Text style={s.brandName}>Maple</Text>
           <Text style={s.brandSub}>Global Online School</Text>
@@ -79,7 +81,7 @@ function Hero({ p }: { p: Pricing }) {
       <Image source={STUDENT} style={s.photo} contentFit="contain" accessibilityLabel="A smiling Maple learner" />
       <View style={s.heroText}>
         <Pill p={p} size={13.5} height={33} />
-        <Text style={s.title} accessibilityRole="header">
+        <Text style={s.title} {...PAGE_TITLE}>
           {p.copy.title}
         </Text>
         <Text style={s.sub}>{p.copy.subtitle}</Text>
@@ -268,7 +270,7 @@ const s = StyleSheet.create({
   choose: { position: 'absolute', left: 20, right: 16, bottom: 19, height: 44, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, borderRadius: 22, borderWidth: 1.5, borderColor: C.blue, backgroundColor: C.white },
   choosePopular: { overflow: 'hidden', borderWidth: 0, backgroundColor: C.blue },
   chooseText: { fontSize: 15, fontWeight: '600', color: C.blue },
-  chooseCurrent: { borderColor: '#BBE5C8', backgroundColor: Maple.successSoft },
+  chooseCurrent: { borderColor: Palette.green300e, backgroundColor: Maple.successSoft },
   chooseCurrentText: { color: C.green },
   choosePopularText: { color: C.white },
 

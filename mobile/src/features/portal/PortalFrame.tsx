@@ -17,6 +17,7 @@ import { isSchoolRefPath } from '@/lib/portal-frame';
 import { CountBadge } from './PortalParts';
 import { BLUE, BODY, CANVAS, DESK_MIN_WIDTH, LINE, MUTED, NAVY, SELECT, WHITE } from './tokens';
 import { Maple } from '@/constants/maple';
+import { isNarrowPhone } from '@/lib/layout';
 import { PageScroll } from '@/components/shell/PageScroll';
 import { MapleLogo } from '@/components/brand/MapleLogo';
 
@@ -25,11 +26,11 @@ import { MapleLogo } from '@/components/brand/MapleLogo';
 export const PORTAL_TOP_HEIGHT = 86;
 
 /** The Maple leaf and wordmark. */
-export function Logo({ size = 'desk' }: { size?: 'desk' | 'phone' }) {
+export function Logo({ size = 'desk', markOnly = false }: { size?: 'desk' | 'phone'; markOnly?: boolean }) {
   const phone = size === 'phone';
   return (
     <Pressable style={styles.logo} onPress={() => openMenuPage('/')} accessibilityRole="link" accessibilityLabel="Maple home">
-      <MapleLogo markStyle={phone ? styles.leafPhone : styles.leaf} />
+      <MapleLogo markStyle={phone ? styles.leafPhone : styles.leaf} markOnly={markOnly} />
     </Pressable>
   );
 }
@@ -107,7 +108,7 @@ export function MeChip({ name, role, avatar, initial }: { name: string; role: st
   const switcher = useSwitcher();
   return (
     <Pressable style={styles.me} onPress={switcher?.open} accessibilityRole="button" accessibilityLabel={`${name}, ${role}. Switch mode`}>
-      {avatar ? <Image source={avatar} style={styles.meAvatar} contentFit="cover" /> : <Initial letter={initial ?? name[0]} size={46} />}
+      {avatar ? <Image decorative source={avatar} style={styles.meAvatar} contentFit="cover" /> : <Initial letter={initial ?? name[0]} size={46} />}
       <View>
         <Text style={styles.meName}>{name}</Text>
         <Text style={styles.meRole}>{role}</Text>
@@ -162,7 +163,7 @@ export function ChildPills({ list, compact = false }: { list: readonly PortalChi
             accessibilityRole="tab"
             accessibilityState={{ selected: on }}
             accessibilityLabel={`${c.name}, ${c.level}`}>
-            <Image source={c.avatar} style={styles.pillAvatar} contentFit="cover" />
+            <Image decorative source={c.avatar} style={styles.pillAvatar} contentFit="cover" />
             <View>
               <Text style={styles.pillName}>{c.name}</Text>
               <Text style={styles.pillLevel}>{c.level}</Text>
@@ -297,9 +298,10 @@ export function SchoolDesk({
 /** The phone header: logo on the left; alerts or help and the account photo on the right. */
 export function PhoneTop({ right }: { right: ReactNode }) {
   const insets = useSafeAreaInsets();
+  const { width } = useWindowDimensions();
   return (
     <View style={[styles.phoneTop, { paddingTop: insets.top + 10 }]}>
-      <Logo size="phone" />
+      <Logo size="phone" markOnly={isNarrowPhone(width)} />
       <View style={styles.flex} />
       {right}
     </View>
@@ -315,7 +317,7 @@ export function ParentPhoneTop({ me }: { me: { avatar: number; notifications: nu
         <>
           <Bell count={me.notifications} size={27} />
           <Pressable onPress={switcher?.open} accessibilityRole="button" accessibilityLabel={`${me.name}. Switch mode`}>
-            <Image source={me.avatar} style={styles.phoneAvatar} contentFit="cover" />
+            <Image decorative source={me.avatar} style={styles.phoneAvatar} contentFit="cover" />
           </Pressable>
         </>
       }
@@ -361,7 +363,7 @@ export function ChildCards({ list }: { list: readonly PortalChild[] }) {
             accessibilityRole="tab"
             accessibilityState={{ selected: on }}
             accessibilityLabel={`${c.name}, ${c.level}`}>
-            <Image source={c.avatar} style={styles.cardAvatar} contentFit="cover" />
+            <Image decorative source={c.avatar} style={styles.cardAvatar} contentFit="cover" />
             <View>
               <Text style={styles.cardName}>{c.name}</Text>
               <Text style={styles.cardLevel}>{c.level}</Text>

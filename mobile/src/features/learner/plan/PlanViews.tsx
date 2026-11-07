@@ -33,6 +33,9 @@ import {
 } from './plan';
 import type { Session } from './schedule';
 import { Maple } from '@/constants/maple';
+import { prefersReducedMotion } from '@/lib/motion';
+import { PAGE_TITLE } from '@/lib/fonts/type';
+import { Palette } from '@/constants/palette';
 
 type Plan = MockData['learner']['learnerPlan'];
 type Tab = PlanTab;
@@ -131,8 +134,8 @@ function Stats({ p, phone = false }: { p: P; phone?: boolean }) {
         onPress={() => p.setAdjusting(true)}
         accessibilityRole="button"
         accessibilityLabel={`My goal: ${p.goal}. Edit`}>
-        <View style={[s.statIcon, { backgroundColor: '#FDE7F1' }]}>
-          <Icon name="target" size={24} color="#DB2777" />
+        <View style={[s.statIcon, { backgroundColor: Palette.pink100b }]}>
+          <Icon name="target" size={24} color={Palette.pink600} />
         </View>
         <View style={s.flex}>
           <Text style={s.statLabel}>My Goal</Text>
@@ -189,7 +192,7 @@ function Tabs({ p, phone = false }: { p: P; phone?: boolean }) {
   const spots = useRef<Partial<Record<Tab, number>>>({});
   useEffect(() => {
     const x = spots.current[p.tab];
-    if (phone && x !== undefined) strip.current?.scrollTo({ x: Math.max(0, x - 16), animated: true });
+    if (phone && x !== undefined) strip.current?.scrollTo({ x: Math.max(0, x - 16), animated: !prefersReducedMotion() });
   }, [p.tab, phone]);
   const row = (
     <View style={[s.tabs, phone && s.tabsP]} accessibilityRole="tablist">
@@ -573,7 +576,7 @@ export function PlanDesk({ plan, lessons, avatar, tab }: PlanProps) {
   return (
     <LightFrame>
       <View style={s.heroPhoto} pointerEvents="none">
-        <Image source={plan.hero} style={StyleSheet.absoluteFill} contentFit="cover" contentPosition="top" />
+        <Image decorative source={plan.hero} style={StyleSheet.absoluteFill} contentFit="cover" contentPosition="top" />
         <LinearGradient
           colors={[L.canvas, 'rgba(246,248,253,0)']}
           start={{ x: 0, y: 0.5 }}
@@ -592,7 +595,7 @@ export function PlanDesk({ plan, lessons, avatar, tab }: PlanProps) {
           <Icon name="sparkle" size={28} color={Maple.blue} />
         </View>
         <View>
-          <Text style={s.title} accessibilityRole="header">
+          <Text style={s.title} {...PAGE_TITLE}>
             My Personalized Learning Plan
           </Text>
           <Text style={s.sub}>A learning plan tailored to your goals, current level and learning style.</Text>
@@ -620,7 +623,7 @@ export function PlanPhone({ plan, lessons, avatar, tab }: PlanProps) {
             <Icon name="sparkle" size={22} color={Maple.blue} />
           </View>
           <View style={s.flex}>
-            <Text style={s.titleP} accessibilityRole="header">
+            <Text style={s.titleP} {...PAGE_TITLE}>
               My Learning Plan
             </Text>
             <Text style={s.subP}>Tailored to your goals, level and learning style.</Text>
@@ -730,7 +733,7 @@ const s = StyleSheet.create({
     borderColor: L.line,
     backgroundColor: L.white,
   },
-  phaseDone: { borderColor: '#9ADBB0', backgroundColor: Maple.successSoft },
+  phaseDone: { borderColor: Palette.green300b, backgroundColor: Maple.successSoft },
   phaseOn: { borderColor: Maple.blueLine, backgroundColor: Maple.blueSoft },
   phaseDot: {
     position: 'absolute',

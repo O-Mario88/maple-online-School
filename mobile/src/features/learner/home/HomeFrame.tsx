@@ -16,6 +16,7 @@ import { openMenuPage } from '@/lib/menu-nav';
 import { FRAME_HEADER, FRAME_SIDE } from './frameBody';
 import { Maple, Radii } from '@/constants/maple';
 import { MapleLogo } from '@/components/brand/MapleLogo';
+import { Palette } from '@/constants/palette';
 
 export type Home = MockData['learner']['learnerHome'];
 
@@ -52,7 +53,7 @@ export function HomeSidebar({
   quote?: string;
 }) {
   return (
-    <LinearGradient colors={['#0A1B3D', '#07122B']} style={styles.side}>
+    <LinearGradient colors={[Palette.blue950d, Palette.blue950b]} style={styles.side}>
       <Pressable style={styles.logo} onPress={() => router.push('/')} accessibilityRole="link" accessibilityLabel="Maple home">
         <MapleLogo markStyle={styles.leaf} />
       </Pressable>
@@ -87,7 +88,7 @@ export function HomeSidebar({
         </View>
       ) : (
         <View style={styles.libraryPromo}>
-          <Image source={h.sidebarBooks} style={styles.sidebarBooksImg} contentFit="contain" />
+          <Image decorative source={h.sidebarBooks} style={styles.sidebarBooksImg} contentFit="contain" />
           <Text style={styles.promoTitle}>{'Explore the\nDigital Library'}</Text>
           <Text style={styles.promoSub}>Thousands of books, notes and study resources.</Text>
           <Pressable
@@ -150,7 +151,7 @@ export function HomeHeader({
         onPress={switcher?.open}
         accessibilityRole="button"
         accessibilityLabel={`${h.name}, ${h.grade}. Switch mode`}>
-        <Image source={h.avatar} style={styles.avatar} />
+        <Image decorative source={h.avatar} style={styles.avatar} />
         <View>
           <Text style={styles.meName}>{h.name}</Text>
           <Text style={styles.meGrade}>{h.grade}</Text>
@@ -209,7 +210,7 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   promoBtnText: { fontSize: 11.5, fontWeight: '700', color: INK },
-  kidCard: { position: 'absolute', left: 12, top: 686, width: 164, height: 294, alignItems: 'center', borderRadius: 10, backgroundColor: '#0E2252', overflow: 'hidden' },
+  kidCard: { position: 'absolute', left: 12, top: 686, width: 164, height: 294, alignItems: 'center', borderRadius: 10, backgroundColor: Palette.blue950i, overflow: 'hidden' },
   kid: { width: 164, height: 172 },
   keep: { marginTop: 6, fontSize: 16, fontWeight: '700', color: Maple.surface },
   keepQuote: { marginTop: 14, fontSize: 14.5, lineHeight: 21, color: Maple.surface, textAlign: 'center' },

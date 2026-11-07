@@ -8,7 +8,7 @@ import { contrast, isAccentBlue, isPurple } from './color';
 
 const SRC = path.resolve(__dirname, '../..');
 /** Token files are where colours are allowed to be written as hex. */
-const TOKEN_FILES = new Set(['constants/maple.ts', 'constants/theme.ts', 'lib/design-system/color.ts']);
+const TOKEN_FILES = new Set(['constants/maple.ts', 'constants/theme.ts', 'constants/palette.ts', 'lib/design-system/color.ts']);
 
 function sourceFiles(): string[] {
   const out: string[] = [];
@@ -124,5 +124,88 @@ describe('pages stay on the Maple palette', () => {
     const rule = css.match(/:focus-visible\s*\{([^}]*)\}/)?.[1] ?? '';
     expect(rule).toMatch(/outline:\s*2px solid/);
     expect(rule.toUpperCase()).toContain(Maple.blue.toUpperCase());
+  });
+
+  it('stills web transitions and smooth scrolling when the person asks for less motion', () => {
+    const css = fs.readFileSync(path.join(SRC, 'global.css'), 'utf8');
+    const block = css.match(/@media \(prefers-reduced-motion: reduce\)\s*\{([\s\S]*?)\n\}/)?.[1] ?? '';
+    expect(block).toMatch(/transition-duration:\s*0\.01ms !important/);
+    expect(block).toMatch(/animation-duration:\s*0\.01ms !important/);
+    expect(block).toMatch(/scroll-behavior:\s*auto !important/);
+  });
+
+  it('gives every control on the web a click area of at least 24px, without changing how it looks', () => {
+    const css = fs.readFileSync(path.join(SRC, 'global.css'), 'utf8');
+    const rule = css.match(/\[role='button'\][^{]*::after\s*\{([^}]*)\}/)?.[1] ?? '';
+    expect(rule).toMatch(/content:\s*''/);
+    expect(rule).toMatch(/position:\s*absolute/);
+    for (const side of ['top', 'bottom', 'left', 'right']) expect(rule).toMatch(new RegExp(`${side}:\\s*min\\(0px, calc\\(\\(100% - 24px / var\\(--ui-scale, 1\\)\\) / 2\\)\\)`));
+  });
+
+  it('never answers a button with only a toast on a page a deployment build shows', () => {
+    // Pages that ship: the real-data screens (Live*), shared components, sign-in and messages, and
+    // every route that isn't design-only (design-only routes say "Coming soon" when deployed).
+    const designOnly = (text: string) => /<PreviewScreen\b/.test(text) && !/:\s*<Live[A-Z]\w*/.test(text);
+    const ships = (rel: string, text: string) =>
+      /(^|\/)Live[A-Z]\w*\.tsx$/.test(rel) ||
+      rel.startsWith('components/') ||
+      rel.startsWith('features/auth/') ||
+      rel.startsWith('features/messages/') ||
+      (rel.startsWith('app/') && !designOnly(text));
+    const toastOnly = sourceFiles().flatMap((file) => {
+      const rel = path.relative(SRC, file);
+      const text = fs.readFileSync(file, 'utf8');
+      if (!ships(rel, text)) return [];
+      return [...text.matchAll(/onPress=\{\(\) => toast\(/g)].map(() => rel);
+    });
+    expect(toastOnly).toEqual([]);
+  });
+
+  // A ratchet on the hand-built styling the Nov 2026 audit found (pages ported screenshot by
+  // screenshot with their own sizes, radii and buttons). Each count may only go down: new work uses
+  // TypeScale, Radii, the shared controls and responsive layouts. When a migration lowers a count,
+  // lower its ceiling here to lock the gain in.
+  it('never adds hand-built font sizes, radii, buttons, rgba colours or scaled canvases', () => {
+    const CEILING = { fontSize: 4027, borderRadius: 2568, pressable: 1580, rgba: 184, refScale: 43 } as const;
+    const counts = { fontSize: 0, borderRadius: 0, pressable: 0, rgba: 0, refScale: 0 };
+    for (const file of sourceFiles()) {
+      if (TOKEN_FILES.has(path.relative(SRC, file))) continue;
+      const text = fs.readFileSync(file, 'utf8');
+      counts.fontSize += (text.match(/fontSize:\s*[0-9.]+/g) ?? []).length;
+      counts.borderRadius += (text.match(/borderRadius:\s*[0-9.]+/g) ?? []).length;
+      counts.pressable += (text.match(/<Pressable\b/g) ?? []).length;
+      counts.rgba += (text.match(/rgba\(/g) ?? []).length;
+      counts.refScale += (text.match(/<RefScale\b/g) ?? []).length;
+    }
+    for (const key of Object.keys(CEILING) as (keyof typeof CEILING)[]) {
+      expect({ [key]: counts[key] <= CEILING[key] ? 'within' : `${counts[key]} > ${CEILING[key]}` }).toEqual({ [key]: 'within' });
+    }
+  });
+
+  it('writes no colour as hex outside the token files (constants/maple.ts, theme.ts and palette.ts)', () => {
+    expect(hexLiterals().map((h) => `${h.file} ${h.hex}`)).toEqual([]);
+  });
+
+  it('draws every image through the Maple Image, which needs a label or the decorative flag', () => {
+    const direct = sourceFiles()
+      .filter((file) => path.relative(SRC, file) !== 'components/picture.tsx')
+      .filter((file) => {
+        const text = fs.readFileSync(file, 'utf8');
+        return /from 'expo-image'/.test(text) || /import \{[^}]*\b(Image|ImageBackground)\b[^}]*\} from 'react-native'/.test(text);
+      })
+      .map((file) => path.relative(SRC, file));
+    expect(direct).toEqual([]);
+  });
+
+  it('checks reduced motion before every animated scroll and looping animation', () => {
+    const unchecked = sourceFiles().flatMap((file) => {
+      const text = fs.readFileSync(file, 'utf8');
+      const rel = path.relative(SRC, file);
+      const problems: string[] = [];
+      if (/animated:\s*true/.test(text)) problems.push(`${rel}: animated: true (use !prefersReducedMotion())`);
+      if (/Animated\.loop\(|withRepeat\(/.test(text) && !/useReducedMotion\(\)/.test(text)) problems.push(`${rel}: a looping animation without useReducedMotion()`);
+      return problems;
+    });
+    expect(unchecked).toEqual([]);
   });
 });

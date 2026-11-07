@@ -6,6 +6,7 @@ import { PortalScreen } from '@/components/shell/PortalScreen';
 import { ScreenBoundary } from '@/components/shell/ScreenBoundary';
 import { AccessProvider } from '@/lib/access/access-context';
 import { PortalProvider } from '@/lib/portal-context';
+import { useReducedMotion } from '@/lib/motion';
 import { routePath } from '@/lib/portal-frame';
 
 // Live rooms are drawing surfaces: a stroke to the right must not be read as iOS's swipe back
@@ -14,6 +15,7 @@ const LIVE_ROOMS: readonly string[] = ['teach/host', 'teach/live-host/[sessionId
 
 /** Screens only signed-in users can reach. The root layout guards this group. */
 export default function SignedInLayout() {
+  const still = useReducedMotion();
   return (
     <PortalProvider>
       <SwitcherProvider>
@@ -22,7 +24,7 @@ export default function SignedInLayout() {
             {/* Each screen gets its portal's frame (when the page doesn't draw it) and its own error boundary, */}
             {/* so a crash replaces only that page and the frame stays. The frame is chosen from the screen's own route. */}
             <Stack
-              screenOptions={({ route }) => ({ headerShown: false, animation: 'fade', gestureEnabled: !LIVE_ROOMS.includes(route.name) })}
+              screenOptions={({ route }) => ({ headerShown: false, animation: still ? 'none' : 'fade', gestureEnabled: !LIVE_ROOMS.includes(route.name) })}
               screenLayout={({ route, children }) => {
                 const params = route.params as Readonly<Record<string, unknown>> | undefined;
                 const id = params?.id;

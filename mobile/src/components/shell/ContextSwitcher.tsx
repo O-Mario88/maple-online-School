@@ -38,7 +38,7 @@ function modesFor(portals: readonly Portal[]): Mode[] {
 
 function Tile({ m, phone }: { m: Mode; phone: boolean }) {
   const size = phone ? 52 : 70;
-  if (m.tile) return <Image source={m.tile} style={{ width: size, height: size, borderRadius: phone ? 12 : 16 }} />;
+  if (m.tile) return <Image decorative source={m.tile} style={{ width: size, height: size, borderRadius: phone ? 12 : 16 }} />;
   return (
     <View style={[styles.tileBox, { width: size, height: size, backgroundColor: `${m.tint}1A` }]}>
       <Icon name={m.icon} size={phone ? 24 : 32} color={m.tint} />
@@ -56,7 +56,7 @@ function ModeCard({ m, on, phone, onPress }: { m: Mode; on: boolean; phone: bool
         {m.tagline ? <Text style={[styles.mTag, p && styles.mTagP]}>{m.tagline}</Text> : null}
         {m.detail ? <Text style={[styles.mBody, p && styles.mBodyP]}>{p ? m.short : m.detail}</Text> : null}
       </View>
-      {m.photo ? <Image source={m.photo} style={p ? styles.photoP : styles.photo} /> : null}
+      {m.photo ? <Image decorative source={m.photo} style={p ? styles.photoP : styles.photo} /> : null}
       {on ? (
         <View style={[styles.tick, p && styles.tickP]}>
           <Icon name="check" size={p ? 13 : 16} color={Maple.surface} />
@@ -96,7 +96,7 @@ function Accounts({
               onPress={() => onSelect(a)}
               accessibilityRole="button"
               accessibilityLabel={`Switch to ${a.name} (${a.role})`}>
-              <Image source={a.photo} style={styles.face} />
+              <Image decorative source={a.photo} style={styles.face} />
               <View style={styles.flex}>
                 <Text style={styles.accName}>{a.name}</Text>
                 <Text style={styles.accRole}>{a.role}</Text>

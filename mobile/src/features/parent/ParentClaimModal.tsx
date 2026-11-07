@@ -117,7 +117,7 @@ export function AddChildClaimModal({
         </View>
 
         <View style={styles.matchedCard}>
-          <Image source={claimable.avatar} style={styles.matchedAvatar} />
+          <Image decorative source={claimable.avatar} style={styles.matchedAvatar} />
           <View style={styles.flex}>
             <View style={styles.matchedTagRow}>
               <Text style={styles.matchedName}>{claimable.fullName}</Text>

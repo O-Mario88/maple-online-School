@@ -14,6 +14,7 @@ import { Brand } from '../palette';
 import { PhoneBar } from '../PhoneBar';
 import { InfoSection } from './InfoBlocks';
 import { PageScroll } from '@/components/shell/PageScroll';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
 type PageKey = keyof MockData['publicPages']['infoPages'];
 
@@ -42,7 +43,7 @@ export function InfoPage({ page }: { page: PageKey }) {
                 <Icon name={p.icon} size={14} color={Brand.blue} />
                 <Text style={styles.eyebrowText}>{p.eyebrow}</Text>
               </View>
-              <Text style={[styles.h1, !wide && styles.h1Phone]} accessibilityRole="header">
+              <Text style={[styles.h1, !wide && styles.h1Phone]} {...PAGE_TITLE}>
                 {p.title}
               </Text>
               <Text style={styles.sub}>{p.sub}</Text>

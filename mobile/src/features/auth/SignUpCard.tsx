@@ -10,6 +10,7 @@ import { apiRole, needsGuardian, newAccountProblem, parseDob, type SignUpRole } 
 import type { IconName } from '@/lib/icons';
 import type { MockData } from '@/mock';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 type Art = MockData['publicPages']['signUpArt'];
 
@@ -19,9 +20,9 @@ const BLUE = Maple.blue;
 
 const ROLES: readonly { key: SignUpRole; title: string; sub: string; icon: IconName; tint: string; fill: string }[] = [
   { key: 'learner', title: 'Learner', sub: 'Student account', icon: 'cap', tint: Maple.blue, fill: Maple.blueSoft },
-  { key: 'parent', title: 'Parent', sub: 'Manage your child', icon: 'people', tint: '#EC4899', fill: '#FDF0F6' },
+  { key: 'parent', title: 'Parent', sub: 'Manage your child', icon: 'people', tint: Palette.pink500c, fill: Palette.pink50b },
   { key: 'teacher', title: 'Teacher', sub: 'Teach and assign', icon: 'person', tint: Maple.successText, fill: Maple.successSoft },
-  { key: 'school', title: 'School', sub: 'Institution account', icon: 'school', tint: '#F97316', fill: Maple.warningSoft },
+  { key: 'school', title: 'School', sub: 'Institution account', icon: 'school', tint: Palette.orange500b, fill: Maple.warningSoft },
 ];
 const GRADES = ['Primary 1', 'Primary 2', 'Primary 3', 'Primary 4', 'Primary 5', 'Primary 6', 'Primary 7', 'Senior 1', 'Senior 2', 'Senior 3', 'Senior 4', 'Senior 5', 'Senior 6'];
 const SOCIAL = [
@@ -32,7 +33,7 @@ const SOCIAL = [
 const TRUST: readonly { key: string; title: string; body: string; icon: IconName; tint: string }[] = [
   { key: 'shield', title: 'Safe & Secure', body: 'Your data is protected', icon: 'shield', tint: Maple.blue },
   { key: 'people', title: 'Child Friendly', body: 'A safe learning space', icon: 'people', tint: Maple.blue },
-  { key: 'heart', title: 'Trusted by Schools', body: 'Used by schools across Uganda and beyond', icon: 'heart', tint: '#EC4899' },
+  { key: 'heart', title: 'Trusted by Schools', body: 'Used by schools across Uganda and beyond', icon: 'heart', tint: Palette.pink500c },
 ];
 /** Accounts are created for Uganda until the form asks for a country. */
 const COUNTRY = 'UG';
@@ -46,7 +47,7 @@ const maskDob = (t: string) => {
 /** A reference icon on design builds, a drawn icon everywhere else. */
 function Glyph({ art, k, size, icon, tint, fill }: { art?: Art; k: string; size: number; icon: IconName; tint: string; fill?: string }) {
   const photo = art?.[k];
-  if (photo) return <Image source={photo} style={{ width: size, height: size }} contentFit="contain" />;
+  if (photo) return <Image decorative source={photo} style={{ width: size, height: size }} contentFit="contain" />;
   return (
     <View style={[styles.glyph, { width: size, height: size, borderRadius: size / 2, backgroundColor: fill ?? 'transparent' }]}>
       <Icon name={icon} size={size * 0.55} color={tint} />
@@ -155,7 +156,7 @@ export function SignUpCard({ art, phone = false }: { art?: Art; phone?: boolean 
 
       {role === 'parent' ? (
         <View style={[styles.parent, p && styles.parentP]}>
-          <Icon name="people" size={26} color="#EC4899" />
+          <Icon name="people" size={26} color={Palette.pink500c} />
           <Text style={styles.parentTitle}>Parents join through their child</Text>
           <Text style={styles.parentText}>Ask your child’s school for their claim code, or scan the QR code on the school letter. Claiming your child creates your parent account and links you to their reports and fees.</Text>
           <Pressable style={styles.primary} onPress={() => router.push('/claim-child')} accessibilityRole="button">
@@ -290,7 +291,7 @@ const styles = StyleSheet.create({
   flex: { flex: 1 },
   zTop: { zIndex: 10 },
   glyph: { alignItems: 'center', justifyContent: 'center' },
-  card: { width: 547, height: 903, paddingHorizontal: 34, paddingTop: 30, borderRadius: 14, backgroundColor: Brand.surface, shadowColor: '#0F2350', shadowOpacity: 0.12, shadowRadius: 24, shadowOffset: { width: 0, height: 8 } },
+  card: { width: 547, height: 903, paddingHorizontal: 34, paddingTop: 30, borderRadius: 14, backgroundColor: Brand.surface, shadowColor: Palette.blue950j, shadowOpacity: 0.12, shadowRadius: 24, shadowOffset: { width: 0, height: 8 } },
   cardP: { width: '100%', height: 'auto', paddingHorizontal: 16, paddingTop: 16, paddingBottom: 18 },
   doneCard: { justifyContent: 'center', gap: 14 },
   title: { fontSize: 33, lineHeight: 40, fontWeight: '800', color: INK, letterSpacing: -0.8 },
@@ -330,7 +331,7 @@ const styles = StyleSheet.create({
   primaryText: { fontSize: 14, fontWeight: '600', color: Maple.surface },
   secondary: { height: 44, alignItems: 'center', justifyContent: 'center', borderRadius: 8, borderWidth: 1, borderColor: Maple.blueLine },
   secondaryText: { fontSize: 14, fontWeight: '600', color: BLUE },
-  parent: { gap: 10, marginTop: 20, padding: 16, borderRadius: 10, backgroundColor: '#FDF0F6' },
+  parent: { gap: 10, marginTop: 20, padding: 16, borderRadius: 10, backgroundColor: Palette.pink50b },
   parentP: { marginTop: 14 },
   parentTitle: { fontSize: 15, fontWeight: '700', color: INK },
   parentText: { fontSize: 13, lineHeight: 19, color: BODY },

@@ -15,6 +15,8 @@ import type { AdminTable } from '@/mock/portal';
 import { AcademicsFrame } from './AcademicsFrame';
 import type { AcademicsPage } from './academicsShape';
 import { Maple } from '@/constants/maple';
+import { PAGE_TITLE } from '@/lib/fonts/type';
+import { Palette } from '@/constants/palette';
 
 const HERO = require('@/assets/images/academics-hero.png') as number;
 
@@ -23,9 +25,23 @@ type Academics = AcademicsPage;
 /** Real builds: what the page's buttons do. Without it (design builds) they show what would happen. */
 export interface AcademicsActions {
   onAction: (action: string) => void;
+  /** False for a button the API has no form for yet: it is drawn disabled, with the reason read out. */
+  isAvailable: (action: string) => boolean;
 }
 
 const press = (act: AcademicsActions | undefined, action: string) => (act ? act.onAction(action) : toast(`${action}: the form opens here.`));
+
+/** Read out with a disabled button. */
+const NOT_YET = 'Not available yet';
+
+/** Whether a real build draws this button disabled (design builds draw every button as usable). */
+const off = (act: AcademicsActions | undefined, action: string) => (act ? !act.isAvailable(action) : false);
+
+/** The props that disable an unavailable action and say why. */
+const availability = (act: AcademicsActions | undefined, action: string) => {
+  const disabled = off(act, action);
+  return { disabled, accessibilityState: { disabled }, accessibilityHint: disabled ? NOT_YET : undefined };
+};
 
 /** The colour a status takes: green for live, blue for coming up, grey for closed. */
 function statusTone(status: string): Tone {
@@ -45,7 +61,7 @@ const PART: Readonly<Record<string, { icon: IconName; tint: string; ink: string;
   streams: { icon: 'people', tint: Maple.blueSelected, ink: Maple.blue, one: 'Grade Level', tab: 'people', wide: 180 },
   subjects: { icon: 'grid', tint: Maple.warningSoft, ink: Maple.warning, one: 'Subject', tab: 'grid', wide: 163 },
   grading: { icon: 'star', tint: Maple.blueSoft, ink: Maple.blue, one: 'Grading Scale', tab: 'chart', wide: 167 },
-  competency: { icon: 'layers', tint: '#DFF6F3', ink: '#14A39A', one: 'Competency Area', tab: 'layers', wide: 192 },
+  competency: { icon: 'layers', tint: Palette.teal100, ink: Palette.cyan700b, one: 'Competency Area', tab: 'layers', wide: 192 },
 };
 const TERMS_TILE = { icon: 'calendar' as IconName, tint: Maple.warningSoft, ink: Maple.warning };
 
@@ -71,7 +87,7 @@ function TableCard({ t, act }: { t: AdminTable; act?: AcademicsActions }) {
           <Text style={styles.tableSub}>{t.subtitle}</Text>
         </View>
         {t.actions.map((a) => (
-          <Pressable key={a} style={({ pressed }) => [styles.addBtn, pressed && styles.pressed]} onPress={() => press(act, a)} accessibilityRole="button" accessibilityLabel={a}>
+          <Pressable key={a} style={({ pressed }) => [styles.addBtn, pressed && styles.pressed, off(act, a) && styles.unavailable]} onPress={() => press(act, a)} {...availability(act, a)} accessibilityRole="button" accessibilityLabel={a}>
             {a.startsWith('Add') ? <Icon name="plus" size={17} color={BLUE} /> : null}
             <Text style={styles.addText} numberOfLines={1}>
               {a}
@@ -103,8 +119,9 @@ function TableCard({ t, act }: { t: AdminTable; act?: AcademicsActions }) {
               );
             })}
             <Pressable
-              style={styles.menuCol}
+              style={[styles.menuCol, off(act, `Edit ${r[1]}`) && styles.unavailable]}
               onPress={() => (act ? act.onAction(`Edit ${r[1]}`) : toast(`Edit or archive ${r[1]}.`))}
+              {...availability(act, `Edit ${r[1]}`)}
               accessibilityRole="button"
               accessibilityLabel={`Options for ${r[1]}`}
               hitSlop={6}>
@@ -142,13 +159,13 @@ function Stats({ a }: { a: Academics }) {
 function Hero() {
   return (
     <View style={styles.hero}>
-      <Image source={HERO} style={styles.heroPhoto} contentFit="cover" contentPosition="right" accessibilityIgnoresInvertColors />
+      <Image decorative source={HERO} style={styles.heroPhoto} contentFit="cover" contentPosition="right" accessibilityIgnoresInvertColors />
       <LinearGradient colors={[Maple.blueSoft, 'rgba(238,244,253,0)']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.heroFade} />
       <View style={styles.heroIcon}>
         <Icon name="cap" size={40} color={BLUE} />
       </View>
       <View>
-        <Text style={styles.title} accessibilityRole="header">
+        <Text style={styles.title} {...PAGE_TITLE}>
           Academics
         </Text>
         <Text style={styles.subtitle}>{"Configure your school's academic structure, grading and competency frameworks."}</Text>
@@ -357,7 +374,7 @@ export function AdminAcademicsPhone({ a, act }: { a: Academics; act?: AcademicsA
             </View>
             <PhoneTable t={t} />
             {t.actions.map((x) => (
-              <Btn key={x} label={x} icon={x.startsWith('Add') ? 'plus' : undefined} kind={x.startsWith('Add') ? 'primary' : 'soft'} onPress={() => press(act, x)} height={52} />
+              <Btn key={x} label={x} icon={x.startsWith('Add') ? 'plus' : undefined} kind={x.startsWith('Add') ? 'primary' : 'soft'} onPress={() => press(act, x)} height={52} disabled={off(act, x)} hint={off(act, x) ? NOT_YET : undefined} />
             ))}
           </View>
         </ScrollView>
@@ -392,7 +409,7 @@ export function AdminAcademicsPhone({ a, act }: { a: Academics; act?: AcademicsA
             </View>
             <View style={styles.quickGrid}>
               {a.quickActions.map((q) => (
-                <Pressable key={q.label} style={styles.quickBtn} onPress={() => press(act, q.label)} accessibilityRole="button" accessibilityLabel={q.label}>
+                <Pressable key={q.label} style={[styles.quickBtn, off(act, q.label) && styles.unavailable]} onPress={() => press(act, q.label)} {...availability(act, q.label)} accessibilityRole="button" accessibilityLabel={q.label}>
                   {q.label === 'Add Campus' ? <Icon name="plus" size={18} color={BLUE} /> : null}
                   <Icon name={q.icon} size={20} color={BLUE} />
                   <Text style={styles.quickText} numberOfLines={2}>
@@ -412,6 +429,8 @@ const styles = StyleSheet.create({
   emptyRows: { fontSize: 14.5, color: BODY, paddingVertical: 18, paddingHorizontal: 6 },
   flex: { flex: 1, minWidth: 0 },
   pressed: { opacity: 0.85 },
+  // An action the API has no form for yet: faded and not pressable (its reason is read out).
+  unavailable: { opacity: 0.45 },
   tile: { alignItems: 'center', justifyContent: 'center' },
   hero: { flexDirection: 'row', alignItems: 'center', gap: 20, height: 124, marginTop: 2, paddingHorizontal: 12, borderRadius: 16, overflow: 'hidden', backgroundColor: Maple.blueSoft },
   heroPhoto: { position: 'absolute', top: 0, right: 0, bottom: 0, width: 610 },

@@ -30,7 +30,7 @@ function Row({ icon, label, id, color }: { icon: number; label: string; id: numb
   const identifier = asId(id);
   return (
     <View style={styles.row} accessible accessibilityLabel={`${label}: identifier ${id}, ${identifier.label}`}>
-      <Image source={icon} style={styles.rowIcon} />
+      <Image decorative source={icon} style={styles.rowIcon} />
       <View style={styles.flex}>
         <Text style={styles.rowLabel} numberOfLines={1}>
           {label}
@@ -84,7 +84,7 @@ export function ProjectAssessment({ page, p, onClose }: { page: Page; p: Project
           <View style={styles.tiles}>
             {RACE.map((r) => (
               <View key={r.key} style={[styles.tile, { backgroundColor: TILE[r.key].bg }]} accessible accessibilityLabel={`${r.label}: ${p.race?.[r.key]} of ${r.max}`}>
-                <Image source={page.raceIcons[r.key]} style={styles.tileIcon} />
+                <Image decorative source={page.raceIcons[r.key]} style={styles.tileIcon} />
                 <Text style={styles.tileLabel}>{r.label}</Text>
                 <Text style={[styles.tileScore, { color: TILE[r.key].fg }]}>{`${p.race?.[r.key]} / ${r.max}`}</Text>
               </View>
@@ -124,7 +124,7 @@ export function ProjectAssessment({ page, p, onClose }: { page: Page; p: Project
             {overall ? <Text style={[styles.overall, { color: ID_TONE[overall.id].fg, backgroundColor: ID_TONE[overall.id].bg }]}>{`Overall: ${overall.label}`}</Text> : null}
           </View>
           <View style={styles.fbBody}>
-            <Image source={page.teacherPhoto} style={styles.fbPhoto} />
+            <Image decorative source={page.teacherPhoto} style={styles.fbPhoto} />
             <View style={styles.flex}>
               <Text style={styles.fbName}>{p.feedback.teacher}</Text>
               <Text style={styles.fbDate}>{p.feedback.date}</Text>

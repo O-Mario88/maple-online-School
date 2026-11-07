@@ -7,10 +7,12 @@ import type { MockData } from '@/mock';
 
 import { Brand, CARD_SHADOW } from '../palette';
 import { Maple } from '@/constants/maple';
+import { PAGE_TITLE } from '@/lib/fonts/type';
+import { Palette } from '@/constants/palette';
 
 type Digest = MockData['publicPages']['parentDigest'];
 
-const NAVY = '#0B1E4D';
+const NAVY = Palette.blue950f;
 
 /** The private-link header: logo and how long the link stays valid. */
 export function DigestHeader({ validUntil, wide }: { validUntil: string; wide: boolean }) {
@@ -42,7 +44,7 @@ export function DigestHero({ d, wide }: { d: Digest; wide: boolean }) {
         <Image source={d.heroPhoto} style={[styles.photo, wide && styles.photoWide]} contentFit="cover" accessibilityLabel="A smiling learner in school uniform" />
         <LinearGradient colors={[NAVY, 'rgba(11,30,77,0.85)', 'rgba(11,30,77,0)']} locations={[0, 0.45, 0.75]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={StyleSheet.absoluteFill} />
         <View style={styles.bannerCopy}>
-          <Text style={[styles.title, wide && styles.titleWide]} accessibilityRole="header">
+          <Text style={[styles.title, wide && styles.titleWide]} {...PAGE_TITLE}>
             {'Weekly Learning\n'}
             <Text style={styles.accent}>Digest</Text>
           </Text>

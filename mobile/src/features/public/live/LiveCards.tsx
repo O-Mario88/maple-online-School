@@ -134,7 +134,7 @@ export function MoreLive({ s, phone = false }: { s: Session; phone?: boolean }) 
     const live = m.status === 'live';
     return (
       <Pressable key={m.title} style={[styles.more, phone && styles.moreP]} onPress={() => router.push(`/live/${s.slug}`)} accessibilityRole="link" accessibilityLabel={`${m.title}, ${m.when}`}>
-        <Image source={m.photo} style={styles.moreThumb} contentFit="cover" />
+        <Image decorative source={m.photo} style={styles.moreThumb} contentFit="cover" />
         <View style={styles.flex}>
           <View style={[styles.morePill, { backgroundColor: live ? Brand.live : Maple.blue }]}>
             <Text style={styles.morePillText}>{live ? '(•) LIVE' : '(•) UPCOMING'}</Text>

@@ -5,6 +5,7 @@ import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Icon } from '@/components/icon';
 import type { HostChatMsg, TeacherHost } from '@/mock/teacher-host';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 interface Props {
   h: TeacherHost;
@@ -214,7 +215,7 @@ export function HostRightPanels({ h, quizTimer, quizRunning, onLaunchQuiz, phone
         <View style={s.chatList}>
           {messages.slice(-3).map((msg) => (
             <View key={msg.id} style={s.chatRow}>
-              <Image source={msg.photo} style={s.chatAvatar} contentFit="cover" />
+              <Image decorative source={msg.photo} style={s.chatAvatar} contentFit="cover" />
               <View style={s.chatBody}>
                 <View style={s.chatNameRow}>
                   <Text style={s.chatName}>{msg.name}</Text>
@@ -356,7 +357,7 @@ const s = StyleSheet.create({
   },
   quizOptRowCorrect: {
     backgroundColor: Maple.successSoft,
-    borderColor: '#86EFAC',
+    borderColor: Palette.green300,
   },
   optLetterCircle: {
     width: 17,

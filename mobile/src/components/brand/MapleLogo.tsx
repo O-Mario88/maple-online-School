@@ -45,10 +45,10 @@ export function MapleLogo({ size, markStyle, onDark = false, markOnly = false, n
   const slogan = !markOnly && !noSlogan;
   return (
     <View style={styles.row} accessible accessibilityRole="image" accessibilityLabel={slogan ? `Maple Online School. ${SLOGAN}` : 'Maple Online School'}>
-      <Image source={onDark ? MARK_LIGHT : MARK} style={{ width: Math.round(h * MARK_RATIO), height: h }} contentFit="contain" />
+      <Image decorative source={onDark ? MARK_LIGHT : MARK} style={{ width: Math.round(h * MARK_RATIO), height: h }} contentFit="contain" />
       {markOnly ? null : (
         <View style={styles.name}>
-          <Image source={onDark ? WORDMARK_LIGHT : WORDMARK} style={{ width: Math.round(wordH * WORDMARK_RATIO), height: wordH }} contentFit="contain" />
+          <Image decorative source={onDark ? WORDMARK_LIGHT : WORDMARK} style={{ width: Math.round(wordH * WORDMARK_RATIO), height: wordH }} contentFit="contain" />
           {slogan ? (
             <Text style={[styles.slogan, onDark && styles.sloganOnDark, { fontSize: sloganSize, lineHeight: Math.round(sloganSize * 1.3) }]} numberOfLines={1}>
               {SLOGAN}

@@ -30,10 +30,11 @@ const NAV_THEME = mapleNavTheme(DefaultTheme);
 
 export default function RootLayout() {
   const [queryClient] = useState(() => new QueryClient({ defaultOptions: { queries: { retry: 1 } } }));
-  // Inter is every page's font: the splash screen stays up until it has loaded (or failed, then
-  // the system font stands in rather than leaving the app blank).
+  // Inter is every page's font. On iOS and Android it loads from the app in moments, so the splash
+  // screen waits for it. On the web the page draws at once in the system font and swaps to Inter
+  // when it arrives: waiting meant a blank page while 1.7 MB of font downloaded (18 s on a slow phone).
   const [fontsLoaded, fontError] = useFonts(INTER_FAMILY);
-  if (!fontsLoaded && !fontError) return null;
+  if (!fontsLoaded && !fontError && Platform.OS !== 'web') return null;
 
   return (
     <QueryClientProvider client={queryClient}>

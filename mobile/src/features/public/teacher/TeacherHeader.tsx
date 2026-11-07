@@ -11,6 +11,7 @@ import type { MockData } from '@/mock';
 import { Brand } from '../palette';
 import { MessageSheet } from './MessageSheet';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 type Storefront = MockData['publicPages']['teacherStorefront'];
 
@@ -41,10 +42,10 @@ export function TeacherHeader({ t, wide }: { t: Storefront; wide: boolean }) {
       {t.bannerPhoto ? (
         // The reference banner already shows her quotes and the "Watch my introduction" button.
         <Pressable style={[styles.banner, wide && styles.bannerPhotoWide]} accessibilityRole="button" accessibilityLabel={`Watch ${t.name}'s introduction, ${t.introLength}`} onPress={() => setWatching(true)}>
-          <Image source={t.bannerPhoto} style={StyleSheet.absoluteFill} contentFit="cover" contentPosition={wide ? 'center' : 'left'} />
+          <Image decorative source={t.bannerPhoto} style={StyleSheet.absoluteFill} contentFit="cover" contentPosition={wide ? 'center' : 'left'} />
         </Pressable>
       ) : (
-      <LinearGradient colors={['#C9A27A', Maple.secondary, Maple.body]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={[styles.banner, wide && styles.bannerWide]}>
+      <LinearGradient colors={[Palette.amber400, Maple.secondary, Maple.body]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={[styles.banner, wide && styles.bannerWide]}>
         {wide ? <Text style={[styles.quote, styles.quoteLeft, { fontFamily: SCRIPT_FONT }]}>{`“ ${t.quotes[0]} ♡`}</Text> : null}
         <Text style={styles.bannerFace} accessibilityElementsHidden>
           👩🏾‍🏫
@@ -142,7 +143,7 @@ const styles = StyleSheet.create({
   identity: { gap: 16 },
   identityWide: { flexDirection: 'row', flex: 1 },
   photoWrap: { alignItems: 'center', gap: 6 },
-  photo: { width: 140, height: 140, borderRadius: 70, borderWidth: 4, borderColor: Brand.surface, backgroundColor: '#E9D5C0', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
+  photo: { width: 140, height: 140, borderRadius: 70, borderWidth: 4, borderColor: Brand.surface, backgroundColor: Palette.amber200, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
   photoFace: { fontSize: 100 },
   online: { fontSize: 12, fontWeight: '600', color: Brand.green, backgroundColor: Brand.greenSoft, paddingHorizontal: 10, paddingVertical: 3, borderRadius: 999, overflow: 'hidden' },
   name: { fontSize: 30, fontWeight: '800', color: Brand.ink, letterSpacing: -0.6 },

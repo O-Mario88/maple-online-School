@@ -13,6 +13,8 @@ import { frameIdentity } from '@/lib/frame-identity';
 import { toast } from '@/lib/toast';
 import type { NavItem } from '@/mock/portal';
 import { Maple } from '@/constants/maple';
+import { PAGE_TITLE } from '@/lib/fonts/type';
+import { Palette } from '@/constants/palette';
 
 /** Every school-admin page shares this sidebar; the current page is tinted blue. */
 export const ADMIN_NAV: readonly NavItem[] = [
@@ -85,7 +87,7 @@ export function PageHead({ title, subtitle, right, phone = false, onBack }: { ti
               <Icon name="arrowLeft" size={phone ? 24 : 28} color={NAVY} />
             </Pressable>
           ) : null}
-          <Text style={[styles.title, phone && styles.titlePhone]} accessibilityRole="header">
+          <Text style={[styles.title, phone && styles.titlePhone]} {...PAGE_TITLE}>
             {title}
           </Text>
         </View>
@@ -188,7 +190,7 @@ export function StatCard({ s, style, compact = false }: { s: Stat; style?: Style
         <Text style={[styles.statValue, compact && styles.statValueCompact, compact && s.value.length > 9 && styles.statValueLong]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.7}>
           {s.value}
         </Text>
-        <Text style={styles.statLabel} numberOfLines={1}>
+        <Text style={styles.statLabel} numberOfLines={2}>
           {s.label}
         </Text>
         {s.sub ? (
@@ -353,7 +355,7 @@ export function MiniBtn({ label, icon, onPress, tone = 'blue', style }: { label:
   const c = TONES[tone].text;
   return (
     <Pressable
-      style={({ hovered }) => [styles.mini, hovered && styles.miniHover, { borderColor: tone === 'red' ? '#F5C2C8' : Maple.blueLine }, style]}
+      style={({ hovered }) => [styles.mini, hovered && styles.miniHover, { borderColor: tone === 'red' ? Palette.red200b : Maple.blueLine }, style]}
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={label}>
@@ -371,7 +373,7 @@ export function MenuRow({ icon, tone, title, body, onPress, right }: { icon: Ico
     <Pressable style={styles.menuRow} onPress={onPress} accessibilityRole="button" accessibilityLabel={`${title}: ${body}`}>
       <IconTile icon={icon} tone={tone} size={46} radius={12} />
       <View style={styles.flex}>
-        <Text style={styles.menuTitle} numberOfLines={1}>
+        <Text style={styles.menuTitle} numberOfLines={2}>
           {title}
         </Text>
         <Text style={styles.menuBody} numberOfLines={2}>
@@ -404,7 +406,7 @@ export function ListRow({ lead, title, body, right, last = false, onPress }: { l
           {title}
         </Text>
         {body ? (
-          <Text style={styles.listBody} numberOfLines={2}>
+          <Text style={styles.listBody} numberOfLines={3}>
             {body}
           </Text>
         ) : null}
@@ -423,7 +425,7 @@ export function ListRow({ lead, title, body, right, last = false, onPress }: { l
 
 /** A round photo. */
 export function Face({ source, size = 36 }: { source: number; size?: number }) {
-  return <Image source={source} style={{ width: size, height: size, borderRadius: size / 2 }} contentFit="cover" />;
+  return <Image decorative source={source} style={{ width: size, height: size, borderRadius: size / 2 }} contentFit="cover" />;
 }
 
 /** A coloured legend dot with a label and an optional value on the right. */
@@ -580,9 +582,9 @@ const styles = StyleSheet.create({
   listLine: { borderBottomWidth: 1, borderColor: LINE },
   listTitle: { fontSize: 15, fontWeight: '600', color: NAVY },
   listBody: { marginTop: 2, fontSize: 13.5, color: BODY },
-  legend: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  legend: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', columnGap: 8, rowGap: 2 },
   legendDot: { width: 11, height: 11, borderRadius: 6 },
-  legendLabel: { flexShrink: 1, fontSize: 13.5, color: NAVY },
+  legendLabel: { flexShrink: 0, fontSize: 13.5, color: NAVY },
   legendValue: { marginLeft: 'auto', fontSize: 13.5, fontWeight: '700', color: NAVY },
   steps: { flexDirection: 'row', alignItems: 'center', paddingVertical: 16, paddingHorizontal: 20, borderRadius: 14, borderWidth: 1, borderColor: LINE, backgroundColor: WHITE },
   stepsCompact: { paddingVertical: 12, paddingHorizontal: 6 },

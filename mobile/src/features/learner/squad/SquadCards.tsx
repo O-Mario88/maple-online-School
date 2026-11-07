@@ -10,6 +10,8 @@ import type { IconName } from '@/lib/icons';
 import { Face } from './SquadChat';
 import { type Room, type SquadState, type SquadTab, TABS } from './useSquad';
 import { Maple } from '@/constants/maple';
+import { PAGE_TITLE } from '@/lib/fonts/type';
+import { Palette } from '@/constants/palette';
 
 const INK = Maple.navy;
 const NAVY = Maple.blueHover;
@@ -25,7 +27,7 @@ export const invite = (s: SquadState) =>
 export function CardHead({ icon, title, right }: { icon?: number; title: string; right?: React.ReactNode }) {
   return (
     <View style={styles.cardHead}>
-      {icon ? <Image source={icon} style={styles.cardIcon} contentFit="contain" /> : null}
+      {icon ? <Image decorative source={icon} style={styles.cardIcon} contentFit="contain" /> : null}
       <Text style={styles.cardTitle}>{title}</Text>
       <View style={styles.flex} />
       {right}
@@ -43,7 +45,7 @@ export function Hero({ room, s, phone = false }: { room: Room; s: SquadState; ph
           <Icon name="people" size={phone ? 22 : 30} color={Maple.surface} />
         </View>
         <View style={styles.flex}>
-          <Text style={[styles.heroTitle, phone && styles.heroTitleP]} accessibilityRole="header">
+          <Text style={[styles.heroTitle, phone && styles.heroTitleP]} {...PAGE_TITLE}>
             {s.squad.name}
           </Text>
           <Text style={[styles.heroMeta, phone && styles.heroMetaP]}>{`${s.squad.members.length} members  •  ${s.squad.level}  •  ${s.squad.subject}`}</Text>
@@ -130,7 +132,7 @@ export function GoalCard({ room, s, phone = false }: { room: Room; s: SquadState
   return (
     <View style={[styles.card, styles.goal]}>
       <View style={styles.goalTop}>
-        <Image source={room.icons.target} style={phone ? styles.targetP : styles.target} contentFit="contain" />
+        <Image decorative source={room.icons.target} style={phone ? styles.targetP : styles.target} contentFit="contain" />
         <View style={styles.flex}>
           <Text style={styles.goalTitle}>Weekly Squad Goal</Text>
           <Text style={styles.goalSub}>{g.label}</Text>
@@ -184,7 +186,7 @@ export function StreakCard({ room, s }: { room: Room; s: SquadState }) {
   return (
     <View style={[styles.card, styles.streak]}>
       <View style={styles.streakTop}>
-        <Image source={room.icons.flame} style={styles.flame} contentFit="contain" />
+        <Image decorative source={room.icons.flame} style={styles.flame} contentFit="contain" />
         <View style={styles.flex}>
           <Text style={styles.goalTitle}>Squad Streak</Text>
           <Text style={styles.streakDays}>{`${s.squad.streak.days} days`}</Text>
@@ -246,7 +248,7 @@ export function Leaderboard({ room, s, limit }: { room: Room; s: SquadState; lim
           return (
             <View key={r.id} style={[styles.rankRow, me && styles.rankMe]} accessibilityLabel={`${r.rank}. ${r.name}${me ? ' (you)' : ''}: ${r.score} questions`}>
               <View style={styles.rank}>
-                {r.rank === 1 ? <Image source={room.icons.medal} style={styles.medal} contentFit="contain" /> : r.rank === 3 ? <Image source={room.icons.crown} style={styles.crown} contentFit="contain" /> : <Text style={[styles.rankText, me && styles.blue]}>{r.rank}</Text>}
+                {r.rank === 1 ? <Image decorative source={room.icons.medal} style={styles.medal} contentFit="contain" /> : r.rank === 3 ? <Image decorative source={room.icons.crown} style={styles.crown} contentFit="contain" /> : <Text style={[styles.rankText, me && styles.blue]}>{r.rank}</Text>}
               </View>
               <Face s={s} id={r.id} size={28} />
               <Text style={[styles.rankName, me && styles.rankNameMe]}>{me ? `${r.name} (You)` : r.name}</Text>
@@ -266,7 +268,7 @@ export function Sessions({ room, s, limit }: { room: Room; s: SquadState; limit?
       <CardHead icon={room.icons.calendar} title={limit === 1 ? 'Upcoming Study Session' : 'Upcoming Study Sessions'} right={limit ? null : <Pill label="See All" onPress={() => s.setTab('Study Sessions')} />} />
       {list.map((x, i) => (
         <View key={x.id} style={[styles.session, i > 0 && styles.divider]}>
-          <Image source={x.icon} style={styles.sessionIcon} contentFit="contain" />
+          <Image decorative source={x.icon} style={styles.sessionIcon} contentFit="contain" />
           <View style={styles.flex}>
             <Text style={styles.when}>{x.when}</Text>
             <Text style={styles.sessionTitle}>{x.title}</Text>
@@ -312,7 +314,7 @@ export function Resources({ room, s }: { room: Room; s: SquadState }) {
       <View style={styles.rows}>
         {s.squad.resources.map((r) => (
           <View key={r.id} style={styles.res}>
-            <Image source={room.resourceIcons[r.kind]} style={styles.resIcon} contentFit="contain" />
+            <Image decorative source={room.resourceIcons[r.kind]} style={styles.resIcon} contentFit="contain" />
             <View style={styles.flex}>
               <Text style={styles.resTitle}>{r.title}</Text>
               <Text style={styles.resMeta}>{r.meta}</Text>
@@ -409,7 +411,7 @@ const styles = StyleSheet.create({
   fill: { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0 },
   bold: { fontWeight: '700', color: INK },
   blue: { color: BLUE },
-  gold: { color: '#C2410C' },
+  gold: { color: Palette.orange700 },
   small: { fontSize: 11, color: BODY },
   hero: { height: 136, justifyContent: 'center', paddingHorizontal: 22, borderTopLeftRadius: 10, borderTopRightRadius: 10, backgroundColor: Maple.navy, overflow: 'hidden' },
   heroP: { height: 'auto', gap: 14, padding: 14, borderRadius: 12 },
@@ -511,7 +513,7 @@ const styles = StyleSheet.create({
   resTitle: { fontSize: 10.5, fontWeight: '600', color: INK, letterSpacing: -0.2 },
   resMeta: { marginTop: 1, fontSize: 10, color: BODY },
   dl: { width: 30, height: 30, alignItems: 'center', justifyContent: 'center', borderRadius: 6, borderWidth: 1, borderColor: Maple.blueSelected },
-  dlOn: { borderColor: '#BBE5C8', backgroundColor: Maple.successSoft },
+  dlOn: { borderColor: Palette.green300e, backgroundColor: Maple.successSoft },
   task: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 6 },
   box: { width: 20, height: 20, alignItems: 'center', justifyContent: 'center', borderRadius: 5, borderWidth: 1.5, borderColor: Maple.faint },
   boxOn: { borderColor: GREEN, backgroundColor: GREEN },

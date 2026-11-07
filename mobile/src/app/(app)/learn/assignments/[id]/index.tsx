@@ -16,6 +16,7 @@ import type { IconName } from '@/lib/icons';
 import { mockData } from '@/lib/mock';
 import { Maple } from '@/constants/maple';
 import { PageScroll } from '@/components/shell/PageScroll';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
 /** The workspace reference's page (x 18–1176 at 1536 wide); the desktop layout uses its pixels. */
 const WORK_REF_WIDTH = 1158;
@@ -56,7 +57,7 @@ function Desktop({ w, s }: { w: Work; s: WorkState }) {
         <Crumbs items={w.crumbs} />
       </View>
       <View style={styles.titleRow}>
-        <Text style={styles.title} accessibilityRole="header">
+        <Text style={styles.title} {...PAGE_TITLE}>
           {w.title}
         </Text>
         <DueChip text={w.due} />
@@ -113,7 +114,7 @@ function Phone({ w, s, avatar }: { w: Work; s: WorkState; avatar: number }) {
       <LearnerPhoneTop avatar={avatar} globe />
       <PageScroll contentContainerStyle={styles.phone}>
         <Crumbs items={w.phoneCrumbs} phone />
-        <Text style={styles.titleP} accessibilityRole="header">
+        <Text style={styles.titleP} {...PAGE_TITLE}>
           {w.title}
         </Text>
         <DueChip text={w.due} phone />

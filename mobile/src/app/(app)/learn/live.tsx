@@ -15,6 +15,7 @@ import { RefScale } from '@/features/public/home/RefScale';
 import { mockData } from '@/lib/mock';
 import { Maple } from '@/constants/maple';
 import { PageScroll } from '@/components/shell/PageScroll';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
 /** The live hub reference's page (x 18–1168 at 1536 wide); the desktop layout uses its pixels. */
 const HUB_REF_WIDTH = 1150;
@@ -45,7 +46,7 @@ function Hero({ hub, s }: { hub: Hub; s: HubState }) {
     <View style={styles.hero}>
       <LinearGradient colors={[Maple.blueSoft, Maple.blueSelected]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />
       <Image source={hub.hero} style={styles.heroPhoto} contentFit="fill" accessibilityLabel="A smiling learner with headphones beside the words Learn, Ask, Practice, Grow" />
-      <Text style={styles.title} accessibilityRole="header">
+      <Text style={styles.title} {...PAGE_TITLE}>
         {hub.title}
       </Text>
       <Text style={styles.sub}>{hub.sub}</Text>
@@ -61,7 +62,7 @@ function Hero({ hub, s }: { hub: Hub; s: HubState }) {
       </View>
       <View style={styles.nowOuter}>
         <Pressable style={styles.now} onPress={() => s.setTab('tutor')} accessibilityRole="button" accessibilityLabel="Available now: get 1-on-1 help in 15 minutes">
-          <Image source={hub.nowIcon} style={styles.nowIcon} />
+          <Image decorative source={hub.nowIcon} style={styles.nowIcon} />
           <View style={styles.flex}>
             <Text style={styles.nowTitle}>Available Now</Text>
             <Text style={styles.nowSub} numberOfLines={1}>{`Get 1-on-1 help in ${hub.sessionMinutes} minutes`}</Text>
@@ -148,7 +149,7 @@ function Phone({ hub, s, avatar }: { hub: Hub; s: HubState; avatar: number }) {
     <View style={styles.phoneRoot}>
       <LearnerPhoneTop avatar={avatar} />
       <PageScroll contentContainerStyle={styles.phone}>
-        <Text style={styles.titleP} accessibilityRole="header">
+        <Text style={styles.titleP} {...PAGE_TITLE}>
           {hub.title}
         </Text>
         <Text style={styles.subP}>{hub.phoneSub}</Text>

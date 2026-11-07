@@ -10,6 +10,7 @@ import type { IconName } from '@/lib/icons';
 
 import type { Exam, ExamState, Question } from './useExam';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 export const INK = Maple.navy;
 export const BODY = Maple.body;
@@ -224,7 +225,7 @@ const styles = StyleSheet.create({
   answerIdle: { backgroundColor: Maple.blueSoft },
   answerIcon: { width: 38, height: 38, alignItems: 'center', justifyContent: 'center', borderRadius: 19, backgroundColor: GREEN },
   answerIconP: { width: 32, height: 32, borderRadius: 16 },
-  answerTitle: { fontSize: 15, fontWeight: '700', color: '#1F3A2B' },
+  answerTitle: { fontSize: 15, fontWeight: '700', color: Palette.green950b },
   answerTitleP: { fontSize: 13.5 },
   answerSub: { marginTop: 4, fontSize: 13, color: BODY },
   answerSubP: { fontSize: 12 },

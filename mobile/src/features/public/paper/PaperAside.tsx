@@ -106,7 +106,7 @@ export function RelatedResources({ videos }: { videos: Pages['videos'] }) {
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.videos}>
         {videos.map((v) => (
           <Pressable key={v.title} style={styles.video} onPress={() => router.push('/shorts')} accessibilityRole="link" accessibilityLabel={`${v.title}, ${v.length}`}>
-            <Image source={v.photo} style={styles.thumb} contentFit="cover" />
+            <Image decorative source={v.photo} style={styles.thumb} contentFit="cover" />
             <Text style={styles.videoTitle} numberOfLines={2}>
               {v.title}
             </Text>

@@ -237,7 +237,7 @@ export function ClassSpacesDesk({ c, me, phone = false }: { c: ClassSpacesManage
                       joinMethod === 'whatsapp' && s.joinMethodCardOn,
                     ]}
                     onPress={() => setJoinMethod('whatsapp')}>
-                    <Image
+                    <Image decorative
                       source={c.whatsappIcon}
                       style={s.whatsappMethodIcon}
                       contentFit="contain"
@@ -270,7 +270,7 @@ export function ClassSpacesDesk({ c, me, phone = false }: { c: ClassSpacesManage
               <View style={s.principalCard}>
                 <View style={s.principalTopRow}>
                   <View style={s.crownTile}>
-                    <Image
+                    <Image decorative
                       source={c.crownIcon}
                       style={s.crownImg}
                       contentFit="contain"
@@ -457,7 +457,7 @@ export function ClassSpacesDesk({ c, me, phone = false }: { c: ClassSpacesManage
 
                   {/* Class Name + Thumbnail */}
                   <View style={[s.classCell, s.colClass]}>
-                    <Image source={row.thumb} style={s.classThumb} contentFit="cover" />
+                    <Image decorative source={row.thumb} style={s.classThumb} contentFit="cover" />
                     <View style={{ flex: 1, gap: 1 }}>
                       <Text style={s.classTitle}>{row.title}</Text>
                       <Text style={s.classSub}>{row.subtitle}</Text>
@@ -497,7 +497,7 @@ export function ClassSpacesDesk({ c, me, phone = false }: { c: ClassSpacesManage
                           `Join ${row.title} on Maple Global Online School with code ${row.joinCode}: https://maple.school/join/${row.joinCode.replace(' ', '')}`,
                         )
                       }>
-                      <Image
+                      <Image decorative
                         source={c.whatsappIcon}
                         style={s.whatsappBtnIcon}
                         contentFit="contain"
@@ -603,7 +603,7 @@ export function ClassSpacesDesk({ c, me, phone = false }: { c: ClassSpacesManage
                 </View>
               </View>
               <View style={s.floatingWhatsappBadge}>
-                <Image
+                <Image decorative
                   source={c.whatsappIcon}
                   style={s.floatingWhatsappImg}
                   contentFit="contain"

@@ -17,6 +17,7 @@ import { paginate } from './directory';
 import { setCounseling } from './saved';
 import type { Compass } from './useCompass';
 import { Maple, Radii } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 type Person = Compass['cc']['counseling']['counselors'][number];
 const PAGE = 4;
@@ -45,7 +46,7 @@ type CP = ReturnType<typeof useCounselorPage>;
 function Avatar({ p, size }: { p: Person; size: 'large' | 'medium' | 'small' }) {
   return (
     <View style={s.avatarWrap}>
-      <Image source={p.photo} style={AVATAR[size]} contentFit="cover" />
+      <Image decorative source={p.photo} style={AVATAR[size]} contentFit="cover" />
       <View style={[s.online, size === 'large' ? s.onlineBig : s.onlineSmall]} />
     </View>
   );
@@ -248,7 +249,7 @@ function NextSession({ x, cp }: { x: Compass; cp: CP }) {
       {b && p ? (
         <>
           <View style={s.next}>
-            <Image source={p.photo} style={s.nextPhoto} contentFit="cover" />
+            <Image decorative source={p.photo} style={s.nextPhoto} contentFit="cover" />
             <View style={s.flex}>
               <Text style={s.name}>{p.name}</Text>
               <Text style={cs.small}>{b.topic}</Text>
@@ -302,7 +303,7 @@ function HowCard({ x, cp }: { x: Compass; cp: CP }) {
         <Text style={s.sideTitle}>How Counseling Works</Text>
         <Text style={cs.small}>A quick guide to booking, preparing and joining your session.</Text>
       </View>
-      <Image source={x.cc.photos.art.howCounseling} style={s.howArt} contentFit="contain" />
+      <Image decorative source={x.cc.photos.art.howCounseling} style={s.howArt} contentFit="contain" />
     </Pressable>
   );
 }
@@ -436,7 +437,7 @@ function Sheets({ x, cp }: { x: Compass; cp: CP }) {
       {prof ? (
         <Sheet title={prof.name} onClose={() => cp.setProfile(null)}>
           <View style={s.next}>
-            <Image source={prof.photo} style={s.profilePhoto} contentFit="cover" />
+            <Image decorative source={prof.photo} style={s.profilePhoto} contentFit="cover" />
             <View style={s.flex}>
               <Text style={s.role}>{prof.title}</Text>
               <Text style={cs.small}>{`${prof.location} · ${prof.languages.join(', ')}`}</Text>
@@ -481,7 +482,7 @@ export function CounselorSection({ x, phone }: { x: Compass; phone: boolean }) {
     { key: 'subjects', title: 'Subject Choices', sub: 'Get guidance on the right subjects', icon: 'layers' as const, tint: Maple.blueSoft, color: Maple.blue, onPress: topicTile('Choosing A-Level subjects') },
     { key: 'unis', title: 'University Options', sub: 'Find programs and entry requirements', icon: 'building' as const, tint: Maple.successSoft, color: Maple.successText, onPress: topicTile('University and program choices') },
     { key: 'funding', title: 'Scholarships', sub: 'Learn about funding and how to apply', icon: 'award' as const, tint: Maple.warningSoft, color: Maple.warning, onPress: topicTile('Scholarships and funding') },
-    { key: 'review', title: 'Application Review', sub: 'Get support on your applications', icon: 'doc' as const, tint: '#FDEEF4', color: '#DB2777', onPress: topicTile('Application review') },
+    { key: 'review', title: 'Application Review', sub: 'Get support on your applications', icon: 'doc' as const, tint: Palette.pink50, color: Palette.pink600, onPress: topicTile('Application review') },
   ];
   const main = (
     <>

@@ -362,7 +362,7 @@ export function WhiteboardStage({ h, studentsMutedAll, onToggleStudentMute, mute
       {phone ? (
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={s.phoneStrip}>
           <View style={[s.teacherTile, s.phoneTeacherTile]}>
-            <Image source={h.teacherVideo} style={s.tileImg} contentFit="cover" />
+            <Image decorative source={h.teacherVideo} style={s.tileImg} contentFit="cover" />
             <View style={s.teacherTileBar}>
               <View style={s.micBadgeGreen}>
                 <Icon name="mic" size={10} color={Maple.surface} />
@@ -392,7 +392,7 @@ export function WhiteboardStage({ h, studentsMutedAll, onToggleStudentMute, mute
           <View style={s.videoStrip}>
             {/* Left: Large Teacher Tile */}
             <View style={s.teacherTile}>
-              <Image source={h.teacherVideo} style={s.tileImg} contentFit="cover" />
+              <Image decorative source={h.teacherVideo} style={s.tileImg} contentFit="cover" />
               <View style={s.tileTopMenu}>
                 <Text style={s.tileDots}>⋮</Text>
               </View>
@@ -456,7 +456,7 @@ function StudentVideoTile({
 }) {
   return (
     <Pressable style={s.studentTile} onPress={onPress}>
-      <Image source={tile.photo} style={s.tileImg} contentFit="cover" />
+      <Image decorative source={tile.photo} style={s.tileImg} contentFit="cover" />
       <View style={s.tileTopMenuSmall}>
         <Text style={s.tileDotsSmall}>⋮</Text>
       </View>

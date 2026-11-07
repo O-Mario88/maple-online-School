@@ -9,16 +9,17 @@ import type { IconName } from '@/lib/icons';
 
 import type { ProgressState } from './useProgress';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 const NAVY = Maple.navy;
 const BODY = Maple.body;
 const LINE = Maple.blue;
-const DASH = '#A7B3C9';
+const DASH = Palette.blue400;
 
 /** Gold = mastered, orange = needs review, blue = in progress, grey = locked. */
 export const TONE: Record<MapState, { fill: string; border: string; dot: string; halo: string; icon: IconName; label: string }> = {
-  mastered: { fill: Maple.warningSoft, border: Maple.warning, dot: Maple.warning, halo: '#F9DB78', icon: 'star', label: 'Mastered' },
-  review: { fill: '#FFEEE3', border: '#F59A5C', dot: '#F26A1B', halo: '#FDD3B6', icon: 'sparkle', label: 'Needs Review' },
+  mastered: { fill: Maple.warningSoft, border: Maple.warning, dot: Maple.warning, halo: Palette.yellow400, icon: 'star', label: 'Mastered' },
+  review: { fill: Palette.orange100, border: Palette.orange400, dot: Palette.orange500, halo: Palette.orange200, icon: 'sparkle', label: 'Needs Review' },
   progress: { fill: Maple.blueSoft, border: Maple.blue, dot: Maple.blue, halo: Maple.blueLine, icon: 'sparkle', label: 'In Progress' },
   locked: { fill: Maple.disabledSurface, border: Maple.borderStrong, dot: Maple.secondary, halo: Maple.disabledBorder, icon: 'lock', label: 'Locked' },
 };
@@ -208,7 +209,7 @@ export function SkillTreeCard({ s, onExpand }: { s: ProgressState; onExpand?: ()
   const tree = s.tree;
   return (
     <View style={styles.card}>
-      <Image source={s.subject.icon} style={styles.headIcon} contentFit="cover" />
+      <Image decorative source={s.subject.icon} style={styles.headIcon} contentFit="cover" />
       <Text style={styles.title}>{`${s.subject.name} Skill Tree`}</Text>
       <Text style={styles.desc}>{`Explore the key skills in ${s.subject.name}. Click on any skill to see practice, or continue learning.`}</Text>
       <View style={styles.curriculum}>

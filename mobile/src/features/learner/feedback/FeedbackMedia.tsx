@@ -107,7 +107,7 @@ export function AnnotatedViewer({ f, onDownload }: { f: Feedback; onDownload: ()
       <View style={styles.thumbs}>
         {f.pages.map((p, i) => (
           <Pressable key={i} style={[styles.thumb, i === page && styles.thumbOn]} onPress={() => go(i)} accessibilityRole="button" accessibilityState={{ selected: i === page }} accessibilityLabel={`Page ${i + 1}`}>
-            <Image source={p.thumb} style={styles.thumbImg} contentFit="cover" />
+            <Image decorative source={p.thumb} style={styles.thumbImg} contentFit="cover" />
             <Text style={styles.thumbText}>{`Page ${i + 1}`}</Text>
           </Pressable>
         ))}
@@ -133,7 +133,7 @@ export function AnnotatedStrip({ f }: { f: Feedback }) {
       </Pressable>
       {open ? (
         <Pressable style={styles.strip} onPress={() => setFull(true)} accessibilityRole="button" accessibilityLabel="Open your marked pages full screen">
-          <Image source={f.pages[0].image} style={styles.fill} contentFit="cover" contentPosition={{ top: '13%', left: '50%' }} />
+          <Image decorative source={f.pages[0].image} style={styles.fill} contentFit="cover" contentPosition={{ top: '13%', left: '50%' }} />
           <View style={styles.stripExpand}>
             <Icon name="expand" size={14} color={INK} />
           </View>
@@ -164,7 +164,7 @@ export function VideoFeedback({ f, phone = false, startTab = 'Chapters' }: { f: 
       {phone ? null : <Text style={styles.title}>Teacher Video Feedback</Text>}
       <View style={[styles.player, phone && styles.playerP]}>
         <Pressable style={styles.frame} onPress={p.toggle} accessibilityRole="button" accessibilityLabel={p.running ? 'Pause video' : 'Play video'}>
-          <Image source={v.frame} style={styles.fill} contentFit="cover" />
+          <Image decorative source={v.frame} style={styles.fill} contentFit="cover" />
           {cc && p.running ? <Text style={styles.caption}>{v.transcript[line].text}</Text> : null}
         </Pressable>
         <PlayerControls total={v.seconds} p={p} muted={muted} onMute={() => setMuted((m) => !m)} cc={cc} onCc={() => setCc((c) => !c)} />

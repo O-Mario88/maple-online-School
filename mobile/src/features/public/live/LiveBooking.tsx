@@ -10,11 +10,12 @@ import type { MockData } from '@/mock';
 
 import { Brand } from '../palette';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 export type Session = MockData['publicPages']['liveSession'];
 
 const TICK_MS = 1000;
-const SEAT_BAR = [Maple.error, '#FE9B4A'] as const;
+const SEAT_BAR = [Maple.error, Palette.orange400b] as const;
 
 /** The current time, updated every second while the page is open. */
 function useNow(): number {

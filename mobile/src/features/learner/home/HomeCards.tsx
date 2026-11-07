@@ -13,6 +13,7 @@ import type { AssignmentProjectTab } from '@/mock/learner-home';
 import { BLUE, BODY, type Home, INK } from './HomeFrame';
 import { styles } from './HomeCards.styles';
 import { Maple } from '@/constants/maple';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
 const WAVE_BARS = [6, 12, 9, 16, 20, 13, 8, 15, 22, 18, 10, 14, 19, 11, 7, 14, 17, 10, 13, 8, 5, 9, 6, 4];
 
@@ -81,7 +82,7 @@ export function Hero({ h, phone = false }: { h: Home; phone?: boolean }) {
   return (
     <View style={styles.hero}>
       <View style={styles.heroCopy}>
-        <Text style={styles.heroTitle} accessibilityRole="header">
+        <Text style={styles.heroTitle} {...PAGE_TITLE}>
           {title}
         </Text>
         <Text style={styles.heroSub}>{message}</Text>
@@ -122,7 +123,7 @@ function HeroButton({ label, icon, onPress, primary = false }: { label: string; 
 function HeroPhone({ title, message }: { title: string; message: string }) {
   return (
     <View style={styles.heroPhone}>
-      <Text style={styles.heroPhoneTitle} accessibilityRole="header">
+      <Text style={styles.heroPhoneTitle} {...PAGE_TITLE}>
         {title}
       </Text>
       <Text style={styles.heroPhoneSub}>{message}</Text>
@@ -151,7 +152,7 @@ export function KpiRow({ h, phone = false }: { h: Home; phone?: boolean }) {
           </View>
           <View style={styles.flex}>
             <Text style={styles.kpiVal}>{k.value}</Text>
-            <Text style={styles.kpiLabel} numberOfLines={1}>
+            <Text style={styles.kpiLabel} numberOfLines={2}>
               {k.label}
             </Text>
           </View>
@@ -214,7 +215,7 @@ export function MySubjectsCard({ h, phone = false }: { h: Home; phone?: boolean 
             <View style={[styles.subjectIconBox, { backgroundColor: s.iconBg }]}>
               <Icon name={s.icon} size={15} color={s.color} />
             </View>
-            <Text style={[phone ? styles.subjectNamePhone : styles.subjectName, phone && { color: s.color }]} numberOfLines={phone ? 2 : 1}>
+            <Text style={[phone ? styles.subjectNamePhone : styles.subjectName, phone && { color: s.color }]} numberOfLines={2}>
               {s.subject}
             </Text>
             <View style={phone ? styles.subjectScoreRowPhone : styles.subjectScoreRow}>
@@ -235,7 +236,7 @@ export function TeacherVoiceCard({ h, phone = false }: { h: Home; phone?: boolea
   return (
     // Phones: the quote wraps onto its own row under the player.
     <View style={phone ? styles.voiceCardInnerPhone : styles.voiceCardInner}>
-      <Image source={m.avatar} style={styles.teacherAvatar} contentFit="cover" />
+      <Image decorative source={m.avatar} style={styles.teacherAvatar} contentFit="cover" />
       <View style={phone ? styles.voiceCenterPhone : styles.voiceCenter}>
         <Text style={styles.voiceHeading}>{m.heading}</Text>
         <Text style={styles.voiceTeacher}>{m.teacher}</Text>
@@ -365,7 +366,7 @@ export function AssignmentsProjectsCard({ h }: { h: Home }) {
               <Icon name={r.icon} size={13} color={r.color} />
             </View>
             <View style={styles.flex}>
-              <Text style={styles.apTitle} numberOfLines={1}>
+              <Text style={styles.apTitle} numberOfLines={2}>
                 {r.title}
               </Text>
               <Text style={styles.apSub} numberOfLines={1}>
@@ -410,7 +411,7 @@ export function RecentWorkCard({ h }: { h: Home }) {
                 <Icon name={r.icon} size={13} color={r.color} />
               </View>
               <View style={styles.flex}>
-                <Text style={styles.apTitle} numberOfLines={1}>
+                <Text style={styles.apTitle} numberOfLines={2}>
                   {r.title}
                 </Text>
                 <Text style={styles.apSub} numberOfLines={1}>
@@ -546,7 +547,7 @@ export function RecommendedCard({ h }: { h: Home }) {
             onPress={() => router.push(it.href)}
             accessibilityRole="link"
             accessibilityLabel={`${it.title}, ${it.sub}`}>
-            <Image source={it.thumb} style={styles.recThumb} contentFit="cover" />
+            <Image decorative source={it.thumb} style={styles.recThumb} contentFit="cover" />
             <Text style={styles.recTitle} numberOfLines={2}>
               {it.title}
             </Text>

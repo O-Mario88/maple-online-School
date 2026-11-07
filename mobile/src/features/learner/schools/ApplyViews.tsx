@@ -16,6 +16,7 @@ import { BRAND_SOFT, BRAND_BLUE, Tag, ugx } from './SchoolParts';
 import { type Apply, useApply } from './useApply';
 import type { Net } from './useSchoolNetwork';
 import { Maple, Radii } from '@/constants/maple';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
 /** The school being applied to: campus photo, save heart, crest, name, place and chips. */
 function SchoolMini({ c, saved, onSave }: { c: SchoolCard; saved: boolean; onSave: () => void }) {
@@ -27,7 +28,7 @@ function SchoolMini({ c, saved, onSave }: { c: SchoolCard; saved: boolean; onSav
           <Icon name={saved ? 'heartFill' : 'heart'} size={18} color={saved ? Maple.error : L.ink} />
         </Pressable>
         <View style={s.crest}>
-          <Image source={c.crest} style={s.crestImg} contentFit="contain" />
+          <Image decorative source={c.crest} style={s.crestImg} contentFit="contain" />
         </View>
       </View>
       <View style={s.miniBody}>
@@ -210,7 +211,7 @@ export function ApplyDesk({ net, school, avatar }: Props) {
               <Icon name="edit" size={30} color={L.white} />
             </View>
             <View style={s.flex}>
-              <Text style={s.title} accessibilityRole="header">{`Apply to ${school.name}`}</Text>
+              <Text style={s.title} {...PAGE_TITLE}>{`Apply to ${school.name}`}</Text>
               <Text style={s.sub}>Complete the admission application and submit your documents.</Text>
             </View>
           </View>
@@ -244,7 +245,7 @@ export function ApplyPhone({ net, school, avatar }: Props) {
           <Icon name="arrowLeft" size={18} color={BRAND_BLUE} />
           <Text style={s.backText}>Back to School Profile</Text>
         </Pressable>
-        <Text style={s.titleP} accessibilityRole="header">{`Apply to ${school.name}`}</Text>
+        <Text style={s.titleP} {...PAGE_TITLE}>{`Apply to ${school.name}`}</Text>
         {a.submitted ? (
           <Submitted a={a} />
         ) : (

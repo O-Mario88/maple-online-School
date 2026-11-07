@@ -9,6 +9,7 @@ import { Icon } from '@/components/icon';
 import { ControlHeight, IconSize, Maple, Radii, Space, TabIndicator, TypeScale } from '@/constants/maple';
 import { nextTabKey } from '@/lib/design-system/tabs';
 import type { IconName } from '@/lib/icons';
+import { prefersReducedMotion } from '@/lib/motion';
 
 export interface TabItem<K extends string = string> {
   key: K;
@@ -38,7 +39,7 @@ export function Tabs<K extends string>({ items, active, onChange, scroll = false
   const spots = useRef<Partial<Record<K, number>>>({});
   useEffect(() => {
     const x = spots.current[active];
-    if (scroll && x !== undefined) strip.current?.scrollTo({ x: Math.max(0, x - Space.md), animated: true });
+    if (scroll && x !== undefined) strip.current?.scrollTo({ x: Math.max(0, x - Space.md), animated: !prefersReducedMotion() });
   }, [active, scroll]);
 
   // Arrow keys, Home and End move between tabs (web keyboard support).

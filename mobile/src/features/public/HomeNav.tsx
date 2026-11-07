@@ -81,7 +81,7 @@ export function HomeNav({ wide, active = 'Home', fullWidth = false, links: own, 
     router.push(href);
   };
   return (
-    <View style={[styles.bar, t && styles.barTall, !wide && styles.barNarrow]} accessibilityRole="header">
+    <View style={[styles.bar, t && styles.barTall, !wide && styles.barNarrow]} role="banner">
       <Pressable style={[styles.brand, t && styles.brandTall]} accessibilityRole="link" accessibilityLabel="Maple Online School, home" onPress={() => router.push('/welcome')}>
         <MapleLogo markStyle={[styles.leaf, t && styles.leafTall, !wide && styles.leafNarrow]} markOnly={!wide && width < NAME_MIN} />
       </Pressable>

@@ -9,15 +9,16 @@ import type { IconName } from '@/lib/icons';
 
 import { clock, type LessonStatus, lessonStatus, type VideoLessonItem } from './videoLessons';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 /** A lesson's thumbnail: a chalkboard with what the lesson writes on it, its running time, and how far it is watched. */
 export function ChalkThumb({ l, height, big = false }: { l: VideoLessonItem; height: number; big?: boolean }) {
   const pct = Math.min(1, l.watched / l.seconds);
   return (
     <View style={[s.thumb, { height }]} accessibilityLabel={`${l.title}, ${clock(l.seconds)}`}>
-      <LinearGradient colors={['#21423A', '#173029']} style={StyleSheet.absoluteFill} />
+      <LinearGradient colors={[Palette.teal950d, Palette.teal950c]} style={StyleSheet.absoluteFill} />
       <View style={s.chalkLine} />
-      <Text style={[s.chalk, big && s.chalkBig]} numberOfLines={2}>
+      <Text style={[s.chalk, big && s.chalkBig]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.4}>
         {l.board}
       </Text>
       {big ? (
@@ -132,7 +133,7 @@ export function LessonMenu({ l, later, downloaded, onLater, onDownload }: { l: V
 const s = StyleSheet.create({
   thumb: { overflow: 'hidden', borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
   chalkLine: { position: 'absolute', left: 12, right: 12, bottom: 18, height: 1, backgroundColor: 'rgba(255,255,255,0.18)' },
-  chalk: { paddingHorizontal: 12, fontSize: 17, fontStyle: 'italic', color: 'rgba(255,255,255,0.92)', textAlign: 'center' },
+  chalk: { paddingHorizontal: 8, fontSize: 17, fontStyle: 'italic', color: 'rgba(255,255,255,0.92)', textAlign: 'center' },
   chalkBig: { position: 'absolute', top: 18, right: 22, fontSize: 22 },
   play: { width: 50, height: 50, borderRadius: 25, borderWidth: 2.5, borderColor: L.white, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.25)' },
   duration: { position: 'absolute', right: 8, bottom: 8, overflow: 'hidden', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 5, fontSize: 11.5, fontWeight: '600', color: L.white, backgroundColor: 'rgba(0,0,0,0.65)' },

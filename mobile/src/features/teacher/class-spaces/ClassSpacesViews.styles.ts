@@ -2,6 +2,7 @@ import { StyleSheet } from 'react-native';
 
 import { BLUE, BODY, INK, LINE } from '@/features/teacher/frame/TeacherParts';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 /** Styles for ClassSpacesViews (kept apart so the view file stays readable). */
 export const CLASS_SPACES_REF_WIDTH = 1220;
@@ -234,7 +235,7 @@ export const s = StyleSheet.create({
     flex: 1,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#FDE68A',
+    borderColor: Palette.yellow300,
     backgroundColor: Maple.warningSoft,
     padding: 14,
     gap: 8,
@@ -366,7 +367,7 @@ export const s = StyleSheet.create({
     top: 15,
     width: 34,
     height: 14,
-    backgroundColor: '#FDE68A',
+    backgroundColor: Palette.yellow300,
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
     borderWidth: 1.5,
@@ -379,14 +380,14 @@ export const s = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: '#38BDF8',
+    backgroundColor: Palette.sky500,
     borderWidth: 1,
     borderColor: Maple.blueHover,
   },
   schoolFacade: {
     width: 94,
     height: 54,
-    backgroundColor: '#FDE68A',
+    backgroundColor: Palette.yellow300,
     borderWidth: 1,
     borderColor: Maple.warning,
     flexDirection: 'row',
@@ -404,7 +405,7 @@ export const s = StyleSheet.create({
   schoolWin: {
     width: 9,
     height: 11,
-    backgroundColor: '#38BDF8',
+    backgroundColor: Palette.sky500,
     borderWidth: 1,
     borderColor: Maple.blueHover,
     borderRadius: 1,
@@ -416,7 +417,7 @@ export const s = StyleSheet.create({
   schoolWinWide: {
     width: 16,
     height: 11,
-    backgroundColor: '#38BDF8',
+    backgroundColor: Palette.sky500,
     borderWidth: 1,
     borderColor: Maple.blueHover,
     borderRadius: 1,
@@ -424,7 +425,7 @@ export const s = StyleSheet.create({
   schoolDoorFrame: {
     width: 18,
     height: 22,
-    backgroundColor: '#78350F',
+    backgroundColor: Palette.orange900,
     borderTopLeftRadius: 3,
     borderTopRightRadius: 3,
     flexDirection: 'row',
@@ -433,7 +434,7 @@ export const s = StyleSheet.create({
   },
   schoolDoorLeaf: {
     flex: 1,
-    backgroundColor: '#92400E',
+    backgroundColor: Palette.orange800b,
   },
   treeLeft: {
     position: 'absolute',

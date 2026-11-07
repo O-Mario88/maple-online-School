@@ -116,7 +116,7 @@ function useCurricula(k: K, me: string) {
 type U = ReturnType<typeof useCurricula>;
 
 function Crest({ src, size }: { src: number; size: number }) {
-  return <Image source={src} style={{ width: size, height: size, borderRadius: size / 2 }} contentFit="cover" />;
+  return <Image decorative source={src} style={{ width: size, height: size, borderRadius: size / 2 }} contentFit="cover" />;
 }
 
 function FrameworkList({ u }: { u: U }) {

@@ -12,6 +12,7 @@ import { addDays, clock12, dayParts } from '@/lib/live-hub';
 import { BLUE, BODY, GREEN, INK, LiveBadge } from './HubSchedule';
 import type { Hub, HubState, Tutor } from './useLiveHub';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 const ugx = (n: number) => formatMoney(n, 'UGX');
 const STAR = Maple.warning;
@@ -63,7 +64,7 @@ export function TutorCard({ hub, t, s, phone = false }: { hub: Hub; t: Tutor; s:
   return (
     <View style={[styles.tutor, phone && styles.tutorP]}>
       <View>
-        <Image source={t.photo} style={phone ? styles.tutorPhotoP : styles.tutorPhoto} contentFit="cover" />
+        <Image decorative source={t.photo} style={phone ? styles.tutorPhotoP : styles.tutorPhoto} contentFit="cover" />
         <Online />
       </View>
       <Text style={[styles.tutorName, phone && styles.tutorNameP]}>{t.name}</Text>
@@ -103,7 +104,7 @@ export function BookingSheet({ hub, s }: { hub: Hub; s: HubState }) {
           <Pressable style={styles.sheet} accessibilityRole="none">
             <Text style={styles.sheetTitle}>{`Book a ${hub.sessionMinutes}-min Homework Rescue`}</Text>
             <View style={styles.sheetTutor}>
-              <Image source={t.photo} style={styles.sheetPhoto} contentFit="cover" />
+              <Image decorative source={t.photo} style={styles.sheetPhoto} contentFit="cover" />
               <View style={styles.flex}>
                 <Text style={styles.tutorName}>{t.name}</Text>
                 <Text style={styles.tutorSub}>{`${t.subject} • ${t.levels}`}</Text>
@@ -165,7 +166,7 @@ export function LiveClassCard({ hub, c, s }: { hub: Hub; c: LiveClass; s: HubSta
   return (
     <View style={styles.classCard}>
       <View>
-        <Image source={c.thumb} style={styles.thumb} contentFit="cover" />
+        <Image decorative source={c.thumb} style={styles.thumb} contentFit="cover" />
         {s.action(c) === 'join' ? (
           <View style={styles.thumbBadge}>
             <LiveBadge text="Live" />
@@ -180,7 +181,7 @@ export function LiveClassCard({ hub, c, s }: { hub: Hub; c: LiveClass; s: HubSta
         </View>
         <Text style={styles.classWhen}>{when(hub, c)}</Text>
         <View style={styles.teacher}>
-          <Image source={c.face} style={styles.face} />
+          <Image decorative source={c.face} style={styles.face} />
           <Text style={styles.classWhen}>{c.teacher}</Text>
         </View>
         <ClassButton c={c} s={s} />
@@ -193,7 +194,7 @@ export function LiveClassRow({ hub, c, s }: { hub: Hub; c: LiveClass; s: HubStat
   return (
     <View style={styles.classRow}>
       <View>
-        <Image source={c.thumb} style={styles.thumbP} contentFit="cover" />
+        <Image decorative source={c.thumb} style={styles.thumbP} contentFit="cover" />
         {s.action(c) === 'join' ? (
           <View style={styles.thumbBadgeP}>
             <LiveBadge text="Live" />
@@ -217,7 +218,7 @@ export function BootcampRow({ b }: { b: Camp }) {
   const ongoing = progress != null;
   return (
     <View style={styles.camp}>
-      <Image source={b.icon} style={styles.campIcon} />
+      <Image decorative source={b.icon} style={styles.campIcon} />
       <View style={styles.flex}>
         <View style={styles.campTop}>
           <Text style={[styles.rowTitle, styles.campTitle]} numberOfLines={1}>
@@ -261,7 +262,7 @@ export function WeekRow({ hub, x, s, phone = false }: { hub: Hub; x: Hub['thisWe
         <Text style={styles.weekDay}>{dayParts(x.day).long}</Text>
         <Text style={styles.rowSub}>{clock12(x.start)}</Text>
       </Pressable>
-      <Image source={hub.icons[x.icon]} style={styles.weekIcon} />
+      <Image decorative source={hub.icons[x.icon]} style={styles.weekIcon} />
       <View style={styles.flex}>
         <Text style={styles.rowTitle}>{x.title}</Text>
         <Text style={styles.rowSub}>{x.teacher}</Text>
@@ -328,7 +329,7 @@ const styles = StyleSheet.create({
   classBtn: { height: 33, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 7, marginTop: 10, borderRadius: 4, borderWidth: 1, borderColor: Maple.blueLine, backgroundColor: Maple.surface },
   classBtnP: { width: 64, marginTop: 0 },
   classJoin: { borderWidth: 0, backgroundColor: Maple.blue },
-  classDone: { borderColor: '#B9E3C8', backgroundColor: Maple.successSoft },
+  classDone: { borderColor: Palette.green300d, backgroundColor: Maple.successSoft },
   classBtnText: { fontSize: 12.5, fontWeight: '500', color: BLUE },
   classRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   thumbP: { width: 44, height: 44, borderRadius: 8 },

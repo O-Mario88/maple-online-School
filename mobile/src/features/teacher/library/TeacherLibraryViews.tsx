@@ -354,7 +354,7 @@ export function TeacherLibraryDesk({ lib, me, phone = false }: { lib: TeacherLib
 
                   <View style={s.avatarStackRow}>
                     {col.faces.map((face, idx) => (
-                      <Image
+                      <Image decorative
                         key={idx}
                         source={face}
                         style={[
@@ -471,7 +471,7 @@ export function TeacherLibraryDesk({ lib, me, phone = false }: { lib: TeacherLib
                 <View style={s.sharedWithRight}>
                   <View style={s.avatarStackRow}>
                     {lib.selectedFile.sharedFaces.map((f, i) => (
-                      <Image
+                      <Image decorative
                         key={i}
                         source={f}
                         style={[
@@ -576,7 +576,7 @@ function FileThumbnailPreview({ file }: { file: LibraryFileCard }) {
   if (file.kind === 'mp4' && file.videoThumb) {
     return (
       <View style={s.thumbBox}>
-        <Image
+        <Image decorative
           source={file.videoThumb}
           style={StyleSheet.absoluteFill}
           contentFit="cover"

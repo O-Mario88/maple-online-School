@@ -68,6 +68,10 @@ jobs:
       - run: npm test -- --ci
       - name: Deployment build carries no mock data
         run: npm run check:no-mock
-      # Moves around each portal in Chrome on the sample-data web build: one frame, no reload, no dark frame.
-      - name: Browser navigation tests
+      - name: First page load stays within the JavaScript budget
+        run: npm run check:bundle
+      # Chrome on an export of the sample-data web build: navigation keeps one frame with no reload or
+      # dark frame, and the key pages keep one h1, no sideways scroll at 320px and no cut-off labels.
+      # (The visual snapshots are macOS pictures and skip on Linux.)
+      - name: Browser tests (navigation and page quality)
         run: npm run test:nav

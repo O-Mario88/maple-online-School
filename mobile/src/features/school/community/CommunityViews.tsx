@@ -67,7 +67,7 @@ function LeftNav({ x }: { x: X }) {
   return (
     <View style={s.stack}>
       <Card style={s.coverCard}>
-        <Image source={x.c.cover} style={s.cover} contentFit="cover" />
+        <Image decorative source={x.c.cover} style={s.cover} contentFit="cover" />
         <LinearGradient colors={['rgba(11,26,63,0)', 'rgba(11,26,63,0.75)']} style={StyleSheet.absoluteFill} />
         <Text style={s.coverText}>{x.c.title}</Text>
       </Card>
@@ -88,7 +88,7 @@ function LeftNav({ x }: { x: X }) {
         </View>
         {x.c.groups.map((g) => (
           <View key={g.id} style={s.group}>
-            <Image source={g.photo} style={s.groupPhoto} contentFit="cover" />
+            <Image decorative source={g.photo} style={s.groupPhoto} contentFit="cover" />
             <View style={s.flex}>
               <Text style={s.strong}>{g.name}</Text>
               <Text style={s.small}>{`${g.members} members`}</Text>
@@ -113,7 +113,7 @@ function Composer({ x }: { x: X }) {
   return (
     <Card style={s.card}>
       <View style={s.row}>
-        <Image source={x.c.meAvatar} style={s.avatar} contentFit="cover" />
+        <Image decorative source={x.c.meAvatar} style={s.avatar} contentFit="cover" />
         <TextInput style={s.composer} value={x.draft} onChangeText={x.setDraft} placeholder="Share an update, resource, or announcement with your school community..." placeholderTextColor={BODY} multiline accessibilityLabel="Write a post" />
       </View>
       <View style={s.rowWrap}>
@@ -136,7 +136,7 @@ function PostCard({ p, x }: { p: CommunityPost; x: X }) {
   return (
     <Card style={s.card}>
       <View style={s.row}>
-        <Image source={p.avatar} style={s.avatar} contentFit="cover" />
+        <Image decorative source={p.avatar} style={s.avatar} contentFit="cover" />
         <View style={s.flex}>
           <View style={s.row}>
             <Text style={s.author}>{p.author}</Text>
@@ -167,12 +167,12 @@ function PostCard({ p, x }: { p: CommunityPost; x: X }) {
             </View>
           ) : null}
         </View>
-        {one ? <Image source={p.images[0]} style={s.sidePhoto} contentFit="cover" /> : null}
+        {one ? <Image decorative source={p.images[0]} style={s.sidePhoto} contentFit="cover" /> : null}
       </View>
       {p.images.length > 1 ? (
         <View style={s.photos}>
           {p.images.map((img, i) => (
-            <Image key={i} source={img} style={s.photo} contentFit="cover" />
+            <Image decorative key={i} source={img} style={s.photo} contentFit="cover" />
           ))}
         </View>
       ) : null}
@@ -281,7 +281,7 @@ function Groups({ x }: { x: X }) {
     <View style={s.gridWrap}>
       {x.c.groups.map((g) => (
         <Card key={g.id} style={s.groupCard}>
-          <Image source={g.photo} style={s.groupCover} contentFit="cover" />
+          <Image decorative source={g.photo} style={s.groupCover} contentFit="cover" />
           <Text style={s.strong}>{g.name}</Text>
           <Text style={s.small}>{`${g.members} members · ${g.moderated ? 'Moderated' : 'Open to members'}`}</Text>
         </Card>
@@ -297,7 +297,7 @@ function Moderation({ x }: { x: X }) {
       {x.pending.length ? (
         x.pending.map((p) => (
           <View key={p.id} style={s.modRow}>
-            <Image source={p.avatar} style={s.avatar} contentFit="cover" />
+            <Image decorative source={p.avatar} style={s.avatar} contentFit="cover" />
             <View style={s.flex}>
               <Text style={s.strong}>{`${p.author} · ${p.context}`}</Text>
               <Text style={s.body}>{p.title}</Text>

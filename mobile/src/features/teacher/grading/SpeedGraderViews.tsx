@@ -238,7 +238,7 @@ export function SpeedGraderDesk({ g, me, phone = false }: { g: SpeedGrader; me: 
                     onPress={() => setSelectedSubId(sub.id)}>
                     <View style={[s.checkbox, active && s.checkboxActiveOutline]} />
 
-                    <Image source={sub.photo} style={s.subAvatar} contentFit="cover" />
+                    <Image decorative source={sub.photo} style={s.subAvatar} contentFit="cover" />
 
                     <View style={{ flex: 1, gap: 2 }}>
                       <View style={s.subTopRow}>
@@ -425,7 +425,7 @@ export function SpeedGraderDesk({ g, me, phone = false }: { g: SpeedGrader; me: 
                     style={s.thumbItem}
                     onPress={() => setActivePage(pageNum)}>
                     <View style={[s.thumbFrame, on && s.thumbFrameOn]}>
-                      <Image source={img} style={s.thumbImg} contentFit="cover" />
+                      <Image decorative source={img} style={s.thumbImg} contentFit="cover" />
                     </View>
                     <View style={[s.thumbNumPill, on && s.thumbNumPillOn]}>
                       <Text style={[s.thumbNumText, on && s.thumbNumTextOn]}>{pageNum}</Text>

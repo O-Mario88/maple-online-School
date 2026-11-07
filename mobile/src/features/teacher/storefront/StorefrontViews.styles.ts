@@ -2,6 +2,7 @@ import { StyleSheet } from 'react-native';
 
 import { BLUE, BODY, INK, LINE, MUTED } from '@/features/teacher/frame/TeacherParts';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 /** Styles for StorefrontViews (kept apart so the view file stays readable). */
 export const STOREFRONT_REF_WIDTH = 1220;
@@ -509,14 +510,14 @@ export const s = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 7,
-    backgroundColor: '#FCE7F3',
+    backgroundColor: Palette.pink100,
     alignItems: 'center',
     justifyContent: 'center',
   },
   promoPercentText: {
     fontSize: 13,
     fontWeight: '800',
-    color: '#DB2777',
+    color: Palette.pink600,
   },
   promoTitle: {
     fontSize: 11,

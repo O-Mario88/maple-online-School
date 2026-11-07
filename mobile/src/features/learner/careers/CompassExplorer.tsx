@@ -14,6 +14,7 @@ import { Bullets, cs, BRAND_SOFT, BRAND_BLUE, Sheet } from './CareerParts';
 import { CareerListRow, PathwayBanner } from './CompassCards';
 import type { Compass } from './useCompass';
 import { Maple, Radii } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 const SORTS: readonly { value: CareerSort; label: string }[] = [
   { value: 'relevant', label: 'Most Relevant' },
@@ -118,9 +119,9 @@ function GridCard({ x, c }: { x: Compass; c: Career }) {
   const saved = x.saves.careers.includes(c.id);
   return (
     <View style={s.card}>
-      <Image source={c.photo} style={s.cardPhoto} contentFit="cover" />
+      <Image decorative source={c.photo} style={s.cardPhoto} contentFit="cover" />
       <Pressable style={s.heart} onPress={() => x.toggleCareer(c.id)} hitSlop={8} accessibilityRole="button" accessibilityState={{ selected: saved }} accessibilityLabel={saved ? `Remove ${c.title} from saved` : `Save ${c.title}`}>
-        <Icon name={saved ? 'heartFill' : 'heart'} size={16} color={saved ? '#E5487F' : L.navy} />
+        <Icon name={saved ? 'heartFill' : 'heart'} size={16} color={saved ? Palette.pink500b : L.navy} />
       </Pressable>
       <View style={s.cardBody}>
         <Text style={s.cardName}>{c.title}</Text>
@@ -191,7 +192,7 @@ function Hero({ x }: { x: Compass }) {
     <View style={s.hero}>
       <LinearGradient colors={[Maple.blue, BRAND_BLUE, Maple.blue]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />
       <View style={s.heroPhoto} pointerEvents="none">
-        <Image source={x.cc.photos.directoryHero} style={StyleSheet.absoluteFill} contentFit="cover" />
+        <Image decorative source={x.cc.photos.directoryHero} style={StyleSheet.absoluteFill} contentFit="cover" />
         <LinearGradient colors={[Maple.blue, 'rgba(106,68,223,0.5)', 'rgba(106,68,223,0)']} locations={[0, 0.3, 0.7]} start={{ x: 0, y: 0.5 }} end={{ x: 1, y: 0.5 }} style={StyleSheet.absoluteFill} />
       </View>
       <View style={s.heroText}>
@@ -256,7 +257,7 @@ function RightColumn({ x }: { x: Compass }) {
     <View style={s.rightCol}>
       <SideCard title="Featured Career" icon="sparkle">
         <View style={s.featured}>
-          <Image source={f.photo} style={s.featuredPhoto} contentFit="cover" />
+          <Image decorative source={f.photo} style={s.featuredPhoto} contentFit="cover" />
           <View style={s.flex}>
             <Text style={s.featuredName}>{f.title}</Text>
             <Text style={cs.small} numberOfLines={4}>

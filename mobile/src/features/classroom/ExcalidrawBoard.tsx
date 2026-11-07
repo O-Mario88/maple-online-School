@@ -14,6 +14,7 @@ import {
 } from '@/lib/excalidraw-livekit';
 import { toast } from '@/lib/toast';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 const EXTRA_WORKED_STEPS = [
   '5/6 − 1/4 = 10/12 − 3/12 = 7/12',
@@ -244,7 +245,7 @@ export function ExcalidrawBoard({
         {/* Corner Picture-in-Picture (PiP) Teacher Camera Box */}
         {pipInCorner ? (
           <View style={s.pipBox}>
-            <Image source={teacherPhoto} style={StyleSheet.absoluteFill} contentFit="cover" />
+            <Image decorative source={teacherPhoto} style={StyleSheet.absoluteFill} contentFit="cover" />
             <View style={s.pipOverlay}>
               <View style={s.pipLiveDot} />
               <Text style={s.pipName} numberOfLines={1}>
@@ -312,7 +313,7 @@ const s = StyleSheet.create({
     gap: 5,
     backgroundColor: Maple.successSoft,
     borderWidth: 1,
-    borderColor: '#BBF7D0',
+    borderColor: Palette.green200,
     borderRadius: 6,
     paddingHorizontal: 8,
     paddingVertical: 3.5,
@@ -343,7 +344,7 @@ const s = StyleSheet.create({
   },
   permCanDraw: {
     backgroundColor: Maple.successSoft,
-    borderColor: '#86EFAC',
+    borderColor: Palette.green300,
   },
   permText: {
     fontSize: 10.5,

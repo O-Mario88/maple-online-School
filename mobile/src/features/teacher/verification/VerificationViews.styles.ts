@@ -2,6 +2,7 @@ import { StyleSheet } from 'react-native';
 
 import { BLUE, BODY, INK, LINE, MUTED } from '@/features/teacher/frame/TeacherParts';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 /** Styles for VerificationViews (kept apart so the view file stays readable). */
 export const VERIFICATION_REF_WIDTH = 1220;
@@ -373,7 +374,7 @@ export const s = StyleSheet.create({
     borderRadius: 9,
     backgroundColor: Maple.warningSoft,
     borderWidth: 1,
-    borderColor: '#FDE68A',
+    borderColor: Palette.yellow300,
     padding: 10,
   },
   goldShieldCircle: {

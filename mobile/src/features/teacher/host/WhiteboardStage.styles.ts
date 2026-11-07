@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 export const s = StyleSheet.create({
   col: { flex: 1, gap: 8, minWidth: 0 },
@@ -386,9 +387,9 @@ export const s = StyleSheet.create({
   /* Sticky Note */
   stickyNote: {
     width: '100%',
-    backgroundColor: '#FEF9C3',
+    backgroundColor: Palette.yellow200b,
     borderWidth: 1,
-    borderColor: '#FDE047',
+    borderColor: Palette.yellow400c,
     borderRadius: 6,
     paddingHorizontal: 10,
     paddingVertical: 7,

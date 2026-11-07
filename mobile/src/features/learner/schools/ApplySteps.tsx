@@ -8,6 +8,7 @@ import { Check, DateField, dayLabel, Field, PhoneField, Row, SectionHead, Select
 import { BRAND_SOFT, BRAND_BLUE, ugx } from './SchoolParts';
 import type { Apply } from './useApply';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 const STAYS = ['Day', 'Boarding', 'Day & Boarding'] as const;
 
@@ -197,7 +198,7 @@ const s = StyleSheet.create({
   chipTextOn: { fontWeight: '600', color: BRAND_BLUE },
   area: { minHeight: 80, padding: 12, borderRadius: 8, borderWidth: 1, borderColor: Maple.borderStrong, fontSize: 14.5, color: L.ink, textAlignVertical: 'top' },
   doc: { flexDirection: 'row', alignItems: 'center', gap: 14, padding: 14, borderRadius: 12, borderWidth: 1, borderColor: L.line },
-  docError: { borderColor: '#F3B4B4', backgroundColor: Maple.errorSoft },
+  docError: { borderColor: Palette.red300d, backgroundColor: Maple.errorSoft },
   docIcon: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center', borderRadius: 10, backgroundColor: BRAND_SOFT },
   docIconOn: { backgroundColor: Maple.successSoft },
   docTitle: { fontSize: 14.5, fontWeight: '600', color: L.navy },

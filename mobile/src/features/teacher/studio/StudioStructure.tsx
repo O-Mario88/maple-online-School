@@ -134,7 +134,7 @@ export function LevelList({ levels, setLevels }: { levels: readonly StudioLevel[
                     <View style={styles.num}>
                       <Text style={styles.numText}>{j + 1}</Text>
                     </View>
-                    <Text style={styles.lessonTitle} numberOfLines={1}>
+                    <Text style={styles.lessonTitle} numberOfLines={2}>
                       {it.title}
                     </Text>
                     <Text style={styles.kind}>{it.kind}</Text>
@@ -165,7 +165,7 @@ export function Samples({ s }: { s: StudioNew }) {
           <SmallEdit onPress={() => go('/teach/course-editor')} a11y="Edit the sample lesson" />
         </View>
         <Pressable onPress={() => go('/learn/lesson')} accessibilityRole="button" accessibilityLabel={`Preview ${s.lesson.title} as a learner, ${s.lesson.length}`}>
-          <Image source={s.lesson.video} style={styles.video} contentFit="cover" />
+          <Image decorative source={s.lesson.video} style={styles.video} contentFit="cover" />
         </Pressable>
       </View>
       <View style={styles.box}>

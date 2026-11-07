@@ -10,6 +10,7 @@ import type { IconName } from '@/lib/icons';
 import { BLUE, BODY, GREEN, INK, RED } from './MathText';
 import type { Work, WorkState } from './useWork';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 
 export function StepHead({ n, title, sub }: { n: number; title: string; sub: string }) {
@@ -54,7 +55,7 @@ function Thumbs({ s, small = false }: { s: WorkState; small?: boolean }) {
       {sc.pages.map((p, i) => (
         <View key={i} style={[small ? styles.thumbP : styles.thumb, i === sc.current && styles.thumbOn]}>
           <Pressable style={styles.fill} onPress={() => sc.setCurrent(i)} accessibilityRole="button" accessibilityState={{ selected: i === sc.current }} accessibilityLabel={`Page ${i + 1}`}>
-            <Image source={p} style={styles.fill} contentFit="cover" />
+            <Image decorative source={p} style={styles.fill} contentFit="cover" />
           </Pressable>
           {i === sc.current ? (
             <Pressable style={styles.remove} onPress={() => sc.remove(i)} accessibilityRole="button" accessibilityLabel={`Remove page ${i + 1}`} hitSlop={6}>
@@ -302,7 +303,7 @@ const styles = StyleSheet.create({
   frameFade: { position: 'absolute', left: 0, right: 0, bottom: 0, height: '35%' },
   timer: { position: 'absolute', top: 8, right: 4, flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 9, height: 27, borderRadius: 7, backgroundColor: 'rgba(22,26,36,0.92)' },
   timerDot: { width: 12, height: 12, borderRadius: 6, borderWidth: 2, borderColor: Maple.surface, backgroundColor: RED },
-  timerDotIdle: { backgroundColor: '#E8797C' },
+  timerDotIdle: { backgroundColor: Palette.red400 },
   timerText: { fontSize: 13, fontWeight: '600', color: Maple.surface, fontVariant: ['tabular-nums'] },
   idleText: { position: 'absolute', top: '42%', alignSelf: 'center', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 10, backgroundColor: 'rgba(11,20,36,0.75)', fontSize: 11.5, color: Maple.surface, overflow: 'hidden' },
   vivaBar: { position: 'absolute', left: 8, right: 8, bottom: 8, flexDirection: 'row', alignItems: 'center' },

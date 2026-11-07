@@ -72,6 +72,8 @@ export function Btn({
   iconRight,
   height = 44,
   accessibilityLabel,
+  disabled = false,
+  hint,
 }: {
   label: string;
   icon?: IconName;
@@ -82,13 +84,27 @@ export function Btn({
   iconRight?: IconName;
   height?: number;
   accessibilityLabel?: string;
+  /** Greyed out and not pressable: for an action that isn't available yet. */
+  disabled?: boolean;
+  /** Read out with the button, e.g. why it is disabled. */
+  hint?: string;
 }) {
-  const color = kind === 'primary' ? WHITE : BLUE;
+  const color = disabled ? Maple.disabledText : kind === 'primary' ? WHITE : BLUE;
   return (
     <Pressable
-      style={({ pressed }) => [styles.btn, { minHeight: height }, kind === 'primary' ? styles.btnPrimary : kind === 'outline' ? styles.btnOutline : styles.btnSoft, pressed && styles.pressed, style]}
+      style={({ pressed }) => [
+        styles.btn,
+        { minHeight: height },
+        kind === 'primary' ? styles.btnPrimary : kind === 'outline' ? styles.btnOutline : styles.btnSoft,
+        pressed && !disabled && styles.pressed,
+        disabled && styles.btnDisabled,
+        style,
+      ]}
       onPress={onPress}
+      disabled={disabled}
       accessibilityRole="button"
+      accessibilityState={{ disabled }}
+      accessibilityHint={hint}
       accessibilityLabel={accessibilityLabel ?? label}>
       {icon ? <Icon name={icon} size={18} color={color} /> : null}
       <Text style={[styles.btnText, { color }, textStyle]} numberOfLines={1}>
@@ -116,7 +132,7 @@ export function Avatar({ source, size = 44, badge = 'none' }: { source: number; 
   const dot = Math.max(12, Math.round(size * 0.28));
   return (
     <View style={{ width: size, height: size }}>
-      <Image source={source} style={{ width: size, height: size, borderRadius: size / 2 }} contentFit="cover" />
+      <Image decorative source={source} style={{ width: size, height: size, borderRadius: size / 2 }} contentFit="cover" />
       {badge === 'online' || badge === 'away' ? (
         <View style={[styles.dot, { width: dot, height: dot, borderRadius: dot / 2, backgroundColor: badge === 'online' ? GREEN : Maple.error }]} />
       ) : null}
@@ -262,6 +278,7 @@ const styles = StyleSheet.create({
   pillText: { fontWeight: '600' },
   btn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, paddingHorizontal: 18, borderRadius: 10 },
   btnPrimary: { backgroundColor: BLUE },
+  btnDisabled: { backgroundColor: Maple.disabledSurface, borderColor: Maple.disabledBorder },
   btnOutline: { backgroundColor: WHITE, borderWidth: 1.5, borderColor: Maple.blueLine },
   btnSoft: { backgroundColor: SELECT, borderWidth: 1, borderColor: Maple.blueLine },
   btnText: { fontSize: 15, fontWeight: '600' },

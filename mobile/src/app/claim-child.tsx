@@ -15,6 +15,7 @@ import { mockData } from '@/lib/mock';
 import type { MockData } from '@/mock';
 import { Maple } from '@/constants/maple';
 import { PageScroll } from '@/components/shell/PageScroll';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
 type Claim = MockData['publicPages']['claimChild'];
 type Stage = 'enter' | 'verify';
@@ -235,7 +236,7 @@ function Phone({ c, f }: { c: Claim; f: Form }) {
         <FlowSteps steps={steps(f.stage)} phone />
         {f.stage === 'enter' ? (
           <>
-            <Text style={styles.titleP} accessibilityRole="header">
+            <Text style={styles.titleP} {...PAGE_TITLE}>
               Claim Your Child
             </Text>
             <Text style={styles.subP}>Scan the school-issued Parent Claim QR Code or enter the claim code manually.</Text>

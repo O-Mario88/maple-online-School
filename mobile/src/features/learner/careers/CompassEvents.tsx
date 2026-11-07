@@ -121,7 +121,7 @@ function EventCard({ e, p, phone }: { e: CareerEvent; p: EP; phone: boolean }) {
   return (
     <View style={[s.card, phone ? s.cardP : s.cardD]}>
       <View>
-        <Image source={e.photo} style={s.photo} contentFit="cover" />
+        <Image decorative source={e.photo} style={s.photo} contentFit="cover" />
         <PhotoPill text={e.kind} icon={KIND_ICON[e.kind]} />
         {e.sponsored ? <PhotoPill text="Sponsored" side="right" tone="gold" /> : null}
       </View>
@@ -230,7 +230,7 @@ function UpcomingForMe({ x, p }: { x: Compass; p: EP }) {
                 <Text style={s.dateDay}>{d}</Text>
               </View>
               <View style={s.flex}>
-                <Text style={s.mineTitle} numberOfLines={1}>
+                <Text style={s.mineTitle} numberOfLines={3}>
                   {e.title}
                 </Text>
                 <Text style={cs.small}>{e.time}</Text>
@@ -262,7 +262,7 @@ function PlanAround({ x, p }: { x: Compass; p: EP }) {
           </View>
           <Text style={cs.small}>Add events to your career path in My Plan, set reminders and track what you learn.</Text>
         </View>
-        <Image source={x.cc.photos.art.calendar} style={s.planArt} contentFit="contain" />
+        <Image decorative source={x.cc.photos.art.calendar} style={s.planArt} contentFit="contain" />
       </View>
       <Pressable style={s.wideOutline} onPress={add} accessibilityRole="button">
         <Text style={s.outlineText}>Add to My Plan</Text>
@@ -311,7 +311,7 @@ function Sheets({ x, p }: { x: Compass; p: EP }) {
     <>
       {e ? (
         <Sheet title={e.title} onClose={() => p.setOpen(null)}>
-          <Image source={e.photo} style={s.sheetPhoto} contentFit="cover" />
+          <Image decorative source={e.photo} style={s.sheetPhoto} contentFit="cover" />
           <Text style={s.host}>{`${e.host}${e.sponsored ? ' · Sponsored' : ''}`}</Text>
           <Text style={cs.body}>{e.about}</Text>
           <Text style={cs.body}>{`${shortDate(e.date)} · ${e.time} · ${e.place} (${e.format.toLowerCase()})`}</Text>

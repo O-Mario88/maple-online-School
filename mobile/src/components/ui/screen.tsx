@@ -13,6 +13,7 @@ import { useStyles } from '@/hooks/use-styles';
 import { PAGE_GUTTER, PAGE_MAX_WIDTH } from '@/lib/layout';
 import { useSwitcher } from '@/lib/switcher-context';
 import { PageScroll } from '@/components/shell/PageScroll';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
 export interface ShellState {
   /** True inside the signed-in app shell (sidebar or tab bar). */
@@ -118,7 +119,7 @@ export function PageHeader({ title, subtitle, eyebrow, back, actions }: PageHead
         <View style={wide ? styles.titleBlock : styles.titleBlockStack}>
           {eyebrow ? <Text style={styles.eyebrow}>{eyebrow}</Text> : null}
           {title ? (
-            <Text style={styles.title} accessibilityRole="header">
+            <Text style={styles.title} {...PAGE_TITLE}>
               {title}
             </Text>
           ) : null}

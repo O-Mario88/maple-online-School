@@ -16,6 +16,7 @@ import type { MockData } from '@/mock';
 
 import { continueLearning, type Curriculum, exploreRows, offeringSize, filterCourses, goalsDone, justForYou, type Kind, liveNow, type Row, type RowKey, toggleGoal, upcoming } from './explore';
 import { Maple } from '@/constants/maple';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
 export type ExploreData = MockData['learner']['explore'];
 type Course = ExploreData['catalogue'][number];
@@ -113,7 +114,7 @@ function Hero({ u, name }: { u: U; name: string }) {
   return (
     <View style={styles.hero}>
       <Text style={styles.heroHi}>{guestGreeting(name, guest)}</Text>
-      <Text style={styles.heroTitle} accessibilityRole="header">
+      <Text style={styles.heroTitle} {...PAGE_TITLE}>
         Explore & Learn
       </Text>
       <Text style={styles.heroSub}>Subjects, past papers, live classes and practice for your curriculum.</Text>
@@ -158,7 +159,7 @@ function CourseCard({ c, onPress, wide = false }: { c: Course; onPress: () => vo
   const onFreePlan = guest || access?.phase === 'locked';
   return (
     <Pressable style={[styles.course, wide && styles.courseWide]} onPress={onPress} accessibilityRole="button" accessibilityLabel={`${c.title} by ${c.teacher}`}>
-      <Image source={c.photo} style={styles.coursePhoto} contentFit="cover" accessibilityIgnoresInvertColors />
+      <Image decorative source={c.photo} style={styles.coursePhoto} contentFit="cover" accessibilityIgnoresInvertColors />
       <View style={styles.courseBadge}>
         <Text style={styles.courseBadgeText}>{`${c.curriculum} • ${c.level}`}</Text>
       </View>
@@ -170,7 +171,7 @@ function CourseCard({ c, onPress, wide = false }: { c: Course; onPress: () => vo
           {c.title}
         </Text>
         <View style={styles.inline}>
-          <Image source={c.face} style={styles.face} contentFit="cover" />
+          <Image decorative source={c.face} style={styles.face} contentFit="cover" />
           <Text style={styles.small} numberOfLines={1}>
             {c.teacher}
           </Text>
@@ -277,7 +278,7 @@ function Resume({ u, phone = false }: { u: U; phone?: boolean }) {
       <Head title="Continue Learning" link="My Subjects" onLink={() => router.push('/learn/course')} />
       {u.resume.map((c) => (
         <Pressable key={c.id} style={styles.resume} onPress={() => u.open(c)} accessibilityRole="button" accessibilityLabel={`Continue ${c.title}, ${Math.round(c.progress * 100)}% done`}>
-          <Image source={c.photo} style={styles.resumePhoto} contentFit="cover" />
+          <Image decorative source={c.photo} style={styles.resumePhoto} contentFit="cover" />
           <View style={styles.flex}>
             <Text style={styles.resumeTitle} numberOfLines={1}>
               {c.title}
@@ -353,7 +354,7 @@ function LiveNow({ u }: { u: U }) {
       </View>
       {s ? (
         <>
-          <Image source={s.photo} style={styles.livePhoto} contentFit="cover" />
+          <Image decorative source={s.photo} style={styles.livePhoto} contentFit="cover" />
           <Text style={styles.resumeTitle}>{s.title}</Text>
           <Text style={styles.small}>{`${s.teacher} • ${s.subject} • ${s.attendees} watching`}</Text>
           <Pressable style={styles.join} onPress={() => u.join(s)} accessibilityRole="button" accessibilityLabel={`Join ${s.title}`}>
@@ -374,7 +375,7 @@ function Upcoming({ u }: { u: U }) {
       <Head title="Upcoming Live Classes" link="All" onLink={() => router.push('/learn/live')} />
       {u.next.map((s) => (
         <View key={s.id} style={styles.up}>
-          <Image source={s.photo} style={styles.upPhoto} contentFit="cover" />
+          <Image decorative source={s.photo} style={styles.upPhoto} contentFit="cover" />
           <View style={styles.flex}>
             <Text style={styles.upTitle} numberOfLines={2}>
               {s.title}
@@ -397,7 +398,7 @@ function ForYou({ u }: { u: U }) {
       <Text style={styles.small}>{`Picked for ${u.d.myCurriculum} from the subjects you are working to improve.`}</Text>
       {u.forYou.map((c) => (
         <Pressable key={c.id} style={styles.up} onPress={() => u.open(c)} accessibilityRole="button" accessibilityLabel={c.title}>
-          <Image source={c.photo} style={styles.upPhoto} contentFit="cover" />
+          <Image decorative source={c.photo} style={styles.upPhoto} contentFit="cover" />
           <View style={styles.flex}>
             <Text style={styles.upTitle} numberOfLines={2}>
               {c.title}

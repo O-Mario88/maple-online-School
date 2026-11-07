@@ -16,6 +16,7 @@ import type { RecRow } from '@/mock/command-center/pf-revenue';
 import { type FormAsk, FormModal } from './FinForm';
 import { CheckList, FinDesk, FinHead, FinPanel, FinPhone, FinStats, FinTabs, num, PhoneRow, type Promo, SumLine, ugx } from './FinKit';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 type D = CommandData['platformFinance']['revenue'];
 const PER_PAGE = 10;
@@ -171,7 +172,7 @@ type U = ReturnType<typeof useRecognition>;
 function Customer({ r }: { r: RecRow }) {
   return (
     <View style={styles.inline}>
-      {r.avatar ? <Image source={r.avatar} style={styles.avatar} contentFit="cover" accessibilityIgnoresInvertColors /> : <Icon name="building" size={20} color={NAVY} />}
+      {r.avatar ? <Image decorative source={r.avatar} style={styles.avatar} contentFit="cover" accessibilityIgnoresInvertColors /> : <Icon name="building" size={20} color={NAVY} />}
       <View style={styles.flex}>
         <Text style={styles.cellStrong} numberOfLines={1}>{r.customer}</Text>
         <Text style={styles.cell} numberOfLines={1}>{r.ref}</Text>
@@ -239,8 +240,8 @@ function Waterfall({ u, phone = false }: { u: U; phone?: boolean }) {
   const scale = (n: number) => (n / f.cash) * height;
   const steps = [
     { label: 'Cash Received', value: `${(f.cash / 1e6).toLocaleString('en-US', { maximumFractionDigits: 1, minimumFractionDigits: 1 })}M`, top: f.cash, size: f.cash, color: Maple.blue },
-    { label: 'Deferred (Unearned)', value: `(${(f.deferred / 1e6).toLocaleString('en-US', { maximumFractionDigits: 1, minimumFractionDigits: 1 })}M)`, top: f.cash, size: f.deferred, color: '#F87171', down: true },
-    { label: 'Discounts & Cancellations', value: `(${(f.adjustments / 1e6).toFixed(1)}M)`, top: f.cash - f.deferred, size: f.adjustments, color: '#F87171', down: true },
+    { label: 'Deferred (Unearned)', value: `(${(f.deferred / 1e6).toLocaleString('en-US', { maximumFractionDigits: 1, minimumFractionDigits: 1 })}M)`, top: f.cash, size: f.deferred, color: Palette.red400b, down: true },
+    { label: 'Discounts & Cancellations', value: `(${(f.adjustments / 1e6).toFixed(1)}M)`, top: f.cash - f.deferred, size: f.adjustments, color: Palette.red400b, down: true },
     { label: 'Revenue Earned', value: `${(f.earned / 1e6).toLocaleString('en-US', { maximumFractionDigits: 1, minimumFractionDigits: 1 })}M`, top: f.earned, size: f.earned, color: Maple.successText },
   ];
   return (
@@ -371,7 +372,7 @@ export function RecognitionPhone({ c }: { c: CommandData }) {
         return (
           <PhoneRow
             key={r.id}
-            lead={r.avatar ? <Image source={r.avatar} style={styles.avatarLg} contentFit="cover" /> : <Icon name="building" size={26} color={NAVY} />}
+            lead={r.avatar ? <Image decorative source={r.avatar} style={styles.avatarLg} contentFit="cover" /> : <Icon name="building" size={26} color={NAVY} />}
             title={`${r.id} • ${r.customer}`}
             sub={`${r.type} • earned ${ugx(l.recognized)} • ${l.reversed ? `reversed ${ugx(l.reversed)}` : `deferred ${ugx(l.deferred)}`}${l.next ? ` • next ${date(l.next.date)}` : ''}`}
             pill={<Pill label={l.status} tone={STATUS_TONE[l.status]} size={11} />}

@@ -9,6 +9,7 @@ import type { MockData } from '@/mock';
 import { Brand } from '../palette';
 import { type NewReview, ReviewSheet, TeacherSheet } from './CourseSheets';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 type Course = MockData['publicPages']['coursePage'];
 
@@ -174,7 +175,7 @@ export function Related({ course }: { course: Course }) {
       {course.related.map((r) => (
         <Pressable key={r.title} style={styles.related} accessibilityRole="link" onPress={() => router.push({ pathname: '/explore', params: { q: r.title.split(' ')[0] } })}>
           <View style={styles.relatedThumb}>
-            {r.photo ? <Image source={r.photo} style={styles.fill} contentFit="cover" /> : <Icon name={r.icon} size={26} color={Brand.surface} />}
+            {r.photo ? <Image decorative source={r.photo} style={styles.fill} contentFit="cover" /> : <Icon name={r.icon} size={26} color={Brand.surface} />}
           </View>
           <View style={styles.flex}>
             <Text style={styles.strong}>{r.title}</Text>
@@ -226,5 +227,5 @@ const styles = StyleSheet.create({
   barPct: { width: 34, fontSize: 12, color: Brand.body, textAlign: 'right' },
   review: { gap: 2, paddingTop: 10, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: Brand.line },
   related: { flexDirection: 'row', gap: 12 },
-  relatedThumb: { width: 96, height: 80, borderRadius: 10, backgroundColor: '#2A9D8F', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
+  relatedThumb: { width: 96, height: 80, borderRadius: 10, backgroundColor: Palette.teal700b, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
 });

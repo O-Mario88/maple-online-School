@@ -37,7 +37,7 @@ function Objectives({ page, p, phone }: { page: Page; p: Project; phone: boolean
       {cols.map((c, i) => (
         <View key={c.title} style={[styles.objCol, i > 0 && !phone && styles.objDivider]}>
           <View style={styles.objHead}>
-            <Image source={c.icon} style={styles.objIcon} />
+            <Image decorative source={c.icon} style={styles.objIcon} />
             <Text style={styles.objTitle}>{c.title}</Text>
           </View>
           {c.items.map((it) => (
@@ -80,7 +80,7 @@ function Attachments({ page, big = false }: { page: Page; big?: boolean }) {
     <View style={[styles.atts, big && styles.attsBig]}>
       {page.attachments.map((a) => (
         <Pressable key={a.title} style={[styles.att, big && styles.attBig]} onPress={() => router.push('/learn/library')} accessibilityRole="link" accessibilityLabel={`${a.title}, ${a.meta}`}>
-          <Image source={a.icon} style={styles.attIcon} />
+          <Image decorative source={a.icon} style={styles.attIcon} />
           <View style={styles.flex}>
             <Text style={styles.attTitle} numberOfLines={1}>
               {a.title}
@@ -168,7 +168,7 @@ export function ProjectDetail({ page, p, s, phone = false }: { page: Page; p: Pr
   return (
     <View>
       <View style={[styles.hero, phone && styles.heroP]}>
-        <Image source={p.hero} style={styles.fill} contentFit="cover" />
+        <Image decorative source={p.hero} style={styles.fill} contentFit="cover" />
         <View style={styles.heroPill}>
           <StatusPill status={p.status} />
         </View>
@@ -177,7 +177,7 @@ export function ProjectDetail({ page, p, s, phone = false }: { page: Page; p: Pr
         <View style={styles.flex}>
           <Text style={styles.title}>{p.title}</Text>
           <View style={styles.meta}>
-            <Image source={page.subjectIcon} style={styles.subjIcon} />
+            <Image decorative source={page.subjectIcon} style={styles.subjIcon} />
             <Text style={styles.metaText}>{`${p.subject}  •  Primary 6`}</Text>
             <Icon name="calendar" size={13} color={BODY} />
             <Text style={styles.metaText}>{p.date}</Text>

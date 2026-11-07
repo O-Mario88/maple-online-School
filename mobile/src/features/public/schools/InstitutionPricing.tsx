@@ -9,6 +9,7 @@ import type { PlanVersion } from '@/features/school/subscription/plans';
 import type { IconName } from '@/lib/icons';
 import type { MockData } from '@/mock';
 import { Maple, Radii } from '@/constants/maple';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
 type Admin = MockData['schoolAdmin'];
 export type PricingData = Pick<Admin, 'comparison' | 'institutionPricing' | 'planCards' | 'planVersions'>;
@@ -45,7 +46,7 @@ function Hero({ d, phone = false }: { d: PricingData; phone?: boolean }) {
         <Icon name="building" size={15} color={BRAND_BLUE} />
         <Text style={s.eyebrowText}>{p.eyebrow}</Text>
       </View>
-      <Text style={[s.title, phone && s.titleP]} accessibilityRole="header">
+      <Text style={[s.title, phone && s.titleP]} {...PAGE_TITLE}>
         {p.title}
       </Text>
       <Text style={s.lede}>{p.sub}</Text>

@@ -99,9 +99,9 @@ export function ContinueReadingCard({ h }: { h: Home }) {
         onPress={() => openMenuPage(b.href)}
         accessibilityRole="link"
         accessibilityLabel={`${b.title}, ${b.subject}, ${b.percentLabel}`}>
-        <Image source={b.thumb} style={styles.bookThumb} contentFit="cover" />
+        <Image decorative source={b.thumb} style={styles.bookThumb} contentFit="cover" />
         <View style={styles.flex}>
-          <Text style={styles.bookTitle} numberOfLines={1}>
+          <Text style={styles.bookTitle} numberOfLines={3}>
             {b.title}
           </Text>
           <Text style={styles.bookSub}>{b.subject}</Text>
@@ -128,9 +128,9 @@ export function CompletedReadingCard({ h }: { h: Home }) {
         onPress={() => openMenuPage(b.href)}
         accessibilityRole="link"
         accessibilityLabel={`${b.title}, ${b.subject}, Completed`}>
-        <Image source={b.thumb} style={styles.bookThumb} contentFit="cover" />
+        <Image decorative source={b.thumb} style={styles.bookThumb} contentFit="cover" />
         <View style={styles.flex}>
-          <Text style={styles.bookTitle} numberOfLines={2}>
+          <Text style={styles.bookTitle} numberOfLines={3}>
             {b.title}
           </Text>
           <Text style={styles.bookSub}>{b.subject}</Text>

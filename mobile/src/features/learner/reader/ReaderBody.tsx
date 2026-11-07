@@ -13,6 +13,7 @@ import { EnvironmentArt } from './ReaderArt';
 import { clock } from './reader';
 import type { Reader } from './useBookReader';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 export const INK = Maple.navy;
 export const NAVY = Maple.blueHover;
@@ -22,7 +23,7 @@ export const LINE = Maple.blueSelected;
 export const WHITE = Maple.surface;
 const GREEN = Maple.successText;
 const HEAD_BLUE = Maple.blue;
-const MARK = '#FFF2A8';
+const MARK = Palette.yellow300e;
 
 function IconBtn({ icon, label, onPress, on = false, children }: { icon?: IconName; label: string; onPress: () => void; on?: boolean; children?: ReactNode }) {
   return (
@@ -254,7 +255,7 @@ function Blocks({ x, blocks, size, figureWidth }: { x: Reader; blocks: readonly 
         if (b.kind === 'media')
           return (
             <Pressable key={key} style={styles.media} onPress={x.togglePlay} accessibilityRole="button" accessibilityLabel={`${x.playing ? 'Pause' : 'Play'} ${b.title}`}>
-              <Image source={b.image} style={{ width: figureWidth, height: Math.round(figureWidth * 0.56) }} contentFit="cover" />
+              <Image decorative source={b.image} style={{ width: figureWidth, height: Math.round(figureWidth * 0.56) }} contentFit="cover" />
               <View style={styles.mediaShade}>
                 <View style={styles.mediaPlay}>
                   <Icon name={x.playing ? 'pause' : b.media === 'video' ? 'playFill' : 'volume'} size={26} color={WHITE} />
@@ -379,7 +380,7 @@ const styles = StyleSheet.create({
   primaryText: { fontSize: 14.5, fontWeight: '700', color: WHITE },
   iconBtn: { width: 40, height: 40, borderRadius: 10, borderWidth: 1, borderColor: Maple.blueLine, alignItems: 'center', justifyContent: 'center', backgroundColor: WHITE },
   iconBtnOn: { borderColor: BLUE, backgroundColor: BLUE },
-  menu: { position: 'absolute', right: 12, top: 78, zIndex: 10, width: 250, padding: 6, borderRadius: 12, borderWidth: 1, borderColor: LINE, backgroundColor: WHITE, shadowColor: '#0B1F4D', shadowOpacity: 0.14, shadowRadius: 18, shadowOffset: { width: 0, height: 8 } },
+  menu: { position: 'absolute', right: 12, top: 78, zIndex: 10, width: 250, padding: 6, borderRadius: 12, borderWidth: 1, borderColor: LINE, backgroundColor: WHITE, shadowColor: Palette.blue950g, shadowOpacity: 0.14, shadowRadius: 18, shadowOffset: { width: 0, height: 8 } },
   menuPhone: { position: 'relative', right: 0, top: 0, width: 'auto' },
   menuItem: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 10, paddingVertical: 10, borderRadius: 8 },
   menuText: { fontSize: 13.5, color: NAVY },
@@ -407,20 +408,20 @@ const styles = StyleSheet.create({
   cols: { flexDirection: 'row', gap: 28 },
   col: { flex: 1, minWidth: 0 },
   blocks: { gap: 14 },
-  tag: { alignSelf: 'flex-start', paddingHorizontal: 14, paddingVertical: 5, borderRadius: 10, backgroundColor: '#DDF0C4' },
-  tagText: { fontSize: 18, fontWeight: '800', color: '#244A10' },
+  tag: { alignSelf: 'flex-start', paddingHorizontal: 14, paddingVertical: 5, borderRadius: 10, backgroundColor: Palette.green200e },
+  tagText: { fontSize: 18, fontWeight: '800', color: Palette.green950c },
   chapterTitle: { fontWeight: '800', color: NAVY, letterSpacing: -0.5 },
   greenRule: { width: 56, height: 4, marginTop: -4, borderRadius: 2, backgroundColor: GREEN },
   para: { color: INK },
   marked: { backgroundColor: MARK },
-  idea: { gap: 6, padding: 14, borderRadius: 12, backgroundColor: '#F7F7DD' },
+  idea: { gap: 6, padding: 14, borderRadius: 12, backgroundColor: Palette.lime100b },
   ideaTitle: { fontWeight: '800', color: INK },
   ideaText: { color: INK },
   heading: { fontWeight: '800', color: HEAD_BLUE },
   bullets: { gap: 8 },
   bulletRow: { flexDirection: 'row', gap: 10 },
   dot: { width: 8, height: 8, marginTop: 8, borderRadius: 4, backgroundColor: GREEN },
-  figure: { gap: 0, borderRadius: 12, overflow: 'hidden', backgroundColor: '#F2F5EA' },
+  figure: { gap: 0, borderRadius: 12, overflow: 'hidden', backgroundColor: Palette.lime100 },
   figureArt: { borderRadius: 12, overflow: 'hidden' },
   media: { borderRadius: 12, overflow: 'hidden', backgroundColor: Maple.navy },
   mediaShade: { position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, alignItems: 'center', justifyContent: 'center', gap: 6, padding: 12, backgroundColor: 'rgba(8,16,40,0.45)' },

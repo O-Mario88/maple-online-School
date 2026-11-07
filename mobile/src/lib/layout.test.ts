@@ -1,4 +1,4 @@
-import { gridColumns, initials, PAGE_MAX_WIDTH, pageWidth } from './layout';
+import { gridColumns, initials, isNarrowPhone, PAGE_MAX_WIDTH, pageWidth } from './layout';
 
 describe('gridColumns', () => {
   it('fits as many equal columns as the minimum width allows', () => {
@@ -29,5 +29,14 @@ describe('page width', () => {
     expect(pageWidth(1448)).toBe(1448);
     expect(pageWidth(1200)).toBe(1200);
     expect(pageWidth(0)).toBe(0);
+  });
+});
+
+describe('narrow phones', () => {
+  test('a 320px or 350px phone is narrow; a 360px or wider one is not', () => {
+    expect(isNarrowPhone(320)).toBe(true);
+    expect(isNarrowPhone(359)).toBe(true);
+    expect(isNarrowPhone(360)).toBe(false);
+    expect(isNarrowPhone(390)).toBe(false);
   });
 });

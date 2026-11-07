@@ -57,7 +57,7 @@ function PayDialog({ s, what }: { s: BillingState; what: PayFor }) {
   return (
     <Frame title="Confirm Payment" onClose={s.close}>
       <View style={styles.summary}>
-        <Image source={p.icon} style={styles.sumIcon} contentFit="contain" />
+        <Image decorative source={p.icon} style={styles.sumIcon} contentFit="contain" />
         <Text style={styles.sumTitle}>{p.title}</Text>
         <Text style={styles.sumAmount}>{ugx(p.amount)}</Text>
       </View>
@@ -66,7 +66,7 @@ function PayDialog({ s, what }: { s: BillingState; what: PayFor }) {
         const on = x.id === s.payWith;
         return (
           <Pressable key={x.id} style={[styles.option, on && styles.optionOn]} onPress={() => s.setPayWith(x.id)} disabled={s.paying} accessibilityRole="radio" accessibilityState={{ checked: on }}>
-            <Image source={x.logo} style={styles.logo} contentFit="contain" />
+            <Image decorative source={x.logo} style={styles.logo} contentFit="contain" />
             <View style={styles.flex}>
               <Text style={styles.optTitle}>{x.label}</Text>
               <Text style={styles.optSub}>{x.sub}</Text>
@@ -211,7 +211,7 @@ function MethodDialog({ s }: { s: BillingState }) {
             }}
             accessibilityRole="radio"
             accessibilityState={{ checked: kind === k }}>
-            <Image source={logo(k)} style={styles.logo} contentFit="contain" />
+            <Image decorative source={logo(k)} style={styles.logo} contentFit="contain" />
             <Text style={styles.optSub}>{k === 'mtn' ? 'MTN MoMo' : k === 'airtel' ? 'Airtel Money' : 'Card'}</Text>
           </Pressable>
         ))}

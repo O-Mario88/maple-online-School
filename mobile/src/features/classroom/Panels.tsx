@@ -10,6 +10,7 @@ import { filterParticipants, type ParticipantFilter, searchTranscript } from '@/
 import type { BoardSnapshot } from '@/lib/excalidraw-livekit';
 import type { MockData } from '@/mock';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 type Room = MockData['shared']['classroom'];
 export type ChatMessage = Room['chat'][number];
@@ -149,7 +150,7 @@ export function ChatBody({ messages, onSend }: { messages: readonly ChatMessage[
     <View style={styles.gap}>
       {messages.map((m, i) => (
         <View key={`${m.at}-${i}`} style={styles.message}>
-          <Image source={m.photo} style={styles.face} contentFit="cover" />
+          <Image decorative source={m.photo} style={styles.face} contentFit="cover" />
           <View style={styles.flex}>
             <View style={styles.nameRow}>
               <Text style={styles.strong}>{m.who}</Text>
@@ -282,7 +283,7 @@ export function ParticipantsBody({
           allowedDrawers.some((n) => n.toLowerCase() === p.name.toLowerCase());
         return (
           <View key={p.name} style={styles.person}>
-            <Image source={p.photo} style={styles.face} contentFit="cover" />
+            <Image decorative source={p.photo} style={styles.face} contentFit="cover" />
             <View style={styles.flex}>
               <View style={styles.nameRow}>
                 <Text style={styles.strong}>{p.name}</Text>
@@ -416,7 +417,7 @@ const styles = StyleSheet.create({
     backgroundColor: Brand.canvas,
   },
   allowDrawBtnOn: {
-    borderColor: '#86EFAC',
+    borderColor: Palette.green300,
     backgroundColor: Maple.successSoft,
   },
   allowDrawText: {

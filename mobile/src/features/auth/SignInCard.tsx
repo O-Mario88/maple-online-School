@@ -11,6 +11,7 @@ import type { IconName } from '@/lib/icons';
 import { MOCK_DATA, mockApi } from '@/lib/mock';
 import type { MockData } from '@/mock';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 type Art = MockData['publicPages']['signInArt'];
 type Method = 'whatsapp' | 'email' | 'phonePin' | 'google' | 'apple' | 'passkey';
@@ -31,13 +32,13 @@ const PRIMARY: readonly MethodInfo[] = [
 ];
 const OTHERS: readonly MethodInfo[] = [
   { key: 'google', title: 'Continue with Google', icon: 'globe', tint: Maple.blue },
-  { key: 'apple', title: 'Continue with Apple', icon: 'person', tint: '#000000' },
+  { key: 'apple', title: 'Continue with Apple', icon: 'person', tint: Palette.black },
   { key: 'passkey', title: 'Use a passkey', detail: 'Sign in with your biometric (Face ID, Touch ID, Windows Hello)', icon: 'fingerprint', tint: Maple.blue },
 ];
 
 function Logo({ m, art, size }: { m: MethodInfo; art?: Art; size: number }) {
   const photo = art?.[m.key];
-  if (photo) return <Image source={photo} style={{ width: size, height: size, borderRadius: size / 2 }} />;
+  if (photo) return <Image decorative source={photo} style={{ width: size, height: size, borderRadius: size / 2 }} />;
   return (
     <View style={{ width: size, height: size, borderRadius: size / 2, backgroundColor: m.tint, alignItems: 'center', justifyContent: 'center' }}>
       <Icon name={m.icon} size={size * 0.5} color={Brand.surface} />
@@ -213,7 +214,7 @@ export function SignInCard({ art, phone = false }: { art?: Art; phone?: boolean 
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
-  card: { width: 552, minHeight: 877, paddingHorizontal: 35, paddingTop: 22, paddingBottom: 30, borderRadius: 14, backgroundColor: Brand.surface, shadowColor: '#0F2350', shadowOpacity: 0.12, shadowRadius: 24, shadowOffset: { width: 0, height: 8 } },
+  card: { width: 552, minHeight: 877, paddingHorizontal: 35, paddingTop: 22, paddingBottom: 30, borderRadius: 14, backgroundColor: Brand.surface, shadowColor: Palette.blue950j, shadowOpacity: 0.12, shadowRadius: 24, shadowOffset: { width: 0, height: 8 } },
   cardP: { width: '100%', height: 'auto', paddingHorizontal: 14, paddingTop: 8, paddingBottom: 16, borderRadius: 14 },
   tabs: { flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: Maple.disabledSurface },
   tab: { flex: 1, alignItems: 'center', paddingVertical: 14 },
@@ -257,7 +258,7 @@ const styles = StyleSheet.create({
   linkP: { fontSize: 13 },
   preview: { marginTop: 10, textAlign: 'center' },
   demoBar: { marginTop: 12, padding: 10, borderRadius: 10, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.blueSoft, gap: 6 },
-  demoTitle: { fontSize: 11.5, fontWeight: '700', color: '#334E7B' },
+  demoTitle: { fontSize: 11.5, fontWeight: '700', color: Palette.blue800 },
   demoRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
   demoPill: { paddingHorizontal: 10, paddingVertical: 5, borderRadius: 999, backgroundColor: Maple.blue },
   demoPillText: { fontSize: 11.5, fontWeight: '700', color: Maple.surface },

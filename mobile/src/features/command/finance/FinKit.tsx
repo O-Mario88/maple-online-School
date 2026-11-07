@@ -84,7 +84,7 @@ function FinTopBar({ search, me }: { search: string; me: Me }) {
         <Icon name="help" size={24} color={BLUE} />
       </Pressable>
       <Pressable style={styles.me} onPress={switcher?.open} accessibilityRole="button" accessibilityLabel={`${me.name}, ${me.role}. Switch mode`}>
-        <Image source={me.avatar} style={styles.meAvatar} contentFit="cover" />
+        <Image decorative source={me.avatar} style={styles.meAvatar} contentFit="cover" />
         <View>
           <Text style={styles.meName}>{me.name}</Text>
           <Text style={styles.meRole}>{me.role}</Text>

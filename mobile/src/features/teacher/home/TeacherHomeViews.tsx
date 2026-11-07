@@ -9,6 +9,7 @@ import type { TeacherHome } from '@/mock/teacher-home';
 import { ActionQueue, FlaggedStudents, NextLiveClass, StatRow, useIntervene, useNextClassCountdown } from './HomeCards';
 import { DateControls, QuickActions, TodaySchedule, WeekEarnings, dayLabel } from './HomeMore';
 import { Maple } from '@/constants/maple';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
 /** The teacher home reference's desktop (top bar to the end of the cards), laid out in its pixels and scaled. */
 export const TEACHER_REF_WIDTH = 1180;
@@ -38,7 +39,7 @@ export function TeacherHomeDesk({ h, now }: { h: TeacherHome; now: Date }) {
         <View style={styles.main}>
           <View style={styles.header}>
             <View style={styles.flex}>
-              <Text style={styles.title} accessibilityRole="header">{`${greeting(now)}, ${h.firstName}!`}</Text>
+              <Text style={styles.title} {...PAGE_TITLE}>{`${greeting(now)}, ${h.firstName}!`}</Text>
               <Text style={styles.subtitle}>Here’s what needs your attention today. You’re making a real difference! ☀️</Text>
             </View>
             <DateControls h={h} />
@@ -83,7 +84,7 @@ export function TeacherHomePhone({ h, now }: { h: TeacherHome; now: Date }) {
       <TeacherPhoneTop me={me} />
       <ScrollView contentContainerStyle={styles.phone}>
         <View>
-          <Text style={styles.titleP} accessibilityRole="header">{`${greeting(now)}, ${h.firstName}!`}</Text>
+          <Text style={styles.titleP} {...PAGE_TITLE}>{`${greeting(now)}, ${h.firstName}!`}</Text>
           <View style={styles.dateP}>
             <Text style={styles.dateTextP}>{dayLabel(h.date)}</Text>
             <Icon name="calendar" size={13} color={BODY} />

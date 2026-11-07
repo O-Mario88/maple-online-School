@@ -20,21 +20,22 @@ import { MASTERY_REF_WIDTH, s as deskS } from './MasteryHeatmapViews.styles';
 import { phoneS } from './MasteryHeatmapViews.phoneStyles';
 import { PhoneScroll } from '@/features/teacher/frame/PhoneScroll';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 export { MASTERY_REF_WIDTH };
 
 const TIER_COLORS: Readonly<Record<HeatCellTier, { bg: string; fg: string }>> = {
-  darkGreen: { bg: Maple.success, fg: '#052E16' },
-  lightGreen: { bg: '#9AE6B4', fg: '#064E3B' },
-  yellow: { bg: '#FDE68A', fg: '#78350F' },
-  orange: { bg: '#FDBA74', fg: '#7C2D12' },
-  red: { bg: '#FCA5A5', fg: Maple.errorText },
+  darkGreen: { bg: Maple.success, fg: Palette.green950 },
+  lightGreen: { bg: Palette.green300c, fg: Palette.teal950 },
+  yellow: { bg: Palette.yellow300, fg: Palette.orange900 },
+  orange: { bg: Palette.amber400c, fg: Palette.orange800 },
+  red: { bg: Palette.red300e, fg: Maple.errorText },
 };
 
 function overallTone(score: number): { fg: string; bar: string } {
   if (score >= 80) return { fg: Maple.navy, bar: Maple.successText };
   if (score >= 68) return { fg: Maple.warningText, bar: Maple.warning };
-  if (score >= 60) return { fg: '#C2410C', bar: '#EA580C' };
+  if (score >= 60) return { fg: Palette.orange700, bar: Palette.orange600 };
   return { fg: Maple.error, bar: Maple.error };
 }
 
@@ -283,7 +284,7 @@ export function MasteryHeatmapDesk({ m, me, phone = false }: { m: MasteryHeatmap
                       </Pressable>
 
                       <View style={[s.studentCell, s.colStudent]}>
-                        <Image source={st.photo} style={s.avatar} contentFit="cover" />
+                        <Image decorative source={st.photo} style={s.avatar} contentFit="cover" />
                         <Text style={[s.studentName, isSelected && { color: BLUE }]} numberOfLines={1}>
                           {st.name}
                         </Text>
@@ -325,7 +326,7 @@ export function MasteryHeatmapDesk({ m, me, phone = false }: { m: MasteryHeatmap
                       comp.avgTone === 'red'
                         ? Maple.errorSoft
                         : comp.avgTone === 'yellow'
-                          ? '#FEF9C3'
+                          ? Palette.yellow200b
                           : Maple.successSoft;
                     const fg = comp.avgTone === 'red' ? Maple.error : Maple.navy;
                     return (
@@ -355,7 +356,7 @@ export function MasteryHeatmapDesk({ m, me, phone = false }: { m: MasteryHeatmap
             <View style={s.legendRow}>
               {[
                 { color: Maple.success, label: '≥ 85% Mastered' },
-                { color: '#86EFAC', label: '70–84% On Track' },
+                { color: Palette.green300, label: '70–84% On Track' },
                 { color: Maple.warning, label: '55–69% Needs Support' },
                 { color: Maple.error, label: '< 55% At Risk' },
                 { color: Maple.muted, label: 'Not Enough Data' },
@@ -392,7 +393,7 @@ export function MasteryHeatmapDesk({ m, me, phone = false }: { m: MasteryHeatmap
                   </View>
                 </View>
                 <Pressable
-                  style={[s.insightBtn, { borderColor: '#FCA5A5' }]}
+                  style={[s.insightBtn, { borderColor: Palette.red300e }]}
                   onPress={() => {
                     setSelectedStudentId('m-8');
                     toast('Focused on At-Risk students (David M., James T.).');
@@ -410,7 +411,7 @@ export function MasteryHeatmapDesk({ m, me, phone = false }: { m: MasteryHeatmap
                     <Text style={s.insightBadgeText}>!</Text>
                   </View>
                   <View style={{ flex: 1, gap: 2 }}>
-                    <Text style={[s.insightHeading, { color: '#92400E' }]}>
+                    <Text style={[s.insightHeading, { color: Palette.orange800b }]}>
                       Common class gaps
                     </Text>
                     <Text style={s.insightBody}>
@@ -463,7 +464,7 @@ export function MasteryHeatmapDesk({ m, me, phone = false }: { m: MasteryHeatmap
         <Panel style={s.rightCol}>
           {/* Student Header */}
           <View style={s.studentDrawerHeader}>
-            <Image
+            <Image decorative
               source={selectedStudent.drawerPhoto ?? selectedStudent.photo}
               style={s.drawerAvatar}
               contentFit="cover"

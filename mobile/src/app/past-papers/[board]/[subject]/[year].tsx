@@ -22,6 +22,7 @@ import { mockData } from '@/lib/mock';
 import { findPaper } from '@/lib/past-paper';
 import { Maple } from '@/constants/maple';
 import { PageScroll } from '@/components/shell/PageScroll';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
 const PAPER_TABS = ['Paper 1', 'Paper 2', 'Marking Scheme', 'Exam Report', 'Related Resources'] as const;
 const SHOWN_QUESTIONS = 10;
@@ -116,14 +117,14 @@ export default function PastPaperScreen() {
       <View style={styles.hero}>
         {wide ? (
           <>
-            <Image source={pages.heroPhoto} style={styles.heroPhoto} contentFit="cover" />
+            <Image decorative source={pages.heroPhoto} style={styles.heroPhoto} contentFit="cover" />
             <View style={styles.heroFade} />
           </>
         ) : null}
         <View style={[styles.heroRow, !wide && styles.heroRowPhone]}>
           {paper.crest ? <Image source={paper.crest} style={wide ? styles.crest : styles.crestSmall} contentFit="contain" accessibilityLabel={`${paper.boardName} crest`} /> : <Text style={styles.flag}>{paper.flag}</Text>}
           <View style={styles.flex}>
-            <Text style={[styles.heroTitle, wide && styles.heroTitleWide]} accessibilityRole="header">
+            <Text style={[styles.heroTitle, wide && styles.heroTitleWide]} {...PAGE_TITLE}>
               {paper.title}
             </Text>
             <Text style={styles.heroSub}>Real exam. Real experience. Real results.</Text>

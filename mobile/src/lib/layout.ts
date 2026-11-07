@@ -29,3 +29,14 @@ export const PAGE_GUTTER = 24;
 export function pageWidth(available: number): number {
   return Math.min(available, PAGE_MAX_WIDTH);
 }
+
+/**
+ * Below this width (a 320px or small Android phone) a full header doesn't fit, so headers show
+ * the logo's mark without the name, and rows let their labels wrap.
+ */
+export const NARROW_PHONE_WIDTH = 360;
+
+/** True on a phone too narrow for the full logo beside the header's buttons. */
+export function isNarrowPhone(width: number): boolean {
+  return width < NARROW_PHONE_WIDTH;
+}

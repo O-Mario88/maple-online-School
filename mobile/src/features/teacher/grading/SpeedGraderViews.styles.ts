@@ -2,6 +2,7 @@ import { StyleSheet } from 'react-native';
 
 import { BLUE, BODY, INK, LINE, MUTED } from '@/features/teacher/frame/TeacherParts';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 /** Styles for SpeedGraderViews (kept apart so the view file stays readable). */
 export const SPEED_GRADER_REF_WIDTH = 1220;
@@ -486,7 +487,7 @@ export const s = StyleSheet.create({
   },
   paperSheet: {
     flex: 1,
-    backgroundColor: '#FDFDFB',
+    backgroundColor: Palette.lime50,
     borderRadius: 8,
     borderWidth: 1,
     borderColor: Maple.border,
@@ -568,7 +569,7 @@ export const s = StyleSheet.create({
     gap: 8,
   },
   yellowHighlightBand: {
-    backgroundColor: '#FEF08A',
+    backgroundColor: Palette.yellow300d,
     borderRadius: 4,
     paddingVertical: 2,
     paddingRight: 8,
@@ -585,9 +586,9 @@ export const s = StyleSheet.create({
     color: Maple.warning,
   },
   yellowSticky: {
-    backgroundColor: '#FEF9C3',
+    backgroundColor: Palette.yellow200b,
     borderWidth: 1,
-    borderColor: '#FDE047',
+    borderColor: Palette.yellow400c,
     borderRadius: 6,
     padding: 8,
     gap: 1,
@@ -871,7 +872,7 @@ export const s = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: '#FF5A5F',
+    backgroundColor: Palette.red400d,
     alignItems: 'center',
     justifyContent: 'center',
   },

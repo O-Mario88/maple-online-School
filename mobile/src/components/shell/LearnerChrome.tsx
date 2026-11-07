@@ -115,7 +115,7 @@ export function LearnerHeader({ mode = 'sidebar' }: { mode?: NavMode }) {
           accessibilityRole="button"
           accessibilityLabel={`${name}${switcher ? `, ${switcher.label}. Switch mode` : ''}`}>
           {avatar ? (
-            <Image source={avatar} style={s.avatar} contentFit="cover" />
+            <Image decorative source={avatar} style={s.avatar} contentFit="cover" />
           ) : (
             <View style={[s.avatar, s.avatarBlank]}>
               <Text style={s.avatarText}>{name.slice(0, 1).toUpperCase()}</Text>
@@ -302,7 +302,8 @@ function TopTabs() {
             onPress={() => openMenuPage(i.href as Href)}
             accessibilityRole="tab"
             accessibilityState={{ selected: on }}
-            accessibilityLabel={i.label}>
+            // The name it's read by is the label it shows (WCAG 2.5.3), so "Videos" is "Videos" to everyone.
+            accessibilityLabel={i.short ?? i.label}>
             <Icon name={i.icon} size={20} color={on ? C.blue : C.ink} />
             <Text style={[s.topTabText, on && s.topTabTextOn]} numberOfLines={1}>
               {i.short ?? i.label}

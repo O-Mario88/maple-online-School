@@ -15,6 +15,7 @@ import { AdminDesk, AdminPhone, SelectBox } from '../kit/AdminKit';
 import { HubHeader, HubTabs, KpiCard, KpiRow, PrivacyNote } from '../kit/HubKit';
 import { conversionRate, ctr, reasonShares, stageShares } from './growth';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 type Admin = MockData['schoolAdmin'];
 
@@ -107,7 +108,7 @@ function ReasonsCard({ x }: { x: X }) {
             <Text style={[s.body, s.reasonLabel]} numberOfLines={1}>
               {r.label}
             </Text>
-            <Bar value={r.pct / 100} color={r.label === 'Other' ? '#B7C0D6' : Maple.blue} height={8} style={s.flex} />
+            <Bar value={r.pct / 100} color={r.label === 'Other' ? Palette.blue300 : Maple.blue} height={8} style={s.flex} />
             <Text style={s.strong}>{`${r.pct}%`}</Text>
           </View>
         ))
@@ -183,7 +184,7 @@ function CampaignsCard({ x }: { x: X }) {
       <CardHead title="Campaign Performance" size={16} link="Manage in Admissions" onLink={() => router.push('/admin/admissions' as Href)} />
       {x.campaigns.map((c) => (
         <View key={c.id} style={s.campaign}>
-          <Image source={c.photo} style={s.campaignPhoto} contentFit="cover" />
+          <Image decorative source={c.photo} style={s.campaignPhoto} contentFit="cover" />
           <View style={s.flex}>
             <Text style={s.strong}>{c.title}</Text>
             <Text style={s.small}>{c.sub}</Text>

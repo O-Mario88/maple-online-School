@@ -9,6 +9,7 @@ import { AdminDesk, AdminPhone } from '../kit/AdminKit';
 import { BillingSummary, Capacity, CapacityBanner, ChangeSheet, CurrentPlan, Head, Invoices, Usage } from './SubscriptionParts';
 import { type Admin, longDate, type SubState, TAB_ICONS, TABS, type Tab, ugx, useSubscription } from './useSubscription';
 import { Maple } from '@/constants/maple';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
 const BRAND_BLUE = Maple.blue;
 
@@ -17,7 +18,7 @@ function PageTitle({ phone = false }: { phone?: boolean }) {
     <View style={s.title}>
       <IconTile icon="receipt" tone="purple" size={phone ? 42 : 48} radius={12} />
       <View style={s.flex}>
-        <Text style={[s.h1, phone && s.h1P]} accessibilityRole="header">
+        <Text style={[s.h1, phone && s.h1P]} {...PAGE_TITLE}>
           Subscription & Billing
         </Text>
         <Text style={s.sub}>Manage your plan, learner capacity, usage, invoices and payments.</Text>

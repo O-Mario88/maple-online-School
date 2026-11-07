@@ -24,7 +24,7 @@ export function BlockPalette({ c, b }: { c: CourseBuilder; b: Builder }) {
       <View style={styles.tiles}>
         {c.blocks.map((k) => (
           <Pressable key={k.kind} style={({ pressed }) => [styles.tile, pressed && styles.tilePressed]} onPress={() => b.addBlock(k.kind)} accessibilityRole="button" accessibilityLabel={`Add a ${k.label.replace('\n', ' ')} block`}>
-            <Image source={k.icon} style={styles.tileIcon} contentFit="contain" />
+            <Image decorative source={k.icon} style={styles.tileIcon} contentFit="contain" />
             <Text style={styles.tileText}>{k.label}</Text>
           </Pressable>
         ))}
@@ -49,10 +49,10 @@ export function LessonContent({ c, b, phone = false, editing = true }: { c: Cour
           <View key={x.id} style={[styles.row, phone ? styles.rowP : styles.rowBox, b.blocks.length - 1 - i > 0 && !phone && styles.rowGap]}>
             <Icon name="grid" size={phone ? 12 : 11} color={MUTED} />
             {x.kind === 'video' ? (
-              <Image source={c.video.frame} style={phone ? styles.thumbP : styles.thumb} contentFit="cover" />
+              <Image decorative source={c.video.frame} style={phone ? styles.thumbP : styles.thumb} contentFit="cover" />
             ) : (
               <View style={phone ? styles.iconBoxP : styles.iconBox}>
-                <Image source={icon(x.kind)} style={phone ? styles.iconP : styles.icon} contentFit="contain" />
+                <Image decorative source={icon(x.kind)} style={phone ? styles.iconP : styles.icon} contentFit="contain" />
               </View>
             )}
             <View style={styles.flex}>

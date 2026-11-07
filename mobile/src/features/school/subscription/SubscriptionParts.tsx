@@ -9,6 +9,7 @@ import type { IconName } from '@/lib/icons';
 
 import { longDate, type SubState, ugx } from './useSubscription';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 const BRAND_BLUE = Maple.blue;
 
@@ -233,7 +234,7 @@ const s = StyleSheet.create({
   headTitle: { fontSize: 16, fontWeight: '700', color: NAVY },
   headSub: { fontSize: 14, fontWeight: '500', color: BODY },
   card: { gap: 10, padding: 18 },
-  banner: { flexDirection: 'row', alignItems: 'center', gap: 10, padding: 12, borderRadius: 12, borderWidth: 1, borderColor: '#FCD9A8', backgroundColor: Maple.warningSoft },
+  banner: { flexDirection: 'row', alignItems: 'center', gap: 10, padding: 12, borderRadius: 12, borderWidth: 1, borderColor: Palette.amber300e, backgroundColor: Maple.warningSoft },
   bannerFull: { borderColor: Maple.errorSoft, backgroundColor: Maple.errorSoft },
   bannerText: { flex: 1, fontSize: 13.5, color: NAVY },
   planCard: { overflow: 'hidden', padding: 0 },

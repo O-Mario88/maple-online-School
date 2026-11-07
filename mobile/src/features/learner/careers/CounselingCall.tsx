@@ -13,11 +13,12 @@ import { JOIN_EARLY_MINUTES, joinState, SESSION_MINUTES, slotLabel } from './com
 import { addAction, seedCounseling, seedSaves, toggleAction, useCareerSaves, useCounseling } from './saved';
 import type { CC } from './useCompass';
 import { Maple, Radii } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 const DARK = Maple.navy;
 const PANEL = Maple.navy;
 const LINE = Maple.navy;
-const SOFT = '#B9BED6';
+const SOFT = Palette.blue300b;
 const WIDE = 900;
 const pad = (n: number) => String(n).padStart(2, '0');
 const nowLocal = () => {
@@ -82,7 +83,7 @@ export function CounselingCall({ cc, sessionId }: { cc: CC; sessionId: string })
       <SafeAreaView style={s.root}>
         <Back />
         <View style={s.center}>
-          <Image source={who.photo} style={s.bigPhoto} contentFit="cover" />
+          <Image decorative source={who.photo} style={s.bigPhoto} contentFit="cover" />
           <Text style={s.title}>This session has ended</Text>
           <Text style={s.soft}>{`Your next steps with ${who.name} are in My Plan. Session notes stay between you and your counselor.`}</Text>
         </View>
@@ -94,11 +95,11 @@ export function CounselingCall({ cc, sessionId }: { cc: CC; sessionId: string })
       <SafeAreaView style={s.root}>
         <Back />
         <ScrollView contentContainerStyle={s.waiting}>
-          <Image source={who.photo} style={s.bigPhoto} contentFit="cover" />
+          <Image decorative source={who.photo} style={s.bigPhoto} contentFit="cover" />
           <Text style={s.title}>{`Your session with ${who.name}`}</Text>
           <Text style={s.soft}>{`${slotLabel(session.at)} · ${SESSION_MINUTES} minutes · ${session.topic}`}</Text>
           <View style={s.notice}>
-            <Icon name="clock" size={18} color="#FCD34D" />
+            <Icon name="clock" size={18} color={Palette.yellow400b} />
             <Text style={s.noticeText}>{`The room opens ${JOIN_EARLY_MINUTES} minutes before your session, in ${wait(j.minutesToOpen)}.`}</Text>
           </View>
           <View style={s.checks}>
@@ -196,7 +197,7 @@ export function CounselingCall({ cc, sessionId }: { cc: CC; sessionId: string })
         <Back />
         <View style={s.flex} />
         <View style={s.badge}>
-          <Icon name="lock" size={13} color="#86EFAC" />
+          <Icon name="lock" size={13} color={Palette.green300} />
           <Text style={s.badgeText}>Private · not recorded</Text>
         </View>
       </View>
@@ -204,7 +205,7 @@ export function CounselingCall({ cc, sessionId }: { cc: CC; sessionId: string })
         <View style={s.stage}>
           {/* Until video connects, the stage shows the counselor's portrait. */}
           <View style={s.portrait}>
-            <Image source={who.photo} style={s.portraitPhoto} contentFit="cover" />
+            <Image decorative source={who.photo} style={s.portraitPhoto} contentFit="cover" />
             <Text style={s.title}>{who.name}</Text>
             <Text style={s.soft}>{live ? 'Connecting video…' : 'Not here yet'}</Text>
           </View>
@@ -218,7 +219,7 @@ export function CounselingCall({ cc, sessionId }: { cc: CC; sessionId: string })
           ) : null}
           <View style={s.self}>
             <Text style={s.selfText}>{cam ? 'You' : 'Camera off'}</Text>
-            {!mic ? <Icon name="micOff" size={14} color="#FCA5A5" /> : null}
+            {!mic ? <Icon name="micOff" size={14} color={Palette.red300e} /> : null}
           </View>
         </View>
         {sidePanel}
@@ -255,15 +256,15 @@ const s = StyleSheet.create({
   small: { fontSize: 12.5, lineHeight: 17, color: SOFT },
   bigPhoto: { width: 120, height: 120, borderRadius: 60 },
   notice: { maxWidth: 520, flexDirection: 'row', alignItems: 'center', gap: 10, padding: 14, borderRadius: 12, backgroundColor: Maple.navy },
-  noticeText: { flex: 1, fontSize: 14, color: '#FDE68A' },
+  noticeText: { flex: 1, fontSize: 14, color: Palette.yellow300 },
   checks: { width: '100%', maxWidth: 520, gap: 10 },
   check: { flexDirection: 'row', alignItems: 'flex-start', gap: 12, padding: 14, borderRadius: 12, backgroundColor: PANEL },
   checkTitle: { fontSize: 14.5, fontWeight: '700', color: Maple.surface },
   primary: { height: 46, justifyContent: 'center', paddingHorizontal: 26, borderRadius: Radii.control, backgroundColor: Maple.blue },
   primaryText: { fontSize: 15, fontWeight: '700', color: Maple.surface },
   top: { flexDirection: 'row', alignItems: 'center', paddingRight: 16 },
-  badge: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 10, paddingVertical: 6, borderRadius: 999, backgroundColor: '#123524' },
-  badgeText: { fontSize: 12, fontWeight: '700', color: '#86EFAC' },
+  badge: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 10, paddingVertical: 6, borderRadius: 999, backgroundColor: Palette.teal950b },
+  badgeText: { fontSize: 12, fontWeight: '700', color: Palette.green300 },
   stageRow: { flex: 1, flexDirection: 'row', gap: 14, paddingHorizontal: 16 },
   stageCol: { flexDirection: 'column' },
   stage: { flex: 1, overflow: 'hidden', borderRadius: 18, backgroundColor: PANEL },
@@ -272,7 +273,7 @@ const s = StyleSheet.create({
   nameTag: { position: 'absolute', left: 14, bottom: 14, paddingHorizontal: 10, paddingVertical: 5, borderRadius: 8, backgroundColor: 'rgba(15,18,34,0.7)' },
   nameText: { fontSize: 13.5, fontWeight: '700', color: Maple.surface },
   waitTag: { position: 'absolute', top: 14, left: 14, right: 14, padding: 10, borderRadius: 10, backgroundColor: 'rgba(15,18,34,0.78)' },
-  waitText: { fontSize: 13, color: '#FDE68A' },
+  waitText: { fontSize: 13, color: Palette.yellow300 },
   self: { position: 'absolute', right: 14, bottom: 14, width: 150, height: 96, alignItems: 'center', justifyContent: 'center', gap: 4, borderRadius: 12, borderWidth: 1, borderColor: LINE, backgroundColor: Maple.navy },
   selfText: { fontSize: 12.5, fontWeight: '600', color: SOFT },
   panel: { overflow: 'hidden', borderRadius: 18, backgroundColor: PANEL },

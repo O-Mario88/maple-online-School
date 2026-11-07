@@ -14,6 +14,8 @@ import { type DirSort, FEE_HIGH, FEE_LOW, INSTITUTION_TYPES, STUDY_LEVELS } from
 import { type Dir, useDirectory } from './useDirectory';
 import type { CC } from './useCompass';
 import { Maple, Radii } from '@/constants/maple';
+import { PAGE_TITLE } from '@/lib/fonts/type';
+import { Palette } from '@/constants/palette';
 
 const CHECKS = ['Verified Institutions', 'Accredited Programs', 'Entry Requirements', 'Scholarships', 'Open Days & Events'];
 const LEVEL_INFO: Readonly<Record<string, { sub: string; icon: 'people' | 'building' | 'doc' | 'award'; tint: string }>> = {
@@ -38,7 +40,7 @@ function Hero({ phone, photo }: { phone: boolean; photo: number }) {
       <LinearGradient colors={[Maple.blueSoft, Maple.surface]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />
       {!phone ? (
         <View style={s.heroPhoto} pointerEvents="none">
-          <Image source={photo} style={StyleSheet.absoluteFill} contentFit="cover" />
+          <Image decorative source={photo} style={StyleSheet.absoluteFill} contentFit="cover" />
           <LinearGradient colors={[Maple.blueSoft, 'rgba(247,244,255,0)']} start={{ x: 0, y: 0.5 }} end={{ x: 0.5, y: 0.5 }} style={StyleSheet.absoluteFill} />
         </View>
       ) : null}
@@ -47,7 +49,7 @@ function Hero({ phone, photo }: { phone: boolean; photo: number }) {
           <Icon name="building" size={phone ? 22 : 30} color={L.white} />
         </LinearGradient>
         <View style={s.flex}>
-          <Text style={[s.heroTitle, phone && s.heroTitleP]} accessibilityRole="header">
+          <Text style={[s.heroTitle, phone && s.heroTitleP]} {...PAGE_TITLE}>
             Universities & Programs Directory
           </Text>
           <Text style={[s.heroSub, phone && s.heroSubP]}>Explore verified universities, colleges and vocational institutions, and discover programs that match your interests and goals.</Text>
@@ -178,12 +180,12 @@ function InstitutionCard({ u, d, phone }: { u: University; d: Dir; phone: boolea
   const saved = d.saves.institutions.includes(u.id);
   return (
     <View style={[s.card, phone ? s.cardP : s.cardD]}>
-      <Image source={u.photo} style={s.cardPhoto} contentFit="cover" />
+      <Image decorative source={u.photo} style={s.cardPhoto} contentFit="cover" />
       <Pressable style={s.heart} onPress={() => d.toggleInstitution(u.id)} hitSlop={8} accessibilityRole="button" accessibilityState={{ selected: saved }} accessibilityLabel={saved ? `Remove ${u.name} from saved` : `Save ${u.name}`}>
-        <Icon name={saved ? 'heartFill' : 'heart'} size={17} color={saved ? '#E5487F' : BRAND_BLUE} />
+        <Icon name={saved ? 'heartFill' : 'heart'} size={17} color={saved ? Palette.pink500b : BRAND_BLUE} />
       </Pressable>
       <View style={s.crestBox}>
-        <Image source={u.crest} style={s.crest} contentFit="contain" />
+        <Image decorative source={u.crest} style={s.crest} contentFit="contain" />
       </View>
       <View style={s.cardBody}>
         <View style={s.nameRow}>

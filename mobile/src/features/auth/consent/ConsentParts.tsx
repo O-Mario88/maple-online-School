@@ -42,7 +42,7 @@ export function ChannelPicker({ c, value, onChange, phone = false }: { c: Consen
         const on = ch.key === value;
         return (
           <Pressable key={ch.key} style={[styles.channel, phone && styles.channelP, on && styles.channelOn]} onPress={() => onChange(ch.key)} accessibilityRole="radio" accessibilityState={{ selected: on }} accessibilityLabel={ch.title}>
-            <Image source={c.art[ch.key]} style={phone ? styles.logoP : styles.logo} />
+            <Image decorative source={c.art[ch.key]} style={phone ? styles.logoP : styles.logo} />
             <Text style={[styles.chTitle, phone && styles.chTitleP]}>{ch.title}</Text>
             <Text style={[styles.chDetail, phone && styles.chDetailP]}>{phone ? ch.short : ch.detail}</Text>
             {on ? (
@@ -66,7 +66,7 @@ export function ContactField({ c, channel, value, onChange, phone = false }: { c
       <View style={[styles.contact, phone && styles.contactP]}>
         {channel === 'email' ? null : (
           <View style={styles.dial}>
-            <Image source={c.art.flagUg} style={styles.flag} />
+            <Image decorative source={c.art.flagUg} style={styles.flag} />
             <Text style={styles.dialText}>{c.dialCode}</Text>
             <Icon name="chevronDown" size={14} color={Brand.ink} />
           </View>

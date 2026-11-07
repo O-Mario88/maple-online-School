@@ -301,9 +301,12 @@ export function navMode(d: { os: string; width: number; installed: boolean }): N
 }
 
 /** The top bar: the first main pages that fit, then a More menu with the rest and the extras. */
+/** The most pages a top bar shows before More: past seven, a menu stops being scannable (Nov 2026 audit). */
+export const TOP_BAR_MAX = 7;
+
 export function topBarSplit(items: readonly NavItem[], slots: number): { tabs: NavItem[]; more: NavItem[] } {
   const main = items.filter((i) => !i.group);
-  const n = Math.max(1, Math.min(slots, main.length));
+  const n = Math.max(1, Math.min(slots, main.length, TOP_BAR_MAX));
   return { tabs: main.slice(0, n), more: [...main.slice(n), ...items.filter((i) => i.group)] };
 }
 

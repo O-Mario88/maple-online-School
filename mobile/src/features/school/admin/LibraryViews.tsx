@@ -11,6 +11,7 @@ import type { LibraryRequest, Resource, ResourceKind } from '@/mock/school-admin
 
 import { AdminDesk, AdminPhone, ListCard, ListRow, MenuRow, PageHead, Search, SelectBox, Segments, useChoice } from '../kit/AdminKit';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 type Admin = MockData['schoolAdmin'];
 type Lib = Admin['library'];
@@ -364,7 +365,7 @@ export function LibraryPhone({ a }: { a: Admin }) {
               const q = l.requests.find((x) => x.resource === r.title);
               return (
                 <View key={r.id} style={styles.phoneRes}>
-                  <Image source={r.cover} style={styles.phoneCover} contentFit="cover" />
+                  <Image decorative source={r.cover} style={styles.phoneCover} contentFit="cover" />
                   <View style={styles.flex}>
                     <Text style={styles.resTitle} numberOfLines={2}>
                       {r.title}
@@ -468,7 +469,7 @@ const styles = StyleSheet.create({
   resMeta: { fontSize: 12, color: BODY },
   resFoot: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 2 },
   resBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, height: 34, marginTop: 4, paddingHorizontal: 8, borderRadius: 8, borderWidth: 1, borderColor: Maple.blueLine, backgroundColor: WHITE },
-  resBtnDone: { borderColor: '#BDE8CC', backgroundColor: Maple.successSoft },
+  resBtnDone: { borderColor: Palette.green300g, backgroundColor: Maple.successSoft },
   resBtnText: { flexShrink: 1, fontSize: 12.5, fontWeight: '600', color: BLUE },
   resBtnTextDone: { color: Maple.successText },
   recNote: { fontSize: 13, color: BODY },
@@ -501,7 +502,7 @@ const styles = StyleSheet.create({
   bubble: { maxWidth: '88%', gap: 3, padding: 12, borderRadius: 12 },
   bubbleMine: { alignSelf: 'flex-end', backgroundColor: Maple.blueSelected },
   bubbleTheirs: { alignSelf: 'flex-start', backgroundColor: Maple.blueSoft },
-  bubbleAdmin: { alignSelf: 'center', backgroundColor: Maple.warningSoft, borderWidth: 1, borderColor: '#F8DFA8' },
+  bubbleAdmin: { alignSelf: 'center', backgroundColor: Maple.warningSoft, borderWidth: 1, borderColor: Palette.amber300d },
   bubbleFrom: { fontSize: 12, fontWeight: '700', color: NAVY },
   bubbleFromAdmin: { color: Maple.warningText },
   bubbleText: { fontSize: 13.5, lineHeight: 19, color: Maple.body },

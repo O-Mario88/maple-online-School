@@ -8,6 +8,7 @@ import { Icon } from '@/components/icon';
 import type { LiveClass } from './home/types';
 import { Brand, CARD_SHADOW } from './palette';
 import { Maple } from '@/constants/maple';
+import { prefersReducedMotion } from '@/lib/motion';
 
 const CARD_WIDTH = 270;
 const CARD_GAP = 14;
@@ -32,13 +33,13 @@ function ClassCard({ c }: { c: LiveClass }) {
               <Text style={styles.soonText}>{`Starts in ${c.startsIn}`}</Text>
             </View>
           )}
-          <Text style={styles.subject} numberOfLines={1}>
+          <Text style={styles.subject} numberOfLines={2}>
             {c.subject}
           </Text>
         </View>
         <Text style={styles.meta}>{`${c.board} · ${c.level}`}</Text>
         <View style={styles.footer}>
-          <Image source={c.face} style={styles.face} />
+          <Image decorative source={c.face} style={styles.face} />
           <Text style={styles.teacher} numberOfLines={1}>
             {c.teacher}
           </Text>
@@ -91,7 +92,7 @@ export function LiveStrip({ classes, phone = false }: { classes: readonly LiveCl
           style={styles.next}
           accessibilityRole="button"
           accessibilityLabel="More live classes"
-          onPress={() => scroller.current?.scrollToEnd({ animated: true })}>
+          onPress={() => scroller.current?.scrollToEnd({ animated: !prefersReducedMotion() })}>
           <Icon name="chevronRight" size={16} color={Brand.ink} />
         </Pressable>
       )}

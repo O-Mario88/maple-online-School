@@ -15,6 +15,7 @@ import { Cell, type Column, DataTable, PageHead, Search, useChoice, useSelection
 import { toast } from '@/lib/toast';
 import type { TicketRow } from '@/mock/command-center/security';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 type S = CommandData['security'];
 const PER_PAGE = 10;
@@ -436,7 +437,7 @@ const styles = StyleSheet.create({
   userName: { fontSize: 13.5, fontWeight: '700', color: NAVY },
   note: { padding: 8, borderRadius: 8, backgroundColor: Maple.warningSoft, fontSize: 12, color: NAVY },
   decided: { padding: 10, borderRadius: 8, backgroundColor: Maple.successSoft, fontSize: 12.5, color: NAVY },
-  tsBtn: { flex: 1.25, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 5, height: 32, borderRadius: 8, borderWidth: 1, borderColor: '#FCA5A5', backgroundColor: Maple.errorSoft },
+  tsBtn: { flex: 1.25, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 5, height: 32, borderRadius: 8, borderWidth: 1, borderColor: Palette.red300e, backgroundColor: Maple.errorSoft },
   tsText: { fontSize: 12, fontWeight: '600', color: RED },
   card: { gap: 8, padding: 12, borderRadius: 14, borderWidth: 1, borderColor: LINE, backgroundColor: WHITE },
 });

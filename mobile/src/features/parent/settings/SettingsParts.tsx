@@ -26,7 +26,7 @@ export function ChildrenCard({ list, phone = false }: { list: readonly PortalChi
           onPress={() => toast(`${c.name}'s profile: ${c.level}, ${c.school}.`)}
           accessibilityRole="button"
           accessibilityLabel={`${c.name}, ${c.level}, ${c.school}`}>
-          <Image source={c.avatar} style={phone ? styles.childAvatarPhone : styles.childAvatar} contentFit="cover" />
+          <Image decorative source={c.avatar} style={phone ? styles.childAvatarPhone : styles.childAvatar} contentFit="cover" />
           <View style={styles.flex}>
             <Text style={styles.childName}>{c.name}</Text>
             {phone ? (
@@ -163,7 +163,7 @@ function SwitchRow({
 }) {
   return (
     <View style={styles.switchRow}>
-      {whatsapp ? <Image source={whatsapp} style={styles.whatsapp} contentFit="contain" /> : icon ? <Icon name={icon} size={28} color={BLUE} /> : null}
+      {whatsapp ? <Image decorative source={whatsapp} style={styles.whatsapp} contentFit="contain" /> : icon ? <Icon name={icon} size={28} color={BLUE} /> : null}
       <View style={styles.flex}>
         <Text style={styles.switchTitle}>{title}</Text>
         <Text style={styles.switchBody}>{body}</Text>
@@ -206,7 +206,7 @@ export function NotificationsCard({ s, phone = false }: { s: Settings; phone?: b
             <Text style={styles.digestLabel}>WhatsApp phone number</Text>
             <View style={styles.phoneRow}>
               <View style={styles.flagBox}>
-                <Image source={d.flag} style={styles.flag} contentFit="cover" />
+                <Image decorative source={d.flag} style={styles.flag} contentFit="cover" />
               </View>
               <View style={styles.phoneField}>
                 <Text style={styles.phoneText} numberOfLines={1}>

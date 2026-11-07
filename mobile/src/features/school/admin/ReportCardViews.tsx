@@ -11,6 +11,7 @@ import type { MarkRow, MarkStatus } from '@/mock/school-admin';
 
 import { AdminDesk, AdminPhone, BigButton, Cell, type Column, DataTable, ListCard, ListRow, MenuRow, MiniBtn, PageHead, Pager, Search, SelectBox, type Stat, StatRow, StatusCell, Steps, useChoice, useSelection } from '../kit/AdminKit';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 type Admin = MockData['schoolAdmin'];
 type RC = Admin['reportCards'];
@@ -52,7 +53,7 @@ export function ReportCard({ rc, student }: { rc: RC; student: MarkRow }) {
   return (
     <View style={styles.rc}>
       <View style={styles.rcInner}>
-        <Image source={LEAF} style={styles.rcLeaf} contentFit="contain" />
+        <Image decorative source={LEAF} style={styles.rcLeaf} contentFit="contain" />
         <Text style={styles.rcSchool}>{p.school}</Text>
         <Text style={styles.rcTitle}>{p.title}</Text>
         <Text style={styles.rcYear}>{p.year}</Text>
@@ -107,7 +108,7 @@ export function ReportCard({ rc, student }: { rc: RC; student: MarkRow }) {
             return (
               <View key={label as string} style={styles.rcSig}>
                 <Text style={styles.rcCell}>{label as string}</Text>
-                <Image source={w.sig} style={styles.rcSigImg} contentFit="contain" />
+                <Image decorative source={w.sig} style={styles.rcSigImg} contentFit="contain" />
                 <Text style={styles.rcCellStrong}>{w.name}</Text>
                 <Text style={styles.rcCell}>{`Date: ${w.date}`}</Text>
               </View>
@@ -115,13 +116,13 @@ export function ReportCard({ rc, student }: { rc: RC; student: MarkRow }) {
           })}
         </View>
         <View style={styles.rcFoot}>
-          <Image source={p.seal} style={styles.rcSeal} contentFit="contain" />
+          <Image decorative source={p.seal} style={styles.rcSeal} contentFit="contain" />
           <View style={styles.flex}>
             <Text style={styles.rcFootTitle}>Maple Learning Passport</Text>
             <Text style={styles.rcCell}>This report card is digitally signed and verifiable on the Maple Learning Passport.</Text>
             <Text style={styles.rcCell}>{`Verification ID: ${p.verification.replace('001', student.adm.slice(-3))}`}</Text>
           </View>
-          <Image source={p.qr} style={styles.rcQr} contentFit="contain" />
+          <Image decorative source={p.qr} style={styles.rcQr} contentFit="contain" />
         </View>
       </View>
     </View>
@@ -269,7 +270,7 @@ export function ReportCardsDesk({ a }: { a: Admin }) {
               </>
             ) : tab === 'Learning Passport' ? (
               <View style={styles.passport}>
-                <Image source={rc.preview.seal} style={styles.passportSeal} contentFit="contain" />
+                <Image decorative source={rc.preview.seal} style={styles.passportSeal} contentFit="contain" />
                 <View style={styles.flex}>
                   <Text style={styles.flowTitle}>Cryptographically signed term transcripts</Text>
                   <Text style={styles.flowBody}>Each published report card is signed with the school’s key and recorded on the learner’s Maple Learning Passport. Anyone with the verification ID or QR code can confirm it is genuine and unchanged.</Text>
@@ -406,7 +407,7 @@ const styles = StyleSheet.create({
   flowBody: { marginTop: 2, fontSize: 13, color: BODY },
   previewCard: { width: 372, gap: 12, padding: 14 },
   rc: { padding: 5, borderRadius: 4, borderWidth: 2, borderColor: GOLD, backgroundColor: Maple.warningSoft },
-  rcInner: { alignItems: 'center', gap: 4, padding: 12, borderWidth: 1, borderColor: '#EAD9A8', backgroundColor: WHITE },
+  rcInner: { alignItems: 'center', gap: 4, padding: 12, borderWidth: 1, borderColor: Palette.amber300, backgroundColor: WHITE },
   rcLeaf: { width: 34, height: 36 },
   rcSchool: { fontSize: 15, fontWeight: '700', color: NAVY_DARK, textAlign: 'center' },
   rcTitle: { fontSize: 13, fontWeight: '800', color: NAVY_DARK },
@@ -428,7 +429,7 @@ const styles = StyleSheet.create({
   rcSigs: { alignSelf: 'stretch', flexDirection: 'row', gap: 10, marginTop: 8 },
   rcSig: { flex: 1, gap: 1 },
   rcSigImg: { width: 80, height: 34 },
-  rcFoot: { alignSelf: 'stretch', flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 10, paddingTop: 8, borderTopWidth: 1, borderColor: '#EAD9A8' },
+  rcFoot: { alignSelf: 'stretch', flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 10, paddingTop: 8, borderTopWidth: 1, borderColor: Palette.amber300 },
   rcFootTitle: { fontSize: 11, fontWeight: '700', color: NAVY_DARK },
   rcSeal: { width: 34, height: 36 },
   rcQr: { width: 46, height: 48 },

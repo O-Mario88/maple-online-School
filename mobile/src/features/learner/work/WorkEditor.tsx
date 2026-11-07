@@ -117,7 +117,7 @@ function CodePane({ s }: { s: WorkState }) {
 function FileRow({ icon, title, meta, onPress }: { icon: number; title: string; meta: string; onPress?: () => void }) {
   return (
     <View style={styles.file}>
-      <Image source={icon} style={styles.fileIcon} />
+      <Image decorative source={icon} style={styles.fileIcon} />
       <View style={styles.flex}>
         <Text style={styles.fileTitle}>{title}</Text>
         <Text style={styles.fileMeta}>{meta}</Text>

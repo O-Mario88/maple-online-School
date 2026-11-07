@@ -17,6 +17,7 @@ import type { CatalogueEntry, catalogueFacets } from '@/mock/public';
 import { LightOnly } from '@/hooks/use-theme';
 import { Maple } from '@/constants/maple';
 import { PageScroll } from '@/components/shell/PageScroll';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
 const SORTS: readonly { value: CatalogueSort; label: string }[] = [
   { value: 'popular', label: 'Popularity' },
@@ -123,7 +124,7 @@ export default function ExploreScreen() {
                 </View>
                 <View style={styles.main}>
                   <View style={styles.head}>
-                    <Text style={styles.title} accessibilityRole="header">
+                    <Text style={styles.title} {...PAGE_TITLE}>
                       Explore Subjects, Live Classes & Past Papers
                     </Text>
                     <Text style={styles.sub}>Find the right learning resources for your goals.</Text>
@@ -161,7 +162,7 @@ export default function ExploreScreen() {
       <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
         <HomeNav wide={false} active="Explore" />
         <PageScroll style={styles.scroll} contentContainerStyle={styles.phone}>
-          <Text style={styles.titlePhone} accessibilityRole="header">
+          <Text style={styles.titlePhone} {...PAGE_TITLE}>
             Explore Subjects, Live Classes & Past Papers
           </Text>
           <Text style={styles.subPhone}>Find the right learning resources for your goals.</Text>

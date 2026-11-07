@@ -12,11 +12,13 @@ import { LiveBooking, type Session } from './LiveBooking';
 import { AboutLive, card, LearnList, MoreLive, TeacherCard } from './LiveCards';
 import { crumbHref } from '@/features/public/HomeNav';
 import { Maple } from '@/constants/maple';
+import { PAGE_TITLE } from '@/lib/fonts/type';
+import { Palette } from '@/constants/palette';
 
 /** The live class reference's desktop width; this layout uses its pixels (render inside RefScale). */
 export const LIVE_REF_WIDTH = 1252;
 const TABS = ['Overview', 'Syllabus', 'Teacher', 'Reviews', 'FAQ'] as const;
-const NAVY = ['#011E52', '#0B2D5C'] as const;
+const NAVY = [Palette.blue950, Palette.blue900b] as const;
 
 function Hero({ s }: { s: Session }) {
   const [saved, setSaved] = useState(false);
@@ -32,7 +34,7 @@ function Hero({ s }: { s: Session }) {
       <View style={styles.badge}>
         <Text style={styles.badgeText}>{`(•) ${s.badge.toUpperCase()}`}</Text>
       </View>
-      <Text style={styles.heroTitle} accessibilityRole="header">
+      <Text style={styles.heroTitle} {...PAGE_TITLE}>
         {`${s.title.lead}\n`}
         <Text style={styles.heroAccent}>{s.title.accent}</Text>
       </Text>
@@ -54,7 +56,7 @@ function Hero({ s }: { s: Session }) {
         <Text style={styles.shareText}>Share</Text>
       </Pressable>
       <Pressable style={styles.heart} onPress={() => setSaved((v) => !v)} accessibilityRole="button" accessibilityLabel={saved ? 'Remove from saved' : 'Save'}>
-        <Icon name="heart" size={13} color={saved ? '#FF4D5E' : Brand.surface} />
+        <Icon name="heart" size={13} color={saved ? Palette.red400c : Brand.surface} />
       </Pressable>
     </View>
   );
@@ -133,7 +135,7 @@ const styles = StyleSheet.create({
   // Body coordinates: the reference's y minus its 60px top bar.
   canvas: { width: LIVE_REF_WIDTH, height: 970 },
   crumbs: { position: 'absolute', left: 32, top: 4, fontSize: 9.5, color: Maple.navy },
-  hero: { position: 'absolute', left: 14, top: 25, width: 1230, height: 315, borderRadius: 14, overflow: 'hidden', backgroundColor: '#0A2A55' },
+  hero: { position: 'absolute', left: 14, top: 25, width: 1230, height: 315, borderRadius: 14, overflow: 'hidden', backgroundColor: Palette.blue950e },
   heroPhoto: { position: 'absolute', left: 486, top: 1, width: 418, height: 282 },
   badge: { position: 'absolute', left: 32, top: 38, height: 22, justifyContent: 'center', paddingHorizontal: 9, borderRadius: 11, backgroundColor: Maple.error },
   badgeText: { fontSize: 10, fontWeight: '700', color: Brand.surface, letterSpacing: 0.3 },

@@ -7,6 +7,7 @@ import { mmss, waveform } from '@/lib/feedback';
 
 import type { Message, SquadState } from './useSquad';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 const INK = Maple.navy;
 const NAVY = Maple.blueHover;
@@ -150,7 +151,7 @@ const styles = StyleSheet.create({
   addReaction: { paddingHorizontal: 5, paddingVertical: 2, borderRadius: 10, opacity: 0.45 },
   addReactionText: { fontSize: 11 },
   held: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 10, padding: 8, borderRadius: 6, backgroundColor: Maple.warningSoft },
-  heldText: { flex: 1, fontSize: 11.5, color: '#92400E' },
+  heldText: { flex: 1, fontSize: 11.5, color: Palette.orange800b },
   composer: { flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 12, paddingLeft: 14, borderRadius: 8, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface },
   input: { flex: 1, height: 44, paddingVertical: 0, fontSize: 12.5, color: INK },
   emoji: { fontSize: 17 },

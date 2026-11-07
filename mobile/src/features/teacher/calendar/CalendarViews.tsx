@@ -31,6 +31,7 @@ import {
 import { ScheduleLiveModal } from './ScheduleLiveModal';
 import { type CalendarController, type CalendarMode, useTeacherCalendar } from './useTeacherCalendar';
 import { Maple } from '@/constants/maple';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
 /** The calendar reference's desktop width, laid out in its pixels and scaled via RefScale. */
 export const CALENDAR_REF_WIDTH = 1180;
@@ -122,7 +123,7 @@ export function CalendarDesk({
           <Panel style={styles.calendarPanel}>
             <View style={[styles.calTopBar, styles.raised]}>
               <View style={styles.flex}>
-                <Text style={styles.title} accessibilityRole="header">
+                <Text style={styles.title} {...PAGE_TITLE}>
                   My Calendar
                 </Text>
                 <Text style={styles.subtitle}>

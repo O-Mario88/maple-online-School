@@ -30,7 +30,7 @@ function Exploration({ x, phone }: { x: Compass; phone: boolean }) {
   return (
     <View style={[s.banner, phone && s.bannerP]}>
       <LinearGradient colors={[Maple.blue, Maple.blue, Maple.blue]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />
-      {!phone ? <Image source={x.cc.photos.heroes.results} style={s.bannerPhoto} contentFit="cover" contentPosition="top" /> : null}
+      {!phone ? <Image decorative source={x.cc.photos.heroes.results} style={s.bannerPhoto} contentFit="cover" contentPosition="top" /> : null}
       <View style={s.bannerTop}>
         <View style={s.flex}>
           <Text style={s.bannerTitle}>Your exploration so far</Text>
@@ -69,7 +69,7 @@ function MatchCard({ x, c, rank, reasons, phone }: { x: Compass; c: Career; rank
   return (
     <View style={[s.card, phone ? s.cardP : s.cardD]}>
       <View>
-        <Image source={c.photo} style={s.photo} contentFit="cover" />
+        <Image decorative source={c.photo} style={s.photo} contentFit="cover" />
         <Text style={s.rank}>{`#${rank} Match`}</Text>
         <Pressable style={s.save} onPress={() => x.toggleCareer(c.id)} hitSlop={8} accessibilityRole="button" accessibilityState={{ selected: saved }} accessibilityLabel={saved ? `Remove ${c.title} from saved` : `Save ${c.title}`}>
           <Icon name={saved ? 'bookmarkOn' : 'bookmark'} size={16} color={saved ? BRAND_BLUE : L.navy} />

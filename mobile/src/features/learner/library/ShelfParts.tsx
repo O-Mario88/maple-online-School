@@ -11,6 +11,9 @@ import type { IconName } from '@/lib/icons';
 
 import type { Book, Hub, ShelfState } from './useShelf';
 import { Maple } from '@/constants/maple';
+import { prefersReducedMotion } from '@/lib/motion';
+import { PAGE_TITLE } from '@/lib/fonts/type';
+import { Palette } from '@/constants/palette';
 
 const INK = Maple.navy;
 const NAVY = Maple.blueHover;
@@ -40,7 +43,7 @@ export function Tag({ text }: { text: string }) {
 export function Head({ icon, color, title, sub, link = 'View All', onLink, leaf = false }: { icon: IconName; color: string; title: string; sub?: string; link?: string; onLink?: () => void; leaf?: boolean }) {
   return (
     <View style={styles.head}>
-      {leaf ? <Image source={LEAF} style={styles.headLeaf} contentFit="contain" /> : <Icon name={icon} size={16} color={color} />}
+      {leaf ? <Image decorative source={LEAF} style={styles.headLeaf} contentFit="contain" /> : <Icon name={icon} size={16} color={color} />}
       <View style={styles.flex}>
         <Text style={styles.headTitle}>{title}</Text>
         {sub ? <Text style={styles.headSub}>{sub}</Text> : null}
@@ -58,7 +61,7 @@ export function Hero({ hub, s }: { hub: Hub; s: ShelfState }) {
     <View style={styles.hero}>
       <Image source={hub.hero} style={styles.fill} contentFit="cover" accessibilityLabel="A girl dreaming in front of a bookshelf" />
       <View style={styles.heroCopy}>
-        <Text style={styles.heroTitle} accessibilityRole="header">
+        <Text style={styles.heroTitle} {...PAGE_TITLE}>
           Digital Library
         </Text>
         <Text style={styles.heroTag}>Read. Explore. Learn. Grow.</Text>
@@ -82,7 +85,7 @@ export function Subjects({ hub, s }: { hub: Hub; s: ShelfState }) {
         const on = s.subject === x.name;
         return (
           <Pressable key={x.name} style={[styles.subject, on && styles.subjectOn]} onPress={() => s.setSubject(x.name)} accessibilityRole="button" accessibilityState={{ selected: on }} accessibilityLabel={`${x.name}, ${x.count}`}>
-            <Image source={x.icon} style={styles.subjectIcon} />
+            <Image decorative source={x.icon} style={styles.subjectIcon} />
             <Text style={styles.subjectName} numberOfLines={2}>
               {x.name}
             </Text>
@@ -121,8 +124,8 @@ export function Levels({ hub, s }: { hub: Hub; s: ShelfState }) {
 export function BookCard({ b, small = false }: { b: Book; small?: boolean }) {
   return (
     <Pressable style={[styles.card, small && styles.cardS]} onPress={() => openBook(b.id)} accessibilityRole="link" accessibilityLabel={`${b.title}, ${b.subject}, ${typeLabel(b.type)}. ${statsSpoken(b)}`}>
-      <Image source={b.cover} style={small ? styles.coverS : styles.cover} contentFit="cover" />
-      <Text style={[styles.cardTitle, small && styles.cardTitleS]} numberOfLines={small ? 2 : 1}>
+      <Image decorative source={b.cover} style={small ? styles.coverS : styles.cover} contentFit="cover" />
+      <Text style={[styles.cardTitle, small && styles.cardTitleS]} numberOfLines={2}>
         {b.title}
       </Text>
       <View style={styles.cardTags}>
@@ -151,7 +154,7 @@ export function Shelf({ title, sub, books, leaf = false, icon = 'book', color = 
           ))}
         </ScrollView>
         {small ? null : (
-          <Pressable style={styles.shelfNext} onPress={() => ref.current?.scrollTo({ x: x + step, animated: true })} accessibilityRole="button" accessibilityLabel={`More in ${title}`}>
+          <Pressable style={styles.shelfNext} onPress={() => ref.current?.scrollTo({ x: x + step, animated: !prefersReducedMotion() })} accessibilityRole="button" accessibilityLabel={`More in ${title}`}>
             <Icon name="chevronRight" size={14} color={BLUE} />
           </Pressable>
         )}
@@ -164,9 +167,9 @@ export function ContinueItem({ b, progress, thumb }: { b: Book; progress: number
   const pct = Math.round(progress * 100);
   return (
     <Pressable style={styles.cont} onPress={() => openBook(b.id)} accessibilityRole="link" accessibilityLabel={`Continue ${b.title}, ${pct}%`}>
-      <Image source={thumb} style={styles.contCover} contentFit="cover" />
+      <Image decorative source={thumb} style={styles.contCover} contentFit="cover" />
       <View style={styles.flex}>
-        <Text style={styles.contTitle} numberOfLines={1}>
+        <Text style={styles.contTitle} numberOfLines={2}>
           {b.title}
         </Text>
         <Text style={styles.contSub}>{`${b.level} • ${b.subject}`}</Text>
@@ -184,9 +187,9 @@ export function ContinueItem({ b, progress, thumb }: { b: Book; progress: number
 export function CompletedItem({ b, on, thumb }: { b: Book; on: string; thumb: number }) {
   return (
     <Pressable style={styles.cont} onPress={() => openBook(b.id)} accessibilityRole="link" accessibilityLabel={`${b.title}, completed ${on}`}>
-      <Image source={thumb} style={styles.contCover} contentFit="cover" />
+      <Image decorative source={thumb} style={styles.contCover} contentFit="cover" />
       <View style={styles.flex}>
-        <Text style={styles.contTitle} numberOfLines={1}>
+        <Text style={styles.contTitle} numberOfLines={2}>
           {b.title}
         </Text>
         <Text style={styles.contSub} numberOfLines={1}>{`${b.level} • ${b.subject}`}</Text>
@@ -237,7 +240,7 @@ export function MySubjects({ hub, s, phone = false }: { hub: Hub; s: ShelfState;
         const on = s.subject === x.name;
         return (
           <Pressable key={x.name} style={[phone ? styles.mySubjectP : styles.mySubject, on && styles.subjectOn]} onPress={() => s.setSubject(x.name)} accessibilityRole="button" accessibilityState={{ selected: on }} accessibilityLabel={`${x.name}, ${x.count}`}>
-            <Image source={x.icon} style={phone ? styles.mySubjectIconP : styles.mySubjectIcon} />
+            <Image decorative source={x.icon} style={phone ? styles.mySubjectIconP : styles.mySubjectIcon} />
             <Text style={styles.mySubjectName} numberOfLines={2}>
               {phone ? (x.name === 'Social Studies' ? 'Social\nStudies' : SHORT[x.name] ?? x.name) : x.name === 'Religious Education' ? 'R.E.' : x.name}
             </Text>
@@ -289,7 +292,7 @@ export function MyLibrary({ hub }: { hub: Hub }) {
       </View>
       {hub.myLibrary.map((m) => (
         <Pressable key={m.title} style={styles.my} onPress={() => openBook(CURRENT_BOOK)} accessibilityRole="link" accessibilityLabel={`${m.title}, ${m.meta}`}>
-          <Image source={m.icon} style={styles.myIcon} />
+          <Image decorative source={m.icon} style={styles.myIcon} />
           <View style={styles.flex}>
             <Text style={styles.myTitle}>{m.title}</Text>
             <Text style={styles.myMeta}>{m.meta}</Text>
@@ -340,9 +343,10 @@ const styles = StyleSheet.create({
   head: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   headTitle: { fontSize: 14, fontWeight: '700', color: NAVY },
   headSub: { marginTop: 2, fontSize: 11.5, color: BODY },
-  link: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+  // 24px tall to click (WCAG 2.5.8) without moving the row: the padding is taken back by the margin.
+  link: { flexDirection: 'row', alignItems: 'center', gap: 4, minHeight: 24, paddingVertical: 5, marginVertical: -5 },
   linkText: { fontSize: 11, color: BLUE },
-  hero: { height: 180, borderRadius: 10, overflow: 'hidden', backgroundColor: '#0E2252' },
+  hero: { height: 180, borderRadius: 10, overflow: 'hidden', backgroundColor: Palette.blue950i },
   heroCopy: { position: 'absolute', left: 268, top: 20, width: 372 },
   heroTitle: { fontSize: 39, lineHeight: 44, fontWeight: '800', color: Maple.surface, letterSpacing: -0.6 },
   heroTag: { marginTop: 2, fontSize: 17.5, color: Maple.surface },
@@ -366,7 +370,7 @@ const styles = StyleSheet.create({
   cardS: { width: 98, padding: 0, borderWidth: 0, backgroundColor: 'transparent' },
   cover: { width: 116, height: 88, borderRadius: 5 },
   coverS: { width: 98, height: 78, borderRadius: 5 },
-  cardTitle: { marginTop: 8, paddingHorizontal: 1, fontSize: 10, lineHeight: 14, letterSpacing: -0.25, fontWeight: '500', color: NAVY },
+  cardTitle: { marginTop: 8, minHeight: 28, paddingHorizontal: 1, fontSize: 10, lineHeight: 14, letterSpacing: -0.25, fontWeight: '500', color: NAVY },
   cardTitleS: { minHeight: 26, paddingHorizontal: 0, fontSize: 10, lineHeight: 13 },
   cardTags: { flexDirection: 'row', alignItems: 'center', marginTop: 3, paddingHorizontal: 2 },
   cardLevel: { fontSize: 9, color: BODY },

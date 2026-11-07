@@ -7,6 +7,7 @@ import type { CatalogueEntry } from '@/mock/public';
 
 import { Brand, CARD_SHADOW } from '../palette';
 import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 /** The thumbnail's height on a 263px-wide card in the reference. */
 export const THUMB_HEIGHT = 139;
@@ -48,7 +49,7 @@ export function CatalogueCard({ item, coursePage, width, list = false, compact =
           {item.meta}
         </Text>
         <View style={[styles.teacher, c && styles.rowC]}>
-          {item.face ? <Image source={item.face} style={[styles.face, c && styles.faceC]} /> : <View style={[styles.face, c && styles.faceC]} />}
+          {item.face ? <Image decorative source={item.face} style={[styles.face, c && styles.faceC]} /> : <View style={[styles.face, c && styles.faceC]} />}
           <Text style={[styles.teacherName, c && styles.smallC]} numberOfLines={1}>
             {item.teacher}
           </Text>
@@ -91,7 +92,7 @@ const styles = StyleSheet.create({
   teacherName: { flex: 1, fontSize: 13.5, color: Maple.navy },
   rating: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 11, height: 17 },
   stars: { fontSize: 13, color: Maple.warning, letterSpacing: 1 },
-  starSoft: { color: '#FBBF5A' },
+  starSoft: { color: Palette.amber400b },
   ratingText: { fontSize: 12.5, color: Maple.body },
   footer: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 8 },
   included: { flexShrink: 1, fontSize: 13, fontWeight: '600', color: Brand.blue },

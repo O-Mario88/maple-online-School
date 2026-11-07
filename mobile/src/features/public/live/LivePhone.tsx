@@ -13,6 +13,7 @@ import { LiveBooking, register, type Session } from './LiveBooking';
 import { AboutLive, card, LearnList, MoreLive, TeacherCard } from './LiveCards';
 import { Maple } from '@/constants/maple';
 import { MapleLogo } from '@/components/brand/MapleLogo';
+import { Palette } from '@/constants/palette';
 
 const TABS = ['Overview', 'Syllabus', 'Teacher', 'Reviews'] as const;
 type Tab = (typeof TABS)[number];
@@ -30,7 +31,7 @@ function TopBar() {
       </View>
       <View style={styles.topActions}>
         <Pressable onPress={() => setSaved((v) => !v)} accessibilityRole="button" accessibilityLabel={saved ? 'Remove from saved' : 'Save'} hitSlop={8}>
-          <Icon name="heart" size={21} color={saved ? '#FF4D5E' : Brand.ink} />
+          <Icon name="heart" size={21} color={saved ? Palette.red400c : Brand.ink} />
         </Pressable>
         <Pressable onPress={() => sharePage('Join this live class on Maple Global Online School.')} accessibilityRole="button" accessibilityLabel="Share" hitSlop={8}>
           <Icon name="share" size={20} color={Brand.ink} />
@@ -144,7 +145,7 @@ const styles = StyleSheet.create({
   logoName: { fontSize: 18, lineHeight: 20, fontWeight: '700', color: Brand.ink },
   logoTag: { fontSize: 7, color: Brand.ink },
   topActions: { flexDirection: 'row', alignItems: 'center', gap: 16 },
-  hero: { height: 196, marginHorizontal: 10, marginTop: 4, borderRadius: 14, overflow: 'hidden', backgroundColor: '#0A2A55' },
+  hero: { height: 196, marginHorizontal: 10, marginTop: 4, borderRadius: 14, overflow: 'hidden', backgroundColor: Palette.blue950e },
   badge: { position: 'absolute', left: 10, top: 10, paddingHorizontal: 9, paddingVertical: 4, borderRadius: 12, backgroundColor: Maple.error },
   badgeText: { fontSize: 10.5, fontWeight: '700', color: Brand.surface },
   play: { position: 'absolute', alignSelf: 'center', top: 72, width: 52, height: 52, borderRadius: 26, borderWidth: 5, borderColor: 'rgba(255,255,255,0.45)', backgroundColor: Brand.blue, alignItems: 'center', justifyContent: 'center' },

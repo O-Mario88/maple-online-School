@@ -30,7 +30,7 @@ function StatCard({ stat, style }: { stat: Stat; style?: object }) {
       </View>
       <View style={styles.statText}>
         <Text style={styles.statValue}>{stat.value}</Text>
-        <Text style={styles.statLabel} numberOfLines={1}>
+        <Text style={styles.statLabel} numberOfLines={2}>
           {stat.label}
         </Text>
       </View>

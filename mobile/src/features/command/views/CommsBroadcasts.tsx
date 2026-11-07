@@ -173,7 +173,7 @@ const COLS: readonly Column<BroadcastRow>[] = [
     flex: 2.2,
     render: (b) => (
       <View style={styles.inline}>
-        <Image source={b.thumb} style={styles.thumb} contentFit="cover" />
+        <Image decorative source={b.thumb} style={styles.thumb} contentFit="cover" />
         <View style={styles.flex}>
           <Text style={styles.rowTitle} numberOfLines={1}>
             {b.title}
@@ -463,7 +463,7 @@ export function BroadcastsPhone({ c }: { c: CommandData }) {
       <Search placeholder="Search broadcasts..." value={u.query} onChange={u.setQuery} />
       {u.rows.map((b) => (
         <View key={b.id} style={styles.card} accessible accessibilityLabel={`${b.title}, ${b.status}, ${b.audience}`}>
-          <Image source={b.thumb} style={styles.cardThumb} contentFit="cover" />
+          <Image decorative source={b.thumb} style={styles.cardThumb} contentFit="cover" />
           <View style={[styles.flex, styles.cardBody]}>
             <Text style={styles.rowTitle}>{b.title}</Text>
             <View style={styles.wrap}>
