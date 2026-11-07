@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
@@ -9,16 +9,17 @@ import { DOMAINS, GENERIC_SKILLS, LEARNING_OUTCOMES, RACE } from '@/lib/cbc';
 
 import { StatusPill } from './ProjectList';
 import { type DetailTab, type Page, type Project, type ProjectsState, type TaskState } from './useProjects';
+import { Maple } from '@/constants/maple';
 
-const INK = '#0B1424';
-const NAVY = '#0B2A6B';
-const BODY = '#4A5263';
-const BLUE = '#1463F3';
+const INK = Maple.navy;
+const NAVY = Maple.blueHover;
+const BODY = Maple.body;
+const BLUE = Maple.blue;
 const TABS: readonly DetailTab[] = ['Overview', 'Instructions', 'Resources', 'Submission', 'Assessment Criteria', 'Discussion'];
 const TASK_LABEL: Record<TaskState, { text: string; bg: string; fg: string }> = {
-  done: { text: 'Completed', bg: '#E3F6E9', fg: '#15803D' },
-  doing: { text: 'In Progress', bg: '#E6EEFC', fg: '#1450C8' },
-  todo: { text: 'Not Started', bg: '#EEF1F6', fg: BODY },
+  done: { text: 'Completed', bg: Maple.successSoft, fg: Maple.successText },
+  doing: { text: 'In Progress', bg: Maple.blueSelected, fg: Maple.blueHover },
+  todo: { text: 'Not Started', bg: Maple.blueSelected, fg: BODY },
 };
 
 function Objectives({ page, p, phone }: { page: Page; p: Project; phone: boolean }) {
@@ -36,7 +37,7 @@ function Objectives({ page, p, phone }: { page: Page; p: Project; phone: boolean
       {cols.map((c, i) => (
         <View key={c.title} style={[styles.objCol, i > 0 && !phone && styles.objDivider]}>
           <View style={styles.objHead}>
-            <Image source={c.icon} style={styles.objIcon} />
+            <Image decorative source={c.icon} style={styles.objIcon} />
             <Text style={styles.objTitle}>{c.title}</Text>
           </View>
           {c.items.map((it) => (
@@ -63,7 +64,7 @@ function Tasks({ p, s }: { p: Project; s: ProjectsState }) {
         return (
           <View key={t.title} style={styles.task}>
             <Pressable style={[styles.box, st === 'done' && styles.boxOn]} onPress={() => s.toggleTask(p, i)} accessibilityRole="checkbox" accessibilityState={{ checked: st === 'done' }} accessibilityLabel={t.title} hitSlop={6}>
-              {st === 'done' ? <Icon name="check" size={11} color="#FFFFFF" /> : null}
+              {st === 'done' ? <Icon name="check" size={11} color={Maple.surface} /> : null}
             </Pressable>
             <Text style={styles.taskText}>{t.title}</Text>
             <Text style={[styles.taskState, { backgroundColor: l.bg, color: l.fg }]}>{l.text}</Text>
@@ -79,7 +80,7 @@ function Attachments({ page, big = false }: { page: Page; big?: boolean }) {
     <View style={[styles.atts, big && styles.attsBig]}>
       {page.attachments.map((a) => (
         <Pressable key={a.title} style={[styles.att, big && styles.attBig]} onPress={() => router.push('/learn/library')} accessibilityRole="link" accessibilityLabel={`${a.title}, ${a.meta}`}>
-          <Image source={a.icon} style={styles.attIcon} />
+          <Image decorative source={a.icon} style={styles.attIcon} />
           <View style={styles.flex}>
             <Text style={styles.attTitle} numberOfLines={1}>
               {a.title}
@@ -101,14 +102,14 @@ function Submission({ p, s }: { p: Project; s: ProjectsState }) {
       <Text style={styles.para}>Projects are part of your Continuous Assessment (CA). Together with your Activities of Integration they make up 20% of your final UCE result.</Text>
       {done ? (
         <View style={styles.doneBox}>
-          <Icon name="check" size={16} color="#15803D" />
+          <Icon name="check" size={16} color={Maple.successText} />
           <Text style={styles.doneText}>{p.status === 'completed' ? p.date : 'Submitted for marking. Your teacher will score it with RACE.'}</Text>
         </View>
       ) : (
         <>
           <Text style={styles.para}>{ready ? 'All tasks are done. You can submit now.' : 'Finish every task in Your Tasks before you submit.'}</Text>
           <Pressable style={[styles.submit, !ready && styles.submitOff]} disabled={!ready} onPress={() => s.submit(p)} accessibilityRole="button" accessibilityState={{ disabled: !ready }}>
-            <Icon name="send" size={15} color="#FFFFFF" />
+            <Icon name="send" size={15} color={Maple.surface} />
             <Text style={styles.submitText}>Submit Project</Text>
           </Pressable>
         </>
@@ -145,7 +146,7 @@ function Discussion({ page }: { page: Page }) {
         </View>
       ))}
       <View style={styles.reply}>
-        <TextInput style={styles.replyInput} value={text} onChangeText={setText} placeholder="Ask your team or teacher…" placeholderTextColor="#6B7385" accessibilityLabel="Write a message" />
+        <TextInput style={styles.replyInput} value={text} onChangeText={setText} placeholder="Ask your team or teacher…" placeholderTextColor={Maple.secondary} accessibilityLabel="Write a message" />
         <Pressable
           style={styles.send}
           disabled={!text.trim()}
@@ -155,7 +156,7 @@ function Discussion({ page }: { page: Page }) {
           }}
           accessibilityRole="button"
           accessibilityLabel="Send">
-          <Icon name="send" size={15} color="#FFFFFF" />
+          <Icon name="send" size={15} color={Maple.surface} />
         </Pressable>
       </View>
     </View>
@@ -167,7 +168,7 @@ export function ProjectDetail({ page, p, s, phone = false }: { page: Page; p: Pr
   return (
     <View>
       <View style={[styles.hero, phone && styles.heroP]}>
-        <Image source={p.hero} style={styles.fill} contentFit="cover" />
+        <Image decorative source={p.hero} style={styles.fill} contentFit="cover" />
         <View style={styles.heroPill}>
           <StatusPill status={p.status} />
         </View>
@@ -176,12 +177,12 @@ export function ProjectDetail({ page, p, s, phone = false }: { page: Page; p: Pr
         <View style={styles.flex}>
           <Text style={styles.title}>{p.title}</Text>
           <View style={styles.meta}>
-            <Image source={page.subjectIcon} style={styles.subjIcon} />
+            <Image decorative source={page.subjectIcon} style={styles.subjIcon} />
             <Text style={styles.metaText}>{`${p.subject}  •  Primary 6`}</Text>
             <Icon name="calendar" size={13} color={BODY} />
             <Text style={styles.metaText}>{p.date}</Text>
             <View style={styles.metaBar}>
-              <Bar value={p.progress} color="#22A35A" track="#E6EBF2" height={7} />
+              <Bar value={p.progress} color={Maple.successText} track={Maple.blueSelected} height={7} />
             </View>
             <Text style={styles.metaPct}>{`${Math.round(p.progress * 100)}%`}</Text>
           </View>
@@ -263,7 +264,7 @@ export function ProjectDetail({ page, p, s, phone = false }: { page: Page; p: Pr
 const styles = StyleSheet.create({
   flex: { flex: 1 },
   fill: { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0 },
-  hero: { height: 122, borderRadius: 8, overflow: 'hidden', backgroundColor: '#DCE9F7' },
+  hero: { height: 122, borderRadius: 8, overflow: 'hidden', backgroundColor: Maple.blueSelected },
   heroP: { height: 150 },
   heroPill: { position: 'absolute', top: 14, right: 12 },
   titleRow: { flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 14 },
@@ -273,18 +274,18 @@ const styles = StyleSheet.create({
   metaText: { fontSize: 11.5, color: BODY, marginRight: 4 },
   metaBar: { width: 56 },
   metaPct: { fontSize: 12, fontWeight: '700', color: INK },
-  cont: { height: 32, justifyContent: 'center', paddingHorizontal: 18, borderRadius: 5, backgroundColor: '#0B6BFF' },
-  contText: { fontSize: 12.5, fontWeight: '500', color: '#FFFFFF' },
-  more: { width: 36, height: 32, alignItems: 'center', justifyContent: 'center', borderRadius: 5, borderWidth: 1, borderColor: '#DCE3EE', backgroundColor: '#FFFFFF' },
-  menu: { position: 'absolute', top: 36, right: 0, width: 190, paddingVertical: 4, borderRadius: 8, borderWidth: 1, borderColor: '#E1E7F0', backgroundColor: '#FFFFFF', zIndex: 5 },
+  cont: { height: 32, justifyContent: 'center', paddingHorizontal: 18, borderRadius: 5, backgroundColor: Maple.blue },
+  contText: { fontSize: 12.5, fontWeight: '500', color: Maple.surface },
+  more: { width: 36, height: 32, alignItems: 'center', justifyContent: 'center', borderRadius: 5, borderWidth: 1, borderColor: Maple.blueLine, backgroundColor: Maple.surface },
+  menu: { position: 'absolute', top: 36, right: 0, width: 190, paddingVertical: 4, borderRadius: 8, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface, zIndex: 5 },
   menuItem: { height: 32, justifyContent: 'center', paddingHorizontal: 12 },
   menuText: { fontSize: 12, color: INK },
-  tabs: { flexDirection: 'row', flexWrap: 'wrap', gap: 4, marginTop: 16, borderBottomWidth: 1, borderBottomColor: '#E3E8F0' },
+  tabs: { flexDirection: 'row', flexWrap: 'wrap', gap: 4, marginTop: 16, borderBottomWidth: 1, borderBottomColor: Maple.blueSelected },
   tab: { paddingVertical: 7, paddingHorizontal: 8, borderRadius: 4 },
-  tabOnBg: { backgroundColor: '#F4F8FF' },
+  tabOnBg: { backgroundColor: Maple.blueSoft },
   tabText: { fontSize: 11.5, color: INK },
   tabOn: { color: BLUE, fontWeight: '700' },
-  tabLine: { position: 'absolute', left: 0, right: 0, bottom: -1, height: 2.5, backgroundColor: BLUE },
+  tabLine: { position: 'absolute', left: 0, right: 0, bottom: -1, height: 3, backgroundColor: BLUE },
   pane: { marginTop: 14 },
   h: { fontSize: 13.5, fontWeight: '700', color: NAVY },
   gap: { marginTop: 18 },
@@ -292,7 +293,7 @@ const styles = StyleSheet.create({
   objectives: { flexDirection: 'row', marginTop: 10 },
   objectivesP: { flexDirection: 'column', gap: 12 },
   objCol: { flex: 1, paddingHorizontal: 6 },
-  objDivider: { borderLeftWidth: 1, borderLeftColor: '#E8EDF4' },
+  objDivider: { borderLeftWidth: 1, borderLeftColor: Maple.blueSelected },
   objHead: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 6 },
   objIcon: { width: 26, height: 26 },
   objTitle: { fontSize: 11.5, fontWeight: '700', color: NAVY },
@@ -302,29 +303,29 @@ const styles = StyleSheet.create({
   objStrong: { fontWeight: '600', color: NAVY },
   tasks: { marginTop: 8 },
   task: { flexDirection: 'row', alignItems: 'center', gap: 10, minHeight: 22, paddingVertical: 2 },
-  box: { width: 15, height: 15, alignItems: 'center', justifyContent: 'center', borderRadius: 3, borderWidth: 1.5, borderColor: '#9AA4B5' },
-  boxOn: { borderColor: '#22A35A', backgroundColor: '#22A35A' },
+  box: { width: 15, height: 15, alignItems: 'center', justifyContent: 'center', borderRadius: 3, borderWidth: 1.5, borderColor: Maple.faint },
+  boxOn: { borderColor: Maple.successText, backgroundColor: Maple.successText },
   taskText: { flex: 1, fontSize: 11.5, color: INK },
   taskState: { width: 66, paddingVertical: 2, borderRadius: 4, fontSize: 10, fontWeight: '500', textAlign: 'center', overflow: 'hidden' },
   atts: { flexDirection: 'row', gap: 6, marginTop: 10 },
   attsBig: { flexDirection: 'column' },
-  att: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 6, padding: 6, borderRadius: 6, borderWidth: 1, borderColor: '#E8EDF4', backgroundColor: '#FFFFFF' },
+  att: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 6, padding: 6, borderRadius: 6, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface },
   attBig: { padding: 10 },
   attIcon: { width: 29, height: 30 },
   attTitle: { fontSize: 10.5, fontWeight: '600', color: NAVY },
   attMeta: { marginTop: 2, fontSize: 9.5, color: BODY },
-  doneBox: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 12, padding: 12, borderRadius: 8, backgroundColor: '#EAF6EE' },
-  doneText: { flex: 1, fontSize: 12.5, color: '#15803D' },
-  submit: { alignSelf: 'flex-start', height: 38, flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 12, paddingHorizontal: 18, borderRadius: 6, backgroundColor: '#0B6BFF' },
+  doneBox: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 12, padding: 12, borderRadius: 8, backgroundColor: Maple.successSoft },
+  doneText: { flex: 1, fontSize: 12.5, color: Maple.successText },
+  submit: { alignSelf: 'flex-start', height: 38, flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 12, paddingHorizontal: 18, borderRadius: 6, backgroundColor: Maple.blue },
   submitOff: { opacity: 0.45 },
-  submitText: { fontSize: 13, fontWeight: '600', color: '#FFFFFF' },
+  submitText: { fontSize: 13, fontWeight: '600', color: Maple.surface },
   crit: { marginTop: 10 },
   critHead: { fontSize: 12, fontWeight: '700', color: INK },
   step: { flexDirection: 'row', gap: 10, marginTop: 8 },
-  stepNum: { width: 22, height: 22, marginTop: 4, borderRadius: 11, backgroundColor: '#DCE8FD', fontSize: 12, lineHeight: 22, fontWeight: '700', color: BLUE, textAlign: 'center', overflow: 'hidden' },
-  post: { marginBottom: 10, padding: 10, borderRadius: 8, backgroundColor: '#F5F8FC' },
+  stepNum: { width: 22, height: 22, marginTop: 4, borderRadius: 11, backgroundColor: Maple.blueSelected, fontSize: 12, lineHeight: 22, fontWeight: '700', color: BLUE, textAlign: 'center', overflow: 'hidden' },
+  post: { marginBottom: 10, padding: 10, borderRadius: 8, backgroundColor: Maple.blueSoft },
   postWho: { fontSize: 11, fontWeight: '700', color: NAVY },
   reply: { flexDirection: 'row', gap: 8, marginTop: 6 },
-  replyInput: { flex: 1, height: 36, paddingVertical: 0, paddingHorizontal: 10, borderRadius: 6, borderWidth: 1, borderColor: '#DCE3EE', fontSize: 12.5, color: INK },
-  send: { width: 36, height: 36, alignItems: 'center', justifyContent: 'center', borderRadius: 6, backgroundColor: '#0B6BFF' },
+  replyInput: { flex: 1, height: 36, paddingVertical: 0, paddingHorizontal: 10, borderRadius: 6, borderWidth: 1, borderColor: Maple.blueLine, fontSize: 12.5, color: INK },
+  send: { width: 36, height: 36, alignItems: 'center', justifyContent: 'center', borderRadius: 6, backgroundColor: Maple.blue },
 });

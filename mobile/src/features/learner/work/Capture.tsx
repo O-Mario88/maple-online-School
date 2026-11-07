@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
@@ -9,6 +9,8 @@ import type { IconName } from '@/lib/icons';
 
 import { BLUE, BODY, GREEN, INK, RED } from './MathText';
 import type { Work, WorkState } from './useWork';
+import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 
 export function StepHead({ n, title, sub }: { n: number; title: string; sub: string }) {
@@ -53,11 +55,11 @@ function Thumbs({ s, small = false }: { s: WorkState; small?: boolean }) {
       {sc.pages.map((p, i) => (
         <View key={i} style={[small ? styles.thumbP : styles.thumb, i === sc.current && styles.thumbOn]}>
           <Pressable style={styles.fill} onPress={() => sc.setCurrent(i)} accessibilityRole="button" accessibilityState={{ selected: i === sc.current }} accessibilityLabel={`Page ${i + 1}`}>
-            <Image source={p} style={styles.fill} contentFit="cover" />
+            <Image decorative source={p} style={styles.fill} contentFit="cover" />
           </Pressable>
           {i === sc.current ? (
             <Pressable style={styles.remove} onPress={() => sc.remove(i)} accessibilityRole="button" accessibilityLabel={`Remove page ${i + 1}`} hitSlop={6}>
-              <Icon name="close" size={9} color="#FFFFFF" />
+              <Icon name="close" size={9} color={Maple.surface} />
             </Pressable>
           ) : null}
         </View>
@@ -73,7 +75,7 @@ function Thumbs({ s, small = false }: { s: WorkState; small?: boolean }) {
 function AutoScan({ s }: { s: WorkState }) {
   return (
     <View style={styles.auto}>
-      <Switch value={s.scanner.auto} onValueChange={s.scanner.setAuto} trackColor={{ true: BLUE, false: '#C9D2E0' }} thumbColor="#FFFFFF" accessibilityLabel="Auto scan" />
+      <Switch value={s.scanner.auto} onValueChange={s.scanner.setAuto} trackColor={{ true: BLUE, false: Maple.borderStrong }} thumbColor={Maple.surface} accessibilityLabel="Auto scan" />
       <Text style={styles.autoText}>Auto Scan</Text>
     </View>
   );
@@ -95,11 +97,11 @@ export function ScannerCard({ s }: { s: WorkState }) {
       </Pressable>
       <Thumbs s={s} />
       <View style={styles.scanRow}>
-        <Icon name="bolt" size={18} color="#F5A524" />
+        <Icon name="bolt" size={18} color={Maple.warning} />
         <Text style={styles.autoText} numberOfLines={1}>
           Auto Scan
         </Text>
-        <Switch value={sc.auto} onValueChange={sc.setAuto} trackColor={{ true: BLUE, false: '#C9D2E0' }} thumbColor="#FFFFFF" accessibilityLabel="Auto scan" />
+        <Switch value={sc.auto} onValueChange={sc.setAuto} trackColor={{ true: BLUE, false: Maple.borderStrong }} thumbColor={Maple.surface} accessibilityLabel="Auto scan" />
         <View style={styles.flex} />
         <Pressable style={styles.smallBtn} onPress={() => sc.capture('gallery')} accessibilityRole="button">
           <Text style={styles.smallBtnText}>Gallery</Text>
@@ -153,7 +155,7 @@ export function ScannerPanel({ s }: { s: WorkState }) {
       <Thumbs s={s} small />
       <View style={styles.scanRowP}>
         <Pressable style={styles.scanBtn} onPress={() => sc.capture('scan')} accessibilityRole="button">
-          <Icon name="playFill" size={15} color="#FFFFFF" />
+          <Icon name="playFill" size={15} color={Maple.surface} />
           <Text style={styles.scanText}>{sc.capturing ? 'Scanning…' : 'Scan'}</Text>
         </Pressable>
         <AutoScan s={s} />
@@ -180,7 +182,7 @@ function VivaControls({ s, phone = false }: { s: WorkState; phone?: boolean }) {
         {left ? (
           <Pressable style={styles.vivaLeft} onPress={left.on} accessibilityRole="button" accessibilityLabel={left.label}>
             <View style={styles.disc}>
-              <Icon name={left.icon} size={16} color="#FFFFFF" />
+              <Icon name={left.icon} size={16} color={Maple.surface} />
             </View>
             {phone ? null : <Text style={styles.vivaLabel}>{left.label}</Text>}
           </Pressable>
@@ -192,7 +194,7 @@ function VivaControls({ s, phone = false }: { s: WorkState; phone?: boolean }) {
       <View style={[styles.vivaSide, styles.vivaRight]}>
         {v.mode === 'idle' ? null : (
           <Pressable style={styles.disc} onPress={v.discard} accessibilityRole="button" accessibilityLabel="Delete recording">
-            <Icon name="trash" size={15} color="#FFFFFF" />
+            <Icon name="trash" size={15} color={Maple.surface} />
           </Pressable>
         )}
       </View>
@@ -233,7 +235,7 @@ export function VivaCard({ w, s }: { w: Work; s: WorkState }) {
         {w.vivaTips.map((t) => (
           <View key={t} style={styles.tip}>
             <View style={styles.tick}>
-              <Icon name="check" size={9} color="#FFFFFF" />
+              <Icon name="check" size={9} color={Maple.surface} />
             </View>
             <Text style={styles.tipText}>{t}</Text>
           </View>
@@ -258,65 +260,65 @@ const styles = StyleSheet.create({
   flex: { flex: 1 },
   fill: { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0 },
   step: { flexDirection: 'row', gap: 12 },
-  stepNum: { width: 28, height: 28, alignItems: 'center', justifyContent: 'center', borderRadius: 14, backgroundColor: '#DCE8FD' },
+  stepNum: { width: 28, height: 28, alignItems: 'center', justifyContent: 'center', borderRadius: 14, backgroundColor: Maple.blueSelected },
   stepNumText: { fontSize: 14, fontWeight: '700', color: BLUE },
   stepTitle: { fontSize: 13.5, fontWeight: '700', color: INK },
   stepSub: { marginTop: 4, fontSize: 10.5, color: BODY },
-  shot: { height: 262, marginTop: 14, borderRadius: 4, backgroundColor: '#8B6A4E', overflow: 'hidden', alignItems: 'center', justifyContent: 'center' },
-  emptyShot: { fontSize: 12, color: '#FFFFFF' },
-  shutter: { alignSelf: 'center', width: 50, height: 50, marginTop: -36, alignItems: 'center', justifyContent: 'center', borderRadius: 25, borderWidth: 3, borderColor: '#FFFFFF', backgroundColor: '#0B6BFF' },
-  shutterIn: { width: 40, height: 40, borderRadius: 20, backgroundColor: '#0B6BFF' },
+  shot: { height: 262, marginTop: 14, borderRadius: 4, backgroundColor: Maple.secondary, overflow: 'hidden', alignItems: 'center', justifyContent: 'center' },
+  emptyShot: { fontSize: 12, color: Maple.surface },
+  shutter: { alignSelf: 'center', width: 50, height: 50, marginTop: -36, alignItems: 'center', justifyContent: 'center', borderRadius: 25, borderWidth: 3, borderColor: Maple.surface, backgroundColor: Maple.blue },
+  shutterIn: { width: 40, height: 40, borderRadius: 20, backgroundColor: Maple.blue },
   thumbs: { gap: 7, marginTop: 10 },
-  thumb: { width: 58, height: 55, borderRadius: 4, borderWidth: 1, borderColor: '#E1E7F0', overflow: 'hidden' },
-  thumbP: { width: 56, height: 40, borderRadius: 4, borderWidth: 1, borderColor: '#E1E7F0', overflow: 'hidden' },
+  thumb: { width: 58, height: 55, borderRadius: 4, borderWidth: 1, borderColor: Maple.blueSelected, overflow: 'hidden' },
+  thumbP: { width: 56, height: 40, borderRadius: 4, borderWidth: 1, borderColor: Maple.blueSelected, overflow: 'hidden' },
   thumbOn: { borderWidth: 2, borderColor: BLUE },
   remove: { position: 'absolute', top: 2, right: 2, width: 15, height: 15, alignItems: 'center', justifyContent: 'center', borderRadius: 8, backgroundColor: 'rgba(11,20,36,0.75)' },
-  galleryTile: { width: 63, alignItems: 'center', justifyContent: 'center', gap: 3, backgroundColor: '#FFFFFF' },
+  galleryTile: { width: 63, alignItems: 'center', justifyContent: 'center', gap: 3, backgroundColor: Maple.surface },
   galleryText: { fontSize: 10.5, color: BODY },
   scanRow: { flexDirection: 'row', alignItems: 'center', gap: 5, marginTop: 12 },
-  smallBtn: { height: 30, justifyContent: 'center', paddingHorizontal: 8, borderRadius: 5, borderWidth: 1, borderColor: '#E1E7F0' },
+  smallBtn: { height: 30, justifyContent: 'center', paddingHorizontal: 8, borderRadius: 5, borderWidth: 1, borderColor: Maple.blueSelected },
   smallBtnText: { fontSize: 12, color: INK },
   auto: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   autoText: { fontSize: 12.5, fontWeight: '500', color: INK },
   corners: { position: 'absolute', top: 10, right: 10, bottom: 10, left: 10 },
-  corner: { position: 'absolute', width: 22, height: 22, borderColor: '#2F80FF' },
+  corner: { position: 'absolute', width: 22, height: 22, borderColor: Maple.blue },
   tl: { top: 0, left: 0, borderTopWidth: 3, borderLeftWidth: 3 },
   tr: { top: 0, right: 0, borderTopWidth: 3, borderRightWidth: 3 },
   bl: { bottom: 0, left: 0, borderBottomWidth: 3, borderLeftWidth: 3 },
   br: { bottom: 0, right: 0, borderBottomWidth: 3, borderRightWidth: 3 },
   veil: { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(255,255,255,0.45)' },
-  veilText: { paddingHorizontal: 10, paddingVertical: 5, borderRadius: 12, backgroundColor: 'rgba(11,20,36,0.8)', fontSize: 11.5, color: '#FFFFFF', overflow: 'hidden' },
-  panel: { padding: 10, borderRadius: 10, borderWidth: 1, borderColor: '#E6EBF2', backgroundColor: '#FFFFFF', gap: 10 },
+  veilText: { paddingHorizontal: 10, paddingVertical: 5, borderRadius: 12, backgroundColor: 'rgba(11,20,36,0.8)', fontSize: 11.5, color: Maple.surface, overflow: 'hidden' },
+  panel: { padding: 10, borderRadius: 10, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface, gap: 10 },
   panelHead: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   panelTitle: { flex: 1, fontSize: 12.5, fontWeight: '700', color: INK },
-  collapsed: { height: 44, flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 12, borderRadius: 10, borderWidth: 1, borderColor: '#E6EBF2', backgroundColor: '#FFFFFF' },
+  collapsed: { height: 44, flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 12, borderRadius: 10, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface },
   collapsedDetail: { fontSize: 12, color: BODY },
-  shotP: { width: '100%', aspectRatio: 281 / 188, borderRadius: 6, overflow: 'hidden', backgroundColor: '#8B6A4E' },
-  count: { position: 'absolute', right: 6, bottom: 6, paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4, backgroundColor: 'rgba(11,20,36,0.75)', fontSize: 10.5, color: '#FFFFFF', overflow: 'hidden' },
+  shotP: { width: '100%', aspectRatio: 281 / 188, borderRadius: 6, overflow: 'hidden', backgroundColor: Maple.secondary },
+  count: { position: 'absolute', right: 6, bottom: 6, paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4, backgroundColor: 'rgba(11,20,36,0.75)', fontSize: 10.5, color: Maple.surface, overflow: 'hidden' },
   scanRowP: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  scanBtn: { flex: 1, height: 34, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, borderRadius: 5, backgroundColor: '#0B6BFF' },
-  scanText: { fontSize: 13.5, fontWeight: '500', color: '#FFFFFF' },
-  frame: { height: 250, marginTop: 14, borderRadius: 6, overflow: 'hidden', backgroundColor: '#1B2230' },
-  frameP: { width: '100%', aspectRatio: 281 / 132, borderRadius: 6, overflow: 'hidden', backgroundColor: '#1B2230' },
+  scanBtn: { flex: 1, height: 34, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, borderRadius: 5, backgroundColor: Maple.blue },
+  scanText: { fontSize: 13.5, fontWeight: '500', color: Maple.surface },
+  frame: { height: 250, marginTop: 14, borderRadius: 6, overflow: 'hidden', backgroundColor: Maple.navy },
+  frameP: { width: '100%', aspectRatio: 281 / 132, borderRadius: 6, overflow: 'hidden', backgroundColor: Maple.navy },
   frameFade: { position: 'absolute', left: 0, right: 0, bottom: 0, height: '35%' },
   timer: { position: 'absolute', top: 8, right: 4, flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 9, height: 27, borderRadius: 7, backgroundColor: 'rgba(22,26,36,0.92)' },
-  timerDot: { width: 12, height: 12, borderRadius: 6, borderWidth: 2, borderColor: '#FFFFFF', backgroundColor: RED },
-  timerDotIdle: { backgroundColor: '#E8797C' },
-  timerText: { fontSize: 13, fontWeight: '600', color: '#FFFFFF', fontVariant: ['tabular-nums'] },
-  idleText: { position: 'absolute', top: '42%', alignSelf: 'center', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 10, backgroundColor: 'rgba(11,20,36,0.75)', fontSize: 11.5, color: '#FFFFFF', overflow: 'hidden' },
+  timerDot: { width: 12, height: 12, borderRadius: 6, borderWidth: 2, borderColor: Maple.surface, backgroundColor: RED },
+  timerDotIdle: { backgroundColor: Palette.red400 },
+  timerText: { fontSize: 13, fontWeight: '600', color: Maple.surface, fontVariant: ['tabular-nums'] },
+  idleText: { position: 'absolute', top: '42%', alignSelf: 'center', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 10, backgroundColor: 'rgba(11,20,36,0.75)', fontSize: 11.5, color: Maple.surface, overflow: 'hidden' },
   vivaBar: { position: 'absolute', left: 8, right: 8, bottom: 8, flexDirection: 'row', alignItems: 'center' },
   vivaBarP: { bottom: 6 },
   vivaSide: { flex: 1, flexDirection: 'row' },
   vivaRight: { justifyContent: 'flex-end' },
   vivaLeft: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   disc: { width: 28, height: 28, alignItems: 'center', justifyContent: 'center', borderRadius: 14, backgroundColor: 'rgba(11,20,36,0.55)' },
-  vivaLabel: { fontSize: 11.5, color: '#FFFFFF' },
-  rec: { width: 50, height: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 25, borderWidth: 3, borderColor: '#FFFFFF', backgroundColor: RED },
+  vivaLabel: { fontSize: 11.5, color: Maple.surface },
+  rec: { width: 50, height: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 25, borderWidth: 3, borderColor: Maple.surface, backgroundColor: RED },
   recP: { width: 42, height: 42, borderRadius: 21 },
-  recStop: { width: 16, height: 16, borderRadius: 3, backgroundColor: '#FFFFFF' },
-  recDot: { width: 16, height: 16, borderRadius: 8, backgroundColor: '#FFFFFF' },
+  recStop: { width: 16, height: 16, borderRadius: 3, backgroundColor: Maple.surface },
+  recDot: { width: 16, height: 16, borderRadius: 8, backgroundColor: Maple.surface },
   tips: { gap: 9, marginTop: 14 },
   tip: { flexDirection: 'row', gap: 9 },
   tick: { width: 16, height: 16, alignItems: 'center', justifyContent: 'center', marginTop: 1, borderRadius: 8, backgroundColor: GREEN },
-  tipText: { flex: 1, fontSize: 12.5, color: '#2B3445' },
+  tipText: { flex: 1, fontSize: 12.5, color: Maple.navy },
 });

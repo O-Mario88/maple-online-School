@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { useMemo, useState } from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
@@ -13,6 +13,7 @@ import { BLUE, BODY, LINE, MUTED, NAVY, type Tone, WHITE } from '@/features/port
 import { Cell, type Column, DataTable, PageHead, Search, useChoice } from '@/features/school/kit/AdminKit';
 import { toast } from '@/lib/toast';
 import type { Framework } from '@/mock/command-center/curricula';
+import { Maple } from '@/constants/maple';
 
 type K = CommandData['curricula'];
 const PER_PAGE = 10;
@@ -115,7 +116,7 @@ function useCurricula(k: K, me: string) {
 type U = ReturnType<typeof useCurricula>;
 
 function Crest({ src, size }: { src: number; size: number }) {
-  return <Image source={src} style={{ width: size, height: size, borderRadius: size / 2 }} contentFit="cover" />;
+  return <Image decorative source={src} style={{ width: size, height: size, borderRadius: size / 2 }} contentFit="cover" />;
 }
 
 function FrameworkList({ u }: { u: U }) {
@@ -536,10 +537,10 @@ const styles = StyleSheet.create({
   colPreview: { width: 318 },
   list: { gap: 10, padding: 12 },
   fw: { flexDirection: 'row', gap: 10, padding: 10, borderRadius: 10, borderWidth: 1, borderColor: LINE, backgroundColor: WHITE },
-  fwOn: { borderColor: BLUE, borderLeftWidth: 4, backgroundColor: '#F2F7FF' },
+  fwOn: { borderColor: BLUE, borderLeftWidth: 4, backgroundColor: Maple.blueSoft },
   fwName: { fontSize: 14, fontWeight: '700', color: BLUE },
   fwChips: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 6 },
-  chip: { flexShrink: 0, paddingHorizontal: 8, paddingVertical: 3, borderRadius: 6, backgroundColor: '#EEF2F8', fontSize: 11, color: NAVY },
+  chip: { flexShrink: 0, paddingHorizontal: 8, paddingVertical: 3, borderRadius: 6, backgroundColor: Maple.blueSelected, fontSize: 11, color: NAVY },
   mid: { padding: 14 },
   fwHead: { gap: 10 },
   fwTitle: { fontSize: 20, fontWeight: '800', color: NAVY },
@@ -556,21 +557,21 @@ const styles = StyleSheet.create({
   gradeName: { fontSize: 15, fontWeight: '800', color: NAVY },
   listGap: { gap: 8 },
   preview: { gap: 10, padding: 12 },
-  sigma: { width: 50, height: 50, borderRadius: 10, alignItems: 'center', justifyContent: 'center', backgroundColor: '#EAF1FF' },
+  sigma: { width: 50, height: 50, borderRadius: 10, alignItems: 'center', justifyContent: 'center', backgroundColor: Maple.blueSoft },
   previewName: { fontSize: 17, fontWeight: '800', color: BLUE },
   previewStats: { flexDirection: 'row', gap: 6 },
   previewStat: { flex: 1, minWidth: 0, padding: 7, borderRadius: 8, borderWidth: 1, borderColor: LINE },
   previewValue: { fontSize: 13.5, fontWeight: '800', color: NAVY },
   coverage: { flexDirection: 'row', flexWrap: 'wrap', gap: 5 },
-  coverChip: { width: 36, paddingVertical: 5, borderRadius: 6, alignItems: 'center', backgroundColor: '#F1F4F9' },
-  coverOn: { backgroundColor: '#E3EDFF' },
+  coverChip: { width: 36, paddingVertical: 5, borderRadius: 6, alignItems: 'center', backgroundColor: Maple.blueSoft },
+  coverOn: { backgroundColor: Maple.blueSelected },
   coverText: { fontSize: 11.5, color: MUTED },
   coverTextOn: { color: BLUE, fontWeight: '700' },
   topic: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingVertical: 3 },
   topicText: { fontSize: 12, color: NAVY },
   fwChipsRow: { gap: 8 },
   fwChip: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 10, paddingVertical: 6, borderRadius: 20, borderWidth: 1, borderColor: LINE, backgroundColor: WHITE },
-  fwChipOn: { borderColor: BLUE, backgroundColor: '#EAF1FF' },
+  fwChipOn: { borderColor: BLUE, backgroundColor: Maple.blueSoft },
   fwChipText: { fontSize: 13, fontWeight: '600', color: NAVY },
   fwChipTextOn: { color: BLUE },
   subjectCard: { flexDirection: 'row', alignItems: 'center', gap: 10, padding: 12, borderRadius: 12, borderWidth: 1, borderColor: LINE, backgroundColor: WHITE },

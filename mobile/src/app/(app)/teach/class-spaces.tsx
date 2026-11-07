@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { ScrollView, StyleSheet, useWindowDimensions } from 'react-native';
+import { StyleSheet, useWindowDimensions } from 'react-native';
 
 import { useShell } from '@/components/ui';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
@@ -11,6 +11,7 @@ import {
 } from '@/features/teacher/class-spaces/ClassSpacesViews';
 import { CANVAS } from '@/features/teacher/frame/TeacherParts';
 import { mockData } from '@/lib/mock';
+import { PageScroll } from '@/components/shell/PageScroll';
 
 /** Inventory 47: "Bottom-Up" Free School Class Space Manager (`/(teacher)/class-spaces`). */
 export default function ClassSpacesScreen() {
@@ -30,11 +31,11 @@ export default function ClassSpacesScreen() {
   const c = mock.teacher.classSpacesManager;
   if (!wide) return <ClassSpacesPhone c={c} me={me} />;
   return (
-    <ScrollView style={styles.bg}>
+    <PageScroll style={styles.bg}>
       <RefScale width={width} refWidth={CLASS_SPACES_REF_WIDTH}>
         <ClassSpacesDesk c={c} me={me} />
       </RefScale>
-    </ScrollView>
+    </PageScroll>
   );
 }
 

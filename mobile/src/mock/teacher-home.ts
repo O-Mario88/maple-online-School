@@ -3,6 +3,7 @@ import type { IconName } from '@/lib/icons';
 import type { TeacherDest } from '@/lib/teacher-home';
 
 import { photos } from './photos';
+import { Maple } from '@/constants/maple';
 
 const p = photos.teacherHome;
 
@@ -74,10 +75,10 @@ export const teacherHome = {
   },
   queueTotal: 24,
   queue: [
-    { title: 'Grade 8 submissions', detail: '12 submissions waiting', phoneDetail: '12 waiting (3 overdue)', tag: '3 overdue', tone: 'red', icon: 'notes', color: '#F08C00', go: '/teach/grading' },
-    { title: 'Students needing support', detail: '5 students struggling', phoneDetail: '5 students', tag: 'High Priority', tone: 'red', icon: 'people', color: '#E5484D', go: 'analytics' },
-    { title: 'Respond to student questions', phoneTitle: 'Respond to questions', detail: '8 new messages', phoneDetail: '8 new messages', tag: '8 new', tone: 'red', icon: 'chat', color: '#F08C00', go: '/messages' },
-    { title: 'Prepare tomorrow’s lesson', detail: 'O-Level Science: Photosynthesis', phoneDetail: 'O-Level Science', tag: 'Due today', tone: 'red', icon: 'notes', color: '#12A58C', go: '/learn/live' },
+    { title: 'Grade 8 submissions', detail: '12 submissions waiting', phoneDetail: '12 waiting (3 overdue)', tag: '3 overdue', tone: 'red', icon: 'notes', color: Maple.warning, go: '/teach/grading' },
+    { title: 'Students needing support', detail: '5 students struggling', phoneDetail: '5 students', tag: 'High Priority', tone: 'red', icon: 'people', color: Maple.error, go: 'analytics' },
+    { title: 'Respond to student questions', phoneTitle: 'Respond to questions', detail: '8 new messages', phoneDetail: '8 new messages', tag: '8 new', tone: 'red', icon: 'chat', color: Maple.warning, go: '/messages' },
+    { title: 'Prepare tomorrow’s lesson', detail: 'O-Level Science: Photosynthesis', phoneDetail: 'O-Level Science', tag: 'Due today', tone: 'red', icon: 'notes', color: Maple.successText, go: '/learn/live' },
   ] as QueueItem[],
   flagged: [
     { name: 'Emmanuel K.', course: 'O-Level Mathematics', score: 42, reason: 'Missed 3 assignments', photo: p.emmanuel },
@@ -87,17 +88,17 @@ export const teacherHome = {
     { name: 'Daniel O.', course: 'O-Level Science', score: 45, reason: 'Falling behind this week', photo: p.daniel },
   ] as Flagged[],
   schedule: [
-    { time: '10:00 AM – 11:00 AM', title: 'O-Level Mathematics', kind: 'Live class', icon: 'video', color: '#1463F3', live: 'Live in 25 min', now: true, go: '/teach/host' },
-    { time: '11:30 AM – 12:30 PM', title: 'Homework Help Session', kind: '1-on-1 Tutoring', icon: 'help', color: '#22A35A', go: '/teach/calendar' },
-    { time: '2:00 PM – 3:00 PM', title: 'O-Level Science', kind: 'Live class', icon: 'notes', color: '#7C4DDB', live: 'Live Class', go: '/teach/calendar' },
-    { time: '4:00 PM – 5:00 PM', title: 'Study Squad Support', kind: 'Group Session', icon: 'people', color: '#F08C00', go: '/teach/calendar' },
-    { time: '6:00 PM – 6:30 PM', title: 'Parent Check-in', kind: 'Video Call', icon: 'phone', color: '#12A58C', go: '/teach/calendar' },
+    { time: '10:00 AM – 11:00 AM', title: 'O-Level Mathematics', kind: 'Live class', icon: 'video', color: Maple.blue, live: 'Live in 25 min', now: true, go: '/teach/host' },
+    { time: '11:30 AM – 12:30 PM', title: 'Homework Help Session', kind: '1-on-1 Tutoring', icon: 'help', color: Maple.successText, go: '/teach/calendar' },
+    { time: '2:00 PM – 3:00 PM', title: 'O-Level Science', kind: 'Live class', icon: 'notes', color: Maple.blue, live: 'Live Class', go: '/teach/calendar' },
+    { time: '4:00 PM – 5:00 PM', title: 'Study Squad Support', kind: 'Group Session', icon: 'people', color: Maple.warning, go: '/teach/calendar' },
+    { time: '6:00 PM – 6:30 PM', title: 'Parent Check-in', kind: 'Video Call', icon: 'phone', color: Maple.successText, go: '/teach/calendar' },
   ] as Slot[],
   quick: [
-    { label: 'Create\nAssignment', icon: 'notes', color: '#7C4DDB', go: '/new-assignment' },
-    { label: 'Send\nMessage', icon: 'chat', color: '#1463F3', go: '/messages/new' },
-    { label: 'Open\nResources', icon: 'book', color: '#22A35A', go: '/learn/library' },
-    { label: 'View\nAnalytics', icon: 'chart', color: '#F08C00', go: 'analytics' },
+    { label: 'Create\nAssignment', icon: 'notes', color: Maple.blue, go: '/new-assignment' },
+    { label: 'Send\nMessage', icon: 'chat', color: Maple.blue, go: '/messages/new' },
+    { label: 'Open\nResources', icon: 'book', color: Maple.successText, go: '/learn/library' },
+    { label: 'View\nAnalytics', icon: 'chart', color: Maple.warning, go: 'analytics' },
   ] as { label: string; icon: IconName; color: string; go: TeacherDest }[],
 };
 

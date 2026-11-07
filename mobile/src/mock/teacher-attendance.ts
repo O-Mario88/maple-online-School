@@ -3,6 +3,7 @@ import type { IconName } from '@/lib/icons';
 import type { TeacherDest } from '@/lib/teacher-home';
 
 import { photos } from './photos';
+import { Maple } from '@/constants/maple';
 
 export type AttendanceStatusKey =
   | 'Present Engaged'
@@ -59,13 +60,13 @@ export const attendanceRegister = {
     { label: 'Session Settings', icon: 'settings' as IconName, go: '/teach/attendance' as TeacherDest },
   ],
   kpis: [
-    { id: 'total', value: '28', label: 'Total Students', icon: null, color: '#0F172A', bg: '#F1F5F9' },
-    { id: 'present', value: '24', label: 'Present (86%)', icon: 'people' as IconName, color: '#16A34A', bg: '#DCFCE7' },
-    { id: 'engaged', value: '18', label: 'Engaged (64%)', icon: 'chart' as IconName, color: '#1463F3', bg: '#DBEAFE' },
-    { id: 'partial', value: '4', label: 'Partial (14%)', icon: 'clock' as IconName, color: '#D97706', bg: '#FEF3C7' },
-    { id: 'absent', value: '2', label: 'Absent (7%)', icon: 'person' as IconName, color: '#EF4444', bg: '#FEE2E2' },
-    { id: 'late', value: '1', label: 'Late (4%)', icon: 'clock' as IconName, color: '#7E22CE', bg: '#F3E8FF' },
-    { id: 'excused', value: '1', label: 'Excused (4%)', icon: 'flag' as IconName, color: '#475569', bg: '#F1F5F9' },
+    { id: 'total', value: '28', label: 'Total Students', icon: null, color: Maple.navy, bg: Maple.blueSoft },
+    { id: 'present', value: '24', label: 'Present (86%)', icon: 'people' as IconName, color: Maple.successText, bg: Maple.successSoft },
+    { id: 'engaged', value: '18', label: 'Engaged (64%)', icon: 'chart' as IconName, color: Maple.blue, bg: Maple.blueSelected },
+    { id: 'partial', value: '4', label: 'Partial (14%)', icon: 'clock' as IconName, color: Maple.warning, bg: Maple.warningSoft },
+    { id: 'absent', value: '2', label: 'Absent (7%)', icon: 'person' as IconName, color: Maple.error, bg: Maple.errorSoft },
+    { id: 'late', value: '1', label: 'Late (4%)', icon: 'clock' as IconName, color: Maple.blue, bg: Maple.blueSelected },
+    { id: 'excused', value: '1', label: 'Excused (4%)', icon: 'flag' as IconName, color: Maple.body, bg: Maple.blueSoft },
   ],
   students: [
     {

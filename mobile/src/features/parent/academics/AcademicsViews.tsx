@@ -18,6 +18,7 @@ import {
   TeacherNotesCard,
   TermPicker,
 } from './AcademicsCards';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
 const TABS = ['Overview', 'Assignments', 'Grades', 'Report Cards'] as const;
 type Tab = (typeof TABS)[number];
@@ -35,7 +36,7 @@ function Heading({ p, wide }: { p: ParentPortal; wide: boolean }) {
   return (
     <View style={styles.headRow}>
       <View style={[styles.headText, wide && styles.headTextWide]}>
-        <Text style={[styles.title, wide && styles.titleWide]} accessibilityRole="header">
+        <Text style={[styles.title, wide && styles.titleWide]} {...PAGE_TITLE}>
           Academics
         </Text>
         <Text style={styles.subtitle}>{wide ? 'Track assignments, view grades, and download report cards.' : 'Track assignments, view grades, access feedback, and download report cards.'}</Text>

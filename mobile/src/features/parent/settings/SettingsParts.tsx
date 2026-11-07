@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
@@ -9,6 +9,7 @@ import { BLUE, BODY, GREEN, LINE, NAVY, SELECT, SOFT, WHITE } from '@/features/p
 import type { IconName } from '@/lib/icons';
 import { toast } from '@/lib/toast';
 import type { ParentPortal, PortalChild } from '@/mock/portal';
+import { Maple } from '@/constants/maple';
 
 type Settings = ParentPortal['settings'];
 
@@ -25,7 +26,7 @@ export function ChildrenCard({ list, phone = false }: { list: readonly PortalChi
           onPress={() => toast(`${c.name}'s profile: ${c.level}, ${c.school}.`)}
           accessibilityRole="button"
           accessibilityLabel={`${c.name}, ${c.level}, ${c.school}`}>
-          <Image source={c.avatar} style={phone ? styles.childAvatarPhone : styles.childAvatar} contentFit="cover" />
+          <Image decorative source={c.avatar} style={phone ? styles.childAvatarPhone : styles.childAvatar} contentFit="cover" />
           <View style={styles.flex}>
             <Text style={styles.childName}>{c.name}</Text>
             {phone ? (
@@ -162,7 +163,7 @@ function SwitchRow({
 }) {
   return (
     <View style={styles.switchRow}>
-      {whatsapp ? <Image source={whatsapp} style={styles.whatsapp} contentFit="contain" /> : icon ? <Icon name={icon} size={28} color={BLUE} /> : null}
+      {whatsapp ? <Image decorative source={whatsapp} style={styles.whatsapp} contentFit="contain" /> : icon ? <Icon name={icon} size={28} color={BLUE} /> : null}
       <View style={styles.flex}>
         <Text style={styles.switchTitle}>{title}</Text>
         <Text style={styles.switchBody}>{body}</Text>
@@ -205,7 +206,7 @@ export function NotificationsCard({ s, phone = false }: { s: Settings; phone?: b
             <Text style={styles.digestLabel}>WhatsApp phone number</Text>
             <View style={styles.phoneRow}>
               <View style={styles.flagBox}>
-                <Image source={d.flag} style={styles.flag} contentFit="cover" />
+                <Image decorative source={d.flag} style={styles.flag} contentFit="cover" />
               </View>
               <View style={styles.phoneField}>
                 <Text style={styles.phoneText} numberOfLines={1}>
@@ -280,9 +281,9 @@ const styles = StyleSheet.create({
   childName: { fontSize: 20, fontWeight: '800', color: NAVY },
   childMeta: { marginTop: 3, fontSize: 15.5, color: BODY },
   active: { alignSelf: 'center', paddingHorizontal: 16, paddingVertical: 8 },
-  claim: { flexDirection: 'row', alignItems: 'center', gap: 22, padding: 18, borderRadius: 14, backgroundColor: '#E6F0FD' },
+  claim: { flexDirection: 'row', alignItems: 'center', gap: 22, padding: 18, borderRadius: 14, backgroundColor: Maple.blueSelected },
   claimPhone: { gap: 14, padding: 14 },
-  claimTile: { width: 74, height: 74, borderRadius: 16, alignItems: 'center', justifyContent: 'center', backgroundColor: WHITE, borderWidth: 1, borderColor: '#CFE0FA' },
+  claimTile: { width: 74, height: 74, borderRadius: 16, alignItems: 'center', justifyContent: 'center', backgroundColor: WHITE, borderWidth: 1, borderColor: Maple.blueLine },
   claimTilePhone: { width: 64, height: 64 },
   claimTitle: { fontSize: 17, fontWeight: '700', color: BLUE },
   claimBody: { marginTop: 4, fontSize: 14.5, lineHeight: 21, color: BODY },
@@ -300,7 +301,7 @@ const styles = StyleSheet.create({
   guardianRolePhone: { fontSize: 14 },
   accessPhone: { alignSelf: 'center', paddingHorizontal: 10, paddingVertical: 7 },
   access: { alignSelf: 'center', paddingHorizontal: 14, paddingVertical: 8 },
-  youChip: { paddingHorizontal: 14, paddingVertical: 8, borderRadius: 8, backgroundColor: SELECT, borderWidth: 1, borderColor: '#C9DBFA' },
+  youChip: { paddingHorizontal: 14, paddingVertical: 8, borderRadius: 8, backgroundColor: SELECT, borderWidth: 1, borderColor: Maple.blueLine },
   youText: { fontSize: 14, fontWeight: '600', color: BLUE },
   dots: { width: 22, alignItems: 'center' },
   dotsSpace: { width: 22 },
@@ -315,7 +316,7 @@ const styles = StyleSheet.create({
   digestPhoneNarrow: { marginLeft: 18 },
   digestLabel: { fontSize: 14.5, color: BODY },
   phoneRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  flagBox: { width: 50, height: 50, borderRadius: 10, alignItems: 'center', justifyContent: 'center', backgroundColor: '#FDECEE' },
+  flagBox: { width: 50, height: 50, borderRadius: 10, alignItems: 'center', justifyContent: 'center', backgroundColor: Maple.errorSoft },
   flag: { width: 30, height: 22, borderRadius: 4 },
   phoneField: { flex: 1, minWidth: 0, height: 50, justifyContent: 'center', paddingHorizontal: 14, borderRadius: 10, borderWidth: 1, borderColor: LINE },
   phoneText: { fontSize: 16.5, color: NAVY },

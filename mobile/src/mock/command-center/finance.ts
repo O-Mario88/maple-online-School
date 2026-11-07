@@ -2,6 +2,7 @@
 import type { Batch, Payout } from '@/features/command/logic/finance';
 
 import { face, type KpiData, type Photo } from './shared';
+import { Maple } from '@/constants/maple';
 
 export type Provider = 'Stripe' | 'Flutterwave' | 'Paystack' | 'MTN MoMo' | 'Airtel Money';
 
@@ -69,11 +70,11 @@ export const breakdown = {
 };
 
 export const methods: readonly { label: string; pct: number; color: string }[] = [
-  { label: 'Mobile Money (MoMo)', pct: 42, color: '#1E6BF0' },
-  { label: 'Card Payments (Stripe)', pct: 28, color: '#22A55A' },
-  { label: 'Flutterwave', pct: 18, color: '#A855F7' },
-  { label: 'Paystack', pct: 9, color: '#F59E0B' },
-  { label: 'Bank Transfer', pct: 3, color: '#B8C2D9' },
+  { label: 'Mobile Money (MoMo)', pct: 42, color: Maple.blue },
+  { label: 'Card Payments (Stripe)', pct: 28, color: Maple.successText },
+  { label: 'Flutterwave', pct: 18, color: Maple.blue },
+  { label: 'Paystack', pct: 9, color: Maple.warning },
+  { label: 'Bank Transfer', pct: 3, color: Maple.blueLine },
 ];
 
 export const marketVsByos = {
@@ -141,9 +142,9 @@ export const payoutTabs = ['Approval Queue', 'Disbursement Tracking', 'Retry Que
 export const admins = ['Mary N.', 'James K.', 'Grace M.'];
 
 export const summary = [
-  { label: 'Total Approved', value: 'UGX 1.84B', delta: '+5%', color: '#1E6BF0', values: [3, 4, 3.6, 5, 4.8, 6, 6.4, 7, 8.4] },
-  { label: 'Pending Approval', value: 'UGX 213M', delta: '+3%', color: '#F59E0B', values: [4, 3.2, 4.4, 3.8, 5, 4.6, 5.6, 5.2, 6.2] },
-  { label: "Today's Disbursals", value: 'UGX 276M', delta: '+12%', color: '#22A55A', values: [2, 3, 2.6, 3.8, 3.4, 4.6, 4.2, 5.6, 6.6] },
+  { label: 'Total Approved', value: 'UGX 1.84B', delta: '+5%', color: Maple.blue, values: [3, 4, 3.6, 5, 4.8, 6, 6.4, 7, 8.4] },
+  { label: 'Pending Approval', value: 'UGX 213M', delta: '+3%', color: Maple.warning, values: [4, 3.2, 4.4, 3.8, 5, 4.6, 5.6, 5.2, 6.2] },
+  { label: "Today's Disbursals", value: 'UGX 276M', delta: '+12%', color: Maple.successText, values: [2, 3, 2.6, 3.8, 3.4, 4.6, 4.2, 5.6, 6.6] },
 ];
 
 export const disbursements: readonly { when: string; amount: number; method: string; status: 'Completed' | 'Processing'; ref: string }[] = [

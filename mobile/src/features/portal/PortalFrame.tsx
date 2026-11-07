@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router, usePathname } from 'expo-router';
 import { type ReactNode, useSyncExternalStore } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, useWindowDimensions, View } from 'react-native';
@@ -6,26 +6,31 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Icon } from '@/components/icon';
 import { RefScale } from '@/features/public/home/RefScale';
+import { useCanOpen } from '@/lib/access/use-role';
 import type { IconName } from '@/lib/icons';
 import { useSwitcher } from '@/lib/switcher-context';
 import { toast } from '@/lib/toast';
 import type { NavItem, PortalChild } from '@/mock/portal';
+import { openMenuPage } from '@/lib/menu-nav';
+import { isSchoolRefPath } from '@/lib/portal-frame';
 
 import { CountBadge } from './PortalParts';
 import { BLUE, BODY, CANVAS, DESK_MIN_WIDTH, LINE, MUTED, NAVY, SELECT, WHITE } from './tokens';
+import { Maple } from '@/constants/maple';
+import { isNarrowPhone } from '@/lib/layout';
+import { PageScroll } from '@/components/shell/PageScroll';
+import { MapleLogo } from '@/components/brand/MapleLogo';
 
-const LEAF = require('@/assets/images/maple-leaf.png') as number;
+
+/** The parent and school-admin desktop top bar's height at the designs' scale. */
+export const PORTAL_TOP_HEIGHT = 86;
 
 /** The Maple leaf and wordmark. */
-export function Logo({ size = 'desk' }: { size?: 'desk' | 'phone' }) {
+export function Logo({ size = 'desk', markOnly = false }: { size?: 'desk' | 'phone'; markOnly?: boolean }) {
   const phone = size === 'phone';
   return (
-    <Pressable style={styles.logo} onPress={() => router.push('/')} accessibilityRole="link" accessibilityLabel="Maple home">
-      <Image source={LEAF} style={phone ? styles.leafPhone : styles.leaf} contentFit="contain" />
-      <View>
-        <Text style={[styles.brand, phone && styles.brandPhone]}>Maple</Text>
-        <Text style={[styles.brandSub, phone && styles.brandSubPhone]}>Global Online School</Text>
-      </View>
+    <Pressable style={styles.logo} onPress={() => openMenuPage('/')} accessibilityRole="link" accessibilityLabel="Maple home">
+      <MapleLogo markStyle={phone ? styles.leafPhone : styles.leaf} markOnly={markOnly} />
     </Pressable>
   );
 }
@@ -33,7 +38,7 @@ export function Logo({ size = 'desk' }: { size?: 'desk' | 'phone' }) {
 /** The alerts bell with its red count. */
 export function Bell({ count, size = 26 }: { count: number; size?: number }) {
   return (
-    <Pressable onPress={() => router.push('/inbox')} accessibilityRole="button" accessibilityLabel={`Notifications, ${count} unread`} hitSlop={8}>
+    <Pressable onPress={() => openMenuPage('/inbox')} accessibilityRole="button" accessibilityLabel={`Notifications, ${count} unread`} hitSlop={8}>
       <Icon name="bell" size={size} color={NAVY} />
       {count > 0 ? <CountBadge count={count} size={size * 0.72} style={styles.bellBadge} /> : null}
     </Pressable>
@@ -48,32 +53,34 @@ export function DeskHost({ children, minWidth = DESK_MIN_WIDTH }: { children: Re
   const { width } = useWindowDimensions();
   if (width >= minWidth) {
     return (
-      <ScrollView style={styles.canvas} contentContainerStyle={styles.canvasContent}>
+      <PageScroll style={styles.canvas} contentContainerStyle={styles.canvasContent}>
         {children}
-      </ScrollView>
+      </PageScroll>
     );
   }
   return (
-    <ScrollView style={styles.canvas}>
+    <PageScroll style={styles.canvas}>
       <RefScale width={width} refWidth={minWidth}>
         {children}
       </RefScale>
-    </ScrollView>
+    </PageScroll>
   );
 }
 
 /** The desktop sidebar: an optional heading ("Parent") over icon links, the current one tinted blue. */
 export function SideNav({ heading, items, active }: { heading?: string; items: readonly NavItem[]; active: string }) {
+  // Only the pages this account's role may open (a class teacher sees no Finance, say).
+  const may = useCanOpen();
   return (
     <View style={styles.side} accessibilityRole="menu">
       {heading ? <Text style={styles.sideHeading}>{heading}</Text> : null}
-      {items.map((n) => {
+      {items.filter((n) => may(n.href)).map((n) => {
         const on = n.label === active;
         return (
           <Pressable
             key={n.label}
             style={({ hovered }) => [styles.sideItem, on && styles.sideItemOn, hovered && !on && styles.sideItemHover]}
-            onPress={() => router.push(n.href as never)}
+            onPress={() => openMenuPage(n.href as never)}
             accessibilityRole="menuitem"
             accessibilityState={{ selected: on }}
             accessibilityLabel={n.label}>
@@ -101,7 +108,7 @@ export function MeChip({ name, role, avatar, initial }: { name: string; role: st
   const switcher = useSwitcher();
   return (
     <Pressable style={styles.me} onPress={switcher?.open} accessibilityRole="button" accessibilityLabel={`${name}, ${role}. Switch mode`}>
-      {avatar ? <Image source={avatar} style={styles.meAvatar} contentFit="cover" /> : <Initial letter={initial ?? name[0]} size={46} />}
+      {avatar ? <Image decorative source={avatar} style={styles.meAvatar} contentFit="cover" /> : <Initial letter={initial ?? name[0]} size={46} />}
       <View>
         <Text style={styles.meName}>{name}</Text>
         <Text style={styles.meRole}>{role}</Text>
@@ -156,7 +163,7 @@ export function ChildPills({ list, compact = false }: { list: readonly PortalChi
             accessibilityRole="tab"
             accessibilityState={{ selected: on }}
             accessibilityLabel={`${c.name}, ${c.level}`}>
-            <Image source={c.avatar} style={styles.pillAvatar} contentFit="cover" />
+            <Image decorative source={c.avatar} style={styles.pillAvatar} contentFit="cover" />
             <View>
               <Text style={styles.pillName}>{c.name}</Text>
               <Text style={styles.pillLevel}>{c.level}</Text>
@@ -291,9 +298,10 @@ export function SchoolDesk({
 /** The phone header: logo on the left; alerts or help and the account photo on the right. */
 export function PhoneTop({ right }: { right: ReactNode }) {
   const insets = useSafeAreaInsets();
+  const { width } = useWindowDimensions();
   return (
     <View style={[styles.phoneTop, { paddingTop: insets.top + 10 }]}>
-      <Logo size="phone" />
+      <Logo size="phone" markOnly={isNarrowPhone(width)} />
       <View style={styles.flex} />
       {right}
     </View>
@@ -309,7 +317,7 @@ export function ParentPhoneTop({ me }: { me: { avatar: number; notifications: nu
         <>
           <Bell count={me.notifications} size={27} />
           <Pressable onPress={switcher?.open} accessibilityRole="button" accessibilityLabel={`${me.name}. Switch mode`}>
-            <Image source={me.avatar} style={styles.phoneAvatar} contentFit="cover" />
+            <Image decorative source={me.avatar} style={styles.phoneAvatar} contentFit="cover" />
           </Pressable>
         </>
       }
@@ -355,7 +363,7 @@ export function ChildCards({ list }: { list: readonly PortalChild[] }) {
             accessibilityRole="tab"
             accessibilityState={{ selected: on }}
             accessibilityLabel={`${c.name}, ${c.level}`}>
-            <Image source={c.avatar} style={styles.cardAvatar} contentFit="cover" />
+            <Image decorative source={c.avatar} style={styles.cardAvatar} contentFit="cover" />
             <View>
               <Text style={styles.cardName}>{c.name}</Text>
               <Text style={styles.cardLevel}>{c.level}</Text>
@@ -401,13 +409,8 @@ const ADMIN_TABS: readonly PortalTab[] = [
   { label: 'More', icon: 'more', href: '/more' },
 ];
 
-/** The paths whose pages draw the parent or school-admin reference frame themselves. */
-export const PARENT_REF_PATHS = ['/family/academics', '/family/settings', '/messages'];
-
-/** Every school-admin page draws the school reference frame. */
-export function isSchoolRefPath(path: string): boolean {
-  return path.startsWith('/admin/');
-}
+// Which pages draw which frame lives in lib/portal-frame, shared with the shell.
+export { isSchoolRefPath, PARENT_REF_PATHS } from '@/lib/portal-frame';
 
 /** The school-admin phone tab bar: Home, Students, this page's section, then Reports or Messages, and More. */
 function schoolTabs(path: string): readonly PortalTab[] {
@@ -430,7 +433,8 @@ function schoolTabs(path: string): readonly PortalTab[] {
 
 /** The reference tab bar for this mode and page in a design build, or null for the shared one. */
 export function portalTabsFor(portal: string, path: string): readonly PortalTab[] | null {
-  if (isSchoolRefPath(path)) return schoolTabs(path);
+  // Every page in the school portal keeps the school tab bar, not just the /admin ones.
+  if (isSchoolRefPath(path) || portal === 'school') return schoolTabs(path);
   if (portal === 'parent') return PARENT_TABS;
   return null;
 }
@@ -445,7 +449,7 @@ export function PortalTabBar({ tabs }: { tabs: readonly PortalTab[] }) {
         const on = t.href === path;
         const color = on ? BLUE : BODY;
         return (
-          <Pressable key={t.label} style={styles.tabItem} onPress={() => router.navigate(t.href as never)} accessibilityRole="tab" accessibilityState={{ selected: on }} accessibilityLabel={t.badge ? `${t.label}, ${t.badge} unread` : t.label}>
+          <Pressable key={t.label} style={styles.tabItem} onPress={() => openMenuPage(t.href as never)} accessibilityRole="tab" accessibilityState={{ selected: on }} accessibilityLabel={t.badge ? `${t.label}, ${t.badge} unread` : t.label}>
             <View>
               <Icon name={t.icon} size={26} color={color} />
               {t.badge ? <CountBadge count={t.badge} size={19} style={styles.tabBadge} /> : null}
@@ -476,7 +480,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 18,
-    height: 86,
+    height: PORTAL_TOP_HEIGHT,
     paddingHorizontal: 28,
     backgroundColor: 'rgba(255,255,255,0.92)',
     borderBottomWidth: 1,
@@ -491,32 +495,33 @@ const styles = StyleSheet.create({
   sideHeading: { marginBottom: 6, marginLeft: 14, fontSize: 17, fontWeight: '800', color: NAVY },
   sideItem: { flexDirection: 'row', alignItems: 'center', gap: 14, height: 48, paddingHorizontal: 14, borderRadius: 12 },
   sideItemOn: { backgroundColor: SELECT },
-  sideItemHover: { backgroundColor: '#F1F5FD' },
+  sideItemHover: { backgroundColor: Maple.blueSoft },
   sideText: { fontSize: 16, color: BODY },
   sideTextOn: { color: BLUE, fontWeight: '600' },
   main: { flex: 1, minWidth: 0, paddingHorizontal: 26, paddingTop: 22, paddingBottom: 36 },
-  search: { flexDirection: 'row', alignItems: 'center', gap: 12, height: 48, paddingHorizontal: 18, borderRadius: 24, backgroundColor: '#EFF3FA' },
+  search: { flexDirection: 'row', alignItems: 'center', gap: 12, height: 48, paddingHorizontal: 18, borderRadius: 24, backgroundColor: Maple.blueSoft },
   searchInput: { flex: 1, height: 48, paddingVertical: 0, fontSize: 15, color: NAVY },
   me: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   meAvatar: { width: 52, height: 52, borderRadius: 26 },
   meName: { fontSize: 16, fontWeight: '700', color: NAVY },
   meRole: { fontSize: 14, color: BODY },
-  initial: { alignItems: 'center', justifyContent: 'center', backgroundColor: '#163A9C' },
+  initial: { alignItems: 'center', justifyContent: 'center', backgroundColor: Maple.blueHover },
   initialText: { color: WHITE, fontWeight: '700' },
   pills: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   pill: { flexDirection: 'row', alignItems: 'center', gap: 11, width: 160, height: 58, paddingHorizontal: 10, borderRadius: 13, backgroundColor: WHITE, borderWidth: 1, borderColor: LINE },
   pillCompact: { width: 170 },
-  pillOn: { backgroundColor: SELECT, borderColor: '#9EC1F9', borderWidth: 1.5 },
+  pillOn: { backgroundColor: SELECT, borderColor: Maple.blueLine, borderWidth: 1.5 },
   pillAvatar: { width: 40, height: 40, borderRadius: 20 },
   pillName: { fontSize: 14.5, fontWeight: '700', color: NAVY },
   pillLevel: { fontSize: 13, color: BODY },
-  addChild: { flexDirection: 'row', alignItems: 'center', gap: 8, height: 52, paddingHorizontal: 16, borderRadius: 14, backgroundColor: '#EAF1FD' },
+  addChild: { flexDirection: 'row', alignItems: 'center', gap: 8, height: 52, paddingHorizontal: 16, borderRadius: 14, backgroundColor: Maple.blueSelected },
   addChildText: { fontSize: 15, fontWeight: '600', color: BLUE },
-  phoneTop: { flexDirection: 'row', alignItems: 'center', gap: 20, paddingHorizontal: 20, paddingBottom: 12, backgroundColor: WHITE },
+  // A 14px gap lets logo, bell and photo fit a 320px phone (20px pushed the photo 7px off screen).
+  phoneTop: { flexDirection: 'row', alignItems: 'center', gap: 14, paddingHorizontal: 20, paddingBottom: 12, backgroundColor: WHITE },
   phoneAvatar: { width: 54, height: 54, borderRadius: 27 },
   cards: { gap: 8, paddingHorizontal: 20, paddingVertical: 4, alignItems: 'center' },
   card: { flexDirection: 'row', alignItems: 'center', gap: 8, width: 110, height: 60, paddingHorizontal: 7, borderRadius: 12, backgroundColor: WHITE, borderWidth: 1, borderColor: LINE },
-  cardOn: { backgroundColor: SELECT, borderColor: '#8FB7F8', borderWidth: 1.5 },
+  cardOn: { backgroundColor: SELECT, borderColor: Maple.blueLine, borderWidth: 1.5 },
   cardAvatar: { width: 40, height: 40, borderRadius: 20 },
   cardName: { fontSize: 14, fontWeight: '700', color: NAVY },
   cardLevel: { fontSize: 12.5, color: BODY },

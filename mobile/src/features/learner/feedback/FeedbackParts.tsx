@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { useState } from 'react';
 import { type GestureResponderEvent, type LayoutChangeEvent, Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -11,16 +11,18 @@ import { IdentifierPill, RaceGrid, raceSummary, SkillChip, ValueChip } from '@/f
 import { identifierFor } from '@/lib/cbc';
 import { mmss, waveform } from '@/lib/feedback';
 import type { MockData } from '@/mock';
+import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 export type Feedback = MockData['learner']['assignmentFeedback'];
-const DARK_GREEN = '#15803D';
+const DARK_GREEN = Maple.successText;
 const BARS = waveform(38);
 
 export function GradedChip({ small = false }: { small?: boolean }) {
   return (
     <View style={[styles.graded, small && styles.gradedS]}>
       <View style={[styles.gradedTick, small && styles.gradedTickS]}>
-        <Icon name="check" size={small ? 8 : 11} color="#FFFFFF" />
+        <Icon name="check" size={small ? 8 : 11} color={Maple.surface} />
       </View>
       <Text style={[styles.gradedText, small && styles.gradedTextS]}>Graded</Text>
     </View>
@@ -37,7 +39,7 @@ export function ScoreCard({ f }: { f: Feedback }) {
           <IdentifierPill identifier={identifierFor(t.score, t.max)} withNumber />
         </View>
       </View>
-      <ProgressRing value={t.percent / 100} size={54} stroke={6} color={GREEN} track="#DDF3E5" label={false} />
+      <ProgressRing value={t.percent / 100} size={54} stroke={6} color={GREEN} track={Maple.successSoft} label={false} />
       <View style={styles.flex}>
         <Text style={styles.verdict}>{f.verdict}</Text>
         <Text style={styles.verdictText}>{f.verdictText}</Text>
@@ -79,7 +81,7 @@ export function VoiceNote({ seconds }: { seconds: number }) {
   return (
     <View style={styles.voice}>
       <Pressable style={styles.voicePlay} onPress={p.toggle} accessibilityRole="button" accessibilityLabel={p.running ? 'Pause voice note' : 'Play voice note'}>
-        <Icon name={p.running ? 'pause' : 'playFill'} size={15} color="#FFFFFF" />
+        <Icon name={p.running ? 'pause' : 'playFill'} size={15} color={Maple.surface} />
       </Pressable>
       <Pressable
         style={styles.wave}
@@ -89,7 +91,7 @@ export function VoiceNote({ seconds }: { seconds: number }) {
         accessibilityLabel="Voice note position"
         accessibilityValue={{ min: 0, max: seconds, now: p.pos, text: mmss(p.pos) }}>
         {BARS.map((b, i) => (
-          <View key={i} style={[styles.bar, { height: 4 + b * 18, backgroundColor: i / BARS.length < played ? BLUE : '#AFC3EA' }]} />
+          <View key={i} style={[styles.bar, { height: 4 + b * 18, backgroundColor: i / BARS.length < played ? BLUE : Maple.blueLine }]} />
         ))}
       </Pressable>
       <Text style={styles.voiceTime}>{mmss(p.running || p.pos > 0 ? p.pos : seconds)}</Text>
@@ -105,12 +107,12 @@ export function TeacherCard({ f, phone = false }: { f: Feedback; phone?: boolean
   return (
     <View>
       <View style={styles.teacher}>
-        <Image source={t.photo} style={phone ? styles.teacherPhotoP : styles.teacherPhoto} />
+        <Image decorative source={t.photo} style={phone ? styles.teacherPhotoP : styles.teacherPhoto} />
         <View style={styles.flex}>
           <View style={styles.nameRow}>
             <Text style={[styles.teacherName, phone && styles.teacherNameP]}>{t.name}</Text>
             <View style={styles.verified}>
-              <Icon name="check" size={8} color="#FFFFFF" />
+              <Icon name="check" size={8} color={Maple.surface} />
             </View>
           </View>
           <Text style={styles.teacherRole}>{t.role}</Text>
@@ -198,18 +200,18 @@ export function PracticeSheet({ f, open, onClose }: { f: Feedback; open: boolean
 const styles = StyleSheet.create({
   flex: { flex: 1 },
   cardTitle: { fontSize: 15.5, fontWeight: '700', color: INK },
-  graded: { flexDirection: 'row', alignItems: 'center', gap: 7, paddingHorizontal: 10, height: 29, borderRadius: 6, backgroundColor: '#E5F6EB' },
+  graded: { flexDirection: 'row', alignItems: 'center', gap: 7, paddingHorizontal: 10, height: 29, borderRadius: 6, backgroundColor: Maple.successSoft },
   gradedS: { height: 20, gap: 4, paddingHorizontal: 6 },
   gradedTick: { width: 17, height: 17, alignItems: 'center', justifyContent: 'center', borderRadius: 9, backgroundColor: GREEN },
   gradedTickS: { width: 12, height: 12 },
   gradedText: { fontSize: 14.5, fontWeight: '600', color: DARK_GREEN },
   gradedTextS: { fontSize: 10.5 },
-  score: { flexDirection: 'row', alignItems: 'center', gap: 14, paddingHorizontal: 16, height: 91, borderRadius: 10, backgroundColor: '#FFFFFF' },
+  score: { flexDirection: 'row', alignItems: 'center', gap: 14, paddingHorizontal: 16, height: 91, borderRadius: 10, backgroundColor: Maple.surface },
   scoreBig: { fontSize: 22, fontWeight: '700', color: INK },
   scoreId: { marginTop: 6 },
   seenTitle: { marginTop: 10, fontSize: 11.5, fontWeight: '700', color: INK },
   seen: { flexDirection: 'row', flexWrap: 'wrap', gap: 5, marginTop: 6 },
-  verdict: { fontSize: 15.5, fontWeight: '700', color: '#1F3A2B' },
+  verdict: { fontSize: 15.5, fontWeight: '700', color: Palette.green950b },
   verdictText: { marginTop: 5, fontSize: 11, lineHeight: 16, color: BODY },
   rubricHead: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   rubricTotal: { fontSize: 17, fontWeight: '700', color: DARK_GREEN },
@@ -222,28 +224,28 @@ const styles = StyleSheet.create({
   verified: { width: 14, height: 14, alignItems: 'center', justifyContent: 'center', borderRadius: 7, backgroundColor: BLUE },
   teacherRole: { marginTop: 4, fontSize: 12, color: BODY },
   voiceWrap: { marginTop: 12 },
-  voice: { height: 48, flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 8, borderRadius: 8, borderWidth: 1, borderColor: '#E3E8F0', backgroundColor: '#FFFFFF' },
-  voicePlay: { width: 32, height: 32, alignItems: 'center', justifyContent: 'center', borderRadius: 16, backgroundColor: '#0B6BFF' },
+  voice: { height: 48, flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 8, borderRadius: 8, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface },
+  voicePlay: { width: 32, height: 32, alignItems: 'center', justifyContent: 'center', borderRadius: 16, backgroundColor: Maple.blue },
   wave: { flex: 1, height: 30, flexDirection: 'row', alignItems: 'center', gap: 2 },
   bar: { flex: 1, borderRadius: 1 },
   voiceTime: { fontSize: 12, color: INK, fontVariant: ['tabular-nums'] },
-  speed: { paddingHorizontal: 7, paddingVertical: 4, borderRadius: 4, backgroundColor: '#EEF2F7' },
+  speed: { paddingHorizontal: 7, paddingVertical: 4, borderRadius: 4, backgroundColor: Maple.blueSelected },
   speedText: { fontSize: 11.5, fontWeight: '600', color: INK },
-  comment: { marginTop: 10, fontSize: 12, lineHeight: 17, color: '#2B3445' },
+  comment: { marginTop: 10, fontSize: 12, lineHeight: 17, color: Maple.navy },
   commentP: { fontSize: 12 },
   scrim: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 16, backgroundColor: 'rgba(8,12,20,0.55)' },
-  sheet: { width: '100%', maxWidth: 460, padding: 20, gap: 12, borderRadius: 14, backgroundColor: '#FFFFFF' },
+  sheet: { width: '100%', maxWidth: 460, padding: 20, gap: 12, borderRadius: 14, backgroundColor: Maple.surface },
   sheetHead: { flexDirection: 'row', alignItems: 'flex-start', gap: 12 },
   sheetTitle: { flex: 1, fontSize: 16, fontWeight: '700', color: INK },
   sheetStep: { fontSize: 12, color: BODY },
   opts: { gap: 8 },
-  opt: { minHeight: 48, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 14, borderRadius: 8, borderWidth: 1, borderColor: '#DFE5EE' },
-  optRight: { borderColor: GREEN, backgroundColor: '#F1FBF4' },
-  optWrong: { borderColor: RED, backgroundColor: '#FFF4F4' },
-  btn: { height: 44, alignItems: 'center', justifyContent: 'center', borderRadius: 8, backgroundColor: '#0B6BFF' },
-  btnGhost: { borderWidth: 1.5, borderColor: BLUE, backgroundColor: '#FFFFFF' },
+  opt: { minHeight: 48, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 14, borderRadius: 8, borderWidth: 1, borderColor: Maple.blueSelected },
+  optRight: { borderColor: GREEN, backgroundColor: Maple.successSoft },
+  optWrong: { borderColor: RED, backgroundColor: Maple.errorSoft },
+  btn: { height: 44, alignItems: 'center', justifyContent: 'center', borderRadius: 8, backgroundColor: Maple.blue },
+  btnGhost: { borderWidth: 1.5, borderColor: BLUE, backgroundColor: Maple.surface },
   btnOff: { opacity: 0.4 },
-  btnText: { fontSize: 14.5, fontWeight: '600', color: '#FFFFFF' },
+  btnText: { fontSize: 14.5, fontWeight: '600', color: Maple.surface },
   result: { alignItems: 'center', gap: 8, paddingVertical: 8 },
   resultBig: { fontSize: 34, fontWeight: '800', color: INK },
   resultText: { fontSize: 13.5, color: BODY, textAlign: 'center' },

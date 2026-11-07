@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -7,6 +7,9 @@ import { Icon } from '@/components/icon';
 import { RefScale } from '@/features/public/home/RefScale';
 
 import { C, LOGO, Pill, PlanIcon, Popular, per, type Pricing, STUDENT, ugx, usePricing } from './pricing-parts';
+import { Maple } from '@/constants/maple';
+import { PAGE_TITLE } from '@/lib/fonts/type';
+import { Palette } from '@/constants/palette';
 
 /** The phone reference is 863px wide; the page is laid out in its pixels (from just under its status bar) and scaled to the phone. */
 const REF_WIDTH = 863;
@@ -17,7 +20,7 @@ function Header({ p }: { p: Pricing }) {
       <View style={s.blob} />
       <Image source={STUDENT} style={s.photo} contentFit="contain" accessibilityLabel="A smiling Maple learner" />
       <View style={s.brand}>
-        <Image source={LOGO} style={s.leaf} contentFit="contain" />
+        <Image decorative source={LOGO} style={s.leaf} contentFit="contain" />
         <View>
           <Text style={s.brandName}>Maple</Text>
           <Text style={s.brandSub}>Global Online School</Text>
@@ -25,7 +28,7 @@ function Header({ p }: { p: Pricing }) {
       </View>
       <View style={s.heroText}>
         <Pill p={p} size={18} height={40} />
-        <Text style={s.title} accessibilityRole="header">
+        <Text style={s.title} {...PAGE_TITLE}>
           {p.copy.title}
         </Text>
         <Text style={s.sub}>{p.copy.phone ?? p.copy.subtitle}</Text>
@@ -110,7 +113,7 @@ export function PricingPhone() {
             </View>
           ) : (
             <Pressable style={s.pay} onPress={() => (plan?.monthly ? p.pay(plan.id) : p.browseFree())} accessibilityRole="button">
-              <LinearGradient colors={['#1F7BF2', '#0457D8']} style={StyleSheet.absoluteFill} />
+              <LinearGradient colors={[Maple.blue, Maple.blueHover]} style={StyleSheet.absoluteFill} />
               <Icon name={plan?.monthly ? 'lock' : 'gift'} size={32} color={C.white} />
               <Text style={s.payText}>{!plan?.monthly ? 'Continue free' : p.currentId ? `Switch to ${plan.short ?? plan.name}` : 'Pay to Continue'}</Text>
               <Icon name="arrowRight" size={32} color={C.white} />
@@ -135,7 +138,7 @@ const s = StyleSheet.create({
   canvas: { width: REF_WIDTH, paddingBottom: 56, backgroundColor: C.canvas },
 
   header: { height: 622 },
-  blob: { position: 'absolute', left: 512, top: 92, width: 330, height: 330, borderTopLeftRadius: 150, borderTopRightRadius: 90, borderBottomLeftRadius: 40, backgroundColor: '#E2ECFC' },
+  blob: { position: 'absolute', left: 512, top: 92, width: 330, height: 330, borderTopLeftRadius: 150, borderTopRightRadius: 90, borderBottomLeftRadius: 40, backgroundColor: Maple.blueSelected },
   photo: { position: 'absolute', left: 526, top: 81, width: 339, height: 393 },
   brand: { position: 'absolute', left: 57, top: 19, flexDirection: 'row', alignItems: 'center', gap: 13 },
   leaf: { width: 51, height: 52 },
@@ -145,13 +148,13 @@ const s = StyleSheet.create({
   title: { marginTop: 7, fontSize: 52, lineHeight: 57, fontWeight: '800', letterSpacing: -0.8, color: C.navy },
   sub: { marginTop: 19, width: 445, fontSize: 20, lineHeight: 30, color: C.body },
 
-  brings: { position: 'absolute', left: 45, top: 408, width: 775, height: 92, flexDirection: 'row', borderRadius: 20, backgroundColor: C.white, shadowColor: '#1E3A8A', shadowOpacity: 0.06, shadowRadius: 14, shadowOffset: { width: 0, height: 4 } },
+  brings: { position: 'absolute', left: 45, top: 408, width: 775, height: 92, flexDirection: 'row', borderRadius: 20, backgroundColor: C.white, shadowColor: Maple.blueHover, shadowOpacity: 0.06, shadowRadius: 14, shadowOffset: { width: 0, height: 4 } },
   bring: { width: 261, flexDirection: 'row', alignItems: 'center', gap: 20, paddingLeft: 40 },
-  bringLine: { position: 'absolute', right: 6, top: 20, bottom: 20, width: 1.5, backgroundColor: '#E5EAF2' },
-  bringIcon: { width: 52, height: 52, alignItems: 'center', justifyContent: 'center', borderRadius: 13, backgroundColor: '#EEF4FF' },
+  bringLine: { position: 'absolute', right: 6, top: 20, bottom: 20, width: 1.5, backgroundColor: Maple.blueSelected },
+  bringIcon: { width: 52, height: 52, alignItems: 'center', justifyContent: 'center', borderRadius: 13, backgroundColor: Maple.blueSoft },
   bringText: { width: 110, fontSize: 20, lineHeight: 28, color: C.ink },
 
-  mode: { position: 'absolute', left: 45, top: 522, width: 775, height: 100, flexDirection: 'row', alignItems: 'center', paddingLeft: 37, paddingRight: 32, borderRadius: 22, borderWidth: 1.5, borderColor: '#D9E5FA', backgroundColor: '#EDF3FE' },
+  mode: { position: 'absolute', left: 45, top: 522, width: 775, height: 100, flexDirection: 'row', alignItems: 'center', paddingLeft: 37, paddingRight: 32, borderRadius: 22, borderWidth: 1.5, borderColor: Maple.blueSelected, backgroundColor: Maple.blueSoft },
   modeText: { flex: 1, marginLeft: 29 },
   modeTitle: { fontSize: 25, lineHeight: 31, fontWeight: '700', color: C.navy },
   modeBody: { marginTop: 4, fontSize: 20, lineHeight: 26, color: C.body },
@@ -160,27 +163,27 @@ const s = StyleSheet.create({
   planHead: { marginTop: 38, marginLeft: 50, fontSize: 38.5, lineHeight: 46, fontWeight: '700', color: C.navy },
   planSub: { marginTop: 7, marginLeft: 50, fontSize: 23.2, lineHeight: 30, color: C.body },
 
-  row: { marginTop: 25, marginLeft: 40, width: 782, flexDirection: 'row', alignItems: 'center', paddingLeft: 28, paddingVertical: 22, borderRadius: 22, borderWidth: 1.5, borderColor: '#EDF0F6', backgroundColor: C.white, shadowColor: '#1E3A8A', shadowOpacity: 0.05, shadowRadius: 12, shadowOffset: { width: 0, height: 3 } },
-  rowPopular: { marginTop: 30, paddingTop: 34, paddingBottom: 26, borderWidth: 2, borderColor: C.goldLine, backgroundColor: '#FFF6E6' },
+  row: { marginTop: 25, marginLeft: 40, width: 782, flexDirection: 'row', alignItems: 'center', paddingLeft: 28, paddingVertical: 22, borderRadius: 22, borderWidth: 1.5, borderColor: Maple.blueSelected, backgroundColor: C.white, shadowColor: Maple.blueHover, shadowOpacity: 0.05, shadowRadius: 12, shadowOffset: { width: 0, height: 3 } },
+  rowPopular: { marginTop: 30, paddingTop: 34, paddingBottom: 26, borderWidth: 2, borderColor: C.goldLine, backgroundColor: Maple.warningSoft },
   popularAt: { position: 'absolute', top: -14, right: 49 },
   rowText: { marginLeft: 31, width: 320 },
   rowName: { fontSize: 27.4, lineHeight: 34, fontWeight: '700', color: C.navy },
   rowBlurb: { marginTop: 6, fontSize: 20, lineHeight: 29.5, color: C.body },
-  rowLine: { marginLeft: 15, width: 1.5, height: 75, backgroundColor: '#E5EAF2' },
+  rowLine: { marginLeft: 15, width: 1.5, height: 75, backgroundColor: Maple.blueSelected },
   rowPrice: { flex: 1, marginLeft: 38 },
   rowAmount: { fontSize: 28.5, lineHeight: 34, fontWeight: '700', color: C.navy },
   rowPer: { marginTop: 9, fontSize: 22, lineHeight: 28, color: C.body },
-  radio: { width: 36, height: 36, marginRight: 18, alignItems: 'center', justifyContent: 'center', borderRadius: 18, borderWidth: 2.5, borderColor: '#A3AAB8' },
+  radio: { width: 36, height: 36, marginRight: 18, alignItems: 'center', justifyContent: 'center', borderRadius: 18, borderWidth: 2.5, borderColor: Maple.faint },
   radioOn: { borderWidth: 3.5, borderColor: C.blue },
   radioDot: { width: 20, height: 20, borderRadius: 10, backgroundColor: C.blue },
 
-  pay: { marginTop: 48, marginLeft: 40, width: 783, height: 84, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 26, overflow: 'hidden', borderRadius: 42, backgroundColor: '#0368E6' },
+  pay: { marginTop: 48, marginLeft: 40, width: 783, height: 84, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 26, overflow: 'hidden', borderRadius: 17, backgroundColor: Maple.blue },
   payText: { fontSize: 29.5, fontWeight: '700', color: C.white },
-  payCurrent: { borderWidth: 2, borderColor: '#BBE5C8', backgroundColor: '#EEF9F1' },
+  payCurrent: { borderWidth: 2, borderColor: Palette.green300e, backgroundColor: Maple.successSoft },
   payCurrentText: { color: C.green },
 
   promises: { marginTop: 36, marginLeft: 20, width: 823, height: 40, flexDirection: 'row', alignItems: 'center' },
   promise: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 11 },
-  promiseLine: { borderLeftWidth: 1.5, borderLeftColor: '#E2E8F0' },
+  promiseLine: { borderLeftWidth: 1.5, borderLeftColor: Maple.border },
   promiseText: { fontSize: 19.5, color: C.ink },
 });

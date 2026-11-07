@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { type ReactNode, useState } from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
@@ -13,11 +13,12 @@ import type { MockData } from '@/mock';
 import { AdminDesk, AdminPhone, SelectBox } from '../kit/AdminKit';
 import { HubHeader, HubTabs, KpiCard, KpiRow, PrivacyNote } from '../kit/HubKit';
 import { advance, contactFor, exportInquiries, type Inquiry, PIPELINE, pipeline } from './admissions';
+import { Maple } from '@/constants/maple';
 
 type Admin = MockData['schoolAdmin'];
 type Campaign = Admin['admissionsHub']['campaigns'][number];
 
-const COLUMN_TINT: Readonly<Record<string, string>> = { New: '#EEF3FF', 'Contact Authorized': '#F3EEFF', Contacted: '#FFF6E8', Interested: '#EEF3FF', Applied: '#F3EEFF', Enrolled: '#ECF8F0' };
+const COLUMN_TINT: Readonly<Record<string, string>> = { New: Maple.blueSoft, 'Contact Authorized': Maple.blueSoft, Contacted: Maple.warningSoft, Interested: Maple.blueSoft, Applied: Maple.blueSoft, Enrolled: Maple.successSoft };
 const SHOWN = 3;
 
 function useAdmissions(a: Admin) {
@@ -153,7 +154,7 @@ function Campaigns({ x }: { x: X }) {
       <CardHead title={`Active Campaigns (${x.campaigns.filter((c) => c.status === 'Active').length})`} size={16} link="View All" onLink={() => x.setTab('Campaigns')} />
       {x.campaigns.map((c) => (
         <View key={c.id} style={s.campaign}>
-          <Image source={c.photo} style={s.campaignPhoto} contentFit="cover" />
+          <Image decorative source={c.photo} style={s.campaignPhoto} contentFit="cover" />
           <View style={s.flex}>
             <View style={s.row}>
               <Text style={[s.strong, s.flex]} numberOfLines={1}>
@@ -404,12 +405,12 @@ const s = StyleSheet.create({
   columnTotal: { fontSize: 17, fontWeight: '800', color: NAVY },
   people: { gap: 8, marginTop: 4 },
   person: { flexDirection: 'row', alignItems: 'center', gap: 8, padding: 6, borderRadius: 8, backgroundColor: WHITE },
-  avatar: { width: 30, height: 30, alignItems: 'center', justifyContent: 'center', borderRadius: 15, backgroundColor: '#E6EEFF' },
+  avatar: { width: 30, height: 30, alignItems: 'center', justifyContent: 'center', borderRadius: 15, backgroundColor: Maple.blueSelected },
   avatarText: { fontSize: 11.5, fontWeight: '700', color: BLUE },
   more: { marginTop: 4, fontSize: 12, color: BODY, textAlign: 'center' },
-  campaign: { flexDirection: 'row', gap: 12, paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: '#EEF2F8' },
+  campaign: { flexDirection: 'row', gap: 12, paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: Maple.blueSelected },
   campaignPhoto: { width: 74, height: 54, borderRadius: 8 },
-  tr: { flexDirection: 'row', alignItems: 'center', gap: 10, minHeight: 40, borderBottomWidth: 1, borderBottomColor: '#EEF2F8' },
+  tr: { flexDirection: 'row', alignItems: 'center', gap: 10, minHeight: 40, borderBottomWidth: 1, borderBottomColor: Maple.blueSelected },
   th: { minHeight: 32 },
   thText: { fontSize: 12, fontWeight: '600', color: BODY },
   colRef: { width: 90 },
@@ -417,11 +418,11 @@ const s = StyleSheet.create({
   colStage: { width: 130 },
   colConsent: { width: 100 },
   colShare: { width: 140, textAlign: 'right' },
-  sumRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12, paddingVertical: 6, borderBottomWidth: 1, borderBottomColor: '#EEF2F8' },
+  sumRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12, paddingVertical: 6, borderBottomWidth: 1, borderBottomColor: Maple.blueSelected },
   scrim: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20, backgroundColor: 'rgba(17,28,78,0.35)' },
   sheet: { width: '100%', maxWidth: 460, gap: 12, padding: 22, borderRadius: 16, backgroundColor: WHITE },
   sheetTitle: { fontSize: 18, fontWeight: '700', color: NAVY },
-  consent: { flexDirection: 'row', alignItems: 'flex-start', gap: 10, padding: 12, borderRadius: 10, backgroundColor: '#F3F5FA' },
-  consentOn: { backgroundColor: '#ECF8F0' },
+  consent: { flexDirection: 'row', alignItems: 'flex-start', gap: 10, padding: 12, borderRadius: 10, backgroundColor: Maple.blueSoft },
+  consentOn: { backgroundColor: Maple.successSoft },
   input: { height: 42, paddingHorizontal: 12, borderRadius: 8, borderWidth: 1, borderColor: LINE, fontSize: 14, color: NAVY },
 });

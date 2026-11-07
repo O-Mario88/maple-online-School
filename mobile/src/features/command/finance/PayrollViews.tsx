@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
@@ -15,6 +15,7 @@ import type { StaffRow } from '@/mock/command-center/pf-corporate';
 
 import { amount, type FormAsk, FormModal } from './FinForm';
 import { FinDesk, FinHead, FinPanel, FinPhone, FinStats, FinTabs, num, PhoneRow, type Promo, RingLegend, SumLine, ugx } from './FinKit';
+import { Maple } from '@/constants/maple';
 
 type D = CommandData['platformFinance']['corporate'];
 type PayRun = D['runs'][number];
@@ -22,7 +23,7 @@ const PER_PAGE = 10;
 const TABS = ['Overview', 'Payroll Runs', 'Employees', 'Earnings & Benefits', 'Deductions', 'Statutory Obligations', 'Payroll Journals', 'Reports', 'Settings'] as const;
 const RUN_TONE: Readonly<Record<Run['status'], Tone>> = { Draft: 'grey', Pending: 'orange', Approved: 'green', Paid: 'blue' };
 const DEPT_TONE: readonly Tone[] = ['blue', 'purple', 'green', 'orange', 'red', 'purple', 'green', 'blue'];
-const PROMO: Promo = { icon: 'people', color: '#1E6BF0', title: 'Corporate Payroll', body: 'Manage staff salaries, benefits, deductions, statutory payments and payroll journals.' };
+const PROMO: Promo = { icon: 'people', color: Maple.blue, title: 'Corporate Payroll', body: 'Manage staff salaries, benefits, deductions, statutory payments and payroll journals.' };
 const RANGES = ['Last 12 Months', 'This Year'];
 const FILTERS = { employment: ['All Employment Types', 'Permanent', 'Contract'] } as const;
 const MASK = '••••••';
@@ -188,7 +189,7 @@ function cols(u: U): readonly Column<StaffRow>[] {
       flex: 1,
       render: (s) => (
         <View style={styles.inline}>
-          <Image source={s.photo} style={styles.avatar} contentFit="cover" accessibilityIgnoresInvertColors />
+          <Image decorative source={s.photo} style={styles.avatar} contentFit="cover" accessibilityIgnoresInvertColors />
           <Text style={styles.cellStrong} numberOfLines={1}>{s.name}</Text>
         </View>
       ),
@@ -217,12 +218,12 @@ function Trend({ d, phone = false }: { d: D; phone?: boolean }) {
   const [range, setRange] = useState(RANGES[0]);
   return (
     <FinPanel icon="chart" title="Payroll Trend (Total Cost)" style={!phone && styles.trend} right={phone ? undefined : <RangeBox value={range} options={RANGES} onChange={setRange} width={176} />}>
-      <ComboChart labels={f.labels} bars={[{ name: 'Net Pay', color: '#3B82F6', values: f.net }]} line={{ name: 'Total Payroll Cost', color: '#8B5CF6', values: f.total, dots: true }} max={400} lineMax={400} rightAxis={false} every={phone ? 2 : 1} barWidth={phone ? 12 : 24} height={phone ? 190 : 160} format={(v) => (v ? `${Math.round(v)}M` : '0')} />
+      <ComboChart labels={f.labels} bars={[{ name: 'Net Pay', color: Maple.blue, values: f.net }]} line={{ name: 'Total Payroll Cost', color: Maple.blue, values: f.total, dots: true }} max={400} lineMax={400} rightAxis={false} every={phone ? 2 : 1} barWidth={phone ? 12 : 24} height={phone ? 190 : 160} format={(v) => (v ? `${Math.round(v)}M` : '0')} />
       <View style={styles.legend}>
         {(
           [
-            ['Net Pay', '#3B82F6'],
-            ['Total Payroll Cost', '#8B5CF6'],
+            ['Net Pay', Maple.blue],
+            ['Total Payroll Cost', Maple.blue],
           ] as const
         ).map(([l, c]) => (
           <View key={l} style={styles.inline}>
@@ -245,9 +246,9 @@ function Breakdown({ u, phone = false }: { u: U; phone?: boolean }) {
         center={`UGX ${(t.cost / 1e6).toFixed(1)}M`}
         caption="Total Cost"
         parts={[
-          { label: 'Gross Salaries', value: t.gross, color: '#2563EB', display: `UGX ${(t.gross / 1e6).toFixed(1)}M` },
-          { label: 'Employer NSSF (10%)', value: t.nssfEmployer, color: '#F5B731', display: `UGX ${(t.nssfEmployer / 1e6).toFixed(1)}M` },
-          { label: 'Benefits (Employer)', value: t.benefits, color: '#22A55A', display: `UGX ${(t.benefits / 1e6).toFixed(1)}M` },
+          { label: 'Gross Salaries', value: t.gross, color: Maple.blue, display: `UGX ${(t.gross / 1e6).toFixed(1)}M` },
+          { label: 'Employer NSSF (10%)', value: t.nssfEmployer, color: Maple.warning, display: `UGX ${(t.nssfEmployer / 1e6).toFixed(1)}M` },
+          { label: 'Benefits (Employer)', value: t.benefits, color: Maple.successText, display: `UGX ${(t.benefits / 1e6).toFixed(1)}M` },
         ]}
       />
     </FinPanel>
@@ -405,7 +406,7 @@ export function PayrollPhone({ c }: { c: CommandData }) {
       <Approvals u={u} />
       <Statutory u={u} />
       {u.rows.map((s) => (
-        <PhoneRow key={s.id} lead={<Image source={s.photo} style={styles.avatarLg} contentFit="cover" />} title={s.name} sub={`${s.id} • ${s.department} • ${s.employment} • net ${u.masked ? MASK : ugx(payslip(s).net)}`} onPress={() => u.showPayslip(s)} />
+        <PhoneRow key={s.id} lead={<Image decorative source={s.photo} style={styles.avatarLg} contentFit="cover" />} title={s.name} sub={`${s.id} • ${s.department} • ${s.employment} • net ${u.masked ? MASK : ugx(payslip(s).net)}`} onPress={() => u.showPayslip(s)} />
       ))}
       {u.tab === 'Payroll Journals' ? <Journal u={u} /> : null}
       <Breakdown u={u} phone />

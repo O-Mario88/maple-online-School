@@ -15,12 +15,13 @@ import type { PlanRow, SubRow } from '@/mock/command-center/pf-subscriptions';
 
 import { amount, type FormAsk, FormModal } from './FinForm';
 import { ActionGrid, FinDesk, FinHead, FinPanel, FinPhone, FinStats, FinTabs, num, PhoneRow, type Promo, SumLine, ugx } from './FinKit';
+import { Maple } from '@/constants/maple';
 
 type D = CommandData['platformFinance']['subscriptions'];
 const PER_PAGE = 10;
 const TABS = ['Overview', 'Subscriptions', 'Plans & Pricing', 'Renewals', 'Upgrades & Downgrades', 'Trials', 'Failed Payments', 'Cancellations', 'Recurring Revenue'] as const;
 const STATUS_TONE: Readonly<Record<SubStatus, Tone>> = { Active: 'green', Trial: 'purple', 'Past Due': 'red', Cancelled: 'grey' };
-const PROMO: Promo = { icon: 'trophy', color: '#F5B301', title: 'Maple Platform Finance', body: 'Subscriptions, revenue, payments and financial control — all in one place.' };
+const PROMO: Promo = { icon: 'trophy', color: Maple.warning, title: 'Maple Platform Finance', body: 'Subscriptions, revenue, payments and financial control — all in one place.' };
 const CYCLE: Readonly<Record<SubRow['billing'], number>> = { Monthly: 1, Termly: 4, Annual: 12 };
 const ACTIONS = ['Change plan', 'Renew now', 'Retry payment', 'Cancel'] as const;
 
@@ -255,8 +256,8 @@ function Trend({ d, phone = false }: { d: D; phone?: boolean }) {
       <AreaChart
         labels={d.trend.labels.slice(-n)}
         series={[
-          { name: 'MRR', color: '#1E6BF0', values: d.trend.mrr.slice(-n), fill: true, dots: true },
-          { name: 'ARR ÷ 12', color: '#8B3CF0', values: d.trend.arr.slice(-n), fill: true, dots: true },
+          { name: 'MRR', color: Maple.blue, values: d.trend.mrr.slice(-n), fill: true, dots: true },
+          { name: 'ARR ÷ 12', color: Maple.blue, values: d.trend.arr.slice(-n), fill: true, dots: true },
         ]}
         min={200}
         max={500}
@@ -266,11 +267,11 @@ function Trend({ d, phone = false }: { d: D; phone?: boolean }) {
       />
       <View style={styles.legend}>
         <View style={styles.inline}>
-          <View style={[styles.dot, { backgroundColor: '#1E6BF0' }]} />
+          <View style={[styles.dot, { backgroundColor: Maple.blue }]} />
           <Text style={styles.tiny}>MRR (Monthly Recurring Revenue)</Text>
         </View>
         <View style={styles.inline}>
-          <View style={[styles.dot, { backgroundColor: '#8B3CF0' }]} />
+          <View style={[styles.dot, { backgroundColor: Maple.blue }]} />
           <Text style={styles.tiny}>ARR (Annual Recurring Revenue, ÷12)</Text>
         </View>
       </View>
@@ -350,8 +351,8 @@ function SubsTable({ u }: { u: U }) {
 function Alerts({ u }: { u: U }) {
   const live = (base: number, f: (s: SubRow) => boolean) => base + u.list.filter(f).length - u.d.subs.filter(f).length;
   const items: readonly [IconName, string, string, string, () => void][] = [
-    ['bell', '#F5B301', u.stats[3].value, 'subscriptions renew in next 30 days', () => u.setTab('Renewals')],
-    ['bell', '#EF3B4D', `${live(u.d.totals.failed, (s) => s.status === 'Past Due')}`, 'failed payments (action required)', () => u.setTab('Failed Payments')],
+    ['bell', Maple.warning, u.stats[3].value, 'subscriptions renew in next 30 days', () => u.setTab('Renewals')],
+    ['bell', Maple.error, `${live(u.d.totals.failed, (s) => s.status === 'Past Due')}`, 'failed payments (action required)', () => u.setTab('Failed Payments')],
     ['bell', NAVY, `${live(u.d.totals.cancelled, (s) => s.status === 'Cancelled')}`, 'cancellation requests', () => u.setTab('Cancellations')],
     ['bell', BLUE, `${live(u.d.totals.trialsEnding, (s) => s.status === 'Trial')}`, 'trial periods ending in 7 days', () => u.setTab('Trials')],
   ];

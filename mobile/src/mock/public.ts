@@ -4,6 +4,7 @@ import type { CatalogueItem } from '@/lib/catalogue';
 import type { ShortClip } from '@/lib/shorts';
 
 import { photos } from './photos';
+import { Maple } from '@/constants/maple';
 
 export type LiveStatus = 'live' | 'soon';
 
@@ -21,16 +22,16 @@ export const landing = {
     { code: 'Common Core', region: 'USA', badge: photos.homeBadges.commonCore },
   ],
   trust: [
-    { label: 'Live & recorded classes', icon: 'check' as const, color: '#22A35F' },
+    { label: 'Live & recorded classes', icon: 'check' as const, color: Maple.successText },
     { label: 'Certified teachers', icon: 'person' as const, color: '#1D5A6E' },
-    { label: 'Globally recognized certificates', icon: 'star' as const, color: '#3B82F6' },
-    { label: 'Learn at your own pace', icon: 'check' as const, color: '#173F5C' },
+    { label: 'Globally recognized certificates', icon: 'star' as const, color: Maple.blue },
+    { label: 'Learn at your own pace', icon: 'check' as const, color: Maple.navy },
   ],
   stats: [
-    { value: '1M+', label: 'Active Learners', icon: 'person' as const, color: '#3FCF9B' },
-    { value: '10K+', label: 'Expert Teachers', icon: 'people' as const, color: '#8DAAF9' },
-    { value: '500+', label: 'Schools & Institutions', icon: 'school' as const, color: '#FBBB2C' },
-    { value: '150+', label: 'Countries', icon: 'globe' as const, color: '#9C7CF1' },
+    { value: '1M+', label: 'Active Learners', icon: 'person' as const, color: Maple.success },
+    { value: '10K+', label: 'Expert Teachers', icon: 'people' as const, color: Maple.blueLine },
+    { value: '500+', label: 'Schools & Institutions', icon: 'school' as const, color: Maple.warning },
+    { value: '150+', label: 'Countries', icon: 'globe' as const, color: Maple.blue },
   ],
   stickyNote: photos.homeSticky,
   liveClasses: [
@@ -260,18 +261,18 @@ export type CatalogueEntry = CatalogueItem & {
 
 // Cards follow the Explore reference's order (its "Popularity" sort), highest score first.
 export const catalogue: readonly CatalogueEntry[] = [
-  c({ id: 'k1', popularity: 12, photo: photos.explore[0], face: photos.exploreTeachers[0], kind: 'course', title: 'Mathematics Complete Subject', board: 'UNEB', country: 'Uganda', level: 'Upper secondary', subject: 'Mathematics', teacher: 'Mr. James Kato', rating: 4.8, reviews: 2100, priceUGX: 120000, wasUGX: 160000, meta: 'UNEB • S4–S6', badge: 'Bestseller', hours: '32 hours', tint: '#1E3A8A', icon: 'chart' }),
+  c({ id: 'k1', popularity: 12, photo: photos.explore[0], face: photos.exploreTeachers[0], kind: 'course', title: 'Mathematics Complete Subject', board: 'UNEB', country: 'Uganda', level: 'Upper secondary', subject: 'Mathematics', teacher: 'Mr. James Kato', rating: 4.8, reviews: 2100, priceUGX: 120000, wasUGX: 160000, meta: 'UNEB • S4–S6', badge: 'Bestseller', hours: '32 hours', tint: Maple.blueHover, icon: 'chart' }),
   c({ id: 'k2', popularity: 11, photo: photos.explore[1], face: photos.exploreTeachers[1], kind: 'live', title: 'English Literature Analysis', board: 'IGCSE', country: 'International', level: 'Upper secondary', subject: 'English', teacher: 'Ms. Aisha Bello', rating: 4.9, reviews: 980, priceUGX: 45000, meta: 'IGCSE • Paper 1', badge: 'Live', hours: '1.5 hours', startsIn: '1 day', tint: '#7C2D12', icon: 'book' }),
-  c({ id: 'k3', popularity: 10, photo: photos.explore[2], face: photos.exploreTeachers[2], kind: 'paper', title: 'KCSE Past Papers (2010–2024)', board: 'KCSE', country: 'Kenya', level: 'Upper secondary', subject: 'Mathematics', teacher: 'Maple Editorial Team', rating: 4.7, reviews: 3200, priceUGX: 30000, meta: 'Form 4', badge: 'Past papers', hours: '50 papers', tint: '#475569', icon: 'book' }),
+  c({ id: 'k3', popularity: 10, photo: photos.explore[2], face: photos.exploreTeachers[2], kind: 'paper', title: 'KCSE Past Papers (2010–2024)', board: 'KCSE', country: 'Kenya', level: 'Upper secondary', subject: 'Mathematics', teacher: 'Maple Editorial Team', rating: 4.7, reviews: 3200, priceUGX: 30000, meta: 'Form 4', badge: 'Past papers', hours: '50 papers', tint: Maple.body, icon: 'book' }),
   c({ id: 'k4', popularity: 9, photo: photos.explore[3], face: photos.exploreTeachers[3], kind: 'course', title: 'Biology – Human Systems', board: 'WAEC', country: 'West Africa', level: 'Upper secondary', subject: 'Biology', teacher: 'Dr. Grace Njeri', rating: 4.8, reviews: 1100, priceUGX: 90000, meta: 'WAEC • SS2', badge: 'Subject', hours: '40 hours', tint: '#0E7490', icon: 'sparkle' }),
-  c({ id: 'k5', popularity: 8, photo: photos.explore[4], face: photos.exploreTeachers[4], kind: 'bootcamp', title: 'Chemistry Revision Bootcamp', board: 'Cambridge', country: 'International', level: 'A level', subject: 'Chemistry', teacher: 'Dr. Michael Tan', rating: 4.8, reviews: 740, priceUGX: 70000, meta: 'A Level • Cambridge', badge: 'Bootcamp', hours: '30 hours', tint: '#334155', icon: 'star' }),
-  c({ id: 'k6', popularity: 7, photo: photos.explore[5], face: photos.exploreTeachers[5], kind: 'short', title: 'Introduction to Python', board: 'Any', country: 'International', level: 'Any level', subject: 'Computer Studies', teacher: 'Mr. Daniel Okello', rating: 4.6, reviews: 3400, priceUGX: 0, meta: 'Beginner • All Curricula', badge: 'Free', hours: '6 hours', tint: '#111827', icon: 'globe' }),
-  c({ id: 'k7', popularity: 6, photo: photos.explore[6], face: photos.exploreTeachers[6], kind: 'course', title: 'Physics for Beginners', board: 'KCSE', country: 'Kenya', level: 'Lower secondary', subject: 'Physics', teacher: 'Ms. Linda Akello', rating: 4.7, reviews: 820, priceUGX: 60000, meta: 'KCSE • Form 3', badge: 'Subject', hours: '50 hours', tint: '#1F2937', icon: 'sparkle' }),
-  c({ id: 'k8', popularity: 5, photo: photos.explore[7], face: photos.exploreTeachers[7], kind: 'live', title: 'Maths Problem Solving Class', board: 'UNEB', country: 'Uganda', level: 'Upper secondary', subject: 'Mathematics', teacher: 'Mr. Kato', rating: 4.9, reviews: 810, priceUGX: 35000, meta: 'UNEB • S5', badge: 'Live', hours: '30 hours', tint: '#7F1D1D', icon: 'live' }),
-  c({ id: 'k9', popularity: 4, photo: photos.explore[2], face: photos.exploreTeachers[2], kind: 'paper', title: 'PLE Mathematics Papers (2015–2025)', board: 'UNEB', country: 'Uganda', level: 'Primary', subject: 'Mathematics', teacher: 'Maple Editorial Team', rating: 4.8, reviews: 2600, priceUGX: 20000, meta: 'Primary 7 • With marking guides', badge: 'Past papers', hours: '11 papers', tint: '#475569', icon: 'book' }),
-  c({ id: 'k10', popularity: 3, photo: photos.explore[0], face: photos.exploreTeachers[0], kind: 'course', title: 'Complete Mathematics for Primary 7', board: 'UNEB', country: 'Uganda', level: 'Primary', subject: 'Mathematics', teacher: 'Mr. James Kato', rating: 4.8, reviews: 2340, priceUGX: 120000, wasUGX: 160000, meta: 'UNEB • Primary 7', badge: 'Bestseller', hours: '40 hours', tint: '#1E40AF', icon: 'chart' }),
-  c({ id: 'k11', popularity: 2, photo: photos.explore[4], face: photos.exploreTeachers[3], kind: 'bootcamp', title: 'UCE Biology Revision Bootcamp', board: 'UNEB', country: 'Uganda', level: 'Lower secondary', subject: 'Biology', teacher: 'Ms. Grace Atim', rating: 4.9, reviews: 430, priceUGX: 35000, meta: 'UNEB • S4', badge: 'Bootcamp', hours: '3 hours', startsIn: '8 days', tint: '#065F46', icon: 'sparkle' }),
-  c({ id: 'k12', popularity: 1, photo: photos.explore[2], face: photos.exploreTeachers[2], kind: 'paper', title: 'WAEC English Past Papers', board: 'WAEC', country: 'West Africa', level: 'Upper secondary', subject: 'English', teacher: 'Maple Editorial Team', rating: 4.6, reviews: 1500, priceUGX: 25000, meta: 'SS3 • With answers', badge: 'Past papers', hours: '30 papers', tint: '#475569', icon: 'book' }),
+  c({ id: 'k5', popularity: 8, photo: photos.explore[4], face: photos.exploreTeachers[4], kind: 'bootcamp', title: 'Chemistry Revision Bootcamp', board: 'Cambridge', country: 'International', level: 'A level', subject: 'Chemistry', teacher: 'Dr. Michael Tan', rating: 4.8, reviews: 740, priceUGX: 70000, meta: 'A Level • Cambridge', badge: 'Bootcamp', hours: '30 hours', tint: Maple.body, icon: 'star' }),
+  c({ id: 'k6', popularity: 7, photo: photos.explore[5], face: photos.exploreTeachers[5], kind: 'short', title: 'Introduction to Python', board: 'Any', country: 'International', level: 'Any level', subject: 'Computer Studies', teacher: 'Mr. Daniel Okello', rating: 4.6, reviews: 3400, priceUGX: 0, meta: 'Beginner • All Curricula', badge: 'Free', hours: '6 hours', tint: Maple.navy, icon: 'globe' }),
+  c({ id: 'k7', popularity: 6, photo: photos.explore[6], face: photos.exploreTeachers[6], kind: 'course', title: 'Physics for Beginners', board: 'KCSE', country: 'Kenya', level: 'Lower secondary', subject: 'Physics', teacher: 'Ms. Linda Akello', rating: 4.7, reviews: 820, priceUGX: 60000, meta: 'KCSE • Form 3', badge: 'Subject', hours: '50 hours', tint: Maple.navy, icon: 'sparkle' }),
+  c({ id: 'k8', popularity: 5, photo: photos.explore[7], face: photos.exploreTeachers[7], kind: 'live', title: 'Maths Problem Solving Class', board: 'UNEB', country: 'Uganda', level: 'Upper secondary', subject: 'Mathematics', teacher: 'Mr. Kato', rating: 4.9, reviews: 810, priceUGX: 35000, meta: 'UNEB • S5', badge: 'Live', hours: '30 hours', tint: Maple.errorText, icon: 'live' }),
+  c({ id: 'k9', popularity: 4, photo: photos.explore[2], face: photos.exploreTeachers[2], kind: 'paper', title: 'PLE Mathematics Papers (2015–2025)', board: 'UNEB', country: 'Uganda', level: 'Primary', subject: 'Mathematics', teacher: 'Maple Editorial Team', rating: 4.8, reviews: 2600, priceUGX: 20000, meta: 'Primary 7 • With marking guides', badge: 'Past papers', hours: '11 papers', tint: Maple.body, icon: 'book' }),
+  c({ id: 'k10', popularity: 3, photo: photos.explore[0], face: photos.exploreTeachers[0], kind: 'course', title: 'Complete Mathematics for Primary 7', board: 'UNEB', country: 'Uganda', level: 'Primary', subject: 'Mathematics', teacher: 'Mr. James Kato', rating: 4.8, reviews: 2340, priceUGX: 120000, wasUGX: 160000, meta: 'UNEB • Primary 7', badge: 'Bestseller', hours: '40 hours', tint: Maple.blueHover, icon: 'chart' }),
+  c({ id: 'k11', popularity: 2, photo: photos.explore[4], face: photos.exploreTeachers[3], kind: 'bootcamp', title: 'UCE Biology Revision Bootcamp', board: 'UNEB', country: 'Uganda', level: 'Lower secondary', subject: 'Biology', teacher: 'Ms. Grace Atim', rating: 4.9, reviews: 430, priceUGX: 35000, meta: 'UNEB • S4', badge: 'Bootcamp', hours: '3 hours', startsIn: '8 days', tint: Maple.successText, icon: 'sparkle' }),
+  c({ id: 'k12', popularity: 1, photo: photos.explore[2], face: photos.exploreTeachers[2], kind: 'paper', title: 'WAEC English Past Papers', board: 'WAEC', country: 'West Africa', level: 'Upper secondary', subject: 'English', teacher: 'Maple Editorial Team', rating: 4.6, reviews: 1500, priceUGX: 25000, meta: 'SS3 • With answers', badge: 'Past papers', hours: '30 papers', tint: Maple.body, icon: 'book' }),
 ];
 export const catalogueCoursePage = 'complete-mathematics-primary-7';
 
@@ -326,16 +327,16 @@ export const shortsFeed = {
   heroPhoto: photos.shortsHero,
   promises: ['Bite-sized learning', 'Real teachers', 'Curriculum aligned', 'Free to watch'],
   clips: [
-    s({ id: 's1', photo: photos.shorts[0], title: 'Multiply Fractions Easily', topic: 'Mathematics', board: 'UNEB', level: 'Primary', subject: 'Mathematics', type: 'Revision tip', language: 'English', teacher: 'Mr. James Kato', teacherTitle: 'Mathematics Teacher', meta: 'UNEB · P7', caption: { lead: 'Multiply', highlight: 'Fractions', tail: 'in 60 Seconds' }, views: 1200000, likes: 34000, comments: 1200, shares: 5400, tint: '#1E3A8A', emoji: '👨🏾‍🏫', desc: 'A quick and simple method to multiply fractions, with examples.', tags: ['UNEB', 'Primary 7', 'Mathematics', 'Fractions'] }),
+    s({ id: 's1', photo: photos.shorts[0], title: 'Multiply Fractions Easily', topic: 'Mathematics', board: 'UNEB', level: 'Primary', subject: 'Mathematics', type: 'Revision tip', language: 'English', teacher: 'Mr. James Kato', teacherTitle: 'Mathematics Teacher', meta: 'UNEB · P7', caption: { lead: 'Multiply', highlight: 'Fractions', tail: 'in 60 Seconds' }, views: 1200000, likes: 34000, comments: 1200, shares: 5400, tint: Maple.blueHover, emoji: '👨🏾‍🏫', desc: 'A quick and simple method to multiply fractions, with examples.', tags: ['UNEB', 'Primary 7', 'Mathematics', 'Fractions'] }),
     s({ id: 's2', photo: photos.shorts[1], title: 'Reading Comprehension Tips', topic: 'English', board: 'KCSE', level: 'Lower secondary', subject: 'English', type: 'Teacher advice', language: 'English', teacher: 'Ms. Aisha Bello', teacherTitle: 'English Teacher', meta: 'KCSE · Form 3', caption: { lead: '5 Techniques', highlight: 'for Better', tail: 'Comprehension' }, views: 856000, likes: 21000, comments: 640, shares: 2100, tint: '#7C2D12', emoji: '👩🏽‍🏫', desc: 'Five habits that help you answer comprehension questions faster.', tags: ['KCSE', 'Form 3', 'English'] }),
     s({ id: 's3', photo: photos.shorts[2], title: 'Parts of a Human Cell', topic: 'Science', board: 'IGCSE', level: 'Lower secondary', subject: 'Biology', type: 'Concept explanation', language: 'English', teacher: 'Dr. Grace Njeri', teacherTitle: 'Biology Teacher', meta: 'IGCSE · Grade 9', caption: { lead: 'The', highlight: 'Human Cell', tail: 'in 60 Seconds' }, views: 1800000, likes: 42000, comments: 1900, shares: 8800, tint: '#0E7490', emoji: '🧫', desc: 'Every organelle you need for the exam, in one minute.', tags: ['IGCSE', 'Grade 9', 'Biology'] }),
-    s({ id: 's4', photo: photos.shorts[3], title: 'Balance Equations Fast', topic: 'Science', board: 'WAEC', level: 'Upper secondary', subject: 'Chemistry', type: 'Concept explanation', language: 'English', teacher: 'Dr. Ahmed Hassan', teacherTitle: 'Chemistry Teacher', meta: 'WAEC · SS2', caption: { lead: 'Balancing', highlight: 'Chemical', tail: 'Equations' }, views: 920000, likes: 28000, comments: 870, shares: 3100, tint: '#334155', emoji: '🥽', desc: 'The atom-counting trick that balances any equation.', tags: ['WAEC', 'SS2', 'Chemistry'] }),
-    s({ id: 's5', photo: photos.shorts[4], title: 'Study Smarter', topic: 'Study Tips', board: 'Any', level: 'Any level', subject: 'Study skills', type: 'Teacher advice', language: 'English', teacher: 'Ms. Laila Chen', teacherTitle: 'Learning Coach', meta: 'All levels', caption: { lead: 'How to', highlight: 'Study Smarter', tail: 'Not Harder' }, views: 643000, likes: 18000, comments: 520, shares: 4200, tint: '#3F3F46', emoji: '📚', desc: 'Spaced practice and self-testing beat re-reading.', tags: ['Study tips'] }),
-    s({ id: 's6', photo: photos.shorts[5], title: "Newton's Three Laws", topic: 'Science', board: 'Cambridge', level: 'A level', subject: 'Physics', type: 'Concept explanation', language: 'English', teacher: 'Dr. Michael Tan', teacherTitle: 'Physics Teacher', meta: 'A Level', caption: { lead: "Newton's", highlight: 'Laws', tail: 'in 60s' }, views: 1100000, likes: 30000, comments: 990, shares: 3600, tint: '#1F2937', emoji: '🍎', desc: 'All three laws with everyday examples.', tags: ['A Level', 'Physics'] }),
-    s({ id: 's7', photo: photos.shorts[6], title: 'PLE 2023 Q5 Solution', topic: 'Exam Revision', board: 'UNEB', level: 'Primary', subject: 'Mathematics', type: 'Past paper solution', language: 'English', teacher: 'Mr. Daniel Okello', teacherTitle: 'Mathematics Teacher', meta: 'UNEB · P7', caption: { lead: '2023 PLE', highlight: 'Maths Q5', tail: 'Fully Solved' }, views: 2300000, likes: 55000, comments: 3100, shares: 12000, tint: '#475569', emoji: '📝', desc: 'Step-by-step marking-scheme answer to PLE 2023 question 5.', tags: ['UNEB', 'PLE', 'Past paper'] }),
-    s({ id: 's8', photo: photos.shorts[7], title: 'Map Reading Skills', topic: 'Exam Revision', board: 'KCSE', level: 'Upper secondary', subject: 'Geography', type: 'Revision tip', language: 'English', teacher: 'Ms. Sarah Kim', teacherTitle: 'Geography Teacher', meta: 'KCSE · Form 4', caption: { lead: 'Map', highlight: 'Reading', tail: 'Made Easy' }, views: 780000, likes: 19000, comments: 410, shares: 1800, tint: '#065F46', emoji: '🗺️', desc: 'Grid references and scale in under a minute.', tags: ['KCSE', 'Geography'] }),
-    s({ id: 's9', photo: photos.shorts[8], title: 'Python for Beginners', topic: 'Career & Life Skills', board: 'Any', level: 'Any level', subject: 'ICT & Coding', type: 'Concept explanation', language: 'English', teacher: 'Mr. David Ouma', teacherTitle: 'Coding Teacher', meta: 'Beginner', caption: { lead: 'Python', highlight: 'Basics', tail: 'in 60 Seconds' }, views: 1500000, likes: 41000, comments: 2200, shares: 9300, tint: '#111827', emoji: '🐍', desc: 'Your first program: variables, print and a loop.', tags: ['Coding', 'Beginner'] }),
-    s({ id: 's10', photo: photos.shorts[9], title: 'Keep Going', topic: 'Motivation', board: 'Any', level: 'Any level', subject: 'Study skills', type: 'Student story', language: 'French', teacher: 'Ms. Faith Achieng', teacherTitle: 'Counsellor', meta: 'All learners', caption: { lead: 'Your', highlight: 'Dreams', tail: 'Are Possible' }, views: 980000, likes: 27000, comments: 1500, shares: 6100, tint: '#581C87', emoji: '🌟', desc: 'A former learner on failing a mock and passing the real exam.', tags: ['Motivation'] }),
+    s({ id: 's4', photo: photos.shorts[3], title: 'Balance Equations Fast', topic: 'Science', board: 'WAEC', level: 'Upper secondary', subject: 'Chemistry', type: 'Concept explanation', language: 'English', teacher: 'Dr. Ahmed Hassan', teacherTitle: 'Chemistry Teacher', meta: 'WAEC · SS2', caption: { lead: 'Balancing', highlight: 'Chemical', tail: 'Equations' }, views: 920000, likes: 28000, comments: 870, shares: 3100, tint: Maple.body, emoji: '🥽', desc: 'The atom-counting trick that balances any equation.', tags: ['WAEC', 'SS2', 'Chemistry'] }),
+    s({ id: 's5', photo: photos.shorts[4], title: 'Study Smarter', topic: 'Study Tips', board: 'Any', level: 'Any level', subject: 'Study skills', type: 'Teacher advice', language: 'English', teacher: 'Ms. Laila Chen', teacherTitle: 'Learning Coach', meta: 'All levels', caption: { lead: 'How to', highlight: 'Study Smarter', tail: 'Not Harder' }, views: 643000, likes: 18000, comments: 520, shares: 4200, tint: Maple.body, emoji: '📚', desc: 'Spaced practice and self-testing beat re-reading.', tags: ['Study tips'] }),
+    s({ id: 's6', photo: photos.shorts[5], title: "Newton's Three Laws", topic: 'Science', board: 'Cambridge', level: 'A level', subject: 'Physics', type: 'Concept explanation', language: 'English', teacher: 'Dr. Michael Tan', teacherTitle: 'Physics Teacher', meta: 'A Level', caption: { lead: "Newton's", highlight: 'Laws', tail: 'in 60s' }, views: 1100000, likes: 30000, comments: 990, shares: 3600, tint: Maple.navy, emoji: '🍎', desc: 'All three laws with everyday examples.', tags: ['A Level', 'Physics'] }),
+    s({ id: 's7', photo: photos.shorts[6], title: 'PLE 2023 Q5 Solution', topic: 'Exam Revision', board: 'UNEB', level: 'Primary', subject: 'Mathematics', type: 'Past paper solution', language: 'English', teacher: 'Mr. Daniel Okello', teacherTitle: 'Mathematics Teacher', meta: 'UNEB · P7', caption: { lead: '2023 PLE', highlight: 'Maths Q5', tail: 'Fully Solved' }, views: 2300000, likes: 55000, comments: 3100, shares: 12000, tint: Maple.body, emoji: '📝', desc: 'Step-by-step marking-scheme answer to PLE 2023 question 5.', tags: ['UNEB', 'PLE', 'Past paper'] }),
+    s({ id: 's8', photo: photos.shorts[7], title: 'Map Reading Skills', topic: 'Exam Revision', board: 'KCSE', level: 'Upper secondary', subject: 'Geography', type: 'Revision tip', language: 'English', teacher: 'Ms. Sarah Kim', teacherTitle: 'Geography Teacher', meta: 'KCSE · Form 4', caption: { lead: 'Map', highlight: 'Reading', tail: 'Made Easy' }, views: 780000, likes: 19000, comments: 410, shares: 1800, tint: Maple.successText, emoji: '🗺️', desc: 'Grid references and scale in under a minute.', tags: ['KCSE', 'Geography'] }),
+    s({ id: 's9', photo: photos.shorts[8], title: 'Python for Beginners', topic: 'Career & Life Skills', board: 'Any', level: 'Any level', subject: 'ICT & Coding', type: 'Concept explanation', language: 'English', teacher: 'Mr. David Ouma', teacherTitle: 'Coding Teacher', meta: 'Beginner', caption: { lead: 'Python', highlight: 'Basics', tail: 'in 60 Seconds' }, views: 1500000, likes: 41000, comments: 2200, shares: 9300, tint: Maple.navy, emoji: '🐍', desc: 'Your first program: variables, print and a loop.', tags: ['Coding', 'Beginner'] }),
+    s({ id: 's10', photo: photos.shorts[9], title: 'Keep Going', topic: 'Motivation', board: 'Any', level: 'Any level', subject: 'Study skills', type: 'Student story', language: 'French', teacher: 'Ms. Faith Achieng', teacherTitle: 'Counsellor', meta: 'All learners', caption: { lead: 'Your', highlight: 'Dreams', tail: 'Are Possible' }, views: 980000, likes: 27000, comments: 1500, shares: 6100, tint: Maple.blueHover, emoji: '🌟', desc: 'A former learner on failing a mock and passing the real exam.', tags: ['Motivation'] }),
   ],
   trending: [
     { title: 'Top 10 Algebra Tips', views: 1900000 },
@@ -395,14 +396,14 @@ export const teacherStorefront = {
     ],
   },
   courses: [
-    { title: 'Complete Mathematics for Primary 7 (2024 Curriculum)', photo: photos.teacherCourses[0], meta: 'UNEB · Primary 7', rating: 4.9, reviews: '4.9K', lessons: 40, hours: 12, priceUGX: 120000, wasUGX: 160000, badge: 'Bestseller', tint: '#1E3A8A' },
-    { title: 'IGCSE Mathematics Exam Preparation', photo: photos.teacherCourses[1], meta: 'IGCSE · Secondary', rating: 4.8, reviews: '660', lessons: 30, hours: 10, priceUGX: 100000, wasUGX: 0, badge: '', tint: '#334155' },
-    { title: 'Problem Solving Masterclass', photo: photos.teacherCourses[2], meta: 'All levels', rating: 4.9, reviews: '540', lessons: 36, hours: 10, priceUGX: 70000, wasUGX: 0, badge: '', tint: '#065F46' },
+    { title: 'Complete Mathematics for Primary 7 (2024 Curriculum)', photo: photos.teacherCourses[0], meta: 'UNEB · Primary 7', rating: 4.9, reviews: '4.9K', lessons: 40, hours: 12, priceUGX: 120000, wasUGX: 160000, badge: 'Bestseller', tint: Maple.blueHover },
+    { title: 'IGCSE Mathematics Exam Preparation', photo: photos.teacherCourses[1], meta: 'IGCSE · Secondary', rating: 4.8, reviews: '660', lessons: 30, hours: 10, priceUGX: 100000, wasUGX: 0, badge: '', tint: Maple.body },
+    { title: 'Problem Solving Masterclass', photo: photos.teacherCourses[2], meta: 'All levels', rating: 4.9, reviews: '540', lessons: 36, hours: 10, priceUGX: 70000, wasUGX: 0, badge: '', tint: Maple.successText },
   ],
   shorts: [
     { id: 's1', photo: photos.teacherShorts[0], lead: 'Simplify', highlight: 'Fractions', tail: 'in 60 Seconds', views: '125K', tint: '#7C2D12' },
-    { id: 's5', photo: photos.teacherShorts[1], lead: '3 Tips', highlight: 'for Exam', tail: 'Success', views: '98K', tint: '#1E3A8A' },
-    { id: 's7', photo: photos.teacherShorts[2], lead: 'Algebra', highlight: 'Made', tail: 'Easy', views: '87K', tint: '#581C87' },
+    { id: 's5', photo: photos.teacherShorts[1], lead: '3 Tips', highlight: 'for Exam', tail: 'Success', views: '98K', tint: Maple.blueHover },
+    { id: 's7', photo: photos.teacherShorts[2], lead: 'Algebra', highlight: 'Made', tail: 'Easy', views: '87K', tint: Maple.blueHover },
   ],
   reviews: [
     { name: 'Amina N.', where: 'Uganda · Primary 7', text: 'Her explanations are so clear. I improved from 62% to 89%!' },
@@ -439,22 +440,22 @@ export const liveSession = {
     { label: 'Certificate\nof participation', short: 'Certificate', icon: 'trophy' as const },
   ],
   features: [
-    { title: 'Past paper practice', detail: 'With marking guidance', icon: 'clipboard' as const, fg: '#16A34A', bg: '#E5F6EC' },
-    { title: 'Exam techniques', detail: 'Tips from expert teachers', icon: 'sparkle' as const, fg: '#E5484D', bg: '#FDECEC' },
-    { title: 'Live Q&A', detail: 'Ask questions in real time', icon: 'chat' as const, fg: '#4F5BD5', bg: '#ECEEFF' },
-    { title: 'Lesson recording', detail: 'Available for 30 days', icon: 'play' as const, fg: '#16A34A', bg: '#E5F6EC' },
-    { title: 'Revision materials', detail: 'Downloadable resources', icon: 'notes' as const, fg: '#4F5BD5', bg: '#ECEEFF' },
+    { title: 'Past paper practice', detail: 'With marking guidance', icon: 'clipboard' as const, fg: Maple.successText, bg: Maple.successSoft },
+    { title: 'Exam techniques', detail: 'Tips from expert teachers', icon: 'sparkle' as const, fg: Maple.error, bg: Maple.errorSoft },
+    { title: 'Live Q&A', detail: 'Ask questions in real time', icon: 'chat' as const, fg: Maple.blue, bg: Maple.blueSoft },
+    { title: 'Lesson recording', detail: 'Available for 30 days', icon: 'play' as const, fg: Maple.successText, bg: Maple.successSoft },
+    { title: 'Revision materials', detail: 'Downloadable resources', icon: 'notes' as const, fg: Maple.blue, bg: Maple.blueSoft },
   ],
   about: 'This intensive 2-hour revision bootcamp will help Primary 7 learners master the most important Mathematics topics, using real UNEB past paper questions, step-by-step solutions and exam strategies.',
   aboutPoints: ['Focus on frequently tested topics', 'Work through real past paper questions', 'Learn simple and effective exam techniques', 'Get your questions answered live', 'Receive downloadable revision notes', 'Session recording available for 30 days'],
   forWho: 'Primary 7 learners preparing for UNEB, teachers supporting revision, and parents who want their children to succeed.',
   syllabus: [
-    { title: 'Number operations and problem solving', detail: 'Master key methods and avoid common mistakes.', icon: 'grid' as const, fg: '#1463F3', bg: '#EAF1FF', minutes: 20 },
-    { title: 'Fractions, decimals and percentages', detail: 'Simplify, compare and solve exam-style questions.', icon: 'sparkle' as const, fg: '#F97316', bg: '#FFF1E6', minutes: 20 },
-    { title: 'Measurement and geometry', detail: 'Understand common shapes, units and practical questions.', icon: 'map' as const, fg: '#F97316', bg: '#FFF1E6', minutes: 20 },
-    { title: 'Data handling', detail: 'Interpret graphs, tables and charts with confidence.', icon: 'chart' as const, fg: '#1463F3', bg: '#EAF1FF', minutes: 15 },
-    { title: 'UNEB past paper practice', detail: 'Work through real questions with full solutions.', icon: 'notes' as const, fg: '#8B5CF6', bg: '#F1EBFF', minutes: 30 },
-    { title: 'Exam tips and time management', detail: 'Learn proven strategies to score higher.', icon: 'clock' as const, fg: '#E5484D', bg: '#FDECEC', minutes: 15 },
+    { title: 'Number operations and problem solving', detail: 'Master key methods and avoid common mistakes.', icon: 'grid' as const, fg: Maple.blue, bg: Maple.blueSoft, minutes: 20 },
+    { title: 'Fractions, decimals and percentages', detail: 'Simplify, compare and solve exam-style questions.', icon: 'sparkle' as const, fg: '#F97316', bg: Maple.warningSoft, minutes: 20 },
+    { title: 'Measurement and geometry', detail: 'Understand common shapes, units and practical questions.', icon: 'map' as const, fg: '#F97316', bg: Maple.warningSoft, minutes: 20 },
+    { title: 'Data handling', detail: 'Interpret graphs, tables and charts with confidence.', icon: 'chart' as const, fg: Maple.blue, bg: Maple.blueSoft, minutes: 15 },
+    { title: 'UNEB past paper practice', detail: 'Work through real questions with full solutions.', icon: 'notes' as const, fg: Maple.blue, bg: Maple.blueSoft, minutes: 30 },
+    { title: 'Exam tips and time management', detail: 'Learn proven strategies to score higher.', icon: 'clock' as const, fg: Maple.error, bg: Maple.errorSoft, minutes: 15 },
   ],
   teacher: {
     name: 'Ms. Sarah Kimani',
@@ -463,9 +464,9 @@ export const liveSession = {
     title: 'Mathematics Teacher & Curriculum Specialist',
     badges: ['MSc Education', '10+ Years Experience', 'Verified by Maple'],
     stats: [
-      { value: '25K+', label: 'Students Taught', icon: 'people' as const, color: '#4F5BD5' },
-      { value: '96%', label: 'Average Pass Rate', icon: 'trophy' as const, color: '#1463F3' },
-      { value: '4.9', label: '(1,240 reviews)', icon: 'star' as const, color: '#F59E0B' },
+      { value: '25K+', label: 'Students Taught', icon: 'people' as const, color: Maple.blue },
+      { value: '96%', label: 'Average Pass Rate', icon: 'trophy' as const, color: Maple.blue },
+      { value: '4.9', label: '(1,240 reviews)', icon: 'star' as const, color: Maple.warning },
     ],
     bio: 'Ms. Sarah is a passionate Mathematics teacher with over 10 years of experience helping learners excel in UNEB examinations. Her teaching is practical, engaging and focused on real exam success.',
   },
@@ -586,10 +587,10 @@ export const guardianConsent = {
 export const onboardingWizard = {
   note: photos.onboarding.note,
   roles: [
-    { key: 'learner', title: 'Learner', body: 'Study, practice, take past papers and track my progress.', photo: photos.onboarding.learner, icon: 'cap' as const, tint: '#3B82F6' },
-    { key: 'teacher', title: 'Teacher', body: 'Create classes, teach, assign work and track learner progress.', photo: photos.onboarding.teacher, icon: 'people' as const, tint: '#8B5CF6' },
+    { key: 'learner', title: 'Learner', body: 'Study, practice, take past papers and track my progress.', photo: photos.onboarding.learner, icon: 'cap' as const, tint: Maple.blue },
+    { key: 'teacher', title: 'Teacher', body: 'Create classes, teach, assign work and track learner progress.', photo: photos.onboarding.teacher, icon: 'people' as const, tint: Maple.blue },
     { key: 'parent', title: 'Parent', body: "Support my child's learning and track their progress.", photo: photos.onboarding.parent, icon: 'people' as const, tint: '#EC4899' },
-    { key: 'admin', title: 'School Admin', body: 'Set up school, manage teachers and learners, and monitor performance.', photo: photos.onboarding.admin, icon: 'school' as const, tint: '#16A34A' },
+    { key: 'admin', title: 'School Admin', body: 'Set up school, manage teachers and learners, and monitor performance.', photo: photos.onboarding.admin, icon: 'school' as const, tint: Maple.successText },
   ],
   countries: [
     { name: 'Uganda', flag: photos.onboarding.flagUg, curricula: [{ code: 'UNEB', name: 'Uganda National Examinations Board', crest: photos.onboarding.uneb }, { code: 'Cambridge', name: 'Cambridge International', crest: photos.crests.igcse }] },
@@ -620,10 +621,10 @@ export const schoolsPage = {
   heroPhotoPhone: photos.schoolsHeroPhone,
   promises: ['UNEB, KCSE, WAEC, IGCSE and more', 'Supports in-class and after-school learning', 'Trusted by schools across Africa and beyond'],
   results: [
-    { value: '+32%', label: 'Average exam improvement', icon: 'chart' as const, tint: '#16A34A' },
-    { value: '94%', label: 'Student engagement', icon: 'people' as const, tint: '#2F6BFF' },
-    { value: '40%', label: 'Higher pass rates', icon: 'school' as const, tint: '#1D4ED8' },
-    { value: '92%', label: 'Teacher satisfaction', icon: 'heart' as const, tint: '#EF4444' },
+    { value: '+32%', label: 'Average exam improvement', icon: 'chart' as const, tint: Maple.successText },
+    { value: '94%', label: 'Student engagement', icon: 'people' as const, tint: Maple.blue },
+    { value: '40%', label: 'Higher pass rates', icon: 'school' as const, tint: Maple.blue },
+    { value: '92%', label: 'Teacher satisfaction', icon: 'heart' as const, tint: Maple.error },
   ],
   trusted: [
     { name: 'UNEB', place: 'Uganda', crest: photos.crests.uneb },
@@ -636,12 +637,12 @@ export const schoolsPage = {
     { name: 'Greenhill', place: 'Academy', crest: photos.crests.greenhill },
   ],
   features: [
-    { title: 'Live Classes', detail: 'Expert teachers for every subject', icon: 'live' as const, tint: '#8B5CF6' },
-    { title: 'Past Papers', detail: 'Interactive practice with solutions', icon: 'book' as const, tint: '#EF4444' },
-    { title: 'Curriculum Support', detail: 'Ready-to-use schemes and lesson plans', icon: 'map' as const, tint: '#2F6BFF' },
-    { title: 'Progress Tracking', detail: 'Real-time analytics for students and classes', icon: 'chart' as const, tint: '#16A34A' },
-    { title: 'Teacher Development', detail: 'Training and resources for your staff', icon: 'person' as const, tint: '#F59E0B' },
-    { title: 'Flexible Integration', detail: 'Works alongside your school systems', icon: 'grid' as const, tint: '#8B5CF6' },
+    { title: 'Live Classes', detail: 'Expert teachers for every subject', icon: 'live' as const, tint: Maple.blue },
+    { title: 'Past Papers', detail: 'Interactive practice with solutions', icon: 'book' as const, tint: Maple.error },
+    { title: 'Curriculum Support', detail: 'Ready-to-use schemes and lesson plans', icon: 'map' as const, tint: Maple.blue },
+    { title: 'Progress Tracking', detail: 'Real-time analytics for students and classes', icon: 'chart' as const, tint: Maple.successText },
+    { title: 'Teacher Development', detail: 'Training and resources for your staff', icon: 'person' as const, tint: Maple.warning },
+    { title: 'Flexible Integration', detail: 'Works alongside your school systems', icon: 'grid' as const, tint: Maple.blue },
   ],
   roi: {
     curricula: ['UNEB (Uganda)', 'KCSE (Kenya)', 'WAEC (West Africa)', 'IGCSE (Cambridge)', 'IB (International)'],
@@ -709,9 +710,9 @@ export const parentDigest = {
   validUntil: 'Sun, 16 Nov 2026 · 11:59 PM',
   child: { name: 'Aisha Namutebi', level: 'Primary 7', school: 'Kampala Hill School', photo: photos.digestChild },
   stats: [
-    { value: '5/5', label: 'Days Attended', icon: 'check' as const, tint: '#16A34A' },
-    { value: '12', label: 'Competencies Mastered', icon: 'sparkle' as const, tint: '#F59E0B' },
-    { value: '4', label: 'Subjects Active', icon: 'star' as const, tint: '#F59E0B' },
+    { value: '5/5', label: 'Days Attended', icon: 'check' as const, tint: Maple.successText },
+    { value: '12', label: 'Competencies Mastered', icon: 'sparkle' as const, tint: Maple.warning },
+    { value: '4', label: 'Subjects Active', icon: 'star' as const, tint: Maple.warning },
   ],
   quote: { text: 'Great progress this week! Aisha is showing more confidence in problem solving and participates actively in class.', by: 'Ms. Sarah Kimani, Class Teacher' },
   attendance: [
@@ -722,10 +723,10 @@ export const parentDigest = {
     { day: 'Fri', date: 'Nov 6', present: true },
   ],
   competencies: [
-    { title: 'Fractions and Decimals', detail: 'Add and subtract fractions with different denominators', icon: 'chart' as const, tint: '#2F6BFF' },
+    { title: 'Fractions and Decimals', detail: 'Add and subtract fractions with different denominators', icon: 'chart' as const, tint: Maple.blue },
     { title: 'Reading Comprehension', detail: 'Identify main ideas and supporting details', icon: 'book' as const, tint: '#F97316' },
-    { title: 'Scientific Investigation', detail: 'Plan and carry out a simple experiment', icon: 'sparkle' as const, tint: '#2F6BFF' },
-    { title: 'Creative Writing', detail: 'Write a clear and well-structured paragraph', icon: 'notes' as const, tint: '#8B5CF6' },
+    { title: 'Scientific Investigation', detail: 'Plan and carry out a simple experiment', icon: 'sparkle' as const, tint: Maple.blue },
+    { title: 'Creative Writing', detail: 'Write a clear and well-structured paragraph', icon: 'notes' as const, tint: Maple.blue },
   ],
   voice: {
     teacher: 'Ms. Sarah Kimani',
@@ -735,9 +736,9 @@ export const parentDigest = {
     transcript: "Hi! This is Ms. Sarah. Aisha had a fantastic week. She worked very hard in Mathematics and showed great improvement in her reading. Keep encouraging her to practise at home!",
   },
   subjects: [
-    { name: 'Mathematics', score: 0.85, tint: '#2F6BFF', icon: 'chart' as const },
-    { name: 'English', score: 0.78, tint: '#8B5CF6', icon: 'book' as const },
-    { name: 'Science', score: 0.92, tint: '#16A34A', icon: 'sparkle' as const },
+    { name: 'Mathematics', score: 0.85, tint: Maple.blue, icon: 'chart' as const },
+    { name: 'English', score: 0.78, tint: Maple.blue, icon: 'book' as const },
+    { name: 'Science', score: 0.92, tint: Maple.successText, icon: 'sparkle' as const },
     { name: 'Social Studies', score: 0.8, tint: '#F97316', icon: 'globe' as const },
   ],
   highlights: [
@@ -756,9 +757,9 @@ export const invoicePage = {
   validUntil: 'Sun, 16 Nov 2026 · 11:59 PM',
   child: { name: 'Aisha Namutebi', level: 'Primary 7', school: 'Kampala Hill School', guardian: 'Sarah Namutebi', year: '2026', photo: photos.payChild },
   items: [
-    { title: 'Term 3 School Fees', detail: 'Primary 7 · 2026', ugx: 1_200_000, icon: 'book' as const, tint: '#8B5CF6' },
-    { title: 'Mathematics Online Subject', detail: 'P7 Exam Revision Bootcamp', ugx: 80_000, icon: 'school' as const, tint: '#16A34A' },
-    { title: 'Learning Materials', detail: 'Workbooks and Digital Resources', ugx: 40_000, icon: 'notes' as const, tint: '#2F6BFF' },
+    { title: 'Term 3 School Fees', detail: 'Primary 7 · 2026', ugx: 1_200_000, icon: 'book' as const, tint: Maple.blue },
+    { title: 'Mathematics Online Subject', detail: 'P7 Exam Revision Bootcamp', ugx: 80_000, icon: 'school' as const, tint: Maple.successText },
+    { title: 'Learning Materials', detail: 'Workbooks and Digital Resources', ugx: 40_000, icon: 'notes' as const, tint: Maple.blue },
   ],
   methods: photos.payMethods,
   promises: [

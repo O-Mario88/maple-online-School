@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import type { ReactNode } from 'react';
 import { Pressable, type StyleProp, StyleSheet, Switch, Text, type TextStyle, View, type ViewStyle } from 'react-native';
 
@@ -6,6 +6,7 @@ import { Icon } from '@/components/icon';
 import type { IconName } from '@/lib/icons';
 
 import { BLUE, BODY, GREEN, LINE, MUTED, NAVY, SELECT, TONES, type Tone, WHITE } from './tokens';
+import { Maple } from '@/constants/maple';
 
 /** A white card with the references' hairline border and soft corners. */
 export function Card({ style, children }: { style?: StyleProp<ViewStyle>; children: ReactNode }) {
@@ -71,6 +72,8 @@ export function Btn({
   iconRight,
   height = 44,
   accessibilityLabel,
+  disabled = false,
+  hint,
 }: {
   label: string;
   icon?: IconName;
@@ -81,13 +84,27 @@ export function Btn({
   iconRight?: IconName;
   height?: number;
   accessibilityLabel?: string;
+  /** Greyed out and not pressable: for an action that isn't available yet. */
+  disabled?: boolean;
+  /** Read out with the button, e.g. why it is disabled. */
+  hint?: string;
 }) {
-  const color = kind === 'primary' ? WHITE : BLUE;
+  const color = disabled ? Maple.disabledText : kind === 'primary' ? WHITE : BLUE;
   return (
     <Pressable
-      style={({ pressed }) => [styles.btn, { minHeight: height }, kind === 'primary' ? styles.btnPrimary : kind === 'outline' ? styles.btnOutline : styles.btnSoft, pressed && styles.pressed, style]}
+      style={({ pressed }) => [
+        styles.btn,
+        { minHeight: height },
+        kind === 'primary' ? styles.btnPrimary : kind === 'outline' ? styles.btnOutline : styles.btnSoft,
+        pressed && !disabled && styles.pressed,
+        disabled && styles.btnDisabled,
+        style,
+      ]}
       onPress={onPress}
+      disabled={disabled}
       accessibilityRole="button"
+      accessibilityState={{ disabled }}
+      accessibilityHint={hint}
       accessibilityLabel={accessibilityLabel ?? label}>
       {icon ? <Icon name={icon} size={18} color={color} /> : null}
       <Text style={[styles.btnText, { color }, textStyle]} numberOfLines={1}>
@@ -115,9 +132,9 @@ export function Avatar({ source, size = 44, badge = 'none' }: { source: number; 
   const dot = Math.max(12, Math.round(size * 0.28));
   return (
     <View style={{ width: size, height: size }}>
-      <Image source={source} style={{ width: size, height: size, borderRadius: size / 2 }} contentFit="cover" />
+      <Image decorative source={source} style={{ width: size, height: size, borderRadius: size / 2 }} contentFit="cover" />
       {badge === 'online' || badge === 'away' ? (
-        <View style={[styles.dot, { width: dot, height: dot, borderRadius: dot / 2, backgroundColor: badge === 'online' ? GREEN : '#EF3B4D' }]} />
+        <View style={[styles.dot, { width: dot, height: dot, borderRadius: dot / 2, backgroundColor: badge === 'online' ? GREEN : Maple.error }]} />
       ) : null}
       {badge === 'mic' || badge === 'check' ? (
         <View style={[styles.badgeRound, { width: dot + 8, height: dot + 8, borderRadius: (dot + 8) / 2 }]}>
@@ -134,9 +151,9 @@ export function Toggle({ value, onChange, label }: { value: boolean; onChange: (
     <Switch
       value={value}
       onValueChange={onChange}
-      trackColor={{ false: '#CBD5E1', true: '#1DB264' }}
+      trackColor={{ false: Maple.borderStrong, true: Maple.success }}
       thumbColor={WHITE}
-      ios_backgroundColor="#CBD5E1"
+      ios_backgroundColor={Maple.borderStrong}
       accessibilityLabel={label}
       // react-native-web colours the "on" thumb with its own prop.
       {...({ activeThumbColor: WHITE } as object)}
@@ -152,7 +169,7 @@ export function Wave({ played = 1, bars = 28, height = 22, color = BLUE }: { pla
   return (
     <View style={[styles.wave, { height }]}>
       {list.map((h, i) => (
-        <View key={i} style={[styles.waveBar, { height: (h / 21) * height, backgroundColor: i / list.length < played ? color : '#B9CDF5' }]} />
+        <View key={i} style={[styles.waveBar, { height: (h / 21) * height, backgroundColor: i / list.length < played ? color : Maple.blueLine }]} />
       ))}
     </View>
   );
@@ -261,8 +278,9 @@ const styles = StyleSheet.create({
   pillText: { fontWeight: '600' },
   btn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, paddingHorizontal: 18, borderRadius: 10 },
   btnPrimary: { backgroundColor: BLUE },
-  btnOutline: { backgroundColor: WHITE, borderWidth: 1.5, borderColor: '#BBD0F8' },
-  btnSoft: { backgroundColor: SELECT, borderWidth: 1, borderColor: '#C7DAFB' },
+  btnDisabled: { backgroundColor: Maple.disabledSurface, borderColor: Maple.disabledBorder },
+  btnOutline: { backgroundColor: WHITE, borderWidth: 1.5, borderColor: Maple.blueLine },
+  btnSoft: { backgroundColor: SELECT, borderWidth: 1, borderColor: Maple.blueLine },
   btnText: { fontSize: 15, fontWeight: '600' },
   pressed: { opacity: 0.85 },
   tile: { alignItems: 'center', justifyContent: 'center' },
@@ -282,10 +300,10 @@ const styles = StyleSheet.create({
   tabInnerTop: { flexDirection: 'column', gap: 6 },
   tabLine: { height: 3, borderRadius: 2, backgroundColor: 'transparent', marginBottom: -1 },
   tabLineOn: { backgroundColor: BLUE },
-  bar: { backgroundColor: '#E3EAF6', overflow: 'hidden' },
+  bar: { backgroundColor: Maple.blueSelected, overflow: 'hidden' },
   grade: { alignItems: 'center', justifyContent: 'center' },
   gradeText: { fontWeight: '800' },
-  count: { alignItems: 'center', justifyContent: 'center', paddingHorizontal: 5, backgroundColor: '#EF2D3F' },
+  count: { alignItems: 'center', justifyContent: 'center', paddingHorizontal: 5, backgroundColor: Maple.error },
   countText: { color: WHITE, fontWeight: '700' },
 });
 

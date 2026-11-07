@@ -757,6 +757,75 @@ paths:
       summary: Mark all your notifications read
       responses:
         "204": { description: All marked read }
+  /api/v1/career-requests/:
+    get:
+      summary: Your Career Compass requests (events and communities you asked for), newest first
+      parameters:
+        - { name: page, in: query, schema: { type: integer } }
+      responses:
+        "200":
+          description: A page of your requests
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [count, results]
+                properties:
+                  count: { type: integer }
+                  next: { type: string, nullable: true }
+                  previous: { type: string, nullable: true }
+                  results: { type: array, items: { $ref: "#/components/schemas/CareerRequest" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+    post:
+      summary: Ask Maple's career team for an event or a community (10 an hour)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [kind, body]
+              properties:
+                kind: { type: string, enum: [event, community] }
+                body: { type: string, minLength: 3, maxLength: 500 }
+      responses:
+        "201": { description: Sent, content: { application/json: { schema: { $ref: "#/components/schemas/CareerRequest" } } } }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+  /api/v1/career-requests/all/:
+    get:
+      summary: Every learner's request, for Maple's career team (staff only; requesters by first name)
+      parameters:
+        - { name: status, in: query, schema: { type: string, enum: [received, planned, declined] } }
+        - { name: page, in: query, schema: { type: integer } }
+      responses:
+        "200":
+          description: A page of requests
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [count, results]
+                properties:
+                  count: { type: integer }
+                  next: { type: string, nullable: true }
+                  previous: { type: string, nullable: true }
+                  results: { type: array, items: { $ref: "#/components/schemas/CareerRequest" } }
+        "403": { description: Not Maple staff }
+  /api/v1/career-requests/{id}/status/:
+    parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
+    post:
+      summary: Answer a request (staff only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { type: object, required: [status], properties: { status: { type: string, enum: [received, planned, declined] } } }
+      responses:
+        "200": { description: Answered, content: { application/json: { schema: { type: object, required: [status], properties: { status: { type: string } } } } } }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "403": { description: Not Maple staff }
+        "404": { description: No such request }
   /api/v1/insights/classes/{id}/learners/:
     parameters: [{ name: id, in: path, required: true, schema: { type: integer, format: int64 } }]
     get:
@@ -1995,6 +2064,16 @@ components:
         kind: { type: string, enum: [parent_message, remedial_work, meeting, note] }
         note: { type: string }
         created_at: { type: string, format: date-time }
+    CareerRequest:
+      type: object
+      required: [id, kind, body, status, created_at]
+      properties:
+        id: { type: integer, format: int64 }
+        kind: { type: string, enum: [event, community] }
+        body: { type: string }
+        status: { type: string, enum: [received, planned, declined] }
+        created_at: { type: string, format: date-time }
+        first_name: { type: string, description: Who asked (staff list only) }
     Notification:
       type: object
       required: [id, kind, title, body, link, created_at, read_at]

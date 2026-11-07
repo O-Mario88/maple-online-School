@@ -3,6 +3,7 @@ import { type GestureResponderEvent, Platform, StyleSheet, TextInput, View } fro
 import Svg, { Ellipse, Path, Rect } from 'react-native-svg';
 
 import { type BoardBox, type InkAction, inkReducer, type InkState, type Point, strokePath, toBoardPoint } from '@/lib/board-ink';
+import { Maple } from '@/constants/maple';
 
 export type InkTool = 'select' | 'pen' | 'highlighter' | 'rect' | 'circle' | 'text' | 'image' | 'formula';
 
@@ -116,7 +117,7 @@ export function InkLayer({ tool, color, ink, onStroke }: InkLayerProps) {
             style={[styles.text, { left: m.points[0].x, top: m.points[0].y - 12, color: m.color }]}
             defaultValue={m.text}
             placeholder="Type here"
-            placeholderTextColor="#94A3B8"
+            placeholderTextColor={Maple.faint}
             ref={(el) => {
               // Focus once, just after the box is placed (the mouse release would otherwise take focus back).
               if (el && m.id === editing) setTimeout(() => el.focus(), 0);

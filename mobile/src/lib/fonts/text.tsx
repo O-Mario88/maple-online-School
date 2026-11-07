@@ -6,7 +6,7 @@
 import { type ComponentProps, createContext, type ElementRef, forwardRef, useContext } from 'react';
 import { Text as RNText, TextInput as RNTextInput, StyleSheet } from 'react-native';
 
-import { textStyle } from './type';
+import { fitProps, textStyle } from './type';
 
 /** True inside a Text, so nested text inherits its parent's font instead of resetting to Inter. */
 const InsideText = createContext(false);
@@ -16,7 +16,7 @@ type Flat = { fontFamily?: string; fontWeight?: string | number; fontSize?: numb
 export const Text = forwardRef<ElementRef<typeof RNText>, ComponentProps<typeof RNText>>(function MapleText({ style, ...props }, ref) {
   const nested = useContext(InsideText);
   const { base, after } = textStyle((StyleSheet.flatten(style) ?? {}) as Flat, nested);
-  const text = <RNText ref={ref} {...props} style={base || after ? [base, style, after] : style} />;
+  const text = <RNText ref={ref} {...props} {...fitProps(props)} style={base || after ? [base, style, after] : style} />;
   return nested ? text : <InsideText.Provider value>{text}</InsideText.Provider>;
 }) as unknown as typeof RNText;
 

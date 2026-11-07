@@ -10,6 +10,8 @@ import type { MockData } from '@/mock';
 import type { RoleName } from '@/mock/school-admin';
 
 import { AdminDesk, AdminPhone, Cell, type Column, DataTable, Face, ListCard, ListRow, MenuRow, MiniBtn, PageHead, Pager, Search, SelectBox, StatusCell, useChoice, useSelection } from '../kit/AdminKit';
+import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 type Admin = MockData['schoolAdmin'];
 type S = Admin['settings'];
@@ -20,7 +22,7 @@ type LogRow = S['log'][number];
 function UserFace({ u, size = 30 }: { u: User; size?: number }) {
   if (u.avatar) return <Face source={u.avatar} size={size} />;
   return (
-    <View style={[styles.initial, { width: size, height: size, borderRadius: size / 2, backgroundColor: u.status === 'Pending' ? '#E2459A' : BLUE }]}>
+    <View style={[styles.initial, { width: size, height: size, borderRadius: size / 2, backgroundColor: u.status === 'Pending' ? Palette.pink500 : BLUE }]}>
       <Text style={styles.initialText}>{u.n}</Text>
     </View>
   );
@@ -149,7 +151,7 @@ export function SettingsDesk({ a }: { a: Admin }) {
             <Text style={styles.statValue}>{`${p.students} / ${money1k(p.limit)}`}</Text>
             <Text style={styles.statLabel}>Students</Text>
             <View style={styles.usage}>
-              <Bar value={p.students / p.limit} color="#22A55A" height={6} style={styles.flex} />
+              <Bar value={p.students / p.limit} color={Maple.successText} height={6} style={styles.flex} />
               <Text style={styles.meta}>{`${Math.round((p.students / p.limit) * 100)}% used`}</Text>
             </View>
           </View>
@@ -217,7 +219,7 @@ export function SettingsDesk({ a }: { a: Admin }) {
             <MiniBtn label="Change Plan" onPress={openSubscription} style={styles.changePlan} />
             {p.features.map((f) => (
               <View key={f} style={styles.feature}>
-                <Icon name="check" size={18} color="#16A34A" />
+                <Icon name="check" size={18} color={Maple.successText} />
                 <Text style={styles.featureText}>{f}</Text>
               </View>
             ))}
@@ -338,7 +340,7 @@ export function SettingsPhone({ a }: { a: Admin }) {
           </View>
         </View>
         <View style={styles.usage}>
-          <Bar value={p.students / p.limit} color="#22A55A" height={8} style={styles.flex} />
+          <Bar value={p.students / p.limit} color={Maple.successText} height={8} style={styles.flex} />
           <Text style={styles.meta}>{`${Math.round((p.students / p.limit) * 100)}% used`}</Text>
         </View>
         <Text style={styles.meta}>{`${p.students} of ${money1k(p.limit)} students`}</Text>

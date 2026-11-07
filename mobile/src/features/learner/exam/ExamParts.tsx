@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { Fragment } from 'react';
 import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
@@ -9,13 +9,15 @@ import { formatClock } from '@/lib/exam';
 import type { IconName } from '@/lib/icons';
 
 import type { Exam, ExamState, Question } from './useExam';
+import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
-export const INK = '#0B1424';
-export const BODY = '#4A5263';
-export const BLUE = '#1463F3';
-export const GREEN = '#22A35A';
-export const RED = '#E5484D';
-export const ORANGE = '#F28C28';
+export const INK = Maple.navy;
+export const BODY = Maple.body;
+export const BLUE = Maple.blue;
+export const GREEN = Maple.successText;
+export const RED = Maple.error;
+export const ORANGE = Maple.warning;
 export const MATH = Platform.select({ ios: 'Times New Roman', android: 'serif', default: '"Times New Roman", Georgia, serif' });
 /** Under five minutes the clock turns red. */
 const LOW_TIME = 5 * 60;
@@ -120,11 +122,11 @@ function Option({ q, i, s, phone }: { q: Question; i: number; s: ExamState; phon
       <Text style={[styles.optText, phone && styles.optTextP, mine && styles.optTextOn]}>{q.options[i]}</Text>
       {tone === 'chosen' || tone === 'right' ? (
         <View style={[styles.badge, { backgroundColor: GREEN }]}>
-          <Icon name="check" size={14} color="#FFFFFF" />
+          <Icon name="check" size={14} color={Maple.surface} />
         </View>
       ) : tone === 'wrong' ? (
         <View style={[styles.badge, { backgroundColor: RED }]}>
-          <Icon name="close" size={13} color="#FFFFFF" />
+          <Icon name="close" size={13} color={Maple.surface} />
         </View>
       ) : null}
     </Pressable>
@@ -162,7 +164,7 @@ export function AnswerBox({ s, phone = false }: { s: ExamState; phone?: boolean 
   return (
     <View style={[styles.answer, !right && styles.answerWrong, phone && styles.answerP]} accessibilityLiveRegion="polite">
       <View style={[styles.answerIcon, phone && styles.answerIconP, !right && { backgroundColor: RED }]}>
-        <Icon name={right ? 'check' : 'close'} size={phone ? 18 : 22} color="#FFFFFF" />
+        <Icon name={right ? 'check' : 'close'} size={phone ? 18 : 22} color={Maple.surface} />
       </View>
       <View style={styles.flex}>
         <Text style={[styles.answerTitle, phone && styles.answerTitleP]}>{`${right ? 'Correct Answer' : 'Not quite. Correct Answer'}: ${letter(q.answer)}. ${q.options[q.answer]}`}</Text>
@@ -177,53 +179,53 @@ const styles = StyleSheet.create({
   crumbs: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   crumb: { fontSize: 12.5, color: BLUE },
   crumbP: { fontSize: 11.5 },
-  timer: { flexDirection: 'row', alignItems: 'center', gap: 16, paddingHorizontal: 16, height: 82, borderRadius: 10, backgroundColor: '#FFFFFF', shadowColor: '#0B1424', shadowOpacity: 0.06, shadowRadius: 10, shadowOffset: { width: 0, height: 3 } },
+  timer: { flexDirection: 'row', alignItems: 'center', gap: 16, paddingHorizontal: 16, height: 82, borderRadius: 10, backgroundColor: Maple.surface, shadowColor: Maple.navy, shadowOpacity: 0.06, shadowRadius: 10, shadowOffset: { width: 0, height: 3 } },
   clock: { fontSize: 25, fontWeight: '700', color: INK, fontVariant: ['tabular-nums'] },
   remain: { marginTop: 2, fontSize: 15, color: BODY },
-  timerP: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 8, paddingVertical: 5, borderRadius: 8, borderWidth: 1, borderColor: '#D5E2F7', backgroundColor: '#FFFFFF' },
+  timerP: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 8, paddingVertical: 5, borderRadius: 8, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface },
   clockP: { fontSize: 13.5, fontWeight: '700', color: INK, fontVariant: ['tabular-nums'] },
   remainP: { fontSize: 7.5, color: BLUE },
   low: { color: RED },
   sections: { flexDirection: 'row', gap: 11 },
-  section: { width: 264, height: 58, flexDirection: 'row', alignItems: 'center', gap: 16, paddingHorizontal: 16, borderRadius: 6, borderWidth: 1, borderColor: '#E1E7F0', backgroundColor: '#FFFFFF' },
+  section: { width: 264, height: 58, flexDirection: 'row', alignItems: 'center', gap: 16, paddingHorizontal: 16, borderRadius: 6, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface },
   sectionWide: { width: 274 },
-  sectionOn: { borderWidth: 1.5, borderColor: BLUE, backgroundColor: '#F1F6FF' },
-  sectionIcon: { width: 30, height: 30, alignItems: 'center', justifyContent: 'center', borderRadius: 6, backgroundColor: '#E7EFFD' },
+  sectionOn: { borderWidth: 1.5, borderColor: BLUE, backgroundColor: Maple.blueSoft },
+  sectionIcon: { width: 30, height: 30, alignItems: 'center', justifyContent: 'center', borderRadius: 6, backgroundColor: Maple.blueSelected },
   sectionTitle: { fontSize: 13.5, fontWeight: '600', color: INK },
   sectionSub: { marginTop: 3, fontSize: 12.5, color: BODY },
   qHead: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   qTitle: { fontSize: 16, fontWeight: '700', color: INK },
   qTitleP: { fontSize: 15 },
-  mark: { paddingHorizontal: 10, paddingVertical: 3, borderRadius: 5, backgroundColor: '#EAF1FE', fontSize: 12.5, color: BLUE, overflow: 'hidden' },
+  mark: { paddingHorizontal: 10, paddingVertical: 3, borderRadius: 5, backgroundColor: Maple.blueSoft, fontSize: 12.5, color: BLUE, overflow: 'hidden' },
   markP: { fontSize: 11 },
-  qText: { marginTop: 26, fontSize: 15, lineHeight: 23, color: '#2B3445' },
+  qText: { marginTop: 26, fontSize: 15, lineHeight: 23, color: Maple.navy },
   qTextP: { marginTop: 14, fontSize: 13.5, lineHeight: 20 },
   figure: { width: 258, height: 168, marginTop: 14, marginLeft: 23 },
   figureP: { width: 210, height: 137, marginTop: 6, marginLeft: 20 },
   options: { gap: 10, marginTop: 23, marginLeft: 4 },
   optionsP: { gap: 7, marginTop: 10, marginLeft: 0 },
-  option: { height: 43, flexDirection: 'row', alignItems: 'center', gap: 18, paddingHorizontal: 12, borderRadius: 5, borderWidth: 1, borderColor: '#DFE5EE', backgroundColor: '#FFFFFF' },
+  option: { height: 43, flexDirection: 'row', alignItems: 'center', gap: 18, paddingHorizontal: 12, borderRadius: 5, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface },
   optionP: { height: 40, gap: 16 },
-  optChosen: { borderWidth: 1.5, borderColor: BLUE, backgroundColor: '#F1F6FF' },
-  optRight: { borderWidth: 1.5, borderColor: GREEN, backgroundColor: '#F1FBF4' },
-  optWrong: { borderWidth: 1.5, borderColor: RED, backgroundColor: '#FFF4F4' },
-  letter: { width: 26, height: 26, alignItems: 'center', justifyContent: 'center', borderRadius: 13, backgroundColor: '#EEF2F7' },
+  optChosen: { borderWidth: 1.5, borderColor: BLUE, backgroundColor: Maple.blueSoft },
+  optRight: { borderWidth: 1.5, borderColor: GREEN, backgroundColor: Maple.successSoft },
+  optWrong: { borderWidth: 1.5, borderColor: RED, backgroundColor: Maple.errorSoft },
+  letter: { width: 26, height: 26, alignItems: 'center', justifyContent: 'center', borderRadius: 13, backgroundColor: Maple.blueSelected },
   letterP: { width: 24, height: 24 },
   letterBlue: { backgroundColor: BLUE },
   letterRed: { backgroundColor: RED },
   letterText: { fontSize: 13, fontWeight: '600', color: INK },
-  letterTextOn: { color: '#FFFFFF' },
+  letterTextOn: { color: Maple.surface },
   optText: { flex: 1, fontSize: 14, color: INK },
   optTextP: { fontSize: 13 },
   optTextOn: { fontWeight: '700' },
   badge: { width: 22, height: 22, alignItems: 'center', justifyContent: 'center', borderRadius: 11 },
-  answer: { minHeight: 73, flexDirection: 'row', alignItems: 'center', gap: 16, paddingHorizontal: 16, paddingVertical: 12, borderRadius: 8, backgroundColor: '#EAF7EF' },
+  answer: { minHeight: 73, flexDirection: 'row', alignItems: 'center', gap: 16, paddingHorizontal: 16, paddingVertical: 12, borderRadius: 8, backgroundColor: Maple.successSoft },
   answerP: { minHeight: 60, gap: 12, paddingHorizontal: 12 },
-  answerWrong: { backgroundColor: '#FDEEEE' },
-  answerIdle: { backgroundColor: '#F1F4F8' },
+  answerWrong: { backgroundColor: Maple.errorSoft },
+  answerIdle: { backgroundColor: Maple.blueSoft },
   answerIcon: { width: 38, height: 38, alignItems: 'center', justifyContent: 'center', borderRadius: 19, backgroundColor: GREEN },
   answerIconP: { width: 32, height: 32, borderRadius: 16 },
-  answerTitle: { fontSize: 15, fontWeight: '700', color: '#1F3A2B' },
+  answerTitle: { fontSize: 15, fontWeight: '700', color: Palette.green950b },
   answerTitleP: { fontSize: 13.5 },
   answerSub: { marginTop: 4, fontSize: 13, color: BODY },
   answerSubP: { fontSize: 12 },

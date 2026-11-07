@@ -2,6 +2,7 @@
 import type { Incident } from '@/features/command/logic/ops';
 
 import { type KpiData, wave } from './shared';
+import { Maple } from '@/constants/maple';
 
 export const stats: readonly KpiData[] = [
   { label: 'Platform Status', value: 'Operational', caption: 'All systems healthy', icon: 'check', tone: 'green', valueTone: 'green' },
@@ -40,13 +41,13 @@ export const topQueries: readonly { q: string; ms: number }[] = [
 
 export const river = { processed: 24810, pending: 312, failed: 7, avgMin: 1.2 };
 export const queues: readonly { name: string; jobs: number; color: string }[] = [
-  { name: 'transcription', jobs: 8420, color: '#1E6BF0' },
-  { name: 'digest', jobs: 5210, color: '#22A55A' },
-  { name: 'payouts', jobs: 3980, color: '#A855F7' },
-  { name: 'notifications', jobs: 2420, color: '#F59E0B' },
-  { name: 'analytics', jobs: 1860, color: '#93C5FD' },
+  { name: 'transcription', jobs: 8420, color: Maple.blue },
+  { name: 'digest', jobs: 5210, color: Maple.successText },
+  { name: 'payouts', jobs: 3980, color: Maple.blue },
+  { name: 'notifications', jobs: 2420, color: Maple.warning },
+  { name: 'analytics', jobs: 1860, color: Maple.blueLine },
   { name: 'reports', jobs: 1120, color: '#F87171' },
-  { name: 'emails', jobs: 800, color: '#CBD5E1' },
+  { name: 'emails', jobs: 800, color: Maple.borderStrong },
 ];
 
 export const livekit = { rooms: 1248, participants: 18320, rtt: 86, loss: 0.4 };

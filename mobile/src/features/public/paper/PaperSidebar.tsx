@@ -4,9 +4,10 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Icon } from '@/components/icon';
 
 import { Brand } from '../palette';
+import { Maple } from '@/constants/maple';
 
-const NAVY = '#0E1B3D';
-const NAVY_ON = '#1D3A8A';
+const NAVY = Maple.navy;
+const NAVY_ON = Maple.blueHover;
 
 interface Props {
   boards: readonly { label: string; href: string }[];

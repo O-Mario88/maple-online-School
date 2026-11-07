@@ -2,6 +2,7 @@ import { useSyncExternalStore } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { currentToast, subscribeToast } from '@/lib/toast';
+import { Maple } from '@/constants/maple';
 
 /** Shows the app-wide toast above everything; mounted once in the root layout. */
 export function ToastHost() {
@@ -16,5 +17,5 @@ export function ToastHost() {
 
 const styles = StyleSheet.create({
   wrap: { position: 'absolute', left: 16, right: 16, bottom: 96, alignItems: 'center', zIndex: 1000 },
-  text: { maxWidth: 520, paddingHorizontal: 14, paddingVertical: 10, borderRadius: 10, backgroundColor: 'rgba(11,20,36,0.92)', fontSize: 13, color: '#FFFFFF', textAlign: 'center', overflow: 'hidden' },
+  text: { maxWidth: 520, paddingHorizontal: 14, paddingVertical: 10, borderRadius: 10, backgroundColor: 'rgba(11,20,36,0.92)', fontSize: 13, color: Maple.surface, textAlign: 'center', overflow: 'hidden' },
 });

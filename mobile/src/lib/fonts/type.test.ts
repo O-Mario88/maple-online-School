@@ -1,4 +1,4 @@
-import { INTER, textStyle, typeWeight } from './type';
+import { fitProps, fitScale, headingLevel, INTER, isFigure, PAGE_TITLE, textStyle, typeWeight } from './type';
 
 describe('the standard weights: 400 body, 500 labels, 600 subheadings, 700 headings', () => {
   test('headings (24px and up, set semibold or heavier) are 700', () => {
@@ -53,5 +53,58 @@ describe('the default font', () => {
 
   test('the heading weights apply on top of the page style', () => {
     expect(textStyle({ fontSize: 34, fontWeight: '800' }, false)).toEqual({ base: { fontFamily: INTER }, after: { fontWeight: '700' } });
+  });
+});
+
+describe('shrinking one line of text to fit (the web side of adjustsFontSizeToFit)', () => {
+  test('text that fits keeps its size', () => {
+    expect(fitScale(120, 100, 0.85)).toBe(1);
+    expect(fitScale(100, 100, 0.85)).toBe(1);
+  });
+
+  test('text a little too wide shrinks just enough to fit', () => {
+    expect(fitScale(60, 63, 0.85)).toBeCloseTo(60 / 63, 3);
+  });
+
+  test('never shrinks below the smallest scale the text allows', () => {
+    expect(fitScale(20, 78, 0.85)).toBe(0.85);
+    expect(fitScale(20, 78, undefined)).toBe(0.5);
+  });
+
+  test('a box with no width yet leaves the size alone', () => {
+    expect(fitScale(0, 80, 0.85)).toBe(1);
+    expect(fitScale(80, 0, 0.85)).toBe(1);
+  });
+});
+
+describe('figures shrink instead of being cut off', () => {
+  test('amounts, counts and percentages are figures', () => {
+    for (const s of ['UGX 420K', 'UGX 185.6M', '1,200,000', '92%', '4.8', '$1,250.00', '+12.5%', '3 / 5', 'KES 9,000']) expect(isFigure(s)).toBe(true);
+  });
+
+  test('words, names and mixed sentences are not', () => {
+    for (const s of ['Dashboard', 'Paid', 'O-Level Mathematics', 'Oct 10, 2026', 'Students needing support', '', 'S3 East']) expect(isFigure(s)).toBe(false);
+  });
+
+  test('a one-line figure fits itself unless the screen chose otherwise', () => {
+    expect(fitProps({ numberOfLines: 1, children: 'UGX 185.6M' })).toEqual({ adjustsFontSizeToFit: true, minimumFontScale: 0.6 });
+    expect(fitProps({ numberOfLines: 1, children: ['1,200', ',000'] })).toEqual({ adjustsFontSizeToFit: true, minimumFontScale: 0.6 });
+    expect(fitProps({ numberOfLines: 1, children: 'UGX 185.6M', adjustsFontSizeToFit: false })).toEqual({});
+    expect(fitProps({ numberOfLines: 2, children: 'UGX 185.6M' })).toEqual({});
+    expect(fitProps({ numberOfLines: 1, children: 'Dashboard' })).toEqual({});
+  });
+});
+
+describe('heading levels', () => {
+  test('a header with no level is a section heading (level 2); the page title asks for level 1', () => {
+    expect(headingLevel({ accessibilityRole: 'header' })).toBe(2);
+    expect(headingLevel({ role: 'heading' })).toBe(2);
+    expect(headingLevel({ accessibilityRole: 'header', 'aria-level': 1 })).toBe(1);
+    expect(headingLevel({ ...PAGE_TITLE })).toBe(1);
+  });
+
+  test('text that is not a heading gets no level', () => {
+    expect(headingLevel({})).toBeUndefined();
+    expect(headingLevel({ accessibilityRole: 'button' })).toBeUndefined();
   });
 });

@@ -1,10 +1,10 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
-import { useShell } from '@/components/ui';
+import { useContentWidth, useShell } from '@/components/ui';
 import { LearnerPhoneTop } from '@/features/learner/dashboard/DashPhone';
 import { ProgressRing } from '@/features/learner/exam/ExamNav';
 import { AnnotatedStrip, AnnotatedViewer, VideoFeedback } from '@/features/learner/feedback/FeedbackMedia';
@@ -16,6 +16,10 @@ import { Crumbs } from '@/features/learner/work/WorkSide';
 import { RefScale } from '@/features/public/home/RefScale';
 import { identifierFor } from '@/lib/cbc';
 import { mockData } from '@/lib/mock';
+import { Maple } from '@/constants/maple';
+import { PageScroll } from '@/components/shell/PageScroll';
+import { PAGE_TITLE } from '@/lib/fonts/type';
+import { Palette } from '@/constants/palette';
 
 /** The feedback reference's page (x 18–1170 at 1536 wide); the desktop layout uses its pixels. */
 const FB_REF_WIDTH = 1152;
@@ -23,7 +27,7 @@ const MAX_DESK_WIDTH = 1400;
 const TOAST_MS = 2600;
 const DESK_TABS = ['Overview', 'Detailed Feedback', 'Annotated Work', 'Voice/Video Feedback', 'Remedial Practice'] as const;
 const PHONE_TABS = ['Overview', 'Feedback', 'Annotated Work'] as const;
-const PURPLE = '#7C3AED';
+const BRAND_BLUE = Maple.blue;
 
 type Actions = { practice: () => void; download: () => void };
 
@@ -43,7 +47,7 @@ function NextSteps({ f, a }: { f: Feedback; a: Actions }) {
       {f.next.map((n, i) => (
         <View key={n.key} style={[styles.nextCard, i === 0 ? styles.nextFirst : styles.nextOther]}>
           <View style={styles.nextRow}>
-            <Image source={n.icon} style={styles.nextIcon} />
+            <Image decorative source={n.icon} style={styles.nextIcon} />
             <View style={styles.flex}>
               <Text style={styles.nextCardTitle}>{n.title}</Text>
               <Text style={styles.nextCardSub}>{n.sub}</Text>
@@ -51,7 +55,7 @@ function NextSteps({ f, a }: { f: Feedback; a: Actions }) {
           </View>
           <Pressable style={[styles.nextBtn, i === 0 ? styles.nextBtnFill : styles.nextBtnLine]} onPress={() => nextAction(n.key, a)} accessibilityRole="button">
             <Text style={[styles.nextBtnText, i > 0 && styles.blue]}>{n.action}</Text>
-            <Icon name="arrowRight" size={16} color={i === 0 ? '#FFFFFF' : BLUE} />
+            <Icon name="arrowRight" size={16} color={i === 0 ? Maple.surface : BLUE} />
           </Pressable>
         </View>
       ))}
@@ -68,7 +72,7 @@ function Desktop({ f, a }: { f: Feedback; a: Actions }) {
         <Crumbs items={f.crumbs} />
       </View>
       <View style={styles.titleRow}>
-        <Text style={styles.title} accessibilityRole="header">
+        <Text style={styles.title} {...PAGE_TITLE}>
           {f.title}
         </Text>
         <GradedChip />
@@ -112,7 +116,7 @@ function PhoneScore({ f }: { f: Feedback }) {
     <View style={styles.cardP}>
       <Text style={styles.cardTitleP}>Your Score</Text>
       <View style={styles.scoreRowP}>
-        <ProgressRing value={t.percent / 100} size={84} stroke={8} color={GREEN} track="#DDF3E5" labelSize={18} />
+        <ProgressRing value={t.percent / 100} size={84} stroke={8} color={GREEN} track={Maple.successSoft} labelSize={18} />
         <View style={styles.flex}>
           <Text style={styles.scoreP}>{`${t.score} / ${t.max}`}</Text>
           <Text style={styles.verdictP}>{f.verdict}</Text>
@@ -134,10 +138,10 @@ function Phone({ f, a, avatar }: { f: Feedback; a: Actions; avatar: number }) {
   return (
     <View style={styles.phoneRoot}>
       <LearnerPhoneTop avatar={avatar} />
-      <ScrollView contentContainerStyle={styles.phone}>
+      <PageScroll contentContainerStyle={styles.phone}>
         <Crumbs items={f.phoneCrumbs} phone />
         <View style={styles.titleRowP}>
-          <Text style={styles.titleP} accessibilityRole="header">
+          <Text style={styles.titleP} {...PAGE_TITLE}>
             {f.title.replace(': ', ':\n')}
           </Text>
           <GradedChip small />
@@ -164,17 +168,17 @@ function Phone({ f, a, avatar }: { f: Feedback; a: Actions; avatar: number }) {
               <AnnotatedStrip f={f} />
             </View>
             <Pressable style={[styles.btnP, styles.btnFill]} onPress={a.practice} accessibilityRole="button">
-              <Icon name="send" size={15} color="#FFFFFF" />
+              <Icon name="send" size={15} color={Maple.surface} />
               <Text style={styles.btnFillText}>Start Remedial Practice</Text>
             </Pressable>
             <View style={styles.btnRow}>
               <Pressable style={[styles.btnP, styles.btnGreen]} onPress={() => router.push('/inbox')} accessibilityRole="button">
                 <Icon name="clock" size={15} color={GREEN} />
-                <Text style={[styles.btnLineText, { color: '#15803D' }]}>Open Chat</Text>
+                <Text style={[styles.btnLineText, { color: Maple.successText }]}>Open Chat</Text>
               </Pressable>
               <Pressable style={[styles.btnP, styles.btnPurple]} onPress={() => router.push('/learn/live')} accessibilityRole="button">
-                <Icon name="video" size={15} color={PURPLE} />
-                <Text style={[styles.btnLineText, { color: PURPLE }]}>Book Tutor</Text>
+                <Icon name="video" size={15} color={BRAND_BLUE} />
+                <Text style={[styles.btnLineText, { color: BRAND_BLUE }]}>Book Tutor</Text>
               </Pressable>
             </View>
           </>
@@ -194,7 +198,7 @@ function Phone({ f, a, avatar }: { f: Feedback; a: Actions; avatar: number }) {
             <AnnotatedViewer f={f} onDownload={a.download} />
           </View>
         ) : null}
-      </ScrollView>
+      </PageScroll>
     </View>
   );
 }
@@ -210,7 +214,7 @@ export default function FeedbackScreen() {
 
 function FeedbackView({ f, avatar }: { f: Feedback; avatar: number }) {
   const { wide } = useShell();
-  const { width } = useWindowDimensions();
+  const width = useContentWidth();
   const [practice, setPractice] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const a: Actions = {
@@ -223,11 +227,11 @@ function FeedbackView({ f, avatar }: { f: Feedback; avatar: number }) {
   return (
     <View style={styles.flex}>
       {wide ? (
-        <ScrollView style={styles.deskBg} contentContainerStyle={styles.deskWrap}>
+        <PageScroll style={styles.deskBg} contentContainerStyle={styles.deskWrap}>
           <RefScale width={Math.min(width - 48, MAX_DESK_WIDTH)} refWidth={FB_REF_WIDTH}>
             <Desktop f={f} a={a} />
           </RefScale>
-        </ScrollView>
+        </PageScroll>
       ) : (
         <Phone f={f} a={a} avatar={avatar} />
       )}
@@ -244,22 +248,22 @@ function FeedbackView({ f, avatar }: { f: Feedback; avatar: number }) {
 const styles = StyleSheet.create({
   flex: { flex: 1 },
   blue: { color: BLUE },
-  deskBg: { backgroundColor: '#EEF3FB' },
+  deskBg: { backgroundColor: Maple.blueSoft },
   deskWrap: { alignItems: 'center', paddingVertical: 16 },
-  canvas: { width: FB_REF_WIDTH, height: 935, borderRadius: 12, backgroundColor: '#F4F8FD' },
+  canvas: { width: FB_REF_WIDTH, height: 935, borderRadius: 12, backgroundColor: Maple.blueSoft },
   crumbsPos: { position: 'absolute', left: 23, top: 21 },
   titleRow: { position: 'absolute', left: 23, top: 50, flexDirection: 'row', alignItems: 'center', gap: 12 },
   title: { fontSize: 26, fontWeight: '800', color: INK, letterSpacing: -0.6 },
   sub: { position: 'absolute', left: 23, top: 89, fontSize: 13, color: BODY },
-  kind: { paddingHorizontal: 9, paddingVertical: 5, borderRadius: 6, backgroundColor: '#E6EEFC', fontSize: 12.5, fontWeight: '600', color: '#1450C8', overflow: 'hidden' },
+  kind: { paddingHorizontal: 9, paddingVertical: 5, borderRadius: 6, backgroundColor: Maple.blueSelected, fontSize: 12.5, fontWeight: '600', color: Maple.blueHover, overflow: 'hidden' },
   scorePos: { position: 'absolute', left: 749, top: 24, width: 390 },
-  tabs: { position: 'absolute', left: 20, top: 126, width: 652, height: 38, flexDirection: 'row', borderRadius: 6, backgroundColor: '#FFFFFF' },
+  tabs: { position: 'absolute', left: 20, top: 126, width: 652, height: 38, flexDirection: 'row', borderRadius: 6, backgroundColor: Maple.surface },
   tab: { justifyContent: 'center', paddingHorizontal: 18 },
   tabText: { fontSize: 12.5, color: INK },
   tabOn: { color: BLUE, fontWeight: '600' },
-  tabLine: { position: 'absolute', left: 0, right: 0, bottom: 0, height: 2.5, backgroundColor: BLUE },
-  card: { position: 'absolute', padding: 13, borderRadius: 8, backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#EAEFF6' },
-  focus: { borderColor: '#A9C4F5' },
+  tabLine: { position: 'absolute', left: 0, right: 0, bottom: 0, height: 3, backgroundColor: BLUE },
+  card: { position: 'absolute', padding: 13, borderRadius: 8, backgroundColor: Maple.surface, borderWidth: 1, borderColor: Maple.blueSelected },
+  focus: { borderColor: Maple.blueLine },
   rubric: { left: 20, top: 173, width: 347, height: 368 },
   teacher: { left: 20, top: 551, width: 347, height: 219 },
   annotated: { left: 377, top: 173, width: 437, height: 597 },
@@ -269,7 +273,7 @@ const styles = StyleSheet.create({
   nextIntro: { width: 130, paddingLeft: 8, paddingTop: 6 },
   nextTitle: { fontSize: 19, fontWeight: '800', color: INK, letterSpacing: -0.4 },
   nextText: { marginTop: 8, fontSize: 12.5, lineHeight: 17, color: BODY },
-  nextCard: { justifyContent: 'space-between', padding: 12, borderRadius: 8, borderWidth: 1, borderColor: '#EAEFF6' },
+  nextCard: { justifyContent: 'space-between', padding: 12, borderRadius: 8, borderWidth: 1, borderColor: Maple.blueSelected },
   nextFirst: { width: 304 },
   nextOther: { width: 314 },
   nextRow: { flexDirection: 'row', gap: 16 },
@@ -277,33 +281,33 @@ const styles = StyleSheet.create({
   nextCardTitle: { fontSize: 13, fontWeight: '600', color: INK },
   nextCardSub: { marginTop: 4, fontSize: 12, lineHeight: 16, color: BODY },
   nextBtn: { height: 36, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 12, marginLeft: 60, borderRadius: 5 },
-  nextBtnFill: { backgroundColor: '#0B6BFF' },
-  nextBtnLine: { borderWidth: 1.5, borderColor: '#7AA6F5', backgroundColor: '#FFFFFF' },
-  nextBtnText: { fontSize: 13.5, fontWeight: '500', color: '#FFFFFF' },
-  phoneRoot: { flex: 1, backgroundColor: '#F7F9FC' },
+  nextBtnFill: { backgroundColor: Maple.blue },
+  nextBtnLine: { borderWidth: 1.5, borderColor: Maple.blue, backgroundColor: Maple.surface },
+  nextBtnText: { fontSize: 13.5, fontWeight: '500', color: Maple.surface },
+  phoneRoot: { flex: 1, backgroundColor: Maple.blueSoft },
   phone: { gap: 12, padding: 16, paddingBottom: 110 },
   titleRowP: { flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between', gap: 8 },
   titleP: { flexShrink: 1, fontSize: 20, fontWeight: '800', color: INK, letterSpacing: -0.4 },
   scoreLineP: { marginTop: -6, alignSelf: 'flex-end', fontSize: 16, color: INK },
   scoreLineBold: { fontWeight: '800' },
-  tabsP: { flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: '#E3E8F0' },
+  tabsP: { flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: Maple.blueSelected },
   tabP: { flex: 1, height: 38, alignItems: 'center', justifyContent: 'center' },
   tabTextP: { fontSize: 12, color: INK },
-  cardP: { padding: 12, borderRadius: 10, borderWidth: 1, borderColor: '#E6EBF2', backgroundColor: '#FFFFFF' },
+  cardP: { padding: 12, borderRadius: 10, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface },
   cardTitleP: { fontSize: 13.5, fontWeight: '700', color: INK },
   scoreRowP: { flexDirection: 'row', alignItems: 'center', gap: 14, marginTop: 10 },
   scoreP: { fontSize: 14, fontWeight: '700', color: INK },
-  verdictP: { marginTop: 4, fontSize: 15, fontWeight: '700', color: '#1F3A2B' },
+  verdictP: { marginTop: 4, fontSize: 15, fontWeight: '700', color: Palette.green950b },
   verdictTextP: { marginTop: 3, fontSize: 11.5, lineHeight: 16, color: BODY },
-  fold: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 12, paddingTop: 12, borderTopWidth: 1, borderTopColor: '#EEF1F6' },
+  fold: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 12, paddingTop: 12, borderTopWidth: 1, borderTopColor: Maple.blueSelected },
   foldText: { fontSize: 12.5, fontWeight: '700', color: INK },
   btnP: { height: 44, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, borderRadius: 6 },
-  btnFill: { backgroundColor: '#0B6BFF' },
-  btnFillText: { fontSize: 13.5, fontWeight: '500', color: '#FFFFFF' },
+  btnFill: { backgroundColor: Maple.blue },
+  btnFillText: { fontSize: 13.5, fontWeight: '500', color: Maple.surface },
   btnRow: { flexDirection: 'row', gap: 12 },
-  btnGreen: { flex: 1, borderWidth: 1.5, borderColor: GREEN, backgroundColor: '#FFFFFF' },
-  btnPurple: { flex: 1, borderWidth: 1.5, borderColor: PURPLE, backgroundColor: '#FFFFFF' },
+  btnGreen: { flex: 1, borderWidth: 1.5, borderColor: GREEN, backgroundColor: Maple.surface },
+  btnPurple: { flex: 1, borderWidth: 1.5, borderColor: BRAND_BLUE, backgroundColor: Maple.surface },
   btnLineText: { fontSize: 13.5, fontWeight: '500' },
   toast: { position: 'absolute', left: 16, right: 16, bottom: 96, alignItems: 'center' },
-  toastText: { maxWidth: 520, paddingHorizontal: 14, paddingVertical: 10, borderRadius: 10, backgroundColor: 'rgba(11,20,36,0.92)', fontSize: 13, color: '#FFFFFF', textAlign: 'center', overflow: 'hidden' },
+  toastText: { maxWidth: 520, paddingHorizontal: 14, paddingVertical: 10, borderRadius: 10, backgroundColor: 'rgba(11,20,36,0.92)', fontSize: 13, color: Maple.surface, textAlign: 'center', overflow: 'hidden' },
 });

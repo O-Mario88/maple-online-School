@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { type Href, router } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
@@ -14,11 +14,13 @@ import type { MockData } from '@/mock';
 import { AdminDesk, AdminPhone, SelectBox } from '../kit/AdminKit';
 import { HubHeader, HubTabs, KpiCard, KpiRow, PrivacyNote } from '../kit/HubKit';
 import { conversionRate, ctr, reasonShares, stageShares } from './growth';
+import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 type Admin = MockData['schoolAdmin'];
 
-const PURPLE = '#5B3FD9';
-const BANDS = ['#C9D8FF', '#CBCBFD', '#D4C8FC', '#DDCDFB', '#E6D3FA', '#EEDCFA'];
+const BRAND_BLUE = Maple.blue;
+const BANDS = [Maple.blueLine, Maple.blueLine, Maple.blueLine, Maple.blueLine, Maple.blueSelected, Maple.blueSelected];
 const PRIVACY = 'Totals only: Maple never shows you who viewed, liked, saved or was recommended your school. Groups under 10 people are merged or withheld.';
 const openProfile = () => router.push('/admin/school-profile' as Href);
 
@@ -77,14 +79,14 @@ function TrendCard({ x }: { x: X }) {
       <View style={s.legend}>
         <View style={[s.dot, { backgroundColor: BLUE }]} />
         <Text style={s.small}>Profile Views</Text>
-        <View style={[s.dot, { backgroundColor: PURPLE }]} />
+        <View style={[s.dot, { backgroundColor: BRAND_BLUE }]} />
         <Text style={s.small}>Applications</Text>
       </View>
       <LineChart
         labels={t.labels}
         series={[
           { name: 'Profile Views', color: BLUE, values: t.views },
-          { name: 'Applications', color: PURPLE, values: t.applications },
+          { name: 'Applications', color: BRAND_BLUE, values: t.applications },
         ]}
         min={0}
         max={10_000}
@@ -102,11 +104,11 @@ function ReasonsCard({ x }: { x: X }) {
       {x.reasons.length ? (
         x.reasons.map((r) => (
           <View key={r.label} style={s.reason}>
-            <Icon name={r.icon} size={16} color={PURPLE} />
+            <Icon name={r.icon} size={16} color={BRAND_BLUE} />
             <Text style={[s.body, s.reasonLabel]} numberOfLines={1}>
               {r.label}
             </Text>
-            <Bar value={r.pct / 100} color={r.label === 'Other' ? '#B7C0D6' : '#4F46E5'} height={8} style={s.flex} />
+            <Bar value={r.pct / 100} color={r.label === 'Other' ? Palette.blue300 : Maple.blue} height={8} style={s.flex} />
             <Text style={s.strong}>{`${r.pct}%`}</Text>
           </View>
         ))
@@ -121,10 +123,10 @@ function ReasonsCard({ x }: { x: X }) {
 function InsightsCard({ x, all = false }: { x: X; all?: boolean }) {
   return (
     <Card style={s.card}>
-      <CardHead title="Growth Insights" size={16} icon={<Icon name="sparkle" size={18} color={PURPLE} />} />
+      <CardHead title="Growth Insights" size={16} icon={<Icon name="sparkle" size={18} color={BRAND_BLUE} />} />
       {x.g.insights.map((i) => (
         <View key={i.text} style={s.insight}>
-          <Icon name={i.done ? 'tick' : 'alert'} size={16} color={i.done ? GREEN : '#E8A317'} />
+          <Icon name={i.done ? 'tick' : 'alert'} size={16} color={i.done ? GREEN : Maple.warning} />
           <Text style={[s.body, s.flex]}>{i.text}</Text>
           {all && !i.done ? <Btn label="Fix" kind="soft" height={30} onPress={openProfile} /> : null}
         </View>
@@ -182,7 +184,7 @@ function CampaignsCard({ x }: { x: X }) {
       <CardHead title="Campaign Performance" size={16} link="Manage in Admissions" onLink={() => router.push('/admin/admissions' as Href)} />
       {x.campaigns.map((c) => (
         <View key={c.id} style={s.campaign}>
-          <Image source={c.photo} style={s.campaignPhoto} contentFit="cover" />
+          <Image decorative source={c.photo} style={s.campaignPhoto} contentFit="cover" />
           <View style={s.flex}>
             <Text style={s.strong}>{c.title}</Text>
             <Text style={s.small}>{c.sub}</Text>
@@ -307,9 +309,9 @@ const s = StyleSheet.create({
   reason: { flexDirection: 'row', alignItems: 'center', gap: 10, height: 30 },
   reasonLabel: { width: 170 },
   insight: { flexDirection: 'row', alignItems: 'center', gap: 10, minHeight: 26 },
-  sumRow: { flexDirection: 'row', justifyContent: 'space-between', gap: 12, paddingVertical: 6, borderBottomWidth: 1, borderBottomColor: '#EEF2F8' },
-  campaign: { flexDirection: 'row', alignItems: 'center', gap: 14, paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: '#EEF2F8', flexWrap: 'wrap' },
+  sumRow: { flexDirection: 'row', justifyContent: 'space-between', gap: 12, paddingVertical: 6, borderBottomWidth: 1, borderBottomColor: Maple.blueSelected },
+  campaign: { flexDirection: 'row', alignItems: 'center', gap: 14, paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: Maple.blueSelected, flexWrap: 'wrap' },
   campaignPhoto: { width: 72, height: 48, borderRadius: 8 },
   metric: { minWidth: 110, fontSize: 12.5, color: NAVY },
-  grow: { backgroundColor: PURPLE },
+  grow: { backgroundColor: BRAND_BLUE },
 });

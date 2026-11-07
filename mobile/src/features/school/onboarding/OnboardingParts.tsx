@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { Fragment, type ReactNode, useState } from 'react';
 import { Pressable, type StyleProp, StyleSheet, Text, TextInput, View, type ViewStyle } from 'react-native';
 
@@ -7,6 +7,7 @@ import { Btn, Card, UnderTabs } from '@/features/portal/PortalParts';
 import { BLUE, BODY, GREEN, LINE, MUTED, NAVY, RED, SELECT, SOFT, WHITE } from '@/features/portal/tokens';
 import { toast } from '@/lib/toast';
 import type { SchoolAdmin } from '@/mock/portal';
+import { Maple } from '@/constants/maple';
 
 type Onboarding = SchoolAdmin['onboarding'];
 export type Profile = Onboarding['profile'];
@@ -80,7 +81,7 @@ function ColorField({ label, value, onChange }: { label: string; value: string; 
     <View style={styles.field}>
       <Text style={styles.fieldLabel}>{label}</Text>
       <View style={[styles.input, styles.colorRow]}>
-        <View style={[styles.swatch, { backgroundColor: isHex(value) ? value : '#CBD5E1' }]} />
+        <View style={[styles.swatch, { backgroundColor: isHex(value) ? value : Maple.borderStrong }]} />
         <TextInput style={styles.colorInput} value={value} onChangeText={onChange} autoCapitalize="characters" accessibilityLabel={label} />
       </View>
     </View>
@@ -158,7 +159,7 @@ export function Preview({ p, style }: { p: Profile; style?: StyleProp<ViewStyle>
   return (
     <Panel title="Preview" style={[styles.previewPanel, style]}>
       <View style={styles.previewCard}>
-        <Image source={p.crest} style={styles.previewCrest} contentFit="contain" />
+        <Image decorative source={p.crest} style={styles.previewCrest} contentFit="contain" />
         <Text style={[styles.previewName, isHex(p.primary) && { color: p.primary }]} numberOfLines={2}>
           {p.name || 'Your school'}
         </Text>
@@ -169,7 +170,7 @@ export function Preview({ p, style }: { p: Profile; style?: StyleProp<ViewStyle>
           <Icon name="people" size={18} color={BODY} />
           <Text style={styles.previewMetaText}>{p.type}</Text>
         </View>
-        <Image source={p.banner} style={styles.previewBanner} contentFit="cover" />
+        <Image decorative source={p.banner} style={styles.previewBanner} contentFit="cover" />
       </View>
     </Panel>
   );
@@ -208,7 +209,7 @@ export function CurriculumCard({ o, phone = false }: { o: Onboarding; phone?: bo
               accessibilityState={{ checked: on }}
               accessibilityLabel={`${c.name}: ${c.body.replace('\n', ' ')}`}>
               <View style={styles.curriculumHead}>
-                {c.flag ? <Image source={c.flag} style={styles.flag} contentFit="cover" /> : <Icon name="doc" size={24} color={BLUE} />}
+                {c.flag ? <Image decorative source={c.flag} style={styles.flag} contentFit="cover" /> : <Icon name="doc" size={24} color={BLUE} />}
                 <Text style={styles.curriculumName}>{c.name}</Text>
               </View>
               <Text style={styles.curriculumBody}>{c.body}</Text>
@@ -328,7 +329,7 @@ const styles = StyleSheet.create({
   pair: { flexDirection: 'row', gap: 16 },
   stepper: { flexDirection: 'row', alignItems: 'center', paddingVertical: 18, paddingHorizontal: 24 },
   step: { flexDirection: 'row', alignItems: 'center', gap: 14 },
-  stepLine: { flex: 1, height: 2, marginHorizontal: 18, backgroundColor: '#D7E2F3', minWidth: 30 },
+  stepLine: { flex: 1, height: 2, marginHorizontal: 18, backgroundColor: Maple.blueLine, minWidth: 30 },
   stepDot: { width: 50, height: 50, borderRadius: 25, alignItems: 'center', justifyContent: 'center', borderWidth: 2, borderColor: NAVY, backgroundColor: WHITE },
   stepDotOn: { borderColor: BLUE, backgroundColor: BLUE },
   stepDotDone: { borderColor: GREEN, backgroundColor: GREEN },
@@ -347,7 +348,7 @@ const styles = StyleSheet.create({
   logoBox: { width: 190, alignItems: 'center', paddingTop: 14, borderRadius: 12, borderWidth: 1, borderColor: LINE, overflow: 'hidden' },
   logoBoxPhone: { width: '100%' },
   crest: { width: 110, height: 110, marginBottom: 12 },
-  logoBtn: { alignSelf: 'stretch', alignItems: 'center', justifyContent: 'center', height: 44, backgroundColor: SELECT, borderTopWidth: 1, borderColor: '#C7DAFB' },
+  logoBtn: { alignSelf: 'stretch', alignItems: 'center', justifyContent: 'center', height: 44, backgroundColor: SELECT, borderTopWidth: 1, borderColor: Maple.blueLine },
   logoBtnText: { fontSize: 15, fontWeight: '600', color: BLUE },
   note: { fontSize: 13.5, color: MUTED },
   banner: { width: '100%', aspectRatio: 276 / 105, borderRadius: 12 },
@@ -370,7 +371,7 @@ const styles = StyleSheet.create({
   curricula: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
   curriculum: { flexBasis: '30%', flexGrow: 1, minWidth: 0, gap: 8, padding: 12, borderRadius: 12, borderWidth: 1, borderColor: LINE, backgroundColor: WHITE },
   curriculumPhone: { flexBasis: '45%' },
-  curriculumOn: { borderColor: BLUE, borderWidth: 1.5, backgroundColor: '#F1F6FE' },
+  curriculumOn: { borderColor: BLUE, borderWidth: 1.5, backgroundColor: Maple.blueSoft },
   curriculumHead: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   curriculumName: { flex: 1, minWidth: 0, paddingRight: 16, fontSize: 15, fontWeight: '700', color: NAVY },
   curriculumBody: { fontSize: 12.5, lineHeight: 18, color: BODY },
@@ -378,7 +379,7 @@ const styles = StyleSheet.create({
   tick: { position: 'absolute', top: 6, right: 6 },
   info: { flexDirection: 'row', alignItems: 'center', gap: 16, padding: 18, borderRadius: 12, backgroundColor: SELECT },
   infoText: { flex: 1, fontSize: 14, lineHeight: 20, color: BODY },
-  drop: { alignItems: 'center', gap: 8, padding: 20, borderRadius: 12, borderWidth: 1.5, borderStyle: 'dashed', borderColor: '#B7CCF3', backgroundColor: '#F7FAFF' },
+  drop: { alignItems: 'center', gap: 8, padding: 20, borderRadius: 12, borderWidth: 1.5, borderStyle: 'dashed', borderColor: Maple.blueLine, backgroundColor: Maple.blueSoft },
   dropTitle: { fontSize: 16, fontWeight: '700', color: NAVY },
   dropBody: { fontSize: 14, lineHeight: 20, color: BODY, textAlign: 'center' },
   chooseBtn: { paddingHorizontal: 30, marginTop: 4 },
@@ -389,8 +390,8 @@ const styles = StyleSheet.create({
   checkText: { flex: 1, fontSize: 14, color: BODY },
   plans: { flexDirection: 'row', gap: 12 },
   plan: { flex: 1, minWidth: 0, gap: 6, padding: 12, borderRadius: 12, borderWidth: 1, borderColor: LINE, backgroundColor: WHITE },
-  planOn: { borderColor: '#34C17A', borderWidth: 2, backgroundColor: '#F4FBF7' },
-  recommended: { alignSelf: 'flex-start', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 6, backgroundColor: '#22A55A' },
+  planOn: { borderColor: Maple.success, borderWidth: 2, backgroundColor: Maple.successSoft },
+  recommended: { alignSelf: 'flex-start', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 6, backgroundColor: Maple.successText },
   recommendedText: { fontSize: 12.5, fontWeight: '700', color: WHITE },
   planName: { fontSize: 15, fontWeight: '800', color: NAVY },
   planBody: { fontSize: 12, lineHeight: 16, color: BODY },
@@ -401,7 +402,7 @@ const styles = StyleSheet.create({
   billing: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 12 },
   billingText: { fontSize: 15, color: BODY },
   billingOn: { color: NAVY, fontWeight: '600' },
-  save: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 6, backgroundColor: '#E2F6EA' },
+  save: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 6, backgroundColor: Maple.successSoft },
   saveText: { fontSize: 13.5, fontWeight: '600', color: GREEN },
   claim: { alignItems: 'center', gap: 10, padding: 24, borderRadius: 12, backgroundColor: SOFT },
   claimTitle: { fontSize: 17, fontWeight: '700', color: NAVY },

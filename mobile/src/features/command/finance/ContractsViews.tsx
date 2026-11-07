@@ -16,6 +16,7 @@ import type { ContractRow } from '@/mock/command-center/pf-commercial';
 
 import { amount, type FormAsk, FormModal } from './FinForm';
 import { CheckList, FinDesk, FinHead, FinPanel, FinPhone, FinStats, FinTabs, num, PhoneRow, type Promo, RingLegend, ugx } from './FinKit';
+import { Maple } from '@/constants/maple';
 
 type D = CommandData['platformFinance']['commercial'];
 const TODAY = '2026-10-31';
@@ -38,7 +39,7 @@ const TEMPLATES: readonly { name: string; type: ContractType; billing: Billing; 
   { name: 'Content Licence – Annual', type: 'Content License', billing: 'Annual', years: 1, discount: 0 },
   { name: 'Implementation & Training Services', type: 'Service', billing: 'Milestone', years: 1, discount: 0 },
 ];
-const PROMO: Promo = { icon: 'doc', color: '#1E6BF0', title: 'Contracts & Agreements', body: 'Manage school contracts, pricing, commissions, discounts and renewals.' };
+const PROMO: Promo = { icon: 'doc', color: Maple.blue, title: 'Contracts & Agreements', body: 'Manage school contracts, pricing, commissions, discounts and renewals.' };
 const RANGES = ['Last 10 Months', 'This Quarter', 'Year to Date'];
 const FILTERS = { type: ['All Contract Types', ...TYPES], status: ['All Statuses', 'Draft', 'Negotiation', 'Active', 'Renewal Due', 'Expiring', 'Expired', 'Terminated'] } as const;
 
@@ -227,7 +228,7 @@ function useContracts(d: D, me: string) {
 type U = ReturnType<typeof useContracts>;
 
 function Crest({ size = 22 }: { size?: number }) {
-  return <Icon name="shield" size={size} color="#B7791F" />;
+  return <Icon name="shield" size={size} color={Maple.warning} />;
 }
 
 function cols(u: U): readonly Column<ContractRow>[] {
@@ -273,12 +274,12 @@ function Trend({ d, phone = false }: { d: D; phone?: boolean }) {
   const [range, setRange] = useState(RANGES[0]);
   return (
     <FinPanel icon="chart" title="Contract Value Trend" style={!phone && styles.flex} right={phone ? undefined : <RangeBox value={range} options={RANGES} onChange={setRange} width={176} />}>
-      <ComboChart labels={f.labels} bars={[{ name: 'Revenue Billed', color: '#4F86F7', values: f.billed }]} line={{ name: 'Contracted Value', color: '#8B5CF6', values: f.contracted, dots: true }} max={600} lineMax={600} rightAxis={false} every={phone ? 2 : 1} barWidth={phone ? 14 : 28} height={phone ? 190 : 160} format={(v) => (v ? `${Math.round(v)}M` : '0')} />
+      <ComboChart labels={f.labels} bars={[{ name: 'Revenue Billed', color: Maple.blue, values: f.billed }]} line={{ name: 'Contracted Value', color: Maple.blue, values: f.contracted, dots: true }} max={600} lineMax={600} rightAxis={false} every={phone ? 2 : 1} barWidth={phone ? 14 : 28} height={phone ? 190 : 160} format={(v) => (v ? `${Math.round(v)}M` : '0')} />
       <View style={styles.legend}>
         {(
           [
-            ['Revenue Billed', '#4F86F7'],
-            ['Contracted Value', '#8B5CF6'],
+            ['Revenue Billed', Maple.blue],
+            ['Contracted Value', Maple.blue],
           ] as const
         ).map(([l, c]) => (
           <View key={l} style={styles.inline}>

@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { ScrollView, StyleSheet, useWindowDimensions } from 'react-native';
+import { StyleSheet, useWindowDimensions } from 'react-native';
 
 import { useShell } from '@/components/ui';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
@@ -11,6 +11,7 @@ import {
   TeacherLibraryPhone,
 } from '@/features/teacher/library/TeacherLibraryViews';
 import { mockData } from '@/lib/mock';
+import { PageScroll } from '@/components/shell/PageScroll';
 
 /** Inventory 51: Teacher Resource Library & Co-Teaching Collections (`/(teacher)/library`). */
 export default function TeacherLibraryScreen() {
@@ -28,11 +29,11 @@ export default function TeacherLibraryScreen() {
   const l = mock.teacher.teacherLibrary;
   if (!wide) return <TeacherLibraryPhone lib={l} me={me} />;
   return (
-    <ScrollView style={styles.bg}>
+    <PageScroll style={styles.bg}>
       <RefScale width={width} refWidth={TEACHER_LIBRARY_REF_WIDTH}>
         <TeacherLibraryDesk lib={l} me={me} />
       </RefScale>
-    </ScrollView>
+    </PageScroll>
   );
 }
 

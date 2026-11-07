@@ -7,6 +7,7 @@ import { ACADEMICS_NAV, ACADEMICS_QUICK_ACTIONS, ACADEMICS_SECTIONS, ACADEMICS_T
 import type { IconName } from '@/lib/icons';
 
 import { planCards, planVersions } from './institution-plans';
+import { Maple } from '@/constants/maple';
 
 type Photo = number;
 
@@ -427,8 +428,8 @@ export const school = {
       address: '123 Acacia Road, Kampala',
       motto: 'Learning Today, Leading Tomorrow',
       website: 'https://www.greenvalley.edu.ug',
-      primary: '#1E40AF',
-      secondary: '#F59E0B',
+      primary: Maple.blueHover as string,
+      secondary: Maple.warning as string,
       crest: require('./images/sa-crest.png') as Photo,
       banner: require('./images/sa-banner.png') as Photo,
     },

@@ -213,3 +213,21 @@ export interface AcademicsPage {
   quickActions: typeof ACADEMICS_QUICK_ACTIONS;
   tables: readonly AdminTable[];
 }
+
+/** What a real build opens for an Academics button. */
+export type AcademicsTarget = 'term' | 'grade' | 'curriculum';
+
+const ACADEMICS_TARGETS: Readonly<Record<string, AcademicsTarget>> = {
+  'Add Term': 'term',
+  'Create Term': 'term',
+  'Add Academic Year': 'term',
+  'New Academic Year': 'term',
+  'Add Grade': 'grade',
+  'Add Subject': 'curriculum',
+  'Manage Matrix': 'curriculum',
+};
+
+/** The form an Academics button opens, or null when the API has no form for it yet (shown disabled). */
+export function academicsAction(action: string): AcademicsTarget | null {
+  return ACADEMICS_TARGETS[action] ?? null;
+}

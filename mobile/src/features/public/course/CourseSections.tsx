@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
@@ -8,6 +8,8 @@ import type { MockData } from '@/mock';
 
 import { Brand } from '../palette';
 import { type NewReview, ReviewSheet, TeacherSheet } from './CourseSheets';
+import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 type Course = MockData['publicPages']['coursePage'];
 
@@ -173,7 +175,7 @@ export function Related({ course }: { course: Course }) {
       {course.related.map((r) => (
         <Pressable key={r.title} style={styles.related} accessibilityRole="link" onPress={() => router.push({ pathname: '/explore', params: { q: r.title.split(' ')[0] } })}>
           <View style={styles.relatedThumb}>
-            {r.photo ? <Image source={r.photo} style={styles.fill} contentFit="cover" /> : <Icon name={r.icon} size={26} color={Brand.surface} />}
+            {r.photo ? <Image decorative source={r.photo} style={styles.fill} contentFit="cover" /> : <Icon name={r.icon} size={26} color={Brand.surface} />}
           </View>
           <View style={styles.flex}>
             <Text style={styles.strong}>{r.title}</Text>
@@ -203,13 +205,13 @@ const styles = StyleSheet.create({
   tab: { paddingVertical: 12 },
   tabText: { fontSize: 14, color: Brand.ink },
   tabOn: { color: Brand.blue, fontWeight: '600' },
-  tabLine: { position: 'absolute', left: 0, right: 0, bottom: -1, height: 2, backgroundColor: Brand.blue },
+  tabLine: { position: 'absolute', left: 0, right: 0, bottom: -1, height: 3, backgroundColor: Brand.blue },
   outcomes: { flexDirection: 'row', flexWrap: 'wrap', rowGap: 16, columnGap: 20 },
   outcome: { flexDirection: 'row', gap: 12, width: '100%' },
   outcomeWide: { width: '47%' },
   outcomeIcon: { width: 44, height: 44, borderRadius: 10, backgroundColor: Brand.purpleSoft, alignItems: 'center', justifyContent: 'center' },
   teacherRow: { flexDirection: 'row', gap: 16, alignItems: 'center' },
-  teacherAvatar: { width: 96, height: 96, borderRadius: 48, backgroundColor: '#8D5524', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
+  teacherAvatar: { width: 96, height: 96, borderRadius: 48, backgroundColor: Maple.warningText, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
   fill: { width: '100%', height: '100%' },
   teacherInitials: { fontSize: 30, fontWeight: '700', color: Brand.surface },
   teacherStats: { flexDirection: 'row', flexWrap: 'wrap', columnGap: 20, rowGap: 8, marginTop: 8 },
@@ -225,5 +227,5 @@ const styles = StyleSheet.create({
   barPct: { width: 34, fontSize: 12, color: Brand.body, textAlign: 'right' },
   review: { gap: 2, paddingTop: 10, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: Brand.line },
   related: { flexDirection: 'row', gap: 12 },
-  relatedThumb: { width: 96, height: 80, borderRadius: 10, backgroundColor: '#2A9D8F', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
+  relatedThumb: { width: 96, height: 80, borderRadius: 10, backgroundColor: Palette.teal700b, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
 });

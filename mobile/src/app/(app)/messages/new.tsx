@@ -19,7 +19,10 @@ export default function NewConversationScreen() {
   const me = useMe();
   const children = me.data?.children ?? [];
   const isParent = children.length > 0 && !params.student;
-  const [child, setChild] = useState<string>(params.student ?? String(children[0]?.user_id ?? ''));
+  // The person's own pick, else the learner in the address, else the first child once `me` has loaded
+  // (a state set from `me` on the first render stayed empty when the page was opened directly).
+  const [picked, setChild] = useState<string | null>(null);
+  const child = picked ?? params.student ?? String(children[0]?.user_id ?? '');
   const student = Number(child) || null;
   const contacts = useContacts(isParent ? student : null);
   const [staff, setStaff] = useState<string>('');
@@ -42,9 +45,12 @@ export default function NewConversationScreen() {
   const chosenStaff = isParent ? Number(staff) || contacts.data?.[0]?.id : undefined;
   const ready = subject.trim() !== '' && body.trim() !== '' && (!isParent || chosenStaff != null);
 
-  async function send() {
-    const thread = await start.mutateAsync({ student: student as number, staff: chosenStaff, subject: subject.trim(), body: body.trim() });
-    router.replace({ pathname: '/messages/[id]', params: { id: String(thread.id) } });
+  // A failure shows under the form (start.error), so it isn't thrown on as well.
+  function send() {
+    start.mutate(
+      { student: student as number, staff: chosenStaff, subject: subject.trim(), body: body.trim() },
+      { onSuccess: (thread) => router.replace({ pathname: '/messages/[id]', params: { id: String(thread.id) } }) },
+    );
   }
 
   return (

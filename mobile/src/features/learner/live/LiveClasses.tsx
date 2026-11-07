@@ -11,12 +11,14 @@ import { isStaff } from '@/lib/roles';
 import { toast } from '@/lib/toast';
 
 import { TeachPanel } from './TeachPanel';
+import { Maple } from '@/constants/maple';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
-const INK = '#0B1424';
-const BODY = '#4A5263';
-const BLUE = '#1463F3';
-const RED = '#E5484D';
-const LINE = '#E6EBF2';
+const INK = Maple.navy;
+const BODY = Maple.body;
+const BLUE = Maple.blue;
+const RED = Maple.error;
+const LINE = Maple.blueSelected;
 
 async function openLink(href: string) {
   try {
@@ -96,7 +98,7 @@ export function LiveClasses() {
   return (
     <ScrollView style={styles.bg} contentContainerStyle={[styles.page, wide && styles.pageWide]}>
       <View style={styles.hero}>
-        <Text style={styles.h1} accessibilityRole="header">
+        <Text style={styles.h1} {...PAGE_TITLE}>
           Classes
         </Text>
         <Text style={styles.body}>Join your live classes, see what’s coming up, and catch up on replays.</Text>
@@ -160,30 +162,30 @@ export function LiveClasses() {
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
-  bg: { flex: 1, backgroundColor: '#F4F8FD' },
+  bg: { flex: 1, backgroundColor: Maple.blueSoft },
   page: { gap: 22, padding: 16, paddingBottom: 110 },
   pageWide: { width: '100%', maxWidth: 1160, alignSelf: 'center', padding: 24 },
-  hero: { gap: 8, padding: 22, borderRadius: 14, backgroundColor: '#E8F0FE' },
+  hero: { gap: 8, padding: 22, borderRadius: 14, backgroundColor: Maple.blueSelected },
   h1: { fontSize: 28, fontWeight: '800', color: INK, letterSpacing: -0.6 },
   h2: { fontSize: 18, fontWeight: '800', color: INK },
   body: { fontSize: 14, lineHeight: 21, color: BODY },
   muted: { fontSize: 12, color: BODY },
-  error: { fontSize: 13, color: '#B42318' },
+  error: { fontSize: 13, color: Maple.errorText },
   section: { gap: 12 },
-  panel: { gap: 4, padding: 6, borderRadius: 10, borderWidth: 1, borderColor: LINE, backgroundColor: '#FFFFFF' },
+  panel: { gap: 4, padding: 6, borderRadius: 10, borderWidth: 1, borderColor: LINE, backgroundColor: Maple.surface },
   empty: { gap: 6, padding: 16 },
   liveGrid: { gap: 12 },
   liveGridWide: { flexDirection: 'row', flexWrap: 'wrap' },
-  liveCard: { minWidth: 280, flexGrow: 1, flexBasis: 300, gap: 8, padding: 16, borderRadius: 12, backgroundColor: '#123A8C' },
+  liveCard: { minWidth: 280, flexGrow: 1, flexBasis: 300, gap: 8, padding: 16, borderRadius: 12, backgroundColor: Maple.blueHover },
   liveTop: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  liveBadge: { paddingHorizontal: 8, paddingVertical: 2, borderRadius: 4, overflow: 'hidden', fontSize: 11, fontWeight: '800', color: '#FFFFFF', backgroundColor: RED },
-  liveTitle: { fontSize: 18, fontWeight: '800', color: '#FFFFFF' },
-  liveMeta: { fontSize: 12.5, color: '#D6E2FA' },
-  join: { alignSelf: 'flex-start', flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 4, paddingHorizontal: 18, paddingVertical: 9, borderRadius: 8, backgroundColor: '#FFFFFF' },
+  liveBadge: { paddingHorizontal: 8, paddingVertical: 2, borderRadius: 4, overflow: 'hidden', fontSize: 11, fontWeight: '800', color: Maple.surface, backgroundColor: RED },
+  liveTitle: { fontSize: 18, fontWeight: '800', color: Maple.surface },
+  liveMeta: { fontSize: 12.5, color: Maple.blueSelected },
+  join: { alignSelf: 'flex-start', flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 4, paddingHorizontal: 18, paddingVertical: 9, borderRadius: 8, backgroundColor: Maple.surface },
   joinText: { fontSize: 14, fontWeight: '700', color: BLUE },
   rowItem: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 10 },
-  iconBox: { width: 38, height: 38, alignItems: 'center', justifyContent: 'center', borderRadius: 9, backgroundColor: '#E8F0FE' },
+  iconBox: { width: 38, height: 38, alignItems: 'center', justifyContent: 'center', borderRadius: 9, backgroundColor: Maple.blueSelected },
   rowTitle: { fontSize: 14, fontWeight: '700', color: INK },
-  outline: { paddingHorizontal: 12, paddingVertical: 7, borderRadius: 7, borderWidth: 1, borderColor: '#CFDAEC' },
+  outline: { paddingHorizontal: 12, paddingVertical: 7, borderRadius: 7, borderWidth: 1, borderColor: Maple.blueLine },
   outlineText: { fontSize: 12.5, fontWeight: '700', color: BLUE },
 });

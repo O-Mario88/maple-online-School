@@ -4,12 +4,13 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Icon } from '@/components/icon';
 import { LearnerPhoneTop } from '@/features/learner/dashboard/DashPhone';
-import { type Home, HomeHeader, HomeSidebar } from '@/features/learner/home/HomeFrame';
+import { type Home } from '@/features/learner/home/HomeFrame';
 import { frameBody } from '@/features/learner/home/frameBody';
 
 import { BookTop, BLUE, Contents, LINE, NAVY, PageView, ReadAloud, ReaderBar, WHITE } from './ReaderBody';
 import { ActivityModal, QuizModal, SidePanel } from './ReaderPanel';
 import type { Reader } from './useBookReader';
+import { Maple } from '@/constants/maple';
 
 /** The reference is 1536 wide; the learner sidebar is 187 and the header 54. */
 export const READER_REF_WIDTH = 1536;
@@ -26,10 +27,9 @@ function useQuizzes(x: Reader) {
   return { open: setQuiz, activity: () => setActivity(true), modals };
 }
 
-/** The desktop reader: learner sidebar and header, the book head, contents, the page and the learning panel. */
+/** The desktop reader (beside the app's one header and sidebar): the book head, contents, the page and the learning panel. */
 export function ReaderDesk({ x, h }: { x: Reader; h: Home }) {
   const q = useQuizzes(x);
-  const me: Home = { ...h, name: x.r.learner.name, grade: x.r.learner.level, avatar: x.r.learner.avatar };
   if (x.focus) {
     return (
       <View style={[styles.canvas, styles.focusCanvas]}>
@@ -44,8 +44,6 @@ export function ReaderDesk({ x, h }: { x: Reader; h: Home }) {
   }
   return (
     <View style={styles.canvas}>
-      <HomeSidebar h={me} active="Library" />
-      <HomeHeader h={me} placeholder="Search for books, topics, authors, or keywords..." lead={{ icon: 'grid', label: 'Library home', onPress: () => x.setFocus(false) }} />
       <View style={styles.body}>
         <BookTop x={x} />
         <View style={styles.cols}>
@@ -110,16 +108,16 @@ export function ReaderPhone({ x, h }: { x: Reader; h: Home }) {
 }
 
 const styles = StyleSheet.create({
-  canvas: { width: READER_REF_WIDTH, minHeight: 1024, backgroundColor: '#EEF3FA' },
-  focusCanvas: { alignItems: 'center', paddingVertical: 24, backgroundColor: '#F4F1EA' },
+  canvas: { width: READER_REF_WIDTH, minHeight: 1024, backgroundColor: Maple.blueSoft },
+  focusCanvas: { alignItems: 'center', paddingVertical: 24, backgroundColor: Maple.warningSoft },
   focusCol: { width: 1040, gap: 14 },
   body: { gap: 12, ...frameBody({ top: 10, left: 18, right: 12, bottom: 20 }) },
   cols: { flexDirection: 'row', alignItems: 'flex-start', gap: 12 },
   card: { padding: 14, borderRadius: 14, borderWidth: 1, borderColor: LINE, backgroundColor: WHITE },
   contents: { width: 238 },
   reader: { flex: 1, minWidth: 0, gap: 12, padding: 12 },
-  side: { width: 352, padding: 10, backgroundColor: '#F7F9FD' },
-  phoneRoot: { flex: 1, backgroundColor: '#EEF3FA' },
+  side: { width: 352, padding: 10, backgroundColor: Maple.blueSoft },
+  phoneRoot: { flex: 1, backgroundColor: Maple.blueSoft },
   phone: { gap: 12, padding: 16, paddingBottom: 24 },
   phoneBar: { flexDirection: 'row', gap: 8 },
   contentsBtn: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 8, height: 42, paddingHorizontal: 12, borderRadius: 10, borderWidth: 1, borderColor: LINE, backgroundColor: WHITE },
@@ -127,5 +125,5 @@ const styles = StyleSheet.create({
   phoneCard: { padding: 12 },
   leave: { alignSelf: 'center', paddingHorizontal: 18, paddingVertical: 10, borderRadius: 20, backgroundColor: BLUE },
   leaveText: { fontSize: 14, fontWeight: '700', color: WHITE },
-  phoneFoot: { paddingHorizontal: 12, paddingTop: 8, backgroundColor: '#EEF3FA', borderTopWidth: 1, borderColor: LINE },
+  phoneFoot: { paddingHorizontal: 12, paddingTop: 8, backgroundColor: Maple.blueSoft, borderTopWidth: 1, borderColor: LINE },
 });

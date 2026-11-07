@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
@@ -10,6 +10,7 @@ import { reviewProblem } from '@/lib/review';
 import type { MockData } from '@/mock';
 
 import { Brand } from '../palette';
+import { Maple } from '@/constants/maple';
 
 type Course = MockData['publicPages']['coursePage'];
 export type NewReview = { name: string; stars: number; text: string; when: string };
@@ -103,7 +104,7 @@ export function ReviewSheet({ visible, onClose, onPosted }: { visible: boolean; 
         multiline
         maxLength={MAX_MESSAGE}
         placeholder="What helped you most? What could be better?"
-        placeholderTextColor="#8A92A3"
+        placeholderTextColor={Maple.faint}
         accessibilityLabel="Your review"
       />
       {tried && problem ? (
@@ -124,12 +125,12 @@ const styles = StyleSheet.create({
   body: { fontSize: 13.5, lineHeight: 20, color: Brand.body },
   muted: { fontSize: 12, color: Brand.muted },
   stats: { flexDirection: 'row', gap: 10 },
-  stat: { flex: 1, padding: 10, borderRadius: 10, backgroundColor: '#F4F7FC' },
+  stat: { flex: 1, padding: 10, borderRadius: 10, backgroundColor: Maple.blueSoft },
   statValue: { fontSize: 15, fontWeight: '700', color: Brand.ink },
   label: { fontSize: 12.5, fontWeight: '600', color: Brand.ink },
   starRow: { flexDirection: 'row', gap: 6 },
-  star: { fontSize: 28, color: '#D5DEEB' },
-  starOn: { color: '#F5A524' },
-  input: { minHeight: 96, padding: 12, borderRadius: 10, borderWidth: 1, borderColor: '#D5DEEB', fontSize: 14, color: Brand.ink, textAlignVertical: 'top' },
-  error: { fontSize: 12.5, color: '#B42318' },
+  star: { fontSize: 28, color: Maple.blueLine },
+  starOn: { color: Maple.warning },
+  input: { minHeight: 96, padding: 12, borderRadius: 10, borderWidth: 1, borderColor: Maple.blueLine, fontSize: 14, color: Brand.ink, textAlignVertical: 'top' },
+  error: { fontSize: 12.5, color: Maple.errorText },
 });

@@ -18,11 +18,13 @@ import { useContinue } from '@/lib/library/queries';
 import { PORTAL_LABELS } from '@/lib/navigation';
 import { usePortal } from '@/lib/portal-context';
 import { toast } from '@/lib/toast';
+import { Maple } from '@/constants/maple';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
-const INK = '#0B1424';
-const BODY = '#4A5263';
-const BLUE = '#1463F3';
-const LINE = '#E6EBF2';
+const INK = Maple.navy;
+const BODY = Maple.body;
+const BLUE = Maple.blue;
+const LINE = Maple.blueSelected;
 const MAX_ROWS = 4;
 
 async function open(href: string | null) {
@@ -96,7 +98,7 @@ export function LiveHome({ firstName }: { firstName: string }) {
       ) : null}
       <View style={styles.hero}>
         <Text style={styles.eyebrow}>{now.toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' }).toUpperCase()}</Text>
-        <Text style={styles.h1} accessibilityRole="header">{`${greeting(now)}, ${firstName}`}</Text>
+        <Text style={styles.h1} {...PAGE_TITLE}>{`${greeting(now)}, ${firstName}`}</Text>
         <Text style={styles.heroBody}>{nextWork ? `Next up: ${nextWork.title}` : 'You’re all caught up. Explore your classes and library.'}</Text>
         <Pressable
           style={styles.heroButton}
@@ -108,8 +110,8 @@ export function LiveHome({ firstName }: { firstName: string }) {
       </View>
 
       <View style={styles.stats}>
-        <Stat icon="clipboard" tint="#F28C28" value={String(todo.length)} label="To do" />
-        <Stat icon="check" tint="#22A35A" value={String(marked.length)} label="Marked" />
+        <Stat icon="clipboard" tint={Maple.warning} value={String(todo.length)} label="To do" />
+        <Stat icon="check" tint={Maple.successText} value={String(marked.length)} label="Marked" />
         <Stat icon="calendar" tint={BLUE} value={String(groups.live.length + groups.upcoming.length + planned.length)} label="Coming up" />
       </View>
 
@@ -193,38 +195,38 @@ export function LiveHome({ firstName }: { firstName: string }) {
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
-  bg: { flex: 1, backgroundColor: '#EEF3FA' },
+  bg: { flex: 1, backgroundColor: Maple.blueSoft },
   page: { gap: 16, padding: 16, paddingBottom: 110 },
   pageWide: { width: '100%', maxWidth: 1180, alignSelf: 'center', padding: 24 },
-  hero: { gap: 8, padding: 22, borderRadius: 16, backgroundColor: '#1D5BEA' },
-  eyebrow: { fontSize: 11.5, fontWeight: '700', letterSpacing: 0.6, color: '#D6E2FA' },
-  h1: { fontSize: 26, fontWeight: '800', color: '#FFFFFF', letterSpacing: -0.5 },
-  heroBody: { fontSize: 14, color: '#E1EAFE' },
-  heroButton: { alignSelf: 'flex-start', flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 6, paddingHorizontal: 18, paddingVertical: 10, borderRadius: 8, backgroundColor: '#FFFFFF' },
+  hero: { gap: 8, padding: 22, borderRadius: 16, backgroundColor: Maple.blue },
+  eyebrow: { fontSize: 11.5, fontWeight: '700', letterSpacing: 0.6, color: Maple.blueSelected },
+  h1: { fontSize: 26, fontWeight: '800', color: Maple.surface, letterSpacing: -0.5 },
+  heroBody: { fontSize: 14, color: Maple.blueSelected },
+  heroButton: { alignSelf: 'flex-start', flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 6, paddingHorizontal: 18, paddingVertical: 10, borderRadius: 8, backgroundColor: Maple.surface },
   heroButtonText: { fontSize: 14, fontWeight: '700', color: BLUE },
-  stats: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, padding: 14, borderRadius: 16, borderWidth: 1, borderColor: '#E3E9F4', backgroundColor: '#FFFFFF' },
+  stats: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, padding: 14, borderRadius: 16, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface },
   stat: { flexGrow: 1, flexBasis: 100 },
   columns: { gap: 16 },
   columnsWide: { flexDirection: 'row', alignItems: 'flex-start' },
   col: { gap: 16 },
   colMain: { flex: 3 },
   colSide: { flex: 2 },
-  card: { gap: 8, padding: 16, borderRadius: 12, borderWidth: 1, borderColor: LINE, backgroundColor: '#FFFFFF' },
+  card: { gap: 8, padding: 16, borderRadius: 12, borderWidth: 1, borderColor: LINE, backgroundColor: Maple.surface },
   cardHead: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   cardTitle: { fontSize: 16, fontWeight: '800', color: INK },
   link: { fontSize: 12.5, fontWeight: '600', color: BLUE },
   body: { fontSize: 13.5, lineHeight: 20, color: BODY },
   muted: { fontSize: 12, color: BODY },
-  row: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 9, borderTopWidth: 1, borderTopColor: '#F0F3F8' },
+  row: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 9, borderTopWidth: 1, borderTopColor: Maple.blueSoft },
   rowTitle: { fontSize: 14, fontWeight: '600', color: INK },
   pill: { paddingHorizontal: 9, paddingVertical: 3, borderRadius: 999, overflow: 'hidden', fontSize: 11.5, fontWeight: '700' },
-  pillTodo: { color: '#B45309', backgroundColor: '#FFF4E5' },
-  pillSent: { color: '#475569', backgroundColor: '#EEF2F7' },
-  pillDone: { color: '#15803D', backgroundColor: '#E6F6EC' },
-  live: { gap: 6, padding: 14, borderRadius: 10, backgroundColor: '#123A8C' },
-  liveTitle: { fontSize: 16, fontWeight: '800', color: '#FFFFFF' },
-  liveMeta: { fontSize: 12.5, color: '#D6E2FA' },
-  join: { alignSelf: 'flex-start', marginTop: 4, paddingHorizontal: 16, paddingVertical: 8, borderRadius: 8, backgroundColor: '#FFFFFF' },
+  pillTodo: { color: Maple.warningText, backgroundColor: Maple.warningSoft },
+  pillSent: { color: Maple.body, backgroundColor: Maple.blueSelected },
+  pillDone: { color: Maple.successText, backgroundColor: Maple.successSoft },
+  live: { gap: 6, padding: 14, borderRadius: 10, backgroundColor: Maple.blueHover },
+  liveTitle: { fontSize: 16, fontWeight: '800', color: Maple.surface },
+  liveMeta: { fontSize: 12.5, color: Maple.blueSelected },
+  join: { alignSelf: 'flex-start', marginTop: 4, paddingHorizontal: 16, paddingVertical: 8, borderRadius: 8, backgroundColor: Maple.surface },
   joinText: { fontSize: 13.5, fontWeight: '700', color: BLUE },
-  signOut: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, padding: 12, borderRadius: 10, borderWidth: 1, borderColor: LINE, backgroundColor: '#FFFFFF' },
+  signOut: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, padding: 12, borderRadius: 10, borderWidth: 1, borderColor: LINE, backgroundColor: Maple.surface },
 });

@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { useState } from 'react';
 import { Platform, Pressable, Share, StyleSheet, Text, TextInput, View } from 'react-native';
 
@@ -8,12 +8,15 @@ import { MathLine } from '@/features/learner/work/MathText';
 import type { IconName } from '@/lib/icons';
 
 import type { Book, Hub } from './useShelf';
+import { Maple } from '@/constants/maple';
+import { useUiScaleRef } from '@/lib/ui-scale';
+import { Palette } from '@/constants/palette';
 
-const INK = '#0B1424';
-const NAVY = '#0B2A6B';
-const BODY = '#4A5263';
-const BLUE = '#1463F3';
-const MARKS = ['#FDF0A6', '#C9F2D6', '#FBD3DA', '#CFE2FB'] as const;
+const INK = Maple.navy;
+const NAVY = Maple.blueHover;
+const BODY = Maple.body;
+const BLUE = Maple.blue;
+const MARKS = [Palette.yellow300b, Palette.green200c, Maple.errorSoft, Maple.blueLine] as const;
 const ZOOM_STEP = 10;
 
 type Block = Hub['reader']['content'][number][number];
@@ -61,7 +64,7 @@ export function BookHeader({ b, hub, rs, phone = false }: { b: Book; hub: Hub; r
   const [menu, setMenu] = useState(false);
   return (
     <View style={styles.bookHead}>
-      <Image source={b.cover} style={phone ? styles.coverP : styles.cover} contentFit="cover" />
+      <Image decorative source={b.cover} style={phone ? styles.coverP : styles.cover} contentFit="cover" />
       <View style={styles.flex}>
         <Text style={[styles.bookTitle, phone && styles.bookTitleP]}>{b.title}</Text>
         <Text style={styles.bookMeta}>{b.id === 'maths-olevel' ? hub.reader.publisherLine : `${b.publisher}  •  ${b.level}`}</Text>
@@ -189,12 +192,12 @@ function BlockView({ blk, mark }: { blk: Block; mark: string }) {
     case 'h3':
       return <Text style={styles.h3}>{`${blk.num}     ${blk.title}`}</Text>;
     case 'p':
-      return <MathLine text={blk.text} size={12.5} color="#2B3445" />;
+      return <MathLine text={blk.text} size={12.5} color={Maple.navy} />;
     case 'mark':
       return (
         <View style={styles.markRow}>
           <Text style={[styles.marked, { backgroundColor: mark }]}>{blk.text}</Text>
-          <MathLine text={blk.rest} size={12.5} color="#2B3445" />
+          <MathLine text={blk.rest} size={12.5} color={Maple.navy} />
         </View>
       );
     case 'example':
@@ -203,7 +206,7 @@ function BlockView({ blk, mark }: { blk: Block; mark: string }) {
           <Text style={styles.exTitle}>{blk.title}</Text>
           <View style={styles.exBody}>
             {blk.lines.map((l) => (
-              <MathLine key={l} text={l} size={12.5} color="#2B3445" />
+              <MathLine key={l} text={l} size={12.5} color={Maple.navy} />
             ))}
           </View>
         </View>
@@ -226,10 +229,11 @@ export function PageView({ hub, rs, sample, phone = false }: { hub: Hub; rs: Rea
   const r = hub.reader;
   const blocks = sample ? r.content[rs.page] : undefined;
   const scale = rs.zoom / 100;
+  const scaled = useUiScaleRef(scale);
   const figure = sample && rs.page === 12 && !phone;
   return (
     <View style={[styles.page, phone && styles.pageP]}>
-      <View style={{ transform: [{ scale }], transformOrigin: 'top left', width: `${100 / scale}%` }}>
+      <View ref={scaled} style={{ transform: [{ scale }], transformOrigin: 'top left', width: `${100 / scale}%` }}>
         {blocks ? (
           <View style={[styles.blocks, figure && styles.blocksBeside]}>
             {blocks.map((blk, i) => (
@@ -257,7 +261,7 @@ export function PageView({ hub, rs, sample, phone = false }: { hub: Hub; rs: Rea
         ) : null}
         {rs.notes.map((n, i) => (
           <View key={i} style={styles.note}>
-            <Icon name="edit" size={12} color="#92400E" />
+            <Icon name="edit" size={12} color={Palette.orange800b} />
             <Text style={styles.noteText}>{n.text}</Text>
           </View>
         ))}
@@ -286,7 +290,7 @@ export function HighlightBar({ hub, rs, toast }: { hub: Hub; rs: ReaderState; to
     <View>
       {noting ? (
         <View style={styles.noteBox}>
-          <TextInput style={styles.noteInput} value={text} onChangeText={setText} placeholder="Write a note for this page…" placeholderTextColor="#8A93A6" autoFocus accessibilityLabel="Note" />
+          <TextInput style={styles.noteInput} value={text} onChangeText={setText} placeholder="Write a note for this page…" placeholderTextColor={Maple.faint} autoFocus accessibilityLabel="Note" />
           <Pressable
             style={styles.noteSave}
             disabled={!text.trim()}
@@ -343,65 +347,65 @@ const styles = StyleSheet.create({
   bookTitle: { fontSize: 17, fontWeight: '700', color: NAVY },
   bookTitleP: { fontSize: 15 },
   bookMeta: { marginTop: 5, fontSize: 12, color: BODY },
-  headBtn: { height: 32, flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 9, borderRadius: 6, borderWidth: 1, borderColor: '#C9DAF8', backgroundColor: '#FFFFFF' },
-  headBtnOn: { backgroundColor: '#EEF4FF' },
+  headBtn: { height: 32, flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 9, borderRadius: 6, borderWidth: 1, borderColor: Maple.blueLine, backgroundColor: Maple.surface },
+  headBtnOn: { backgroundColor: Maple.blueSoft },
   headBtnText: { fontSize: 11.5, fontWeight: '500', color: BLUE },
-  more: { width: 32, height: 32, alignItems: 'center', justifyContent: 'center', borderRadius: 6, borderWidth: 1, borderColor: '#DCE3EE' },
-  menu: { position: 'absolute', top: 36, right: 0, width: 180, paddingVertical: 4, borderRadius: 8, borderWidth: 1, borderColor: '#E1E7F0', backgroundColor: '#FFFFFF', zIndex: 6 },
+  more: { width: 32, height: 32, alignItems: 'center', justifyContent: 'center', borderRadius: 6, borderWidth: 1, borderColor: Maple.blueLine },
+  menu: { position: 'absolute', top: 36, right: 0, width: 180, paddingVertical: 4, borderRadius: 8, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface, zIndex: 6 },
   menuItem: { height: 30, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 12 },
   menuText: { fontSize: 12, color: INK },
-  toolbar: { height: 36, flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 10, paddingHorizontal: 6, borderRadius: 6, backgroundColor: '#F4F7FB', zIndex: 5 },
+  toolbar: { height: 36, flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 10, paddingHorizontal: 6, borderRadius: 6, backgroundColor: Maple.blueSoft, zIndex: 5 },
   toolbarP: { gap: 4 },
   tool: { width: 28, height: 28, alignItems: 'center', justifyContent: 'center', borderRadius: 5 },
-  toolOn: { backgroundColor: '#E6EEFC' },
-  toc: { position: 'absolute', top: 32, left: 0, width: 230, paddingVertical: 4, borderRadius: 8, borderWidth: 1, borderColor: '#E1E7F0', backgroundColor: '#FFFFFF', zIndex: 6 },
+  toolOn: { backgroundColor: Maple.blueSelected },
+  toc: { position: 'absolute', top: 32, left: 0, width: 230, paddingVertical: 4, borderRadius: 8, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface, zIndex: 6 },
   tocPage: { fontSize: 11, color: BODY },
-  pageBox: { height: 26, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 8, borderRadius: 5, backgroundColor: '#FFFFFF' },
+  pageBox: { height: 26, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 8, borderRadius: 5, backgroundColor: Maple.surface },
   pageInput: { width: 28, height: 24, paddingVertical: 0, fontSize: 12, color: INK, textAlign: 'right' },
   pageOf: { fontSize: 12, color: INK },
-  zoom: { height: 26, flexDirection: 'row', alignItems: 'center', borderRadius: 5, backgroundColor: '#FFFFFF' },
+  zoom: { height: 26, flexDirection: 'row', alignItems: 'center', borderRadius: 5, backgroundColor: Maple.surface },
   zoomBtn: { width: 26, height: 26, alignItems: 'center', justifyContent: 'center' },
   zoomText: { width: 44, fontSize: 12, color: INK, textAlign: 'center' },
-  page: { flex: 1, minHeight: 470, marginTop: 8, padding: 18, paddingRight: 16, paddingBottom: 40, borderRadius: 6, borderWidth: 1, borderColor: '#EEF1F6', backgroundColor: '#FFFFFF', overflow: 'hidden' },
+  page: { flex: 1, minHeight: 470, marginTop: 8, padding: 18, paddingRight: 16, paddingBottom: 40, borderRadius: 6, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface, overflow: 'hidden' },
   pageP: { minHeight: 380, padding: 14 },
   blocks: { gap: 12 },
   blocksBeside: { paddingRight: 150 },
   h2Row: { flexDirection: 'row', alignItems: 'center', gap: 16 },
-  h2Num: { paddingHorizontal: 12, paddingVertical: 3, borderRadius: 3, backgroundColor: '#0B6BFF', fontSize: 18, fontWeight: '700', color: '#FFFFFF', overflow: 'hidden' },
+  h2Num: { paddingHorizontal: 12, paddingVertical: 3, borderRadius: 3, backgroundColor: Maple.blue, fontSize: 18, fontWeight: '700', color: Maple.surface, overflow: 'hidden' },
   h2: { fontSize: 21, fontWeight: '700', color: NAVY },
   h3: { marginTop: 4, fontSize: 15, fontWeight: '700', color: BLUE },
   markRow: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 6 },
-  marked: { paddingHorizontal: 3, fontSize: 12.5, color: '#2B3445' },
-  example: { maxWidth: 400, borderRadius: 6, backgroundColor: '#EAF2FE', overflow: 'hidden' },
-  exTitle: { alignSelf: 'flex-start', paddingHorizontal: 12, paddingVertical: 4, borderBottomRightRadius: 6, backgroundColor: '#0B6BFF', fontSize: 12.5, fontWeight: '700', color: '#FFFFFF', overflow: 'hidden' },
+  marked: { paddingHorizontal: 3, fontSize: 12.5, color: Maple.navy },
+  example: { maxWidth: 400, borderRadius: 6, backgroundColor: Maple.blueSoft, overflow: 'hidden' },
+  exTitle: { alignSelf: 'flex-start', paddingHorizontal: 12, paddingVertical: 4, borderBottomRightRadius: 6, backgroundColor: Maple.blue, fontSize: 12.5, fontWeight: '700', color: Maple.surface, overflow: 'hidden' },
   exBody: { gap: 8, padding: 14 },
-  take: { padding: 12, borderRadius: 6, backgroundColor: '#FDE8EC' },
+  take: { padding: 12, borderRadius: 6, backgroundColor: Maple.errorSoft },
   takeHead: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   bulb: { fontSize: 18 },
-  takeTitle: { fontSize: 15, fontWeight: '700', color: '#BE123C' },
+  takeTitle: { fontSize: 15, fontWeight: '700', color: Maple.error },
   takeText: { marginTop: 6, marginLeft: 26, fontSize: 12, color: BODY },
   preview: { gap: 8, paddingVertical: 40 },
   previewText: { fontSize: 12.5, lineHeight: 18, color: BODY },
-  sticky: { position: 'absolute', top: 18, right: 0, width: 132, padding: 12, backgroundColor: '#FDF2A6', transform: [{ rotate: '-7deg' }], shadowColor: INK, shadowOpacity: 0.12, shadowRadius: 6, shadowOffset: { width: 0, height: 3 } },
-  stickyText: { fontSize: 12, lineHeight: 17, color: '#1F2A44', fontStyle: 'italic' },
+  sticky: { position: 'absolute', top: 18, right: 0, width: 132, padding: 12, backgroundColor: Palette.yellow300c, transform: [{ rotate: '-7deg' }], shadowColor: INK, shadowOpacity: 0.12, shadowRadius: 6, shadowOffset: { width: 0, height: 3 } },
+  stickyText: { fontSize: 12, lineHeight: 17, color: Maple.navy, fontStyle: 'italic' },
   figure: { position: 'absolute', top: 160, right: 6, alignItems: 'center', gap: 6 },
   pie: { width: 100, height: 100 },
-  note: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 10, padding: 8, borderRadius: 6, backgroundColor: '#FEF3C7' },
-  noteText: { flex: 1, fontSize: 12, color: '#78350F' },
+  note: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 10, padding: 8, borderRadius: 6, backgroundColor: Maple.warningSoft },
+  noteText: { flex: 1, fontSize: 12, color: Palette.orange900 },
   domain: { position: 'absolute', left: 18, bottom: 10 },
   pageNum: { position: 'absolute', right: 14, bottom: 10, fontSize: 11, color: INK },
-  hbar: { height: 34, flexDirection: 'row', alignItems: 'center', gap: 14, marginTop: 8, paddingHorizontal: 12, borderRadius: 17, borderWidth: 1, borderColor: '#E8EDF4', backgroundColor: '#FFFFFF' },
-  hiliter: { width: 22, height: 22, alignItems: 'center', justifyContent: 'center', borderRadius: 11, backgroundColor: '#FDF0A6' },
-  hiliterText: { fontSize: 11, fontWeight: '800', color: '#92400E' },
+  hbar: { height: 34, flexDirection: 'row', alignItems: 'center', gap: 14, marginTop: 8, paddingHorizontal: 12, borderRadius: 17, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface },
+  hiliter: { width: 22, height: 22, alignItems: 'center', justifyContent: 'center', borderRadius: 11, backgroundColor: Palette.yellow300b },
+  hiliterText: { fontSize: 11, fontWeight: '800', color: Palette.orange800b },
   dot: { width: 14, height: 14, borderRadius: 7 },
   dotOn: { borderWidth: 2, borderColor: INK },
   hItem: { flexDirection: 'row', alignItems: 'center', gap: 5 },
   hText: { fontSize: 11, color: INK },
   noteBox: { flexDirection: 'row', gap: 8, marginTop: 8 },
-  noteInput: { flex: 1, height: 34, paddingVertical: 0, paddingHorizontal: 10, borderRadius: 6, borderWidth: 1, borderColor: '#DCE3EE', fontSize: 12, color: INK },
-  noteSave: { height: 34, justifyContent: 'center', paddingHorizontal: 14, borderRadius: 6, backgroundColor: '#0B6BFF' },
-  noteSaveText: { fontSize: 12, fontWeight: '600', color: '#FFFFFF' },
-  defs: { gap: 4, marginTop: 8, padding: 10, borderRadius: 6, backgroundColor: '#F4F8FF' },
+  noteInput: { flex: 1, height: 34, paddingVertical: 0, paddingHorizontal: 10, borderRadius: 6, borderWidth: 1, borderColor: Maple.blueLine, fontSize: 12, color: INK },
+  noteSave: { height: 34, justifyContent: 'center', paddingHorizontal: 14, borderRadius: 6, backgroundColor: Maple.blue },
+  noteSaveText: { fontSize: 12, fontWeight: '600', color: Maple.surface },
+  defs: { gap: 4, marginTop: 8, padding: 10, borderRadius: 6, backgroundColor: Maple.blueSoft },
   def: { fontSize: 11.5, color: BODY },
   defWord: { fontWeight: '700', color: NAVY },
 });

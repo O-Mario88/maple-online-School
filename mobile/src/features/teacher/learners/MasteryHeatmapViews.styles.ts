@@ -1,6 +1,8 @@
 import { StyleSheet } from 'react-native';
 
 import { BLUE, BODY, INK, LINE } from '@/features/teacher/frame/TeacherParts';
+import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 /** Styles for MasteryHeatmapViews (kept apart so the view file stays readable). */
 export const MASTERY_REF_WIDTH = 1220;
@@ -10,7 +12,7 @@ export const s = StyleSheet.create({
     width: MASTERY_REF_WIDTH,
     padding: 12,
     gap: 10,
-    backgroundColor: '#EAF1FB',
+    backgroundColor: Maple.blueSelected,
   },
   body: {
     flexDirection: 'row',
@@ -46,12 +48,12 @@ export const s = StyleSheet.create({
     borderRadius: 8,
   },
   sideItemOn: {
-    backgroundColor: '#E3EDFF',
+    backgroundColor: Maple.blueSelected,
   },
   sideText: {
     flex: 1,
     fontSize: 11.5,
-    color: '#2B3445',
+    color: Maple.navy,
   },
   sideTextOn: {
     color: BLUE,
@@ -85,7 +87,7 @@ export const s = StyleSheet.create({
     borderRadius: 7,
   },
   myClassRowOn: {
-    backgroundColor: '#E3EDFF',
+    backgroundColor: Maple.blueSelected,
   },
   classDot: {
     width: 7,
@@ -158,7 +160,7 @@ export const s = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
   },
   filterSelectText: {
     fontSize: 10.5,
@@ -174,7 +176,7 @@ export const s = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
   },
   exportBtnText: {
     fontSize: 11,
@@ -192,7 +194,7 @@ export const s = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     borderRadius: 10,
     borderWidth: 1,
     borderColor: LINE,
@@ -271,7 +273,7 @@ export const s = StyleSheet.create({
     borderRadius: 6,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
   },
   searchInput: {
     flex: 1,
@@ -288,7 +290,7 @@ export const s = StyleSheet.create({
     borderRadius: 6,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
   },
   filterPillText: {
     fontSize: 9.5,
@@ -302,7 +304,7 @@ export const s = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 8,
     paddingVertical: 6,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
     borderBottomWidth: 1,
     borderBottomColor: LINE,
   },
@@ -335,20 +337,20 @@ export const s = StyleSheet.create({
     paddingVertical: 3.5,
     borderBottomWidth: 1,
     borderBottomColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
   },
   trRowSelected: {
-    backgroundColor: '#EBF3FF',
+    backgroundColor: Maple.blueSoft,
   },
   checkbox: {
     width: 13,
     height: 13,
     borderRadius: 3.5,
     borderWidth: 1.5,
-    borderColor: '#CBD5E1',
+    borderColor: Maple.borderStrong,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
   },
   checkboxOn: {
     backgroundColor: BLUE,
@@ -357,7 +359,7 @@ export const s = StyleSheet.create({
   checkboxTick: {
     fontSize: 8,
     fontWeight: '800',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   studentCell: {
     flexDirection: 'row',
@@ -399,7 +401,7 @@ export const s = StyleSheet.create({
     flex: 1,
     height: 6,
     borderRadius: 3,
-    backgroundColor: '#E2E8F0',
+    backgroundColor: Maple.border,
     overflow: 'hidden',
   },
   overallFill: {
@@ -413,7 +415,7 @@ export const s = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 8,
     paddingVertical: 5,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
     borderBottomWidth: 1,
     borderBottomColor: LINE,
   },
@@ -488,16 +490,16 @@ export const s = StyleSheet.create({
     justifyContent: 'space-between',
   },
   insightCardRed: {
-    backgroundColor: '#FEF2F2',
-    borderColor: '#FECACA',
+    backgroundColor: Maple.errorSoft,
+    borderColor: Maple.errorSoft,
   },
   insightCardAmber: {
-    backgroundColor: '#FFFBEB',
-    borderColor: '#FDE68A',
+    backgroundColor: Maple.warningSoft,
+    borderColor: Palette.yellow300,
   },
   insightCardGreen: {
-    backgroundColor: '#F0FDF4',
-    borderColor: '#BBF7D0',
+    backgroundColor: Maple.successSoft,
+    borderColor: Palette.green200,
   },
   insightTopRow: {
     flexDirection: 'row',
@@ -514,7 +516,7 @@ export const s = StyleSheet.create({
   insightBadgeText: {
     fontSize: 10,
     fontWeight: '800',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   insightHeading: {
     fontSize: 10.5,
@@ -529,7 +531,7 @@ export const s = StyleSheet.create({
     height: 24,
     borderRadius: 6,
     borderWidth: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -639,7 +641,7 @@ export const s = StyleSheet.create({
     flex: 1,
     height: 5.5,
     borderRadius: 3,
-    backgroundColor: '#E2E8F0',
+    backgroundColor: Maple.border,
     overflow: 'hidden',
   },
   breakdownFill: {
@@ -654,8 +656,8 @@ export const s = StyleSheet.create({
   packCard: {
     borderRadius: 9,
     borderWidth: 1,
-    borderColor: '#CFE0FF',
-    backgroundColor: '#F3F8FF',
+    borderColor: Maple.blueSelected,
+    backgroundColor: Maple.blueSoft,
     padding: 9,
     gap: 7,
   },
@@ -663,7 +665,7 @@ export const s = StyleSheet.create({
     borderRadius: 9,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     padding: 9,
     gap: 7,
   },
@@ -690,7 +692,7 @@ export const s = StyleSheet.create({
     color: INK,
   },
   oneClickPill: {
-    backgroundColor: '#DCFCE7',
+    backgroundColor: Maple.successSoft,
     borderRadius: 4,
     paddingHorizontal: 5,
     paddingVertical: 1,
@@ -698,7 +700,7 @@ export const s = StyleSheet.create({
   oneClickText: {
     fontSize: 8,
     fontWeight: '700',
-    color: '#15803D',
+    color: Maple.successText,
   },
   actionSub: {
     fontSize: 8.5,
@@ -729,14 +731,14 @@ export const s = StyleSheet.create({
   sendPackBtnText: {
     fontSize: 10,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   outlineActionBtn: {
     height: 26,
     borderRadius: 6,
     borderWidth: 1,
-    borderColor: '#BFDBFE',
-    backgroundColor: '#FFFFFF',
+    borderColor: Maple.blueLine,
+    backgroundColor: Maple.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },

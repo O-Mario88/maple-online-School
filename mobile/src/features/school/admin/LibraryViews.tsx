@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { type ReactNode, useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
@@ -10,6 +10,8 @@ import type { MockData } from '@/mock';
 import type { LibraryRequest, Resource, ResourceKind } from '@/mock/school-admin';
 
 import { AdminDesk, AdminPhone, ListCard, ListRow, MenuRow, PageHead, Search, SelectBox, Segments, useChoice } from '../kit/AdminKit';
+import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 type Admin = MockData['schoolAdmin'];
 type Lib = Admin['library'];
@@ -97,7 +99,7 @@ function ResourceCard({ r, action, onAction, actionDone }: { r: Resource; action
       </View>
       {action !== 'download' ? (
         <Pressable style={[styles.resBtn, actionDone && styles.resBtnDone]} onPress={onAction} accessibilityRole="button" accessibilityLabel={action === 'recommend' ? `Recommend ${r.title}` : `Request access to ${r.title}`}>
-          <Icon name={action === 'recommend' ? 'thumbUp' : 'lock'} size={15} color={actionDone ? '#16A34A' : BLUE} />
+          <Icon name={action === 'recommend' ? 'thumbUp' : 'lock'} size={15} color={actionDone ? Maple.successText : BLUE} />
           <Text style={[styles.resBtnText, actionDone && styles.resBtnTextDone]} numberOfLines={1}>
             {action === 'recommend' ? (actionDone ? `Recommended to ${actionDone}` : 'Recommend to learners') : actionDone ? actionDone : 'Request Access'}
           </Text>
@@ -319,7 +321,7 @@ export function LibraryDesk({ a }: { a: Admin }) {
               <Text style={styles.sideTitle}>Storage Usage</Text>
               <Text style={styles.storagePct}>{`${lib.storage.percent}% used`}</Text>
             </View>
-            <Bar value={lib.storage.percent / 100} color="#22A55A" height={10} />
+            <Bar value={lib.storage.percent / 100} color={Maple.successText} height={10} />
             <View style={styles.storageHead}>
               <Text style={styles.dropNote}>{`${lib.storage.used} of ${lib.storage.total}`}</Text>
               <Btn label="Manage" kind="soft" onPress={() => toast('Large files, duplicates and storage add-ons.')} height={34} style={styles.manage} />
@@ -363,7 +365,7 @@ export function LibraryPhone({ a }: { a: Admin }) {
               const q = l.requests.find((x) => x.resource === r.title);
               return (
                 <View key={r.id} style={styles.phoneRes}>
-                  <Image source={r.cover} style={styles.phoneCover} contentFit="cover" />
+                  <Image decorative source={r.cover} style={styles.phoneCover} contentFit="cover" />
                   <View style={styles.flex}>
                     <Text style={styles.resTitle} numberOfLines={2}>
                       {r.title}
@@ -425,7 +427,7 @@ export function LibraryPhone({ a }: { a: Admin }) {
           <ListRow
             key={r.id}
             last={i === 2}
-            lead={<View style={[styles.fmt, { backgroundColor: r.format === 'PDF' ? '#E5383B' : BLUE }]}><Text style={styles.fmtText}>{r.format}</Text></View>}
+            lead={<View style={[styles.fmt, { backgroundColor: r.format === 'PDF' ? Maple.error : BLUE }]}><Text style={styles.fmtText}>{r.format}</Text></View>}
             title={r.title}
             body={`${r.kind}  •  Today`}
             right={
@@ -449,7 +451,7 @@ const styles = StyleSheet.create({
   tabs: { marginTop: 18 },
   filters: { flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 14, padding: 12 },
   viewBtn: { width: 42, height: 42, alignItems: 'center', justifyContent: 'center', borderRadius: 10, borderWidth: 1, borderColor: LINE, backgroundColor: WHITE },
-  viewBtnOn: { backgroundColor: SELECT, borderColor: '#BFD3F7' },
+  viewBtnOn: { backgroundColor: SELECT, borderColor: Maple.blueLine },
   row: { flexDirection: 'row', alignItems: 'flex-start', gap: 16, marginTop: 14 },
   main: { flex: 1, minWidth: 0, gap: 16 },
   block: { gap: 14, padding: 16 },
@@ -466,15 +468,15 @@ const styles = StyleSheet.create({
   resTitle: { marginTop: 4, fontSize: 13.5, fontWeight: '600', color: NAVY },
   resMeta: { fontSize: 12, color: BODY },
   resFoot: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 2 },
-  resBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, height: 34, marginTop: 4, paddingHorizontal: 8, borderRadius: 8, borderWidth: 1, borderColor: '#C9DAF7', backgroundColor: WHITE },
-  resBtnDone: { borderColor: '#BDE8CC', backgroundColor: '#F1FBF4' },
+  resBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, height: 34, marginTop: 4, paddingHorizontal: 8, borderRadius: 8, borderWidth: 1, borderColor: Maple.blueLine, backgroundColor: WHITE },
+  resBtnDone: { borderColor: Palette.green300g, backgroundColor: Maple.successSoft },
   resBtnText: { flexShrink: 1, fontSize: 12.5, fontWeight: '600', color: BLUE },
-  resBtnTextDone: { color: '#16A34A' },
+  resBtnTextDone: { color: Maple.successText },
   recNote: { fontSize: 13, color: BODY },
   side: { width: 290, gap: 16 },
   sideCard: { gap: 12, padding: 16 },
   sideTitle: { fontSize: 17, fontWeight: '800', color: NAVY },
-  drop: { alignItems: 'center', gap: 5, padding: 16, borderRadius: 12, borderWidth: 1.5, borderStyle: 'dashed', borderColor: '#A9C2F0', backgroundColor: '#F8FAFF' },
+  drop: { alignItems: 'center', gap: 5, padding: 16, borderRadius: 12, borderWidth: 1.5, borderStyle: 'dashed', borderColor: Maple.blueLine, backgroundColor: Maple.blueSoft },
   dropTitle: { marginTop: 6, fontSize: 15, fontWeight: '700', color: NAVY },
   dropLink: { fontSize: 13.5, color: BLUE },
   dropNote: { fontSize: 12, color: BODY, textAlign: 'center' },
@@ -488,7 +490,7 @@ const styles = StyleSheet.create({
   requests: { flexDirection: 'row', gap: 16 },
   reqList: { width: 280, gap: 8 },
   req: { flexDirection: 'row', alignItems: 'flex-start', gap: 10, padding: 10, borderRadius: 12, borderWidth: 1, borderColor: LINE, backgroundColor: WHITE },
-  reqOn: { borderColor: '#9EC1F9', backgroundColor: SELECT },
+  reqOn: { borderColor: Maple.blueLine, backgroundColor: SELECT },
   reqTitle: { fontSize: 14, fontWeight: '700', color: NAVY },
   reqMeta: { marginTop: 2, fontSize: 12.5, color: BODY },
   reqPill: { marginTop: 6 },
@@ -498,12 +500,12 @@ const styles = StyleSheet.create({
   mediator: { flexDirection: 'row', alignItems: 'center', gap: 10, padding: 10, borderRadius: 10, backgroundColor: SOFT },
   mediatorText: { flex: 1, fontSize: 12.5, color: BODY },
   bubble: { maxWidth: '88%', gap: 3, padding: 12, borderRadius: 12 },
-  bubbleMine: { alignSelf: 'flex-end', backgroundColor: '#DCEBFF' },
-  bubbleTheirs: { alignSelf: 'flex-start', backgroundColor: '#F1F4F9' },
-  bubbleAdmin: { alignSelf: 'center', backgroundColor: '#FFF6E5', borderWidth: 1, borderColor: '#F8DFA8' },
+  bubbleMine: { alignSelf: 'flex-end', backgroundColor: Maple.blueSelected },
+  bubbleTheirs: { alignSelf: 'flex-start', backgroundColor: Maple.blueSoft },
+  bubbleAdmin: { alignSelf: 'center', backgroundColor: Maple.warningSoft, borderWidth: 1, borderColor: Palette.amber300d },
   bubbleFrom: { fontSize: 12, fontWeight: '700', color: NAVY },
-  bubbleFromAdmin: { color: '#B26A00' },
-  bubbleText: { fontSize: 13.5, lineHeight: 19, color: '#26335F' },
+  bubbleFromAdmin: { color: Maple.warningText },
+  bubbleText: { fontSize: 13.5, lineHeight: 19, color: Maple.body },
   bubbleWhen: { fontSize: 11, color: MUTED },
   decide: { flexDirection: 'row', gap: 10 },
   compose: { flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 4 },

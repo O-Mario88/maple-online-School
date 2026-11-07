@@ -1,10 +1,10 @@
-import { Platform, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import { BLUE, BODY, INK } from './HomeFrame';
+import { Maple, Radii } from '@/constants/maple';
 
 /** Styles for the learner home cards (kept apart so HomeCards.tsx stays readable). */
-const SERIF = Platform.select({ ios: 'Georgia', android: 'serif', default: 'Georgia, "Times New Roman", serif' });
-const GREEN = '#16A34A';
+const GREEN = Maple.successText;
 
 export const styles = StyleSheet.create({
   flex: { flex: 1 },
@@ -14,98 +14,48 @@ export const styles = StyleSheet.create({
   sectionTitle: { fontSize: 14.5, fontWeight: '800', color: INK, letterSpacing: -0.2 },
   link: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   linkText: { fontSize: 11, fontWeight: '600', color: BLUE },
-  hero: {
-    height: 118,
-    borderRadius: 12,
-    overflow: 'hidden',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  heroPhone: { height: 132, borderRadius: 14, overflow: 'hidden', flexDirection: 'row', alignItems: 'center', backgroundColor: '#0A1F47' },
-  heroPhoneMountain: { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0 },
-  heroPhoneShade: { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0 },
-  heroPhonePhoto: { width: 118, height: 132 },
-  heroPhoneCopy: { flex: 1, minWidth: 0, paddingHorizontal: 14, gap: 6 },
-  heroPhoneTitle: { fontSize: 20, lineHeight: 24, fontWeight: '800', color: '#FFFFFF', letterSpacing: -0.3 },
-  heroPhoneSub: { fontSize: 13, lineHeight: 18, color: '#E2E8F0' },
-  heroMountain: {
-    position: 'absolute',
-    right: 0,
-    top: 0,
-    bottom: 0,
-    width: 195,
-    height: 118,
-  },
-  heroPhoto: {
-    width: 195,
-    height: 118,
-  },
-  heroCopy: {
-    flex: 1,
-    paddingLeft: 12,
-    gap: 4,
-  },
-  heroTitle: {
-    fontSize: 25,
-    lineHeight: 29,
-    fontWeight: '800',
-    color: '#FFFFFF',
-    letterSpacing: -0.5,
-  },
-  heroSub: {
-    fontSize: 12.5,
-    color: '#E2E8F0',
-  },
-  weekPill: {
-    alignSelf: 'flex-start',
-    marginTop: 6,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 7,
-    backgroundColor: 'rgba(15, 23, 42, 0.45)',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.14)',
-  },
-  weekPillText: { fontSize: 11, color: '#F1F5F9' },
-  weekPillBold: { fontWeight: '700', color: '#FFFFFF' },
-  quoteWrap: {
-    width: 245,
-    paddingRight: 20,
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 4,
-  },
-  quoteMark: {
-    fontSize: 24,
-    lineHeight: 24,
-    fontWeight: '900',
-    color: '#FBBF24',
-  },
-  quoteText: {
-    fontFamily: SERIF,
-    fontStyle: 'italic',
-    fontSize: 13.5,
-    lineHeight: 19,
-    color: '#FFFFFF',
-  },
+  // Hero: one Maple Blue panel (greeting, sentence, actions) with the week's numbers inset on the right.
+  hero: { minHeight: 118, borderRadius: Radii.card, backgroundColor: Maple.blue, flexDirection: 'row', alignItems: 'center', gap: 20, paddingVertical: 14, paddingHorizontal: 22 },
+  heroCopy: { flex: 1, minWidth: 0, gap: 4 },
+  heroTitle: { fontSize: 22, lineHeight: 27, fontWeight: '700', color: Maple.white, letterSpacing: -0.4 },
+  heroSub: { fontSize: 12.5, lineHeight: 17, color: Maple.onBlueMuted },
+  heroActions: { flexDirection: 'row', gap: 8, marginTop: 8 },
+  heroBtn: { height: 30, flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 12, borderRadius: Radii.control, backgroundColor: Maple.white },
+  heroBtnHover: { backgroundColor: Maple.blueSoft },
+  heroBtnText: { fontSize: 12, fontWeight: '600', color: Maple.blue },
+  heroBtnGhost: { height: 30, flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 12, borderRadius: Radii.control, borderWidth: 1, borderColor: Maple.onBlueLine },
+  heroBtnGhostHover: { backgroundColor: Maple.onBlueTint },
+  heroBtnGhostText: { fontSize: 12, fontWeight: '600', color: Maple.white },
+  heroPanel: { width: 290, gap: 10, padding: 12, borderRadius: Radii.control, backgroundColor: Maple.onBlueTint, borderWidth: 1, borderColor: Maple.onBlueLine },
+  heroWeek: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  heroWeekText: { fontSize: 10.5, fontWeight: '500', color: Maple.onBlueMuted },
+  heroGoal: { gap: 4 },
+  heroGoalHead: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  heroGoalText: { flex: 1, minWidth: 0, fontSize: 10.5, color: Maple.white },
+  heroGoalValue: { fontSize: 10.5, fontWeight: '700', color: Maple.white, fontVariant: ['tabular-nums'] },
+  heroTrack: { height: 5, borderRadius: Radii.pill, backgroundColor: Maple.onBlueLine, overflow: 'hidden' },
+  heroBar: { height: 5, borderRadius: Radii.pill, backgroundColor: Maple.white },
+  heroPhone: { borderRadius: Radii.panel, backgroundColor: Maple.blue, padding: 18, gap: 8 },
+  heroPhoneTitle: { fontSize: 22, lineHeight: 27, fontWeight: '700', color: Maple.white, letterSpacing: -0.3 },
+  heroPhoneSub: { fontSize: 14, lineHeight: 20, color: Maple.onBlueMuted },
+  heroPhoneBtn: { marginTop: 6, height: 44, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, borderRadius: Radii.controlLarge, backgroundColor: Maple.white },
+  heroPhoneBtnText: { fontSize: 15, fontWeight: '600', color: Maple.blue },
   kpiRow: {
     flexDirection: 'row',
     gap: 8,
   },
   kpiCard: {
     flex: 1,
-    height: 54,
+    minHeight: 54,
+    paddingVertical: 6,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
     paddingHorizontal: 9,
     borderRadius: 10,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     borderWidth: 1,
-    borderColor: '#E8EDF4',
+    borderColor: Maple.blueSelected,
   },
   kpiCardWide: {
     flex: 1.55,
@@ -125,6 +75,7 @@ export const styles = StyleSheet.create({
   },
   kpiLabel: {
     fontSize: 9.5,
+    lineHeight: 12,
     color: BODY,
   },
   kpiDeltaCol: {
@@ -134,7 +85,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 5,
     paddingVertical: 1.5,
     borderRadius: 4,
-    backgroundColor: '#EAFBF0',
+    backgroundColor: Maple.successSoft,
   },
   kpiDeltaText: {
     fontSize: 9.5,
@@ -158,9 +109,9 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 10,
     borderRadius: 12,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     borderWidth: 1,
-    borderColor: '#E5ECF5',
+    borderColor: Maple.blueSelected,
   },
   kpiIconWrapPhone: { width: 36, height: 36, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
   kpiValPhone: { fontSize: 19, lineHeight: 23, fontWeight: '800', color: INK },
@@ -169,7 +120,7 @@ export const styles = StyleSheet.create({
   pillTabs: {
     flexDirection: 'row',
     gap: 4,
-    backgroundColor: '#F1F5F9',
+    backgroundColor: Maple.blueSoft,
     padding: 2,
     borderRadius: 7,
   },
@@ -187,7 +138,7 @@ export const styles = StyleSheet.create({
     color: BODY,
   },
   pillTabTextOn: {
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   subjectsGrid: {
     flexDirection: 'row',
@@ -254,9 +205,9 @@ export const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 12,
     borderRadius: 8,
-    backgroundColor: '#F5F8FF',
+    backgroundColor: Maple.blueSoft,
     borderWidth: 1,
-    borderColor: '#E4ECFA',
+    borderColor: Maple.blueSelected,
   },
   voiceCardInner: {
     flexDirection: 'row',
@@ -314,9 +265,9 @@ export const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 11,
     borderRadius: 8,
-    backgroundColor: '#F5F8FF',
+    backgroundColor: Maple.blueSoft,
     borderWidth: 1,
-    borderColor: '#E4ECFA',
+    borderColor: Maple.blueSelected,
   },
   voiceQuoteWatermark: {
     position: 'absolute',
@@ -324,14 +275,14 @@ export const styles = StyleSheet.create({
     top: -2,
     fontSize: 22,
     fontWeight: '900',
-    color: '#CBD5E1',
+    color: Maple.borderStrong,
     opacity: 0.45,
   },
   voiceQuoteText: {
     fontStyle: 'italic',
     fontSize: 10.5,
     lineHeight: 14.5,
-    color: '#334155',
+    color: Maple.body,
   },
   liveList: {
     marginTop: 9,
@@ -345,11 +296,11 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 8,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#EEF2F8',
+    borderColor: Maple.blueSelected,
   },
   liveRowHighlight: {
-    backgroundColor: '#F8FAFF',
-    borderColor: '#DCE7FA',
+    backgroundColor: Maple.blueSoft,
+    borderColor: Maple.blueSelected,
   },
   liveInBadge: {
     flexDirection: 'row',
@@ -358,12 +309,12 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 7,
     paddingVertical: 5,
     borderRadius: 6,
-    backgroundColor: '#FEE2E2',
+    backgroundColor: Maple.errorSoft,
   },
   liveInText: {
     fontSize: 9.5,
     fontWeight: '700',
-    color: '#DC2626',
+    color: Maple.error,
   },
   liveDateCell: {
     width: 66,
@@ -375,7 +326,7 @@ export const styles = StyleSheet.create({
     width: 22,
     height: 22,
     borderRadius: 5,
-    backgroundColor: '#EAF3FF',
+    backgroundColor: Maple.blueSoft,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -407,7 +358,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 7,
     paddingVertical: 3.5,
     borderRadius: 5,
-    backgroundColor: '#F1F5F9',
+    backgroundColor: Maple.blueSoft,
   },
   apTabOn: {
     backgroundColor: BLUE,
@@ -418,7 +369,7 @@ export const styles = StyleSheet.create({
     color: BODY,
   },
   apTabTextOn: {
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   apList: {
     marginTop: 8,
@@ -452,26 +403,26 @@ export const styles = StyleSheet.create({
     borderRadius: 5,
   },
   statusDanger: {
-    backgroundColor: '#FEE2E2',
+    backgroundColor: Maple.errorSoft,
   },
   statusGood: {
-    backgroundColor: '#DCFCE7',
+    backgroundColor: Maple.successSoft,
   },
   statusInfo: {
-    backgroundColor: '#E0F2FE',
+    backgroundColor: Maple.blueSelected,
   },
   statusText: {
     fontSize: 9,
     fontWeight: '700',
   },
   statusTextDanger: {
-    color: '#DC2626',
+    color: Maple.error,
   },
   statusTextGood: {
     color: GREEN,
   },
   statusTextInfo: {
-    color: '#0284C7',
+    color: Maple.blueHover,
   },
   rwList: {
     marginTop: 10,
@@ -522,7 +473,7 @@ export const styles = StyleSheet.create({
     marginTop: 12,
     paddingTop: 8,
     borderTopWidth: 1,
-    borderTopColor: '#F1F5F9',
+    borderTopColor: Maple.blueSoft,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -540,7 +491,7 @@ export const styles = StyleSheet.create({
     right: 24,
     top: 14,
     height: 2,
-    backgroundColor: '#E2E8F0',
+    backgroundColor: Maple.border,
   },
   journeyTrackDone: {
     position: 'absolute',
@@ -558,9 +509,9 @@ export const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: '#F1F5F9',
+    backgroundColor: Maple.blueSoft,
     borderWidth: 1.5,
-    borderColor: '#CBD5E1',
+    borderColor: Maple.borderStrong,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -570,7 +521,7 @@ export const styles = StyleSheet.create({
   },
   journeyCircleCurrent: {
     backgroundColor: BLUE,
-    borderColor: '#93C5FD',
+    borderColor: Maple.blueLine,
     borderWidth: 3,
   },
   journeyTitle: {
@@ -589,7 +540,7 @@ export const styles = StyleSheet.create({
   journeyListPhone: { marginTop: 12 },
   journeyRowPhone: { flexDirection: 'row', gap: 12 },
   journeyRailPhone: { alignItems: 'center', width: 28 },
-  journeyLinePhone: { width: 2, flex: 1, minHeight: 14, backgroundColor: '#E2E8F0' },
+  journeyLinePhone: { width: 2, flex: 1, minHeight: 14, backgroundColor: Maple.border },
   journeyLineDonePhone: { backgroundColor: GREEN },
   journeyTextPhone: { flex: 1, paddingTop: 4, paddingBottom: 12 },
   journeyTitlePhone: { fontSize: 13, fontWeight: '700', color: INK },

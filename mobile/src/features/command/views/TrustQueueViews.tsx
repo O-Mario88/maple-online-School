@@ -14,6 +14,7 @@ import { toast } from '@/lib/toast';
 import type { QueueApp } from '@/mock/command-center/trust';
 
 import { SafeguardPill, StatusPill, useReview } from './TrustParts';
+import { Maple } from '@/constants/maple';
 
 type T = CommandData['trust'];
 const PER_PAGE = 10;
@@ -386,15 +387,15 @@ const styles = StyleSheet.create({
   fitCaption: { fontSize: 11.5, color: BODY },
   fitRow: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingVertical: 4 },
   fitLabel: { fontSize: 11.5, color: NAVY },
-  fitTrack: { width: 58, height: 6, borderRadius: 3, backgroundColor: '#E6ECF6', overflow: 'hidden' },
-  fitFill: { height: 6, borderRadius: 3, backgroundColor: '#22A55A' },
+  fitTrack: { width: 58, height: 6, borderRadius: 3, backgroundColor: Maple.blueSelected, overflow: 'hidden' },
+  fitFill: { height: 6, borderRadius: 3, backgroundColor: Maple.successText },
   fitValue: { width: 22, textAlign: 'right', fontSize: 12, fontWeight: '600', color: NAVY },
   doc: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 6, borderBottomWidth: 1, borderColor: LINE },
-  docIcon: { width: 32, height: 32, borderRadius: 8, alignItems: 'center', justifyContent: 'center', backgroundColor: '#EAF1FF' },
+  docIcon: { width: 32, height: 32, borderRadius: 8, alignItems: 'center', justifyContent: 'center', backgroundColor: Maple.blueSoft },
   docTitle: { fontSize: 12.5, fontWeight: '600', color: NAVY },
   history: { gap: 6 },
   decide: { flexDirection: 'row', gap: 10, marginTop: 4 },
-  decided: { padding: 10, borderRadius: 10, backgroundColor: '#F1F5FB', fontSize: 12.5, color: NAVY },
+  decided: { padding: 10, borderRadius: 10, backgroundColor: Maple.blueSoft, fontSize: 12.5, color: NAVY },
   appCard: { gap: 8, padding: 12, borderRadius: 14, borderWidth: 1, borderColor: LINE, backgroundColor: WHITE },
   appCardTop: { flexDirection: 'row', alignItems: 'center', gap: 10, justifyContent: 'space-between' },
   appCardChecks: { gap: 3 },

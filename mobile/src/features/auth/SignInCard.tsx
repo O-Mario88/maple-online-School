@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { Link, router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
@@ -10,6 +10,8 @@ import { useAuth, useStartFree } from '@/lib/auth/auth-context';
 import type { IconName } from '@/lib/icons';
 import { MOCK_DATA, mockApi } from '@/lib/mock';
 import type { MockData } from '@/mock';
+import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 type Art = MockData['publicPages']['signInArt'];
 type Method = 'whatsapp' | 'email' | 'phonePin' | 'google' | 'apple' | 'passkey';
@@ -24,19 +26,19 @@ interface MethodInfo {
 
 // The reference's sign-in methods. Only email works today; the rest say "coming soon" until their server side exists.
 const PRIMARY: readonly MethodInfo[] = [
-  { key: 'whatsapp', title: 'Continue with WhatsApp', detail: 'Get a magic link on WhatsApp', icon: 'chat', tint: '#25D366' },
-  { key: 'email', title: 'Continue with Email', detail: 'Get a magic link in your email', icon: 'mail', tint: '#1463F3' },
-  { key: 'phonePin', title: 'Continue with Phone + PIN', detail: 'Enter your phone number and receive a PIN', icon: 'phone', tint: '#8B3DFF' },
+  { key: 'whatsapp', title: 'Continue with WhatsApp', detail: 'Get a magic link on WhatsApp', icon: 'chat', tint: Maple.success },
+  { key: 'email', title: 'Continue with Email', detail: 'Get a magic link in your email', icon: 'mail', tint: Maple.blue },
+  { key: 'phonePin', title: 'Continue with Phone + PIN', detail: 'Enter your phone number and receive a PIN', icon: 'phone', tint: Maple.blue },
 ];
 const OTHERS: readonly MethodInfo[] = [
-  { key: 'google', title: 'Continue with Google', icon: 'globe', tint: '#4285F4' },
-  { key: 'apple', title: 'Continue with Apple', icon: 'person', tint: '#000000' },
-  { key: 'passkey', title: 'Use a passkey', detail: 'Sign in with your biometric (Face ID, Touch ID, Windows Hello)', icon: 'fingerprint', tint: '#1463F3' },
+  { key: 'google', title: 'Continue with Google', icon: 'globe', tint: Maple.blue },
+  { key: 'apple', title: 'Continue with Apple', icon: 'person', tint: Palette.black },
+  { key: 'passkey', title: 'Use a passkey', detail: 'Sign in with your biometric (Face ID, Touch ID, Windows Hello)', icon: 'fingerprint', tint: Maple.blue },
 ];
 
 function Logo({ m, art, size }: { m: MethodInfo; art?: Art; size: number }) {
   const photo = art?.[m.key];
-  if (photo) return <Image source={photo} style={{ width: size, height: size, borderRadius: size / 2 }} />;
+  if (photo) return <Image decorative source={photo} style={{ width: size, height: size, borderRadius: size / 2 }} />;
   return (
     <View style={{ width: size, height: size, borderRadius: size / 2, backgroundColor: m.tint, alignItems: 'center', justifyContent: 'center' }}>
       <Icon name={m.icon} size={size * 0.5} color={Brand.surface} />
@@ -212,21 +214,21 @@ export function SignInCard({ art, phone = false }: { art?: Art; phone?: boolean 
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
-  card: { width: 552, minHeight: 877, paddingHorizontal: 35, paddingTop: 22, paddingBottom: 30, borderRadius: 14, backgroundColor: Brand.surface, shadowColor: '#0F2350', shadowOpacity: 0.12, shadowRadius: 24, shadowOffset: { width: 0, height: 8 } },
+  card: { width: 552, minHeight: 877, paddingHorizontal: 35, paddingTop: 22, paddingBottom: 30, borderRadius: 14, backgroundColor: Brand.surface, shadowColor: Palette.blue950j, shadowOpacity: 0.12, shadowRadius: 24, shadowOffset: { width: 0, height: 8 } },
   cardP: { width: '100%', height: 'auto', paddingHorizontal: 14, paddingTop: 8, paddingBottom: 16, borderRadius: 14 },
-  tabs: { flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: '#E6EAF1' },
+  tabs: { flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: Maple.disabledSurface },
   tab: { flex: 1, alignItems: 'center', paddingVertical: 14 },
-  tabText: { fontSize: 18, color: '#4A5263' },
+  tabText: { fontSize: 18, color: Maple.body },
   tabTextP: { fontSize: 13 },
   tabOn: { color: Brand.blue, fontWeight: '600' },
   tabLine: { position: 'absolute', left: 0, right: 0, bottom: -1, height: 3, borderRadius: 2, backgroundColor: Brand.blue },
   title: { marginTop: 26, fontSize: 36, lineHeight: 42, fontWeight: '700', color: Brand.ink, letterSpacing: -0.8 },
   titleP: { marginTop: 16, fontSize: 22, lineHeight: 27, letterSpacing: -0.4 },
-  sub: { marginTop: 10, fontSize: 16.5, lineHeight: 24, color: '#4A5C7A' },
+  sub: { marginTop: 10, fontSize: 16.5, lineHeight: 24, color: Maple.body },
   subP: { marginTop: 6, fontSize: 12, lineHeight: 17 },
   list: { gap: 13, marginTop: 24 },
   listP: { gap: 9, marginTop: 14 },
-  row: { flexDirection: 'row', alignItems: 'center', gap: 22, paddingLeft: 20, paddingRight: 18, borderRadius: 10, borderWidth: 1, borderColor: '#E3E8F0', backgroundColor: Brand.surface },
+  row: { flexDirection: 'row', alignItems: 'center', gap: 22, paddingLeft: 20, paddingRight: 18, borderRadius: 10, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Brand.surface },
   rowP: { gap: 14, paddingLeft: 12, paddingRight: 12, borderRadius: 9 },
   tall: { height: 72 },
   short: { height: 59 },
@@ -234,20 +236,20 @@ const styles = StyleSheet.create({
   shortP: { height: 44 },
   rowTitle: { fontSize: 17.5, fontWeight: '600', color: Brand.ink },
   rowTitleP: { fontSize: 13 },
-  rowDetail: { marginTop: 3, fontSize: 13.5, color: '#4A5263', letterSpacing: -0.1 },
+  rowDetail: { marginTop: 3, fontSize: 13.5, color: Maple.body, letterSpacing: -0.1 },
   rowDetailP: { marginTop: 2, fontSize: 10, lineHeight: 14 },
   or: { flexDirection: 'row', alignItems: 'center', gap: 14, marginTop: 26, marginBottom: -2 },
   orP: { marginTop: 16 },
-  orLine: { flex: 1, height: 1, backgroundColor: '#E3E8F0' },
-  orText: { fontSize: 14, color: '#4A5263' },
+  orLine: { flex: 1, height: 1, backgroundColor: Maple.blueSelected },
+  orText: { fontSize: 14, color: Maple.body },
   orTextP: { fontSize: 11 },
   soon: { marginTop: 14, fontSize: 13.5, color: Brand.blue, textAlign: 'center' },
   soonP: { fontSize: 12 },
-  secure: { flexDirection: 'row', alignItems: 'center', gap: 26, marginTop: 20, paddingLeft: 32, paddingRight: 24, paddingVertical: 22, borderRadius: 10, backgroundColor: '#EEF4FF' },
+  secure: { flexDirection: 'row', alignItems: 'center', gap: 26, marginTop: 20, paddingLeft: 32, paddingRight: 24, paddingVertical: 22, borderRadius: 10, backgroundColor: Maple.blueSoft },
   secureP: { gap: 14, marginTop: 14, paddingLeft: 16, paddingRight: 14, paddingVertical: 14 },
   secureTitle: { fontSize: 15, fontWeight: '700', color: Brand.ink },
   secureTitleP: { fontSize: 12 },
-  secureText: { marginTop: 6, fontSize: 14, lineHeight: 20, color: '#3D4656' },
+  secureText: { marginTop: 6, fontSize: 14, lineHeight: 20, color: Maple.body },
   secureTextP: { marginTop: 3, fontSize: 10.5, lineHeight: 15 },
   form: { gap: 14, marginTop: 24 },
   formLinks: { flexDirection: 'row', justifyContent: 'space-between' },
@@ -255,9 +257,9 @@ const styles = StyleSheet.create({
   browseFree: { alignSelf: 'center', marginTop: 4 },
   linkP: { fontSize: 13 },
   preview: { marginTop: 10, textAlign: 'center' },
-  demoBar: { marginTop: 12, padding: 10, borderRadius: 10, borderWidth: 1, borderColor: '#DCE6F5', backgroundColor: '#F8FBFF', gap: 6 },
-  demoTitle: { fontSize: 11.5, fontWeight: '700', color: '#334E7B' },
+  demoBar: { marginTop: 12, padding: 10, borderRadius: 10, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.blueSoft, gap: 6 },
+  demoTitle: { fontSize: 11.5, fontWeight: '700', color: Palette.blue800 },
   demoRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
-  demoPill: { paddingHorizontal: 10, paddingVertical: 5, borderRadius: 999, backgroundColor: '#1463F3' },
-  demoPillText: { fontSize: 11.5, fontWeight: '700', color: '#FFFFFF' },
+  demoPill: { paddingHorizontal: 10, paddingVertical: 5, borderRadius: 999, backgroundColor: Maple.blue },
+  demoPillText: { fontSize: 11.5, fontWeight: '700', color: Maple.surface },
 });

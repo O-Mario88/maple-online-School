@@ -1,4 +1,4 @@
-import { levelFor, overallProgress, phaseStatus, planStatus, scalePhases, subjectAction } from './plan';
+import { planTabFromLink, levelFor, overallProgress, phaseStatus, planStatus, scalePhases, subjectAction } from './plan';
 
 const PHASES = [
   { title: 'Build Foundations', from: 1, to: 6 },
@@ -34,8 +34,23 @@ describe('My Plan', () => {
 
   test('a longer or shorter plan stretches every phase in proportion, with no gaps', () => {
     const twelve = scalePhases(PHASES, 24, 12);
-    expect(twelve.map((p) => [p.from, p.to])).toEqual([[1, 3], [4, 6], [7, 10], [11, 12]]);
+    expect(twelve.map((p) => [p.from, p.to])).toEqual([
+      [1, 3],
+      [4, 6],
+      [7, 10],
+      [11, 12],
+    ]);
     expect(scalePhases(PHASES, 24, 36).map((p) => p.to)).toEqual([9, 18, 30, 36]);
     expect(scalePhases(PHASES, 24, 24)).toEqual(PHASES);
+  });
+});
+
+describe('plan tabs from links', () => {
+  test('a link’s ?tab= opens that tab, and anything else leaves the tab alone', () => {
+    expect(planTabFromLink('career')).toBe('career');
+    expect(planTabFromLink('recs')).toBe('recs');
+    expect(planTabFromLink('settings')).toBeNull();
+    expect(planTabFromLink(undefined)).toBeNull();
+    expect(planTabFromLink(['goals'])).toBeNull();
   });
 });

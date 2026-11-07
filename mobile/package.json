@@ -10,6 +10,7 @@
     "expo": "~58.0.21",
     "expo-constants": "~58.0.14",
     "expo-device": "~58.0.5",
+    "expo-file-system": "~58.0.13",
     "expo-font": "~58.0.11",
     "expo-glass-effect": "~58.0.5",
     "expo-image": "~58.0.18",
@@ -17,6 +18,7 @@
     "expo-linking": "~58.0.15",
     "expo-router": "~58.0.28",
     "expo-secure-store": "~58.0.2",
+    "expo-sharing": "~58.0.22",
     "expo-splash-screen": "~58.0.12",
     "expo-status-bar": "~58.0.4",
     "expo-symbols": "~58.0.4",
@@ -24,6 +26,7 @@
     "expo-web-browser": "~58.0.7",
     "jest": "~30.5.2",
     "jest-expo": "~58.0.13",
+    "lucide-react-native": "1.61.0",
     "openapi-fetch": "^0.17.0",
     "react": "19.3.0",
     "react-dom": "19.3.0",
@@ -37,6 +40,7 @@
     "react-native-worklets": "0.13.0"
   },
   "devDependencies": {
+    "@playwright/test": "1.64.0",
     "@types/jest": "^30.0.0",
     "@types/react": "~19.3.0",
     "eslint-config-expo": "~58.0.4",
@@ -51,15 +55,29 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "test": "jest",
+    "test:nav": "node scripts/test-pages.mjs",
     "typecheck": "tsc --noEmit",
     "api:types": "npx --yes -p openapi-typescript@7.13.0 -p typescript@5.9.3 openapi-typescript ../openapi/maple.yaml -o src/lib/api/schema.d.ts",
     "web:mock": "EXPO_PUBLIC_MOCK_DATA=true expo start --web --port 8081",
     "web:designs": "EXPO_PUBLIC_DESIGN_DATA=true expo start --web --port 8082",
     "start:mock": "EXPO_PUBLIC_MOCK_DATA=true expo start",
-    "check:no-mock": "node scripts/check-no-mock.mjs"
+    "check:no-mock": "node scripts/check-no-mock.mjs",
+    "check:bundle": "node scripts/check-bundle.mjs",
+    "design:export": "jest --config scripts/design-data/jest.config.js",
+    "db:design": "node scripts/design-data/db-design.mjs",
+    "web:design-db": "EXPO_PUBLIC_DESIGN_DATA=true EXPO_PUBLIC_API_URL=http://localhost:8088 expo start --web --port 8086",
+    "test:visual": "node scripts/test-pages.mjs e2e/visual.spec.ts"
   },
   "private": true,
   "jest": {
-    "preset": "jest-expo"
+    "preset": "jest-expo",
+    "moduleNameMapper": {
+      "^lucide-react-native/icons/(.*)$": "<rootDir>/node_modules/lucide-react-native/dist/cjs/icons/$1.js",
+      "^lucide-react-native$": "<rootDir>/node_modules/lucide-react-native/dist/cjs/lucide-react-native.js"
+    },
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "<rootDir>/e2e/"
+    ]
   }
 }

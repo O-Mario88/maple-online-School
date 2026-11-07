@@ -4,6 +4,7 @@
  * Names, dates and figures are illustrative, copied from Edwin's references.
  */
 import type { IconName } from '@/lib/icons';
+import { Maple } from '@/constants/maple';
 
 type Photo = number;
 type Tone = 'blue' | 'red' | 'orange' | 'purple' | 'green' | 'grey';
@@ -492,11 +493,11 @@ export const accounting = {
     expenses: [90, 110, 120, 100, 130, 110, 120, 130, 110, 120],
   },
   balances: [
-    { label: 'Current Assets', pct: 38, color: '#22A55A' },
-    { label: 'Fixed Assets', pct: 42, color: '#1E6BF0' },
-    { label: 'Current Liabilities', pct: 12, color: '#F7A21B' },
-    { label: 'Long-term Liabilities', pct: 5, color: '#8B3CF0' },
-    { label: 'Equity', pct: 3, color: '#5B45D8' },
+    { label: 'Current Assets', pct: 38, color: Maple.successText },
+    { label: 'Fixed Assets', pct: 42, color: Maple.blue },
+    { label: 'Current Liabilities', pct: 12, color: Maple.warning },
+    { label: 'Long-term Liabilities', pct: 5, color: Maple.blue },
+    { label: 'Equity', pct: 3, color: Maple.blue },
   ],
   accounts: [
     { code: '1000', name: 'Cash & Bank', type: 'Asset', balance: 24500000 },

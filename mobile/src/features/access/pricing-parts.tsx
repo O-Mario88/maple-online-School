@@ -13,6 +13,7 @@ import { navFor, PORTAL_LABELS } from '@/lib/navigation';
 import { usePortal } from '@/lib/portal-context';
 import { toast } from '@/lib/toast';
 import type { PayPlan } from '@/mock/access';
+import { Maple } from '@/constants/maple';
 
 /** The student on both designs, cut from the reference with soft edges. */
 export const STUDENT = require('@/assets/images/paywall-student.png') as number;
@@ -20,23 +21,23 @@ export const LOGO = require('@/assets/images/maple-leaf.png') as number;
 
 /** The reference's colours. */
 export const C = {
-  navy: '#0B1A3F',
-  ink: '#1E293B',
-  body: '#475569',
-  muted: '#64748B',
-  blue: '#0063EA',
-  blueDeep: '#0B4FD6',
-  line: '#E6EBF3',
-  canvas: '#F9FAFE',
-  white: '#FFFFFF',
-  gold: '#E9A23B',
-  goldLine: '#E9B04A',
-  goldSoft: '#FFF8EC',
-  green: '#16A34A',
-  soft: '#F0F5FF',
-  softLine: '#DFE8FA',
+  navy: Maple.navyDeep,
+  ink: Maple.navy,
+  body: Maple.body,
+  muted: Maple.secondary,
+  blue: Maple.blue,
+  blueDeep: Maple.blue,
+  line: Maple.blueSelected,
+  canvas: Maple.blueSoft,
+  white: Maple.surface,
+  gold: Maple.warning,
+  goldLine: Maple.warning,
+  goldSoft: Maple.warningSoft,
+  green: Maple.successText,
+  soft: Maple.blueSoft,
+  softLine: Maple.blueSelected,
 } as const;
-const TONES = { red: { bg: '#FDE9E4', fg: '#A3261C' }, blue: { bg: '#EAF1FF', fg: C.blue }, green: { bg: '#E6F6EC', fg: C.green } } as const;
+const TONES = { red: { bg: Maple.errorSoft, fg: Maple.errorText }, blue: { bg: Maple.blueSoft, fg: C.blue }, green: { bg: Maple.successSoft, fg: C.green } } as const;
 
 export const ugx = (n: number) => formatMoney(n, 'UGX');
 export const per = (school: boolean) => (school ? '/ learner a month' : '/ month');

@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
@@ -6,6 +6,7 @@ import { Icon } from '@/components/icon';
 import type { MockData } from '@/mock';
 
 import { Brand, CARD_SHADOW } from '../palette';
+import { Maple } from '@/constants/maple';
 
 type Page = MockData['publicPages']['schoolsPage'];
 
@@ -186,7 +187,7 @@ const styles = StyleSheet.create({
   trustedRow: { flexWrap: 'nowrap', justifyContent: 'space-between', columnGap: 8 },
   featuresWide: { flexWrap: 'nowrap', gap: 0, paddingVertical: 14, borderRadius: 14, backgroundColor: 'rgba(255,255,255,0.6)' },
   featureWide: { flexBasis: 0, flexGrow: 1, paddingVertical: 4 },
-  featureRule: { borderLeftWidth: 1, borderLeftColor: '#E6EAF1' },
+  featureRule: { borderLeftWidth: 1, borderLeftColor: Maple.disabledSurface },
   copy: { gap: 12 },
   copyWide: { width: 410, paddingTop: 22, paddingLeft: 30, gap: 9 },
   badge: { alignSelf: 'flex-start', fontSize: 11, fontWeight: '800', letterSpacing: 0.4, color: Brand.surface, backgroundColor: Brand.blue, paddingHorizontal: 12, paddingVertical: 6, borderRadius: 6, overflow: 'hidden' },

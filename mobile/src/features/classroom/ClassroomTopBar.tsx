@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
@@ -7,8 +7,8 @@ import { Icon } from '@/components/icon';
 import { type ClassLayout, LayoutSheet, SettingsSheet } from '@/features/classroom/ClassSheets';
 import { Brand } from '@/features/public/palette';
 import { clockOf } from '@/lib/classroom';
+import { MapleLogo } from '@/components/brand/MapleLogo';
 
-const LEAF = require('@/assets/images/maple-leaf.png') as number;
 const TICK_MS = 1000;
 
 interface Props {
@@ -49,11 +49,7 @@ export function ClassroomTopBar({ title, board, students, teacher, teacherPhoto,
       <SettingsSheet visible={sheet === 'settings'} onClose={() => setSheet(null)} />
       {wide ? (
         <Pressable style={styles.brand} onPress={() => router.push('/')} accessibilityRole="link" accessibilityLabel="Maple home">
-          <Image source={LEAF} style={styles.leafImg} contentFit="contain" />
-          <View>
-            <Text style={styles.name}>Maple</Text>
-            <Text style={styles.tag}>Global Online School</Text>
-          </View>
+          <MapleLogo markStyle={styles.leafImg} />
         </Pressable>
       ) : null}
       <View style={styles.info}>
@@ -81,7 +77,7 @@ export function ClassroomTopBar({ title, board, students, teacher, teacherPhoto,
           </View>
           {wide ? (
             <View style={styles.chipBox}>
-              {teacherPhoto ? <Image source={teacherPhoto} style={styles.teacherFace} /> : null}
+              {teacherPhoto ? <Image decorative source={teacherPhoto} style={styles.teacherFace} /> : null}
               <Text style={[styles.chip, styles.chipBold]}>{teacher}</Text>
             </View>
           ) : null}

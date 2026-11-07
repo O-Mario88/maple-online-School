@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { useState } from 'react';
 import { Modal, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 
@@ -11,6 +11,8 @@ import type { TeacherCalendar } from '@/mock/teacher-calendar';
 import type { CalendarController } from './useTeacherCalendar';
 import { phoneStyles } from './ScheduleLiveModal.phoneStyles';
 import { styles as deskStyles } from './ScheduleLiveModal.styles';
+import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 const THUMB = require('@/mock/images/builder-thumb.jpg') as number;
 const JAMES = require('@/mock/images/teacher-home-daniel.png') as number;
@@ -153,7 +155,7 @@ export function ScheduleLiveModal({
       {/* Modal Header */}
       <View style={styles.modalHeader}>
         <View style={styles.headerIconTile}>
-          <Icon name="video" size={20} color="#FFFFFF" />
+          <Icon name="video" size={20} color={Maple.surface} />
         </View>
         <View style={styles.flex}>
           <Text style={styles.modalTitle} accessibilityRole="header">
@@ -194,7 +196,7 @@ export function ScheduleLiveModal({
                 accessibilityRole="button"
                 accessibilityState={{ expanded: cohortOpen }}
                 accessibilityLabel={`Subject / Cohort: ${cohort.title}, ${cohort.subtitle}`}>
-                <Image source={THUMB} style={styles.cohortThumb} contentFit="cover" />
+                <Image decorative source={THUMB} style={styles.cohortThumb} contentFit="cover" />
                 <View style={styles.flex}>
                   <Text style={styles.cohortTitle}>{cohort.title}</Text>
                   <Text style={styles.cohortSub}>{cohort.subtitle}</Text>
@@ -452,7 +454,7 @@ export function ScheduleLiveModal({
               <View style={styles.coTeachersBox}>
                 {coTeachers.map((t) => (
                   <View key={t.id} style={styles.coTeacherChip}>
-                    <Image source={t.photo} style={styles.coTeacherAvatar} />
+                    <Image decorative source={t.photo} style={styles.coTeacherAvatar} />
                     <Text style={styles.coTeacherName}>{t.name}</Text>
                     <Pressable
                       onPress={() => removeCoTeacher(t.id)}
@@ -479,10 +481,10 @@ export function ScheduleLiveModal({
               <Text style={styles.fieldLabel}>Resources (optional)</Text>
               <View style={styles.resourcesRow}>
                 {[
-                  { label: 'Add Slides / PDF', icon: 'notes' as const, color: '#1463F3' },
-                  { label: 'Add Worksheet', icon: 'clipboard' as const, color: '#7C3AED' },
-                  { label: 'Add Link', icon: 'link' as const, color: '#0284C7' },
-                  { label: 'Add Recording', icon: 'playFill' as const, color: '#7C3AED' },
+                  { label: 'Add Slides / PDF', icon: 'notes' as const, color: Maple.blue },
+                  { label: 'Add Worksheet', icon: 'clipboard' as const, color: Maple.blue },
+                  { label: 'Add Link', icon: 'link' as const, color: Maple.blueHover },
+                  { label: 'Add Recording', icon: 'playFill' as const, color: Maple.blue },
                 ].map((res) => {
                   const isOn = attached.includes(res.label);
                   return (
@@ -540,13 +542,13 @@ export function ScheduleLiveModal({
               </View>
               {conflict ? (
                 <View style={styles.conflictPillBad}>
-                  <Icon name="alert" size={11} color="#DC2626" />
+                  <Icon name="alert" size={11} color={Maple.error} />
                   <Text style={styles.conflictPillBadText}>1 Conflict</Text>
                 </View>
               ) : (
                 <View style={styles.conflictPillGood}>
                   <View style={styles.greenCheckDot}>
-                    <Icon name="check" size={9} color="#FFFFFF" />
+                    <Icon name="check" size={9} color={Maple.surface} />
                   </View>
                   <Text style={styles.conflictPillGoodText}>No Conflicts</Text>
                 </View>
@@ -556,7 +558,7 @@ export function ScheduleLiveModal({
             {/* Status Banner */}
             {conflict ? (
               <View style={styles.statusBannerBad}>
-                <Icon name="alert" size={16} color="#DC2626" />
+                <Icon name="alert" size={16} color={Maple.error} />
                 <View style={styles.flex}>
                   <Text style={styles.statusTitleBad}>Conflict with {conflict.title}</Text>
                   <Text style={styles.statusBodyBad}>
@@ -567,7 +569,7 @@ export function ScheduleLiveModal({
             ) : (
               <View style={styles.statusBannerGood}>
                 <View style={styles.statusCheckCircle}>
-                  <Icon name="check" size={13} color="#FFFFFF" />
+                  <Icon name="check" size={13} color={Maple.surface} />
                 </View>
                 <View style={styles.flex}>
                   <Text style={styles.statusTitleGood}>This time slot is available!</Text>
@@ -585,10 +587,10 @@ export function ScheduleLiveModal({
               <View style={styles.miniRow}>
                 <Text style={styles.miniTime}>8:00 AM</Text>
                 <View style={[styles.miniEvent, styles.miniEventGreen]}>
-                  <Icon name="bolt" size={13} color="#16A34A" />
+                  <Icon name="bolt" size={13} color={Maple.successText} />
                   <View style={styles.flex}>
-                    <Text style={[styles.miniEventTitle, { color: '#064E3B' }]}>Instant Help (Available)</Text>
-                    <Text style={[styles.miniEventSub, { color: '#166534' }]}>8:00 – 8:45 AM</Text>
+                    <Text style={[styles.miniEventTitle, { color: Palette.teal950 }]}>Instant Help (Available)</Text>
+                    <Text style={[styles.miniEventSub, { color: Maple.successText }]}>8:00 – 8:45 AM</Text>
                   </View>
                 </View>
               </View>
@@ -597,14 +599,14 @@ export function ScheduleLiveModal({
               <View style={styles.miniRow}>
                 <Text style={styles.miniTime}>9:00 AM</Text>
                 <View style={[styles.miniEvent, styles.miniEventBlue]}>
-                  <View style={[styles.miniIconBadge, { backgroundColor: '#1D63ED' }]}>
-                    <Icon name="book" size={10} color="#FFFFFF" />
+                  <View style={[styles.miniIconBadge, { backgroundColor: Maple.blue }]}>
+                    <Icon name="book" size={10} color={Maple.surface} />
                   </View>
                   <View style={styles.flex}>
-                    <Text style={[styles.miniEventTitle, { color: '#0F295C' }]}>
+                    <Text style={[styles.miniEventTitle, { color: Palette.blue900c }]}>
                       O-Level Mathematics Class (School)
                     </Text>
-                    <Text style={[styles.miniEventSub, { color: '#1E40AF' }]}>9:00 – 10:00 AM</Text>
+                    <Text style={[styles.miniEventSub, { color: Maple.blueHover }]}>9:00 – 10:00 AM</Text>
                   </View>
                 </View>
               </View>
@@ -618,15 +620,15 @@ export function ScheduleLiveModal({
                     conflict ? styles.miniEventConflict : styles.miniEventNew,
                   ]}>
                   <View style={styles.flex}>
-                    <Text style={[styles.miniNewTime, conflict && { color: '#DC2626' }]}>
+                    <Text style={[styles.miniNewTime, conflict && { color: Maple.error }]}>
                       {rangeLabel}
                     </Text>
                     <Text style={styles.miniNewTitle}>
                       <Text style={styles.miniNewBold}>New Live Class</Text> (Your Time)
                     </Text>
                   </View>
-                  <View style={[styles.miniNewCheck, conflict && { backgroundColor: '#DC2626' }]}>
-                    <Icon name={conflict ? 'close' : 'check'} size={11} color="#FFFFFF" />
+                  <View style={[styles.miniNewCheck, conflict && { backgroundColor: Maple.error }]}>
+                    <Icon name={conflict ? 'close' : 'check'} size={11} color={Maple.surface} />
                   </View>
                 </View>
               </View>
@@ -635,10 +637,10 @@ export function ScheduleLiveModal({
               <View style={styles.miniRow}>
                 <Text style={styles.miniTime}>11:00 AM</Text>
                 <View style={[styles.miniEvent, styles.miniEventGrey]}>
-                  <Icon name="people" size={14} color="#475569" />
+                  <Icon name="people" size={14} color={Maple.body} />
                   <View style={styles.flex}>
-                    <Text style={[styles.miniEventTitle, { color: '#1E293B' }]}>Teacher Meeting</Text>
-                    <Text style={[styles.miniEventSub, { color: '#475569' }]}>11:00 AM – 12:00 PM</Text>
+                    <Text style={[styles.miniEventTitle, { color: Maple.navy }]}>Teacher Meeting</Text>
+                    <Text style={[styles.miniEventSub, { color: Maple.body }]}>11:00 AM – 12:00 PM</Text>
                   </View>
                 </View>
               </View>
@@ -710,9 +712,9 @@ export function ScheduleLiveModal({
               onPress={handleSchedule}
               accessibilityRole="button"
               accessibilityLabel="Schedule Class">
-              <Icon name="calendar" size={14} color="#FFFFFF" />
+              <Icon name="calendar" size={14} color={Maple.surface} />
               <Text style={styles.scheduleBtnText}>Schedule Class</Text>
-              <Icon name="arrowRight" size={13} color="#FFFFFF" />
+              <Icon name="arrowRight" size={13} color={Maple.surface} />
             </Pressable>
           </View>
         </View>

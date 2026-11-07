@@ -1,18 +1,9 @@
-import { useSyncExternalStore } from 'react';
-import { useColorScheme as useRNColorScheme } from 'react-native';
-
-const noSubscription = () => () => {};
+import { APP_SCHEME } from '@/lib/appearance';
 
 /**
- * To support static rendering, the server always renders light; the client
- * switches to the device scheme once it has hydrated.
+ * The scheme Maple draws in (light for now: see lib/appearance). The server and the browser
+ * draw the same scheme, so the page never switches colours after it loads.
  */
-export function useColorScheme() {
-  const hasHydrated = useSyncExternalStore(
-    noSubscription,
-    () => true,
-    () => false,
-  );
-  const colorScheme = useRNColorScheme();
-  return hasHydrated ? colorScheme : 'light';
+export function useColorScheme(): typeof APP_SCHEME {
+  return APP_SCHEME;
 }

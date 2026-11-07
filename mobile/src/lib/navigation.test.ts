@@ -1,4 +1,4 @@
-import { activeKey, navFor, portalsFor, PORTALS, CLASSROOM, type Person, PUBLIC_PREVIEWS, SHARED_PREVIEWS, tabBar } from './navigation';
+import { activeKey, navFor, navMode, portalsFor, PORTALS, CLASSROOM, type Person, PUBLIC_PREVIEWS, SHARED_PREVIEWS, onlyAllowed, tabBar, TOP_BAR_MAX, topBarSplit } from './navigation';
 
 const person = (role: string, memberships: { role: string; status?: string }[] = [], children = 0): Person => ({
   role,
@@ -150,7 +150,7 @@ describe('navFor', () => {
   });
 
   it('keeps the learner phone tabs to Home, Learn, Classes and Assignments', () => {
-    expect(tabBar(navFor('learner', true)).tabs.map((i) => i.label)).toEqual(['Home', 'Explore', 'Classes', 'Assignments']);
+    expect(tabBar(navFor('learner', true)).tabs.map((i) => i.short ?? i.label)).toEqual(['Home', 'Explore', 'Classes', 'Assignments']);
   });
 
   it('lights Classes and Library on both their designed and live pages', () => {
@@ -265,5 +265,98 @@ describe('the pricing page', () => {
     expect(navFor('parent', true).some((i) => i.key === 'pricing')).toBe(false);
     expect(navFor('command', true).some((i) => i.key === 'pricing')).toBe(false);
     expect(navFor('learner', false).some((i) => i.key === 'pricing')).toBe(false);
+  });
+});
+
+describe('the learner menu', () => {
+  const items = navFor('learner', true);
+
+  test('the sidebar lists the main pages in the references’ order, the rest under More', () => {
+    expect(items.filter((i) => !i.group).map((i) => i.label)).toEqual(['Home', 'My Plan', 'Subjects', 'Video Lessons', 'Live Classes', 'Assignments', 'Progress', 'Library', 'School Network', 'Career Compass']);
+    expect([...new Set(items.filter((i) => i.group).map((i) => i.group))]).toEqual(['More']);
+    expect(items.filter((i) => i.group).map((i) => i.key)).toEqual(expect.arrayContaining(['explore', 'shorts', 'exam', 'past-papers', 'passport', 'squad', 'projects', 'account', 'billing']));
+  });
+
+  test('phone tabs are picked from the same list, not by position', () => {
+    expect(tabBar(items).tabs.map((i) => i.key)).toEqual(['home', 'explore', 'lessons', 'assignments']);
+  });
+
+  test('Career Compass carries its sections, each opening its tab', () => {
+    const compass = items.find((i) => i.key === 'careers');
+    expect(compass?.children?.map((c) => c.label)).toEqual(['Home', 'Interests', 'Career Explorer', 'Counselor', 'Universities', 'Scholarships', 'Applications', 'Career Events', 'Communities']);
+    expect(compass?.children?.[0].href).toBe('/learn/careers');
+    expect(compass?.children?.[2].href).toBe('/learn/careers?tab=explorer');
+  });
+
+  test('pages inside a section light that section', () => {
+    expect(activeKey(items, '/universities/kampala-lakes-university')).toBe('careers');
+    expect(activeKey(items, '/learn/apply')).toBe('schools');
+    expect(activeKey(items, '/learn/lesson')).toBe('video-lessons');
+    expect(activeKey(items, '/learn/course')).toBe('subjects');
+  });
+});
+
+describe('where the menu goes', () => {
+  test('phones and narrow windows get the bottom tabs; an installed app on a computer gets the sidebar; a browser tab gets the top bar', () => {
+    expect(navMode({ os: 'ios', width: 390, installed: false })).toBe('tabs');
+    expect(navMode({ os: 'web', width: 800, installed: true })).toBe('tabs');
+    expect(navMode({ os: 'web', width: 1440, installed: true })).toBe('sidebar');
+    expect(navMode({ os: 'web', width: 1440, installed: false })).toBe('topbar');
+    expect(navMode({ os: 'ios', width: 1180, installed: false })).toBe('sidebar');
+  });
+
+  test('the top bar shows as many main pages as fit, and More holds the rest and the extras', () => {
+    const items = navFor('learner', true);
+    const { tabs, more } = topBarSplit(items, 7);
+    expect(tabs.map((i) => i.key)).toEqual(['home', 'plan', 'subjects', 'video-lessons', 'lessons', 'assignments', 'progress']);
+    expect(more.slice(0, 4).map((i) => i.key)).toEqual(['library', 'schools', 'careers', 'explore']);
+    expect(tabs.length + more.length).toBe(items.length);
+    expect(topBarSplit(items, 99).tabs.map((i) => i.key)).not.toContain('explore');
+  });
+
+  test('however wide the window, the top bar shows at most seven pages before More', () => {
+    const items = navFor('learner', true);
+    expect(topBarSplit(items, 99).tabs).toHaveLength(TOP_BAR_MAX);
+    expect(TOP_BAR_MAX).toBe(7);
+  });
+});
+
+describe('role-filtered menus', () => {
+  test('items and sections the role may not open are left out', () => {
+    const items = navFor('learner', true);
+    const out = onlyAllowed(items, (href) => !href.startsWith('/learn/plan') && !href.includes('tab=counselor'));
+    expect(out.map((i) => i.key)).not.toContain('plan');
+    expect(out.find((i) => i.key === 'careers')?.children?.map((c) => c.key)).not.toContain('careers-counselor');
+    expect(items.find((i) => i.key === 'plan')).toBeDefined();
+  });
+});
+
+describe('deployment menus', () => {
+  // A route file that still shows "Coming soon" in a deployment build (no sample data).
+  /// <reference types="node" />
+  const fs = jest.requireActual<typeof import('fs')>('fs');
+  const path = jest.requireActual<typeof import('path')>('path');
+  const APP = path.resolve(__dirname, '../app');
+  const routeFile = (href: string): string | null => {
+    const clean = href.split('?')[0].replace(/\/$/, '') || '/';
+    const rel = clean === '/' ? 'index' : clean.slice(1);
+    for (const dir of [path.join(APP, '(app)'), APP]) {
+      for (const f of [`${rel}.tsx`, `${rel}/index.tsx`]) if (fs.existsSync(path.join(dir, f))) return path.join(dir, f);
+    }
+    return null;
+  };
+  // It shows PreviewScreen and has no real-data page to show instead (`design ? <Design /> : <LiveX />`).
+  const comingSoon = (file: string) => {
+    const text = fs.readFileSync(file, 'utf8');
+    return /<PreviewScreen\b/.test(text) && !/:\s*<Live[A-Z]\w*/.test(text);
+  };
+
+  test.each(PORTALS)('every %s menu item in a deployment build opens a working page, never "Coming soon"', (portal) => {
+    const items = navFor(portal, false).flatMap((i) => [i, ...(i.children ?? [])]);
+    const previews = items.filter((i) => {
+      const file = routeFile(i.href);
+      return file !== null && comingSoon(file);
+    });
+    expect(previews.map((i) => `${i.label} (${i.href})`)).toEqual([]);
   });
 });

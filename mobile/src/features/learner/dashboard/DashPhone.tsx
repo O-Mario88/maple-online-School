@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -7,9 +7,10 @@ import { Icon } from '@/components/icon';
 import { LanguageMenu } from '@/components/shell/LanguageMenu';
 import { useMe } from '@/lib/auth/auth-context';
 import { useSwitcher } from '@/lib/switcher-context';
+import { Maple, TypeScale } from '@/constants/maple';
+import { MapleLogo } from '@/components/brand/MapleLogo';
 
-const INK = '#0B1424';
-const LEAF = require('@/assets/images/maple-leaf.png') as number;
+const INK = Maple.navy;
 
 /** The learner's phone top bar: logo, optional language globe, notifications and the avatar (or initial) that opens the mode switcher. */
 export function LearnerPhoneTop({ avatar, globe = false }: { avatar?: number; globe?: boolean }) {
@@ -20,11 +21,7 @@ export function LearnerPhoneTop({ avatar, globe = false }: { avatar?: number; gl
   return (
     <View style={[styles.top, { paddingTop: insets.top, height: 56 + insets.top }]}>
       <View style={styles.logo}>
-        <Image source={LEAF} style={styles.leaf} contentFit="contain" />
-        <View>
-          <Text style={styles.name}>Maple</Text>
-          <Text style={styles.tag}>Global Online School</Text>
-        </View>
+        <MapleLogo markStyle={styles.leaf} />
       </View>
       <View style={styles.topRight}>
         {globe ? (
@@ -38,7 +35,7 @@ export function LearnerPhoneTop({ avatar, globe = false }: { avatar?: number; gl
         </Pressable>
         <Pressable onPress={switcher?.open} accessibilityRole="button" accessibilityLabel="Switch mode">
           {avatar ? (
-            <Image source={avatar} style={styles.avatar} />
+            <Image decorative source={avatar} style={styles.avatar} />
           ) : (
             <View style={[styles.avatar, styles.avatarBlank]}>
               <Text style={styles.avatarText}>{initial}</Text>
@@ -51,14 +48,14 @@ export function LearnerPhoneTop({ avatar, globe = false }: { avatar?: number; gl
 }
 
 const styles = StyleSheet.create({
-  top: { height: 56, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, backgroundColor: '#FFFFFF' },
+  top: { height: 56, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, backgroundColor: Maple.surface },
   logo: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   leaf: { width: 32, height: 32 },
   name: { fontSize: 18, lineHeight: 20, fontWeight: '700', color: INK },
   tag: { fontSize: 7.5, color: INK },
   topRight: { flexDirection: 'row', alignItems: 'center', gap: 18 },
-  redDot: { position: 'absolute', top: 0, right: 0, width: 8, height: 8, borderRadius: 4, backgroundColor: '#E5484D' },
+  redDot: { position: 'absolute', top: 0, right: 0, width: 8, height: 8, borderRadius: 4, backgroundColor: Maple.error },
   avatar: { width: 36, height: 36, borderRadius: 18 },
-  avatarBlank: { alignItems: 'center', justifyContent: 'center', backgroundColor: '#E6EEFF' },
-  avatarText: { fontSize: 15, fontWeight: '700', color: '#1463F3' },
+  avatarBlank: { alignItems: 'center', justifyContent: 'center', backgroundColor: Maple.blueSoft },
+  avatarText: { ...TypeScale.cardTitle, color: Maple.blue },
 });

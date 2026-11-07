@@ -1,12 +1,13 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { formatCount } from '@/lib/shorts';
 import type { ShortEntry } from '@/mock/public';
 
 import { Brand } from '../palette';
+import { Maple } from '@/constants/maple';
 
-const HIGHLIGHT = '#FFD43B';
+const HIGHLIGHT = Maple.warning;
 
 /** The big caption painted on a short, with one highlighted phrase. */
 export function Caption({ clip, size }: { clip: ShortEntry; size: number }) {
@@ -27,7 +28,7 @@ export function ShortCard({ clip, active, onPress }: { clip: ShortEntry; active:
       {clip.photo ? (
         // The reference frame already carries the subject, caption, views and likes.
         <View style={[styles.frame, styles.photoFrame, active && styles.frameActive]}>
-          <Image source={clip.photo} style={StyleSheet.absoluteFill} contentFit="cover" />
+          <Image decorative source={clip.photo} style={StyleSheet.absoluteFill} contentFit="cover" />
         </View>
       ) : (
       <View style={[styles.frame, { backgroundColor: clip.tint }, active && styles.frameActive]}>

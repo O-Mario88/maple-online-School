@@ -2,10 +2,11 @@
  * Maple's basic building blocks: text, cards, rows, badges, buttons and
  * fields. Every value comes from the design tokens in constants/theme.
  */
-import type { ReactNode } from 'react';
-import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, type TextInputProps, View } from 'react-native';
+import { type ReactNode, useState } from 'react';
+import { ActivityIndicator, Platform, Pressable, StyleSheet, Text, TextInput, type TextInputProps, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
+import { ControlHeight, Maple, Radii, Space, TypeScale } from '@/constants/maple';
 import { Elevation, Radius, Spacing, type Theme, Type } from '@/constants/theme';
 import { useStyles } from '@/hooks/use-styles';
 import type { IconName } from '@/lib/icons';
@@ -144,7 +145,15 @@ function badgeColors(t: Theme, tone: BadgeTone): [string, string] {
   }
 }
 
-type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
+/**
+ * The one Maple button. Primary is solid Maple Blue; secondary is white with
+ * a 1px blue outline and blue text; tertiary is blue text only; danger is for
+ * destructive actions; accent is pale gold with navy text, for the one main action on a dark
+ * Maple Blue surface such as a hero. All are 8px rounded rectangles, never pills.
+ * `ghost` is the old name for tertiary.
+ */
+export type ButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'ghost' | 'danger' | 'accent';
+export type ButtonSize = 'standard' | 'compact' | 'large';
 
 interface ButtonProps {
   label: string;
@@ -153,38 +162,63 @@ interface ButtonProps {
   busy?: boolean;
   variant?: ButtonVariant;
   icon?: IconName;
+  /** Shorthand for size="compact". */
   compact?: boolean;
+  size?: ButtonSize;
+  /** Stretch to the width of its container. */
+  block?: boolean;
+  accessibilityHint?: string;
 }
 
-export function Button({ label, onPress, disabled = false, busy = false, variant = 'primary', icon, compact = false }: ButtonProps) {
-  const { theme, styles } = useStyles(makeStyles);
+export function Button({
+  label,
+  onPress,
+  disabled = false,
+  busy = false,
+  variant = 'primary',
+  icon,
+  compact = false,
+  size,
+  block = false,
+  accessibilityHint,
+}: ButtonProps) {
+  const { styles } = useStyles(makeStyles);
+  const kind = variant === 'ghost' ? 'tertiary' : variant;
+  const scale = size ?? (compact ? 'compact' : 'standard');
   const inactive = disabled || busy;
-  const filled = variant === 'primary' || variant === 'danger';
-  const textColor = filled ? theme.onAccent : variant === 'ghost' ? theme.accentText : theme.text;
+  const textColor = disabled ? Maple.disabledText : kind === 'primary' || kind === 'danger' ? Maple.white : kind === 'accent' ? Maple.navy : Maple.blueText;
   return (
     <Pressable
-      style={({ pressed, hovered }) => [
+      style={({ pressed, hovered, focused }: PressState) => [
         styles.button,
-        compact && styles.buttonCompact,
-        styles[variant],
-        hovered && !inactive && styles[`${variant}Hover`],
-        (inactive || pressed) && styles.dim,
+        scale === 'compact' && styles.buttonCompact,
+        scale === 'large' && styles.buttonLarge,
+        block && styles.buttonBlock,
+        styles[kind],
+        !inactive && (hovered || pressed) && styles[`${kind}Hover`],
+        focused && styles.buttonFocus,
+        disabled && styles.buttonDisabled,
       ]}
       onPress={onPress}
       disabled={inactive}
       accessibilityRole="button"
       accessibilityLabel={label}
+      accessibilityHint={accessibilityHint}
       accessibilityState={{ disabled: inactive, busy }}>
-      {busy ? (
-        <ActivityIndicator color={textColor} />
-      ) : (
-        <>
-          {icon ? <Icon name={icon} size={18} color={textColor} /> : null}
-          <Text style={[styles.buttonText, compact && styles.buttonTextCompact, { color: textColor }]}>{label}</Text>
-        </>
-      )}
+      {busy ? <ActivityIndicator color={textColor} accessibilityLabel={`${label}, working`} /> : null}
+      {!busy && icon ? <Icon name={icon} size={scale === 'compact' ? 16 : 18} color={textColor} /> : null}
+      <Text style={[styles.buttonText, { color: textColor }]} numberOfLines={1}>
+        {label}
+      </Text>
     </Pressable>
   );
+}
+
+/** Pressable's style callback state, including web hover and focus. */
+interface PressState {
+  pressed: boolean;
+  hovered?: boolean;
+  focused?: boolean;
 }
 
 interface FieldProps extends TextInputProps {
@@ -192,8 +226,9 @@ interface FieldProps extends TextInputProps {
   hint?: string;
 }
 
-export function Field({ label, hint, multiline, ...input }: FieldProps) {
-  const { theme, styles } = useStyles(makeStyles);
+export function Field({ label, hint, multiline, onFocus, onBlur, ...input }: FieldProps) {
+  const { styles } = useStyles(makeStyles);
+  const [focused, setFocused] = useState(false);
   return (
     <View style={styles.field}>
       <Text style={styles.label}>{label}</Text>
@@ -202,8 +237,16 @@ export function Field({ label, hint, multiline, ...input }: FieldProps) {
         multiline={multiline}
         accessibilityLabel={label}
         accessibilityHint={hint}
-        placeholderTextColor={theme.textMuted}
-        style={[styles.input, multiline && styles.inputMultiline]}
+        placeholderTextColor={Maple.muted}
+        onFocus={(e) => {
+          setFocused(true);
+          onFocus?.(e);
+        }}
+        onBlur={(e) => {
+          setFocused(false);
+          onBlur?.(e);
+        }}
+        style={[styles.input, multiline && styles.inputMultiline, focused && styles.inputFocus, input.editable === false && styles.inputDisabled]}
         textAlignVertical={multiline ? 'top' : 'center'}
       />
       {hint ? <Text style={styles.hint}>{hint}</Text> : null}
@@ -285,42 +328,48 @@ function makeStyles(t: Theme) {
     badge: { borderRadius: Radius.pill, paddingHorizontal: 10, paddingVertical: 3, alignSelf: 'flex-start' },
     badgeText: { ...Type.caption },
     button: {
-      minHeight: 48,
-      borderRadius: Radius.md,
+      minHeight: ControlHeight.standard,
+      borderRadius: Radii.control,
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
       gap: Spacing.two,
-      paddingHorizontal: Spacing.four,
+      paddingHorizontal: Space.md,
       borderWidth: 1,
       borderColor: 'transparent',
     },
-    buttonCompact: { minHeight: 40, paddingHorizontal: Spacing.three },
-    buttonText: { ...Type.bodyStrong },
-    buttonTextCompact: { ...Type.small, fontWeight: '600' },
-    primary: { backgroundColor: t.accent },
-    primaryHover: { backgroundColor: t.accentHover },
-    danger: { backgroundColor: t.danger },
-    dangerHover: { opacity: 0.9 },
-    secondary: { backgroundColor: t.backgroundElement, borderColor: t.borderStrong },
-    secondaryHover: { backgroundColor: t.backgroundSelected },
-    ghost: { backgroundColor: 'transparent' },
-    ghostHover: { backgroundColor: t.accentSoft },
-    dim: { opacity: 0.6 },
+    buttonCompact: { minHeight: ControlHeight.compact, paddingHorizontal: Space.sm },
+    buttonLarge: { minHeight: ControlHeight.large, paddingHorizontal: Space.xl },
+    buttonBlock: { alignSelf: 'stretch' },
+    buttonText: { ...TypeScale.button },
+    buttonFocus: Platform.select({ web: { outlineStyle: 'solid', outlineWidth: 2, outlineColor: Maple.blue, outlineOffset: 2 } as object, default: {} }),
+    buttonDisabled: { backgroundColor: Maple.disabledSurface, borderColor: Maple.disabledBorder },
+    primary: { backgroundColor: Maple.blue, borderColor: Maple.blue },
+    primaryHover: { backgroundColor: Maple.blueHover, borderColor: Maple.blueHover },
+    danger: { backgroundColor: Maple.error, borderColor: Maple.error },
+    dangerHover: { backgroundColor: Maple.errorText, borderColor: Maple.errorText },
+    accent: { backgroundColor: Maple.goldSoft, borderColor: Maple.goldSoft },
+    accentHover: { backgroundColor: Maple.goldHover, borderColor: Maple.goldHover },
+    secondary: { backgroundColor: Maple.surface, borderColor: Maple.blue },
+    secondaryHover: { backgroundColor: Maple.blueSoft },
+    tertiary: { backgroundColor: 'transparent', paddingHorizontal: Space.xs },
+    tertiaryHover: { backgroundColor: Maple.blueSoft },
     field: { gap: Spacing.two },
-    label: { ...Type.small, fontWeight: '600', color: t.text },
+    label: { ...TypeScale.label, color: Maple.navy },
     hint: { ...Type.caption, color: t.textMuted },
     input: {
-      minHeight: 48,
+      minHeight: ControlHeight.touch,
       borderWidth: 1,
-      borderColor: t.borderStrong,
-      borderRadius: Radius.md,
-      paddingHorizontal: Spacing.three,
-      paddingVertical: Spacing.two,
-      ...Type.body,
-      color: t.text,
-      backgroundColor: t.backgroundElement,
+      borderColor: Maple.borderStrong,
+      borderRadius: Radii.control,
+      paddingHorizontal: Space.sm,
+      paddingVertical: Space.xs,
+      ...TypeScale.body,
+      color: Maple.navy,
+      backgroundColor: Maple.surface,
     },
+    inputFocus: { borderColor: Maple.blue, ...Platform.select({ web: { boxShadow: `0 0 0 3px ${Maple.blueSelected}` } as object, default: {} }) },
+    inputDisabled: { backgroundColor: Maple.disabledSurface, color: Maple.disabledText },
     inputMultiline: { minHeight: 140 },
     error: { ...Type.small, color: t.danger },
     loading: { paddingVertical: Spacing.four, alignItems: 'center' },

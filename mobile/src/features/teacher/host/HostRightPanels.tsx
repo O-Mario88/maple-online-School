@@ -1,9 +1,11 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
 import type { HostChatMsg, TeacherHost } from '@/mock/teacher-host';
+import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 interface Props {
   h: TeacherHost;
@@ -51,16 +53,16 @@ export function HostRightPanels({ h, quizTimer, quizRunning, onLaunchQuiz, phone
       <View style={s.card}>
         <View style={s.cardHeader}>
           <View style={s.headerIconBlue}>
-            <Icon name="bolt" size={11} color="#FFFFFF" />
+            <Icon name="bolt" size={11} color={Maple.surface} />
           </View>
           <Text style={s.cardTitle}>Pulse Quiz</Text>
           <View style={{ flex: 1 }} />
           <View style={[s.timerPill, quizRunning && s.timerPillActive]}>
-            <Icon name="clock" size={10} color={quizRunning ? '#1463F3' : '#475569'} />
-            <Text style={[s.timerText, quizRunning && { color: '#1463F3' }]}>{formattedQuizTime}</Text>
+            <Icon name="clock" size={10} color={quizRunning ? Maple.blue : Maple.body} />
+            <Text style={[s.timerText, quizRunning && { color: Maple.blue }]}>{formattedQuizTime}</Text>
           </View>
           <Pressable style={s.closeBtn}>
-            <Icon name="close" size={11} color="#64748B" />
+            <Icon name="close" size={11} color={Maple.secondary} />
           </Pressable>
         </View>
 
@@ -106,7 +108,7 @@ export function HostRightPanels({ h, quizTimer, quizRunning, onLaunchQuiz, phone
       <View style={s.card}>
         <View style={s.cardHeader}>
           <View style={s.headerIconBlue}>
-            <Icon name="chart" size={11} color="#FFFFFF" />
+            <Icon name="chart" size={11} color={Maple.surface} />
           </View>
           <Text style={s.cardTitle}>Live Comprehension</Text>
         </View>
@@ -160,7 +162,7 @@ export function HostRightPanels({ h, quizTimer, quizRunning, onLaunchQuiz, phone
       <View style={s.card}>
         <View style={s.cardHeader}>
           <View style={s.headerIconBlue}>
-            <Icon name="rooms" size={11} color="#FFFFFF" />
+            <Icon name="rooms" size={11} color={Maple.surface} />
           </View>
           <Text style={s.cardTitle}>Breakout Rooms</Text>
           <View style={{ flex: 1 }} />
@@ -179,7 +181,7 @@ export function HostRightPanels({ h, quizTimer, quizRunning, onLaunchQuiz, phone
                 </View>
                 <Text style={s.roomName}>{room.name}</Text>
                 <View style={s.roomMeta}>
-                  <Icon name="people" size={10} color="#64748B" />
+                  <Icon name="people" size={10} color={Maple.secondary} />
                   <Text style={s.roomCount}>{room.students} students</Text>
                 </View>
                 <View style={{ flex: 1 }} />
@@ -200,20 +202,20 @@ export function HostRightPanels({ h, quizTimer, quizRunning, onLaunchQuiz, phone
       <View style={[s.card, s.chatCard]}>
         <View style={s.cardHeader}>
           <View style={s.headerIconBlue}>
-            <Icon name="chat" size={11} color="#FFFFFF" />
+            <Icon name="chat" size={11} color={Maple.surface} />
           </View>
           <Text style={s.cardTitle}>Class Chat</Text>
           <View style={{ flex: 1 }} />
           <Pressable style={s.everyonePill}>
             <Text style={s.everyoneText}>Everyone</Text>
-            <Icon name="chevronDown" size={9} color="#475569" />
+            <Icon name="chevronDown" size={9} color={Maple.body} />
           </Pressable>
         </View>
 
         <View style={s.chatList}>
           {messages.slice(-3).map((msg) => (
             <View key={msg.id} style={s.chatRow}>
-              <Image source={msg.photo} style={s.chatAvatar} contentFit="cover" />
+              <Image decorative source={msg.photo} style={s.chatAvatar} contentFit="cover" />
               <View style={s.chatBody}>
                 <View style={s.chatNameRow}>
                   <Text style={s.chatName}>{msg.name}</Text>
@@ -233,14 +235,14 @@ export function HostRightPanels({ h, quizTimer, quizRunning, onLaunchQuiz, phone
               value={draft}
               onChangeText={setDraft}
               placeholder="Type a message..."
-              placeholderTextColor="#94A3B8"
+              placeholderTextColor={Maple.faint}
               style={s.chatInput}
               onSubmitEditing={sendMessage}
             />
-            <Icon name="smile" size={13} color="#94A3B8" />
+            <Icon name="smile" size={13} color={Maple.faint} />
           </View>
           <Pressable style={s.sendBtn} onPress={sendMessage}>
-            <Icon name="send" size={11} color="#FFFFFF" />
+            <Icon name="send" size={11} color={Maple.surface} />
           </Pressable>
         </View>
       </View>
@@ -282,10 +284,10 @@ const s = StyleSheet.create({
   },
   colPhone: { width: '100%' },
   card: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     borderRadius: 11,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: Maple.border,
     padding: 10,
     gap: 7,
   },
@@ -302,31 +304,31 @@ const s = StyleSheet.create({
     width: 20,
     height: 20,
     borderRadius: 10,
-    backgroundColor: '#1463F3',
+    backgroundColor: Maple.blue,
     alignItems: 'center',
     justifyContent: 'center',
   },
   cardTitle: {
     fontWeight: '700',
     fontSize: 12,
-    color: '#0F172A',
+    color: Maple.navy,
   },
   timerPill: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 3,
-    backgroundColor: '#F1F5F9',
+    backgroundColor: Maple.blueSoft,
     borderRadius: 10,
     paddingHorizontal: 6,
     paddingVertical: 2.5,
   },
   timerPillActive: {
-    backgroundColor: '#DBEAFE',
+    backgroundColor: Maple.blueSelected,
   },
   timerText: {
     fontWeight: '600',
     fontSize: 9.5,
-    color: '#334155',
+    color: Maple.body,
   },
   closeBtn: {
     width: 18,
@@ -337,7 +339,7 @@ const s = StyleSheet.create({
   quizQuestion: {
     fontWeight: '500',
     fontSize: 10.5,
-    color: '#1E293B',
+    color: Maple.navy,
   },
   quizOptions: {
     gap: 4.5,
@@ -346,60 +348,60 @@ const s = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 7,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: Maple.border,
     borderRadius: 7,
     paddingHorizontal: 7,
     paddingVertical: 4.5,
   },
   quizOptRowCorrect: {
-    backgroundColor: '#DCFCE7',
-    borderColor: '#86EFAC',
+    backgroundColor: Maple.successSoft,
+    borderColor: Palette.green300,
   },
   optLetterCircle: {
     width: 17,
     height: 17,
     borderRadius: 8.5,
-    backgroundColor: '#E2E8F0',
+    backgroundColor: Maple.border,
     alignItems: 'center',
     justifyContent: 'center',
   },
   optLetterCircleCorrect: {
-    backgroundColor: '#16A34A',
+    backgroundColor: Maple.successText,
   },
   optLetterText: {
     fontWeight: '700',
     fontSize: 9.5,
-    color: '#475569',
+    color: Maple.body,
   },
   optLetterTextCorrect: {
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   optFormula: {
     fontWeight: '500',
     fontSize: 10.5,
-    color: '#1E293B',
+    color: Maple.navy,
   },
   optFormulaCorrect: {
     fontWeight: '600',
-    color: '#0F172A',
+    color: Maple.navy,
   },
   optCheckCircle: {
     width: 16,
     height: 16,
     borderRadius: 8,
-    backgroundColor: '#16A34A',
+    backgroundColor: Maple.successText,
     alignItems: 'center',
     justifyContent: 'center',
   },
   optCheckMark: {
     fontWeight: '700',
     fontSize: 9.5,
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   launchBtn: {
-    backgroundColor: '#1463F3',
+    backgroundColor: Maple.blue,
     borderRadius: 7,
     paddingVertical: 7,
     alignItems: 'center',
@@ -407,12 +409,12 @@ const s = StyleSheet.create({
     marginTop: 1,
   },
   launchBtnActive: {
-    backgroundColor: '#1D4ED8',
+    backgroundColor: Maple.blue,
   },
   launchBtnText: {
     fontWeight: '700',
     fontSize: 10.5,
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
 
   /* Live Comprehension */
@@ -442,7 +444,7 @@ const s = StyleSheet.create({
     height: 44,
     borderRadius: 22,
     borderWidth: 5,
-    borderColor: '#E2E8F0',
+    borderColor: Maple.border,
   },
   gaugeArcGreen: {
     position: 'absolute',
@@ -451,9 +453,9 @@ const s = StyleSheet.create({
     height: 44,
     borderRadius: 22,
     borderWidth: 5,
-    borderLeftColor: '#22C55E',
-    borderTopColor: '#4ADE80',
-    borderRightColor: '#F59E0B',
+    borderLeftColor: Maple.success,
+    borderTopColor: Maple.success,
+    borderRightColor: Maple.warning,
     borderBottomColor: 'transparent',
   },
   gaugeArcAmber: {
@@ -465,13 +467,13 @@ const s = StyleSheet.create({
     borderWidth: 5,
     borderLeftColor: 'transparent',
     borderTopColor: 'transparent',
-    borderRightColor: '#EF4444',
+    borderRightColor: Maple.error,
     borderBottomColor: 'transparent',
   },
   gaugeNeedle: {
     width: 2,
     height: 15,
-    backgroundColor: '#0F172A',
+    backgroundColor: Maple.navy,
     borderRadius: 1,
     transform: [{ rotate: '28deg' }],
     marginBottom: 2,
@@ -480,7 +482,7 @@ const s = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: '#0F172A',
+    backgroundColor: Maple.navy,
     position: 'absolute',
     bottom: 0,
   },
@@ -490,13 +492,13 @@ const s = StyleSheet.create({
   compPercent: {
     fontWeight: '700',
     fontSize: 16,
-    color: '#0F172A',
+    color: Maple.navy,
     lineHeight: 18,
   },
   compSub: {
     fontWeight: '400',
     fontSize: 8.5,
-    color: '#64748B',
+    color: Maple.secondary,
   },
   legendCol: {
     gap: 2,
@@ -514,7 +516,7 @@ const s = StyleSheet.create({
   legendText: {
     fontWeight: '500',
     fontSize: 8.5,
-    color: '#475569',
+    color: Maple.body,
   },
   heatmapRow: {
     height: 36,
@@ -526,7 +528,7 @@ const s = StyleSheet.create({
   heatmapTrack: {
     flex: 1,
     height: '100%',
-    backgroundColor: '#F1F5F9',
+    backgroundColor: Maple.blueSoft,
     borderRadius: 2,
     justifyContent: 'flex-end',
     overflow: 'hidden',
@@ -538,9 +540,9 @@ const s = StyleSheet.create({
 
   /* Breakout Rooms */
   manageBtn: {
-    backgroundColor: '#F1F5F9',
+    backgroundColor: Maple.blueSoft,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: Maple.border,
     borderRadius: 6,
     paddingHorizontal: 8,
     paddingVertical: 2.5,
@@ -548,7 +550,7 @@ const s = StyleSheet.create({
   manageBtnText: {
     fontWeight: '600',
     fontSize: 9.5,
-    color: '#1463F3',
+    color: Maple.blue,
   },
   roomsList: {
     gap: 4.5,
@@ -557,9 +559,9 @@ const s = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
     borderWidth: 1,
-    borderColor: '#E8EEF7',
+    borderColor: Maple.blueSelected,
     borderRadius: 7,
     paddingHorizontal: 7,
     paddingVertical: 4.5,
@@ -568,7 +570,7 @@ const s = StyleSheet.create({
     width: 14,
     height: 14,
     borderRadius: 7,
-    backgroundColor: '#DCFCE7',
+    backgroundColor: Maple.successSoft,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -576,12 +578,12 @@ const s = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: '#16A34A',
+    backgroundColor: Maple.successText,
   },
   roomName: {
     fontWeight: '600',
     fontSize: 10.5,
-    color: '#0F172A',
+    color: Maple.navy,
     width: 44,
   },
   roomMeta: {
@@ -592,27 +594,27 @@ const s = StyleSheet.create({
   roomCount: {
     fontWeight: '400',
     fontSize: 9.5,
-    color: '#64748B',
+    color: Maple.secondary,
   },
   joinBtn: {
-    backgroundColor: '#EEF4FF',
+    backgroundColor: Maple.blueSoft,
     borderWidth: 1,
-    borderColor: '#DBEAFE',
+    borderColor: Maple.blueSelected,
     borderRadius: 5,
     paddingHorizontal: 9,
     paddingVertical: 2.5,
   },
   joinBtnActive: {
-    backgroundColor: '#1463F3',
-    borderColor: '#1463F3',
+    backgroundColor: Maple.blue,
+    borderColor: Maple.blue,
   },
   joinBtnText: {
     fontWeight: '600',
     fontSize: 9.5,
-    color: '#1463F3',
+    color: Maple.blue,
   },
   joinBtnTextActive: {
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
 
   /* Class Chat */
@@ -620,9 +622,9 @@ const s = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 3,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: Maple.border,
     borderRadius: 6,
     paddingHorizontal: 7,
     paddingVertical: 2.5,
@@ -630,7 +632,7 @@ const s = StyleSheet.create({
   everyoneText: {
     fontWeight: '500',
     fontSize: 9.5,
-    color: '#334155',
+    color: Maple.body,
   },
   chatList: {
     gap: 6,
@@ -657,17 +659,17 @@ const s = StyleSheet.create({
   chatName: {
     fontWeight: '700',
     fontSize: 10,
-    color: '#0F172A',
+    color: Maple.navy,
   },
   chatTime: {
     fontWeight: '400',
     fontSize: 8.5,
-    color: '#94A3B8',
+    color: Maple.muted,
   },
   chatText: {
     fontWeight: '400',
     fontSize: 10,
-    color: '#334155',
+    color: Maple.body,
   },
   chatInputRow: {
     flexDirection: 'row',
@@ -681,9 +683,9 @@ const s = StyleSheet.create({
     paddingVertical: 0,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: Maple.border,
     borderRadius: 7,
     paddingHorizontal: 8,
     gap: 4,
@@ -692,14 +694,14 @@ const s = StyleSheet.create({
     flex: 1,
     fontWeight: '400',
     fontSize: 10,
-    color: '#0F172A',
+    color: Maple.navy,
     paddingVertical: 0,
   },
   sendBtn: {
     width: 28,
     height: 28,
     borderRadius: 7,
-    backgroundColor: '#3B82F6',
+    backgroundColor: Maple.blue,
     alignItems: 'center',
     justifyContent: 'center',
   },

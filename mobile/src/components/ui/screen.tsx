@@ -4,25 +4,36 @@
  */
 import { router } from 'expo-router';
 import { createContext, type ReactNode, useContext } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { type Edge, SafeAreaView } from 'react-native-safe-area-context';
 
 import { Icon } from '@/components/icon';
-import { MaxContentWidth, Spacing, type Theme, Type } from '@/constants/theme';
+import { Spacing, type Theme, Type } from '@/constants/theme';
 import { useStyles } from '@/hooks/use-styles';
+import { PAGE_GUTTER, PAGE_MAX_WIDTH } from '@/lib/layout';
 import { useSwitcher } from '@/lib/switcher-context';
+import { PageScroll } from '@/components/shell/PageScroll';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
 export interface ShellState {
   /** True inside the signed-in app shell (sidebar or tab bar). */
   inShell: boolean;
   /** True when the sidebar is showing. */
   wide: boolean;
+  /** Width left for the page beside the sidebar; unset means the whole window. */
+  contentWidth?: number;
 }
 
 export const ShellContext = createContext<ShellState>({ inShell: false, wide: false });
 
 export function useShell(): ShellState {
   return useContext(ShellContext);
+}
+
+/** The width a page has to lay out in: the window, less the sidebar when one is showing. */
+export function useContentWidth(): number {
+  const { width } = useWindowDimensions();
+  return useContext(ShellContext).contentWidth ?? width;
 }
 
 interface ScreenProps {
@@ -43,17 +54,18 @@ export function Screen({ title, subtitle, eyebrow, back = false, actions, width 
   const shell = useShell();
   // In the shell the tab bar owns the bottom inset and the sidebar the left.
   const edges: Edge[] = shell.inShell ? (shell.wide ? ['top', 'right'] : ['top', 'left', 'right']) : ['top', 'left', 'right', 'bottom'];
-  const maxWidth = width === 'wide' ? MaxContentWidth : NARROW_WIDTH;
+  // Wide pages share the platform's page width (lib/layout); narrow ones are forms and lists.
+  const maxWidth = width === 'wide' ? PAGE_MAX_WIDTH : NARROW_WIDTH;
   return (
     <SafeAreaView style={styles.safe} edges={edges}>
-      <ScrollView
+      <PageScroll
         contentContainerStyle={[styles.container, shell.wide && styles.containerWide, { maxWidth }]}
         keyboardShouldPersistTaps="handled">
         {back || title ? (
           <PageHeader title={title} subtitle={subtitle} eyebrow={eyebrow} back={back} actions={actions} />
         ) : null}
         {children}
-      </ScrollView>
+      </PageScroll>
     </SafeAreaView>
   );
 }
@@ -107,7 +119,7 @@ export function PageHeader({ title, subtitle, eyebrow, back, actions }: PageHead
         <View style={wide ? styles.titleBlock : styles.titleBlockStack}>
           {eyebrow ? <Text style={styles.eyebrow}>{eyebrow}</Text> : null}
           {title ? (
-            <Text style={styles.title} accessibilityRole="header">
+            <Text style={styles.title} {...PAGE_TITLE}>
               {title}
             </Text>
           ) : null}
@@ -132,7 +144,7 @@ function makeStyles(t: Theme) {
       width: '100%',
       alignSelf: 'center',
     },
-    containerWide: { paddingHorizontal: Spacing.five, paddingTop: Spacing.five },
+    containerWide: { paddingHorizontal: PAGE_GUTTER, paddingTop: Spacing.five },
     header: { gap: Spacing.two },
     back: {
       flexDirection: 'row',

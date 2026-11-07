@@ -2,6 +2,7 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
 import { Brand } from '@/features/public/palette';
+import { Maple } from '@/constants/maple';
 
 export type StepState = 'done' | 'current' | 'todo' | 'first';
 
@@ -43,14 +44,14 @@ const styles = StyleSheet.create({
   step: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   stepP: { flex: 1, alignItems: 'center', gap: 6 },
   topP: { width: '100%', alignItems: 'center' },
-  num: { width: 33, height: 33, borderRadius: 17, backgroundColor: '#B6C0D0', alignItems: 'center', justifyContent: 'center' },
+  num: { width: 33, height: 33, borderRadius: 17, backgroundColor: Maple.borderStrong, alignItems: 'center', justifyContent: 'center' },
   numP: { width: 24, height: 24, borderRadius: 12 },
   numOn: { backgroundColor: Brand.blue },
   numText: { fontSize: 15, fontWeight: '600', color: Brand.surface },
   numTextP: { fontSize: 11 },
-  label: { fontSize: 13.5, color: '#4A5263' },
-  labelP: { fontSize: 10, color: '#4A5263', textAlign: 'center' },
+  label: { fontSize: 13.5, color: Maple.body },
+  labelP: { fontSize: 10, color: Maple.body, textAlign: 'center' },
   labelOn: { color: Brand.blue, fontWeight: '600' },
-  line: { height: 1, marginHorizontal: 12, backgroundColor: '#B8C3D4' },
-  lineP: { position: 'absolute', left: '62%', right: '-38%', top: 12, height: 1, backgroundColor: '#B8C3D4' },
+  line: { height: 1, marginHorizontal: 12, backgroundColor: Maple.borderStrong },
+  lineP: { position: 'absolute', left: '62%', right: '-38%', top: 12, height: 1, backgroundColor: Maple.borderStrong },
 });

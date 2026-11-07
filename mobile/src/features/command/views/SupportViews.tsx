@@ -14,6 +14,8 @@ import { Donut, DonutLabel } from '@/features/school/kit/Charts';
 import { Cell, type Column, DataTable, PageHead, Search, useChoice, useSelection } from '@/features/school/kit/AdminKit';
 import { toast } from '@/lib/toast';
 import type { TicketRow } from '@/mock/command-center/security';
+import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 type S = CommandData['security'];
 const PER_PAGE = 10;
@@ -103,7 +105,7 @@ type U = ReturnType<typeof useSupport>;
 
 function SlaCell({ t, s }: { t: TicketRow; s: S }) {
   const st = slaState(t, s.NOW);
-  const color = st.breached ? RED : st.minutesLeft < 60 ? '#D97F06' : GREEN;
+  const color = st.breached ? RED : st.minutesLeft < 60 ? Maple.warning : GREEN;
   return (
     <View style={styles.inline}>
       <Icon name={st.breached ? 'alert' : 'timer'} size={13} color={color} />
@@ -120,7 +122,7 @@ function ticketCols(u: U, s: S): readonly Column<TicketRow>[] {
       flex: 1.8,
       render: (t) => (
         <View style={styles.inline}>
-          <View style={[styles.dot, { backgroundColor: t.priority === 'High' ? RED : t.priority === 'Medium' ? '#F59E0B' : GREEN }]} />
+          <View style={[styles.dot, { backgroundColor: t.priority === 'High' ? RED : t.priority === 'Medium' ? Maple.warning : GREEN }]} />
           <Cell small>{t.subject}</Cell>
         </View>
       ),
@@ -226,9 +228,9 @@ function Charts({ s, phone = false }: { s: S; phone?: boolean }) {
           <View style={styles.inline}>
             {(
               [
-                ['Created', '#1E6BF0'],
-                ['Resolved', '#22A55A'],
-                ['Escalated', '#EF4444'],
+                ['Created', Maple.blue],
+                ['Resolved', Maple.successText],
+                ['Escalated', Maple.error],
               ] as const
             ).map(([l, c]) => (
               <View key={l} style={styles.inline}>
@@ -242,9 +244,9 @@ function Charts({ s, phone = false }: { s: S; phone?: boolean }) {
         <AreaChart
           labels={v.labels}
           series={[
-            { name: 'Created', color: '#1E6BF0', values: v.created, fill: true, dots: true },
-            { name: 'Resolved', color: '#22A55A', values: v.resolved, fill: true, dots: true },
-            { name: 'Escalated', color: '#EF4444', values: v.escalated, fill: true, dots: true },
+            { name: 'Created', color: Maple.blue, values: v.created, fill: true, dots: true },
+            { name: 'Resolved', color: Maple.successText, values: v.resolved, fill: true, dots: true },
+            { name: 'Escalated', color: Maple.error, values: v.escalated, fill: true, dots: true },
           ]}
           max={40}
           height={phone ? 160 : 150}
@@ -271,8 +273,8 @@ function Charts({ s, phone = false }: { s: S; phone?: boolean }) {
         <View style={styles.donutRow}>
           <Donut
             slices={[
-              { value: s.sla.within, color: '#22A55A' },
-              { value: s.sla.breached, color: '#EF4444' },
+              { value: s.sla.within, color: Maple.successText },
+              { value: s.sla.breached, color: Maple.error },
             ]}
             size={phone ? 130 : 140}
             stroke={18}>
@@ -280,12 +282,12 @@ function Charts({ s, phone = false }: { s: S; phone?: boolean }) {
           </Donut>
           <View style={styles.flex}>
             <View style={styles.catRow}>
-              <View style={[styles.dot, { backgroundColor: '#22A55A' }]} />
+              <View style={[styles.dot, { backgroundColor: Maple.successText }]} />
               <Text style={[styles.catLabel, styles.flex]}>Within SLA</Text>
               <Text style={styles.slaNum}>{s.sla.within}</Text>
             </View>
             <View style={styles.catRow}>
-              <View style={[styles.dot, { backgroundColor: '#EF4444' }]} />
+              <View style={[styles.dot, { backgroundColor: Maple.error }]} />
               <Text style={[styles.catLabel, styles.flex]}>Breached</Text>
               <Text style={styles.slaNum}>{s.sla.breached}</Text>
             </View>
@@ -433,9 +435,9 @@ const styles = StyleSheet.create({
   ticketTitle: { fontSize: 17, fontWeight: '800', color: NAVY },
   userCard: { flexDirection: 'row', alignItems: 'center', gap: 10, padding: 10, borderRadius: 10, borderWidth: 1, borderColor: LINE },
   userName: { fontSize: 13.5, fontWeight: '700', color: NAVY },
-  note: { padding: 8, borderRadius: 8, backgroundColor: '#FFF9E6', fontSize: 12, color: NAVY },
-  decided: { padding: 10, borderRadius: 8, backgroundColor: '#E6F7EC', fontSize: 12.5, color: NAVY },
-  tsBtn: { flex: 1.25, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 5, height: 32, borderRadius: 8, borderWidth: 1, borderColor: '#FCA5A5', backgroundColor: '#FEF2F2' },
+  note: { padding: 8, borderRadius: 8, backgroundColor: Maple.warningSoft, fontSize: 12, color: NAVY },
+  decided: { padding: 10, borderRadius: 8, backgroundColor: Maple.successSoft, fontSize: 12.5, color: NAVY },
+  tsBtn: { flex: 1.25, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 5, height: 32, borderRadius: 8, borderWidth: 1, borderColor: Palette.red300e, backgroundColor: Maple.errorSoft },
   tsText: { fontSize: 12, fontWeight: '600', color: RED },
   card: { gap: 8, padding: 12, borderRadius: 14, borderWidth: 1, borderColor: LINE, backgroundColor: WHITE },
 });

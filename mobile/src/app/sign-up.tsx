@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AUTH_SKY, AuthPhoneTop, AuthTopBar, FitScale } from '@/features/auth/AuthChrome';
@@ -7,6 +7,8 @@ import { SignInLink, SignUpCard } from '@/features/auth/SignUpCard';
 import { SignUpPanel } from '@/features/auth/SignUpPanel';
 import { LightOnly } from '@/hooks/use-theme';
 import { mockData } from '@/lib/mock';
+import { Maple } from '@/constants/maple';
+import { PageScroll } from '@/components/shell/PageScroll';
 
 /** From this width the page is the reference's desktop layout, scaled to fit the window. */
 const DESKTOP_MIN = 900;
@@ -45,9 +47,9 @@ export default function SignUpScreen() {
       <SafeAreaView style={styles.phoneSafe} edges={['top', 'left', 'right']}>
         <AuthPhoneTop />
         <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-          <ScrollView contentContainerStyle={styles.phoneScroll} keyboardShouldPersistTaps="handled">
+          <PageScroll contentContainerStyle={styles.phoneScroll} keyboardShouldPersistTaps="handled">
             <SignUpCard art={art} phone />
-          </ScrollView>
+          </PageScroll>
         </KeyboardAvoidingView>
       </SafeAreaView>
     </LightOnly>
@@ -60,6 +62,6 @@ const styles = StyleSheet.create({
   bar: { position: 'absolute', left: 18, top: 12 },
   panel: { position: 'absolute', left: 18, top: 78 },
   card: { position: 'absolute', left: 625, top: 90 },
-  phoneSafe: { flex: 1, backgroundColor: '#FFFFFF' },
-  phoneScroll: { paddingBottom: 28, backgroundColor: '#FFFFFF' },
+  phoneSafe: { flex: 1, backgroundColor: Maple.surface },
+  phoneScroll: { paddingBottom: 28, backgroundColor: Maple.surface },
 });

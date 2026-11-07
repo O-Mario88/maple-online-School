@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { ScrollView, StyleSheet, useWindowDimensions } from 'react-native';
+import { StyleSheet, useWindowDimensions } from 'react-native';
 
 import { useShell } from '@/components/ui';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
@@ -11,6 +11,7 @@ import {
 } from '@/features/teacher/attendance/AttendanceViews';
 import { CANVAS } from '@/features/teacher/frame/TeacherParts';
 import { mockData } from '@/lib/mock';
+import { PageScroll } from '@/components/shell/PageScroll';
 
 /** Inventory 43: Post-Class Attendance & Engagement Register (`/(teacher)/attendance/[sessionId]`). */
 export default function AttendanceRegisterScreen() {
@@ -30,11 +31,11 @@ export default function AttendanceRegisterScreen() {
   const r = mock.teacher.attendanceRegister;
   if (!wide) return <AttendancePhone r={r} me={me} />;
   return (
-    <ScrollView style={styles.bg}>
+    <PageScroll style={styles.bg}>
       <RefScale width={width} refWidth={ATTENDANCE_REF_WIDTH}>
         <AttendanceDesk r={r} me={me} />
       </RefScale>
-    </ScrollView>
+    </PageScroll>
   );
 }
 

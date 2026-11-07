@@ -16,3 +16,27 @@ export function gridColumns(width: number, min: number, gap: number, count: numb
   return Math.min(fit, Math.max(1, count));
 }
 
+/**
+ * The widest a page gets on the web: 1400px of content and a 24px gutter on each side, centred
+ * (the subject page's layout). Wider screens show the page background either side.
+ */
+export const PAGE_MAX_WIDTH = 1448;
+
+/** The space either side of a page's content, inside the page width. */
+export const PAGE_GUTTER = 24;
+
+/** The width a page draws at, given the space beside the menu. */
+export function pageWidth(available: number): number {
+  return Math.min(available, PAGE_MAX_WIDTH);
+}
+
+/**
+ * Below this width (a 320px or small Android phone) a full header doesn't fit, so headers show
+ * the logo's mark without the name, and rows let their labels wrap.
+ */
+export const NARROW_PHONE_WIDTH = 360;
+
+/** True on a phone too narrow for the full logo beside the header's buttons. */
+export function isNarrowPhone(width: number): boolean {
+  return width < NARROW_PHONE_WIDTH;
+}

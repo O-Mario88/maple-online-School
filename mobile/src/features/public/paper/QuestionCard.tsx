@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
@@ -7,6 +7,7 @@ import { type Mark, markAnswer } from '@/lib/past-paper';
 import type { PastPaperEntry } from '@/mock/public';
 
 import { Brand, CARD_SHADOW } from '../palette';
+import { Maple } from '@/constants/maple';
 
 /** Question 1, free: the question, its figure, an answer box, auto-marking and the worked solution. */
 export function QuestionCard({ paper }: { paper: PastPaperEntry }) {
@@ -161,7 +162,7 @@ const styles = StyleSheet.create({
   body: { fontSize: 13, lineHeight: 20, color: Brand.body },
   strong: { fontSize: 14, fontWeight: '700', color: Brand.ink },
   link: { fontSize: 13, fontWeight: '600', color: Brand.blue },
-  hint: { gap: 12, padding: 16, borderRadius: 12, backgroundColor: '#FFF7E6' },
+  hint: { gap: 12, padding: 16, borderRadius: 12, backgroundColor: Maple.warningSoft },
   hintHead: { flexDirection: 'row', gap: 10 },
   hintIcon: { fontSize: 22 },
   hintBtn: { alignItems: 'center', paddingVertical: 10, borderRadius: 8, borderWidth: 1, borderColor: Brand.blue, backgroundColor: Brand.surface },

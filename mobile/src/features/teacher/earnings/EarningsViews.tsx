@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { useState } from 'react';
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 
@@ -15,6 +15,7 @@ import type { EarningsLedger, EarningsTransactionRow } from '@/mock/teacher-earn
 import { EARNINGS_REF_WIDTH, s as deskS } from './EarningsViews.styles';
 import { phoneS } from './EarningsViews.phoneStyles';
 import { PhoneScroll } from '@/features/teacher/frame/PhoneScroll';
+import { Maple } from '@/constants/maple';
 
 export { EARNINGS_REF_WIDTH };
 
@@ -88,7 +89,7 @@ export function EarningsDesk({ e, me, phone = false }: { e: EarningsLedger; me: 
           <View style={s.kpiRow}>
             <Panel style={s.kpiTopCard}>
               <View style={[s.kpiBigTile, { backgroundColor: BLUE }]}>
-                <Icon name="wallet" size={20} color="#FFFFFF" />
+                <Icon name="wallet" size={20} color={Maple.surface} />
               </View>
               <View style={{ flex: 1, gap: 2 }}>
                 <Text style={s.kpiTopLabel}>Total Earnings</Text>
@@ -104,8 +105,8 @@ export function EarningsDesk({ e, me, phone = false }: { e: EarningsLedger; me: 
             </Panel>
 
             <Panel style={s.kpiTopCard}>
-              <View style={[s.kpiBigTile, { backgroundColor: '#16A34A' }]}>
-                <Icon name="people" size={20} color="#FFFFFF" />
+              <View style={[s.kpiBigTile, { backgroundColor: Maple.successText }]}>
+                <Icon name="people" size={20} color={Maple.surface} />
               </View>
               <View style={{ flex: 1, gap: 2 }}>
                 <Text style={s.kpiTopLabel}>BYOS Classes (0% fee)</Text>
@@ -115,8 +116,8 @@ export function EarningsDesk({ e, me, phone = false }: { e: EarningsLedger; me: 
             </Panel>
 
             <Panel style={s.kpiTopCard}>
-              <View style={[s.kpiBigTile, { backgroundColor: '#9333EA' }]}>
-                <Icon name="grid" size={20} color="#FFFFFF" />
+              <View style={[s.kpiBigTile, { backgroundColor: Maple.blue }]}>
+                <Icon name="grid" size={20} color={Maple.surface} />
               </View>
               <View style={{ flex: 1, gap: 2 }}>
                 <Text style={s.kpiTopLabel}>Marketplace Sales</Text>
@@ -129,7 +130,7 @@ export function EarningsDesk({ e, me, phone = false }: { e: EarningsLedger; me: 
           {/* Row 2 KPIs: Pending in Escrow, Unlocked Balance, Lifetime Earnings */}
           <View style={s.kpiRow}>
             <Panel style={s.kpiBotCard}>
-              <View style={[s.kpiSmallCircle, { backgroundColor: '#DBEAFE' }]}>
+              <View style={[s.kpiSmallCircle, { backgroundColor: Maple.blueSelected }]}>
                 <Icon name="clock" size={15} color={BLUE} />
               </View>
               <View style={{ flex: 1, gap: 2 }}>
@@ -140,8 +141,8 @@ export function EarningsDesk({ e, me, phone = false }: { e: EarningsLedger; me: 
             </Panel>
 
             <Panel style={s.kpiBotCard}>
-              <View style={[s.kpiSmallCircle, { backgroundColor: '#DCFCE7' }]}>
-                <Icon name="lock" size={15} color="#16A34A" />
+              <View style={[s.kpiSmallCircle, { backgroundColor: Maple.successSoft }]}>
+                <Icon name="lock" size={15} color={Maple.successText} />
               </View>
               <View style={{ flex: 1, gap: 2 }}>
                 <Text style={s.kpiTopLabel}>Unlocked Balance</Text>
@@ -151,7 +152,7 @@ export function EarningsDesk({ e, me, phone = false }: { e: EarningsLedger; me: 
             </Panel>
 
             <Panel style={s.kpiBotCard}>
-              <View style={[s.kpiSmallCircle, { backgroundColor: '#DBEAFE' }]}>
+              <View style={[s.kpiSmallCircle, { backgroundColor: Maple.blueSelected }]}>
                 <Icon name="chart" size={15} color={BLUE} />
               </View>
               <View style={{ flex: 1, gap: 2 }}>
@@ -168,11 +169,11 @@ export function EarningsDesk({ e, me, phone = false }: { e: EarningsLedger; me: 
               <Text style={s.chartTitle}>Earnings Overview</Text>
               <View style={s.chartLegend}>
                 <View style={s.legendItem}>
-                  <View style={[s.legendDot, { backgroundColor: '#2563EB' }]} />
+                  <View style={[s.legendDot, { backgroundColor: Maple.blue }]} />
                   <Text style={s.legendText}>BYOS (0% fee)</Text>
                 </View>
                 <View style={s.legendItem}>
-                  <View style={[s.legendDot, { backgroundColor: '#A855F7' }]} />
+                  <View style={[s.legendDot, { backgroundColor: Maple.blue }]} />
                   <Text style={s.legendText}>Marketplace (platform fee)</Text>
                 </View>
               </View>
@@ -294,10 +295,10 @@ export function EarningsDesk({ e, me, phone = false }: { e: EarningsLedger; me: 
               const isByos = tx.type === 'BYOS Class';
               const isResource = tx.type === 'Resource Sale';
               const typeBadgeBg = isByos
-                ? '#2563EB'
+                ? Maple.blue
                 : isResource
-                  ? '#16A34A'
-                  : '#9333EA';
+                  ? Maple.successText
+                  : Maple.blue;
               const typeIcon = isByos
                 ? 'video'
                 : isResource
@@ -314,7 +315,7 @@ export function EarningsDesk({ e, me, phone = false }: { e: EarningsLedger; me: 
                         s.typeIconBadge,
                         { backgroundColor: typeBadgeBg },
                       ]}>
-                      <Icon name={typeIcon} size={10} color="#FFFFFF" />
+                      <Icon name={typeIcon} size={10} color={Maple.surface} />
                     </View>
                     <Text style={s.tdText} numberOfLines={1}>
                       {tx.type}
@@ -335,8 +336,8 @@ export function EarningsDesk({ e, me, phone = false }: { e: EarningsLedger; me: 
                         s.statusPill,
                         {
                           backgroundColor: isCompleted
-                            ? '#DCFCE7'
-                            : '#FEF3C7',
+                            ? Maple.successSoft
+                            : Maple.warningSoft,
                         },
                       ]}>
                       <View
@@ -344,8 +345,8 @@ export function EarningsDesk({ e, me, phone = false }: { e: EarningsLedger; me: 
                           s.statusDot,
                           {
                             backgroundColor: isCompleted
-                              ? '#16A34A'
-                              : '#D97706',
+                              ? Maple.successText
+                              : Maple.warning,
                           },
                         ]}
                       />
@@ -353,7 +354,7 @@ export function EarningsDesk({ e, me, phone = false }: { e: EarningsLedger; me: 
                         style={[
                           s.statusPillText,
                           {
-                            color: isCompleted ? '#15803D' : '#B45309',
+                            color: isCompleted ? Maple.successText : Maple.warningText,
                           },
                         ]}>
                         {tx.status}
@@ -385,7 +386,7 @@ export function EarningsDesk({ e, me, phone = false }: { e: EarningsLedger; me: 
           <Panel style={s.rightCard}>
             <View style={s.rightHeaderRow}>
               <View style={s.payoutHeaderTile}>
-                <Icon name="wallet" size={16} color="#FFFFFF" />
+                <Icon name="wallet" size={16} color={Maple.surface} />
               </View>
               <View style={{ flex: 1, gap: 1 }}>
                 <View style={s.titleWithInfoRow}>
@@ -401,7 +402,7 @@ export function EarningsDesk({ e, me, phone = false }: { e: EarningsLedger; me: 
             {/* Available Balance Box */}
             <View style={s.availBalanceBox}>
               <View style={s.availWalletCircle}>
-                <Icon name="wallet" size={14} color="#16A34A" />
+                <Icon name="wallet" size={14} color={Maple.successText} />
               </View>
               <View style={{ gap: 1 }}>
                 <Text style={s.availLabel}>Available Balance</Text>
@@ -434,19 +435,19 @@ export function EarningsDesk({ e, me, phone = false }: { e: EarningsLedger; me: 
                       ) : null}
 
                       {m.key === 'mtn' ? (
-                        <Image
+                        <Image decorative
                           source={e.mtnLogo}
                           style={s.methodLogo}
                           contentFit="contain"
                         />
                       ) : m.key === 'airtel' ? (
-                        <Image
+                        <Image decorative
                           source={e.airtelLogo}
                           style={s.methodLogo}
                           contentFit="contain"
                         />
                       ) : m.key === 'mpesa' ? (
-                        <Image
+                        <Image decorative
                           source={e.mpesaLogo}
                           style={s.methodLogo}
                           contentFit="contain"
@@ -513,7 +514,7 @@ export function EarningsDesk({ e, me, phone = false }: { e: EarningsLedger; me: 
                   `Instant payout of UGX ${payoutAmount} initiated to ${payoutMethod.toUpperCase()} (${phoneNumber})!`,
                 )
               }>
-              <Icon name="send" size={13} color="#FFFFFF" />
+              <Icon name="send" size={13} color={Maple.surface} />
               <Text style={s.requestPayoutBtnText}>Request Payout</Text>
             </Pressable>
 
@@ -543,9 +544,9 @@ export function EarningsDesk({ e, me, phone = false }: { e: EarningsLedger; me: 
                       style={[
                         s.savedMethodBadge,
                         pm.kind === 'mtn'
-                          ? { backgroundColor: '#FACC15' }
+                          ? { backgroundColor: Maple.warning }
                           : pm.kind === 'airtel'
-                            ? { backgroundColor: '#EF4444' }
+                            ? { backgroundColor: Maple.error }
                             : { backgroundColor: BLUE },
                       ]}>
                       {pm.kind === 'mtn' ? (
@@ -553,7 +554,7 @@ export function EarningsDesk({ e, me, phone = false }: { e: EarningsLedger; me: 
                       ) : pm.kind === 'airtel' ? (
                         <Text style={s.airtelBadgeText}>Airtel</Text>
                       ) : (
-                        <Icon name="school" size={13} color="#FFFFFF" />
+                        <Icon name="school" size={13} color={Maple.surface} />
                       )}
                     </View>
 
@@ -590,7 +591,7 @@ export function EarningsDesk({ e, me, phone = false }: { e: EarningsLedger; me: 
           <Panel style={s.rightCard}>
             <View style={s.rightHeaderRow}>
               <View style={s.payoutHeaderTile}>
-                <Icon name="notes" size={16} color="#FFFFFF" />
+                <Icon name="notes" size={16} color={Maple.surface} />
               </View>
               <View style={{ flex: 1, gap: 1 }}>
                 <View style={s.titleWithInfoRow}>
@@ -614,7 +615,7 @@ export function EarningsDesk({ e, me, phone = false }: { e: EarningsLedger; me: 
                 onPress={() =>
                   toast('Downloaded 2026_Maple_Educator_Tax_Statement.pdf')
                 }>
-                <Icon name="download" size={12} color="#FFFFFF" />
+                <Icon name="download" size={12} color={Maple.surface} />
                 <Text style={s.downloadPdfText}>Download PDF</Text>
               </Pressable>
             </View>
@@ -636,7 +637,7 @@ export function EarningsDesk({ e, me, phone = false }: { e: EarningsLedger; me: 
 
 export function EarningsPhone({ e, me }: { e: EarningsLedger; me: TeacherMe }) {
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: '#EAF1FB' }}>
+    <ScrollView style={{ flex: 1, backgroundColor: Maple.blueSelected }}>
       <TeacherPhoneTop me={me} />
       <EarningsDesk e={e} me={me} phone />
     </ScrollView>

@@ -14,6 +14,8 @@ import { Brand, PUBLIC_WIDE } from '@/features/public/palette';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { LightOnly } from '@/hooks/use-theme';
 import { mockData } from '@/lib/mock';
+import { PageScroll } from '@/components/shell/PageScroll';
+import { prefersReducedMotion } from '@/lib/motion';
 
 const MAX_WIDTH = 1440;
 const SIDE = 380;
@@ -63,14 +65,14 @@ export default function CourseLandingScreen() {
   const jump = (t: string) => {
     setTab(t);
     const y = offsets[TAB_SECTION[t]];
-    if (y !== undefined) scroll.current?.scrollTo({ y: Math.max(y - 12, 0), animated: true });
+    if (y !== undefined) scroll.current?.scrollTo({ y: Math.max(y - 12, 0), animated: !prefersReducedMotion() });
   };
 
   return (
     <LightOnly>
     <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
       <HomeNav wide={wide} active="Subjects" />
-      <ScrollView ref={scroll} contentContainerStyle={styles.page}>
+      <PageScroll ref={scroll} contentContainerStyle={styles.page}>
         <View style={styles.inner}>
           <View style={[styles.row, wide && styles.rowWide]}>
             <View style={[styles.main, wide && styles.flex]}>
@@ -109,7 +111,7 @@ export default function CourseLandingScreen() {
             </View>
           </View>
         </View>
-      </ScrollView>
+      </PageScroll>
     </SafeAreaView>
     </LightOnly>
   );

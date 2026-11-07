@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { ScrollView, StyleSheet, useWindowDimensions } from 'react-native';
+import { StyleSheet, useWindowDimensions } from 'react-native';
 
 import { useShell } from '@/components/ui';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
@@ -11,6 +11,7 @@ import {
 } from '@/features/teacher/assignments/AssignmentViews';
 import { CANVAS } from '@/features/teacher/frame/TeacherParts';
 import { mockData } from '@/lib/mock';
+import { PageScroll } from '@/components/shell/PageScroll';
 
 /** Inventory 44: Assignment & AI Rubric Builder (`/(teacher)/assignments/new`). */
 export default function NewAssignmentScreen() {
@@ -30,11 +31,11 @@ export default function NewAssignmentScreen() {
   const a = mock.teacher.assignmentBuilder;
   if (!wide) return <AssignmentPhone a={a} me={me} />;
   return (
-    <ScrollView style={styles.bg}>
+    <PageScroll style={styles.bg}>
       <RefScale width={width} refWidth={ASSIGNMENT_REF_WIDTH}>
         <AssignmentDesk a={a} me={me} />
       </RefScale>
-    </ScrollView>
+    </PageScroll>
   );
 }
 

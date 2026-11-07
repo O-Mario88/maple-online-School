@@ -72,7 +72,7 @@ export function PremiumTile({ item, style, minHeight = 160 }: { item: PremiumIte
       accessibilityRole={item.onPress ? 'link' : undefined}
       accessibilityLabel={label}>
       <Icon name={item.icon} size={26} color={t.solid} />
-      <Text style={[styles.label, { color: t.text }]} numberOfLines={2}>
+      <Text style={[styles.label, { color: t.text }]} numberOfLines={3}>
         {item.label}
       </Text>
       <Text style={[styles.value, long && styles.valueLong, shown.length > 11 && styles.valueLonger, { color: t.text }]} numberOfLines={1}>

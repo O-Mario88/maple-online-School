@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
@@ -14,6 +14,7 @@ import { toast } from '@/lib/toast';
 import type { LibraryFileCard, TeacherLibrary } from '@/mock/teacher-library';
 import { TEACHER_LIBRARY_REF_WIDTH, s, s as deskS } from './TeacherLibraryViews.styles';
 import { phoneS } from './TeacherLibraryViews.phoneStyles';
+import { Maple } from '@/constants/maple';
 
 export { TEACHER_LIBRARY_REF_WIDTH };
 
@@ -97,7 +98,7 @@ export function TeacherLibraryDesk({ lib, me, phone = false }: { lib: TeacherLib
               <Pressable
                 style={s.uploadTopBtn}
                 onPress={() => toast('Uploading teaching resources to O-Level Mathematics...')}>
-                <Icon name="upload" size={12} color="#FFFFFF" />
+                <Icon name="upload" size={12} color={Maple.surface} />
                 <Text style={s.uploadTopBtnText}>Upload Files</Text>
               </Pressable>
             </View>
@@ -319,7 +320,7 @@ export function TeacherLibraryDesk({ lib, me, phone = false }: { lib: TeacherLib
                 <Pressable
                   style={s.newCollectionBtn}
                   onPress={() => toast('Created new shared Co-Teaching Collection.')}>
-                  <Icon name="plus" size={11} color="#FFFFFF" />
+                  <Icon name="plus" size={11} color={Maple.surface} />
                   <Text style={s.newCollectionBtnText}>New Collection</Text>
                 </Pressable>
               </View>
@@ -337,7 +338,7 @@ export function TeacherLibraryDesk({ lib, me, phone = false }: { lib: TeacherLib
                         s.collectionIconTile,
                         { backgroundColor: col.color },
                       ]}>
-                      <Icon name={col.icon} size={15} color="#FFFFFF" />
+                      <Icon name={col.icon} size={15} color={Maple.surface} />
                     </View>
                     <View style={{ flex: 1, gap: 1 }}>
                       <View style={s.collectionTitleRow}>
@@ -353,7 +354,7 @@ export function TeacherLibraryDesk({ lib, me, phone = false }: { lib: TeacherLib
 
                   <View style={s.avatarStackRow}>
                     {col.faces.map((face, idx) => (
-                      <Image
+                      <Image decorative
                         key={idx}
                         source={face}
                         style={[
@@ -470,7 +471,7 @@ export function TeacherLibraryDesk({ lib, me, phone = false }: { lib: TeacherLib
                 <View style={s.sharedWithRight}>
                   <View style={s.avatarStackRow}>
                     {lib.selectedFile.sharedFaces.map((f, i) => (
-                      <Image
+                      <Image decorative
                         key={i}
                         source={f}
                         style={[
@@ -564,7 +565,7 @@ export function TeacherLibraryDesk({ lib, me, phone = false }: { lib: TeacherLib
 
 export function TeacherLibraryPhone({ lib, me }: { lib: TeacherLibrary; me: TeacherMe }) {
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: '#EAF1FB' }}>
+    <ScrollView style={{ flex: 1, backgroundColor: Maple.blueSelected }}>
       <TeacherPhoneTop me={me} />
       <TeacherLibraryDesk lib={lib} me={me} phone />
     </ScrollView>
@@ -575,7 +576,7 @@ function FileThumbnailPreview({ file }: { file: LibraryFileCard }) {
   if (file.kind === 'mp4' && file.videoThumb) {
     return (
       <View style={s.thumbBox}>
-        <Image
+        <Image decorative
           source={file.videoThumb}
           style={StyleSheet.absoluteFill}
           contentFit="cover"

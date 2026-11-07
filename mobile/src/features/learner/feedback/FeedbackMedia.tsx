@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { useState } from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -9,6 +9,7 @@ import { BLUE, BODY, INK } from '@/features/learner/work/MathText';
 import { chapterAt, mmss } from '@/lib/feedback';
 
 import type { Feedback } from './FeedbackParts';
+import { Maple } from '@/constants/maple';
 
 const ZOOMS = [1, 1.5, 2] as const;
 
@@ -47,11 +48,11 @@ function Pager({ f, page, setPage }: { f: Feedback; page: number; setPage: (n: n
   return (
     <View style={styles.pager}>
       <Pressable onPress={() => setPage(Math.max(0, page - 1))} disabled={page === 0} accessibilityRole="button" accessibilityLabel="Previous page" hitSlop={6}>
-        <Icon name="chevronLeft" size={14} color={page === 0 ? '#B8C0CE' : INK} />
+        <Icon name="chevronLeft" size={14} color={page === 0 ? Maple.borderStrong : INK} />
       </Pressable>
       <Text style={styles.pagerText}>{`${page + 1}/${f.pages.length}`}</Text>
       <Pressable onPress={() => setPage(Math.min(f.pages.length - 1, page + 1))} disabled={page === f.pages.length - 1} accessibilityRole="button" accessibilityLabel="Next page" hitSlop={6}>
-        <Icon name="chevronRight" size={14} color={page === f.pages.length - 1 ? '#B8C0CE' : INK} />
+        <Icon name="chevronRight" size={14} color={page === f.pages.length - 1 ? Maple.borderStrong : INK} />
       </Pressable>
     </View>
   );
@@ -67,7 +68,7 @@ function FullScreen({ f, open, onClose, start }: { f: Feedback; open: boolean; o
         <View style={styles.fullHead}>
           <Pager f={f} page={page} setPage={setPage} />
           <Pressable onPress={onClose} accessibilityRole="button" accessibilityLabel="Close full screen" hitSlop={10}>
-            <Icon name="close" size={22} color="#FFFFFF" />
+            <Icon name="close" size={22} color={Maple.surface} />
           </Pressable>
         </View>
         <ScrollView contentContainerStyle={styles.fullBody} maximumZoomScale={3}>
@@ -106,7 +107,7 @@ export function AnnotatedViewer({ f, onDownload }: { f: Feedback; onDownload: ()
       <View style={styles.thumbs}>
         {f.pages.map((p, i) => (
           <Pressable key={i} style={[styles.thumb, i === page && styles.thumbOn]} onPress={() => go(i)} accessibilityRole="button" accessibilityState={{ selected: i === page }} accessibilityLabel={`Page ${i + 1}`}>
-            <Image source={p.thumb} style={styles.thumbImg} contentFit="cover" />
+            <Image decorative source={p.thumb} style={styles.thumbImg} contentFit="cover" />
             <Text style={styles.thumbText}>{`Page ${i + 1}`}</Text>
           </Pressable>
         ))}
@@ -132,7 +133,7 @@ export function AnnotatedStrip({ f }: { f: Feedback }) {
       </Pressable>
       {open ? (
         <Pressable style={styles.strip} onPress={() => setFull(true)} accessibilityRole="button" accessibilityLabel="Open your marked pages full screen">
-          <Image source={f.pages[0].image} style={styles.fill} contentFit="cover" contentPosition={{ top: '13%', left: '50%' }} />
+          <Image decorative source={f.pages[0].image} style={styles.fill} contentFit="cover" contentPosition={{ top: '13%', left: '50%' }} />
           <View style={styles.stripExpand}>
             <Icon name="expand" size={14} color={INK} />
           </View>
@@ -163,7 +164,7 @@ export function VideoFeedback({ f, phone = false, startTab = 'Chapters' }: { f: 
       {phone ? null : <Text style={styles.title}>Teacher Video Feedback</Text>}
       <View style={[styles.player, phone && styles.playerP]}>
         <Pressable style={styles.frame} onPress={p.toggle} accessibilityRole="button" accessibilityLabel={p.running ? 'Pause video' : 'Play video'}>
-          <Image source={v.frame} style={styles.fill} contentFit="cover" />
+          <Image decorative source={v.frame} style={styles.fill} contentFit="cover" />
           {cc && p.running ? <Text style={styles.caption}>{v.transcript[line].text}</Text> : null}
         </Pressable>
         <PlayerControls total={v.seconds} p={p} muted={muted} onMute={() => setMuted((m) => !m)} cc={cc} onCc={() => setCc((c) => !c)} />
@@ -192,45 +193,45 @@ const styles = StyleSheet.create({
   fill: { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0 },
   head: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   title: { flex: 1, fontSize: 15.5, fontWeight: '700', color: INK },
-  pager: { height: 28, flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 8, borderRadius: 14, borderWidth: 1, borderColor: '#E1E7F0', backgroundColor: '#FFFFFF' },
+  pager: { height: 28, flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 8, borderRadius: 14, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface },
   pagerText: { fontSize: 12, color: INK },
   expand: { width: 28, height: 28, alignItems: 'center', justifyContent: 'center', marginLeft: 12 },
   viewer: { marginTop: 12 },
-  page: { borderRadius: 6, overflow: 'hidden', backgroundColor: '#F4F1EC' },
+  page: { borderRadius: 6, overflow: 'hidden', backgroundColor: Maple.subtle },
   plain: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 14 },
   plainImage: { width: 200, height: 160 },
   plainNote: { fontSize: 13, color: BODY },
   zoomPos: { position: 'absolute', right: 9, bottom: 22 },
-  zoom: { width: 30, borderRadius: 15, backgroundColor: '#FFFFFF', shadowColor: INK, shadowOpacity: 0.12, shadowRadius: 6, shadowOffset: { width: 0, height: 2 } },
+  zoom: { width: 30, borderRadius: 15, backgroundColor: Maple.surface, shadowColor: INK, shadowOpacity: 0.12, shadowRadius: 6, shadowOffset: { width: 0, height: 2 } },
   zoomBtn: { height: 32, alignItems: 'center', justifyContent: 'center' },
-  zoomSep: { height: 1, marginHorizontal: 6, backgroundColor: '#E6EBF2' },
+  zoomSep: { height: 1, marginHorizontal: 6, backgroundColor: Maple.blueSelected },
   thumbs: { flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 10 },
-  thumb: { width: 76, alignItems: 'center', gap: 4, padding: 3, borderRadius: 6, borderWidth: 1, borderColor: '#E1E7F0' },
+  thumb: { width: 76, alignItems: 'center', gap: 4, padding: 3, borderRadius: 6, borderWidth: 1, borderColor: Maple.blueSelected },
   thumbOn: { borderWidth: 2, borderColor: BLUE },
   thumbImg: { width: 68, height: 54, borderRadius: 3 },
   thumbText: { fontSize: 11, color: INK },
-  download: { flex: 1, height: 42, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, marginLeft: 8, borderRadius: 6, borderWidth: 1, borderColor: '#E1E7F0', backgroundColor: '#FFFFFF' },
+  download: { flex: 1, height: 42, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, marginLeft: 8, borderRadius: 6, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface },
   downloadText: { fontSize: 13, fontWeight: '600', color: BLUE },
   full: { flex: 1, backgroundColor: 'rgba(8,12,20,0.94)' },
   fullHead: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingBottom: 10 },
   fullBody: { padding: 16, alignItems: 'center', gap: 12 },
   stripHead: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   stripTitle: { fontSize: 13.5, fontWeight: '700', color: INK },
-  strip: { height: 66, marginTop: 10, borderRadius: 6, overflow: 'hidden', backgroundColor: '#F4F1EC' },
-  stripExpand: { position: 'absolute', top: 6, right: 6, width: 26, height: 26, alignItems: 'center', justifyContent: 'center', borderRadius: 5, backgroundColor: '#FFFFFF' },
-  player: { marginTop: 12, borderRadius: 8, overflow: 'hidden', backgroundColor: '#161B26' },
+  strip: { height: 66, marginTop: 10, borderRadius: 6, overflow: 'hidden', backgroundColor: Maple.subtle },
+  stripExpand: { position: 'absolute', top: 6, right: 6, width: 26, height: 26, alignItems: 'center', justifyContent: 'center', borderRadius: 5, backgroundColor: Maple.surface },
+  player: { marginTop: 12, borderRadius: 8, overflow: 'hidden', backgroundColor: Maple.navy },
   playerP: { marginTop: 0 },
-  frame: { width: '100%', aspectRatio: 278 / 190, backgroundColor: '#2A3140' },
-  caption: { position: 'absolute', left: 16, right: 16, bottom: 8, paddingHorizontal: 8, paddingVertical: 3, borderRadius: 3, backgroundColor: 'rgba(0,0,0,0.7)', fontSize: 11.5, color: '#FFFFFF', textAlign: 'center', overflow: 'hidden' },
-  tabs: { flexDirection: 'row', gap: 24, marginTop: 12, paddingHorizontal: 4, borderBottomWidth: 1, borderBottomColor: '#E3E8F0' },
+  frame: { width: '100%', aspectRatio: 278 / 190, backgroundColor: Maple.navy },
+  caption: { position: 'absolute', left: 16, right: 16, bottom: 8, paddingHorizontal: 8, paddingVertical: 3, borderRadius: 3, backgroundColor: 'rgba(0,0,0,0.7)', fontSize: 11.5, color: Maple.surface, textAlign: 'center', overflow: 'hidden' },
+  tabs: { flexDirection: 'row', gap: 24, marginTop: 12, paddingHorizontal: 4, borderBottomWidth: 1, borderBottomColor: Maple.blueSelected },
   tab: { paddingVertical: 9, paddingHorizontal: 20 },
-  tabText: { fontSize: 12.5, color: '#3D4656' },
+  tabText: { fontSize: 12.5, color: Maple.body },
   tabOn: { color: BLUE, fontWeight: '600' },
-  tabLine: { position: 'absolute', left: 0, right: 0, bottom: -1, height: 2.5, backgroundColor: BLUE },
+  tabLine: { position: 'absolute', left: 0, right: 0, bottom: -1, height: 3, backgroundColor: BLUE },
   rows: { gap: 4, marginTop: 10 },
   row: { flexDirection: 'row', alignItems: 'center', minHeight: 28, paddingHorizontal: 6, paddingVertical: 5, borderRadius: 4 },
-  rowOn: { backgroundColor: '#EAF1FE' },
+  rowOn: { backgroundColor: Maple.blueSoft },
   rowTime: { width: 44, fontSize: 12, color: INK, fontVariant: ['tabular-nums'] },
   rowText: { flex: 1, fontSize: 12.5, color: INK },
-  rowTextSmall: { fontSize: 11.5, lineHeight: 16, color: '#2B3445' },
+  rowTextSmall: { fontSize: 11.5, lineHeight: 16, color: Maple.navy },
 });

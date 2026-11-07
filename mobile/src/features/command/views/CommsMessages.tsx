@@ -13,6 +13,7 @@ import { PageHead, Search } from '@/features/school/kit/AdminKit';
 import type { IconName } from '@/lib/icons';
 import { toast } from '@/lib/toast';
 import type { Participant, ThreadRow } from '@/mock/command-center/comms';
+import { Maple } from '@/constants/maple';
 
 type M = CommandData['comms'];
 const CHAT_TABS = ['Messages', 'Files', 'Links', 'Tasks', 'Events'] as const;
@@ -391,7 +392,7 @@ function Details({ u, onClose }: { u: U; onClose?: () => void }) {
             </Text>
             <Text style={styles.tiny}>{p.role}</Text>
           </View>
-          <View style={[styles.status, { backgroundColor: p.online ? GREEN : '#C5CCDA' }]} accessible accessibilityLabel={p.online ? 'Online' : 'Offline'} />
+          <View style={[styles.status, { backgroundColor: p.online ? GREEN : Maple.borderStrong }]} accessible accessibilityLabel={p.online ? 'Online' : 'Offline'} />
         </View>
       ))}
       {!people.length ? <Text style={styles.small}>Just you so far.</Text> : null}
@@ -540,7 +541,7 @@ const styles = StyleSheet.create({
   small: { fontSize: 12.5, lineHeight: 19, color: BODY },
   tiny: { fontSize: 11.5, color: BODY },
   empty: { padding: 14 },
-  hover: { backgroundColor: '#F3F6FC' },
+  hover: { backgroundColor: Maple.blueSoft },
   tabsCard: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 6, paddingHorizontal: 12 },
   searchBox: { width: 250 },
   listCol: { width: 360, padding: 0, overflow: 'hidden' },
@@ -550,7 +551,7 @@ const styles = StyleSheet.create({
   detailCol: { width: 312 },
   lead: { alignItems: 'center', justifyContent: 'center' },
   thread: { flexDirection: 'row', gap: 10, paddingVertical: 11, paddingHorizontal: 12, borderBottomWidth: 1, borderColor: LINE },
-  threadOn: { backgroundColor: '#EAF1FE' },
+  threadOn: { backgroundColor: Maple.blueSoft },
   threadName: { fontSize: 13.5, fontWeight: '700', color: NAVY },
   preview: { marginTop: 2, fontSize: 12, color: NAVY },
   unread: { minWidth: 20, height: 20, paddingHorizontal: 6, borderRadius: 10, alignItems: 'center', justifyContent: 'center', backgroundColor: BLUE },
@@ -559,12 +560,12 @@ const styles = StyleSheet.create({
   chatName: { fontSize: 15, fontWeight: '800', color: NAVY },
   headBtn: { width: 36, height: 36, borderRadius: 9, borderWidth: 1, borderColor: LINE, alignItems: 'center', justifyContent: 'center', backgroundColor: WHITE },
   msgs: { gap: 14 },
-  dateChip: { alignSelf: 'center', paddingHorizontal: 12, paddingVertical: 4, borderRadius: 8, backgroundColor: '#F1F4FA' },
+  dateChip: { alignSelf: 'center', paddingHorizontal: 12, paddingVertical: 4, borderRadius: 8, backgroundColor: Maple.blueSoft },
   dateText: { fontSize: 11.5, color: NAVY },
   msg: { flexDirection: 'row', gap: 10 },
   msgBy: { fontSize: 12.5, fontWeight: '700', color: NAVY },
-  bubble: { alignSelf: 'flex-start', maxWidth: '100%', gap: 8, marginTop: 4, padding: 10, borderRadius: 12, backgroundColor: '#F3F5FA' },
-  bubbleMine: { backgroundColor: '#E8F0FE' },
+  bubble: { alignSelf: 'flex-start', maxWidth: '100%', gap: 8, marginTop: 4, padding: 10, borderRadius: 12, backgroundColor: Maple.blueSoft },
+  bubbleMine: { backgroundColor: Maple.blueSelected },
   msgText: { fontSize: 13, lineHeight: 21, color: NAVY },
   file: { flexDirection: 'row', alignItems: 'center', gap: 10, padding: 9, borderRadius: 10, borderWidth: 1, borderColor: LINE, backgroundColor: WHITE },
   fileRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
@@ -573,7 +574,7 @@ const styles = StyleSheet.create({
   moreBtn: { width: 30, height: 30, borderRadius: 8, borderWidth: 1, borderColor: LINE, alignItems: 'center', justifyContent: 'center' },
   reactRow: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 6, marginTop: 6 },
   react: { paddingHorizontal: 8, paddingVertical: 3, borderRadius: 12, borderWidth: 1, borderColor: LINE, backgroundColor: WHITE },
-  reactOn: { borderColor: BLUE, backgroundColor: '#EAF1FE' },
+  reactOn: { borderColor: BLUE, backgroundColor: Maple.blueSoft },
   reactText: { fontSize: 12, fontWeight: '600', color: NAVY },
   reactAdd: { padding: 3 },
   face: { alignSelf: 'flex-start' },

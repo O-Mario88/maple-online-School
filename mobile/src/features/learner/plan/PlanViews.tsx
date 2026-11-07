@@ -1,12 +1,14 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { LinearGradient } from 'expo-linear-gradient';
 import { type Href, router } from 'expo-router';
-import { useState } from 'react';
+import { type ComponentRef, useEffect, useRef, useState } from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
 import { LearnerPhoneTop } from '@/features/learner/dashboard/DashPhone';
 import { ProgressRing } from '@/features/learner/exam/ExamNav';
+import { SupportsGoalsCard } from '@/features/learner/careers/CareerLinks';
+import { CareerPathPanel } from '@/features/learner/careers/CareerPath';
 import { L, LightFrame } from '@/features/learner/frame/LightFrame';
 import { ChalkThumb, LessonStats } from '@/features/learner/lessons/LessonParts';
 import type { VideoLessonItem } from '@/features/learner/lessons/videoLessons';
@@ -14,34 +16,64 @@ import type { IconName } from '@/lib/icons';
 import { toast } from '@/lib/toast';
 import type { MockData } from '@/mock';
 
-import { levelFor, overallProgress, phaseStatus, planStatus, scalePhases, subjectAction, type SubjectLevel } from './plan';
+import { GoalsTab } from './PlanGoals';
+import { RecsTab } from './PlanRecs';
+import { ScheduleTab } from './PlanSchedule';
+import { SubjectsTab } from './PlanSubjects';
+import {
+  levelFor,
+  overallProgress,
+  type PlanTab,
+  planTabFromLink,
+  phaseStatus,
+  planStatus,
+  scalePhases,
+  subjectAction,
+  type SubjectLevel,
+} from './plan';
+import type { Session } from './schedule';
+import { Maple } from '@/constants/maple';
+import { prefersReducedMotion } from '@/lib/motion';
+import { PAGE_TITLE } from '@/lib/fonts/type';
+import { Palette } from '@/constants/palette';
 
 type Plan = MockData['learner']['learnerPlan'];
-type Tab = 'plan' | 'subject' | 'schedule' | 'goals' | 'recs';
+type Tab = PlanTab;
 
 const TABS: readonly { key: Tab; label: string; icon: IconName }[] = [
   { key: 'plan', label: 'My Plan', icon: 'layers' },
+  { key: 'career', label: 'Career Path', icon: 'map' },
   { key: 'subject', label: 'By Subject', icon: 'grid' },
   { key: 'schedule', label: 'Study Schedule', icon: 'calendar' },
   { key: 'goals', label: 'Goals & Milestones', icon: 'flag' },
   { key: 'recs', label: 'Recommendations', icon: 'bulb' },
 ];
 const LEVEL_TONE: Readonly<Record<SubjectLevel, { fg: string; bg: string }>> = {
-  Strong: { fg: '#1D4ED8', bg: '#E3ECFF' },
-  Good: { fg: '#15803D', bg: '#E6F6EC' },
-  Developing: { fg: '#B45309', bg: '#FEF3DC' },
+  Strong: { fg: Maple.blue, bg: Maple.blueSelected },
+  Good: { fg: Maple.successText, bg: Maple.successSoft },
+  Developing: { fg: Maple.warningText, bg: Maple.warningSoft },
 };
-const AMBER = '#F5A524';
+const AMBER = Maple.warning;
 
 /** Everything both layouts need: the plan as the learner has set it, this week's ticks, and what the buttons do. */
-export function usePlan(plan: Plan, lessons: readonly VideoLessonItem[]) {
-  const [tab, setTab] = useState<Tab>('plan');
+export function usePlan(plan: Plan, lessons: readonly VideoLessonItem[], startTab?: string) {
+  const [tab, setTab] = useState<Tab>(planTabFromLink(startTab) ?? 'plan');
+  // A link with ?tab= can arrive while the page is open, so follow it when it changes.
+  const [linkTab, setLinkTab] = useState(startTab);
+  if (startTab !== linkTab) {
+    setLinkTab(startTab);
+    const next = planTabFromLink(startTab);
+    if (next) setTab(next);
+  }
   const [goal, setGoal] = useState(plan.goal);
   const [target, setTarget] = useState(plan.target);
   const [weeks, setWeeks] = useState(plan.weeks);
   const [style, setStyle] = useState(plan.style);
   const [focus, setFocus] = useState(plan.focus);
   const [adjusting, setAdjusting] = useState(false);
+  const [goals, setGoals] = useState(plan.milestones);
+  const [sessions, setSessions] = useState<readonly Session[]>(plan.sessions);
+  const [subjects, setSubjects] = useState(plan.subjects);
   const overall = overallProgress(plan.subjects.map((x) => x.progress));
   const week = Math.min(plan.week, weeks);
   return {
@@ -65,6 +97,23 @@ export function usePlan(plan: Plan, lessons: readonly VideoLessonItem[]) {
     recommended: plan.recommended.map((id) => lessons.find((l) => l.id === id)).filter((l): l is VideoLessonItem => !!l),
     adjusting,
     setAdjusting,
+    goals,
+    addGoal: (title: string, week: number) => {
+      setGoals([...goals, { id: `g-${Date.now()}`, title, week, done: false, progress: 0 }]);
+      toast('Goal added to your plan.');
+    },
+    toggleGoal: (id: string) => setGoals(goals.map((g) => (g.id === id ? { ...g, done: !g.done, progress: g.done ? g.progress : 1 } : g))),
+    sessions,
+    addSession: (s: Session) => {
+      setSessions([...sessions, s]);
+      toast('Study session added.');
+    },
+    subjects,
+    addSubject: (name: string) => {
+      if (subjects.some((x) => x.name === name)) return;
+      setSubjects([...subjects, { name, icon: 'book' as IconName, tint: Maple.secondary, progress: 0, next: 'First lesson' }]);
+      toast(`${name} added to your plan.`);
+    },
     save: () => {
       setAdjusting(false);
       toast('Your plan is updated.');
@@ -75,13 +124,18 @@ export function usePlan(plan: Plan, lessons: readonly VideoLessonItem[]) {
   };
 }
 type P = ReturnType<typeof usePlan>;
+export type PlanState = P;
 
 function Stats({ p, phone = false }: { p: P; phone?: boolean }) {
   return (
     <View style={[s.stats, phone ? s.statsP : s.statsD]}>
-      <Pressable style={[s.statCard, phone ? s.statCardP : s.goalCard]} onPress={() => p.setAdjusting(true)} accessibilityRole="button" accessibilityLabel={`My goal: ${p.goal}. Edit`}>
-        <View style={[s.statIcon, { backgroundColor: '#FDE7F1' }]}>
-          <Icon name="target" size={24} color="#DB2777" />
+      <Pressable
+        style={[s.statCard, phone ? s.statCardP : s.goalCard]}
+        onPress={() => p.setAdjusting(true)}
+        accessibilityRole="button"
+        accessibilityLabel={`My goal: ${p.goal}. Edit`}>
+        <View style={[s.statIcon, { backgroundColor: Palette.pink100b }]}>
+          <Icon name="target" size={24} color={Palette.pink600} />
         </View>
         <View style={s.flex}>
           <Text style={s.statLabel}>My Goal</Text>
@@ -91,7 +145,7 @@ function Stats({ p, phone = false }: { p: P; phone?: boolean }) {
       </Pressable>
       <View style={[s.statCard, phone ? [s.statCardP, s.metaP] : s.metaCard]}>
         <View style={[s.statPart, phone ? s.statPartP : s.statPartD]}>
-          <View style={[s.statIcon, { backgroundColor: '#E7EFFE' }]}>
+          <View style={[s.statIcon, { backgroundColor: Maple.blueSelected }]}>
             <Icon name="chart" size={22} color={L.blue} />
           </View>
           <View>
@@ -100,9 +154,13 @@ function Stats({ p, phone = false }: { p: P; phone?: boolean }) {
           </View>
         </View>
         {phone ? null : <View style={s.divider} />}
-        <Pressable style={[s.statPart, phone ? s.statPartP : s.statPartD]} onPress={() => p.setAdjusting(true)} accessibilityRole="button" accessibilityLabel={`Target date: ${p.target}. Edit`}>
-          <View style={[s.statIcon, { backgroundColor: '#F1EAFE' }]}>
-            <Icon name="calendar" size={22} color="#7C3AED" />
+        <Pressable
+          style={[s.statPart, phone ? s.statPartP : s.statPartD]}
+          onPress={() => p.setAdjusting(true)}
+          accessibilityRole="button"
+          accessibilityLabel={`Target date: ${p.target}. Edit`}>
+          <View style={[s.statIcon, { backgroundColor: Maple.blueSoft }]}>
+            <Icon name="calendar" size={22} color={Maple.blue} />
           </View>
           <View>
             <Text style={s.statLabel}>Target Date</Text>
@@ -111,8 +169,12 @@ function Stats({ p, phone = false }: { p: P; phone?: boolean }) {
           <Icon name="edit" size={18} color={L.body} />
         </Pressable>
         {phone ? null : <View style={s.divider} />}
-        <Pressable style={[s.statPart, phone ? s.statPartWide : s.statPartD]} onPress={() => p.go('/learn/progress')} accessibilityRole="button" accessibilityLabel={`Overall progress ${p.overall}%, ${p.status}`}>
-          <ProgressRing value={p.overall / 100} size={62} stroke={7} color={L.green} track="#E6EBF3" labelSize={15} />
+        <Pressable
+          style={[s.statPart, phone ? s.statPartWide : s.statPartD]}
+          onPress={() => p.go('/learn/progress')}
+          accessibilityRole="button"
+          accessibilityLabel={`Overall progress ${p.overall}%, ${p.status}`}>
+          <ProgressRing value={p.overall / 100} size={62} stroke={7} color={L.green} track={Maple.blueSelected} labelSize={15} />
           <View style={s.flex}>
             <Text style={[s.statValue, s.statValueSmall]}>Overall Progress</Text>
             <Text style={[s.onTrack, p.status === 'Behind' && s.behind]}>{p.status}</Text>
@@ -125,12 +187,29 @@ function Stats({ p, phone = false }: { p: P; phone?: boolean }) {
 }
 
 function Tabs({ p, phone = false }: { p: P; phone?: boolean }) {
+  // On phones the strip scrolls sideways; keep the open tab in view.
+  const strip = useRef<ComponentRef<typeof ScrollView>>(null);
+  const spots = useRef<Partial<Record<Tab, number>>>({});
+  useEffect(() => {
+    const x = spots.current[p.tab];
+    if (phone && x !== undefined) strip.current?.scrollTo({ x: Math.max(0, x - 16), animated: !prefersReducedMotion() });
+  }, [p.tab, phone]);
   const row = (
     <View style={[s.tabs, phone && s.tabsP]} accessibilityRole="tablist">
       {TABS.map((t) => {
         const on = p.tab === t.key;
         return (
-          <Pressable key={t.key} style={[s.tab, phone && s.tabP]} onPress={() => p.setTab(t.key)} accessibilityRole="tab" accessibilityState={{ selected: on }}>
+          <Pressable
+            key={t.key}
+            style={[s.tab, phone && s.tabP]}
+            onPress={() => p.setTab(t.key)}
+            onLayout={(e) => {
+              spots.current[t.key] = e.nativeEvent.layout.x;
+              if (phone && on && e.nativeEvent.layout.x > 0)
+                strip.current?.scrollTo({ x: Math.max(0, e.nativeEvent.layout.x - 16), animated: false });
+            }}
+            accessibilityRole="tab"
+            accessibilityState={{ selected: on }}>
             <Icon name={t.icon} size={phone ? 16 : 20} color={on ? L.blue : L.body} />
             <Text style={[s.tabText, phone && s.tabTextP, on && s.tabOn]}>{t.label}</Text>
             {on ? <View style={s.tabLine} /> : null}
@@ -140,7 +219,7 @@ function Tabs({ p, phone = false }: { p: P; phone?: boolean }) {
     </View>
   );
   return phone ? (
-    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+    <ScrollView ref={strip} horizontal showsHorizontalScrollIndicator={false}>
       {row}
     </ScrollView>
   ) : (
@@ -178,11 +257,17 @@ function Journey({ p, phone = false }: { p: P; phone?: boolean }) {
               {i > 0 && !phone ? <View style={s.connector} /> : null}
               <View style={[s.phase, st === 'done' && s.phaseDone, st === 'current' && s.phaseOn]}>
                 <View style={[s.phaseDot, st === 'done' && s.phaseDotDone, st === 'current' && s.phaseDotOn]}>
-                  <Icon name={st === 'done' ? 'tick' : st === 'current' ? 'playFill' : 'lock'} size={st === 'current' ? 12 : 14} color={st === 'done' ? L.white : st === 'current' ? L.blue : L.muted} />
+                  <Icon
+                    name={st === 'done' ? 'tick' : st === 'current' ? 'playFill' : 'lock'}
+                    size={st === 'current' ? 12 : 14}
+                    color={st === 'done' ? L.white : st === 'current' ? L.blue : L.muted}
+                  />
                 </View>
                 <Text style={s.phaseTitle}>{ph.title}</Text>
                 <Text style={s.phaseWeeks}>{`Weeks ${ph.from} – ${ph.to}`}</Text>
-                <Text style={[s.phaseChip, st === 'done' && s.phaseChipDone, st === 'current' && s.phaseChipOn]}>{st === 'done' ? 'Completed' : st === 'current' ? 'In Progress' : 'Upcoming'}</Text>
+                <Text style={[s.phaseChip, st === 'done' && s.phaseChipDone, st === 'current' && s.phaseChipOn]}>
+                  {st === 'done' ? 'Completed' : st === 'current' ? 'In Progress' : 'Upcoming'}
+                </Text>
               </View>
             </View>
           );
@@ -198,7 +283,11 @@ function SubjectRow({ p, x, phone }: { p: P; x: Plan['subjects'][number]; phone:
   const tone = LEVEL_TONE[level];
   const pct = Math.round(x.progress * 100);
   const button = (
-    <Pressable style={[s.colAction, action === 'Continue' ? s.continue : s.review]} onPress={() => p.openSubject(x.name)} accessibilityRole="button" accessibilityLabel={`${action} ${x.name}: ${x.next}`}>
+    <Pressable
+      style={[s.colAction, action === 'Continue' ? s.continue : s.review]}
+      onPress={() => p.openSubject(x.name)}
+      accessibilityRole="button"
+      accessibilityLabel={`${action} ${x.name}: ${x.next}`}>
       {action === 'Continue' ? <Icon name="playFill" size={12} color={L.white} /> : null}
       <Text style={action === 'Continue' ? s.continueText : s.reviewText}>{action}</Text>
     </Pressable>
@@ -255,7 +344,11 @@ function SubjectsTable({ p, phone = false }: { p: P; phone?: boolean }) {
           <Text style={s.cardSub}>Your focus areas, progress and next steps.</Text>
         </View>
         {phone ? null : (
-          <Pressable style={s.style} onPress={() => p.setAdjusting(true)} accessibilityRole="button" accessibilityLabel={`Learning style: ${p.style}. Change`}>
+          <Pressable
+            style={s.style}
+            onPress={() => p.setAdjusting(true)}
+            accessibilityRole="button"
+            accessibilityLabel={`Learning style: ${p.style}. Change`}>
             <Icon name="calendar" size={17} color={L.ink} />
             <Text style={s.styleText}>{`Learning Style: ${p.style}`}</Text>
             <Icon name="chevronDown" size={16} color={L.ink} />
@@ -283,7 +376,7 @@ function WeekFocus({ p, phone = false }: { p: P; phone?: boolean }) {
     <View style={s.card}>
       <View style={s.cardHead}>
         {phone ? null : (
-          <View style={[s.statIcon, { backgroundColor: '#E7EFFE' }]}>
+          <View style={[s.statIcon, { backgroundColor: Maple.blueSelected }]}>
             <Icon name="calendar" size={22} color={L.blue} />
           </View>
         )}
@@ -296,7 +389,12 @@ function WeekFocus({ p, phone = false }: { p: P; phone?: boolean }) {
       <View style={s.focusList}>
         {p.focus.map((f) => (
           <View key={f.id} style={s.focusRow}>
-            <Pressable onPress={() => p.toggle(f.id)} hitSlop={10} accessibilityRole="checkbox" accessibilityState={{ checked: f.done }} accessibilityLabel={f.text}>
+            <Pressable
+              onPress={() => p.toggle(f.id)}
+              hitSlop={10}
+              accessibilityRole="checkbox"
+              accessibilityState={{ checked: f.done }}
+              accessibilityLabel={f.text}>
               <View style={[s.check, f.done && s.checkOn]}>{f.done ? <Icon name="tick" size={13} color={L.white} /> : null}</View>
             </Pressable>
             <Pressable style={s.flex} onPress={() => p.go(f.href)} accessibilityRole="link">
@@ -312,15 +410,15 @@ function WeekFocus({ p, phone = false }: { p: P; phone?: boolean }) {
 function Advisor({ p }: { p: P }) {
   return (
     <View style={[s.card, s.advisor]}>
-      <LinearGradient colors={['#F3EEFF', '#EAF1FF']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />
+      <LinearGradient colors={[Maple.blueSoft, Maple.blueSoft]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />
       <View style={s.advisorText}>
         <View style={s.cardHead}>
-          <Icon name="sparkle" size={24} color="#7C3AED" />
+          <Icon name="sparkle" size={24} color={Maple.blue} />
           <Text style={s.cardTitle}>AI Learning Advisor</Text>
         </View>
         <Text style={s.advisorBody}>{p.plan.advisor.text}</Text>
         <Pressable style={s.boost} onPress={() => p.go('/copilot')} accessibilityRole="button">
-          <Icon name="bolt" size={16} color="#6D28D9" />
+          <Icon name="bolt" size={16} color={Maple.blue} />
           <Text style={s.boostText}>Get a Study Boost</Text>
         </Pressable>
       </View>
@@ -334,7 +432,7 @@ function Recommended({ p, count = 2, phone = false }: { p: P; count?: number; ph
     <View style={s.card}>
       <View style={s.cardHead}>
         {phone ? null : (
-          <View style={[s.statIcon, { backgroundColor: '#E7EFFE' }]}>
+          <View style={[s.statIcon, { backgroundColor: Maple.blueSelected }]}>
             <Icon name="book" size={22} color={L.blue} />
           </View>
         )}
@@ -348,7 +446,12 @@ function Recommended({ p, count = 2, phone = false }: { p: P; count?: number; ph
       </View>
       <View style={s.recs}>
         {p.recommended.slice(0, count).map((l) => (
-          <Pressable key={l.id} style={[s.rec, count > 2 && s.recQuarter]} onPress={() => p.openLesson(l)} accessibilityRole="button" accessibilityLabel={`${l.title}, ${l.subject}`}>
+          <Pressable
+            key={l.id}
+            style={[s.rec, count > 2 && s.recQuarter]}
+            onPress={() => p.openLesson(l)}
+            accessibilityRole="button"
+            accessibilityLabel={`${l.title}, ${l.subject}`}>
             <ChalkThumb l={l} height={86} />
             <View style={s.recBody}>
               <Text style={s.recTitle} numberOfLines={2}>
@@ -364,99 +467,30 @@ function Recommended({ p, count = 2, phone = false }: { p: P; count?: number; ph
   );
 }
 
-function BySubject({ p, phone }: { p: P; phone: boolean }) {
-  return (
-    <View style={s.tiles}>
-      {p.plan.subjects.map((x) => {
-        const level = levelFor(x.progress);
-        const tone = LEVEL_TONE[level];
-        const pct = Math.round(x.progress * 100);
-        return (
-          <Pressable key={x.name} style={[s.tile, phone && s.tileP]} onPress={() => p.openSubject(x.name)} accessibilityRole="button" accessibilityLabel={`${x.name}, ${pct}%, ${level}`}>
-            <View style={s.subjectCell}>
-              <View style={[s.subjectIcon, { backgroundColor: x.tint }]}>
-                <Icon name={x.icon} size={18} color={L.white} />
-              </View>
-              <Text style={[s.subjectName, s.flex]}>{x.name}</Text>
-              <Text style={[s.level, { color: tone.fg, backgroundColor: tone.bg }]}>{level}</Text>
-            </View>
-            <Text style={s.pct}>{`${pct}% complete`}</Text>
-            <View style={s.bar}>
-              <View style={[s.barFill, { width: `${pct}%`, backgroundColor: x.progress >= 0.65 ? L.green : AMBER }]} />
-            </View>
-            <Text style={s.next}>{`Next: ${x.next}`}</Text>
-          </Pressable>
-        );
-      })}
-    </View>
-  );
-}
-
-function Schedule({ p, phone }: { p: P; phone: boolean }) {
-  return (
-    <View style={s.card}>
-      <Text style={s.cardTitle}>Study Schedule</Text>
-      <Text style={s.cardSub}>{`A week of study for ${p.style.toLowerCase()} learners.`}</Text>
-      <View style={s.days}>
-        {p.plan.schedule.map((d) => (
-          <View key={d.day} style={[s.day, phone && s.dayP]}>
-            <Text style={s.dayName}>{d.day}</Text>
-            {d.items.map((it) => (
-              <Text key={it} style={s.dayItem}>
-                {it}
-              </Text>
-            ))}
-          </View>
-        ))}
-      </View>
-    </View>
-  );
-}
-
-function Milestones({ p }: { p: P }) {
-  return (
-    <View style={s.card}>
-      <Text style={s.cardTitle}>Goals & Milestones</Text>
-      <Text style={s.cardSub}>{`Steps on the way to ${p.goal}, by ${p.target}.`}</Text>
-      <View style={s.focusList}>
-        {p.plan.milestones.map((m) => (
-          <View key={m.title} style={s.focusRow}>
-            <View style={[s.check, m.done && s.checkOn]}>{m.done ? <Icon name="tick" size={13} color={L.white} /> : null}</View>
-            <Text style={[s.focusText, s.flex, m.done && s.focusDone]}>{m.title}</Text>
-            <Text style={s.due}>{m.due}</Text>
-          </View>
-        ))}
-      </View>
-    </View>
-  );
-}
-
-function Recommendations({ p, phone }: { p: P; phone: boolean }) {
-  return (
-    <View style={s.stack}>
-      <View style={s.card}>
-        <Text style={s.cardTitle}>What to do next</Text>
-        <View style={s.focusList}>
-          {p.plan.tips.map((t) => (
-            <View key={t} style={s.focusRow}>
-              <Icon name="bulb" size={18} color="#C98A0B" />
-              <Text style={[s.focusText, s.flex]}>{t}</Text>
-            </View>
-          ))}
-        </View>
-      </View>
-      <Recommended p={p} count={4} phone={phone} />
-    </View>
-  );
-}
-
-function Choices<T extends string | number>({ title, options, value, onChange, label = String }: { title: string; options: readonly T[]; value: T; onChange: (v: T) => void; label?: (v: T) => string }) {
+function Choices<T extends string | number>({
+  title,
+  options,
+  value,
+  onChange,
+  label = String,
+}: {
+  title: string;
+  options: readonly T[];
+  value: T;
+  onChange: (v: T) => void;
+  label?: (v: T) => string;
+}) {
   return (
     <View style={s.group}>
       <Text style={s.groupTitle}>{title}</Text>
       <View style={s.chips}>
         {options.map((o) => (
-          <Pressable key={String(o)} style={[s.chip, o === value && s.chipOn]} onPress={() => onChange(o)} accessibilityRole="radio" accessibilityState={{ selected: o === value }}>
+          <Pressable
+            key={String(o)}
+            style={[s.chip, o === value && s.chipOn]}
+            onPress={() => onChange(o)}
+            accessibilityRole="radio"
+            accessibilityState={{ selected: o === value }}>
             <Text style={[s.chipText, o === value && s.chipTextOn]}>{label(o)}</Text>
           </Pressable>
         ))}
@@ -491,16 +525,20 @@ function Adjust({ p }: { p: P }) {
 }
 
 function TabBody({ p, phone }: { p: P; phone: boolean }) {
-  if (p.tab === 'subject') return <BySubject p={p} phone={phone} />;
-  if (p.tab === 'schedule') return <Schedule p={p} phone={phone} />;
-  if (p.tab === 'goals') return <Milestones p={p} />;
-  if (p.tab === 'recs') return <Recommendations p={p} phone={phone} />;
+  if (p.tab === 'career') return <CareerPathPanel phone={phone} />;
+  if (p.tab === 'subject') return <SubjectsTab p={p} phone={phone} />;
+  if (p.tab === 'schedule') return <ScheduleTab p={p} phone={phone} />;
+  if (p.tab === 'goals') return <GoalsTab p={p} phone={phone} />;
+  if (p.tab === 'recs') return <RecsTab p={p} phone={phone} />;
   if (phone) {
     return (
       <View style={s.stack}>
         <Journey p={p} phone />
         <WeekFocus p={p} phone />
         <SubjectsTable p={p} phone />
+        <View style={s.card}>
+          <SupportsGoalsCard subjects={p.plan.subjects.map((x) => x.name)} onCareerPath={() => p.setTab('career')} />
+        </View>
         <Advisor p={p} />
         <Recommended p={p} phone />
       </View>
@@ -514,6 +552,9 @@ function TabBody({ p, phone }: { p: P; phone: boolean }) {
       </View>
       <View style={s.right}>
         <WeekFocus p={p} />
+        <View style={s.card}>
+          <SupportsGoalsCard subjects={p.plan.subjects.map((x) => x.name)} onCareerPath={() => p.setTab('career')} />
+        </View>
         <Advisor p={p} />
         <Recommended p={p} />
       </View>
@@ -525,24 +566,36 @@ interface PlanProps {
   plan: Plan;
   lessons: readonly VideoLessonItem[];
   avatar?: number;
+  /** `?tab=` from the address, e.g. career to open the Career Path. */
+  tab?: string;
 }
 
 /** My Personalized Learning Plan on wide screens: the reference, in the light learner frame. */
-export function PlanDesk({ plan, lessons, avatar }: PlanProps) {
-  const p = usePlan(plan, lessons);
+export function PlanDesk({ plan, lessons, avatar, tab }: PlanProps) {
+  const p = usePlan(plan, lessons, tab);
   return (
-    <LightFrame placeholder="Search subjects, lessons, past papers..." avatar={avatar}>
+    <LightFrame>
       <View style={s.heroPhoto} pointerEvents="none">
-        <Image source={plan.hero} style={StyleSheet.absoluteFill} contentFit="cover" contentPosition="top" />
-        <LinearGradient colors={[L.canvas, 'rgba(246,248,253,0)']} start={{ x: 0, y: 0.5 }} end={{ x: 0.6, y: 0.5 }} style={StyleSheet.absoluteFill} />
-        <LinearGradient colors={['rgba(246,248,253,0)', L.canvas]} start={{ x: 0.5, y: 0.6 }} end={{ x: 0.5, y: 1 }} style={StyleSheet.absoluteFill} />
+        <Image decorative source={plan.hero} style={StyleSheet.absoluteFill} contentFit="cover" contentPosition="top" />
+        <LinearGradient
+          colors={[L.canvas, 'rgba(246,248,253,0)']}
+          start={{ x: 0, y: 0.5 }}
+          end={{ x: 0.6, y: 0.5 }}
+          style={StyleSheet.absoluteFill}
+        />
+        <LinearGradient
+          colors={['rgba(246,248,253,0)', L.canvas]}
+          start={{ x: 0.5, y: 0.6 }}
+          end={{ x: 0.5, y: 1 }}
+          style={StyleSheet.absoluteFill}
+        />
       </View>
       <View style={s.head}>
         <View style={s.headIcon}>
-          <Icon name="sparkle" size={28} color="#7C3AED" />
+          <Icon name="sparkle" size={28} color={Maple.blue} />
         </View>
         <View>
-          <Text style={s.title} accessibilityRole="header">
+          <Text style={s.title} {...PAGE_TITLE}>
             My Personalized Learning Plan
           </Text>
           <Text style={s.sub}>A learning plan tailored to your goals, current level and learning style.</Text>
@@ -559,18 +612,18 @@ export function PlanDesk({ plan, lessons, avatar }: PlanProps) {
 }
 
 /** My Plan on phones: the same plan, stacked. */
-export function PlanPhone({ plan, lessons, avatar }: PlanProps) {
-  const p = usePlan(plan, lessons);
+export function PlanPhone({ plan, lessons, avatar, tab }: PlanProps) {
+  const p = usePlan(plan, lessons, tab);
   return (
     <View style={s.phoneRoot}>
       {avatar ? <LearnerPhoneTop avatar={avatar} /> : null}
       <ScrollView contentContainerStyle={s.phone}>
         <View style={s.headP}>
           <View style={[s.headIcon, s.headIconP]}>
-            <Icon name="sparkle" size={22} color="#7C3AED" />
+            <Icon name="sparkle" size={22} color={Maple.blue} />
           </View>
           <View style={s.flex}>
-            <Text style={s.titleP} accessibilityRole="header">
+            <Text style={s.titleP} {...PAGE_TITLE}>
               My Learning Plan
             </Text>
             <Text style={s.subP}>Tailored to your goals, level and learning style.</Text>
@@ -591,13 +644,22 @@ const s = StyleSheet.create({
   stack: { gap: 14 },
   heroPhoto: { position: 'absolute', top: -20, right: -16, width: 300, height: 215, overflow: 'hidden' },
   head: { height: 95, flexDirection: 'row', alignItems: 'flex-start', gap: 20 },
-  headIcon: { width: 57, height: 57, alignItems: 'center', justifyContent: 'center', borderRadius: 14, backgroundColor: '#EEE8FE' },
+  headIcon: { width: 57, height: 57, alignItems: 'center', justifyContent: 'center', borderRadius: 14, backgroundColor: Maple.blueSelected },
   title: { fontSize: 36, lineHeight: 42, fontWeight: '700', color: L.navy },
   sub: { marginTop: 6, fontSize: 16, color: L.body },
   stats: { flexDirection: 'row', gap: 18 },
   statsD: { width: 1045 },
   statsP: { flexDirection: 'column', gap: 10 },
-  statCard: { flexDirection: 'row', alignItems: 'center', gap: 14, paddingHorizontal: 16, borderRadius: 16, borderWidth: 1, borderColor: L.line, backgroundColor: 'rgba(255,255,255,0.96)' },
+  statCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 14,
+    paddingHorizontal: 16,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: L.line,
+    backgroundColor: 'rgba(255,255,255,0.96)',
+  },
   statCardP: { paddingVertical: 12 },
   goalCard: { width: 293, height: 84 },
   metaCard: { flex: 1, height: 84 },
@@ -610,8 +672,19 @@ const s = StyleSheet.create({
   statLabel: { fontSize: 14, color: L.body },
   statValue: { marginTop: 2, fontSize: 17, fontWeight: '700', color: L.navy },
   statValueSmall: { fontSize: 15 },
-  onTrack: { marginTop: 4, alignSelf: 'flex-start', overflow: 'hidden', paddingHorizontal: 9, paddingVertical: 2, borderRadius: 7, fontSize: 12.5, fontWeight: '600', color: L.green, backgroundColor: '#E6F6EC' },
-  behind: { color: '#B45309', backgroundColor: '#FEF3DC' },
+  onTrack: {
+    marginTop: 4,
+    alignSelf: 'flex-start',
+    overflow: 'hidden',
+    paddingHorizontal: 9,
+    paddingVertical: 2,
+    borderRadius: 7,
+    fontSize: 12.5,
+    fontWeight: '600',
+    color: L.green,
+    backgroundColor: Maple.successSoft,
+  },
+  behind: { color: Maple.warningText, backgroundColor: Maple.warningSoft },
   divider: { width: 1, height: 46, backgroundColor: L.line },
   tabsCard: { marginTop: 16, borderRadius: 14, borderWidth: 1, borderColor: L.line, backgroundColor: L.white },
   tabs: { flexDirection: 'row', paddingHorizontal: 12, gap: 10 },
@@ -632,30 +705,78 @@ const s = StyleSheet.create({
   cardSub: { marginTop: 2, fontSize: 14, color: L.body },
   planFor: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   planForText: { fontSize: 14, color: L.ink },
-  adjust: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 14, height: 38, borderRadius: 10, backgroundColor: '#E7EFFE' },
+  adjust: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingHorizontal: 14,
+    height: 38,
+    borderRadius: 10,
+    backgroundColor: Maple.blueSelected,
+  },
   adjustText: { fontSize: 14, fontWeight: '600', color: L.blue },
   phases: { flexDirection: 'row', marginTop: 14 },
   phasesP: { flexWrap: 'wrap', gap: 18, justifyContent: 'space-between' },
   phaseWrap: { flexDirection: 'row', alignItems: 'center' },
   phaseWrapD: { flex: 1 },
   phaseWrapP: { width: '46%' },
-  connector: { width: 22, height: 2, backgroundColor: '#C9D6EA' },
-  phase: { flex: 1, alignItems: 'center', gap: 6, paddingTop: 22, paddingBottom: 12, paddingHorizontal: 8, borderRadius: 14, borderWidth: 1.5, borderColor: L.line, backgroundColor: L.white },
-  phaseDone: { borderColor: '#9ADBB0', backgroundColor: '#F0FBF3' },
-  phaseOn: { borderColor: '#A9C4F7', backgroundColor: '#EEF4FF' },
-  phaseDot: { position: 'absolute', top: -14, width: 28, height: 28, alignItems: 'center', justifyContent: 'center', borderRadius: 14, borderWidth: 2, borderColor: '#C9D2E0', backgroundColor: L.white },
+  connector: { width: 22, height: 2, backgroundColor: Maple.blueLine },
+  phase: {
+    flex: 1,
+    alignItems: 'center',
+    gap: 6,
+    paddingTop: 22,
+    paddingBottom: 12,
+    paddingHorizontal: 8,
+    borderRadius: 14,
+    borderWidth: 1.5,
+    borderColor: L.line,
+    backgroundColor: L.white,
+  },
+  phaseDone: { borderColor: Palette.green300b, backgroundColor: Maple.successSoft },
+  phaseOn: { borderColor: Maple.blueLine, backgroundColor: Maple.blueSoft },
+  phaseDot: {
+    position: 'absolute',
+    top: -14,
+    width: 28,
+    height: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 14,
+    borderWidth: 2,
+    borderColor: Maple.borderStrong,
+    backgroundColor: L.white,
+  },
   phaseDotDone: { borderColor: L.green, backgroundColor: L.green },
   phaseDotOn: { borderColor: L.blue },
   phaseTitle: { fontSize: 15, fontWeight: '700', color: L.navy, textAlign: 'center' },
   phaseWeeks: { fontSize: 13, color: L.body },
-  phaseChip: { overflow: 'hidden', paddingHorizontal: 10, paddingVertical: 3, borderRadius: 7, fontSize: 12.5, fontWeight: '600', color: L.body, backgroundColor: '#F1F4F9' },
-  phaseChipDone: { color: L.green, backgroundColor: '#DCF3E4' },
-  phaseChipOn: { color: L.blue, backgroundColor: '#DCE7FC' },
-  style: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 14, height: 38, borderRadius: 10, borderWidth: 1, borderColor: L.line },
+  phaseChip: {
+    overflow: 'hidden',
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    borderRadius: 7,
+    fontSize: 12.5,
+    fontWeight: '600',
+    color: L.body,
+    backgroundColor: Maple.blueSoft,
+  },
+  phaseChipDone: { color: L.green, backgroundColor: Maple.successSoft },
+  phaseChipOn: { color: L.blue, backgroundColor: Maple.blueSelected },
+  style: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingHorizontal: 14,
+    height: 38,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: L.line,
+  },
   styleText: { fontSize: 14, fontWeight: '600', color: L.ink },
-  tr: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: '#EEF1F6' },
-  trP: { gap: 8, paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: '#EEF1F6' },
-  th: { paddingVertical: 8, paddingHorizontal: 8, borderRadius: 8, borderBottomWidth: 0, backgroundColor: '#F5F7FB' },
+  tr: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: Maple.blueSelected },
+  trP: { gap: 8, paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: Maple.blueSelected },
+  th: { paddingVertical: 8, paddingHorizontal: 8, borderRadius: 8, borderBottomWidth: 0, backgroundColor: Maple.blueSoft },
   thText: { fontSize: 13.5, fontWeight: '600', color: L.ink },
   colSubject: { width: 176 },
   colLevel: { width: 104 },
@@ -664,28 +785,72 @@ const s = StyleSheet.create({
   subjectCell: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   subjectIcon: { width: 34, height: 34, alignItems: 'center', justifyContent: 'center', borderRadius: 9 },
   subjectName: { fontSize: 15, fontWeight: '600', color: L.navy },
-  level: { alignSelf: 'flex-start', overflow: 'hidden', paddingHorizontal: 10, paddingVertical: 3, borderRadius: 7, fontSize: 12.5, fontWeight: '600' },
+  level: {
+    alignSelf: 'flex-start',
+    overflow: 'hidden',
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    borderRadius: 7,
+    fontSize: 12.5,
+    fontWeight: '600',
+  },
   pct: { fontSize: 13, color: L.ink },
-  bar: { marginTop: 5, height: 6, borderRadius: 3, backgroundColor: '#E6EBF3' },
+  bar: { marginTop: 5, height: 6, borderRadius: 3, backgroundColor: Maple.blueSelected },
   barFill: { height: 6, borderRadius: 3 },
   next: { fontSize: 13.5, color: L.ink },
-  continue: { height: 34, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, borderRadius: 8, backgroundColor: L.blue },
+  continue: {
+    height: 34,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    borderRadius: 8,
+    backgroundColor: L.blue,
+  },
   continueText: { fontSize: 13.5, fontWeight: '600', color: L.white },
-  review: { height: 34, alignItems: 'center', justifyContent: 'center', borderRadius: 8, backgroundColor: '#E7EFFE' },
+  review: { height: 34, alignItems: 'center', justifyContent: 'center', borderRadius: 8, backgroundColor: Maple.blueSelected },
   reviewText: { fontSize: 13.5, fontWeight: '600', color: L.blue },
-  weekChip: { overflow: 'hidden', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 8, fontSize: 13, fontWeight: '600', color: L.blue, backgroundColor: '#E7EFFE' },
+  weekChip: {
+    overflow: 'hidden',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 8,
+    fontSize: 13,
+    fontWeight: '600',
+    color: L.blue,
+    backgroundColor: Maple.blueSelected,
+  },
   focusList: { gap: 12 },
   focusRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  check: { width: 20, height: 20, alignItems: 'center', justifyContent: 'center', borderRadius: 10, borderWidth: 1.5, borderColor: '#B6C0CF', backgroundColor: L.white },
+  check: {
+    width: 20,
+    height: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
+    borderWidth: 1.5,
+    borderColor: Maple.borderStrong,
+    backgroundColor: L.white,
+  },
   checkOn: { borderColor: L.green, backgroundColor: L.green },
   focusText: { fontSize: 14.5, color: L.ink },
   focusDone: { color: L.body },
-  due: { fontSize: 13, color: L.muted },
-  advisor: { flexDirection: 'row', borderColor: '#E3DAFB' },
+  advisor: { flexDirection: 'row', borderColor: Maple.blueSelected },
   advisorText: { flex: 1, gap: 10 },
   advisorBody: { fontSize: 14, lineHeight: 20, color: L.body },
-  boost: { alignSelf: 'flex-start', flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 18, height: 36, borderRadius: 18, borderWidth: 1.5, borderColor: '#8B5CF6', backgroundColor: L.white },
-  boostText: { fontSize: 14, fontWeight: '600', color: '#6D28D9' },
+  boost: {
+    alignSelf: 'flex-start',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingHorizontal: 18,
+    height: 36,
+    borderRadius: 18,
+    borderWidth: 1.5,
+    borderColor: Maple.blue,
+    backgroundColor: L.white,
+  },
+  boostText: { fontSize: 14, fontWeight: '600', color: Maple.blue },
   robot: { width: 104, height: 104, alignSelf: 'center' },
   seeAll: { fontSize: 14, fontWeight: '600', color: L.blue },
   recs: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
@@ -694,14 +859,6 @@ const s = StyleSheet.create({
   recBody: { gap: 4, padding: 10 },
   recTitle: { fontSize: 14, lineHeight: 18, fontWeight: '700', color: L.navy },
   recMeta: { fontSize: 12.5, color: L.body },
-  tiles: { flexDirection: 'row', flexWrap: 'wrap', gap: 16 },
-  tile: { width: 320, gap: 8, padding: 18, borderRadius: 16, borderWidth: 1, borderColor: L.line, backgroundColor: L.white },
-  tileP: { width: '100%' },
-  days: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
-  day: { width: 170, gap: 6, padding: 12, borderRadius: 12, backgroundColor: '#F5F7FB' },
-  dayP: { width: '47%' },
-  dayName: { fontSize: 15, fontWeight: '700', color: L.navy },
-  dayItem: { fontSize: 13, color: L.ink },
   scrim: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20, backgroundColor: 'rgba(11,26,63,0.35)' },
   sheet: { width: '100%', maxWidth: 520, gap: 14, padding: 20, borderRadius: 18, backgroundColor: L.white },
   group: { gap: 8 },
@@ -712,7 +869,14 @@ const s = StyleSheet.create({
   chipText: { fontSize: 13.5, color: L.ink },
   chipTextOn: { fontWeight: '600', color: L.blue },
   sheetActions: { flexDirection: 'row', justifyContent: 'flex-end', gap: 10 },
-  cancel: { height: 40, paddingHorizontal: 18, alignItems: 'center', justifyContent: 'center', borderRadius: 10, backgroundColor: '#E7EFFE' },
+  cancel: {
+    height: 40,
+    paddingHorizontal: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
+    backgroundColor: Maple.blueSelected,
+  },
   save: { height: 40, paddingHorizontal: 18 },
   phoneRoot: { flex: 1, backgroundColor: L.canvas },
   phone: { gap: 14, padding: 16, paddingBottom: 110 },

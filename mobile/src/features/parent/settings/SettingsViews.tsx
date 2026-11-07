@@ -5,6 +5,7 @@ import { ParentDesk, ParentPhoneTop } from '@/features/portal/PortalFrame';
 import { Card, UnderTabs } from '@/features/portal/PortalParts';
 import { BODY, CANVAS, NAVY } from '@/features/portal/tokens';
 import type { IconName } from '@/lib/icons';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 import type { ParentPortal } from '@/mock/portal';
 
 import { AccountCard, ChildrenCard, GuardiansCard, HowToCard, NotificationsCard, PrivacyCard } from './SettingsParts';
@@ -19,7 +20,7 @@ export function SettingsDesk({ p }: { p: ParentPortal }) {
   const s = p.settings;
   return (
     <ParentDesk list={p.children} me={p.me} search="Search classes, messages, or resources..." active="Settings">
-      <Text style={styles.title} accessibilityRole="header">
+      <Text style={styles.title} {...PAGE_TITLE}>
         Settings
       </Text>
       <Text style={styles.subtitle}>Manage your children, notifications, privacy, and account preferences.</Text>

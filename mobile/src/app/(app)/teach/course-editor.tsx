@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { ScrollView, StyleSheet, useWindowDimensions } from 'react-native';
+import { StyleSheet, useWindowDimensions } from 'react-native';
 
 import { useShell } from '@/components/ui';
 import { RefScale } from '@/features/public/home/RefScale';
@@ -7,6 +7,7 @@ import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { COURSE_REF_WIDTH, CourseDesk, CoursePhone } from '@/features/teacher/course/CourseViews';
 import { CANVAS } from '@/features/teacher/frame/TeacherParts';
 import { mockData } from '@/lib/mock';
+import { PageScroll } from '@/components/shell/PageScroll';
 
 /** Inventory 38: build modules and lessons, with video, timestamps, notes, completion and access settings. */
 export default function CourseEditorScreen() {
@@ -18,11 +19,11 @@ export default function CourseEditorScreen() {
   const c = mock.teacher.courseBuilder;
   if (!wide) return <CoursePhone c={c} me={me} />;
   return (
-    <ScrollView style={styles.bg}>
+    <PageScroll style={styles.bg}>
       <RefScale width={width} refWidth={COURSE_REF_WIDTH}>
         <CourseDesk c={c} me={me} />
       </RefScale>
-    </ScrollView>
+    </PageScroll>
   );
 }
 

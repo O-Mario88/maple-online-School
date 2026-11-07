@@ -1,6 +1,8 @@
 import { StyleSheet } from 'react-native';
 
 import { BLUE, BODY, INK, LINE, MUTED } from '@/features/teacher/frame/TeacherParts';
+import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 /** Styles for SpeedGraderViews (kept apart so the view file stays readable). */
 export const SPEED_GRADER_REF_WIDTH = 1220;
@@ -10,7 +12,7 @@ export const s = StyleSheet.create({
     width: SPEED_GRADER_REF_WIDTH,
     padding: 12,
     gap: 10,
-    backgroundColor: '#EAF1FB',
+    backgroundColor: Maple.blueSelected,
   },
 
   /* Sub-Header */
@@ -61,7 +63,7 @@ export const s = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     overflow: 'hidden',
   },
   counterArrow: {
@@ -93,7 +95,7 @@ export const s = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
   },
   studentViewText: {
     fontSize: 11,
@@ -112,7 +114,7 @@ export const s = StyleSheet.create({
   postGradesText: {
     fontSize: 11,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
 
   /* 3-Column Studio */
@@ -168,7 +170,7 @@ export const s = StyleSheet.create({
     borderRadius: 6,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
   },
   queueSearchInput: {
     flex: 1,
@@ -185,7 +187,7 @@ export const s = StyleSheet.create({
     borderRadius: 6,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
   },
   statusFilterText: {
     fontSize: 9.5,
@@ -203,10 +205,10 @@ export const s = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
   },
   subCardActive: {
-    backgroundColor: '#EBF3FF',
+    backgroundColor: Maple.blueSoft,
     borderColor: BLUE,
     borderWidth: 1.5,
   },
@@ -215,10 +217,10 @@ export const s = StyleSheet.create({
     height: 14,
     borderRadius: 3.5,
     borderWidth: 1.5,
-    borderColor: '#CBD5E1',
+    borderColor: Maple.borderStrong,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
   },
   checkboxOn: {
     backgroundColor: BLUE,
@@ -227,7 +229,7 @@ export const s = StyleSheet.create({
   checkboxActiveOutline: {
     borderColor: BLUE,
     borderWidth: 2,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
   },
   handFractionRow: {
     flexDirection: 'row',
@@ -241,19 +243,19 @@ export const s = StyleSheet.create({
   stackedFracText: {
     fontSize: 10.5,
     lineHeight: 11,
-    color: '#1E293B',
+    color: Maple.navy,
     fontFamily: 'Georgia',
   },
   stackedFracBar: {
     width: 11,
     height: 1.2,
-    backgroundColor: '#1E293B',
+    backgroundColor: Maple.navy,
     marginVertical: 0.5,
   },
   checkboxTick: {
     fontSize: 8.5,
     fontWeight: '800',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   subAvatar: {
     width: 28,
@@ -277,7 +279,7 @@ export const s = StyleSheet.create({
   scorePill: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
     borderRadius: 5,
     borderWidth: 1,
     borderColor: LINE,
@@ -287,7 +289,7 @@ export const s = StyleSheet.create({
   scorePillStrong: {
     fontSize: 9.5,
     fontWeight: '800',
-    color: '#15803D',
+    color: Maple.successText,
   },
   scorePillMax: {
     fontSize: 9,
@@ -320,14 +322,14 @@ export const s = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 5,
-    backgroundColor: '#EF4444',
+    backgroundColor: Maple.error,
     alignItems: 'center',
     justifyContent: 'center',
   },
   pdfRedIconText: {
     fontSize: 7.5,
     fontWeight: '800',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   pdfName: {
     fontSize: 11,
@@ -349,7 +351,7 @@ export const s = StyleSheet.create({
     borderRadius: 6,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -362,7 +364,7 @@ export const s = StyleSheet.create({
     borderRadius: 6,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
   },
   zoomSelectText: {
     fontSize: 9.5,
@@ -380,7 +382,7 @@ export const s = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
   },
   drawToolBtn: {
     width: 26,
@@ -390,7 +392,7 @@ export const s = StyleSheet.create({
     justifyContent: 'center',
   },
   drawToolBtnOn: {
-    backgroundColor: '#DBEAFE',
+    backgroundColor: Maple.blueSelected,
   },
   pointerGlyph: {
     fontSize: 12,
@@ -437,7 +439,7 @@ export const s = StyleSheet.create({
     borderRadius: 5,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -460,7 +462,7 @@ export const s = StyleSheet.create({
     width: 30,
     height: 17,
     borderRadius: 9,
-    backgroundColor: '#94A3B8',
+    backgroundColor: Maple.faint,
     padding: 2,
     justifyContent: 'center',
   },
@@ -471,7 +473,7 @@ export const s = StyleSheet.create({
     width: 13,
     height: 13,
     borderRadius: 6.5,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
   },
   switchThumbOn: {
     alignSelf: 'flex-end',
@@ -485,10 +487,10 @@ export const s = StyleSheet.create({
   },
   paperSheet: {
     flex: 1,
-    backgroundColor: '#FDFDFB',
+    backgroundColor: Palette.lime50,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: Maple.border,
     padding: 16,
     gap: 12,
     justifyContent: 'space-between',
@@ -511,7 +513,7 @@ export const s = StyleSheet.create({
   },
   handLine: {
     fontSize: 13.5,
-    color: '#1E293B',
+    color: Maple.navy,
     fontStyle: 'italic',
     marginLeft: 18,
   },
@@ -523,7 +525,7 @@ export const s = StyleSheet.create({
   },
   redOvalWrap: {
     borderWidth: 2,
-    borderColor: '#DC2626',
+    borderColor: Maple.error,
     borderRadius: 20,
     paddingHorizontal: 10,
     paddingVertical: 3,
@@ -531,7 +533,7 @@ export const s = StyleSheet.create({
   redHandNote: {
     fontSize: 12.5,
     fontWeight: '700',
-    color: '#DC2626',
+    color: Maple.error,
     fontStyle: 'italic',
     transform: [{ rotate: '-5deg' }],
   },
@@ -544,8 +546,8 @@ export const s = StyleSheet.create({
   },
   greenAnsBox: {
     borderWidth: 1.5,
-    borderColor: '#16A34A',
-    backgroundColor: '#F0FDF4',
+    borderColor: Maple.successText,
+    backgroundColor: Maple.successSoft,
     borderRadius: 4,
     paddingHorizontal: 8,
     paddingVertical: 3,
@@ -553,13 +555,13 @@ export const s = StyleSheet.create({
   greenHandNote: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#16A34A',
+    color: Maple.successText,
     fontStyle: 'italic',
   },
   greenCheckBig: {
     fontSize: 16,
     fontWeight: '800',
-    color: '#16A34A',
+    color: Maple.successText,
   },
   partBRow: {
     flexDirection: 'row',
@@ -567,7 +569,7 @@ export const s = StyleSheet.create({
     gap: 8,
   },
   yellowHighlightBand: {
-    backgroundColor: '#FEF08A',
+    backgroundColor: Palette.yellow300d,
     borderRadius: 4,
     paddingVertical: 2,
     paddingRight: 8,
@@ -581,12 +583,12 @@ export const s = StyleSheet.create({
   yellowArrow: {
     fontSize: 16,
     fontWeight: '800',
-    color: '#D97706',
+    color: Maple.warning,
   },
   yellowSticky: {
-    backgroundColor: '#FEF9C3',
+    backgroundColor: Palette.yellow200b,
     borderWidth: 1,
-    borderColor: '#FDE047',
+    borderColor: Palette.yellow400c,
     borderRadius: 6,
     padding: 8,
     gap: 1,
@@ -594,12 +596,12 @@ export const s = StyleSheet.create({
   yellowStickyText: {
     fontSize: 10.5,
     fontStyle: 'italic',
-    color: '#854D0E',
+    color: Maple.warningText,
     fontWeight: '600',
   },
   extraStampPill: {
     alignSelf: 'flex-start',
-    backgroundColor: '#DBEAFE',
+    backgroundColor: Maple.blueSelected,
     borderRadius: 6,
     paddingHorizontal: 8,
     paddingVertical: 3,
@@ -627,7 +629,7 @@ export const s = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: LINE,
     overflow: 'hidden',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
   },
   thumbFrameOn: {
     borderColor: BLUE,
@@ -641,7 +643,7 @@ export const s = StyleSheet.create({
     minWidth: 18,
     height: 16,
     borderRadius: 4,
-    backgroundColor: '#F1F5F9',
+    backgroundColor: Maple.blueSoft,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 4,
@@ -655,7 +657,7 @@ export const s = StyleSheet.create({
     color: BODY,
   },
   thumbNumTextOn: {
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
 
   /* Right Column: Rubric & Voice Studio */
@@ -692,10 +694,10 @@ export const s = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    backgroundColor: '#EEF5FF',
+    backgroundColor: Maple.blueSoft,
     borderRadius: 9,
     borderWidth: 1,
-    borderColor: '#CFE0FF',
+    borderColor: Maple.blueSelected,
     padding: 9,
   },
   aiSparkle: {
@@ -725,7 +727,7 @@ export const s = StyleSheet.create({
   aiSuggestedLabel: {
     fontSize: 8.5,
     fontWeight: '700',
-    color: '#D97706',
+    color: Maple.warning,
   },
 
   /* Criteria List */
@@ -743,7 +745,7 @@ export const s = StyleSheet.create({
     paddingVertical: 7,
     borderBottomWidth: 1,
     borderBottomColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
   },
   crTitle: {
     width: 84,
@@ -778,7 +780,7 @@ export const s = StyleSheet.create({
   crBarTrack: {
     height: 4,
     borderRadius: 2,
-    backgroundColor: '#E2E8F0',
+    backgroundColor: Maple.border,
     overflow: 'hidden',
   },
   crBarFill: {
@@ -807,7 +809,7 @@ export const s = StyleSheet.create({
     borderRadius: 7,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     paddingHorizontal: 10,
     justifyContent: 'center',
   },
@@ -825,14 +827,14 @@ export const s = StyleSheet.create({
     borderRadius: 7,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 8,
   },
   gradeBadge: {
-    backgroundColor: '#DCFCE7',
+    backgroundColor: Maple.successSoft,
     borderRadius: 5,
     paddingHorizontal: 7,
     paddingVertical: 2,
@@ -840,7 +842,7 @@ export const s = StyleSheet.create({
   gradeBadgeText: {
     fontSize: 10,
     fontWeight: '700',
-    color: '#15803D',
+    color: Maple.successText,
   },
 
   /* Voice Studio */
@@ -852,25 +854,25 @@ export const s = StyleSheet.create({
     borderRadius: 9,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
   },
   micOuterRing: {
     width: 46,
     height: 46,
     borderRadius: 23,
-    backgroundColor: '#FFE4E6',
+    backgroundColor: Maple.errorSoft,
     alignItems: 'center',
     justifyContent: 'center',
   },
   micOuterRingActive: {
-    backgroundColor: '#FECDD3',
+    backgroundColor: Maple.errorSoft,
     transform: [{ scale: 1.06 }],
   },
   micCoralCircle: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: '#FF5A5F',
+    backgroundColor: Palette.red400d,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -911,11 +913,11 @@ export const s = StyleSheet.create({
     borderRadius: 6,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
   },
   quickChipOn: {
     borderColor: BLUE,
-    backgroundColor: '#EEF5FF',
+    backgroundColor: Maple.blueSoft,
   },
   quickChipText: {
     fontSize: 9.5,
@@ -947,8 +949,8 @@ export const s = StyleSheet.create({
     height: 34,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#CBD5E1',
-    backgroundColor: '#FFFFFF',
+    borderColor: Maple.borderStrong,
+    backgroundColor: Maple.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -970,7 +972,7 @@ export const s = StyleSheet.create({
   saveNextText: {
     fontSize: 11,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
 });
 

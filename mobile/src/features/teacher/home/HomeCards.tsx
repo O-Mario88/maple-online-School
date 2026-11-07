@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { useCallback, useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
@@ -10,6 +10,7 @@ import type { Countdown } from '@/lib/teacher-home';
 import { countdown } from '@/lib/teacher-home';
 import { toast } from '@/lib/toast';
 import type { Flagged, TeacherHome } from '@/mock/teacher-home';
+import { Maple } from '@/constants/maple';
 
 const TICK_MS = 15_000;
 
@@ -74,7 +75,7 @@ export function StatRow({ h, cd, phone = false }: { h: TeacherHome; cd: Countdow
         </View>
       </Pressable>
       <Pressable style={styles.stat} onPress={() => go('analytics')} accessibilityRole="button" accessibilityLabel={`${h.struggling} struggling students need your intervention`}>
-        <IconTile icon="people" color="#F08C00" size={46} soft />
+        <IconTile icon="people" color={Maple.warning} size={46} soft />
         <View style={styles.flex}>
           <Text style={styles.statBig}>{h.struggling}</Text>
           <Text style={styles.statSub}>Struggling Students</Text>
@@ -169,7 +170,7 @@ export function ActionQueue({ h, phone = false }: { h: TeacherHome; phone?: bool
           <Pressable key={q.title} style={[styles.queueRow, i > 0 && styles.divider]} onPress={() => go(q.go)} accessibilityRole="button" accessibilityLabel={`${q.title}, ${q.detail}, ${q.tag}`}>
             <IconTile icon={q.icon} color={q.color} size={phone ? 32 : 36} soft />
             <View style={styles.flex}>
-              <Text style={[styles.rowTitle, phone && styles.rowTitleP]} numberOfLines={phone ? 1 : undefined}>
+              <Text style={[styles.rowTitle, phone && styles.rowTitleP]} numberOfLines={phone ? 2 : undefined}>
                 {phone ? (q.phoneTitle ?? q.title) : q.title}
               </Text>
               <Text style={[styles.rowSub, phone && q.tone === 'red' && i === 0 && styles.redText]}>{phone ? q.phoneDetail : q.detail}</Text>
@@ -199,7 +200,7 @@ export function FlaggedStudents({ h, sent, intervene, phone = false }: { h: Teac
               <Image source={f.photo} style={styles.face} accessibilityLabel={f.name} />
               <View style={phone ? styles.flex : styles.flagName}>
                 <Text style={styles.rowTitle}>{f.name}</Text>
-                <Text style={styles.rowSub} numberOfLines={1}>{f.course}</Text>
+                <Text style={styles.rowSub} numberOfLines={2}>{f.course}</Text>
               </View>
               <Pill label={`${f.score}%`} tone={scoreTone} />
               {phone ? null : (
@@ -234,7 +235,7 @@ export function FlaggedStudents({ h, sent, intervene, phone = false }: { h: Teac
 const styles = StyleSheet.create({
   flex: { flex: 1 },
   stats: { flexDirection: 'row', gap: 10 },
-  stat: { flex: 1, height: 93, flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 11, borderRadius: 12, backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: LINE },
+  stat: { flex: 1, height: 93, flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 11, borderRadius: 12, backgroundColor: Maple.surface, borderWidth: 1, borderColor: LINE },
   statStrong: { fontSize: 14, fontWeight: '700', color: INK },
   statBlue: { fontSize: 17, fontWeight: '800', color: BLUE },
   statSub: { fontSize: 12.5, color: BODY, marginTop: 1 },
@@ -243,7 +244,7 @@ const styles = StyleSheet.create({
   statRed: { fontSize: 11.5, color: RED, marginTop: 3 },
   statPill: { marginTop: 4 },
   statsP: { flexDirection: 'row', gap: 8 },
-  statP: { flex: 1, alignItems: 'center', gap: 3, paddingVertical: 10, borderRadius: 10, backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: LINE },
+  statP: { flex: 1, alignItems: 'center', gap: 3, paddingVertical: 10, borderRadius: 10, backgroundColor: Maple.surface, borderWidth: 1, borderColor: LINE },
   statPValue: { fontSize: 14, fontWeight: '800', color: INK },
   statPLabel: { fontSize: 10, color: BODY },
   nextBox: { flexDirection: 'row', gap: 12, marginTop: 12, padding: 12, borderRadius: 10, borderWidth: 1, borderColor: LINE },
@@ -252,7 +253,7 @@ const styles = StyleSheet.create({
   nextTitle: { fontSize: 17, fontWeight: '800', color: INK, letterSpacing: -0.2 },
   nextTitleP: { fontSize: 15 },
   meta: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 7 },
-  metaText: { fontSize: 12.5, color: '#2B3445' },
+  metaText: { fontSize: 12.5, color: Maple.navy },
   metaTextP: { fontSize: 11 },
   topic: { marginTop: 8, fontSize: 12.5, color: INK, letterSpacing: -0.1 },
   thumb: { width: 86, height: 84, borderRadius: 8, alignSelf: 'center' },
@@ -261,11 +262,11 @@ const styles = StyleSheet.create({
   launch: { width: 185 },
   details: { width: 162 },
   more: { width: 38, height: 38, alignItems: 'center', justifyContent: 'center', borderRadius: 8, borderWidth: 1, borderColor: LINE },
-  menu: { position: 'absolute', right: 0, bottom: 44, width: 190, paddingVertical: 4, borderRadius: 10, backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: LINE, shadowColor: '#0B1424', shadowOpacity: 0.12, shadowRadius: 12, shadowOffset: { width: 0, height: 4 } },
+  menu: { position: 'absolute', right: 0, bottom: 44, width: 190, paddingVertical: 4, borderRadius: 10, backgroundColor: Maple.surface, borderWidth: 1, borderColor: LINE, shadowColor: Maple.navy, shadowOpacity: 0.12, shadowRadius: 12, shadowOffset: { width: 0, height: 4 } },
   menuRow: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 12, paddingVertical: 9 },
   menuText: { fontSize: 13, color: INK },
   list: { marginTop: 8 },
-  divider: { borderTopWidth: 1, borderColor: '#EEF2F8' },
+  divider: { borderTopWidth: 1, borderColor: Maple.blueSelected },
   queueRow: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 8 },
   rowTitle: { fontSize: 13.5, fontWeight: '600', color: INK },
   rowTitleP: { fontSize: 12.5 },
@@ -275,9 +276,9 @@ const styles = StyleSheet.create({
   face: { width: 36, height: 36, borderRadius: 18 },
   flagName: { width: 122 },
   reason: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 4, marginLeft: 2 },
-  reasonText: { flex: 1, fontSize: 12, color: '#D93036' },
+  reasonText: { flex: 1, fontSize: 12, color: Maple.error },
   intervene: { height: 32, minWidth: 70, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 4, paddingHorizontal: 10, borderRadius: 7, backgroundColor: BLUE },
-  intervened: { backgroundColor: '#E6F6EC' },
-  interveneText: { fontSize: 12.5, fontWeight: '600', color: '#FFFFFF' },
+  intervened: { backgroundColor: Maple.successSoft },
+  interveneText: { fontSize: 12.5, fontWeight: '600', color: Maple.surface },
   intervenedText: { color: GREEN },
 });

@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
@@ -13,6 +13,8 @@ import type {
 } from '@/lib/excalidraw-livekit';
 import type { IconName } from '@/lib/icons';
 import { toast } from '@/lib/toast';
+import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 const REACTIONS = ['👏', '👍', '❤️', '😂', '🎉'] as const;
 
@@ -132,7 +134,7 @@ export function Stage({
           accessibilityRole="button"
           accessibilityState={{ selected: c.on }}
           accessibilityLabel={c.label}>
-          <Icon name={c.icon} size={20} color={c.danger ? '#FF6B6B' : Brand.surface} />
+          <Icon name={c.icon} size={20} color={c.danger ? Palette.red400e : Brand.surface} />
           <Text style={styles.controlText} numberOfLines={1}>
             {compact ? (SHORT_LABELS[c.label] ?? c.label.split(' ')[0]) : c.label}
           </Text>
@@ -162,7 +164,7 @@ export function Stage({
             />
           </View>
         ) : (
-          <Image
+          <Image decorative
             source={photo}
             style={StyleSheet.absoluteFill}
             contentFit="cover"
@@ -219,7 +221,7 @@ export function Stage({
             style={[styles.tile, styles.tilePinnedPip]}
             onPress={() => setPipInCorner(true)}
             accessibilityLabel={`${teacher} pinned PiP camera`}>
-            <Image
+            <Image decorative
               source={teacherAvatar ?? tiles[0]?.photo ?? photo}
               style={StyleSheet.absoluteFill}
               contentFit="cover"
@@ -234,7 +236,7 @@ export function Stage({
             key={t.name}
             style={[styles.tile, i === 0 && styles.tileActive]}
             accessibilityLabel={`${t.name}${t.speaking ? ', speaking' : ''}`}>
-            <Image source={t.photo} style={StyleSheet.absoluteFill} contentFit="cover" />
+            <Image decorative source={t.photo} style={StyleSheet.absoluteFill} contentFit="cover" />
           </View>
         ))}
         <View
@@ -274,7 +276,7 @@ const styles = StyleSheet.create({
     gap: 2,
     paddingHorizontal: 6,
     borderRadius: 12,
-    backgroundColor: '#1B2230',
+    backgroundColor: Maple.navy,
   },
   // Phones put the bar under the video and crop the printed one away.
   videoCompact: { aspectRatio: 932 / 410 },
@@ -290,7 +292,7 @@ const styles = StyleSheet.create({
     height: 'auto',
     paddingVertical: 6,
     justifyContent: 'space-between',
-    backgroundColor: '#111827',
+    backgroundColor: Maple.navy,
   },
   controlText: { fontSize: 11, color: Brand.surface },
   reaction: { position: 'absolute', right: 30, bottom: 90, fontSize: 48 },
@@ -319,7 +321,7 @@ const styles = StyleSheet.create({
     backgroundColor: Brand.video,
   },
   tileActive: { borderWidth: 2, borderColor: Brand.blue },
-  tilePinnedPip: { borderWidth: 2, borderColor: '#22C55E' },
+  tilePinnedPip: { borderWidth: 2, borderColor: Maple.success },
   pipStripTag: {
     position: 'absolute',
     left: 6,
@@ -330,7 +332,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
     paddingVertical: 2,
   },
-  pipStripText: { fontSize: 10, fontWeight: '700', color: '#FFFFFF' },
-  moreTile: { alignItems: 'center', justifyContent: 'center', gap: 4, backgroundColor: '#1F2937' },
+  pipStripText: { fontSize: 10, fontWeight: '700', color: Maple.surface },
+  moreTile: { alignItems: 'center', justifyContent: 'center', gap: 4, backgroundColor: Maple.navy },
   moreText: { fontSize: 14, fontWeight: '700', color: Brand.surface },
 });

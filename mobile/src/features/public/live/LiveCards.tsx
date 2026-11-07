@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
@@ -7,9 +7,10 @@ import { formatMoney } from '@/lib/finance/fees';
 
 import { Brand, CARD_SHADOW } from '../palette';
 import type { Session } from './LiveBooking';
+import { Maple } from '@/constants/maple';
 
 /** A filled check in a circle, as the reference's lists use. */
-export function Tick({ size = 15, color = '#16A34A' }: { size?: number; color?: string }) {
+export function Tick({ size = 15, color = Maple.successText }: { size?: number; color?: string }) {
   return (
     <View style={{ width: size, height: size, borderRadius: size / 2, backgroundColor: color, alignItems: 'center', justifyContent: 'center' }}>
       <Text style={{ fontSize: size * 0.62, lineHeight: size * 0.8, fontWeight: '800', color: Brand.surface }}>✓</Text>
@@ -76,7 +77,7 @@ export function LearnList({ s, phone = false }: { s: Session; phone?: boolean })
   );
 }
 
-const BADGE_COLOURS = ['#7C5CFF', '#4F8BFF', '#16A34A'] as const;
+const BADGE_COLOURS = [Maple.blue, Maple.blue, Maple.successText] as const;
 
 export function TeacherCard({ s, phone = false }: { s: Session; phone?: boolean }) {
   const t = s.teacher;
@@ -133,9 +134,9 @@ export function MoreLive({ s, phone = false }: { s: Session; phone?: boolean }) 
     const live = m.status === 'live';
     return (
       <Pressable key={m.title} style={[styles.more, phone && styles.moreP]} onPress={() => router.push(`/live/${s.slug}`)} accessibilityRole="link" accessibilityLabel={`${m.title}, ${m.when}`}>
-        <Image source={m.photo} style={styles.moreThumb} contentFit="cover" />
+        <Image decorative source={m.photo} style={styles.moreThumb} contentFit="cover" />
         <View style={styles.flex}>
-          <View style={[styles.morePill, { backgroundColor: live ? Brand.live : '#4F5BD5' }]}>
+          <View style={[styles.morePill, { backgroundColor: live ? Brand.live : Maple.blue }]}>
             <Text style={styles.morePillText}>{live ? '(•) LIVE' : '(•) UPCOMING'}</Text>
           </View>
           <Text style={styles.moreTitle} numberOfLines={1}>
@@ -145,7 +146,7 @@ export function MoreLive({ s, phone = false }: { s: Session; phone?: boolean }) 
           <View style={styles.moreFoot}>
             <Text style={styles.morePrice}>{formatMoney(m.priceUGX, 'UGX')}</Text>
             <View style={styles.moreSeats}>
-              <Icon name="people" size={13} color="#4A5263" />
+              <Icon name="people" size={13} color={Maple.body} />
               <Text style={styles.moreWhen}>{String(m.seats)}</Text>
             </View>
           </View>
@@ -183,18 +184,18 @@ const styles = StyleSheet.create({
   flex: { flex: 1 },
   title: { fontSize: 15.5, fontWeight: '700', color: Brand.ink },
   titleP: { fontSize: 18 },
-  body: { marginTop: 10, fontSize: 12, lineHeight: 19, color: '#3D4656' },
+  body: { marginTop: 10, fontSize: 12, lineHeight: 19, color: Maple.body },
   bodyP: { fontSize: 13.5, lineHeight: 20 },
   points: { marginTop: 14 },
   point: { height: 24, flexDirection: 'row', alignItems: 'center', gap: 10 },
   pointP: { height: 28 },
-  pointText: { fontSize: 12, color: '#2A3242' },
-  who: { flexDirection: 'row', gap: 13, marginTop: 14, padding: 13, borderRadius: 10, backgroundColor: '#F2F7FE' },
+  pointText: { fontSize: 12, color: Maple.navy },
+  who: { flexDirection: 'row', gap: 13, marginTop: 14, padding: 13, borderRadius: 10, backgroundColor: Maple.blueSoft },
   whoP: { marginTop: 16 },
-  whoIcon: { width: 28, height: 28, borderRadius: 14, backgroundColor: '#3B82F6', alignItems: 'center', justifyContent: 'center' },
+  whoIcon: { width: 28, height: 28, borderRadius: 14, backgroundColor: Maple.blue, alignItems: 'center', justifyContent: 'center' },
   whoTitle: { fontSize: 12, fontWeight: '700', color: Brand.ink },
   whoTitleP: { fontSize: 14 },
-  whoText: { marginTop: 4, fontSize: 10.5, lineHeight: 17, color: '#3D4656' },
+  whoText: { marginTop: 4, fontSize: 10.5, lineHeight: 17, color: Maple.body },
   whoTextP: { fontSize: 12.5, lineHeight: 18 },
 
   learn: { marginTop: 12, gap: 14 },
@@ -203,7 +204,7 @@ const styles = StyleSheet.create({
   tileP: { width: 40, height: 40, borderRadius: 10 },
   learnTitle: { fontSize: 11.5, fontWeight: '700', color: Brand.ink },
   learnTitleP: { fontSize: 13.5 },
-  learnDetail: { marginTop: 3, fontSize: 10.5, color: '#4A5263' },
+  learnDetail: { marginTop: 3, fontSize: 10.5, color: Maple.body },
   learnDetailP: { fontSize: 12 },
 
   tHead: { flexDirection: 'row', gap: 12, marginTop: 12 },
@@ -212,21 +213,21 @@ const styles = StyleSheet.create({
   tNameRow: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 4 },
   tName: { fontSize: 13, fontWeight: '700', color: Brand.ink },
   tNameP: { fontSize: 16 },
-  tTitle: { marginTop: 4, fontSize: 8.5, fontWeight: '600', color: '#2A3242' },
+  tTitle: { marginTop: 4, fontSize: 8.5, fontWeight: '600', color: Maple.navy },
   tTitleP: { fontSize: 11 },
   tBadges: { marginTop: 9, gap: 6 },
   tBadge: { flexDirection: 'row', alignItems: 'center', gap: 6 },
-  tBadgeText: { fontSize: 9, color: '#2A3242' },
+  tBadgeText: { fontSize: 9, color: Maple.navy },
   tBadgeTextP: { fontSize: 11 },
-  tStats: { flexDirection: 'row', marginTop: 16, paddingTop: 12, borderTopWidth: 1, borderTopColor: '#EEF1F6' },
+  tStats: { flexDirection: 'row', marginTop: 16, paddingTop: 12, borderTopWidth: 1, borderTopColor: Maple.blueSelected },
   tStat: { flex: 1, alignItems: 'center' },
   tStatTop: { flexDirection: 'row', alignItems: 'center', gap: 5 },
   tStatValue: { fontSize: 13, fontWeight: '700', color: Brand.ink },
   tStatValueP: { fontSize: 15 },
-  tStatLabel: { marginTop: 3, fontSize: 8.5, color: '#4A5263' },
+  tStatLabel: { marginTop: 3, fontSize: 8.5, color: Maple.body },
   tStatLabelP: { fontSize: 10.5 },
-  tBio: { marginTop: 16, fontSize: 10.5, lineHeight: 17.5, color: '#3D4656' },
-  profile: { height: 29, marginTop: 16, alignItems: 'center', justifyContent: 'center', borderRadius: 6, borderWidth: 1, borderColor: '#9DBBF8' },
+  tBio: { marginTop: 16, fontSize: 10.5, lineHeight: 17.5, color: Maple.body },
+  profile: { height: 29, marginTop: 16, alignItems: 'center', justifyContent: 'center', borderRadius: 6, borderWidth: 1, borderColor: Maple.blueLine },
   profileP: { height: 44, borderRadius: 10 },
   profileText: { fontSize: 11.5, fontWeight: '600', color: Brand.blue },
   profileTextP: { fontSize: 14 },
@@ -242,7 +243,7 @@ const styles = StyleSheet.create({
   morePill: { alignSelf: 'flex-start', paddingHorizontal: 5, paddingVertical: 1.5, borderRadius: 3 },
   morePillText: { fontSize: 8.5, fontWeight: '700', color: Brand.surface },
   moreTitle: { marginTop: 7, fontSize: 10.5, fontWeight: '700', color: Brand.ink, letterSpacing: -0.2 },
-  moreWhen: { marginTop: 6, fontSize: 10, color: '#4A5263' },
+  moreWhen: { marginTop: 6, fontSize: 10, color: Maple.body },
   moreFoot: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 4 },
   morePrice: { marginTop: 6, fontSize: 11, fontWeight: '700', color: Brand.ink },
   moreSeats: { flexDirection: 'row', alignItems: 'center', gap: 4 },

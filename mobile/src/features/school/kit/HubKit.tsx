@@ -6,6 +6,7 @@ import { Card, IconTile, UnderTabs } from '@/features/portal/PortalParts';
 import { BODY, GREEN, NAVY, RED, type Tone } from '@/features/portal/tokens';
 import { change } from '@/features/school/growth/growth';
 import type { IconName } from '@/lib/icons';
+import { Maple } from '@/constants/maple';
 
 /** The title of a school-growth page: icon tile, title and line, with actions on the right. */
 export function HubHeader({ icon, title, subtitle, right, phone = false }: { icon: IconName; title: string; subtitle: string; right?: ReactNode; phone?: boolean }) {
@@ -50,7 +51,7 @@ export function KpiCard({ label, icon, tone, now, before, value }: { label: stri
         <View style={s.kpiRow}>
           <Text style={s.kpiValue}>{value ?? now.toLocaleString('en-US')}</Text>
           {c ? (
-            <View style={[s.delta, { backgroundColor: c.up ? '#E6F6EC' : '#FDECEC' }]} accessibilityLabel={`${c.up ? 'Up' : 'Down'} ${c.pct}% on last term`}>
+            <View style={[s.delta, { backgroundColor: c.up ? Maple.successSoft : Maple.errorSoft }]} accessibilityLabel={`${c.up ? 'Up' : 'Down'} ${c.pct}% on last term`}>
               <Icon name={c.up ? 'arrowUp' : 'arrowDown'} size={11} color={c.up ? GREEN : RED} />
               <Text style={[s.deltaText, { color: c.up ? GREEN : RED }]}>{`${c.pct}%`}</Text>
             </View>
@@ -70,7 +71,7 @@ export function KpiRow({ children }: { children: ReactNode }) {
 export function PrivacyNote({ text }: { text: string }) {
   return (
     <View style={s.privacy}>
-      <Icon name="shield" size={15} color="#5B3FD9" />
+      <Icon name="shield" size={15} color={Maple.blue} />
       <Text style={s.privacyText}>{text}</Text>
     </View>
   );

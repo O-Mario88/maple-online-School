@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 
 import { BLUE, BODY, INK, LINE, MUTED } from '@/features/teacher/frame/TeacherParts';
+import { Maple } from '@/constants/maple';
 
 /** Styles for EarningsViews (kept apart so the view file stays readable). */
 export const EARNINGS_REF_WIDTH = 1220;
@@ -10,7 +11,7 @@ export const s = StyleSheet.create({
     width: EARNINGS_REF_WIDTH,
     padding: 12,
     gap: 10,
-    backgroundColor: '#EAF1FB',
+    backgroundColor: Maple.blueSelected,
   },
   body: {
     flexDirection: 'row',
@@ -47,7 +48,7 @@ export const s = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
   },
   dateRangeText: {
     fontSize: 10.5,
@@ -94,19 +95,19 @@ export const s = StyleSheet.create({
     width: 13,
     height: 13,
     borderRadius: 6.5,
-    backgroundColor: '#DCFCE7',
+    backgroundColor: Maple.successSoft,
     alignItems: 'center',
     justifyContent: 'center',
   },
   growthArrowText: {
     fontSize: 8.5,
     fontWeight: '800',
-    color: '#16A34A',
+    color: Maple.successText,
   },
   growthPct: {
     fontSize: 9.5,
     fontWeight: '800',
-    color: '#16A34A',
+    color: Maple.successText,
   },
   kpiSubNote: {
     fontSize: 9,
@@ -192,7 +193,7 @@ export const s = StyleSheet.create({
     left: 0,
     right: 0,
     height: 1,
-    backgroundColor: '#F1F5F9',
+    backgroundColor: Maple.blueSoft,
   },
   barsRow: {
     flexDirection: 'row',
@@ -216,13 +217,13 @@ export const s = StyleSheet.create({
   },
   barMarketSeg: {
     width: '100%',
-    backgroundColor: '#A855F7',
+    backgroundColor: Maple.blue,
     borderTopLeftRadius: 3,
     borderTopRightRadius: 3,
   },
   barByosSeg: {
     width: '100%',
-    backgroundColor: '#2563EB',
+    backgroundColor: Maple.blue,
   },
   xAxisLabel: {
     fontSize: 7.5,
@@ -281,7 +282,7 @@ export const s = StyleSheet.create({
     borderRadius: 6,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
   },
   searchInput: {
     flex: 1,
@@ -298,7 +299,7 @@ export const s = StyleSheet.create({
     borderRadius: 6,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
   },
   filterBtnText: {
     fontSize: 9.5,
@@ -310,7 +311,7 @@ export const s = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 12,
     paddingVertical: 7,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
     borderBottomWidth: 1,
     borderBottomColor: LINE,
   },
@@ -349,7 +350,7 @@ export const s = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 7.5,
     borderBottomWidth: 1,
-    borderBottomColor: '#EEF2F7',
+    borderBottomColor: Maple.blueSelected,
   },
   tdText: {
     fontSize: 9.5,
@@ -401,7 +402,7 @@ export const s = StyleSheet.create({
     borderRadius: 5,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -416,7 +417,7 @@ export const s = StyleSheet.create({
     borderRadius: 5,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -468,16 +469,16 @@ export const s = StyleSheet.create({
     alignItems: 'center',
     gap: 9,
     borderRadius: 8,
-    backgroundColor: '#EEF5FF',
+    backgroundColor: Maple.blueSoft,
     borderWidth: 1,
-    borderColor: '#CFE0FF',
+    borderColor: Maple.blueSelected,
     padding: 9,
   },
   availWalletCircle: {
     width: 28,
     height: 28,
     borderRadius: 7,
-    backgroundColor: '#DCFCE7',
+    backgroundColor: Maple.successSoft,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -505,7 +506,7 @@ export const s = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     alignItems: 'center',
     justifyContent: 'center',
     gap: 4,
@@ -515,7 +516,7 @@ export const s = StyleSheet.create({
   methodTileOn: {
     borderColor: BLUE,
     borderWidth: 1.5,
-    backgroundColor: '#F3F8FF',
+    backgroundColor: Maple.blueSoft,
   },
   methodCheckCircle: {
     position: 'absolute',
@@ -531,7 +532,7 @@ export const s = StyleSheet.create({
   methodCheckMark: {
     fontSize: 7.5,
     fontWeight: '800',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   methodLogo: {
     width: 28,
@@ -554,7 +555,7 @@ export const s = StyleSheet.create({
     borderRadius: 7,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     paddingHorizontal: 9,
     fontSize: 10.5,
     color: INK,
@@ -565,7 +566,7 @@ export const s = StyleSheet.create({
     borderRadius: 7,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -576,7 +577,7 @@ export const s = StyleSheet.create({
     borderRadius: 7,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     paddingHorizontal: 9,
     flexDirection: 'row',
     alignItems: 'center',
@@ -600,7 +601,7 @@ export const s = StyleSheet.create({
     borderRadius: 7,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -621,7 +622,7 @@ export const s = StyleSheet.create({
   requestPayoutBtnText: {
     fontSize: 11.5,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   instantNote: {
     fontSize: 8.5,
@@ -663,7 +664,7 @@ export const s = StyleSheet.create({
   airtelBadgeText: {
     fontSize: 8,
     fontWeight: '800',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   savedMethodTitle: {
     fontSize: 10.5,
@@ -675,7 +676,7 @@ export const s = StyleSheet.create({
     color: BODY,
   },
   primaryPill: {
-    backgroundColor: '#DCFCE7',
+    backgroundColor: Maple.successSoft,
     borderRadius: 6,
     paddingHorizontal: 7,
     paddingVertical: 2.5,
@@ -683,7 +684,7 @@ export const s = StyleSheet.create({
   primaryPillText: {
     fontSize: 8.5,
     fontWeight: '700',
-    color: '#15803D',
+    color: Maple.successText,
   },
   setPrimaryBtn: {
     height: 22,
@@ -691,7 +692,7 @@ export const s = StyleSheet.create({
     borderRadius: 5,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -712,7 +713,7 @@ export const s = StyleSheet.create({
     borderRadius: 7,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     paddingHorizontal: 9,
     flexDirection: 'row',
     alignItems: 'center',
@@ -735,14 +736,14 @@ export const s = StyleSheet.create({
   downloadPdfText: {
     fontSize: 10,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   taxInfoBanner: {
     flexDirection: 'row',
     alignItems: 'flex-start',
     gap: 7,
     borderRadius: 7,
-    backgroundColor: '#F0F6FF',
+    backgroundColor: Maple.blueSoft,
     padding: 8,
   },
   infoCircleBlue: {
@@ -757,7 +758,7 @@ export const s = StyleSheet.create({
   infoCircleGlyph: {
     fontSize: 8.5,
     fontWeight: '800',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   taxInfoText: {
     flex: 1,

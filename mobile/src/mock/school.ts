@@ -1,9 +1,11 @@
+import { Maple } from '@/constants/maple';
+
 /** School admin fixtures (design builds only; never bundled in deployment). */
 
 export const onboarding = {
   steps: ['School profile', 'Curriculum', 'Rosters', 'Plan'],
   current: 2,
-  profile: { name: 'Kampala Hill School', motto: 'Wisdom and service', colour: '#B4402A', campuses: 1 },
+  profile: { name: 'Kampala Hill School', motto: 'Wisdom and service', colour: Maple.error, campuses: 1 },
   curricula: ['Uganda NCDC (UNEB)', 'Kenya CBC (KNEC)', 'Cambridge IGCSE', 'IB Diploma'],
 };
 

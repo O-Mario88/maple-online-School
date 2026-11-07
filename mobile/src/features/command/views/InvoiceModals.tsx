@@ -7,6 +7,7 @@ import { Btn } from '@/features/portal/PortalParts';
 import { BLUE, BODY, LINE, MUTED, NAVY, RED, WHITE } from '@/features/portal/tokens';
 import { Segments } from '@/features/school/kit/AdminKit';
 import type { catalogue as Catalogue, learnerCustomers as Learners } from '@/mock/command-center/billing';
+import { Maple } from '@/constants/maple';
 
 /** What the amount dialog is for. */
 export interface MoneyAsk {
@@ -221,10 +222,10 @@ const styles = StyleSheet.create({
   link: { fontSize: 13, fontWeight: '600', color: BLUE },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
   chip: { paddingHorizontal: 11, paddingVertical: 7, borderRadius: 18, borderWidth: 1, borderColor: LINE, backgroundColor: WHITE },
-  chipOn: { borderColor: BLUE, backgroundColor: '#EAF1FE' },
+  chipOn: { borderColor: BLUE, backgroundColor: Maple.blueSoft },
   chipText: { fontSize: 12.5, color: NAVY },
   chipTextOn: { fontWeight: '700', color: BLUE },
-  sum: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 12, borderRadius: 10, backgroundColor: '#F4F7FC' },
+  sum: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 12, borderRadius: 10, backgroundColor: Maple.blueSoft },
   total: { fontSize: 17, fontWeight: '800', color: NAVY },
   error: { fontSize: 13, color: RED },
   btns: { flexDirection: 'row', gap: 10, marginTop: 6 },

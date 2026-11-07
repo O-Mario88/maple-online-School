@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { LinearGradient } from 'expo-linear-gradient';
 import { type Href, router } from 'expo-router';
 import { useState } from 'react';
@@ -8,20 +8,22 @@ import { Icon } from '@/components/icon';
 import type { PlanVersion } from '@/features/school/subscription/plans';
 import type { IconName } from '@/lib/icons';
 import type { MockData } from '@/mock';
+import { Maple, Radii } from '@/constants/maple';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
 type Admin = MockData['schoolAdmin'];
 export type PricingData = Pick<Admin, 'comparison' | 'institutionPricing' | 'planCards' | 'planVersions'>;
 
-const NAVY = '#0B1A3F';
-const INK = '#1E293B';
-const BODY = '#475569';
-const MUTED = '#94A3B8';
-const BLUE = '#1463F3';
-const PURPLE = '#5B3FD9';
-const LAVENDER = '#EEEAFE';
-const LINE = '#E3E8F1';
-const GREEN = '#16A34A';
-const WHITE = '#FFFFFF';
+const NAVY = Maple.navyDeep;
+const INK = Maple.navy;
+const BODY = Maple.body;
+const MUTED = Maple.faint;
+const BLUE = Maple.blue;
+const BRAND_BLUE = Maple.blue;
+const BRAND_SOFT = Maple.blueSoft;
+const LINE = Maple.blueSelected;
+const GREEN = Maple.successText;
+const WHITE = Maple.surface;
 
 type Tab = 'compare' | 'features' | 'how' | 'faqs';
 const TABS: readonly { key: Tab; label: string; icon: IconName }[] = [
@@ -41,10 +43,10 @@ function Hero({ d, phone = false }: { d: PricingData; phone?: boolean }) {
   return (
     <View style={phone ? s.heroP : s.hero}>
       <View style={s.eyebrow}>
-        <Icon name="building" size={15} color={PURPLE} />
+        <Icon name="building" size={15} color={BRAND_BLUE} />
         <Text style={s.eyebrowText}>{p.eyebrow}</Text>
       </View>
-      <Text style={[s.title, phone && s.titleP]} accessibilityRole="header">
+      <Text style={[s.title, phone && s.titleP]} {...PAGE_TITLE}>
         {p.title}
       </Text>
       <Text style={s.lede}>{p.sub}</Text>
@@ -75,7 +77,7 @@ function PlanCardView({ card, plan, phone = false }: { card: PricingData['planCa
     <View style={[s.plan, phone ? null : s.planD, card.popular && s.planOn]}>
       {card.popular ? <Text style={s.popular}>Most Popular</Text> : null}
       <View style={s.planHead}>
-        <Icon name={card.icon} size={26} color={PURPLE} />
+        <Icon name={card.icon} size={26} color={BRAND_BLUE} />
         <View style={s.flex}>
           <Text style={s.planName}>{plan.name}</Text>
           <Text style={s.planTag}>{card.tagline}</Text>
@@ -84,7 +86,7 @@ function PlanCardView({ card, plan, phone = false }: { card: PricingData['planCa
       <Text style={s.price}>{ugx(plan.priceUGX)}</Text>
       <Text style={s.per}>per term</Text>
       <View style={s.cap}>
-        <Icon name="people" size={14} color={PURPLE} />
+        <Icon name="people" size={14} color={BRAND_BLUE} />
         <Text style={s.capText}>{`Up to ${plan.learners.toLocaleString('en-US')} learners`}</Text>
       </View>
       {card.lead ? <Text style={s.lead}>{card.lead}</Text> : null}
@@ -123,7 +125,7 @@ function Advantage({ d, phone = false }: { d: PricingData; phone?: boolean }) {
       {p.advantage.map((a) => (
         <View key={a.title} style={s.advRow}>
           <View style={s.advIcon}>
-            <Icon name={a.icon} size={20} color={PURPLE} />
+            <Icon name={a.icon} size={20} color={BRAND_BLUE} />
           </View>
           <View style={s.flex}>
             <Text style={s.advRowTitle}>{a.title}</Text>
@@ -146,7 +148,7 @@ function Pillars({ d, phone = false }: { d: PricingData; phone?: boolean }) {
       <View style={s.pillarRow}>
         {d.institutionPricing.pillars.map((x) => (
           <View key={x.label} style={[s.pillar, phone && s.pillarP]}>
-            <Icon name={x.icon} size={24} color={PURPLE} />
+            <Icon name={x.icon} size={24} color={BRAND_BLUE} />
             <Text style={s.pillarText}>{x.label}</Text>
           </View>
         ))}
@@ -267,7 +269,7 @@ function Faqs({ d }: { d: PricingData }) {
 function FinalCta({ phone }: { phone: boolean }) {
   return (
     <View style={[s.final, phone && s.finalP]}>
-      <LinearGradient colors={['#EEF3FF', '#F3EEFF']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />
+      <LinearGradient colors={[Maple.blueSoft, Maple.blueSoft]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />
       <View style={s.flex}>
         <Text style={[s.finalTitle, phone && s.finalTitleP]}>Your School. Your Identity. Powered by Maple.</Text>
         <Text style={s.small}>Start with any plan; every plan is a complete digital school.</Text>
@@ -314,7 +316,7 @@ export function PricingDetails({ d, phone = false }: { d: PricingData; phone?: b
 export function PricingTop({ d }: { d: PricingData }) {
   return (
     <View style={s.top}>
-      <LinearGradient colors={['#F7F9FF', '#EEF2FD']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />
+      <LinearGradient colors={[Maple.blueSoft, Maple.blueSoft]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />
       <View style={s.swoosh} />
       <Image source={d.institutionPricing.hero} style={s.heroPhoto} contentFit="cover" accessibilityLabel="Teachers and learners using Maple" />
       <View style={s.topRow}>
@@ -346,20 +348,20 @@ const s = StyleSheet.create({
   flex: { flex: 1, minWidth: 0 },
   small: { fontSize: 12.5, lineHeight: 17, color: BODY },
   top: { overflow: 'hidden', paddingTop: 22, paddingBottom: 18, paddingHorizontal: 36 },
-  swoosh: { position: 'absolute', left: 150, top: 430, width: 420, height: 420, borderRadius: 210, backgroundColor: '#E4DEFB' },
+  swoosh: { position: 'absolute', left: 150, top: 430, width: 420, height: 420, borderRadius: 210, backgroundColor: Maple.blueSelected },
   heroPhoto: { position: 'absolute', left: 250, top: 452, width: 255, height: 232, borderTopLeftRadius: 120 },
   topRow: { flexDirection: 'row', gap: 14, alignItems: 'flex-start' },
   hero: { width: 460, gap: 14, paddingTop: 8 },
   heroP: { gap: 14 },
-  eyebrow: { flexDirection: 'row', alignItems: 'center', gap: 8, alignSelf: 'flex-start', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 8, backgroundColor: LAVENDER },
+  eyebrow: { flexDirection: 'row', alignItems: 'center', gap: 8, alignSelf: 'flex-start', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 8, backgroundColor: BRAND_SOFT },
   eyebrowText: { fontSize: 12.5, fontWeight: '600', color: NAVY },
   title: { fontSize: 31, lineHeight: 36, fontWeight: '800', letterSpacing: -0.6, color: NAVY },
   titleP: { fontSize: 26, lineHeight: 31 },
   lede: { fontSize: 14.5, lineHeight: 21, color: INK },
   ctas: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
-  ctaPrimary: { height: 42, flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 22, borderRadius: 21, backgroundColor: BLUE },
+  ctaPrimary: { height: 42, flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 22, borderRadius: Radii.control, backgroundColor: BLUE },
   ctaPrimaryText: { fontSize: 14.5, fontWeight: '600', color: WHITE },
-  ctaGhost: { height: 42, flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 20, borderRadius: 21, borderWidth: 1.5, borderColor: '#C7D2E6', backgroundColor: WHITE },
+  ctaGhost: { height: 42, flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 20, borderRadius: Radii.control, borderWidth: 1.5, borderColor: Maple.blueLine, backgroundColor: WHITE },
   ctaGhostText: { fontSize: 14.5, fontWeight: '600', color: NAVY },
   trust: { flexDirection: 'row', marginTop: 18 },
   trustItem: { alignItems: 'center', gap: 6, paddingHorizontal: 12 },
@@ -370,28 +372,28 @@ const s = StyleSheet.create({
   plansP: { gap: 14 },
   plan: { gap: 6, padding: 16, borderRadius: 14, borderWidth: 1, borderColor: LINE, backgroundColor: WHITE, shadowColor: NAVY, shadowOpacity: 0.05, shadowRadius: 10, shadowOffset: { width: 0, height: 3 } },
   planD: { flex: 1, minHeight: 350 },
-  planOn: { borderWidth: 1.5, borderColor: '#A897F0', backgroundColor: '#FBFAFF' },
-  popular: { position: 'absolute', top: -11, alignSelf: 'center', overflow: 'hidden', paddingHorizontal: 12, paddingVertical: 3, borderRadius: 8, fontSize: 11, fontWeight: '600', color: WHITE, backgroundColor: PURPLE },
+  planOn: { borderWidth: 1.5, borderColor: Maple.blueLine, backgroundColor: Maple.blueSoft },
+  popular: { position: 'absolute', top: -11, alignSelf: 'center', overflow: 'hidden', paddingHorizontal: 12, paddingVertical: 3, borderRadius: 8, fontSize: 11, fontWeight: '600', color: WHITE, backgroundColor: BRAND_BLUE },
   planHead: { flexDirection: 'row', alignItems: 'flex-start', gap: 10 },
   planName: { fontSize: 16, fontWeight: '700', color: NAVY },
   planTag: { marginTop: 2, fontSize: 11.5, lineHeight: 15, color: BODY },
   price: { marginTop: 8, fontSize: 21, fontWeight: '800', color: NAVY },
   per: { fontSize: 12, color: BODY },
-  cap: { flexDirection: 'row', alignItems: 'center', gap: 6, alignSelf: 'flex-start', marginTop: 4, paddingHorizontal: 10, paddingVertical: 5, borderRadius: 14, backgroundColor: LAVENDER },
-  capText: { fontSize: 12, fontWeight: '600', color: '#3B1E9C' },
+  cap: { flexDirection: 'row', alignItems: 'center', gap: 6, alignSelf: 'flex-start', marginTop: 4, paddingHorizontal: 10, paddingVertical: 5, borderRadius: 14, backgroundColor: BRAND_SOFT },
+  capText: { fontSize: 12, fontWeight: '600', color: Maple.blueHover },
   lead: { marginTop: 4, fontSize: 12, fontWeight: '600', color: NAVY },
   features: { gap: 5, marginTop: 4 },
   feature: { flexDirection: 'row', alignItems: 'center', gap: 7 },
   featureText: { flexShrink: 1, fontSize: 11.5, color: INK },
-  choose: { height: 34, alignItems: 'center', justifyContent: 'center', marginTop: 10, borderRadius: 17, borderWidth: 1.5, borderColor: '#9DB4F2' },
+  choose: { height: 34, alignItems: 'center', justifyContent: 'center', marginTop: 10, borderRadius: 17, borderWidth: 1.5, borderColor: Maple.blueLine },
   chooseText: { fontSize: 13, fontWeight: '600', color: BLUE },
-  choosePrimary: { height: 34, alignItems: 'center', justifyContent: 'center', marginTop: 10, borderRadius: 17, backgroundColor: PURPLE },
+  choosePrimary: { height: 34, alignItems: 'center', justifyContent: 'center', marginTop: 10, borderRadius: Radii.control, backgroundColor: BRAND_BLUE },
   chooseTextOn: { fontSize: 13, fontWeight: '600', color: WHITE },
   adv: { gap: 12, overflow: 'hidden', paddingTop: 16, paddingHorizontal: 16, borderRadius: 14, borderWidth: 1, borderColor: LINE, backgroundColor: WHITE },
   advD: { flex: 1 },
   advTitle: { fontSize: 17, fontWeight: '800', color: NAVY },
   advRow: { flexDirection: 'row', gap: 12 },
-  advIcon: { width: 38, height: 38, alignItems: 'center', justifyContent: 'center', borderRadius: 10, backgroundColor: LAVENDER },
+  advIcon: { width: 38, height: 38, alignItems: 'center', justifyContent: 'center', borderRadius: 10, backgroundColor: BRAND_SOFT },
   advRowTitle: { fontSize: 12.5, fontWeight: '700', color: NAVY },
   campus: { height: 150, marginHorizontal: -16, marginTop: 4 },
   campusP: { height: 130 },
@@ -410,15 +412,15 @@ const s = StyleSheet.create({
   tab: { height: 44, flexDirection: 'row', alignItems: 'center', gap: 7, paddingHorizontal: 12 },
   tabText: { fontSize: 13.5, color: INK },
   tabOn: { fontWeight: '700', color: BLUE },
-  tabLine: { position: 'absolute', left: 4, right: 4, bottom: -1, height: 2.5, borderRadius: 2, backgroundColor: BLUE },
+  tabLine: { position: 'absolute', left: 4, right: 4, bottom: -1, height: 3, borderRadius: 2, backgroundColor: BLUE },
   table: { overflow: 'hidden', borderRadius: 14, borderWidth: 1, borderColor: LINE, backgroundColor: WHITE },
-  tr: { flexDirection: 'row', alignItems: 'center', minHeight: 42, paddingHorizontal: 16, borderTopWidth: 1, borderTopColor: '#EEF1F6' },
-  th: { borderTopWidth: 0, backgroundColor: '#F5F7FC' },
+  tr: { flexDirection: 'row', alignItems: 'center', minHeight: 42, paddingHorizontal: 16, borderTopWidth: 1, borderTopColor: Maple.blueSelected },
+  th: { borderTopWidth: 0, backgroundColor: Maple.blueSoft },
   thText: { fontSize: 13, fontWeight: '700', color: NAVY },
   featureCol: { flex: 1, paddingRight: 8 },
   planCol: { width: 180, alignItems: 'center', textAlign: 'center' },
   planColP: { width: 64 },
-  cat: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', minHeight: 44, paddingHorizontal: 16, borderTopWidth: 1, borderTopColor: LINE, backgroundColor: '#FAFBFE' },
+  cat: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', minHeight: 44, paddingHorizontal: 16, borderTopWidth: 1, borderTopColor: LINE, backgroundColor: Maple.blueSoft },
   catText: { flex: 1, fontSize: 14, fontWeight: '700', color: NAVY },
   rowText: { fontSize: 13, color: INK },
   cellText: { fontSize: 12.5, fontWeight: '600', color: NAVY, textAlign: 'center' },

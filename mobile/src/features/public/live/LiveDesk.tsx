@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
@@ -11,11 +11,14 @@ import { Brand } from '../palette';
 import { LiveBooking, type Session } from './LiveBooking';
 import { AboutLive, card, LearnList, MoreLive, TeacherCard } from './LiveCards';
 import { crumbHref } from '@/features/public/HomeNav';
+import { Maple } from '@/constants/maple';
+import { PAGE_TITLE } from '@/lib/fonts/type';
+import { Palette } from '@/constants/palette';
 
 /** The live class reference's desktop width; this layout uses its pixels (render inside RefScale). */
 export const LIVE_REF_WIDTH = 1252;
 const TABS = ['Overview', 'Syllabus', 'Teacher', 'Reviews', 'FAQ'] as const;
-const NAVY = ['#011E52', '#0B2D5C'] as const;
+const NAVY = [Palette.blue950, Palette.blue900b] as const;
 
 function Hero({ s }: { s: Session }) {
   const [saved, setSaved] = useState(false);
@@ -31,7 +34,7 @@ function Hero({ s }: { s: Session }) {
       <View style={styles.badge}>
         <Text style={styles.badgeText}>{`(•) ${s.badge.toUpperCase()}`}</Text>
       </View>
-      <Text style={styles.heroTitle} accessibilityRole="header">
+      <Text style={styles.heroTitle} {...PAGE_TITLE}>
         {`${s.title.lead}\n`}
         <Text style={styles.heroAccent}>{s.title.accent}</Text>
       </Text>
@@ -53,7 +56,7 @@ function Hero({ s }: { s: Session }) {
         <Text style={styles.shareText}>Share</Text>
       </Pressable>
       <Pressable style={styles.heart} onPress={() => setSaved((v) => !v)} accessibilityRole="button" accessibilityLabel={saved ? 'Remove from saved' : 'Save'}>
-        <Icon name="heart" size={13} color={saved ? '#FF4D5E' : Brand.surface} />
+        <Icon name="heart" size={13} color={saved ? Palette.red400c : Brand.surface} />
       </Pressable>
     </View>
   );
@@ -131,33 +134,33 @@ const styles = StyleSheet.create({
   flex: { flex: 1 },
   // Body coordinates: the reference's y minus its 60px top bar.
   canvas: { width: LIVE_REF_WIDTH, height: 970 },
-  crumbs: { position: 'absolute', left: 32, top: 4, fontSize: 9.5, color: '#2A3242' },
-  hero: { position: 'absolute', left: 14, top: 25, width: 1230, height: 315, borderRadius: 14, overflow: 'hidden', backgroundColor: '#0A2A55' },
+  crumbs: { position: 'absolute', left: 32, top: 4, fontSize: 9.5, color: Maple.navy },
+  hero: { position: 'absolute', left: 14, top: 25, width: 1230, height: 315, borderRadius: 14, overflow: 'hidden', backgroundColor: Palette.blue950e },
   heroPhoto: { position: 'absolute', left: 486, top: 1, width: 418, height: 282 },
-  badge: { position: 'absolute', left: 32, top: 38, height: 22, justifyContent: 'center', paddingHorizontal: 9, borderRadius: 11, backgroundColor: '#E5484D' },
+  badge: { position: 'absolute', left: 32, top: 38, height: 22, justifyContent: 'center', paddingHorizontal: 9, borderRadius: 11, backgroundColor: Maple.error },
   badgeText: { fontSize: 10, fontWeight: '700', color: Brand.surface, letterSpacing: 0.3 },
   heroTitle: { position: 'absolute', left: 32, top: 68, fontSize: 36, lineHeight: 44, fontWeight: '700', color: Brand.surface, letterSpacing: -0.4 },
-  heroAccent: { color: '#3D8BFF' },
-  heroSub: { position: 'absolute', left: 32, top: 162, width: 370, fontSize: 14.5, lineHeight: 22, color: '#E1E8F5' },
+  heroAccent: { color: Maple.blue },
+  heroSub: { position: 'absolute', left: 32, top: 162, width: 370, fontSize: 14.5, lineHeight: 22, color: Maple.blueSelected },
   meta: { position: 'absolute', left: 32, top: 227, flexDirection: 'row', gap: 22 },
   metaItem: { flexDirection: 'row', alignItems: 'center', gap: 9 },
   metaTitle: { fontSize: 10.5, fontWeight: '600', color: Brand.surface },
-  metaDetail: { marginTop: 2, fontSize: 10, color: '#D3DCEC' },
+  metaDetail: { marginTop: 2, fontSize: 10, color: Maple.blueLine },
   share: { position: 'absolute', left: 781, top: 7, height: 24, flexDirection: 'row', alignItems: 'center', gap: 5, paddingHorizontal: 9, borderRadius: 6, backgroundColor: Brand.surface },
   shareText: { fontSize: 10, fontWeight: '500', color: Brand.ink },
-  heart: { position: 'absolute', left: 854, top: 6, width: 26, height: 26, borderRadius: 13, backgroundColor: '#8E9AA6', alignItems: 'center', justifyContent: 'center' },
+  heart: { position: 'absolute', left: 854, top: 6, width: 26, height: 26, borderRadius: 13, backgroundColor: Maple.faint, alignItems: 'center', justifyContent: 'center' },
   featuresWrap: { position: 'absolute', left: 30, top: 308, width: 875, height: 64 },
   features: { flex: 1, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 17, ...card },
   feature: { width: 173, flexDirection: 'row', alignItems: 'center', gap: 6 },
   featureIcon: { width: 32, height: 32, borderRadius: 8, alignItems: 'center', justifyContent: 'center' },
   featureTitle: { fontSize: 10.5, fontWeight: '700', color: Brand.ink },
-  featureDetail: { marginTop: 2, fontSize: 9, color: '#4A5263' },
+  featureDetail: { marginTop: 2, fontSize: 9, color: Maple.body },
   tabs: { position: 'absolute', left: 30, top: 392, flexDirection: 'row', gap: 4 },
-  tab: { height: 36, justifyContent: 'center', paddingHorizontal: 14 },
-  tabOn: { borderRadius: 8, backgroundColor: '#EAF1FE' },
+  tab: { height: 36, justifyContent: 'center', paddingHorizontal: 14, borderBottomWidth: 3, borderBottomColor: 'transparent' },
+  tabOn: { borderBottomColor: Brand.blue },
   tabText: { fontSize: 12.5, color: Brand.ink },
   tabTextOn: { color: Brand.blue, fontWeight: '500' },
-  tabLine: { position: 'absolute', left: 10, right: 10, bottom: -1, height: 2.5, borderRadius: 2, backgroundColor: Brand.blue },
+  tabLine: { position: 'absolute', left: 10, right: 10, bottom: -1, height: 3, borderRadius: 2, backgroundColor: Brand.blue },
   box: { position: 'absolute', padding: 17, ...card },
   about: { left: 30, top: 438, width: 470, height: 352, paddingLeft: 15 },
   learn: { left: 517, top: 438, width: 388, height: 352 },

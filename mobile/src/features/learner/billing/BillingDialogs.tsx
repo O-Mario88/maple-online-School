@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { useState } from 'react';
 import { Modal, Platform, Pressable, ScrollView, Share, StyleSheet, Text, TextInput, View } from 'react-native';
 
@@ -7,10 +7,11 @@ import { type Cycle, CYCLES, type Network, planPrice, receiptText, validMobileMo
 import { formatMoney } from '@/lib/finance/fees';
 
 import type { BillingState, PayFor, Plan } from './useBilling';
+import { Maple } from '@/constants/maple';
 
-const NAVY = '#0F1B3D';
-const BODY = '#4A5263';
-const BLUE = '#1463F3';
+const NAVY = Maple.navy;
+const BODY = Maple.body;
+const BLUE = Maple.blue;
 const ugx = (n: number) => formatMoney(n, 'UGX');
 
 type WebDoc = { createElement: (t: 'a') => { href: string; download: string; click: () => void } };
@@ -56,7 +57,7 @@ function PayDialog({ s, what }: { s: BillingState; what: PayFor }) {
   return (
     <Frame title="Confirm Payment" onClose={s.close}>
       <View style={styles.summary}>
-        <Image source={p.icon} style={styles.sumIcon} contentFit="contain" />
+        <Image decorative source={p.icon} style={styles.sumIcon} contentFit="contain" />
         <Text style={styles.sumTitle}>{p.title}</Text>
         <Text style={styles.sumAmount}>{ugx(p.amount)}</Text>
       </View>
@@ -65,7 +66,7 @@ function PayDialog({ s, what }: { s: BillingState; what: PayFor }) {
         const on = x.id === s.payWith;
         return (
           <Pressable key={x.id} style={[styles.option, on && styles.optionOn]} onPress={() => s.setPayWith(x.id)} disabled={s.paying} accessibilityRole="radio" accessibilityState={{ checked: on }}>
-            <Image source={x.logo} style={styles.logo} contentFit="contain" />
+            <Image decorative source={x.logo} style={styles.logo} contentFit="contain" />
             <View style={styles.flex}>
               <Text style={styles.optTitle}>{x.label}</Text>
               <Text style={styles.optSub}>{x.sub}</Text>
@@ -157,7 +158,7 @@ function CompareDialog({ s }: { s: BillingState }) {
           <Text style={[styles.optSub, styles.tLabel]}>{f.label}</Text>
           {s.hub.plans.map((p) => (
             <View key={p.id} style={styles.tCell}>
-              {f.plans.includes(p.id) ? <Icon name="check" size={14} color="#16A34A" /> : <Text style={styles.dash}>—</Text>}
+              {f.plans.includes(p.id) ? <Icon name="check" size={14} color={Maple.successText} /> : <Text style={styles.dash}>—</Text>}
             </View>
           ))}
         </View>
@@ -210,7 +211,7 @@ function MethodDialog({ s }: { s: BillingState }) {
             }}
             accessibilityRole="radio"
             accessibilityState={{ checked: kind === k }}>
-            <Image source={logo(k)} style={styles.logo} contentFit="contain" />
+            <Image decorative source={logo(k)} style={styles.logo} contentFit="contain" />
             <Text style={styles.optSub}>{k === 'mtn' ? 'MTN MoMo' : k === 'airtel' ? 'Airtel Money' : 'Card'}</Text>
           </Pressable>
         ))}
@@ -228,7 +229,7 @@ function MethodDialog({ s }: { s: BillingState }) {
               setError(null);
             }}
             placeholder={kind === 'mtn' ? '0772 123 456' : '0701 987 654'}
-            placeholderTextColor="#8A93A6"
+            placeholderTextColor={Maple.faint}
             keyboardType="phone-pad"
             autoFocus
             accessibilityLabel="Mobile money number"
@@ -285,49 +286,49 @@ export function BillingDialogs({ s }: { s: BillingState }) {
 const styles = StyleSheet.create({
   flex: { flex: 1 },
   scrim: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20, backgroundColor: 'rgba(8,12,20,0.5)' },
-  dialog: { width: '100%', maxWidth: 460, maxHeight: '90%', borderRadius: 14, backgroundColor: '#FFFFFF', overflow: 'hidden' },
+  dialog: { width: '100%', maxWidth: 460, maxHeight: '90%', borderRadius: 14, backgroundColor: Maple.surface, overflow: 'hidden' },
   head: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 18, paddingTop: 16 },
   title: { fontSize: 17, fontWeight: '700', color: NAVY },
   body: { gap: 10, padding: 18 },
-  summary: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 12, borderRadius: 10, backgroundColor: '#F4F7FC' },
+  summary: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 12, borderRadius: 10, backgroundColor: Maple.blueSoft },
   sumIcon: { width: 36, height: 36 },
   sumTitle: { flex: 1, fontSize: 13.5, fontWeight: '600', color: NAVY },
   sumAmount: { fontSize: 15, fontWeight: '800', color: NAVY },
   label: { marginTop: 4, fontSize: 12, fontWeight: '600', color: NAVY },
-  option: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 10, borderRadius: 10, borderWidth: 1, borderColor: '#E3E9F2' },
-  optionOn: { borderColor: '#3B82F6', backgroundColor: '#F5F9FF' },
+  option: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 10, borderRadius: 10, borderWidth: 1, borderColor: Maple.blueSelected },
+  optionOn: { borderColor: Maple.blue, backgroundColor: Maple.blueSoft },
   logo: { width: 40, height: 34 },
   optTitle: { fontSize: 13, fontWeight: '600', color: NAVY },
   optSub: { marginTop: 2, fontSize: 11.5, color: BODY },
-  radio: { width: 18, height: 18, borderRadius: 9, borderWidth: 2, borderColor: '#B5BFCE' },
-  radioOn: { borderWidth: 5, borderColor: '#0B6BFF' },
+  radio: { width: 18, height: 18, borderRadius: 9, borderWidth: 2, borderColor: Maple.borderStrong },
+  radioOn: { borderWidth: 5, borderColor: Maple.blue },
   note: { fontSize: 12, lineHeight: 17, color: BODY },
-  fine: { fontSize: 10.5, color: '#8A93A6', textAlign: 'center' },
-  text: { fontSize: 13, lineHeight: 19, color: '#2B3445' },
-  primary: { height: 42, alignItems: 'center', justifyContent: 'center', borderRadius: 8, backgroundColor: '#0B6BFF' },
+  fine: { fontSize: 10.5, color: Maple.muted, textAlign: 'center' },
+  text: { fontSize: 13, lineHeight: 19, color: Maple.navy },
+  primary: { height: 42, alignItems: 'center', justifyContent: 'center', borderRadius: 8, backgroundColor: Maple.blue },
   busy: { opacity: 0.7 },
-  primaryText: { fontSize: 13.5, fontWeight: '600', color: '#FFFFFF' },
-  secondary: { height: 42, alignItems: 'center', justifyContent: 'center', borderRadius: 8, borderWidth: 1, borderColor: '#C9DAF8' },
+  primaryText: { fontSize: 13.5, fontWeight: '600', color: Maple.surface },
+  secondary: { height: 42, alignItems: 'center', justifyContent: 'center', borderRadius: 8, borderWidth: 1, borderColor: Maple.blueLine },
   secondaryText: { fontSize: 13.5, fontWeight: '600', color: BLUE },
-  row: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: '#EEF1F6' },
-  switch: { width: 38, height: 22, justifyContent: 'center', paddingHorizontal: 2, borderRadius: 11, backgroundColor: '#D5DDEA' },
-  switchOn: { backgroundColor: '#0B6BFF' },
-  knob: { width: 18, height: 18, borderRadius: 9, backgroundColor: '#FFFFFF' },
+  row: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: Maple.blueSelected },
+  switch: { width: 38, height: 22, justifyContent: 'center', paddingHorizontal: 2, borderRadius: 11, backgroundColor: Maple.blueLine },
+  switchOn: { backgroundColor: Maple.blue },
+  knob: { width: 18, height: 18, borderRadius: 9, backgroundColor: Maple.surface },
   knobOn: { alignSelf: 'flex-end' },
-  tRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 7, borderBottomWidth: 1, borderBottomColor: '#F0F3F7' },
+  tRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 7, borderBottomWidth: 1, borderBottomColor: Maple.blueSelected },
   tLabel: { flex: 1.4 },
   tCell: { flex: 1, alignItems: 'center' },
   tHead: { fontSize: 11.5, fontWeight: '700', color: NAVY, textAlign: 'center' },
-  dash: { fontSize: 12, color: '#B8C0CD' },
-  tBtn: { paddingHorizontal: 10, paddingVertical: 5, borderRadius: 6, borderWidth: 1, borderColor: '#3B82F6' },
-  tBtnOn: { borderColor: '#0B6BFF', backgroundColor: '#0B6BFF' },
+  dash: { fontSize: 12, color: Maple.borderStrong },
+  tBtn: { paddingHorizontal: 10, paddingVertical: 5, borderRadius: 6, borderWidth: 1, borderColor: Maple.blue },
+  tBtnOn: { borderColor: Maple.blue, backgroundColor: Maple.blue },
   tBtnText: { fontSize: 11.5, fontWeight: '600', color: BLUE },
-  tBtnTextOn: { color: '#FFFFFF' },
+  tBtnTextOn: { color: Maple.surface },
   kinds: { flexDirection: 'row', gap: 8 },
-  kind: { flex: 1, alignItems: 'center', gap: 4, padding: 10, borderRadius: 10, borderWidth: 1, borderColor: '#E3E9F2' },
-  input: { height: 44, paddingVertical: 0, paddingHorizontal: 12, borderRadius: 8, borderWidth: 1, borderColor: '#DCE3EE', fontSize: 15, color: NAVY },
-  error: { fontSize: 12, color: '#B91C1C' },
-  receipt: { gap: 4, padding: 14, borderRadius: 10, borderWidth: 1, borderColor: '#E3E9F2', backgroundColor: '#FBFCFE' },
+  kind: { flex: 1, alignItems: 'center', gap: 4, padding: 10, borderRadius: 10, borderWidth: 1, borderColor: Maple.blueSelected },
+  input: { height: 44, paddingVertical: 0, paddingHorizontal: 12, borderRadius: 8, borderWidth: 1, borderColor: Maple.blueLine, fontSize: 15, color: NAVY },
+  error: { fontSize: 12, color: Maple.error },
+  receipt: { gap: 4, padding: 14, borderRadius: 10, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.blueSoft },
   receiptHead: { fontSize: 13, fontWeight: '700', color: NAVY },
-  receiptLine: { fontSize: 12.5, color: '#2B3445' },
+  receiptLine: { fontSize: 12.5, color: Maple.navy },
 });

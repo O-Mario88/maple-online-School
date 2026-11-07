@@ -3,6 +3,7 @@
 import type { MicState } from '@/lib/classroom';
 
 import { photos } from './photos';
+import { Maple } from '@/constants/maple';
 
 export * as access from './access';
 
@@ -39,7 +40,7 @@ export const contexts = [
     detail: 'Access your lessons, classes, practice, and progress. Continue your personalized learning journey.',
     short: 'Access your lessons, classes, practice, and progress.',
     icon: 'cap' as const,
-    tint: '#1463F3',
+    tint: Maple.blue,
     tile: role('icon-learner'),
     photo: role('learner'),
   },
@@ -52,7 +53,7 @@ export const contexts = [
     detail: 'Create and manage your own classes, students, storefront, and learning resources.',
     short: 'Create and manage your own classes and students.',
     icon: 'person' as const,
-    tint: '#8B5CF6',
+    tint: Maple.blue,
     tile: role('icon-tutor'),
     photo: role('tutor'),
   },
@@ -65,7 +66,7 @@ export const contexts = [
     detail: 'Access your school classes, curriculum, students, assignments, and school resources.',
     short: 'Access your school classes and curriculum.',
     icon: 'school' as const,
-    tint: '#16A34A',
+    tint: Maple.successText,
     tile: role('icon-teacher'),
     photo: role('teacher'),
   },
@@ -91,7 +92,7 @@ export const contexts = [
     detail: 'Manage school rosters, timetable, attendance monitor, fee collection, academic year, and staff roles.',
     short: 'Manage school rosters, timetable, fees, and staff.',
     icon: 'grid' as const,
-    tint: '#D97706',
+    tint: Maple.warning,
   },
   {
     key: 'command',
@@ -102,7 +103,7 @@ export const contexts = [
     detail: 'Oversee platform health, school pipeline, trust & safety queue, revenue reconciliation, and teacher payouts.',
     short: 'Oversee schools, trust & safety, revenue, and ops.',
     icon: 'settings' as const,
-    tint: '#0F172A',
+    tint: Maple.navy,
   },
 ];
 
@@ -260,7 +261,20 @@ export function setActiveDemoByPortal(portal: DemoPortal) {
 }
 
 export function setActiveDemoByEmail(email: string) {
-  const lower = email.toLowerCase();
+  const lower = email.trim().toLowerCase();
+  // A demo address is its own account. Every one ends in @maple.school, so the guesses below
+  // only read the name before the @ (reading all of it made every demo account the school's).
+  const exact = (Object.keys(demoAccounts) as DemoAccountKey[]).find((k) => demoAccounts[k].email === lower);
+  if (exact) {
+    activeDemoKey = exact;
+    return demoAccounts[activeDemoKey];
+  }
+  const name = lower.split('@')[0] ?? '';
+  return setActiveDemoByName(name);
+}
+
+/** The demo account a typed-in address most likely means, from the name before its @. */
+function setActiveDemoByName(lower: string) {
   if (lower.includes('teacher') || lower.includes('sarah') || lower.includes('tutor')) {
     activeDemoKey = 'teacher';
   } else if (lower.includes('parent') || lower.includes('grace') || lower.includes('family') || lower.includes('mary')) {
@@ -501,8 +515,8 @@ export const classroom = {
       title: 'Practice Questions 1',
       kind: 'Homework',
       due: 'Due: Nov 8, 2026 · 11:59 PM',
-      tint: '#2F6BFF',
-      soft: '#EAF1FF',
+      tint: Maple.blue,
+      soft: Maple.blueSoft,
       status: 'todo' as const,
     },
     {
@@ -510,15 +524,15 @@ export const classroom = {
       kind: 'Past Paper',
       due: 'Due: Nov 10, 2026 · 11:59 PM',
       tint: '#F97316',
-      soft: '#FFEDD5',
+      soft: Maple.warningSoft,
       status: 'todo' as const,
     },
     {
       title: 'Fractions Mini Quiz',
       kind: 'Quiz',
       due: 'Due: Nov 8, 2026 · 5:00 PM',
-      tint: '#8B5CF6',
-      soft: '#EFEBFF',
+      tint: Maple.blue,
+      soft: Maple.blueSoft,
       status: 'todo' as const,
     },
   ],
@@ -601,6 +615,110 @@ const MOCK_CLASSES = [
 ];
 
 /** A list the way the real API sends it: `{ count, results }`. */
+interface SampleMessage {
+  id: number;
+  author: { id: number; name: string };
+  body: string;
+  created_at: string;
+}
+
+interface SampleSummary {
+  id: number;
+  subject: string;
+  student: { id: number; name: string };
+  staff: { id: number; name: string };
+  last_message_at: string;
+  last_body: string;
+  last_author: string;
+}
+
+const SAMPLE_THREADS: readonly SampleSummary[] = [
+  {
+    id: 1,
+    subject: 'Mary’s weekly progress',
+    student: { id: 201, name: 'Mary N.' },
+    staff: { id: 102, name: 'Ms. Sarah N.' },
+    last_message_at: '2026-10-26T09:42:00Z',
+    last_body: 'Thank you! We are practising 10 minutes of mental maths every evening.',
+    last_author: 'Grace Namukasa',
+  },
+  {
+    id: 2,
+    subject: 'Science lab preparation',
+    student: { id: 202, name: 'Daniel O.' },
+    staff: { id: 105, name: 'Mr. Mugisha' },
+    last_message_at: '2026-10-25T16:10:00Z',
+    last_body: 'Remember to review Chapter 4 before Tuesday’s live lab.',
+    last_author: 'Mr. Mugisha',
+  },
+];
+
+const MARY_MESSAGES: readonly SampleMessage[] = [
+  {
+    id: 1,
+    author: { id: 102, name: 'Ms. Sarah N.' },
+    body: 'Mary has been very focused in class this week and is asking great questions. Keep encouraging her!',
+    created_at: '2026-10-26T09:30:00Z',
+  },
+  {
+    id: 2,
+    author: { id: 301, name: 'Grace Namukasa' },
+    body: 'Thank you! We are practising 10 minutes of mental maths every evening.',
+    created_at: '2026-10-26T09:42:00Z',
+  },
+];
+
+const SAMPLE_MESSAGES: Readonly<Record<number, readonly SampleMessage[]>> = {
+  1: MARY_MESSAGES,
+  2: [
+    {
+      id: 3,
+      author: { id: 105, name: 'Mr. Mugisha' },
+      body: 'Remember to review Chapter 4 before Tuesday’s live lab.',
+      created_at: '2026-10-25T16:10:00Z',
+    },
+  ],
+};
+
+/** Replies sent in this visit of a design build, by conversation, so a sent message stays on screen. */
+const sentReplies = new Map<number, readonly SampleMessage[]>();
+
+/** Conversations started in this visit of a design build, newest first. */
+let startedThreads: readonly SampleSummary[] = [];
+
+const SAMPLE_STAFF: Readonly<Record<number, string>> = { 102: 'Ms. Sarah N.', 104: 'Dr. James Mukasa', 105: 'Mr. Mugisha' };
+
+/** Starts a conversation from the New conversation form, with its first message, and returns its id. */
+function startSampleThread(sent: { student?: number; staff?: number; subject?: string; body?: string }): number {
+  const me = getActiveDemoAccount().me;
+  const id = 100 + startedThreads.length + 1;
+  const student = SHARED_CHILDREN.find((c) => c.user_id === sent.student) ?? SHARED_CHILDREN[0];
+  const staffId = sent.staff ?? 102;
+  const first: SampleMessage = { id: Date.now(), author: { id: me.id, name: me.full_name }, body: sent.body ?? '', created_at: new Date().toISOString() };
+  const summary: SampleSummary = {
+    id,
+    subject: sent.subject || 'New conversation',
+    student: { id: student.user_id, name: student.full_name },
+    staff: { id: staffId, name: SAMPLE_STAFF[staffId] ?? 'Ms. Sarah N.' },
+    last_message_at: first.created_at,
+    last_body: first.body,
+    last_author: me.full_name,
+  };
+  startedThreads = [summary, ...startedThreads];
+  sentReplies.set(id, [first]);
+  return id;
+}
+
+function sampleThread(id: number) {
+  const head = [...startedThreads, ...SAMPLE_THREADS].find((t) => t.id === id) ?? SAMPLE_THREADS[0];
+  return { id, subject: head.subject, student: head.student, staff: head.staff, can_reply: true, messages: [...(SAMPLE_MESSAGES[head.id] ?? []), ...(sentReplies.get(id) ?? [])] };
+}
+
+function withLatestReply(t: SampleSummary) {
+  const latest = sentReplies.get(t.id)?.at(-1);
+  return latest ? { ...t, last_message_at: latest.created_at, last_body: latest.body, last_author: latest.author.name } : t;
+}
+
 function listResponse(results: readonly unknown[]): Response {
   return jsonResponse({
     count: results.length,
@@ -1092,50 +1210,27 @@ export async function mockApiFetch(input: RequestInfo | URL, init?: RequestInit)
       },
     ]);
   }
+  if (path === '/api/v1/messages/threads/' && method === 'POST') {
+    const raw = init?.body ? String(init.body) : input instanceof Request ? await input.clone().text() : '';
+    const sent = JSON.parse(raw || '{}') as { student?: number; staff?: number; subject?: string; body?: string };
+    return jsonResponse(sampleThread(startSampleThread(sent)));
+  }
   if (path === '/api/v1/messages/threads/') {
-    return listResponse([
-      {
-        id: 1,
-        subject: 'Mary’s weekly progress',
-        student: { id: 201, name: 'Mary N.' },
-        staff: { id: 102, name: 'Ms. Sarah N.' },
-        last_message_at: '2026-10-26T09:42:00Z',
-        last_body: 'Thank you! We are practising 10 minutes of mental maths every evening.',
-        last_author: 'Grace Namukasa',
-      },
-      {
-        id: 2,
-        subject: 'Science lab preparation',
-        student: { id: 202, name: 'Daniel O.' },
-        staff: { id: 105, name: 'Mr. Mugisha' },
-        last_message_at: '2026-10-25T16:10:00Z',
-        last_body: 'Remember to review Chapter 4 before Tuesday’s live lab.',
-        last_author: 'Mr. Mugisha',
-      },
-    ]);
+    return listResponse([...startedThreads, ...SAMPLE_THREADS].map(withLatestReply));
+  }
+  const reply = /^\/api\/v1\/messages\/threads\/(\d+)\/messages\/$/.exec(path);
+  if (reply && method === 'POST') {
+    const id = Number(reply[1]);
+    const me = getActiveDemoAccount().me;
+    // openapi-fetch sends a Request with the body inside it rather than in init.
+    const raw = init?.body ? String(init.body) : input instanceof Request ? await input.clone().text() : '';
+    const body = (JSON.parse(raw || '{}') as { body?: string }).body ?? '';
+    const sent = { id: Date.now(), author: { id: me.id, name: me.full_name }, body, created_at: new Date().toISOString() };
+    sentReplies.set(id, [...(sentReplies.get(id) ?? []), sent]);
+    return jsonResponse(sampleThread(id));
   }
   if (path.match(/^\/api\/v1\/messages\/threads\/\d+\/$/)) {
-    return jsonResponse({
-      id: Number(path.split('/')[5]) || 1,
-      subject: 'Mary’s weekly progress',
-      student: { id: 201, name: 'Mary N.' },
-      staff: { id: 102, name: 'Ms. Sarah N.' },
-      can_reply: true,
-      messages: [
-        {
-          id: 1,
-          author: { id: 102, name: 'Ms. Sarah N.' },
-          body: 'Mary has been very focused in class this week and is asking great questions. Keep encouraging her!',
-          created_at: '2026-10-26T09:30:00Z',
-        },
-        {
-          id: 2,
-          author: { id: 301, name: 'Grace Namukasa' },
-          body: 'Thank you! We are practising 10 minutes of mental maths every evening.',
-          created_at: '2026-10-26T09:42:00Z',
-        },
-      ],
-    });
+    return jsonResponse(sampleThread(Number(path.split('/')[5]) || 1));
   }
   if (path === '/api/v1/messages/contacts/') {
     return listResponse([

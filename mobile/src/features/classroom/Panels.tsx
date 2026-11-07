@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { type ReactNode, useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
@@ -9,6 +9,8 @@ import { Brand, CARD_SHADOW } from '@/features/public/palette';
 import { filterParticipants, type ParticipantFilter, searchTranscript } from '@/lib/classroom';
 import type { BoardSnapshot } from '@/lib/excalidraw-livekit';
 import type { MockData } from '@/mock';
+import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 type Room = MockData['shared']['classroom'];
 export type ChatMessage = Room['chat'][number];
@@ -148,7 +150,7 @@ export function ChatBody({ messages, onSend }: { messages: readonly ChatMessage[
     <View style={styles.gap}>
       {messages.map((m, i) => (
         <View key={`${m.at}-${i}`} style={styles.message}>
-          <Image source={m.photo} style={styles.face} contentFit="cover" />
+          <Image decorative source={m.photo} style={styles.face} contentFit="cover" />
           <View style={styles.flex}>
             <View style={styles.nameRow}>
               <Text style={styles.strong}>{m.who}</Text>
@@ -281,7 +283,7 @@ export function ParticipantsBody({
           allowedDrawers.some((n) => n.toLowerCase() === p.name.toLowerCase());
         return (
           <View key={p.name} style={styles.person}>
-            <Image source={p.photo} style={styles.face} contentFit="cover" />
+            <Image decorative source={p.photo} style={styles.face} contentFit="cover" />
             <View style={styles.flex}>
               <View style={styles.nameRow}>
                 <Text style={styles.strong}>{p.name}</Text>
@@ -339,7 +341,7 @@ const styles = StyleSheet.create({
   notesTitle: { fontSize: 17, fontWeight: '800', color: Brand.ink },
   notesSub: { fontSize: 16, fontWeight: '800', color: Brand.ink, marginTop: 6 },
   bullet: { fontSize: 14, lineHeight: 22, color: Brand.body },
-  keyPoint: { flexDirection: 'row', gap: 10, padding: 14, borderRadius: 10, backgroundColor: '#FFF7E6', marginTop: 6 },
+  keyPoint: { flexDirection: 'row', gap: 10, padding: 14, borderRadius: 10, backgroundColor: Maple.warningSoft, marginTop: 6 },
   keyIcon: { fontSize: 22 },
   message: { flexDirection: 'row', gap: 10 },
   nameRow: { flexDirection: 'row', alignItems: 'center', gap: 5 },
@@ -386,8 +388,8 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#BFDBFE',
-    backgroundColor: '#F0F6FF',
+    borderColor: Maple.blueLine,
+    backgroundColor: Maple.blueSoft,
     gap: 3,
     marginTop: 4,
   },
@@ -415,8 +417,8 @@ const styles = StyleSheet.create({
     backgroundColor: Brand.canvas,
   },
   allowDrawBtnOn: {
-    borderColor: '#86EFAC',
-    backgroundColor: '#DCFCE7',
+    borderColor: Palette.green300,
+    backgroundColor: Maple.successSoft,
   },
   allowDrawText: {
     fontSize: 10.5,
@@ -424,7 +426,7 @@ const styles = StyleSheet.create({
     color: Brand.ink,
   },
   allowDrawTextOn: {
-    color: '#15803D',
+    color: Maple.successText,
     fontWeight: '700',
   },
   expand: { width: 28, height: 28, marginLeft: 8, alignItems: 'center', justifyContent: 'center' },

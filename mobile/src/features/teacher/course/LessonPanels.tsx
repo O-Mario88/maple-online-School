@@ -8,6 +8,8 @@ import { toast } from '@/lib/toast';
 import type { CourseBuilder } from '@/mock/teacher-course';
 
 import type { Builder } from './useCourseBuilder';
+import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 /** The selected lesson's settings, with delete (tap twice) and duplicate. */
 export function LessonSettingsPanel({ c, b, buttons = true }: { c: CourseBuilder; b: Builder; buttons?: boolean }) {
@@ -47,7 +49,7 @@ export function LessonSettingsPanel({ c, b, buttons = true }: { c: CourseBuilder
       {buttons ? (
         <View style={styles.buttons}>
           <Pressable style={[styles.btn, styles.danger, confirm && styles.dangerOn]} onPress={del} accessibilityRole="button" accessibilityLabel={confirm ? 'Confirm: delete this lesson' : 'Delete lesson'}>
-            <Icon name="trash" size={11} color={confirm ? '#FFFFFF' : RED} />
+            <Icon name="trash" size={11} color={confirm ? Maple.surface : RED} />
             <Text style={[styles.btnText, styles.dangerText, confirm && styles.dangerTextOn]} numberOfLines={1}>{confirm ? 'Tap to confirm' : 'Delete Lesson'}</Text>
           </Pressable>
           <Pressable style={styles.btn} onPress={b.duplicateLesson} accessibilityRole="button" accessibilityLabel="Duplicate lesson">
@@ -101,7 +103,7 @@ export function QuizTab({ c, b }: { c: CourseBuilder; b: Builder }) {
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
-  settings: { padding: 9, borderRadius: 8, borderWidth: 1, borderColor: LINE, backgroundColor: '#FFFFFF' },
+  settings: { padding: 9, borderRadius: 8, borderWidth: 1, borderColor: LINE, backgroundColor: Maple.surface },
   head: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 },
   headTitle: { flexShrink: 1, fontSize: 11.5, fontWeight: '700', color: INK, letterSpacing: -0.2 },
   addBtn: { flexDirection: 'row', alignItems: 'center', gap: 3, paddingHorizontal: 5, paddingVertical: 3, borderRadius: 6, borderWidth: 1, borderColor: LINE },
@@ -109,18 +111,18 @@ const styles = StyleSheet.create({
   fields: { gap: 8 },
   toggles: { gap: 1, marginTop: 4 },
   buttons: { flexDirection: 'row', justifyContent: 'space-between', gap: 6, marginTop: 30 },
-  btn: { height: 26, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 3, paddingHorizontal: 5, borderRadius: 6, borderWidth: 1, borderColor: LINE, backgroundColor: '#FFFFFF' },
+  btn: { height: 26, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 3, paddingHorizontal: 5, borderRadius: 6, borderWidth: 1, borderColor: LINE, backgroundColor: Maple.surface },
   btnText: { flexShrink: 1, fontSize: 8.5, fontWeight: '600', color: BLUE, letterSpacing: -0.15 },
-  danger: { borderColor: '#F3B5B7' },
+  danger: { borderColor: Palette.red200 },
   dangerOn: { backgroundColor: RED, borderColor: RED },
   dangerText: { color: RED },
-  dangerTextOn: { color: '#FFFFFF' },
+  dangerTextOn: { color: Maple.surface },
   tab: { gap: 8 },
   tabTitle: { fontSize: 14, fontWeight: '700', color: INK },
   tabSub: { fontSize: 12, color: BODY },
   notes: { minHeight: 280, padding: 12, borderRadius: 8, borderWidth: 1, borderColor: LINE, fontSize: 13, lineHeight: 20, color: INK, textAlignVertical: 'top' },
   question: { flexDirection: 'row', gap: 10, padding: 10, borderRadius: 8, borderWidth: 1, borderColor: LINE },
-  qNum: { width: 22, height: 22, borderRadius: 11, overflow: 'hidden', textAlign: 'center', lineHeight: 22, fontSize: 11, fontWeight: '700', color: '#FFFFFF', backgroundColor: BLUE },
+  qNum: { width: 22, height: 22, borderRadius: 11, overflow: 'hidden', textAlign: 'center', lineHeight: 22, fontSize: 11, fontWeight: '700', color: Maple.surface, backgroundColor: BLUE },
   qText: { fontSize: 12.5, color: INK },
-  qAnswer: { marginTop: 3, fontSize: 11.5, color: '#1F8A4C' },
+  qAnswer: { marginTop: 3, fontSize: 11.5, color: Maple.successText },
 });

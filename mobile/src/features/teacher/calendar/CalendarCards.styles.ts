@@ -1,6 +1,8 @@
 import { StyleSheet } from 'react-native';
 
 import { BLUE, BODY, INK, LINE, MUTED } from '@/features/teacher/frame/TeacherParts';
+import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 export const styles = StyleSheet.create({
   flex: { flex: 1 },
@@ -16,7 +18,7 @@ export const styles = StyleSheet.create({
   sideCard: {
     padding: 11,
     borderRadius: 10,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     borderWidth: 1,
     borderColor: LINE,
     gap: 8,
@@ -35,7 +37,7 @@ export const styles = StyleSheet.create({
     flex: 1,
     fontSize: 12,
     fontWeight: '700',
-    color: '#15803D',
+    color: Maple.successText,
   },
   sideAvailDesc: {
     fontSize: 10.5,
@@ -49,7 +51,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 9,
     paddingVertical: 7,
     borderRadius: 8,
-    backgroundColor: '#F8FAFD',
+    backgroundColor: Maple.subtle,
     borderWidth: 1,
     borderColor: LINE,
   },
@@ -72,7 +74,7 @@ export const styles = StyleSheet.create({
     borderRadius: 7,
     borderWidth: 1.5,
     borderColor: BLUE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
   },
   openInstantText: {
     fontSize: 11,
@@ -96,7 +98,7 @@ export const styles = StyleSheet.create({
     width: 15,
     height: 15,
     borderRadius: 7.5,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
   },
   switchKnobLg: {
     width: 19,
@@ -138,15 +140,15 @@ export const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
   },
   googleLogo: {
     width: 24,
     height: 24,
     borderRadius: 6,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: Maple.border,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -155,23 +157,23 @@ export const styles = StyleSheet.create({
     height: 18,
     borderRadius: 9,
     borderWidth: 2,
-    borderTopColor: '#EA4335',
-    borderRightColor: '#4285F4',
-    borderBottomColor: '#34A853',
-    borderLeftColor: '#FBBC05',
+    borderTopColor: Maple.error,
+    borderRightColor: Maple.blue,
+    borderBottomColor: Maple.success,
+    borderLeftColor: Maple.warning,
     alignItems: 'center',
     justifyContent: 'center',
   },
   googleG: {
     fontSize: 10,
     fontWeight: '800',
-    color: '#4285F4',
+    color: Maple.blue,
   },
   outlookLogo: {
     width: 24,
     height: 24,
     borderRadius: 6,
-    backgroundColor: '#0078D4',
+    backgroundColor: Maple.blueHover,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -179,13 +181,13 @@ export const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 6,
-    backgroundColor: '#0B1424',
+    backgroundColor: Maple.navy,
     alignItems: 'center',
     justifyContent: 'center',
   },
   appleGlyph: {
     fontSize: 14,
-    color: '#FFFFFF',
+    color: Maple.surface,
     lineHeight: 16,
   },
   providerName: {
@@ -201,24 +203,24 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 10,
-    backgroundColor: '#E6F6EC',
+    backgroundColor: Maple.successSoft,
   },
   connectedDot: {
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: '#1F9D55',
+    backgroundColor: Maple.successText,
   },
   connectedText: {
     fontSize: 10.5,
     fontWeight: '600',
-    color: '#15803D',
+    color: Maple.successText,
   },
   notConnectedPill: {
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 10,
-    backgroundColor: '#EEF2F7',
+    backgroundColor: Maple.blueSelected,
   },
   notConnectedText: {
     fontSize: 10.5,
@@ -233,7 +235,7 @@ export const styles = StyleSheet.create({
     borderColor: BLUE,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
   },
   connectBtnText: {
     fontSize: 11,
@@ -254,7 +256,7 @@ export const styles = StyleSheet.create({
   availToggleBox: {
     padding: 10,
     borderRadius: 8,
-    backgroundColor: '#F8FAFD',
+    backgroundColor: Maple.subtle,
     borderWidth: 1,
     borderColor: LINE,
     gap: 4,
@@ -268,7 +270,7 @@ export const styles = StyleSheet.create({
     width: 18,
     height: 18,
     borderRadius: 9,
-    backgroundColor: '#1F9D55',
+    backgroundColor: Maple.successText,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -320,7 +322,7 @@ export const styles = StyleSheet.create({
   },
   upcomingBorder: {
     borderTopWidth: 1,
-    borderColor: '#EEF2F8',
+    borderColor: Maple.blueSelected,
   },
   upcomingIcon: {
     width: 26,
@@ -342,9 +344,9 @@ export const styles = StyleSheet.create({
   phoneInstantCard: {
     padding: 13,
     borderRadius: 12,
-    backgroundColor: '#EAFBF0',
+    backgroundColor: Maple.successSoft,
     borderWidth: 1,
-    borderColor: '#BBE7C9',
+    borderColor: Palette.green300f,
     gap: 10,
     marginTop: 8,
   },
@@ -368,7 +370,7 @@ export const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1.5,
     borderColor: BLUE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -380,8 +382,8 @@ export const styles = StyleSheet.create({
   addPanel: {
     padding: 14,
     gap: 10,
-    borderColor: '#BFDBFE',
-    backgroundColor: '#F8FAFF',
+    borderColor: Maple.blueLine,
+    backgroundColor: Maple.blueSoft,
   },
   addHead: {
     flexDirection: 'row',
@@ -417,7 +419,7 @@ export const styles = StyleSheet.create({
     borderRadius: 7,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     fontSize: 12,
     color: INK,
   },
@@ -432,12 +434,12 @@ export const styles = StyleSheet.create({
     borderRadius: 6,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },
   choicePillBlue: {
-    backgroundColor: '#DCEAFE',
+    backgroundColor: Maple.blueSelected,
     borderColor: BLUE,
   },
   choiceText: {
@@ -454,18 +456,18 @@ export const styles = StyleSheet.create({
     gap: 10,
     padding: 10,
     borderRadius: 8,
-    backgroundColor: '#FEF3C7',
+    backgroundColor: Maple.warningSoft,
     borderWidth: 1,
-    borderColor: '#F59E0B',
+    borderColor: Maple.warning,
   },
   clashTitle: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#92400E',
+    color: Palette.orange800b,
   },
   clashBody: {
     fontSize: 11,
-    color: '#92400E',
+    color: Palette.orange800b,
     marginTop: 2,
   },
   freeSlotsRow: {
@@ -481,14 +483,14 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 9,
     paddingVertical: 5,
     borderRadius: 6,
-    backgroundColor: '#DCFCE7',
+    backgroundColor: Maple.successSoft,
     borderWidth: 1,
-    borderColor: '#16A34A',
+    borderColor: Maple.successText,
   },
   freeSlotText: {
     fontSize: 11,
     fontWeight: '700',
-    color: '#166534',
+    color: Maple.successText,
   },
   clearBanner: {
     flexDirection: 'row',
@@ -496,15 +498,15 @@ export const styles = StyleSheet.create({
     gap: 8,
     padding: 9,
     borderRadius: 8,
-    backgroundColor: '#DCFCE7',
+    backgroundColor: Maple.successSoft,
     borderWidth: 1,
-    borderColor: '#86EFAC',
+    borderColor: Palette.green300,
   },
   clearText: {
     flex: 1,
     fontSize: 11.5,
     fontWeight: '600',
-    color: '#166534',
+    color: Maple.successText,
   },
   confirmAddBtn: {
     height: 30,
@@ -517,7 +519,7 @@ export const styles = StyleSheet.create({
   confirmAddText: {
     fontSize: 11.5,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   sectionItems: {
     gap: 8,

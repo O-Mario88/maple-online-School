@@ -1,18 +1,20 @@
 import { StyleSheet, Text, View } from 'react-native';
 
 import { DOMAINS, type Domain, GENERIC_SKILLS, type GenericSkill, type Identifier, RACE, type RaceScore, raceTotal } from '@/lib/cbc';
+import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
-const INK = '#0B1424';
-const BODY = '#4A5263';
+const INK = Maple.navy;
+const BODY = Maple.body;
 export const DOMAIN_TONE: Record<Domain, { bg: string; fg: string }> = {
-  knowledge: { bg: '#E6EEFC', fg: '#1450C8' },
-  skills: { bg: '#E3F6E9', fg: '#15803D' },
-  values: { bg: '#F1E8FD', fg: '#6D28D9' },
+  knowledge: { bg: Maple.blueSelected, fg: Maple.blueHover },
+  skills: { bg: Maple.successSoft, fg: Maple.successText },
+  values: { bg: Maple.blueSelected, fg: Maple.blue },
 };
 export const ID_TONE: Record<Identifier['id'], { bg: string; fg: string; bar: string }> = {
-  1: { bg: '#FDECEC', fg: '#C2410C', bar: '#F0475B' },
-  2: { bg: '#E6EEFC', fg: '#1450C8', bar: '#1463F3' },
-  3: { bg: '#DDF3E5', fg: '#15803D', bar: '#22A35A' },
+  1: { bg: Maple.errorSoft, fg: Palette.orange700, bar: Maple.error },
+  2: { bg: Maple.blueSelected, fg: Maple.blueHover, bar: Maple.blue },
+  3: { bg: Maple.successSoft, fg: Maple.successText, bar: Maple.successText },
 };
 
 /** A learning-domain tag: Knowledge, Skills or Values. */
@@ -75,7 +77,7 @@ export function RaceGrid({ race, notes, phone = false }: { race: RaceScore; note
             </View>
             <Text style={styles.max}>{r.max}</Text>
             <View style={[styles.score, full ? styles.scoreFull : styles.scorePart]}>
-              <Text style={[styles.scoreText, { color: full ? '#15803D' : '#B45309' }]}>{score}</Text>
+              <Text style={[styles.scoreText, { color: full ? Maple.successText : Maple.warningText }]}>{score}</Text>
             </View>
           </View>
         );
@@ -92,23 +94,23 @@ export const raceSummary = (race: RaceScore) => {
 const styles = StyleSheet.create({
   flex: { flex: 1 },
   chip: { alignSelf: 'flex-start', paddingHorizontal: 7, paddingVertical: 2, borderRadius: 4, fontSize: 10.5, fontWeight: '600', overflow: 'hidden' },
-  value: { backgroundColor: '#F1E8FD', color: '#6D28D9' },
-  skill: { flexDirection: 'row', alignItems: 'center', gap: 5, paddingLeft: 7, paddingRight: 3, paddingVertical: 2, borderRadius: 4, borderWidth: 1, borderColor: '#F3C99B', backgroundColor: '#FFF7EE' },
-  skillText: { fontSize: 10.5, fontWeight: '600', color: '#B45309' },
+  value: { backgroundColor: Maple.blueSelected, color: Maple.blue },
+  skill: { flexDirection: 'row', alignItems: 'center', gap: 5, paddingLeft: 7, paddingRight: 3, paddingVertical: 2, borderRadius: 4, borderWidth: 1, borderColor: Palette.amber300b, backgroundColor: Maple.warningSoft },
+  skillText: { fontSize: 10.5, fontWeight: '600', color: Maple.warningText },
   skillId: { minWidth: 15, paddingHorizontal: 3, borderRadius: 3, fontSize: 10, fontWeight: '800', textAlign: 'center', overflow: 'hidden' },
   idPill: { alignSelf: 'flex-start', paddingHorizontal: 8, paddingVertical: 3, borderRadius: 4, fontSize: 10.5, fontWeight: '600', overflow: 'hidden' },
-  th: { flexDirection: 'row', alignItems: 'center', height: 26, marginTop: 8, paddingHorizontal: 10, borderRadius: 4, backgroundColor: '#F1F4F9' },
+  th: { flexDirection: 'row', alignItems: 'center', height: 26, marginTop: 8, paddingHorizontal: 10, borderRadius: 4, backgroundColor: Maple.blueSoft },
   thText: { fontSize: 12, color: INK },
   thMax: { width: 44, textAlign: 'center' },
   thScore: { width: 44, textAlign: 'center' },
-  tr: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 5, paddingHorizontal: 6, borderBottomWidth: 1, borderBottomColor: '#EEF1F6' },
+  tr: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 5, paddingHorizontal: 6, borderBottomWidth: 1, borderBottomColor: Maple.blueSelected },
   trP: { paddingVertical: 10 },
-  letter: { width: 22, height: 22, borderRadius: 11, backgroundColor: '#DCE8FD', fontSize: 12, lineHeight: 22, fontWeight: '800', color: '#1463F3', textAlign: 'center', overflow: 'hidden' },
+  letter: { width: 22, height: 22, borderRadius: 11, backgroundColor: Maple.blueSelected, fontSize: 12, lineHeight: 22, fontWeight: '800', color: Maple.blue, textAlign: 'center', overflow: 'hidden' },
   crit: { fontSize: 12, fontWeight: '600', color: INK },
   critSub: { marginTop: 2, fontSize: 10.5, lineHeight: 14, color: BODY },
   max: { width: 34, textAlign: 'center', fontSize: 12, color: BODY },
   score: { width: 34, height: 28, alignItems: 'center', justifyContent: 'center', borderRadius: 5 },
-  scoreFull: { backgroundColor: '#DDF3E5' },
-  scorePart: { backgroundColor: '#FDEBD3' },
+  scoreFull: { backgroundColor: Maple.successSoft },
+  scorePart: { backgroundColor: Maple.warningSoft },
   scoreText: { fontSize: 14, fontWeight: '700' },
 });

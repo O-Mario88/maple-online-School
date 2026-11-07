@@ -1,7 +1,7 @@
 import { useLocalSearchParams } from 'expo-router';
 import Head from 'expo-router/head';
 import { type ReactNode, useMemo, useState } from 'react';
-import { ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { StyleSheet, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { EmptyState } from '@/components/ui';
@@ -12,6 +12,7 @@ import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { LightOnly } from '@/hooks/use-theme';
 import { mockData } from '@/lib/mock';
 import { readPayToken } from '@/lib/pay-link';
+import { PageScroll } from '@/components/shell/PageScroll';
 
 const MAX_WIDTH = 1180;
 const SUMMARY = 480;
@@ -69,7 +70,7 @@ export default function PayInvoiceScreen() {
 
   return (
     <Private wide={wide}>
-      <ScrollView style={styles.flex} contentContainerStyle={styles.page}>
+      <PageScroll style={styles.flex} contentContainerStyle={styles.page}>
         <View style={[styles.inner, wide && styles.innerWide]}>
           <View style={[styles.summary, wide && styles.summaryWide]}>
             <CheckoutSummary inv={inv} total={total} />
@@ -81,7 +82,7 @@ export default function PayInvoiceScreen() {
             {wide ? null : <LinkFacts validUntil={inv.validUntil} />}
           </View>
         </View>
-      </ScrollView>
+      </PageScroll>
     </Private>
   );
 }

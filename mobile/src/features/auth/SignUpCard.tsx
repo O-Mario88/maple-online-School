@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
@@ -9,18 +9,20 @@ import { api } from '@/lib/api/client';
 import { apiRole, needsGuardian, newAccountProblem, parseDob, type SignUpRole } from '@/lib/auth/signup';
 import type { IconName } from '@/lib/icons';
 import type { MockData } from '@/mock';
+import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 type Art = MockData['publicPages']['signUpArt'];
 
-const INK = '#0F1B3D';
-const BODY = '#4A5263';
-const BLUE = '#1463F3';
+const INK = Maple.navy;
+const BODY = Maple.body;
+const BLUE = Maple.blue;
 
 const ROLES: readonly { key: SignUpRole; title: string; sub: string; icon: IconName; tint: string; fill: string }[] = [
-  { key: 'learner', title: 'Learner', sub: 'Student account', icon: 'cap', tint: '#1463F3', fill: '#EAF2FE' },
-  { key: 'parent', title: 'Parent', sub: 'Manage your child', icon: 'people', tint: '#EC4899', fill: '#FDF0F6' },
-  { key: 'teacher', title: 'Teacher', sub: 'Teach and assign', icon: 'person', tint: '#16A34A', fill: '#EEF8F1' },
-  { key: 'school', title: 'School', sub: 'Institution account', icon: 'school', tint: '#F97316', fill: '#FEF5EC' },
+  { key: 'learner', title: 'Learner', sub: 'Student account', icon: 'cap', tint: Maple.blue, fill: Maple.blueSoft },
+  { key: 'parent', title: 'Parent', sub: 'Manage your child', icon: 'people', tint: Palette.pink500c, fill: Palette.pink50b },
+  { key: 'teacher', title: 'Teacher', sub: 'Teach and assign', icon: 'person', tint: Maple.successText, fill: Maple.successSoft },
+  { key: 'school', title: 'School', sub: 'Institution account', icon: 'school', tint: Palette.orange500b, fill: Maple.warningSoft },
 ];
 const GRADES = ['Primary 1', 'Primary 2', 'Primary 3', 'Primary 4', 'Primary 5', 'Primary 6', 'Primary 7', 'Senior 1', 'Senior 2', 'Senior 3', 'Senior 4', 'Senior 5', 'Senior 6'];
 const SOCIAL = [
@@ -29,9 +31,9 @@ const SOCIAL = [
   { key: 'microsoft', label: 'Microsoft' },
 ] as const;
 const TRUST: readonly { key: string; title: string; body: string; icon: IconName; tint: string }[] = [
-  { key: 'shield', title: 'Safe & Secure', body: 'Your data is protected', icon: 'shield', tint: '#1463F3' },
-  { key: 'people', title: 'Child Friendly', body: 'A safe learning space', icon: 'people', tint: '#1463F3' },
-  { key: 'heart', title: 'Trusted by Schools', body: 'Used by schools across Uganda and beyond', icon: 'heart', tint: '#EC4899' },
+  { key: 'shield', title: 'Safe & Secure', body: 'Your data is protected', icon: 'shield', tint: Maple.blue },
+  { key: 'people', title: 'Child Friendly', body: 'A safe learning space', icon: 'people', tint: Maple.blue },
+  { key: 'heart', title: 'Trusted by Schools', body: 'Used by schools across Uganda and beyond', icon: 'heart', tint: Palette.pink500c },
 ];
 /** Accounts are created for Uganda until the form asks for a country. */
 const COUNTRY = 'UG';
@@ -45,7 +47,7 @@ const maskDob = (t: string) => {
 /** A reference icon on design builds, a drawn icon everywhere else. */
 function Glyph({ art, k, size, icon, tint, fill }: { art?: Art; k: string; size: number; icon: IconName; tint: string; fill?: string }) {
   const photo = art?.[k];
-  if (photo) return <Image source={photo} style={{ width: size, height: size }} contentFit="contain" />;
+  if (photo) return <Image decorative source={photo} style={{ width: size, height: size }} contentFit="contain" />;
   return (
     <View style={[styles.glyph, { width: size, height: size, borderRadius: size / 2, backgroundColor: fill ?? 'transparent' }]}>
       <Icon name={icon} size={size * 0.55} color={tint} />
@@ -58,7 +60,7 @@ function Field({ label, icon, children, phone, half = false }: { label: string; 
     <View style={half && !phone ? styles.flex : undefined}>
       <Text style={[styles.label, phone && styles.labelP]}>{label}</Text>
       <View style={[styles.input, phone && styles.inputP]}>
-        <Icon name={icon} size={phone ? 15 : 17} color="#6B7489" />
+        <Icon name={icon} size={phone ? 15 : 17} color={Maple.secondary} />
         {children}
       </View>
     </View>
@@ -136,7 +138,7 @@ export function SignUpCard({ art, phone = false }: { art?: Art; phone?: boolean 
           return (
             <Pressable
               key={r.key}
-              style={[styles.role, p && styles.roleP, { backgroundColor: on ? '#F1F6FF' : r.fill }, on && styles.roleOn]}
+              style={[styles.role, p && styles.roleP, { backgroundColor: on ? Maple.blueSoft : r.fill }, on && styles.roleOn]}
               onPress={() => {
                 setRole(r.key);
                 setProblem(null);
@@ -144,7 +146,7 @@ export function SignUpCard({ art, phone = false }: { art?: Art; phone?: boolean 
               accessibilityRole="radio"
               accessibilityState={{ checked: on }}
               accessibilityLabel={`${r.title}: ${r.sub}`}>
-              <Glyph art={art} k={r.key} size={p ? 30 : 41} icon={r.icon} tint={r.tint} fill="#FFFFFF" />
+              <Glyph art={art} k={r.key} size={p ? 30 : 41} icon={r.icon} tint={r.tint} fill={Maple.surface} />
               <Text style={[styles.roleTitle, p && styles.roleTitleP]}>{r.title}</Text>
               <Text style={[styles.roleSub, p && styles.roleSubP]}>{r.sub}</Text>
             </Pressable>
@@ -154,7 +156,7 @@ export function SignUpCard({ art, phone = false }: { art?: Art; phone?: boolean 
 
       {role === 'parent' ? (
         <View style={[styles.parent, p && styles.parentP]}>
-          <Icon name="people" size={26} color="#EC4899" />
+          <Icon name="people" size={26} color={Palette.pink500c} />
           <Text style={styles.parentTitle}>Parents join through their child</Text>
           <Text style={styles.parentText}>Ask your child’s school for their claim code, or scan the QR code on the school letter. Claiming your child creates your parent account and links you to their reports and fees.</Text>
           <Pressable style={styles.primary} onPress={() => router.push('/claim-child')} accessibilityRole="button">
@@ -165,10 +167,10 @@ export function SignUpCard({ art, phone = false }: { art?: Art; phone?: boolean 
         <>
           <View style={[styles.pair, p && styles.pairP]}>
             <Field half label="First Name" icon="person" phone={p}>
-              <TextInput style={styles.text} value={first} onChangeText={setFirst} placeholder="Enter your first name" placeholderTextColor="#8A93A6" autoComplete="given-name" maxLength={120} accessibilityLabel="First name" />
+              <TextInput style={styles.text} value={first} onChangeText={setFirst} placeholder="Enter your first name" placeholderTextColor={Maple.faint} autoComplete="given-name" maxLength={120} accessibilityLabel="First name" />
             </Field>
             <Field half label="Last Name" icon="person" phone={p}>
-              <TextInput style={styles.text} value={last} onChangeText={setLast} placeholder="Enter your last name" placeholderTextColor="#8A93A6" autoComplete="family-name" maxLength={120} accessibilityLabel="Last name" />
+              <TextInput style={styles.text} value={last} onChangeText={setLast} placeholder="Enter your last name" placeholderTextColor={Maple.faint} autoComplete="family-name" maxLength={120} accessibilityLabel="Last name" />
             </Field>
           </View>
           {learner ? (
@@ -176,7 +178,7 @@ export function SignUpCard({ art, phone = false }: { art?: Art; phone?: boolean 
               <View style={[!p && styles.flex, styles.zTop]}>
                 <Text style={[styles.label, p && styles.labelP]}>Class / Grade</Text>
                 <Pressable style={[styles.input, p && styles.inputP]} onPress={() => setGradeOpen(!gradeOpen)} accessibilityRole="button" accessibilityState={{ expanded: gradeOpen }} accessibilityLabel={`Class or grade: ${grade || 'not chosen'}`}>
-                  <Icon name="book" size={p ? 15 : 17} color="#6B7489" />
+                  <Icon name="book" size={p ? 15 : 17} color={Maple.secondary} />
                   <Text style={[styles.text, styles.choice, !grade && styles.placeholder]}>{grade || 'Select your class/grade'}</Text>
                   <Icon name="chevronDown" size={14} color={INK} />
                 </Pressable>
@@ -198,17 +200,17 @@ export function SignUpCard({ art, phone = false }: { art?: Art; phone?: boolean 
                 ) : null}
               </View>
               <Field half label="Date of Birth" icon="calendar" phone={p}>
-                <TextInput style={styles.text} value={dob} onChangeText={(t) => setDob(maskDob(t))} placeholder="DD / MM / YYYY" placeholderTextColor="#8A93A6" keyboardType="number-pad" maxLength={14} accessibilityLabel="Date of birth, day month year" />
+                <TextInput style={styles.text} value={dob} onChangeText={(t) => setDob(maskDob(t))} placeholder="DD / MM / YYYY" placeholderTextColor={Maple.faint} keyboardType="number-pad" maxLength={14} accessibilityLabel="Date of birth, day month year" />
               </Field>
             </View>
           ) : null}
           <Field label="Email Address" icon="mail" phone={p}>
-            <TextInput style={styles.text} value={email} onChangeText={setEmail} placeholder="Enter your email address" placeholderTextColor="#8A93A6" autoCapitalize="none" autoComplete="email" keyboardType="email-address" textContentType="emailAddress" accessibilityLabel="Email address" />
+            <TextInput style={styles.text} value={email} onChangeText={setEmail} placeholder="Enter your email address" placeholderTextColor={Maple.faint} autoCapitalize="none" autoComplete="email" keyboardType="email-address" textContentType="emailAddress" accessibilityLabel="Email address" />
           </Field>
           <Field label="Create Password" icon="lock" phone={p}>
-            <TextInput style={styles.text} value={password} onChangeText={setPassword} placeholder="Create a strong password" placeholderTextColor="#8A93A6" secureTextEntry={!show} autoComplete="new-password" textContentType="newPassword" onSubmitEditing={submit} accessibilityLabel="Create password" />
+            <TextInput style={styles.text} value={password} onChangeText={setPassword} placeholder="Create a strong password" placeholderTextColor={Maple.faint} secureTextEntry={!show} autoComplete="new-password" textContentType="newPassword" onSubmitEditing={submit} accessibilityLabel="Create password" />
             <Pressable onPress={() => setShow(!show)} accessibilityRole="button" accessibilityLabel={show ? 'Hide password' : 'Show password'} hitSlop={8}>
-              <Icon name={show ? 'eyeOff' : 'eye'} size={17} color="#6B7489" />
+              <Icon name={show ? 'eyeOff' : 'eye'} size={17} color={Maple.secondary} />
             </Pressable>
           </Field>
           {problem ? (
@@ -289,7 +291,7 @@ const styles = StyleSheet.create({
   flex: { flex: 1 },
   zTop: { zIndex: 10 },
   glyph: { alignItems: 'center', justifyContent: 'center' },
-  card: { width: 547, height: 903, paddingHorizontal: 34, paddingTop: 30, borderRadius: 14, backgroundColor: Brand.surface, shadowColor: '#0F2350', shadowOpacity: 0.12, shadowRadius: 24, shadowOffset: { width: 0, height: 8 } },
+  card: { width: 547, height: 903, paddingHorizontal: 34, paddingTop: 30, borderRadius: 14, backgroundColor: Brand.surface, shadowColor: Palette.blue950j, shadowOpacity: 0.12, shadowRadius: 24, shadowOffset: { width: 0, height: 8 } },
   cardP: { width: '100%', height: 'auto', paddingHorizontal: 16, paddingTop: 16, paddingBottom: 18 },
   doneCard: { justifyContent: 'center', gap: 14 },
   title: { fontSize: 33, lineHeight: 40, fontWeight: '800', color: INK, letterSpacing: -0.8 },
@@ -298,9 +300,9 @@ const styles = StyleSheet.create({
   subP: { maxWidth: '100%', fontSize: 13, lineHeight: 19 },
   roles: { flexDirection: 'row', gap: 10, marginTop: 12 },
   rolesP: { flexWrap: 'wrap', gap: 8 },
-  role: { width: 113, height: 99, alignItems: 'center', justifyContent: 'center', gap: 3, borderRadius: 8, borderWidth: 1, borderColor: '#EDF0F5' },
+  role: { width: 113, height: 99, alignItems: 'center', justifyContent: 'center', gap: 3, borderRadius: 8, borderWidth: 1, borderColor: Maple.disabledSurface },
   roleP: { width: '48%', height: 74, flexGrow: 1 },
-  roleOn: { borderWidth: 1.5, borderColor: '#3B82F6' },
+  roleOn: { borderWidth: 1.5, borderColor: Maple.blue },
   roleTitle: { marginTop: 4, fontSize: 13.5, fontWeight: '700', color: INK },
   roleTitleP: { marginTop: 2, fontSize: 12 },
   roleSub: { fontSize: 11, color: BODY },
@@ -309,37 +311,37 @@ const styles = StyleSheet.create({
   pairP: { flexDirection: 'column', gap: 0 },
   label: { marginTop: 18, marginBottom: 5, fontSize: 13.5, fontWeight: '600', color: INK },
   labelP: { marginTop: 12, marginBottom: 4, fontSize: 12 },
-  input: { height: 41, paddingVertical: 0, flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 13, borderRadius: 7, borderWidth: 1, borderColor: '#E1E6EE', backgroundColor: '#FFFFFF' },
+  input: { height: 41, paddingVertical: 0, flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 13, borderRadius: 7, borderWidth: 1, borderColor: Maple.border, backgroundColor: Maple.surface },
   inputP: { height: 40, paddingVertical: 0, gap: 10 },
   text: { flex: 1, height: 39, fontSize: 13, color: INK },
   choice: { lineHeight: 39 },
-  placeholder: { color: '#8A93A6' },
-  menu: { position: 'absolute', top: 70, left: 0, right: 0, maxHeight: 230, paddingVertical: 4, borderRadius: 8, borderWidth: 1, borderColor: '#E1E7F0', backgroundColor: '#FFFFFF', overflow: 'scroll' },
+  placeholder: { color: Maple.muted },
+  menu: { position: 'absolute', top: 70, left: 0, right: 0, maxHeight: 230, paddingVertical: 4, borderRadius: 8, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface, overflow: 'scroll' },
   menuP: { top: 62 },
   menuItem: { height: 28, justifyContent: 'center', paddingHorizontal: 12 },
   menuText: { fontSize: 12.5, color: INK },
   menuOn: { fontWeight: '700', color: BLUE },
-  problem: { marginTop: 10, fontSize: 12.5, color: '#B91C1C' },
-  create: { height: 46, alignItems: 'center', justifyContent: 'center', marginTop: 20, borderRadius: 7, backgroundColor: '#0B6BFF' },
+  problem: { marginTop: 10, fontSize: 12.5, color: Maple.error },
+  create: { height: 46, alignItems: 'center', justifyContent: 'center', marginTop: 20, borderRadius: 7, backgroundColor: Maple.blue },
   createP: { height: 42, marginTop: 16 },
   busy: { opacity: 0.7 },
-  createText: { fontSize: 17, fontWeight: '600', color: '#FFFFFF' },
+  createText: { fontSize: 17, fontWeight: '600', color: Maple.surface },
   createTextP: { fontSize: 14 },
-  primary: { height: 44, alignItems: 'center', justifyContent: 'center', borderRadius: 8, backgroundColor: '#0B6BFF' },
-  primaryText: { fontSize: 14, fontWeight: '600', color: '#FFFFFF' },
-  secondary: { height: 44, alignItems: 'center', justifyContent: 'center', borderRadius: 8, borderWidth: 1, borderColor: '#C9DAF8' },
+  primary: { height: 44, alignItems: 'center', justifyContent: 'center', borderRadius: 8, backgroundColor: Maple.blue },
+  primaryText: { fontSize: 14, fontWeight: '600', color: Maple.surface },
+  secondary: { height: 44, alignItems: 'center', justifyContent: 'center', borderRadius: 8, borderWidth: 1, borderColor: Maple.blueLine },
   secondaryText: { fontSize: 14, fontWeight: '600', color: BLUE },
-  parent: { gap: 10, marginTop: 20, padding: 16, borderRadius: 10, backgroundColor: '#FDF0F6' },
+  parent: { gap: 10, marginTop: 20, padding: 16, borderRadius: 10, backgroundColor: Palette.pink50b },
   parentP: { marginTop: 14 },
   parentTitle: { fontSize: 15, fontWeight: '700', color: INK },
   parentText: { fontSize: 13, lineHeight: 19, color: BODY },
   or: { flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 22 },
-  orLine: { flex: 1, height: 1, backgroundColor: '#E6EAF1' },
+  orLine: { flex: 1, height: 1, backgroundColor: Maple.disabledSurface },
   orText: { fontSize: 13, color: BODY },
   orTextP: { fontSize: 11.5 },
   socials: { flexDirection: 'row', gap: 14, marginTop: 16 },
   socialsP: { gap: 8, marginTop: 12 },
-  social: { flex: 1, height: 45, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 12, borderRadius: 7, borderWidth: 1, borderColor: '#E1E6EE' },
+  social: { flex: 1, height: 45, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 12, borderRadius: 7, borderWidth: 1, borderColor: Maple.border },
   socialP: { height: 38, gap: 6 },
   socialText: { fontSize: 14.5, fontWeight: '600', color: INK },
   socialTextP: { fontSize: 11.5 },
@@ -349,9 +351,9 @@ const styles = StyleSheet.create({
   link: { color: BLUE, fontWeight: '500' },
   signIn: { marginTop: 14, alignItems: 'center' },
   signInText: { fontSize: 13, color: BODY },
-  trust: { position: 'absolute', left: 26, right: 26, bottom: 28, height: 88, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12, borderRadius: 10, backgroundColor: '#EEF4FD' },
+  trust: { position: 'absolute', left: 26, right: 26, bottom: 28, height: 88, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12, borderRadius: 10, backgroundColor: Maple.blueSoft },
   trustItem: { flex: 1, flexDirection: 'row', alignItems: 'flex-start', gap: 10, paddingHorizontal: 8 },
-  trustRule: { borderLeftWidth: 1, borderLeftColor: '#D9E3F2' },
+  trustRule: { borderLeftWidth: 1, borderLeftColor: Maple.blueLine },
   trustTitle: { fontSize: 12, fontWeight: '700', color: INK },
   trustBody: { marginTop: 3, fontSize: 10.5, lineHeight: 14, color: BODY },
   barLink: { flexDirection: 'row', alignItems: 'center', gap: 8 },

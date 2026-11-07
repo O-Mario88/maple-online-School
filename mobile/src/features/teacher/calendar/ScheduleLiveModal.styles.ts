@@ -1,6 +1,8 @@
 import { StyleSheet } from 'react-native';
 
 import { BLUE, BODY, GREEN, INK, LINE, MUTED } from '@/features/teacher/frame/TeacherParts';
+import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 export const styles = StyleSheet.create({
   flex: { flex: 1 },
@@ -23,10 +25,10 @@ export const styles = StyleSheet.create({
     transform: [{ scale: 0.87 }],
     transformOrigin: 'top center',
     borderRadius: 16,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     borderWidth: 1,
     borderColor: LINE,
-    shadowColor: '#0B1424',
+    shadowColor: Maple.navy,
     shadowOpacity: 0.22,
     shadowRadius: 28,
     shadowOffset: { width: 0, height: 12 },
@@ -43,7 +45,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 14,
     borderBottomWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
   },
   headerIconTile: {
     width: 38,
@@ -74,7 +76,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 14,
     padding: 16,
-    backgroundColor: '#F7FAFE',
+    backgroundColor: Maple.blueSoft,
   },
   modalBodyPhone: {
     flexDirection: 'column',
@@ -92,7 +94,7 @@ export const styles = StyleSheet.create({
   stepCard: {
     padding: 13,
     borderRadius: 12,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     borderWidth: 1,
     borderColor: LINE,
     gap: 9,
@@ -121,7 +123,7 @@ export const styles = StyleSheet.create({
     color: INK,
   },
   req: {
-    color: '#DC2626',
+    color: Maple.error,
   },
   cohortBox: {
     height: 46,
@@ -131,8 +133,8 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 8,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#D8E2F0',
-    backgroundColor: '#FFFFFF',
+    borderColor: Maple.blueLine,
+    backgroundColor: Maple.surface,
   },
   cohortThumb: {
     width: 38,
@@ -155,11 +157,11 @@ export const styles = StyleSheet.create({
     left: 0,
     right: 0,
     borderRadius: 8,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     borderWidth: 1,
     borderColor: LINE,
     paddingVertical: 4,
-    shadowColor: '#0B1424',
+    shadowColor: Maple.navy,
     shadowOpacity: 0.14,
     shadowRadius: 12,
     shadowOffset: { width: 0, height: 4 },
@@ -170,7 +172,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 7,
   },
   dropdownRowOn: {
-    backgroundColor: '#EEF4FF',
+    backgroundColor: Maple.blueSoft,
   },
   textInput: {
     height: 33,
@@ -178,8 +180,8 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 7,
     borderWidth: 1,
-    borderColor: '#D8E2F0',
-    backgroundColor: '#FFFFFF',
+    borderColor: Maple.blueLine,
+    backgroundColor: Maple.surface,
     fontSize: 11.5,
     color: INK,
   },
@@ -197,7 +199,7 @@ export const styles = StyleSheet.create({
   seriesTabs: {
     flexDirection: 'row',
     borderRadius: 7,
-    backgroundColor: '#F1F5F9',
+    backgroundColor: Maple.blueSoft,
     padding: 2,
     borderWidth: 1,
     borderColor: LINE,
@@ -208,7 +210,7 @@ export const styles = StyleSheet.create({
     borderRadius: 5,
   },
   seriesTabOn: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     borderBottomWidth: 2,
     borderBottomColor: BLUE,
   },
@@ -245,8 +247,8 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 6,
     borderRadius: 7,
     borderWidth: 1,
-    borderColor: '#D8E2F0',
-    backgroundColor: '#FFFFFF',
+    borderColor: Maple.blueLine,
+    backgroundColor: Maple.surface,
   },
   selectValue: {
     fontSize: 8.5,
@@ -260,11 +262,11 @@ export const styles = StyleSheet.create({
     left: 0,
     right: 0,
     borderRadius: 8,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     borderWidth: 1,
     borderColor: LINE,
     paddingVertical: 3,
-    shadowColor: '#0B1424',
+    shadowColor: Maple.navy,
     shadowOpacity: 0.14,
     shadowRadius: 10,
     shadowOffset: { width: 0, height: 4 },
@@ -281,7 +283,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 9,
     paddingVertical: 5,
     borderRadius: 6,
-    backgroundColor: '#EEF4FF',
+    backgroundColor: Maple.blueSoft,
   },
   recurringHintText: {
     fontSize: 10.5,
@@ -301,14 +303,14 @@ export const styles = StyleSheet.create({
     width: 16,
     height: 16,
     borderRadius: 8,
-    backgroundColor: '#F59E0B',
+    backgroundColor: Maple.warning,
     alignItems: 'center',
     justifyContent: 'center',
   },
   coinText: {
     fontSize: 9.5,
     fontWeight: '800',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   coTeachersBox: {
     minHeight: 38,
@@ -320,8 +322,8 @@ export const styles = StyleSheet.create({
     paddingVertical: 4,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#D8E2F0',
-    backgroundColor: '#FFFFFF',
+    borderColor: Maple.blueLine,
+    backgroundColor: Maple.surface,
   },
   coTeacherChip: {
     flexDirection: 'row',
@@ -331,7 +333,7 @@ export const styles = StyleSheet.create({
     paddingRight: 7,
     paddingVertical: 2.5,
     borderRadius: 14,
-    backgroundColor: '#EBF2FF',
+    backgroundColor: Maple.blueSoft,
   },
   coTeacherAvatar: {
     width: 20,
@@ -357,8 +359,8 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 9,
     borderRadius: 6,
     borderWidth: 1,
-    borderColor: '#D8E2F0',
-    backgroundColor: '#FFFFFF',
+    borderColor: Maple.blueLine,
+    backgroundColor: Maple.surface,
   },
   addCoTeacherText: {
     fontSize: 10.5,
@@ -378,11 +380,11 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 7,
     borderRadius: 6,
     borderWidth: 1,
-    borderColor: '#D8E2F0',
-    backgroundColor: '#FFFFFF',
+    borderColor: Maple.blueLine,
+    backgroundColor: Maple.surface,
   },
   resourceChipOn: {
-    backgroundColor: '#EEF4FF',
+    backgroundColor: Maple.blueSoft,
     borderColor: BLUE,
   },
   resourceChipText: {
@@ -402,7 +404,7 @@ export const styles = StyleSheet.create({
   },
   advCard: {
     borderRadius: 10,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     borderWidth: 1,
     borderColor: LINE,
     paddingHorizontal: 13,
@@ -433,7 +435,7 @@ export const styles = StyleSheet.create({
   conflictCard: {
     padding: 13,
     borderRadius: 12,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     borderWidth: 1,
     borderColor: LINE,
     gap: 9,
@@ -445,7 +447,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 12,
-    backgroundColor: '#DCFCE7',
+    backgroundColor: Maple.successSoft,
   },
   greenCheckDot: {
     width: 14,
@@ -458,7 +460,7 @@ export const styles = StyleSheet.create({
   conflictPillGoodText: {
     fontSize: 10,
     fontWeight: '700',
-    color: '#15803D',
+    color: Maple.successText,
   },
   conflictPillBad: {
     flexDirection: 'row',
@@ -467,12 +469,12 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 12,
-    backgroundColor: '#FEE2E2',
+    backgroundColor: Maple.errorSoft,
   },
   conflictPillBadText: {
     fontSize: 10,
     fontWeight: '700',
-    color: '#DC2626',
+    color: Maple.error,
   },
   statusBannerGood: {
     flexDirection: 'row',
@@ -480,9 +482,9 @@ export const styles = StyleSheet.create({
     gap: 9,
     padding: 10,
     borderRadius: 9,
-    backgroundColor: '#E6F7ED',
+    backgroundColor: Maple.successSoft,
     borderWidth: 1,
-    borderColor: '#BBF7D0',
+    borderColor: Palette.green200,
   },
   statusCheckCircle: {
     width: 20,
@@ -496,12 +498,12 @@ export const styles = StyleSheet.create({
   statusTitleGood: {
     fontSize: 11.5,
     fontWeight: '800',
-    color: '#065F46',
+    color: Maple.successText,
   },
   statusBodyGood: {
     fontSize: 10,
     lineHeight: 14,
-    color: '#065F46',
+    color: Maple.successText,
     marginTop: 1,
   },
   statusBannerBad: {
@@ -510,19 +512,19 @@ export const styles = StyleSheet.create({
     gap: 9,
     padding: 10,
     borderRadius: 9,
-    backgroundColor: '#FEF2F2',
+    backgroundColor: Maple.errorSoft,
     borderWidth: 1,
-    borderColor: '#FECACA',
+    borderColor: Maple.errorSoft,
   },
   statusTitleBad: {
     fontSize: 11.5,
     fontWeight: '800',
-    color: '#991B1B',
+    color: Maple.errorText,
   },
   statusBodyBad: {
     fontSize: 10,
     lineHeight: 14,
-    color: '#B91C1C',
+    color: Maple.error,
     marginTop: 1,
   },
   miniDayTitle: {
@@ -535,7 +537,7 @@ export const styles = StyleSheet.create({
     borderRadius: 9,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FAFCFF',
+    backgroundColor: Maple.blueSoft,
     gap: 5,
   },
   miniRow: {
@@ -569,30 +571,30 @@ export const styles = StyleSheet.create({
     borderLeftWidth: 3,
   },
   miniEventGreen: {
-    backgroundColor: '#DCFCE7',
-    borderLeftColor: '#16A34A',
+    backgroundColor: Maple.successSoft,
+    borderLeftColor: Maple.successText,
   },
   miniEventBlue: {
-    backgroundColor: '#DCEAFE',
-    borderLeftColor: '#1D63ED',
+    backgroundColor: Maple.blueSelected,
+    borderLeftColor: Maple.blue,
   },
   miniEventGrey: {
-    backgroundColor: '#E2E8F0',
-    borderLeftColor: '#64748B',
+    backgroundColor: Maple.border,
+    borderLeftColor: Maple.secondary,
   },
   miniEventNew: {
-    backgroundColor: '#EEF4FF',
+    backgroundColor: Maple.blueSoft,
     borderWidth: 1.5,
     borderColor: BLUE,
     borderLeftWidth: 4,
     borderLeftColor: BLUE,
   },
   miniEventConflict: {
-    backgroundColor: '#FEF2F2',
+    backgroundColor: Maple.errorSoft,
     borderWidth: 1.5,
-    borderColor: '#DC2626',
+    borderColor: Maple.error,
     borderLeftWidth: 4,
-    borderLeftColor: '#DC2626',
+    borderLeftColor: Maple.error,
   },
   miniIconBadge: {
     width: 18,
@@ -632,9 +634,9 @@ export const styles = StyleSheet.create({
   altCard: {
     padding: 10,
     borderRadius: 10,
-    backgroundColor: '#FFFBEB',
+    backgroundColor: Maple.warningSoft,
     borderWidth: 1,
-    borderColor: '#FDE68A',
+    borderColor: Palette.yellow300,
     gap: 6,
   },
   altHead: {
@@ -665,20 +667,20 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 9,
     paddingVertical: 5,
     borderRadius: 7,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     borderWidth: 1,
-    borderColor: '#F3E8C8',
+    borderColor: Palette.amber200b,
   },
   altRowOn: {
     borderColor: BLUE,
-    backgroundColor: '#F0F7FF',
+    backgroundColor: Maple.blueSoft,
   },
   radioOuter: {
     width: 15,
     height: 15,
     borderRadius: 7.5,
     borderWidth: 1.5,
-    borderColor: '#94A3B8',
+    borderColor: Maple.faint,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -707,7 +709,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 7,
     paddingVertical: 2.5,
     borderRadius: 10,
-    backgroundColor: '#DCFCE7',
+    backgroundColor: Maple.successSoft,
   },
   availDot: {
     width: 5,
@@ -718,7 +720,7 @@ export const styles = StyleSheet.create({
   availText: {
     fontSize: 9.5,
     fontWeight: '700',
-    color: '#15803D',
+    color: Maple.successText,
   },
   moreOptionsBtn: {
     height: 26,
@@ -727,7 +729,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 4,
     borderRadius: 6,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     borderWidth: 1,
     borderColor: LINE,
   },
@@ -745,8 +747,8 @@ export const styles = StyleSheet.create({
     height: 38,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#CBD5E1',
-    backgroundColor: '#FFFFFF',
+    borderColor: Maple.borderStrong,
+    backgroundColor: Maple.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -768,7 +770,7 @@ export const styles = StyleSheet.create({
   scheduleBtnText: {
     fontSize: 12.5,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
 });
 

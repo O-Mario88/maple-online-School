@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
@@ -8,6 +8,8 @@ import { useStartFree } from '@/lib/auth/auth-context';
 
 import { Brand, CARD_SHADOW } from '../palette';
 import type { Landing } from './types';
+import { Maple } from '@/constants/maple';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
 /** Each curriculum chip's width in the reference, in order. */
 const CHIP_WIDTHS = [117, 87, 100, 100, 103, 122] as const;
@@ -17,7 +19,7 @@ export function HeroCopy({ landing, phone = false }: { landing: Landing; phone?:
   return (
     <View style={phone ? styles.colPhone : styles.col}>
       <Text style={[styles.eyebrow, phone && styles.eyebrowPhone]}>{landing.eyebrow.toUpperCase()}</Text>
-      <Text style={[styles.headline, phone && styles.headlinePhone]} accessibilityRole="header">
+      <Text style={[styles.headline, phone && styles.headlinePhone]} {...PAGE_TITLE}>
         {`${landing.headline.lead}\n${landing.headline.pre}`}
         <Text style={styles.accent}>{landing.headline.accent}</Text>
       </Text>
@@ -41,7 +43,7 @@ export function HeroActions({ landing, phone = false }: { landing: Landing; phon
         accessibilityRole="radio"
         accessibilityState={{ selected: on }}
         accessibilityLabel={`${c.code}, ${c.region}`}>
-        <Image source={c.badge} style={styles.badge} />
+        <Image decorative source={c.badge} style={styles.badge} />
         <View>
           <Text style={styles.chipCode}>{c.code}</Text>
           <Text style={styles.chipRegion}>{`(${c.region})`}</Text>
@@ -94,12 +96,12 @@ export function HeroActions({ landing, phone = false }: { landing: Landing; phon
 const styles = StyleSheet.create({
   col: { width: 640 },
   colPhone: { paddingHorizontal: 16 },
-  eyebrow: { fontSize: 12.5, fontWeight: '600', letterSpacing: 1.3, color: '#5E6675' },
+  eyebrow: { fontSize: 12.5, fontWeight: '600', letterSpacing: 1.3, color: Maple.body },
   eyebrowPhone: { fontSize: 12 },
   headline: { marginTop: 13, fontSize: 51, lineHeight: 53, fontWeight: '700', color: Brand.ink, letterSpacing: -1.1 },
   headlinePhone: { marginTop: 10, fontSize: 38, lineHeight: 42, letterSpacing: -1 },
   accent: { color: Brand.blue },
-  sub: { marginTop: 14, maxWidth: 480, fontSize: 18.5, lineHeight: 23.5, color: '#3D4656' },
+  sub: { marginTop: 14, maxWidth: 480, fontSize: 18.5, lineHeight: 23.5, color: Maple.body },
   subPhone: { marginTop: 12, maxWidth: '100%', fontSize: 16.5, lineHeight: 23 },
 
   actions: { width: 680 },
@@ -118,11 +120,11 @@ const styles = StyleSheet.create({
     paddingRight: 8,
     borderRadius: 7,
     borderWidth: 1,
-    borderColor: '#E6EAF2',
+    borderColor: Maple.blueSelected,
     backgroundColor: Brand.surface,
     ...CARD_SHADOW,
   },
-  chipOn: { borderWidth: 2, borderColor: Brand.blue, backgroundColor: '#F4F8FF', paddingLeft: 9 },
+  chipOn: { borderWidth: 2, borderColor: Brand.blue, backgroundColor: Maple.blueSoft, paddingLeft: 9 },
   badge: { width: 22, height: 22, borderRadius: 11 },
   chipCode: { fontSize: 11.5, fontWeight: '700', color: Brand.ink, letterSpacing: -0.2 },
   chipRegion: { fontSize: 8.5, color: Brand.muted, marginTop: 1 },
@@ -152,6 +154,6 @@ const styles = StyleSheet.create({
   trustItem: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   trustItemPhone: { width: '47%' },
   trustIcon: { width: 19, height: 19, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
-  trustText: { fontSize: 10.5, color: '#2A3242', flexShrink: 1 },
+  trustText: { fontSize: 10.5, color: Maple.navy, flexShrink: 1 },
   trustTextPhone: { fontSize: 12.5 },
 });

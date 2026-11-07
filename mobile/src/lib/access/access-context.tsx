@@ -131,3 +131,8 @@ export function useAccess(): AccessValue {
   if (!value) throw new Error('useAccess needs an AccessProvider above it.');
   return value;
 }
+
+/** Access where there may be no provider (public pages outside the app): null there. */
+export function useOptionalAccess(): AccessValue | null {
+  return useContext(AccessContext);
+}

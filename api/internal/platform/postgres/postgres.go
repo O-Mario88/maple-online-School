@@ -62,7 +62,9 @@ func Migrate(ctx context.Context, pool *pgxpool.Pool) error {
 	if err := goose.SetDialect("postgres"); err != nil {
 		return fmt.Errorf("set goose dialect: %w", err)
 	}
-	if err := goose.UpContext(ctx, sqlDB, "migrations"); err != nil {
+	// Branches add migrations in parallel (00009 School Network, 00010 Career Compass), so an older
+	// one may arrive after a newer one is applied; each creates its own tables, so order is safe.
+	if err := goose.UpContext(ctx, sqlDB, "migrations", goose.WithAllowMissing()); err != nil {
 		return fmt.Errorf("apply migrations: %w", err)
 	}
 	return nil

@@ -12,6 +12,7 @@ import { BLUE, BODY, GREEN, LINE, NAVY, type Tone, WHITE } from '@/features/port
 import { Cell, type Column, DataTable, PageHead, Search, useChoice, useSelection } from '@/features/school/kit/AdminKit';
 import { toast } from '@/lib/toast';
 import type { SchoolRow } from '@/mock/command-center/institutions';
+import { Maple } from '@/constants/maple';
 
 type I = CommandData['institutions'];
 const PER_PAGE = 10;
@@ -148,7 +149,7 @@ function Growth({ i, phone = false }: { i: I; phone?: boolean }) {
   const series = [
     { name: 'Total Registered', color: CHART.blue, values: g.total },
     { name: 'Active Tenants', color: CHART.green, values: g.active },
-    { name: 'Bottom-Up Opportunities', color: '#A78BFA', values: g.bottomUp },
+    { name: 'Bottom-Up Opportunities', color: Maple.blueLine, values: g.bottomUp },
     { name: 'Enterprise', color: CHART.orange, values: g.enterprise.map((v) => v * 6) },
   ];
   return (

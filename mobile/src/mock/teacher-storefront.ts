@@ -3,6 +3,7 @@ import type { IconName } from '@/lib/icons';
 import type { TeacherDest } from '@/lib/teacher-home';
 
 import { photos } from './photos';
+import { Maple } from '@/constants/maple';
 
 export interface StorefrontSubjectCard {
   id: string;
@@ -49,8 +50,8 @@ export const storefrontEditor = {
       previewTitle: 'O-Level Mathematics',
       description: 'Exam preparation, problem solving, and past papers.',
       tags: ['O-Level', 'Exam Prep'],
-      color: '#1463F3',
-      bg: '#DBEAFE',
+      color: Maple.blue,
+      bg: Maple.blueSelected,
       icon: 'chart' as IconName,
       featured: true,
     },
@@ -61,7 +62,7 @@ export const storefrontEditor = {
       description: 'Build strong foundations with clear explanations.',
       tags: ['Lower Secondary', 'Foundation'],
       color: '#EA580C',
-      bg: '#FFEDD5',
+      bg: Maple.warningSoft,
       icon: 'grid' as IconName,
       featured: true,
     },
@@ -71,8 +72,8 @@ export const storefrontEditor = {
       previewTitle: 'Primary Mathematics',
       description: 'Fun and engaging lessons for young learners.',
       tags: ['Primary', 'Concept Building'],
-      color: '#16A34A',
-      bg: '#DCFCE7',
+      color: Maple.successText,
+      bg: Maple.successSoft,
       icon: 'book' as IconName,
       featured: true,
     },

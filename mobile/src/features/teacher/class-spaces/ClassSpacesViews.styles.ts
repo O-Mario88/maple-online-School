@@ -1,6 +1,8 @@
 import { StyleSheet } from 'react-native';
 
 import { BLUE, BODY, INK, LINE } from '@/features/teacher/frame/TeacherParts';
+import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 /** Styles for ClassSpacesViews (kept apart so the view file stays readable). */
 export const CLASS_SPACES_REF_WIDTH = 1220;
@@ -12,7 +14,7 @@ export const s = StyleSheet.create({
     width: CLASS_SPACES_REF_WIDTH,
     padding: 12,
     gap: 10,
-    backgroundColor: '#EAF1FB',
+    backgroundColor: Maple.blueSelected,
   },
   body: {
     flexDirection: 'row',
@@ -52,7 +54,7 @@ export const s = StyleSheet.create({
   createNewTopBtnText: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
 
   /* Top 2-Column Split */
@@ -75,7 +77,7 @@ export const s = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 9,
-    backgroundColor: '#E0ECFF',
+    backgroundColor: Maple.blueSelected,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -99,7 +101,7 @@ export const s = StyleSheet.create({
     color: INK,
   },
   reqStar: {
-    color: '#EF4444',
+    color: Maple.error,
   },
   textInput: {
     height: 32,
@@ -107,7 +109,7 @@ export const s = StyleSheet.create({
     borderRadius: 7,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     paddingHorizontal: 9,
     fontSize: 11,
     color: INK,
@@ -117,7 +119,7 @@ export const s = StyleSheet.create({
     borderRadius: 7,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     paddingHorizontal: 9,
     flexDirection: 'row',
     alignItems: 'center',
@@ -134,7 +136,7 @@ export const s = StyleSheet.create({
     borderRadius: 7,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     paddingHorizontal: 9,
     flexDirection: 'row',
     alignItems: 'center',
@@ -164,18 +166,18 @@ export const s = StyleSheet.create({
     borderRadius: 9,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
   },
   joinMethodCardOn: {
     borderColor: BLUE,
     borderWidth: 1.5,
-    backgroundColor: '#F3F8FF',
+    backgroundColor: Maple.blueSoft,
   },
   joinCodeCircle: {
     width: 30,
     height: 30,
     borderRadius: 15,
-    backgroundColor: '#DCFCE7',
+    backgroundColor: Maple.successSoft,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -204,14 +206,14 @@ export const s = StyleSheet.create({
   radioCheckMark: {
     fontSize: 9,
     fontWeight: '800',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   radioUnchecked: {
     width: 15,
     height: 15,
     borderRadius: 7.5,
     borderWidth: 1.5,
-    borderColor: '#94A3B8',
+    borderColor: Maple.faint,
     alignSelf: 'flex-start',
   },
   createSpacePrimaryBtn: {
@@ -225,7 +227,7 @@ export const s = StyleSheet.create({
   createSpacePrimaryText: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
 
   /* Principal Referral Card */
@@ -233,8 +235,8 @@ export const s = StyleSheet.create({
     flex: 1,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#FDE68A',
-    backgroundColor: '#FFFBEB',
+    borderColor: Palette.yellow300,
+    backgroundColor: Maple.warningSoft,
     padding: 14,
     gap: 8,
     justifyContent: 'space-between',
@@ -248,7 +250,7 @@ export const s = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 8,
-    backgroundColor: '#FEF3C7',
+    backgroundColor: Maple.warningSoft,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -285,14 +287,14 @@ export const s = StyleSheet.create({
     width: 15,
     height: 15,
     borderRadius: 7.5,
-    backgroundColor: '#22C55E',
+    backgroundColor: Maple.success,
     alignItems: 'center',
     justifyContent: 'center',
   },
   greenCheckGlyph: {
     fontSize: 9,
     fontWeight: '800',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   benefitText: {
     flex: 1,
@@ -303,7 +305,7 @@ export const s = StyleSheet.create({
   principalBtn: {
     height: 34,
     borderRadius: 8,
-    backgroundColor: '#F59E0B',
+    backgroundColor: Maple.warning,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -320,7 +322,7 @@ export const s = StyleSheet.create({
   copyInviteLinkText: {
     fontSize: 10.5,
     fontWeight: '700',
-    color: '#1D4ED8',
+    color: Maple.blue,
     textDecorationLine: 'underline',
   },
 
@@ -341,7 +343,7 @@ export const s = StyleSheet.create({
   flagPole: {
     width: 1.5,
     height: 14,
-    backgroundColor: '#475569',
+    backgroundColor: Maple.body,
   },
   redFlag: {
     position: 'absolute',
@@ -349,14 +351,14 @@ export const s = StyleSheet.create({
     top: 1,
     width: 9,
     height: 6,
-    backgroundColor: '#EF4444',
+    backgroundColor: Maple.error,
     borderTopRightRadius: 2,
     borderBottomRightRadius: 2,
   },
   schoolRoofBar: {
     width: 98,
     height: 10,
-    backgroundColor: '#57534E',
+    backgroundColor: Maple.body,
     borderTopLeftRadius: 4,
     borderTopRightRadius: 4,
   },
@@ -365,11 +367,11 @@ export const s = StyleSheet.create({
     top: 15,
     width: 34,
     height: 14,
-    backgroundColor: '#FDE68A',
+    backgroundColor: Palette.yellow300,
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
     borderWidth: 1.5,
-    borderColor: '#57534E',
+    borderColor: Maple.body,
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 2,
@@ -378,16 +380,16 @@ export const s = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: '#38BDF8',
+    backgroundColor: Palette.sky500,
     borderWidth: 1,
-    borderColor: '#0284C7',
+    borderColor: Maple.blueHover,
   },
   schoolFacade: {
     width: 94,
     height: 54,
-    backgroundColor: '#FDE68A',
+    backgroundColor: Palette.yellow300,
     borderWidth: 1,
-    borderColor: '#D97706',
+    borderColor: Maple.warning,
     flexDirection: 'row',
     paddingHorizontal: 5,
     paddingTop: 6,
@@ -403,9 +405,9 @@ export const s = StyleSheet.create({
   schoolWin: {
     width: 9,
     height: 11,
-    backgroundColor: '#38BDF8',
+    backgroundColor: Palette.sky500,
     borderWidth: 1,
-    borderColor: '#0284C7',
+    borderColor: Maple.blueHover,
     borderRadius: 1,
   },
   centerPortico: {
@@ -415,15 +417,15 @@ export const s = StyleSheet.create({
   schoolWinWide: {
     width: 16,
     height: 11,
-    backgroundColor: '#38BDF8',
+    backgroundColor: Palette.sky500,
     borderWidth: 1,
-    borderColor: '#0284C7',
+    borderColor: Maple.blueHover,
     borderRadius: 1,
   },
   schoolDoorFrame: {
     width: 18,
     height: 22,
-    backgroundColor: '#78350F',
+    backgroundColor: Palette.orange900,
     borderTopLeftRadius: 3,
     borderTopRightRadius: 3,
     flexDirection: 'row',
@@ -432,7 +434,7 @@ export const s = StyleSheet.create({
   },
   schoolDoorLeaf: {
     flex: 1,
-    backgroundColor: '#92400E',
+    backgroundColor: Palette.orange800b,
   },
   treeLeft: {
     position: 'absolute',
@@ -441,7 +443,7 @@ export const s = StyleSheet.create({
     width: 18,
     height: 24,
     borderRadius: 9,
-    backgroundColor: '#16A34A',
+    backgroundColor: Maple.successText,
   },
   treeRight: {
     position: 'absolute',
@@ -450,13 +452,13 @@ export const s = StyleSheet.create({
     width: 18,
     height: 24,
     borderRadius: 9,
-    backgroundColor: '#16A34A',
+    backgroundColor: Maple.successText,
   },
   schoolLawn: {
     width: 122,
     height: 6,
     borderRadius: 3,
-    backgroundColor: '#22C55E',
+    backgroundColor: Maple.success,
   },
 
   /* Bottom Table Card */
@@ -511,7 +513,7 @@ export const s = StyleSheet.create({
     borderRadius: 7,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
   },
   searchInput: {
     flex: 1,
@@ -528,7 +530,7 @@ export const s = StyleSheet.create({
     borderRadius: 7,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
   },
   termsFilterText: {
     fontSize: 10,
@@ -540,7 +542,7 @@ export const s = StyleSheet.create({
     borderRadius: 7,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
     padding: 2,
     gap: 2,
   },
@@ -553,7 +555,7 @@ export const s = StyleSheet.create({
     borderRadius: 5,
   },
   viewToggleBtnOn: {
-    backgroundColor: '#DCE8FF',
+    backgroundColor: Maple.blueSelected,
   },
   viewToggleText: {
     fontSize: 9.5,
@@ -571,7 +573,7 @@ export const s = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 12,
     paddingVertical: 8,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
     borderBottomWidth: 1,
     borderBottomColor: LINE,
   },
@@ -607,8 +609,8 @@ export const s = StyleSheet.create({
     height: 14,
     borderRadius: 3.5,
     borderWidth: 1.5,
-    borderColor: '#CBD5E1',
-    backgroundColor: '#FFFFFF',
+    borderColor: Maple.borderStrong,
+    backgroundColor: Maple.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -619,7 +621,7 @@ export const s = StyleSheet.create({
   checkboxTick: {
     fontSize: 8.5,
     fontWeight: '800',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   trRow: {
     flexDirection: 'row',
@@ -627,7 +629,7 @@ export const s = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 9,
     borderBottomWidth: 1,
-    borderBottomColor: '#EEF2F7',
+    borderBottomColor: Maple.blueSelected,
   },
   classCell: {
     flexDirection: 'row',
@@ -660,7 +662,7 @@ export const s = StyleSheet.create({
   studentsBarTrack: {
     height: 5,
     borderRadius: 2.5,
-    backgroundColor: '#E2E8F0',
+    backgroundColor: Maple.border,
     overflow: 'hidden',
   },
   studentsBarFill: {
@@ -680,9 +682,9 @@ export const s = StyleSheet.create({
     gap: 6,
     paddingHorizontal: 9,
     borderRadius: 7,
-    backgroundColor: '#F1F5F9',
+    backgroundColor: Maple.blueSoft,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: Maple.border,
   },
   codePillText: {
     fontSize: 11,
@@ -697,7 +699,7 @@ export const s = StyleSheet.create({
     gap: 5,
     paddingHorizontal: 8,
     borderRadius: 7,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
     borderWidth: 1,
     borderColor: LINE,
   },
@@ -708,7 +710,7 @@ export const s = StyleSheet.create({
   whatsappBtnText: {
     fontSize: 9.5,
     fontWeight: '700',
-    color: '#1D4ED8',
+    color: Maple.blue,
   },
   termCell: {
     gap: 1,
@@ -731,19 +733,19 @@ export const s = StyleSheet.create({
     width: 14,
     height: 14,
     borderRadius: 7,
-    backgroundColor: '#22C55E',
+    backgroundColor: Maple.success,
     alignItems: 'center',
     justifyContent: 'center',
   },
   activeDotCheck: {
     fontSize: 8.5,
     fontWeight: '800',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   activeStatusText: {
     fontSize: 10.5,
     fontWeight: '700',
-    color: '#15803D',
+    color: Maple.successText,
   },
   actionsCell: {
     flexDirection: 'row',
@@ -756,14 +758,14 @@ export const s = StyleSheet.create({
     borderRadius: 6,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },
   manageBtnText: {
     fontSize: 10,
     fontWeight: '700',
-    color: '#1D4ED8',
+    color: Maple.blue,
   },
   moreDotsBtn: {
     width: 24,
@@ -771,7 +773,7 @@ export const s = StyleSheet.create({
     borderRadius: 6,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -804,13 +806,13 @@ export const s = StyleSheet.create({
     borderRadius: 6,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },
   pageBtnOn: {
-    backgroundColor: '#DCE8FF',
-    borderColor: '#BFDBFE',
+    backgroundColor: Maple.blueSelected,
+    borderColor: Maple.blueLine,
   },
   pageBtnText: {
     fontSize: 10,
@@ -834,7 +836,7 @@ export const s = StyleSheet.create({
     borderRadius: 6,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
   },
   rowsSelectText: {
     fontSize: 10,
@@ -868,7 +870,7 @@ export const s = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: '#F59E0B',
+    backgroundColor: Maple.warning,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -900,7 +902,7 @@ export const s = StyleSheet.create({
   phoneIllustrationWrap: {
     height: 96,
     borderRadius: 10,
-    backgroundColor: '#EEF5FF',
+    backgroundColor: Maple.blueSoft,
     alignItems: 'center',
     justifyContent: 'flex-end',
     overflow: 'hidden',
@@ -912,7 +914,7 @@ export const s = StyleSheet.create({
     height: 82,
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
-    backgroundColor: '#334155',
+    backgroundColor: Maple.body,
     paddingTop: 5,
     paddingHorizontal: 5,
     alignItems: 'center',
@@ -922,7 +924,7 @@ export const s = StyleSheet.create({
     width: 30,
     height: 3.5,
     borderRadius: 2,
-    backgroundColor: '#1E293B',
+    backgroundColor: Maple.navy,
     marginBottom: 4,
   },
   phoneMockupScreen: {
@@ -930,7 +932,7 @@ export const s = StyleSheet.create({
     flex: 1,
     borderTopLeftRadius: 11,
     borderTopRightRadius: 11,
-    backgroundColor: '#F1F5F9',
+    backgroundColor: Maple.blueSoft,
     alignItems: 'center',
     paddingTop: 6,
     gap: 4,
@@ -938,15 +940,15 @@ export const s = StyleSheet.create({
   phoneMockupHeader: {
     fontSize: 9.5,
     fontWeight: '700',
-    color: '#334155',
+    color: Maple.body,
   },
   phoneMockupCodeCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     borderRadius: 6,
     paddingHorizontal: 12,
     paddingVertical: 5,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: Maple.border,
   },
   phoneMockupCodeText: {
     fontSize: 17,
@@ -961,10 +963,10 @@ export const s = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#0F172A',
+    shadowColor: Maple.navy,
     shadowOpacity: 0.12,
     shadowRadius: 4,
     elevation: 2,
@@ -994,8 +996,8 @@ export const s = StyleSheet.create({
   helpCard: {
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#CFE0FF',
-    backgroundColor: '#F0F6FF',
+    borderColor: Maple.blueSelected,
+    backgroundColor: Maple.blueSoft,
     padding: 12,
     gap: 10,
   },
@@ -1015,7 +1017,7 @@ export const s = StyleSheet.create({
   helpQuestionMark: {
     fontSize: 13,
     fontWeight: '800',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   helpBodyText: {
     fontSize: 9.5,
@@ -1026,8 +1028,8 @@ export const s = StyleSheet.create({
     height: 30,
     borderRadius: 7,
     borderWidth: 1,
-    borderColor: '#BFDBFE',
-    backgroundColor: '#FFFFFF',
+    borderColor: Maple.blueLine,
+    backgroundColor: Maple.surface,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',

@@ -3,6 +3,7 @@ import { Platform, StyleSheet, Text, View } from 'react-native';
 import Svg, { Circle, G, Line, Path, Polyline, Rect, Text as SvgText } from 'react-native-svg';
 
 import { BODY, LINE, NAVY } from '@/features/portal/tokens';
+import { Maple } from '@/constants/maple';
 
 export interface Slice {
   value: number;
@@ -24,7 +25,7 @@ export function Donut({ slices, size = 150, stroke = 22, children }: { slices: r
     <View style={{ width: size, height: size }}>
       <Svg width={size} height={size}>
         <G transform={`rotate(-90 ${size / 2} ${size / 2})`}>
-          <Circle cx={size / 2} cy={size / 2} r={r} stroke="#EEF2F8" strokeWidth={stroke} fill="none" />
+          <Circle cx={size / 2} cy={size / 2} r={r} stroke={Maple.blueSelected} strokeWidth={stroke} fill="none" />
           {arcs.map((a, i) => (
             <Circle key={i} cx={size / 2} cy={size / 2} r={r} stroke={a.color} strokeWidth={stroke} fill="none" strokeDasharray={`${Math.max(0, a.len - 1.5)} ${c}`} strokeDashoffset={-a.start} />
           ))}
@@ -173,7 +174,7 @@ export function LineChart({ labels, series, min, max, ticks = 5, height = 170, f
             <G key={s.name}>
               <Path d={s.values.map((v, i) => `${i === 0 ? 'M' : 'L'}${x(i)},${y(v)}`).join(' ')} fill="none" stroke={s.color} strokeWidth={2.5} />
               {s.values.map((v, i) => (
-                <Circle key={i} cx={x(i)} cy={y(v)} r={4.5} fill={s.color} stroke="#FFFFFF" strokeWidth={1.5} />
+                <Circle key={i} cx={x(i)} cy={y(v)} r={4.5} fill={s.color} stroke={Maple.surface} strokeWidth={1.5} />
               ))}
             </G>
           ))}

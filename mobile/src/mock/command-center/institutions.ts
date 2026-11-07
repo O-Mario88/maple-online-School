@@ -2,6 +2,7 @@
 import type { Plan, School, Stage } from '@/features/command/logic/institutions';
 
 import type { KpiData } from './shared';
+import { Maple } from '@/constants/maple';
 
 export interface SchoolRow extends School {
   n: number;
@@ -15,23 +16,23 @@ export interface SchoolRow extends School {
 }
 
 const first: readonly SchoolRow[] = [
-  { n: 1, id: 'sc-1', name: 'Green Valley Academy', city: 'Kampala, Uganda', flag: 'UG', teachers: 8, students: 420, stage: 'Active Tenant', plan: 'Pro Plan', renewal: 'Jan 2027', owner: 'Alice K.', last: 'Oct 18, 2026', color: '#22A55A' },
-  { n: 2, id: 'sc-2', name: 'Bright Future School', city: 'Nairobi, Kenya', flag: 'KE', teachers: 5, students: 312, stage: 'Active Tenant', plan: 'Standard', owner: 'Peter O.', last: 'Oct 18, 2026', color: '#1E6BF0' },
-  { n: 3, id: 'sc-3', name: 'Sunrise Primary School', city: 'Arusha, Tanzania', flag: 'TZ', teachers: 3, students: 180, stage: 'Registered', plan: '', owner: 'Grace M.', last: 'Oct 17, 2026', color: '#16A34A' },
-  { n: 4, id: 'sc-4', name: 'Hope International School', city: 'Lagos, Nigeria', flag: 'NG', teachers: 12, students: 560, stage: 'In Negotiation', plan: 'Enterprise', owner: 'Daniel A.', last: 'Oct 16, 2026', color: '#8B5CF6' },
-  { n: 5, id: 'sc-5', name: 'New Life Academy', city: 'Accra, Ghana', flag: 'GH', teachers: 4, students: 210, stage: 'Onboarding', plan: 'Standard', owner: 'Sarah N.', last: 'Oct 16, 2026', color: '#F59E0B' },
+  { n: 1, id: 'sc-1', name: 'Green Valley Academy', city: 'Kampala, Uganda', flag: 'UG', teachers: 8, students: 420, stage: 'Active Tenant', plan: 'Pro Plan', renewal: 'Jan 2027', owner: 'Alice K.', last: 'Oct 18, 2026', color: Maple.successText },
+  { n: 2, id: 'sc-2', name: 'Bright Future School', city: 'Nairobi, Kenya', flag: 'KE', teachers: 5, students: 312, stage: 'Active Tenant', plan: 'Standard', owner: 'Peter O.', last: 'Oct 18, 2026', color: Maple.blue },
+  { n: 3, id: 'sc-3', name: 'Sunrise Primary School', city: 'Arusha, Tanzania', flag: 'TZ', teachers: 3, students: 180, stage: 'Registered', plan: '', owner: 'Grace M.', last: 'Oct 17, 2026', color: Maple.successText },
+  { n: 4, id: 'sc-4', name: 'Hope International School', city: 'Lagos, Nigeria', flag: 'NG', teachers: 12, students: 560, stage: 'In Negotiation', plan: 'Enterprise', owner: 'Daniel A.', last: 'Oct 16, 2026', color: Maple.blue },
+  { n: 5, id: 'sc-5', name: 'New Life Academy', city: 'Accra, Ghana', flag: 'GH', teachers: 4, students: 210, stage: 'Onboarding', plan: 'Standard', owner: 'Sarah N.', last: 'Oct 16, 2026', color: Maple.warning },
   { n: 6, id: 'sc-6', name: 'Faith Christian School', city: 'Kigali, Rwanda', flag: 'RW', teachers: 3, students: 150, stage: 'Qualified', plan: '', owner: 'Peter O.', last: 'Oct 15, 2026', color: '#0EA5E9' },
   { n: 7, id: 'sc-7', name: "St. Mark's College", city: 'Johannesburg, South Africa', flag: 'ZA', teachers: 15, students: 890, stage: 'Active Tenant', plan: 'Enterprise', owner: 'Mary N.', last: 'Oct 15, 2026', color: '#0F766E' },
-  { n: 8, id: 'sc-8', name: 'Unity Primary School', city: 'Gulu, Uganda', flag: 'UG', teachers: 2, students: 95, stage: 'Registered', plan: '', owner: 'Daniel A.', last: 'Oct 14, 2026', color: '#64748B' },
-  { n: 9, id: 'sc-9', name: 'Cornerstone Academy', city: 'Mombasa, Kenya', flag: 'KE', teachers: 6, students: 320, stage: 'In Negotiation', plan: 'Pro Plan', owner: 'Grace M.', last: 'Oct 14, 2026', color: '#DC2626' },
-  { n: 10, id: 'sc-10', name: 'Light of Hope School', city: 'Dar es Salaam, Tanzania', flag: 'TZ', teachers: 1, students: 60, stage: 'Registered', plan: '', owner: '—', last: 'Oct 13, 2026', color: '#111827' },
+  { n: 8, id: 'sc-8', name: 'Unity Primary School', city: 'Gulu, Uganda', flag: 'UG', teachers: 2, students: 95, stage: 'Registered', plan: '', owner: 'Daniel A.', last: 'Oct 14, 2026', color: Maple.secondary },
+  { n: 9, id: 'sc-9', name: 'Cornerstone Academy', city: 'Mombasa, Kenya', flag: 'KE', teachers: 6, students: 320, stage: 'In Negotiation', plan: 'Pro Plan', owner: 'Grace M.', last: 'Oct 14, 2026', color: Maple.error },
+  { n: 10, id: 'sc-10', name: 'Light of Hope School', city: 'Dar es Salaam, Tanzania', flag: 'TZ', teachers: 1, students: 60, stage: 'Registered', plan: '', owner: '—', last: 'Oct 13, 2026', color: Maple.navy },
 ];
 
 const PREFIX = ['Kingdom', 'Victory', 'Mount Zion', 'Riverside', 'Lakeview', 'Hilltop', 'Golden Gate', 'Morning Star', 'Pearl', 'Heritage', 'Bethel', 'Excel', 'Savannah', 'Crestwood', 'Harmony'];
 const SUFFIX = ['Academy', 'Primary School', 'High School', 'College', 'International School', 'Junior School'];
 const CITIES: readonly [string, string][] = [['Kampala, Uganda', 'UG'], ['Nairobi, Kenya', 'KE'], ['Dodoma, Tanzania', 'TZ'], ['Abuja, Nigeria', 'NG'], ['Kumasi, Ghana', 'GH'], ['Kigali, Rwanda', 'RW'], ['Mbarara, Uganda', 'UG'], ['Kisumu, Kenya', 'KE'], ['Durban, South Africa', 'ZA']];
 const OWNERS = ['Alice K.', 'Peter O.', 'Grace M.', 'Daniel A.', 'Sarah N.', 'Mary N.'];
-const COLORS = ['#22A55A', '#1E6BF0', '#8B5CF6', '#F59E0B', '#0EA5E9', '#DC2626', '#0F766E'];
+const COLORS = [Maple.successText, Maple.blue, Maple.blue, Maple.warning, '#0EA5E9', Maple.error, '#0F766E'];
 
 /** Fills the list to 1,248 schools in the reference's proportions, so tabs, counts and pages are real. */
 function generated(): readonly SchoolRow[] {
@@ -86,12 +87,12 @@ export const growth = {
 
 /** This quarter's funnel, from qualified to live. */
 export const funnel: readonly { label: string; sub: string; value: number; color: string }[] = [
-  { label: 'Bottom-Up Qualified', sub: '≥ 3 active teachers', value: 356, color: '#8DB5FA' },
-  { label: 'Contacted', sub: 'Outreach initiated', value: 242, color: '#4ADE80' },
-  { label: 'In Negotiation', sub: 'Demo / Proposal sent', value: 128, color: '#C4B5FD' },
+  { label: 'Bottom-Up Qualified', sub: '≥ 3 active teachers', value: 356, color: Maple.blueLine },
+  { label: 'Contacted', sub: 'Outreach initiated', value: 242, color: Maple.success },
+  { label: 'In Negotiation', sub: 'Demo / Proposal sent', value: 128, color: Maple.blueLine },
   { label: 'Contract Signed', sub: 'Pending setup', value: 64, color: '#FCD34D' },
   { label: 'Onboarding', sub: 'Setup in progress', value: 52, color: '#FCA5A5' },
-  { label: 'Active Tenant', sub: 'Completed', value: 46, color: '#D8B4FE' },
+  { label: 'Active Tenant', sub: 'Completed', value: 46, color: Maple.blueLine },
 ];
 export const regionsFilter = ['All Regions', 'East Africa', 'West Africa', 'Southern Africa'];
 

@@ -1,26 +1,29 @@
 import { useLocalSearchParams } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, useWindowDimensions, View } from 'react-native';
+import { Modal, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Icon } from '@/components/icon';
 import { useShell } from '@/components/ui';
 import { LearnerPhoneTop } from '@/features/learner/dashboard/DashPhone';
-import { type Home, HomeHeader, HomeSidebar } from '@/features/learner/home/HomeFrame';
+import { type Home } from '@/features/learner/home/HomeFrame';
 import { BookCard, CompletedItem, ContinueItem, DoneMark, Filters, Head, Hero, Levels, MyLibrary, MySubjects, Shelf, SidePanel, Subjects } from '@/features/learner/library/ShelfParts';
 import { LiveLibrary } from '@/features/learner/library/LiveLibrary';
 import { type Hub, type ShelfState, useShelf } from '@/features/learner/library/useShelf';
-import { RefScale } from '@/features/public/home/RefScale';
+import { HomeCanvas } from '@/features/learner/home/HomeFrame';
 import { mockData } from '@/lib/mock';
+import { Maple } from '@/constants/maple';
+import { PageScroll } from '@/components/shell/PageScroll';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
 /** The library reference's desktop (x 0–1276 of 1536, sidebar included), laid out in its pixels. */
 const LIB_REF_WIDTH = 1276;
 /** Longest search a link into the library may carry. */
 const MAX_QUERY = 80;
-const INK = '#0B1424';
-const NAVY = '#0B2A6B';
-const BODY = '#4A5263';
-const BLUE = '#1463F3';
+const INK = Maple.navy;
+const NAVY = Maple.blueHover;
+const BODY = Maple.body;
+const BLUE = Maple.blue;
 
 function Results({ s, small = false }: { s: ShelfState; small?: boolean }) {
   return (
@@ -40,9 +43,9 @@ function Shelves({ hub, s }: { hub: Hub; s: ShelfState }) {
   return (
     <>
       {s.searching ? <Results s={s} /> : <Shelf leaf title="Recommended for You" sub="Based on your level, recent activity and learning goals" books={s.pick(hub.recommended)} />}
-      <Shelf icon="book" color="#2563EB" title="Popular This Month" sub="Most read, viewed and loved by Maple learners" books={s.pick(hub.popular)} />
-      <Shelf icon="sparkle" color="#F59E0B" title="New Arrivals" sub="Latest books and resources added to the library" books={s.pick(hub.newArrivals)} />
-      <Shelf icon="people" color="#16A34A" title="Teacher Recommended" sub="Handpicked by your teachers to support your learning" books={s.pick(hub.teacherPicks)} />
+      <Shelf icon="book" color={Maple.blue} title="Popular This Month" sub="Most read, viewed and loved by Maple learners" books={s.pick(hub.popular)} />
+      <Shelf icon="sparkle" color={Maple.warning} title="New Arrivals" sub="Latest books and resources added to the library" books={s.pick(hub.newArrivals)} />
+      <Shelf icon="people" color={Maple.successText} title="Teacher Recommended" sub="Handpicked by your teachers to support your learning" books={s.pick(hub.teacherPicks)} />
     </>
   );
 }
@@ -77,10 +80,13 @@ function SideColumn({ hub, s }: { hub: Hub; s: ShelfState }) {
 function Desktop({ hub, h, s, onFilters }: { hub: Hub; h: Home; s: ShelfState; onFilters: () => void }) {
   return (
     <View style={styles.canvas}>
-      <HomeSidebar h={h} active="Library" heading="Keep exploring!" quote={'“Good books\nbuild brighter\nfutures.”'} />
-      <HomeHeader h={h} placeholder="Search for books, topics, authors, or keywords..." lead={{ icon: 'grid', label: 'Filters', onPress: onFilters }} />
       <View style={styles.body}>
         <View style={styles.main}>
+          {/* Filters used to sit in the page's own header, which the app's one header replaces. */}
+          <Pressable style={styles.filters} onPress={onFilters} accessibilityRole="button" accessibilityLabel="Filters">
+            <Icon name="grid" size={14} color={BLUE} />
+            <Text style={styles.filtersText}>Filters</Text>
+          </Pressable>
           <Hero hub={hub} s={s} />
           <Subjects hub={hub} s={s} />
           <Levels hub={hub} s={s} />
@@ -100,9 +106,9 @@ function FilterSheet({ hub, s, open, onClose, wide }: { hub: Hub; s: ShelfState;
       <View style={[styles.sheetBg, wide && styles.sheetBgWide, { paddingTop: insets.top + (wide ? 0 : 40) }]}>
         <Pressable style={styles.scrim} onPress={onClose} accessibilityRole="button" accessibilityLabel="Close filters" />
         <View style={[styles.sheet, wide && styles.sheetWide, { paddingBottom: insets.bottom + 16 }]}>
-          <ScrollView>
+          <PageScroll>
             <Filters hub={hub} s={s} />
-          </ScrollView>
+          </PageScroll>
           <Pressable style={styles.done} onPress={onClose} accessibilityRole="button">
             <Text style={styles.doneText}>{`Show ${s.searching ? s.results.length : 'all'} resources`}</Text>
           </Pressable>
@@ -124,7 +130,7 @@ function LevelPicker({ hub, s }: { hub: Hub; s: ShelfState }) {
         </Pressable>
         {open ? (
           <View style={styles.levelMenu}>
-            <ScrollView>
+            <PageScroll>
               {hub.levels.map((lv) => (
                 <Pressable
                   key={lv}
@@ -137,7 +143,7 @@ function LevelPicker({ hub, s }: { hub: Hub; s: ShelfState }) {
                   <Text style={[styles.levelItemText, lv === s.level && styles.levelOn]}>{lv}</Text>
                 </Pressable>
               ))}
-            </ScrollView>
+            </PageScroll>
           </View>
         ) : null}
       </View>
@@ -153,9 +159,9 @@ function Phone({ hub, h, s, onFilters }: { hub: Hub; h: Home; s: ShelfState; onF
   return (
     <View style={styles.phoneRoot}>
       <LearnerPhoneTop avatar={h.avatar} />
-      <ScrollView contentContainerStyle={styles.phone} keyboardShouldPersistTaps="handled">
+      <PageScroll contentContainerStyle={styles.phone} keyboardShouldPersistTaps="handled">
         <View>
-          <Text style={styles.titleP} accessibilityRole="header">
+          <Text style={styles.titleP} {...PAGE_TITLE}>
             Digital Library
           </Text>
           <Text style={styles.subP}>Read. Explore. Learn. Grow.</Text>
@@ -163,7 +169,7 @@ function Phone({ hub, h, s, onFilters }: { hub: Hub; h: Home; s: ShelfState; onF
         <View style={styles.searchRowP}>
           <View style={styles.searchP}>
             <Icon name="search" size={15} color={BODY} />
-            <TextInput style={styles.searchInputP} value={s.query} onChangeText={s.setQuery} placeholder="Search books, topics or authors..." placeholderTextColor="#6B7385" accessibilityLabel="Search the library" />
+            <TextInput style={styles.searchInputP} value={s.query} onChangeText={s.setQuery} placeholder="Search books, topics or authors..." placeholderTextColor={Maple.secondary} accessibilityLabel="Search the library" />
           </View>
           <Pressable style={styles.filterBtnP} onPress={onFilters} accessibilityRole="button" accessibilityLabel="Filters">
             <Icon name="listBullet" size={17} color={INK} />
@@ -188,7 +194,7 @@ function Phone({ hub, h, s, onFilters }: { hub: Hub; h: Home; s: ShelfState; onF
           <Head leaf icon="library" color={NAVY} title="My Subjects" link="See All" onLink={() => s.setSubject(undefined)} />
           <MySubjects hub={hub} s={s} phone />
         </View>
-      </ScrollView>
+      </PageScroll>
     </View>
   );
 }
@@ -206,7 +212,6 @@ function LibraryView({ hub, h }: { hub: Hub; h: Home }) {
   const publisher = hub.filters.publishers.find((x) => x === params.publisher);
   const s = useShelf(hub, { subject, query: typeof params.q === 'string' ? params.q.slice(0, MAX_QUERY) : undefined, publisher });
   const { wide } = useShell();
-  const { width } = useWindowDimensions();
   const [filters, setFilters] = useState(false);
   const sheet = <FilterSheet hub={hub} s={s} open={filters} onClose={() => setFilters(false)} wide={wide} />;
   if (!wide)
@@ -217,39 +222,41 @@ function LibraryView({ hub, h }: { hub: Hub; h: Home }) {
       </>
     );
   return (
-    <ScrollView style={styles.deskBg}>
-      <RefScale width={width} refWidth={LIB_REF_WIDTH}>
+    <PageScroll style={styles.deskBg}>
+      <HomeCanvas refWidth={LIB_REF_WIDTH}>
         <Desktop hub={hub} h={h} s={s} onFilters={() => setFilters(true)} />
-      </RefScale>
+      </HomeCanvas>
       {sheet}
-    </ScrollView>
+    </PageScroll>
   );
 }
 
 const styles = StyleSheet.create({
-  deskBg: { backgroundColor: '#EEF3FA' },
-  canvas: { width: LIB_REF_WIDTH, minHeight: 1024, backgroundColor: '#EEF3FA' },
+  deskBg: { backgroundColor: Maple.blueSoft },
+  canvas: { width: LIB_REF_WIDTH, minHeight: 1024, backgroundColor: Maple.blueSoft },
   body: { flexDirection: 'row', gap: 15, paddingTop: 56, paddingLeft: 198, paddingRight: 11, paddingBottom: 20 },
   main: { width: 827, gap: 10 },
+  filters: { alignSelf: 'flex-start', height: 30, flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 12, borderRadius: 15, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface },
+  filtersText: { fontSize: 12, fontWeight: '600', color: BLUE },
   side: { flex: 1, gap: 10, paddingTop: 10 },
-  sideCard: { paddingHorizontal: 14, paddingVertical: 12, borderRadius: 8, borderWidth: 1, borderColor: '#E8EDF4', backgroundColor: '#FFFFFF' },
+  sideCard: { paddingHorizontal: 14, paddingVertical: 12, borderRadius: 8, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface },
   subjectsPad: { paddingBottom: 8 },
-  card: { padding: 12, borderRadius: 8, borderWidth: 1, borderColor: '#E8EDF4', backgroundColor: '#FFFFFF' },
+  card: { padding: 12, borderRadius: 8, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface },
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 7.5, marginTop: 12 },
   empty: { paddingVertical: 24, fontSize: 12, color: BODY, textAlign: 'center' },
-  phoneRoot: { flex: 1, backgroundColor: '#FFFFFF' },
+  phoneRoot: { flex: 1, backgroundColor: Maple.surface },
   phone: { gap: 16, padding: 16, paddingBottom: 110 },
   titleP: { fontSize: 24, fontWeight: '800', color: NAVY, letterSpacing: -0.4 },
   subP: { marginTop: 2, fontSize: 13, color: BODY },
   searchRowP: { flexDirection: 'row', gap: 8 },
-  searchP: { flex: 1, height: 38, flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 10, borderRadius: 8, borderWidth: 1, borderColor: '#DCE3EE', backgroundColor: '#FFFFFF' },
+  searchP: { flex: 1, height: 38, flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 10, borderRadius: 8, borderWidth: 1, borderColor: Maple.blueLine, backgroundColor: Maple.surface },
   searchInputP: { flex: 1, height: 36, fontSize: 12.5, color: INK },
-  filterBtnP: { width: 38, height: 38, alignItems: 'center', justifyContent: 'center', borderRadius: 8, borderWidth: 1, borderColor: '#DCE3EE', backgroundColor: '#FFFFFF' },
+  filterBtnP: { width: 38, height: 38, alignItems: 'center', justifyContent: 'center', borderRadius: 8, borderWidth: 1, borderColor: Maple.blueLine, backgroundColor: Maple.surface },
   levelRowP: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', zIndex: 3 },
   levelTitleP: { fontSize: 14, fontWeight: '700', color: NAVY },
-  levelPick: { width: 120, height: 30, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 10, borderRadius: 6, borderWidth: 1, borderColor: '#DCE3EE', backgroundColor: '#FFFFFF' },
+  levelPick: { width: 120, height: 30, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 10, borderRadius: 6, borderWidth: 1, borderColor: Maple.blueLine, backgroundColor: Maple.surface },
   levelPickText: { fontSize: 12, color: NAVY },
-  levelMenu: { position: 'absolute', top: 34, right: 0, width: 120, maxHeight: 260, paddingVertical: 4, borderRadius: 8, borderWidth: 1, borderColor: '#E1E7F0', backgroundColor: '#FFFFFF', zIndex: 4 },
+  levelMenu: { position: 'absolute', top: 34, right: 0, width: 120, maxHeight: 260, paddingVertical: 4, borderRadius: 8, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface, zIndex: 4 },
   levelItem: { height: 28, justifyContent: 'center', paddingHorizontal: 10 },
   levelItemText: { fontSize: 12, color: INK },
   levelOn: { color: BLUE, fontWeight: '700' },
@@ -259,8 +266,8 @@ const styles = StyleSheet.create({
   sheetBg: { flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(8,12,20,0.5)' },
   sheetBgWide: { justifyContent: 'flex-start', alignItems: 'flex-start' },
   scrim: { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0 },
-  sheet: { maxHeight: '85%', padding: 16, borderTopLeftRadius: 16, borderTopRightRadius: 16, backgroundColor: '#FFFFFF' },
+  sheet: { maxHeight: '85%', padding: 16, borderTopLeftRadius: 16, borderTopRightRadius: 16, backgroundColor: Maple.surface },
   sheetWide: { width: 300, height: '100%', maxHeight: '100%', borderTopLeftRadius: 0, borderTopRightRadius: 12, borderBottomRightRadius: 12 },
-  done: { height: 44, alignItems: 'center', justifyContent: 'center', marginTop: 12, borderRadius: 8, backgroundColor: '#0B6BFF' },
-  doneText: { fontSize: 14, fontWeight: '600', color: '#FFFFFF' },
+  done: { height: 44, alignItems: 'center', justifyContent: 'center', marginTop: 12, borderRadius: 8, backgroundColor: Maple.blue },
+  doneText: { fontSize: 14, fontWeight: '600', color: Maple.surface },
 });

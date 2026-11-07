@@ -11,9 +11,11 @@ import { STEPS } from './applicationForm';
 import { StepsBar } from './ApplyParts';
 import { AcademicStep, ApplicantStep, DocumentsStep, ReviewStep } from './ApplySteps';
 import type { SchoolCard } from './networkData';
-import { Campus, Crest, LAVENDER, PURPLE, Tag, ugx } from './SchoolParts';
+import { BRAND_SOFT, BRAND_BLUE, Campus, Crest, Tag, ugx } from './SchoolParts';
 import { type Apply, type ApplyActions, message, useApply } from './useApply';
 import type { Net } from './useSchoolNetwork';
+import { Maple, Radii } from '@/constants/maple';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
 /** The school being applied to: campus photo, save heart, crest, name, place and chips. */
 function SchoolMini({ c, saved, onSave }: { c: SchoolCard; saved: boolean; onSave: () => void }) {
@@ -22,7 +24,7 @@ function SchoolMini({ c, saved, onSave }: { c: SchoolCard; saved: boolean; onSav
       <View>
         <Campus c={c} style={[s.photo]} />
         <Pressable style={s.heart} onPress={onSave} hitSlop={8} accessibilityRole="button" accessibilityState={{ selected: saved }} accessibilityLabel={saved ? `Remove ${c.name} from saved` : `Save ${c.name}`}>
-          <Icon name={saved ? 'heartFill' : 'heart'} size={18} color={saved ? '#EF4444' : L.ink} />
+          <Icon name={saved ? 'heartFill' : 'heart'} size={18} color={saved ? Maple.error : L.ink} />
         </Pressable>
         <View style={s.crest}>
           <Crest c={c} size={46} />
@@ -58,7 +60,7 @@ function Summary({ a }: { a: Apply }) {
   return (
     <View style={s.card}>
       <View style={s.cardHead}>
-        <Icon name="calendar" size={22} color={PURPLE} />
+        <Icon name="calendar" size={22} color={BRAND_BLUE} />
         <Text style={s.cardTitle}>Application Summary</Text>
       </View>
       {rows.map(([k, v, strong]) => (
@@ -68,7 +70,7 @@ function Summary({ a }: { a: Apply }) {
         </View>
       ))}
       <View style={s.place}>
-        <Icon name="info" size={14} color={PURPLE} />
+        <Icon name="info" size={14} color={BRAND_BLUE} />
         <Text style={s.small}>Application fee is non-refundable.</Text>
       </View>
     </View>
@@ -100,7 +102,7 @@ function Progress({ a }: { a: Apply }) {
     <View style={s.card}>
       <Text style={s.cardTitle}>Your Application Progress</Text>
       <View style={s.progRow}>
-        <ProgressRing value={pct / 100} size={104} stroke={9} color={PURPLE} track="#E6E3F8" labelSize={22} />
+        <ProgressRing value={pct / 100} size={104} stroke={9} color={BRAND_BLUE} track={Maple.blueSelected} labelSize={22} />
         <View style={s.flex}>
           <Text style={s.progTitle}>{a.submitted ? 'Application submitted' : 'Application in progress'}</Text>
           <Text style={s.small}>{`Step ${done} of ${STEPS.length} completed`}</Text>
@@ -154,7 +156,7 @@ function Actions({ a, phone }: { a: Apply; phone: boolean }) {
   return (
     <View style={[s.actions, phone && s.actionsP]}>
       <Pressable style={s.later} onPress={a.saveLater} accessibilityRole="button">
-        <Icon name="bookmark" size={18} color={PURPLE} />
+        <Icon name="bookmark" size={18} color={BRAND_BLUE} />
         <Text style={s.laterText}>Save & Continue Later</Text>
       </Pressable>
       <View style={s.actionsRight}>
@@ -206,11 +208,11 @@ export function ApplyDesk({ net, school, avatar, actions }: Props) {
   const a = useApply(net, school, actions);
   const fav = useSaved(net, school.id, actions);
   return (
-    <LightFrame placeholder="Search schools, programs, subjects, exam centres, or vacancies..." avatar={avatar}>
+    <LightFrame>
       <View style={s.cols}>
         <View style={s.left}>
           <Pressable style={s.backLink} onPress={a.backToProfile} accessibilityRole="link">
-            <Icon name="arrowLeft" size={18} color={PURPLE} />
+            <Icon name="arrowLeft" size={18} color={BRAND_BLUE} />
             <Text style={s.backText}>Back to School Profile</Text>
           </Pressable>
           <View style={s.head}>
@@ -218,7 +220,7 @@ export function ApplyDesk({ net, school, avatar, actions }: Props) {
               <Icon name="edit" size={30} color={L.white} />
             </View>
             <View style={s.flex}>
-              <Text style={s.title} accessibilityRole="header">{`Apply to ${school.name}`}</Text>
+              <Text style={s.title} {...PAGE_TITLE}>{`Apply to ${school.name}`}</Text>
               <Text style={s.sub}>Complete the admission application and submit your documents.</Text>
             </View>
           </View>
@@ -249,10 +251,10 @@ export function ApplyPhone({ net, school, avatar, actions }: Props) {
       <LearnerPhoneTop avatar={avatar} />
       <ScrollView contentContainerStyle={s.phone} keyboardShouldPersistTaps="handled">
         <Pressable style={s.backLink} onPress={a.backToProfile} accessibilityRole="link">
-          <Icon name="arrowLeft" size={18} color={PURPLE} />
+          <Icon name="arrowLeft" size={18} color={BRAND_BLUE} />
           <Text style={s.backText}>Back to School Profile</Text>
         </Pressable>
-        <Text style={s.titleP} accessibilityRole="header">{`Apply to ${school.name}`}</Text>
+        <Text style={s.titleP} {...PAGE_TITLE}>{`Apply to ${school.name}`}</Text>
         {a.submitted ? (
           <Submitted a={a} />
         ) : (
@@ -278,13 +280,14 @@ const s = StyleSheet.create({
   backLink: { flexDirection: 'row', alignItems: 'center', gap: 10, alignSelf: 'flex-start' },
   backText: { fontSize: 14.5, fontWeight: '500', color: L.navy },
   head: { flexDirection: 'row', alignItems: 'center', gap: 16, marginLeft: 12 },
-  headIcon: { width: 64, height: 64, alignItems: 'center', justifyContent: 'center', borderRadius: 16, backgroundColor: '#7A63E8' },
+  headIcon: { width: 64, height: 64, alignItems: 'center', justifyContent: 'center', borderRadius: 16, backgroundColor: Maple.blue },
   title: { fontSize: 32, lineHeight: 38, fontWeight: '800', color: L.navy },
   sub: { marginTop: 2, fontSize: 15.5, color: L.ink },
   card0: { overflow: 'hidden', borderRadius: 16, borderWidth: 1, borderColor: L.line, backgroundColor: L.white },
   photo: { width: '100%', height: 120 },
   heart: { position: 'absolute', top: 10, right: 10, width: 34, height: 34, alignItems: 'center', justifyContent: 'center', borderRadius: 17, backgroundColor: L.white },
-  crest: { position: 'absolute', left: 18, bottom: -28, width: 64, height: 60, alignItems: 'center', justifyContent: 'center', borderRadius: 12, backgroundColor: L.white, shadowColor: '#0B1A3F', shadowOpacity: 0.12, shadowRadius: 6, shadowOffset: { width: 0, height: 2 }, elevation: 3 },
+  crest: { position: 'absolute', left: 18, bottom: -28, width: 64, height: 60, alignItems: 'center', justifyContent: 'center', borderRadius: 12, backgroundColor: L.white, shadowColor: Maple.navyDeep, shadowOpacity: 0.12, shadowRadius: 6, shadowOffset: { width: 0, height: 2 }, elevation: 3 },
+  crestImg: { width: 46, height: 46 },
   miniBody: { gap: 8, paddingHorizontal: 18, paddingTop: 8, paddingBottom: 16 },
   nameRow: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingLeft: 78 },
   name: { flexShrink: 1, fontSize: 17, fontWeight: '700', color: L.navy },
@@ -293,26 +296,26 @@ const s = StyleSheet.create({
   card: { gap: 12, padding: 20, borderRadius: 16, borderWidth: 1, borderColor: L.line, backgroundColor: L.white },
   cardHead: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   cardTitle: { fontSize: 19, fontWeight: '700', color: L.navy },
-  sumRow: { flexDirection: 'row', justifyContent: 'space-between', gap: 12, paddingVertical: 4, borderBottomWidth: 1, borderBottomColor: '#EEF1F6' },
+  sumRow: { flexDirection: 'row', justifyContent: 'space-between', gap: 12, paddingVertical: 4, borderBottomWidth: 1, borderBottomColor: Maple.blueSelected },
   sumKey: { fontSize: 14.5, color: L.ink },
   sumValue: { fontSize: 14.5, fontWeight: '500', color: L.navy },
-  fee: { fontSize: 17, fontWeight: '800', color: PURPLE },
-  reqCard: { borderColor: '#D3EEDC', backgroundColor: '#F2FBF5' },
-  reqIcon: { width: 30, height: 30, alignItems: 'center', justifyContent: 'center', borderRadius: 15, backgroundColor: '#D7F2E0' },
+  fee: { fontSize: 17, fontWeight: '800', color: BRAND_BLUE },
+  reqCard: { borderColor: Maple.successSoft, backgroundColor: Maple.successSoft },
+  reqIcon: { width: 30, height: 30, alignItems: 'center', justifyContent: 'center', borderRadius: 15, backgroundColor: Maple.successSoft },
   reqRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   reqText: { flex: 1, fontSize: 14.5, color: L.ink },
   progRow: { flexDirection: 'row', alignItems: 'center', gap: 22 },
   progTitle: { fontSize: 17, fontWeight: '700', color: L.navy },
-  bar: { marginTop: 10, height: 8, borderRadius: 4, backgroundColor: '#E6E3F8' },
-  barFill: { height: 8, borderRadius: 4, backgroundColor: PURPLE },
+  bar: { marginTop: 10, height: 8, borderRadius: 4, backgroundColor: Maple.blueSelected },
+  barFill: { height: 8, borderRadius: 4, backgroundColor: BRAND_BLUE },
   actions: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   actionsP: { flexDirection: 'column-reverse', alignItems: 'stretch', gap: 12 },
   actionsRight: { flexDirection: 'row', gap: 12 },
-  later: { height: 46, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, paddingHorizontal: 22, borderRadius: 23, borderWidth: 1.5, borderColor: '#C9BFF4', backgroundColor: L.white },
-  laterText: { fontSize: 15, fontWeight: '600', color: PURPLE },
-  backBtn: { height: 46, paddingHorizontal: 22, alignItems: 'center', justifyContent: 'center', borderRadius: 23, backgroundColor: LAVENDER },
+  later: { height: 46, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, paddingHorizontal: 22, borderRadius: 23, borderWidth: 1.5, borderColor: Maple.blueLine, backgroundColor: L.white },
+  laterText: { fontSize: 15, fontWeight: '600', color: BRAND_BLUE },
+  backBtn: { height: 46, paddingHorizontal: 22, alignItems: 'center', justifyContent: 'center', borderRadius: Radii.control, backgroundColor: BRAND_SOFT },
   primaryOff: { opacity: 0.6 },
-  primary: { height: 46, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, paddingHorizontal: 26, borderRadius: 23, backgroundColor: L.blue },
+  primary: { height: 46, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, paddingHorizontal: 26, borderRadius: Radii.control, backgroundColor: L.blue },
   primaryText: { fontSize: 15, fontWeight: '600', color: L.white },
   doneCard: { alignItems: 'center', paddingVertical: 36 },
   doneIcon: { width: 68, height: 68, alignItems: 'center', justifyContent: 'center', borderRadius: 34, backgroundColor: L.green },

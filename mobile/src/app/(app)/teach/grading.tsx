@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { ScrollView, StyleSheet, useWindowDimensions } from 'react-native';
+import { StyleSheet, useWindowDimensions } from 'react-native';
 
 import { useShell } from '@/components/ui';
 import { RefScale } from '@/features/public/home/RefScale';
@@ -11,6 +11,7 @@ import {
 } from '@/features/teacher/grading/SpeedGraderViews';
 import { LiveMarking } from '@/features/teacher/LiveMarking';
 import { mockData } from '@/lib/mock';
+import { PageScroll } from '@/components/shell/PageScroll';
 
 /** Inventory 45: Rapid Speed-Grader (Voice-Note & Screen-Draw Studio) (`/(teacher)/grading/[assignmentId]`). */
 export default function GradingScreen() {
@@ -23,11 +24,11 @@ export default function GradingScreen() {
   const g = mock.teacher.speedGrader;
   if (!wide) return <SpeedGraderPhone g={g} me={me} />;
   return (
-    <ScrollView style={styles.bg}>
+    <PageScroll style={styles.bg}>
       <RefScale width={width} refWidth={SPEED_GRADER_REF_WIDTH}>
         <SpeedGraderDesk g={g} me={me} />
       </RefScale>
-    </ScrollView>
+    </PageScroll>
   );
 }
 

@@ -5,6 +5,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { LightOnly } from '@/hooks/use-theme';
 
 import { AUTH_SKY, AuthPhoneTop, AuthTopBar } from './AuthChrome';
+import { Maple } from '@/constants/maple';
+import { PAGE_TITLE } from '@/lib/fonts/type';
+import { Palette } from '@/constants/palette';
 
 const DESKTOP_MIN = 900;
 const FRAME_MAX = 1162;
@@ -26,7 +29,7 @@ export function AuthPage({ title, sub, children }: { title: string; sub?: string
         <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
           <ScrollView contentContainerStyle={[styles.scroll, wide && styles.scrollWide]} keyboardShouldPersistTaps="handled">
             <View style={[styles.card, !wide && styles.cardPhone]}>
-              <Text style={styles.title} accessibilityRole="header">
+              <Text style={styles.title} {...PAGE_TITLE}>
                 {title}
               </Text>
               {sub ? <Text style={styles.sub}>{sub}</Text> : null}
@@ -42,12 +45,12 @@ export function AuthPage({ title, sub, children }: { title: string; sub?: string
 const styles = StyleSheet.create({
   flex: { flex: 1 },
   safe: { flex: 1, backgroundColor: AUTH_SKY },
-  phone: { backgroundColor: '#FFFFFF' },
+  phone: { backgroundColor: Maple.surface },
   bar: { alignItems: 'center', paddingTop: 12 },
   scroll: { flexGrow: 1, padding: 16, paddingBottom: 40 },
   scrollWide: { alignItems: 'center', justifyContent: 'center', padding: 32 },
-  card: { width: '100%', maxWidth: 460, gap: 14, padding: 28, borderRadius: 16, backgroundColor: '#FFFFFF', shadowColor: '#0F2350', shadowOpacity: 0.08, shadowRadius: 18, shadowOffset: { width: 0, height: 6 } },
+  card: { width: '100%', maxWidth: 460, gap: 14, padding: 28, borderRadius: 16, backgroundColor: Maple.surface, shadowColor: Palette.blue950j, shadowOpacity: 0.08, shadowRadius: 18, shadowOffset: { width: 0, height: 6 } },
   cardPhone: { padding: 4, shadowOpacity: 0 },
-  title: { fontSize: 26, fontWeight: '800', color: '#0B1424', letterSpacing: -0.5 },
-  sub: { fontSize: 14.5, lineHeight: 21, color: '#4A5263' },
+  title: { fontSize: 26, fontWeight: '800', color: Maple.navy, letterSpacing: -0.5 },
+  sub: { fontSize: 14.5, lineHeight: 21, color: Maple.body },
 });

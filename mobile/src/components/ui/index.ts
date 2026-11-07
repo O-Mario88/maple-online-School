@@ -1,4 +1,6 @@
+export * from './controls';
 export * from './data';
 export * from './display';
 export * from './primitives';
 export * from './screen';
+export * from './Type';

@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
@@ -7,6 +7,7 @@ import { BLUE, BODY, INK, LINE, MUTED } from '@/features/teacher/frame/TeacherPa
 import type { BlockKind, CourseBuilder } from '@/mock/teacher-course';
 
 import type { Builder } from './useCourseBuilder';
+import { Maple } from '@/constants/maple';
 
 /** The ten kinds of block a lesson can hold; tap one to add it to the end of the lesson. */
 export function BlockPalette({ c, b }: { c: CourseBuilder; b: Builder }) {
@@ -23,7 +24,7 @@ export function BlockPalette({ c, b }: { c: CourseBuilder; b: Builder }) {
       <View style={styles.tiles}>
         {c.blocks.map((k) => (
           <Pressable key={k.kind} style={({ pressed }) => [styles.tile, pressed && styles.tilePressed]} onPress={() => b.addBlock(k.kind)} accessibilityRole="button" accessibilityLabel={`Add a ${k.label.replace('\n', ' ')} block`}>
-            <Image source={k.icon} style={styles.tileIcon} contentFit="contain" />
+            <Image decorative source={k.icon} style={styles.tileIcon} contentFit="contain" />
             <Text style={styles.tileText}>{k.label}</Text>
           </Pressable>
         ))}
@@ -48,10 +49,10 @@ export function LessonContent({ c, b, phone = false, editing = true }: { c: Cour
           <View key={x.id} style={[styles.row, phone ? styles.rowP : styles.rowBox, b.blocks.length - 1 - i > 0 && !phone && styles.rowGap]}>
             <Icon name="grid" size={phone ? 12 : 11} color={MUTED} />
             {x.kind === 'video' ? (
-              <Image source={c.video.frame} style={phone ? styles.thumbP : styles.thumb} contentFit="cover" />
+              <Image decorative source={c.video.frame} style={phone ? styles.thumbP : styles.thumb} contentFit="cover" />
             ) : (
               <View style={phone ? styles.iconBoxP : styles.iconBox}>
-                <Image source={icon(x.kind)} style={phone ? styles.iconP : styles.icon} contentFit="contain" />
+                <Image decorative source={icon(x.kind)} style={phone ? styles.iconP : styles.icon} contentFit="contain" />
               </View>
             )}
             <View style={styles.flex}>
@@ -91,21 +92,21 @@ const styles = StyleSheet.create({
   head: { flexDirection: 'row', alignItems: 'center', gap: 7, marginBottom: 10 },
   headTitle: { fontSize: 12.5, fontWeight: '700', color: INK },
   tiles: { flexDirection: 'row', flexWrap: 'wrap', gap: 4 },
-  tile: { width: 86, height: 66, alignItems: 'center', justifyContent: 'center', gap: 5, borderRadius: 8, borderWidth: 1, borderColor: '#E3EAF5', backgroundColor: '#F6F9FE' },
-  tilePressed: { borderColor: BLUE, backgroundColor: '#EAF1FD' },
+  tile: { width: 86, height: 66, alignItems: 'center', justifyContent: 'center', gap: 5, borderRadius: 8, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.blueSoft },
+  tilePressed: { borderColor: BLUE, backgroundColor: Maple.blueSelected },
   tileIcon: { width: 26, height: 26 },
   tileText: { fontSize: 10, lineHeight: 12, color: INK, textAlign: 'center' },
   listTitle: { fontSize: 12.5, fontWeight: '700', color: INK, marginTop: 18, marginBottom: 8 },
   empty: { fontSize: 11.5, color: MUTED, paddingVertical: 10 },
   rows: {},
   row: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  rowBox: { height: 28, paddingHorizontal: 10, borderRadius: 6, borderWidth: 1, borderColor: LINE, backgroundColor: '#FFFFFF' },
+  rowBox: { height: 28, paddingHorizontal: 10, borderRadius: 6, borderWidth: 1, borderColor: LINE, backgroundColor: Maple.surface },
   rowGap: { marginBottom: 5 },
-  rowP: { paddingVertical: 8, borderBottomWidth: 1, borderColor: '#EEF2F8' },
+  rowP: { paddingVertical: 8, borderBottomWidth: 1, borderColor: Maple.blueSelected },
   thumb: { width: 42, height: 22, borderRadius: 3 },
   thumbP: { width: 38, height: 26, borderRadius: 4 },
   iconBox: { width: 42, height: 22, alignItems: 'center', justifyContent: 'center' },
-  iconBoxP: { width: 38, height: 30, alignItems: 'center', justifyContent: 'center', borderRadius: 6, backgroundColor: '#F4F7FC' },
+  iconBoxP: { width: 38, height: 30, alignItems: 'center', justifyContent: 'center', borderRadius: 6, backgroundColor: Maple.blueSoft },
   icon: { width: 20, height: 20 },
   iconP: { width: 22, height: 22 },
   rowText: { fontSize: 10.5, color: INK },

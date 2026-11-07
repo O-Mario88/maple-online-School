@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
@@ -9,11 +9,13 @@ import { scoreQuiz } from '@/lib/quiz';
 
 import type { SampleLesson } from './home/types';
 import { Brand, CARD_SHADOW } from './palette';
+import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 const POINTS = [
-  { label: 'Real lesson content', icon: 'play' as const, color: '#3E7A97' },
-  { label: 'Instant feedback', icon: 'check' as const, color: '#3E7A97' },
-  { label: 'Personalized next steps', icon: 'check' as const, color: '#16A34A' },
+  { label: 'Real lesson content', icon: 'play' as const, color: Palette.sky700 },
+  { label: 'Instant feedback', icon: 'check' as const, color: Palette.sky700 },
+  { label: 'Personalized next steps', icon: 'check' as const, color: Maple.successText },
 ];
 
 function Stepper({ step, total }: { step: number; total: number }) {
@@ -123,7 +125,7 @@ export function TryLesson({ lesson, phone = false }: { lesson: SampleLesson; pho
       </View>
 
       <Pressable style={[styles.video, phone && styles.videoPhone]} onPress={() => setPlaying(true)} accessibilityRole="button" accessibilityLabel={`Play the sample lesson: ${lesson.title}`}>
-        <Image source={lesson.photo} style={StyleSheet.absoluteFill} contentFit="cover" />
+        <Image decorative source={lesson.photo} style={StyleSheet.absoluteFill} contentFit="cover" />
       </Pressable>
       <VideoSheet visible={playing} poster={lesson.photo} title={lesson.title} seconds={180} onClose={() => setPlaying(false)} />
 
@@ -149,27 +151,27 @@ export function TryLesson({ lesson, phone = false }: { lesson: SampleLesson; pho
 
 const styles = StyleSheet.create({
   // Desktop: the reference's own pixels (x 50–1488, y 745–1020).
-  wrap: { flexDirection: 'row', marginLeft: 50, width: 1438, height: 275, paddingLeft: 32, paddingRight: 16, borderRadius: 16, backgroundColor: '#EEF5FE' },
+  wrap: { flexDirection: 'row', marginLeft: 50, width: 1438, height: 275, paddingLeft: 32, paddingRight: 16, borderRadius: 16, backgroundColor: Maple.blueSoft },
   wrapPhone: { flexDirection: 'column', width: 'auto', height: 'auto', marginLeft: 10, marginRight: 10, paddingLeft: 14, paddingRight: 14, paddingVertical: 18, gap: 14 },
   ctaPhone: { width: '100%', height: 46 },
   ctaTextPhone: { fontSize: 15 },
   copy: { width: 459, paddingTop: 23 },
   copyPhone: { width: 'auto', paddingTop: 0 },
-  eyebrow: { alignSelf: 'flex-start', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4, backgroundColor: Brand.surface, fontSize: 9.5, fontWeight: '600', letterSpacing: 1, color: '#4A5263' },
+  eyebrow: { alignSelf: 'flex-start', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4, backgroundColor: Brand.surface, fontSize: 9.5, fontWeight: '600', letterSpacing: 1, color: Maple.body },
   title: { marginTop: 9, fontSize: 30, lineHeight: 32, fontWeight: '700', color: Brand.ink, letterSpacing: -0.6 },
   titlePhone: { fontSize: 27, lineHeight: 31 },
-  body: { marginTop: 11, width: 360, fontSize: 14, lineHeight: 17.5, color: '#3D4656' },
+  body: { marginTop: 11, width: 360, fontSize: 14, lineHeight: 17.5, color: Maple.body },
   bodyPhone: { width: 'auto', fontSize: 14.5, lineHeight: 20 },
   points: { flexDirection: 'row', flexWrap: 'wrap', columnGap: 32, rowGap: 8, marginTop: 14 },
   point: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   pointIcon: { width: 14, height: 14, borderRadius: 7, alignItems: 'center', justifyContent: 'center' },
-  small: { fontSize: 10.5, color: '#2A3242' },
+  small: { fontSize: 10.5, color: Maple.navy },
   smallPhone: { fontSize: 13.5 },
   ctas: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 15 },
   primary: { width: 208, height: 39, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, borderRadius: 6, backgroundColor: Brand.blue },
   primaryText: { fontSize: 12.5, fontWeight: '500', color: Brand.surface },
   secondary: { width: 186, height: 39, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, borderRadius: 6, backgroundColor: Brand.surface, ...CARD_SHADOW },
-  secondaryText: { fontSize: 12.5, color: '#2A3242' },
+  secondaryText: { fontSize: 12.5, color: Maple.navy },
 
   video: { width: 454, height: 243, marginTop: 12, borderRadius: 10, overflow: 'hidden', backgroundColor: Brand.video },
   videoPhone: { width: '100%', height: 'auto', aspectRatio: 454 / 243, marginTop: 0 },
@@ -177,23 +179,23 @@ const styles = StyleSheet.create({
   quizCol: { width: 248, marginLeft: 27, paddingTop: 22 },
   stepper: { flexDirection: 'row', alignItems: 'center', height: 24, paddingLeft: 5 },
   stepCell: { flexDirection: 'row', alignItems: 'center' },
-  dot: { width: 20, height: 20, borderRadius: 10, borderWidth: 1, borderColor: '#DCE2EC', backgroundColor: Brand.surface, alignItems: 'center', justifyContent: 'center' },
+  dot: { width: 20, height: 20, borderRadius: 10, borderWidth: 1, borderColor: Maple.disabledBorder, backgroundColor: Brand.surface, alignItems: 'center', justifyContent: 'center' },
   dotOn: { backgroundColor: Brand.blue, borderColor: Brand.blue },
-  dotDone: { backgroundColor: '#9DBBF8', borderColor: '#9DBBF8' },
-  dotText: { fontSize: 9.5, color: '#4A5263' },
+  dotDone: { backgroundColor: Maple.blueLine, borderColor: Maple.blueLine },
+  dotText: { fontSize: 9.5, color: Maple.body },
   dotTextOn: { color: Brand.surface, fontWeight: '700' },
   stepBar: { position: 'absolute', left: 0, bottom: -7, width: 20, height: 2, borderRadius: 1, backgroundColor: Brand.blue },
-  stepLine: { width: 27, height: 1, backgroundColor: '#E1E6EF' },
-  resultsStep: { marginLeft: 6, fontSize: 10.5, color: '#4A5263' },
-  quizCard: { marginTop: 8, padding: 7, paddingTop: 9, borderRadius: 8, backgroundColor: '#F7FAFE' },
+  stepLine: { width: 27, height: 1, backgroundColor: Maple.blueSelected },
+  resultsStep: { marginLeft: 6, fontSize: 10.5, color: Maple.body },
+  quizCard: { marginTop: 8, padding: 7, paddingTop: 9, borderRadius: 8, backgroundColor: Maple.blueSoft },
   qHead: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  qTag: { paddingHorizontal: 5, paddingVertical: 1.5, borderRadius: 4, backgroundColor: '#DCEBFE', fontSize: 8.5, fontWeight: '500', color: Brand.blue },
-  qKind: { paddingHorizontal: 5, paddingVertical: 1.5, borderRadius: 4, backgroundColor: '#EEF1F6', fontSize: 8, color: '#4A5263' },
+  qTag: { paddingHorizontal: 5, paddingVertical: 1.5, borderRadius: 4, backgroundColor: Maple.blueSelected, fontSize: 8.5, fontWeight: '500', color: Brand.blue },
+  qKind: { paddingHorizontal: 5, paddingVertical: 1.5, borderRadius: 4, backgroundColor: Maple.blueSelected, fontSize: 8, color: Maple.body },
   question: { marginTop: 8, fontSize: 11, lineHeight: 15.5, fontWeight: '600', color: Brand.ink },
   options: { gap: 2, marginTop: 9 },
-  option: { flexDirection: 'row', alignItems: 'center', gap: 8, height: 22, paddingHorizontal: 7, borderRadius: 4, borderWidth: 1, borderColor: '#EEF1F6', backgroundColor: Brand.surface },
-  optionOn: { borderColor: '#9DBBF8', backgroundColor: '#EEF4FE' },
-  radio: { width: 9, height: 9, borderRadius: 5, borderWidth: 1, borderColor: '#B8C0CC' },
+  option: { flexDirection: 'row', alignItems: 'center', gap: 8, height: 24, paddingHorizontal: 7, borderRadius: 4, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Brand.surface },
+  optionOn: { borderColor: Maple.blueLine, backgroundColor: Maple.blueSoft },
+  radio: { width: 9, height: 9, borderRadius: 5, borderWidth: 1, borderColor: Maple.borderStrong },
   radioOn: { borderWidth: 3, borderColor: Brand.blue },
   optionText: { fontSize: 9.5, color: Brand.ink },
   next: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, height: 30, marginTop: 8, borderRadius: 5, backgroundColor: Brand.blue },
@@ -210,11 +212,11 @@ const styles = StyleSheet.create({
   scoreBox: { gap: 10, alignItems: 'center', justifyContent: 'center', paddingVertical: 20 },
   score: { fontSize: 32, fontWeight: '800', color: Brand.blue },
 
-  results: { width: 182, height: 205, marginLeft: 20, marginTop: 50, paddingTop: 8, paddingHorizontal: 11, borderRadius: 10, borderWidth: 1, borderColor: '#E7ECF5', backgroundColor: '#F6F8FE', alignItems: 'center' },
+  results: { width: 182, height: 205, marginLeft: 20, marginTop: 50, paddingTop: 8, paddingHorizontal: 11, borderRadius: 10, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.blueSoft, alignItems: 'center' },
   resultsPhone: { width: 'auto', height: 'auto', marginLeft: 0, marginTop: 0, paddingBottom: 16 },
   trophy: { width: 52, height: 48 },
   resultsTitle: { marginTop: 7, fontSize: 12, fontWeight: '700', color: Brand.ink },
   resultList: { alignSelf: 'stretch', gap: 9, marginTop: 13 },
   resultItem: { flexDirection: 'row', alignItems: 'flex-start', gap: 7 },
-  resultIcon: { backgroundColor: '#16A34A', marginTop: 1 },
+  resultIcon: { backgroundColor: Maple.successText, marginTop: 1 },
 });

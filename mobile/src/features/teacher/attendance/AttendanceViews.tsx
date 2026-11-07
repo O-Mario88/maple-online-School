@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
@@ -21,6 +21,7 @@ import type {
 import { ATTENDANCE_REF_WIDTH, s, s as deskS } from './AttendanceViews.styles';
 import { phoneS } from './AttendanceViews.phoneStyles';
 import { PhoneScroll } from '@/features/teacher/frame/PhoneScroll';
+import { Maple } from '@/constants/maple';
 
 export { ATTENDANCE_REF_WIDTH };
 
@@ -36,12 +37,12 @@ const STATUS_CYCLE: readonly AttendanceStatusKey[] = [
 const STATUS_STYLE: Readonly<
   Record<AttendanceStatusKey, { bg: string; fg: string; badgeBg: string; glyph: string }>
 > = {
-  'Present Engaged': { bg: '#DCFCE7', fg: '#15803D', badgeBg: '#16A34A', glyph: '✓' },
-  'Present Passive': { bg: '#DBEAFE', fg: '#1D4ED8', badgeBg: '#2563EB', glyph: '✓' },
-  Partial: { bg: '#FEF3C7', fg: '#B45309', badgeBg: '#D97706', glyph: 'P' },
-  Late: { bg: '#F3E8FF', fg: '#7E22CE', badgeBg: '#9333EA', glyph: '🕒' },
-  Absent: { bg: '#FEE2E2', fg: '#DC2626', badgeBg: '#EF4444', glyph: '✕' },
-  Excused: { bg: '#F1F5F9', fg: '#475569', badgeBg: '#64748B', glyph: '●' },
+  'Present Engaged': { bg: Maple.successSoft, fg: Maple.successText, badgeBg: Maple.successText, glyph: '✓' },
+  'Present Passive': { bg: Maple.blueSelected, fg: Maple.blue, badgeBg: Maple.blue, glyph: '✓' },
+  Partial: { bg: Maple.warningSoft, fg: Maple.warningText, badgeBg: Maple.warning, glyph: 'P' },
+  Late: { bg: Maple.blueSelected, fg: Maple.blue, badgeBg: Maple.blue, glyph: '🕒' },
+  Absent: { bg: Maple.errorSoft, fg: Maple.error, badgeBg: Maple.error, glyph: '✕' },
+  Excused: { bg: Maple.blueSoft, fg: Maple.body, badgeBg: Maple.secondary, glyph: '●' },
 };
 
 /**
@@ -135,7 +136,7 @@ export function AttendanceDesk({ r, me, phone = false }: { r: AttendanceRegister
           </Pressable>
 
           <View style={s.courseCard}>
-            <Image source={r.courseThumb} style={s.courseThumb} contentFit="cover" />
+            <Image decorative source={r.courseThumb} style={s.courseThumb} contentFit="cover" />
             <View style={{ flex: 1, gap: 1 }}>
               <Text style={s.courseTitle}>{r.course}</Text>
               <Text style={s.courseSub}>{r.topic}</Text>
@@ -150,7 +151,7 @@ export function AttendanceDesk({ r, me, phone = false }: { r: AttendanceRegister
                   key={item.label}
                   style={[s.sideItem, on && s.sideItemOn]}
                   onPress={() => setActiveSide(item.label)}>
-                  <Icon name={item.icon} size={15} color={on ? BLUE : '#475569'} />
+                  <Icon name={item.icon} size={15} color={on ? BLUE : Maple.body} />
                   <Text style={[s.sideText, on && s.sideTextOn]} numberOfLines={1}>
                     {item.label}
                   </Text>
@@ -203,7 +204,7 @@ export function AttendanceDesk({ r, me, phone = false }: { r: AttendanceRegister
                     <Icon name={k.icon} size={22} color={k.color} />
                   ) : (
                     <View style={[s.kpiIconCircle, { backgroundColor: k.color }]}>
-                      <Icon name={k.icon} size={13} color="#FFFFFF" />
+                      <Icon name={k.icon} size={13} color={Maple.surface} />
                     </View>
                   )
                 ) : null}
@@ -309,7 +310,7 @@ export function AttendanceDesk({ r, me, phone = false }: { r: AttendanceRegister
                   <Text style={[s.tdNum, s.colNum]}>{st.num}</Text>
 
                   <View style={[s.studentCell, s.colStudent]}>
-                    <Image source={st.photo} style={s.avatar} contentFit="cover" />
+                    <Image decorative source={st.photo} style={s.avatar} contentFit="cover" />
                     <View style={{ gap: 1 }}>
                       <Text style={s.studentName}>{st.name}</Text>
                       <Text style={s.studentCohort}>{st.cohort}</Text>
@@ -394,7 +395,7 @@ export function AttendanceDesk({ r, me, phone = false }: { r: AttendanceRegister
 
             {/* Video Preview Box */}
             <View style={s.videoBox}>
-              <Image source={r.videoThumb} style={StyleSheet.absoluteFill} contentFit="cover" />
+              <Image decorative source={r.videoThumb} style={StyleSheet.absoluteFill} contentFit="cover" />
               <View style={s.videoBoardOverlay}>
                 <Text style={s.videoBoardEq}>x² − 5x + 6 = 0</Text>
                 <Text style={s.videoBoardSub}>(x − 2)(x − 3) = 0</Text>
@@ -403,7 +404,7 @@ export function AttendanceDesk({ r, me, phone = false }: { r: AttendanceRegister
               <Pressable
                 style={s.playOverlayCircle}
                 onPress={() => toast('Playing class recording from 00:00.')}>
-                <Icon name="playFill" size={18} color="#FFFFFF" />
+                <Icon name="playFill" size={18} color={Maple.surface} />
               </Pressable>
 
               <View style={s.videoControlsBar}>
@@ -411,7 +412,7 @@ export function AttendanceDesk({ r, me, phone = false }: { r: AttendanceRegister
                   <View style={s.videoScrubberDot} />
                 </View>
                 <View style={s.videoControlsBottomRow}>
-                  <Icon name="playFill" size={10} color="#FFFFFF" />
+                  <Icon name="playFill" size={10} color={Maple.surface} />
                   <Text style={s.videoTimeText}>0:00 / 1:00:00</Text>
                   <View style={{ flex: 1 }} />
                   <View style={s.speedChip}>
@@ -420,7 +421,7 @@ export function AttendanceDesk({ r, me, phone = false }: { r: AttendanceRegister
                   <View style={s.speedChip}>
                     <Text style={s.speedChipText}>1x</Text>
                   </View>
-                  <Icon name="expand" size={10} color="#FFFFFF" />
+                  <Icon name="expand" size={10} color={Maple.surface} />
                 </View>
               </View>
             </View>
@@ -434,7 +435,7 @@ export function AttendanceDesk({ r, me, phone = false }: { r: AttendanceRegister
                   style={s.chapterRow}
                   onPress={() => toast(`Jumped recording to ${ch.timestamp} — ${ch.title.replace('\n', ' ')}`)}>
                   <Text style={s.chapterTime}>{ch.timestamp}</Text>
-                  <Image source={ch.thumb} style={s.chapterThumb} contentFit="cover" />
+                  <Image decorative source={ch.thumb} style={s.chapterThumb} contentFit="cover" />
                   <View style={{ flex: 1 }}>
                     <Text style={s.chapterTitle}>{ch.title}</Text>
                     <Text style={s.chapterDur}>{ch.duration}</Text>
@@ -453,7 +454,7 @@ export function AttendanceDesk({ r, me, phone = false }: { r: AttendanceRegister
             </View>
 
             <View style={s.overrideStudentRow}>
-              <Image source={overrideStudent.photo} style={s.overrideAvatar} contentFit="cover" />
+              <Image decorative source={overrideStudent.photo} style={s.overrideAvatar} contentFit="cover" />
               <View>
                 <Text style={s.overrideName}>{overrideStudent.name}</Text>
                 <Text style={s.overrideCohort}>{overrideStudent.cohort}</Text>
@@ -527,7 +528,7 @@ export function AttendanceDesk({ r, me, phone = false }: { r: AttendanceRegister
 
 export function AttendancePhone({ r, me }: { r: AttendanceRegister; me: TeacherMe }) {
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: '#EAF1FB' }}>
+    <ScrollView style={{ flex: 1, backgroundColor: Maple.blueSelected }}>
       <TeacherPhoneTop me={me} />
       <AttendanceDesk r={r} me={me} phone />
     </ScrollView>
@@ -536,7 +537,7 @@ export function AttendancePhone({ r, me }: { r: AttendanceRegister; me: TeacherM
 
 function SignalBars({ level }: { level: EngagementLevelKey }) {
   const color =
-    level === 'High' ? '#16A34A' : level === 'Medium' ? '#F59E0B' : '#EF4444';
+    level === 'High' ? Maple.successText : level === 'Medium' ? Maple.warning : Maple.error;
   const activeCount = level === 'High' ? 3 : level === 'Medium' ? 2 : 1;
   return (
     <View style={s.signalWrap}>
@@ -547,7 +548,7 @@ function SignalBars({ level }: { level: EngagementLevelKey }) {
             s.signalBar,
             {
               height: h,
-              backgroundColor: idx < activeCount ? color : '#CBD5E1',
+              backgroundColor: idx < activeCount ? color : Maple.borderStrong,
             },
           ]}
         />

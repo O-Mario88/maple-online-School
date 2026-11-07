@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { ScrollView, StyleSheet, useWindowDimensions } from 'react-native';
+import { StyleSheet, useWindowDimensions } from 'react-native';
 
 import { useShell } from '@/components/ui';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
@@ -11,6 +11,7 @@ import {
   VerificationPhone,
 } from '@/features/teacher/verification/VerificationViews';
 import { mockData } from '@/lib/mock';
+import { PageScroll } from '@/components/shell/PageScroll';
 
 /** Inventory 49: Teacher Verification & KYC Credentials Upload (`/(teacher)/verification`). */
 export default function VerificationScreen() {
@@ -28,11 +29,11 @@ export default function VerificationScreen() {
   const v = mock.teacher.verificationKyc;
   if (!wide) return <VerificationPhone v={v} me={me} />;
   return (
-    <ScrollView style={styles.bg}>
+    <PageScroll style={styles.bg}>
       <RefScale width={width} refWidth={VERIFICATION_REF_WIDTH}>
         <VerificationDesk v={v} me={me} />
       </RefScale>
-    </ScrollView>
+    </PageScroll>
   );
 }
 

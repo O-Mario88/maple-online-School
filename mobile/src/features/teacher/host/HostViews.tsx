@@ -12,6 +12,7 @@ import type { HostMaterial, HostToolKey, TeacherHost } from '@/mock/teacher-host
 import { HostRightPanels, usePulseQuizTimer } from './HostRightPanels';
 import { WhiteboardStage } from './WhiteboardStage';
 import { d, p } from './HostViews.styles';
+import { Maple } from '@/constants/maple';
 
 export { HOST_REF_WIDTH } from './HostViews.styles';
 
@@ -51,7 +52,7 @@ export function HostDesk({ h }: { h: TeacherHost }) {
         id,
         title: 'Board Snapshot (Quadratics).png',
         kind: 'pro',
-        color: '#16A34A',
+        color: Maple.successText,
       },
     ]);
     toast('Board saved to Lesson Notes and Class Materials.');
@@ -96,7 +97,7 @@ export function HostDesk({ h }: { h: TeacherHost }) {
 
         {/* Live Timer Pill */}
         <View style={d.liveBadgeGroup}>
-          <View style={[d.livePillRed, paused && { backgroundColor: '#F59E0B' }]}>
+          <View style={[d.livePillRed, paused && { backgroundColor: Maple.warning }]}>
             <View style={d.liveDotWhite} />
             <Text style={d.livePillText}>{paused ? 'PAUSED' : 'LIVE'}</Text>
           </View>
@@ -108,13 +109,13 @@ export function HostDesk({ h }: { h: TeacherHost }) {
         {/* Student & Co-teacher Counters */}
         <View style={d.metaStat}>
           <View style={d.greenStatDot}>
-            <Icon name="people" size={9} color="#FFFFFF" />
+            <Icon name="people" size={9} color={Maple.surface} />
           </View>
           <Text style={d.metaStatText}>{h.studentsCount} students</Text>
         </View>
 
         <View style={d.metaStat}>
-          <Icon name="people" size={13} color="#CBD5E1" />
+          <Icon name="people" size={13} color={Maple.borderStrong} />
           <Text style={d.metaStatText}>{h.coTeachersCount} co-teachers</Text>
         </View>
 
@@ -125,12 +126,12 @@ export function HostDesk({ h }: { h: TeacherHost }) {
             onPress={() => toast('Join link copied. Share it with learners or a co-teacher.')}
             accessibilityRole="button"
             accessibilityLabel="Invite: copy the join link">
-            <Icon name="plus" size={11} color="#FFFFFF" />
+            <Icon name="plus" size={11} color={Maple.surface} />
             <Text style={d.topDarkBtnText}>Invite</Text>
           </Pressable>
 
           <Pressable style={d.topDarkBtn} onPress={() => setPaused((p) => !p)}>
-            <Icon name={paused ? 'playFill' : 'pause'} size={11} color="#FFFFFF" />
+            <Icon name={paused ? 'playFill' : 'pause'} size={11} color={Maple.surface} />
             <Text style={d.topDarkBtnText}>{paused ? 'Resume Class' : 'Pause Class'}</Text>
           </Pressable>
 
@@ -155,7 +156,7 @@ export function HostDesk({ h }: { h: TeacherHost }) {
       {locksOpen ? (
         <View style={d.locksBar}>
           <View style={d.locksTitleCluster}>
-            <Icon name="lock" size={12} color="#1463F3" />
+            <Icon name="lock" size={12} color={Maple.blue} />
             <Text style={d.locksBarTitle}>Host Room Controls & Permissions:</Text>
           </View>
 
@@ -165,7 +166,7 @@ export function HostDesk({ h }: { h: TeacherHost }) {
             <Icon
               name={lockStudentMics ? 'micOff' : 'mic'}
               size={11}
-              color={lockStudentMics ? '#DC2626' : '#334155'}
+              color={lockStudentMics ? Maple.error : Maple.body}
             />
             <Text style={[d.lockChipText, lockStudentMics && d.lockChipTextActive]}>
               {lockStudentMics ? 'Student Mics Locked (28)' : 'Lock All Student Mics'}
@@ -178,7 +179,7 @@ export function HostDesk({ h }: { h: TeacherHost }) {
             <Icon
               name={lockStudentCams ? 'videoOff' : 'video'}
               size={11}
-              color={lockStudentCams ? '#DC2626' : '#334155'}
+              color={lockStudentCams ? Maple.error : Maple.body}
             />
             <Text style={[d.lockChipText, lockStudentCams && d.lockChipTextActive]}>
               {lockStudentCams ? 'Student Cameras Locked' : 'Lock Student Cameras'}
@@ -196,9 +197,9 @@ export function HostDesk({ h }: { h: TeacherHost }) {
               <Icon
                 name="edit"
                 size={11}
-                color={allowedDrawStudent ? '#15803D' : '#334155'}
+                color={allowedDrawStudent ? Maple.successText : Maple.body}
               />
-              <Text style={[d.lockChipText, allowedDrawStudent != null && { color: '#15803D', fontWeight: '600' }]}>
+              <Text style={[d.lockChipText, allowedDrawStudent != null && { color: Maple.successText, fontWeight: '600' }]}>
                 {allowedDrawStudent
                   ? `Drawing allowed: ${allowedDrawStudent}`
                   : `Allow Draw: ${drawStudent} (Students Read-Only)`}
@@ -207,8 +208,8 @@ export function HostDesk({ h }: { h: TeacherHost }) {
           )}
 
           <Pressable style={d.lockChip} onPress={saveBoardToResources}>
-            <Icon name="download" size={11} color="#1463F3" />
-            <Text style={[d.lockChipText, { color: '#1463F3', fontWeight: '600' }]}>
+            <Icon name="download" size={11} color={Maple.blue} />
+            <Text style={[d.lockChipText, { color: Maple.blue, fontWeight: '600' }]}>
               Save Board to Notes & Resources
             </Text>
           </Pressable>
@@ -244,7 +245,7 @@ export function HostDesk({ h }: { h: TeacherHost }) {
                   <Icon
                     name={item.icon}
                     size={13}
-                    color={active ? '#FFFFFF' : '#475569'}
+                    color={active ? Maple.surface : Maple.body}
                   />
                   <Text style={[d.navLabel, active && d.navLabelActive]}>
                     {item.label}
@@ -261,7 +262,7 @@ export function HostDesk({ h }: { h: TeacherHost }) {
             <View style={d.materialsHeader}>
               <Text style={d.materialsTitle}>Class Materials</Text>
               <Pressable style={d.materialsAddBtn} onPress={saveBoardToResources}>
-                <Icon name="plus" size={11} color="#475569" />
+                <Icon name="plus" size={11} color={Maple.body} />
               </Pressable>
             </View>
 
@@ -278,7 +279,7 @@ export function HostDesk({ h }: { h: TeacherHost }) {
                   accessibilityLabel={`Present ${mat.title}`}>
                   <View style={[d.materialIconBox, { backgroundColor: mat.color }]}>
                     {mat.kind === 'video' ? (
-                      <Icon name="playFill" size={8} color="#FFFFFF" />
+                      <Icon name="playFill" size={8} color={Maple.surface} />
                     ) : (
                       <Text style={d.materialIconText}>
                         {mat.kind === 'pro' ? 'PRO' : 'PDF'}
@@ -293,7 +294,7 @@ export function HostDesk({ h }: { h: TeacherHost }) {
             </View>
 
             <Pressable style={d.addResourceRow} onPress={saveBoardToResources}>
-              <Icon name="plus" size={11} color="#1463F3" />
+              <Icon name="plus" size={11} color={Maple.blue} />
               <Text style={d.addResourceText}>Save Board / Resource</Text>
             </Pressable>
           </View>
@@ -314,8 +315,8 @@ export function HostDesk({ h }: { h: TeacherHost }) {
               {/* Primary Mic Circle */}
               <Pressable style={d.dockPrimaryItem} onPress={() => setMicOn((m) => !m)}>
                 <View style={d.dockCircleRow}>
-                  <View style={[d.dockCircleGreen, !micOn && { backgroundColor: '#EF4444' }]}>
-                    <Icon name={micOn ? 'mic' : 'micOff'} size={15} color="#FFFFFF" />
+                  <View style={[d.dockCircleGreen, !micOn && { backgroundColor: Maple.error }]}>
+                    <Icon name={micOn ? 'mic' : 'micOff'} size={15} color={Maple.surface} />
                   </View>
                   <Text style={d.dockCaret}>⌃</Text>
                 </View>
@@ -325,8 +326,8 @@ export function HostDesk({ h }: { h: TeacherHost }) {
               {/* Primary Camera Circle */}
               <Pressable style={d.dockPrimaryItem} onPress={() => setCamOn((c) => !c)}>
                 <View style={d.dockCircleRow}>
-                  <View style={[d.dockCircleDark, !camOn && { backgroundColor: '#EF4444' }]}>
-                    <Icon name={camOn ? 'video' : 'videoOff'} size={15} color="#FFFFFF" />
+                  <View style={[d.dockCircleDark, !camOn && { backgroundColor: Maple.error }]}>
+                    <Icon name={camOn ? 'video' : 'videoOff'} size={15} color={Maple.surface} />
                   </View>
                   <Text style={d.dockCaret}>⌃</Text>
                 </View>
@@ -343,7 +344,7 @@ export function HostDesk({ h }: { h: TeacherHost }) {
               {/* Record button with red dot */}
               <Pressable style={d.dockItem} onPress={() => setRecording((r) => !r)}>
                 <View style={d.recordIconRing}>
-                  <View style={[d.recordIconDot, !recording && { backgroundColor: '#94A3B8' }]} />
+                  <View style={[d.recordIconDot, !recording && { backgroundColor: Maple.faint }]} />
                 </View>
                 <Text style={d.dockLabel}>Record</Text>
               </Pressable>
@@ -355,7 +356,7 @@ export function HostDesk({ h }: { h: TeacherHost }) {
               {/* Participants with 28 pill */}
               <Pressable style={d.dockItem} onPress={() => setLocksOpen((o) => !o)}>
                 <View style={d.participantsIconWrap}>
-                  <Icon name="people" size={16} color="#1E293B" />
+                  <Icon name="people" size={16} color={Maple.navy} />
                   <View style={d.participantsCountPill}>
                     <Text style={d.participantsCountText}>{h.studentsCount}</Text>
                   </View>
@@ -432,7 +433,7 @@ function DockItem({
   return (
     <Pressable style={d.dockItem} onPress={onPress}>
       <View style={d.dockIconBox}>
-        <Icon name={icon} size={16} color="#1E293B" />
+        <Icon name={icon} size={16} color={Maple.navy} />
       </View>
       <Text style={d.dockLabel}>{label}</Text>
     </Pressable>
@@ -506,7 +507,7 @@ export function HostPhone({ h }: { h: TeacherHost }) {
         {dock.map((d) => (
           <Pressable key={d.key} style={p.dockItem} onPress={d.onPress} accessibilityRole="button" accessibilityState={{ selected: d.on }} accessibilityLabel={d.label}>
             <View style={[p.dockIcon, d.on && p.dockIconOn, d.key === 'rec' && d.on && p.dockIconRec]}>
-              <Icon name={d.icon} size={17} color={d.on ? '#FFFFFF' : '#334155'} />
+              <Icon name={d.icon} size={17} color={d.on ? Maple.surface : Maple.body} />
             </View>
             <Text style={p.dockLabel} numberOfLines={1}>
               {d.label}

@@ -6,6 +6,7 @@
 import type { Leaf, SkillTree } from '@/lib/progress';
 
 import { photos } from './photos';
+import { Maple } from '@/constants/maple';
 
 const p = (n: string): number => photos.progress[n];
 const m = (id: string, name: string, extra: Partial<Leaf> = {}): Leaf => ({ id, name, mastered: true, ...extra });
@@ -94,22 +95,22 @@ export const progressMap = {
   monthGain: 12,
   curricula: ['O-Level Curriculum', 'UNEB UCE Syllabus', 'Cambridge IGCSE'],
   subjects: [
-    { name: 'Mathematics', short: 'Mathematics', done: 24, total: 48, color: '#1463F3', icon: p('subj-maths'), tree: maths },
-    { name: 'English', short: 'English', done: 18, total: 42, color: '#16A34A', icon: p('subj-english'), tree: english },
-    { name: 'Science', short: 'Science', done: 16, total: 44, color: '#7C3AED', icon: p('subj-science'), tree: science },
+    { name: 'Mathematics', short: 'Mathematics', done: 24, total: 48, color: Maple.blue, icon: p('subj-maths'), tree: maths },
+    { name: 'English', short: 'English', done: 18, total: 42, color: Maple.successText, icon: p('subj-english'), tree: english },
+    { name: 'Science', short: 'Science', done: 16, total: 44, color: Maple.blue, icon: p('subj-science'), tree: science },
     { name: 'Social Studies', short: 'Social Studies', done: 12, total: 38, color: '#F97316', icon: p('subj-social'), tree: social },
-    { name: 'ICT', short: 'ICT', done: 10, total: 32, color: '#3B82F6', icon: p('subj-ict'), tree: ict },
-    { name: 'Exam Skills', short: 'Exam Skills', done: 8, total: 28, color: '#EF4444', icon: p('subj-exam'), tree: exam },
-    { name: 'Life Skills', short: 'Life Skills', done: 14, total: 36, color: '#F5B800', icon: p('subj-life'), tree: life },
+    { name: 'ICT', short: 'ICT', done: 10, total: 32, color: Maple.blue, icon: p('subj-ict'), tree: ict },
+    { name: 'Exam Skills', short: 'Exam Skills', done: 8, total: 28, color: Maple.error, icon: p('subj-exam'), tree: exam },
+    { name: 'Life Skills', short: 'Life Skills', done: 14, total: 36, color: Maple.warning, icon: p('subj-life'), tree: life },
   ],
   /** Hours per day: video lessons, practice questions, assignments, live classes, reading. */
   activity: {
     categories: [
-      { label: 'Video Lessons', color: '#3B82F6' },
-      { label: 'Practice Questions', color: '#A855F7' },
-      { label: 'Assignments', color: '#22A45D' },
+      { label: 'Video Lessons', color: Maple.blue },
+      { label: 'Practice Questions', color: Maple.blue },
+      { label: 'Assignments', color: Maple.successText },
       { label: 'Live Classes', color: '#F97316' },
-      { label: 'Reading', color: '#F5B800' },
+      { label: 'Reading', color: Maple.warning },
     ],
     days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
     week: [

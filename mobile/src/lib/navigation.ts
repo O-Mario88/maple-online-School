@@ -5,6 +5,7 @@
  * Items marked `preview` are design screens built on mock data; they only
  * appear in builds with EXPO_PUBLIC_MOCK_DATA=true (see lib/mock.ts).
  */
+import { COMPASS_SECTIONS, compassHref } from './careers/sections';
 import type { IconName } from './icons';
 
 export const PORTALS = ['learner', 'teacher', 'parent', 'school', 'command'] as const;
@@ -38,6 +39,12 @@ export interface NavItem {
   also?: readonly string[];
   /** Where the item opens on mock data, when a designed page stands in for the live one. */
   designHref?: string;
+  /** The collapsible sidebar heading the item sits under (the learner's More). */
+  group?: string;
+  /** Sections shown under the item while it's open, such as Career Compass's. */
+  children?: readonly NavItem[];
+  /** Its place in the phone tab bar, when the menu names its tabs. */
+  tab?: number;
 }
 
 // Matches the Go API's roles: Leaders, Finance and Staff.
@@ -74,34 +81,44 @@ const fees = item('fees', 'Fees', '/fees', 'wallet');
 const school = item('school', 'Set-up', '/admin/onboarding', 'school');
 const messages = item('messages', 'Messages', '/messages', 'chat');
 
-// Order matters: on phones the first four (or five) become tabs.
+// Order matters: on phones the first four (or five) become tabs, unless the menu numbers its tabs.
 // The plans page: where the free month continues, and where people land once it has ended.
 const pricing = p('pricing', 'Pricing', '/plans', 'wallet');
 
+const inGroup = (group: string, items: readonly NavItem[]): NavItem[] => items.map((i) => ({ ...i, group }));
+const tab = (n: number, i: NavItem): NavItem => ({ ...i, tab: n });
+const compassSections: readonly NavItem[] = COMPASS_SECTIONS.map((sec) => p(`careers-${sec.key}`, sec.nav, compassHref(sec.key), sec.icon));
+
 const MENUS: Readonly<Record<Portal, readonly NavItem[]>> = {
+  // The one learner menu: the sidebar on wide screens (in the references' order, the rest under More),
+  // and on phones the four numbered tabs plus More.
   learner: [
-    home,
-    p('explore', 'Explore', '/learn/explore', 'search'),
-    { ...lessons, label: 'Classes', icon: 'person' },
+    tab(1, home),
+    p('plan', 'My Plan', '/learn/plan', 'target'),
+    p('subjects', 'Subjects', '/learn/course', 'book'),
+    { ...p('video-lessons', 'Video Lessons', '/learn/lessons', 'play'), short: 'Videos', also: ['/learn/lesson'] },
+    tab(3, { ...lessons, label: 'Live Classes', short: 'Classes', icon: 'live', also: ['/learn/live', '/learn/live-room'] }),
     // Ported to the API: the designed page in every build.
-    { key: 'assignments', label: 'Assignments', href: '/learn/assignments', icon: 'clipboard' },
+    tab(4, { key: 'assignments', label: 'Assignments', href: '/learn/assignments', icon: 'clipboard' }),
+    p('progress', 'Progress', '/learn/progress', 'chart'),
     library,
-    p('video-lessons', 'Video lessons', '/learn/lessons', 'play'),
-    p('plan', 'My plan', '/learn/plan', 'target'),
-    p('schools', 'School Network', '/learn/schools', 'building'),
-    p('progress', 'My progress', '/learn/progress', 'chart'),
-    p('projects', 'Projects', '/learn/projects', 'folder'),
-    p('exam', 'Exam practice', '/learn/paper', 'timer'),
-    p('past-papers', 'Past papers', '/learn/past-papers', 'book'),
-    p('shorts', 'Shorts', '/learn/shorts', 'sparkle'),
-    p('squad', 'Study squads', '/learn/squads', 'people'),
-    p('passport', 'Passport', '/learn/passport', 'flag'),
-    p('offline', 'Offline', '/learn/offline', 'cloud'),
-    curriculum,
-    fees,
-    pricing,
-    p('billing', 'Billing', '/learn/billing', 'wallet'),
-    p('account', 'My account', '/learn/account', 'person'),
+    { ...p('schools', 'School Network', '/learn/schools', 'building'), short: 'Schools', also: ['/learn/apply'] },
+    { ...p('careers', 'Career Compass', '/learn/careers', 'map'), short: 'Careers', also: ['/universities'], children: compassSections },
+    ...inGroup('More', [
+      tab(2, p('explore', 'Explore', '/learn/explore', 'search')),
+      p('shorts', 'Shorts', '/learn/shorts', 'sparkle'),
+      p('exam', 'Exam Practice', '/learn/paper', 'timer'),
+      p('past-papers', 'Past Papers', '/learn/past-papers', 'doc'),
+      p('passport', 'Achievements', '/learn/passport', 'trophy'),
+      p('squad', 'Study Squads', '/learn/squads', 'people'),
+      p('projects', 'Projects', '/learn/projects', 'folder'),
+      p('account', 'My Account', '/learn/account', 'person'),
+      p('billing', 'Billing', '/learn/billing', 'wallet'),
+      pricing,
+      fees,
+      curriculum,
+      p('offline', 'Offline', '/learn/offline', 'cloud'),
+    ]),
   ],
   teacher: [
     home,
@@ -208,6 +225,9 @@ const MAX_TABS = 5;
 
 /** The phone tab bar: up to five items, or four and a More tab. */
 export function tabBar(items: readonly NavItem[]): { tabs: readonly NavItem[]; more: boolean } {
+  // A menu can name its tabs (the learner's does); otherwise the first ones are the tabs.
+  const named = items.filter((i) => i.tab !== undefined).sort((x, y) => (x.tab ?? 0) - (y.tab ?? 0));
+  if (named.length) return { tabs: named, more: items.length > named.length };
   if (items.length <= MAX_TABS) return { tabs: items, more: false };
   return { tabs: items.slice(0, MAX_TABS - 1), more: true };
 }
@@ -265,3 +285,32 @@ export const CLASSROOM = { href: '/classroom/p7-maths-revision-bootcamp', route:
 
 /** The sample one-tap checkout link that pay buttons open while the app runs on sample data. */
 export const SAMPLE_CHECKOUT = PUBLIC_PREVIEWS.find((p) => p.label === 'One-tap checkout')?.href ?? '/pay';
+
+/** Matches Breakpoints.wide in constants/theme (lib stays free of the theme so tests can load it). */
+export const NAV_WIDE = 960;
+export type NavMode = 'sidebar' | 'topbar' | 'tabs';
+
+/**
+ * Where the menu goes: bottom tabs on phones and narrow windows; a sidebar in an installed app
+ * (the web app installed on a computer, or a tablet); a top bar in an ordinary browser tab.
+ */
+export function navMode(d: { os: string; width: number; installed: boolean }): NavMode {
+  if (d.width < NAV_WIDE) return 'tabs';
+  if (d.os !== 'web') return 'sidebar';
+  return d.installed ? 'sidebar' : 'topbar';
+}
+
+/** The top bar: the first main pages that fit, then a More menu with the rest and the extras. */
+/** The most pages a top bar shows before More: past seven, a menu stops being scannable (Nov 2026 audit). */
+export const TOP_BAR_MAX = 7;
+
+export function topBarSplit(items: readonly NavItem[], slots: number): { tabs: NavItem[]; more: NavItem[] } {
+  const main = items.filter((i) => !i.group);
+  const n = Math.max(1, Math.min(slots, main.length, TOP_BAR_MAX));
+  return { tabs: main.slice(0, n), more: [...main.slice(n), ...items.filter((i) => i.group)] };
+}
+
+/** A menu without the items (and sections) the account's role may not open. */
+export function onlyAllowed(items: readonly NavItem[], may: (href: string) => boolean): NavItem[] {
+  return items.filter((i) => may(i.href)).map((i) => (i.children ? { ...i, children: i.children.filter((c) => may(c.href)) } : i));
+}

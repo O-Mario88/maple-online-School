@@ -3,6 +3,7 @@ import type { Expense } from '@/features/command/logic/expenses';
 import type { Run, Staff } from '@/features/command/logic/payroll';
 
 import { face, type KpiData } from './shared';
+import { Maple } from '@/constants/maple';
 
 export const TODAY = '2026-10-31';
 /** Who records expenses and prepares payroll; the Finance Director approves. */
@@ -37,13 +38,13 @@ export const expStats: readonly KpiData[] = [
 export const expTotals = { count: 1842, spent: 2_846_320_000, paid: 2_316_400_000, budget: 3_200_000_000, ap: { total: 324_600_000, overdue: 56_400_000, dueWeek: 96_000_000, dueMonth: 172_200_000 } };
 
 export const expByCategory: readonly { label: string; value: number; color: string }[] = [
-  { label: 'Cloud & Infrastructure', value: 814_200_000, color: '#2563EB' },
-  { label: 'Salaries & Benefits', value: 628_800_000, color: '#22A55A' },
-  { label: 'Software & AI Tools', value: 353_400_000, color: '#F5B731' },
-  { label: 'Marketing & Growth', value: 278_400_000, color: '#8B5CF6' },
-  { label: 'Contractors & Services', value: 244_800_000, color: '#F28A2E' },
+  { label: 'Cloud & Infrastructure', value: 814_200_000, color: Maple.blue },
+  { label: 'Salaries & Benefits', value: 628_800_000, color: Maple.successText },
+  { label: 'Software & AI Tools', value: 353_400_000, color: Maple.warning },
+  { label: 'Marketing & Growth', value: 278_400_000, color: Maple.blue },
+  { label: 'Contractors & Services', value: 244_800_000, color: Maple.warning },
   { label: 'Admin & Operations', value: 214_200_000, color: '#14B8A6' },
-  { label: 'Other', value: 312_600_000, color: '#A0AEC0' },
+  { label: 'Other', value: 312_600_000, color: Maple.muted },
 ];
 
 /** Actual spend and budget (millions), Jan–Oct 2026. */
@@ -54,11 +55,11 @@ export const expTrend = {
 };
 
 export const recurring: readonly { name: string; amount: number; badge: string; color: string }[] = [
-  { name: 'AWS Cloud Hosting', amount: 86_400_000, badge: 'aws', color: '#F59E0B' },
-  { name: 'LiveKit (Live Classes)', amount: 24_600_000, badge: 'LK', color: '#111827' },
-  { name: 'OpenAI (AI Usage)', amount: 12_000_000, badge: 'AI', color: '#10A37F' },
-  { name: 'Microsoft 365 (Enterprise)', amount: 21_600_000, badge: 'MS', color: '#2563EB' },
-  { name: 'Zoom (Meetings & Webinars)', amount: 8_400_000, badge: 'Z', color: '#2D8CFF' },
+  { name: 'AWS Cloud Hosting', amount: 86_400_000, badge: 'aws', color: Maple.warning },
+  { name: 'LiveKit (Live Classes)', amount: 24_600_000, badge: 'LK', color: Maple.navy },
+  { name: 'OpenAI (AI Usage)', amount: 12_000_000, badge: 'AI', color: Maple.successText },
+  { name: 'Microsoft 365 (Enterprise)', amount: 21_600_000, badge: 'MS', color: Maple.blue },
+  { name: 'Zoom (Meetings & Webinars)', amount: 8_400_000, badge: 'Z', color: Maple.blue },
 ];
 
 /* ─── Payroll ─── */
@@ -110,7 +111,7 @@ export const runs: readonly (Run & { amount: number; label: string })[] = [
 ];
 
 export const calendar: readonly { label: string; run: string; inDays: number; color: string }[] = [
-  { label: 'Nov 2026 Payroll', run: 'Nov 26, 2026', inDays: 26, color: '#22A55A' },
-  { label: 'Dec 2026 Payroll', run: 'Dec 24, 2026', inDays: 54, color: '#2563EB' },
-  { label: 'Year-End Bonus', run: 'Dec 24, 2026', inDays: 54, color: '#8B5CF6' },
+  { label: 'Nov 2026 Payroll', run: 'Nov 26, 2026', inDays: 26, color: Maple.successText },
+  { label: 'Dec 2026 Payroll', run: 'Dec 24, 2026', inDays: 54, color: Maple.blue },
+  { label: 'Year-End Bonus', run: 'Dec 24, 2026', inDays: 54, color: Maple.blue },
 ];

@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { type ReactNode } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
@@ -10,10 +10,13 @@ import { BLUE, BODY, CANVAS, LINE, MUTED, NAVY, WHITE } from '@/features/portal/
 import type { IconName } from '@/lib/icons';
 import { useSwitcher } from '@/lib/switcher-context';
 import { toast } from '@/lib/toast';
+import { openMenuPage } from '@/lib/menu-nav';
 
 import { SIDEBAR, SIDEBAR_ACTIVE, SIDEBAR_TEXT } from './tokens';
+import { Maple } from '@/constants/maple';
+import { MapleLogo } from '@/components/brand/MapleLogo';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
-const LEAF = require('@/assets/images/maple-leaf.png') as number;
 
 export interface CmdMe {
   name: string;
@@ -114,7 +117,7 @@ export const CMD_NAV: readonly NavGroup[] = [
   },
 ];
 
-const go = (href: string | undefined, label: string) => (href ? router.push(href as never) : toast(`${label} opens here in the next release.`));
+const go = (href: string | undefined, label: string) => (href ? openMenuPage(href as never) : toast(`${label} opens here in the next release.`));
 
 /** One sidebar entry; a group opens its children while one of them is the current page. */
 function SideGroup({ g, active, sub }: { g: NavGroup; active: string; sub?: string }) {
@@ -167,11 +170,7 @@ function CommandSide({ active, sub, nav, home, platform, footer }: { active: str
   return (
     <View style={styles.side} accessibilityRole="menu">
       <Pressable style={styles.logo} onPress={() => router.push(home as never)} accessibilityRole="link" accessibilityLabel="Maple home">
-        <Image source={LEAF} style={styles.leaf} contentFit="contain" />
-        <View>
-          <Text style={styles.brand}>Maple</Text>
-          <Text style={styles.brandSub}>Global Online School</Text>
-        </View>
+        <MapleLogo markStyle={styles.leaf} onDark />
       </Pressable>
       <View style={styles.items}>
         {nav.map((g) => (
@@ -222,7 +221,7 @@ function CmdMeChip({ me }: { me: CmdMe }) {
   const switcher = useSwitcher();
   return (
     <Pressable style={styles.me} onPress={switcher?.open} accessibilityRole="button" accessibilityLabel={`${me.name}, ${me.role}. Switch mode`}>
-      <Image source={me.avatar} style={styles.meAvatar} contentFit="cover" />
+      <Image decorative source={me.avatar} style={styles.meAvatar} contentFit="cover" />
       <View>
         <Text style={styles.meName}>{me.name}</Text>
         <Text style={styles.meRole}>{me.role}</Text>
@@ -311,7 +310,7 @@ export function CmdHead({ icon, title, subtitle, section, right, root = 'Maple C
             </>
           ) : null}
         </View>
-        <Text style={styles.title} accessibilityRole="header" numberOfLines={1}>
+        <Text style={styles.title} {...PAGE_TITLE} numberOfLines={1}>
           {title}
         </Text>
         <Text style={styles.subtitle} numberOfLines={2}>
@@ -333,7 +332,7 @@ export function CommandPhone({ me, children, footer }: { me: CmdMe; children: Re
           <>
             <Bell count={me.notifications} size={26} />
             <Pressable onPress={switcher?.open} accessibilityRole="button" accessibilityLabel={`${me.name}. Switch mode`}>
-              <Image source={me.avatar} style={styles.phoneAvatar} contentFit="cover" />
+              <Image decorative source={me.avatar} style={styles.phoneAvatar} contentFit="cover" />
             </Pressable>
           </>
         }
@@ -346,10 +345,7 @@ export function CommandPhone({ me, children, footer }: { me: CmdMe; children: Re
   );
 }
 
-/** Every Maple Command page draws the command reference frame. */
-export function isCommandRefPath(path: string): boolean {
-  return path.startsWith('/command/');
-}
+export { isCommandRefPath } from '@/lib/portal-frame';
 
 /** The command phone tab bar: Overview, Trust, this page's section, Finance or Security, and More. */
 export function commandTabs(path: string): readonly PortalTab[] {
@@ -389,20 +385,20 @@ const styles = StyleSheet.create({
   countText: { fontSize: 11.5, fontWeight: '700', color: WHITE },
   countTextOn: { color: NAVY },
   sideRule: { height: 1, marginVertical: 12, backgroundColor: 'rgba(255,255,255,0.12)' },
-  healthDot: { width: 9, height: 9, borderRadius: 5, backgroundColor: '#22C55E' },
+  healthDot: { width: 9, height: 9, borderRadius: 5, backgroundColor: Maple.success },
   status: { flexDirection: 'row', alignItems: 'center', gap: 9, marginTop: 'auto', padding: 11, borderRadius: 12, backgroundColor: 'rgba(255,255,255,0.07)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)' },
-  statusIcon: { width: 24, height: 24, borderRadius: 12, alignItems: 'center', justifyContent: 'center', backgroundColor: '#22A55A' },
+  statusIcon: { width: 24, height: 24, borderRadius: 12, alignItems: 'center', justifyContent: 'center', backgroundColor: Maple.successText },
   statusTitle: { fontSize: 13, fontWeight: '700', color: WHITE },
   statusBody: { marginTop: 2, fontSize: 11.5, color: SIDEBAR_TEXT },
   column: { flex: 1, minWidth: 0 },
   top: { flexDirection: 'row', alignItems: 'center', gap: 16, height: 62, paddingHorizontal: 22, backgroundColor: WHITE, borderBottomWidth: 1, borderColor: LINE },
-  search: { flexDirection: 'row', alignItems: 'center', gap: 10, width: 600, height: 38, paddingHorizontal: 14, borderRadius: 10, backgroundColor: '#EEF3FB' },
+  search: { flexDirection: 'row', alignItems: 'center', gap: 10, width: 600, height: 38, paddingHorizontal: 14, borderRadius: 10, backgroundColor: Maple.blueSoft },
   searchInput: { flex: 1, minWidth: 0, height: 38, paddingVertical: 0, fontSize: 13.5, color: NAVY },
   kbd: { fontSize: 12, color: BODY },
-  live: { flexDirection: 'row', alignItems: 'center', gap: 7, height: 32, paddingHorizontal: 12, borderRadius: 8, backgroundColor: '#E3F6EA' },
+  live: { flexDirection: 'row', alignItems: 'center', gap: 7, height: 32, paddingHorizontal: 12, borderRadius: 8, backgroundColor: Maple.successSoft },
   liveSmall: { height: 28, paddingHorizontal: 9 },
-  liveDot: { width: 9, height: 9, borderRadius: 5, backgroundColor: '#16A34A' },
-  liveText: { fontSize: 14, fontWeight: '600', color: '#15803D' },
+  liveDot: { width: 9, height: 9, borderRadius: 5, backgroundColor: Maple.successText },
+  liveText: { fontSize: 14, fontWeight: '600', color: Maple.successText },
   liveTextSmall: { fontSize: 13 },
   me: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingLeft: 14, borderLeftWidth: 1, borderColor: LINE },
   meAvatar: { width: 44, height: 44, borderRadius: 22 },

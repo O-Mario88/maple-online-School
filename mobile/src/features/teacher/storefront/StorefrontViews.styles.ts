@@ -1,6 +1,8 @@
 import { StyleSheet } from 'react-native';
 
 import { BLUE, BODY, INK, LINE, MUTED } from '@/features/teacher/frame/TeacherParts';
+import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 /** Styles for StorefrontViews (kept apart so the view file stays readable). */
 export const STOREFRONT_REF_WIDTH = 1220;
@@ -10,7 +12,7 @@ export const s = StyleSheet.create({
     width: STOREFRONT_REF_WIDTH,
     padding: 12,
     gap: 10,
-    backgroundColor: '#EAF1FB',
+    backgroundColor: Maple.blueSelected,
   },
   body: {
     flexDirection: 'row',
@@ -64,8 +66,8 @@ export const s = StyleSheet.create({
     paddingHorizontal: 11,
     borderRadius: 7,
     borderWidth: 1,
-    borderColor: '#93C5FD',
-    backgroundColor: '#FFFFFF',
+    borderColor: Maple.blueLine,
+    backgroundColor: Maple.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -85,7 +87,7 @@ export const s = StyleSheet.create({
   primaryBtnText: {
     fontSize: 10.5,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   smallOutlineBtn: {
     height: 26,
@@ -96,7 +98,7 @@ export const s = StyleSheet.create({
     borderRadius: 6,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
   },
   smallOutlineBtnText: {
     fontSize: 10,
@@ -129,7 +131,7 @@ export const s = StyleSheet.create({
     borderRadius: 12,
     backgroundColor: BLUE,
     borderWidth: 2,
-    borderColor: '#FFFFFF',
+    borderColor: Maple.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -147,7 +149,7 @@ export const s = StyleSheet.create({
     color: INK,
   },
   reqStar: {
-    color: '#EF4444',
+    color: Maple.error,
   },
   textInput: {
     height: 28,
@@ -155,7 +157,7 @@ export const s = StyleSheet.create({
     borderRadius: 6,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     paddingHorizontal: 8,
     fontSize: 10.5,
     color: INK,
@@ -186,7 +188,7 @@ export const s = StyleSheet.create({
     borderRadius: 7,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     overflow: 'hidden',
   },
   richToolbar: {
@@ -195,7 +197,7 @@ export const s = StyleSheet.create({
     alignItems: 'center',
     gap: 9,
     paddingHorizontal: 8,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
     borderBottomWidth: 1,
     borderBottomColor: LINE,
   },
@@ -220,7 +222,7 @@ export const s = StyleSheet.create({
     height: 92,
     borderRadius: 8,
     overflow: 'hidden',
-    backgroundColor: '#0F172A',
+    backgroundColor: Maple.navy,
     alignItems: 'center',
     justifyContent: 'center',
     position: 'relative',
@@ -242,7 +244,7 @@ export const s = StyleSheet.create({
     borderRadius: 15,
     backgroundColor: 'rgba(15,23,42,0.65)',
     borderWidth: 1.5,
-    borderColor: '#FFFFFF',
+    borderColor: Maple.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -264,7 +266,7 @@ export const s = StyleSheet.create({
   videoTimeText: {
     fontSize: 8.5,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   videoBtnsRow: {
     flexDirection: 'row',
@@ -276,7 +278,7 @@ export const s = StyleSheet.create({
     borderRadius: 6,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -298,7 +300,7 @@ export const s = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     padding: 8,
     gap: 7,
     justifyContent: 'space-between',
@@ -343,7 +345,7 @@ export const s = StyleSheet.create({
     marginTop: 2,
   },
   tagPill: {
-    backgroundColor: '#E0ECFF',
+    backgroundColor: Maple.blueSelected,
     borderRadius: 4,
     paddingHorizontal: 5,
     paddingVertical: 1.5,
@@ -351,7 +353,7 @@ export const s = StyleSheet.create({
   tagText: {
     fontSize: 8,
     fontWeight: '700',
-    color: '#1D4ED8',
+    color: Maple.blue,
   },
   subjectFooter: {
     flexDirection: 'row',
@@ -359,13 +361,13 @@ export const s = StyleSheet.create({
     gap: 6,
     paddingTop: 5,
     borderTopWidth: 1,
-    borderTopColor: '#F1F5F9',
+    borderTopColor: Maple.blueSoft,
   },
   switchTrack: {
     width: 28,
     height: 15,
     borderRadius: 7.5,
-    backgroundColor: '#CBD5E1',
+    backgroundColor: Maple.borderStrong,
     padding: 1.5,
     justifyContent: 'center',
   },
@@ -376,7 +378,7 @@ export const s = StyleSheet.create({
     width: 12,
     height: 12,
     borderRadius: 6,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
   },
   switchThumbOn: {
     alignSelf: 'flex-end',
@@ -399,7 +401,7 @@ export const s = StyleSheet.create({
     borderRadius: 6,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     paddingHorizontal: 8,
     flexDirection: 'row',
     alignItems: 'center',
@@ -426,7 +428,7 @@ export const s = StyleSheet.create({
   hourDayHeader: {
     width: '100%',
     paddingVertical: 4,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
     borderBottomWidth: 1,
     borderBottomColor: LINE,
     alignItems: 'center',
@@ -455,7 +457,7 @@ export const s = StyleSheet.create({
     width: '100%',
     paddingVertical: 3,
     borderTopWidth: 1,
-    borderTopColor: '#F1F5F9',
+    borderTopColor: Maple.blueSoft,
     alignItems: 'center',
   },
   hourPlusText: {
@@ -470,7 +472,7 @@ export const s = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     padding: 9,
     gap: 6,
   },
@@ -483,7 +485,7 @@ export const s = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: '#DCFCE7',
+    backgroundColor: Maple.successSoft,
     borderRadius: 10,
     paddingHorizontal: 7,
     paddingVertical: 2,
@@ -492,12 +494,12 @@ export const s = StyleSheet.create({
     width: 5,
     height: 5,
     borderRadius: 2.5,
-    backgroundColor: '#16A34A',
+    backgroundColor: Maple.successText,
   },
   activePillText: {
     fontSize: 8.5,
     fontWeight: '700',
-    color: '#15803D',
+    color: Maple.successText,
   },
   promoBodyRow: {
     flexDirection: 'row',
@@ -508,14 +510,14 @@ export const s = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 7,
-    backgroundColor: '#FCE7F3',
+    backgroundColor: Palette.pink100,
     alignItems: 'center',
     justifyContent: 'center',
   },
   promoPercentText: {
     fontSize: 13,
     fontWeight: '800',
-    color: '#DB2777',
+    color: Palette.pink600,
   },
   promoTitle: {
     fontSize: 11,
@@ -549,7 +551,7 @@ export const s = StyleSheet.create({
     borderRadius: 7,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
     padding: 2,
   },
   deviceBtn: {
@@ -566,7 +568,7 @@ export const s = StyleSheet.create({
     color: BODY,
   },
   deviceBtnTextOn: {
-    color: '#FFFFFF',
+    color: Maple.surface,
     fontWeight: '700',
   },
   previewCanvas: {
@@ -574,7 +576,7 @@ export const s = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     overflow: 'hidden',
     padding: 10,
     gap: 9,
@@ -582,7 +584,7 @@ export const s = StyleSheet.create({
   heroBanner: {
     height: 102,
     borderRadius: 8,
-    backgroundColor: '#0B2A6E',
+    backgroundColor: Maple.blueHover,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -614,11 +616,11 @@ export const s = StyleSheet.create({
     fontSize: 16,
     lineHeight: 19,
     fontWeight: '800',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   heroTagline: {
     fontSize: 9,
-    color: '#BFDBFE',
+    color: Maple.blueLine,
   },
   heroTeacherImg: {
     width: 96,
@@ -638,7 +640,7 @@ export const s = StyleSheet.create({
     height: 52,
     borderRadius: 26,
     borderWidth: 2,
-    borderColor: '#FFFFFF',
+    borderColor: Maple.surface,
   },
   previewNameRow: {
     flexDirection: 'row',
@@ -661,7 +663,7 @@ export const s = StyleSheet.create({
   verifiedCheckMark: {
     fontSize: 8,
     fontWeight: '800',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   previewHandle: {
     fontSize: 9,
@@ -678,7 +680,7 @@ export const s = StyleSheet.create({
   },
   starGlyph: {
     fontSize: 10,
-    color: '#F59E0B',
+    color: Maple.warning,
   },
   ratingStrong: {
     fontSize: 9.5,
@@ -705,7 +707,7 @@ export const s = StyleSheet.create({
   bookClassBtnText: {
     fontSize: 9.5,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   messageBtn: {
     height: 26,
@@ -713,7 +715,7 @@ export const s = StyleSheet.create({
     borderRadius: 6,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -775,7 +777,7 @@ export const s = StyleSheet.create({
     height: 68,
     borderRadius: 7,
     overflow: 'hidden',
-    backgroundColor: '#0F172A',
+    backgroundColor: Maple.navy,
     alignItems: 'center',
     justifyContent: 'center',
     position: 'relative',
@@ -786,7 +788,7 @@ export const s = StyleSheet.create({
     borderRadius: 12,
     backgroundColor: 'rgba(15,23,42,0.65)',
     borderWidth: 1,
-    borderColor: '#FFFFFF',
+    borderColor: Maple.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -802,7 +804,7 @@ export const s = StyleSheet.create({
   miniDurationText: {
     fontSize: 7.5,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
 
   /* Featured Subjects Preview */
@@ -825,7 +827,7 @@ export const s = StyleSheet.create({
     borderRadius: 7,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     padding: 7,
     gap: 3,
   },
@@ -852,7 +854,7 @@ export const s = StyleSheet.create({
     color: BODY,
   },
   tagPillSmall: {
-    backgroundColor: '#E0ECFF',
+    backgroundColor: Maple.blueSelected,
     borderRadius: 3,
     paddingHorizontal: 4,
     paddingVertical: 1,
@@ -860,7 +862,7 @@ export const s = StyleSheet.create({
   tagTextSmall: {
     fontSize: 7,
     fontWeight: '700',
-    color: '#1D4ED8',
+    color: Maple.blue,
   },
 
   /* Preview Hours Strip */
@@ -873,7 +875,7 @@ export const s = StyleSheet.create({
     borderRadius: 6,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#F8FAFF',
+    backgroundColor: Maple.blueSoft,
     paddingVertical: 5,
     alignItems: 'center',
     gap: 1,
@@ -896,27 +898,27 @@ export const s = StyleSheet.create({
     gap: 8,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#FECDD3',
-    backgroundColor: '#FFF1F2',
+    borderColor: Maple.errorSoft,
+    backgroundColor: Maple.errorSoft,
     padding: 8,
   },
   claimPercentBox: {
     width: 26,
     height: 26,
     borderRadius: 6,
-    backgroundColor: '#E11D48',
+    backgroundColor: Maple.error,
     alignItems: 'center',
     justifyContent: 'center',
   },
   claimPercentText: {
     fontSize: 13,
     fontWeight: '800',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   claimBannerTitle: {
     fontSize: 10,
     fontWeight: '800',
-    color: '#BE123C',
+    color: Maple.error,
   },
   claimBannerSub: {
     fontSize: 8,
@@ -930,14 +932,14 @@ export const s = StyleSheet.create({
     height: 26,
     paddingHorizontal: 10,
     borderRadius: 6,
-    backgroundColor: '#E11D48',
+    backgroundColor: Maple.error,
     alignItems: 'center',
     justifyContent: 'center',
   },
   claimOfferBtnText: {
     fontSize: 9,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
 });
 

@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { useShell } from '@/components/ui';
+import { useContentWidth, useShell } from '@/components/ui';
 import { AccountSide, CurrentPlan, PaymentMethods, PhoneOverview, Plans, Purchases, Wallet } from '@/features/learner/billing/BillingCards';
 import { BillingDialogs } from '@/features/learner/billing/BillingDialogs';
 import { type BillingState, type Hub, type PhoneTab, useBilling } from '@/features/learner/billing/useBilling';
@@ -9,12 +9,15 @@ import { LearnerPhoneTop } from '@/features/learner/dashboard/DashPhone';
 import { RefScale } from '@/features/public/home/RefScale';
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { mockData } from '@/lib/mock';
+import { Maple } from '@/constants/maple';
+import { PageScroll } from '@/components/shell/PageScroll';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
 /** The billing reference's desktop panel (x 16–1170 of 1536), laid out in its pixels. */
 const BILLING_REF_WIDTH = 1154;
 const MAX_DESK_WIDTH = 1400;
-const NAVY = '#0F1B3D';
-const BODY = '#4A5263';
+const NAVY = Maple.navy;
+const BODY = Maple.body;
 
 function Desktop({ s }: { s: BillingState }) {
   return (
@@ -23,7 +26,7 @@ function Desktop({ s }: { s: BillingState }) {
         <AccountSide s={s} />
       </View>
       <View style={styles.main}>
-        <Text style={styles.title} accessibilityRole="header">
+        <Text style={styles.title} {...PAGE_TITLE}>
           Billing & Subscriptions
         </Text>
         <Text style={styles.sub}>Manage your study passes, tutoring credits, payment methods and purchase history.</Text>
@@ -59,8 +62,8 @@ function Phone({ s, avatar }: { s: BillingState; avatar: number }) {
   return (
     <View style={styles.phoneRoot}>
       <LearnerPhoneTop avatar={avatar} />
-      <ScrollView contentContainerStyle={styles.phone}>
-        <Text style={styles.titleP} accessibilityRole="header">
+      <PageScroll contentContainerStyle={styles.phone}>
+        <Text style={styles.titleP} {...PAGE_TITLE}>
           Billing & Subscriptions
         </Text>
         <View style={styles.tabs} accessibilityRole="tablist">
@@ -88,7 +91,7 @@ function Phone({ s, avatar }: { s: BillingState; avatar: number }) {
         ) : (
           <Purchases s={s} />
         )}
-      </ScrollView>
+      </PageScroll>
     </View>
   );
 }
@@ -96,15 +99,15 @@ function Phone({ s, avatar }: { s: BillingState; avatar: number }) {
 function BillingView({ hub, avatar }: { hub: Hub; avatar: number }) {
   const s = useBilling(hub);
   const { wide } = useShell();
-  const { width } = useWindowDimensions();
+  const width = useContentWidth();
   return (
     <View style={styles.flex}>
       {wide ? (
-        <ScrollView style={styles.deskBg} contentContainerStyle={styles.deskWrap}>
+        <PageScroll style={styles.deskBg} contentContainerStyle={styles.deskWrap}>
           <RefScale width={Math.min(width - 32, MAX_DESK_WIDTH)} refWidth={BILLING_REF_WIDTH}>
             <Desktop s={s} />
           </RefScale>
-        </ScrollView>
+        </PageScroll>
       ) : (
         <Phone s={s} avatar={avatar} />
       )}
@@ -128,23 +131,23 @@ export default function BillingScreen() {
 const styles = StyleSheet.create({
   flex: { flex: 1 },
   gap: { gap: 12 },
-  deskBg: { backgroundColor: '#EEF3FB' },
+  deskBg: { backgroundColor: Maple.blueSoft },
   deskWrap: { alignItems: 'center', paddingVertical: 16 },
-  canvas: { width: BILLING_REF_WIDTH, flexDirection: 'row', borderRadius: 12, backgroundColor: '#F6F9FD', overflow: 'hidden' },
-  left: { width: 206, backgroundColor: '#EFF4FB' },
+  canvas: { width: BILLING_REF_WIDTH, flexDirection: 'row', borderRadius: 12, backgroundColor: Maple.blueSoft, overflow: 'hidden' },
+  left: { width: 206, backgroundColor: Maple.blueSoft },
   main: { flex: 1, gap: 14, padding: 14, paddingLeft: 14 },
   title: { marginTop: 10, fontSize: 29, fontWeight: '800', color: NAVY, letterSpacing: -0.6 },
   sub: { marginTop: -8, fontSize: 14, color: BODY },
   row: { flexDirection: 'row', gap: 10 },
   colA: { width: 566 },
-  phoneRoot: { flex: 1, backgroundColor: '#F6F9FD' },
+  phoneRoot: { flex: 1, backgroundColor: Maple.blueSoft },
   phone: { gap: 12, padding: 14, paddingBottom: 110 },
   titleP: { fontSize: 22, fontWeight: '800', color: NAVY, letterSpacing: -0.4 },
-  tabs: { flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: '#E6ECF5' },
+  tabs: { flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: Maple.blueSelected },
   tab: { flex: 1, height: 38, alignItems: 'center', justifyContent: 'center', borderBottomWidth: 2.5, borderBottomColor: 'transparent' },
-  tabOn: { borderBottomColor: '#0B6BFF' },
+  tabOn: { borderBottomColor: Maple.blue },
   tabText: { fontSize: 13, color: NAVY },
-  tabTextOn: { fontWeight: '600', color: '#1463F3' },
+  tabTextOn: { fontWeight: '600', color: Maple.blue },
   toast: { position: 'absolute', left: 16, right: 16, bottom: 96, alignItems: 'center' },
-  toastText: { maxWidth: 520, paddingHorizontal: 14, paddingVertical: 10, borderRadius: 10, backgroundColor: 'rgba(11,20,36,0.92)', fontSize: 13, color: '#FFFFFF', textAlign: 'center', overflow: 'hidden' },
+  toastText: { maxWidth: 520, paddingHorizontal: 14, paddingVertical: 10, borderRadius: 10, backgroundColor: 'rgba(11,20,36,0.92)', fontSize: 13, color: Maple.surface, textAlign: 'center', overflow: 'hidden' },
 });

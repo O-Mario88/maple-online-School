@@ -5,8 +5,10 @@ import { L } from '@/features/learner/frame/LightFrame';
 
 import type { StepKey } from './applicationForm';
 import { Check, DateField, dayLabel, Field, PhoneField, Row, SectionHead, Select } from './ApplyParts';
-import { LAVENDER, PURPLE } from './SchoolParts';
+import { BRAND_SOFT, BRAND_BLUE } from './SchoolParts';
 import type { Apply } from './useApply';
+import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 const STAYS = ['Day', 'Boarding', 'Day & Boarding'] as const;
 
@@ -119,7 +121,7 @@ export function DocumentsStep({ a }: { a: Apply }) {
         return (
           <View key={d.id} style={[s.doc, !!error && s.docError]}>
             <View style={[s.docIcon, file && s.docIconOn]}>
-              <Icon name={file ? 'tick' : 'doc'} size={18} color={file ? L.green : PURPLE} />
+              <Icon name={file ? 'tick' : 'doc'} size={18} color={file ? L.green : BRAND_BLUE} />
             </View>
             <View style={s.flex}>
               <Text style={s.docTitle}>{d.label}</Text>
@@ -169,11 +171,11 @@ export function ReviewStep({ a }: { a: Apply }) {
       <Summary title="Academic" step="academic" onEdit={a.goTo} rows={[['Current school', [f.current.school, f.current.grade, f.current.year].filter(Boolean).join(', ')], ['Stream', f.academic.stream], ['PLE', `Aggregate ${f.academic.pleAggregate} · ${f.academic.pleIndex} · ${f.academic.pleYear}`], ['Subjects', f.academic.subjects.join(', ')], ['Day or boarding', f.academic.boarding]]} />
       <Summary title="Documents" step="documents" onEdit={a.goTo} rows={docs.map((d) => [d.label, f.documents[d.id] ?? 'Missing'])} />
       <View style={s.notice}>
-        <Icon name="shield" size={18} color={PURPLE} />
+        <Icon name="shield" size={18} color={BRAND_BLUE} />
         <Text style={s.noticeText}>{`When you submit, ${a.school.name} receives only this application and its documents. Nothing else from your Maple account is shared, and your browsing, likes and saves stay private. The school decides on admission; Maple never promises a place.`}</Text>
       </View>
       <View style={s.notice}>
-        <Icon name="wallet" size={18} color={PURPLE} />
+        <Icon name="wallet" size={18} color={BRAND_BLUE} />
         <Text style={s.noticeText}>{a.feeNote}</Text>
       </View>
       <Check checked={f.consent} onPress={() => a.set({ consent: !f.consent })} label={`I confirm these details are true, and I agree to share this application with ${a.school.name} only.`} error={a.errors.consent} />
@@ -190,28 +192,28 @@ const s = StyleSheet.create({
   group: { gap: 8 },
   groupTitle: { fontSize: 14.5, fontWeight: '600', color: L.navy },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  chip: { paddingHorizontal: 12, paddingVertical: 7, borderRadius: 999, borderWidth: 1, borderColor: '#D5DCE7', backgroundColor: L.white },
-  chipOn: { borderColor: PURPLE, backgroundColor: LAVENDER },
+  chip: { paddingHorizontal: 12, paddingVertical: 7, borderRadius: 999, borderWidth: 1, borderColor: Maple.borderStrong, backgroundColor: L.white },
+  chipOn: { borderColor: BRAND_BLUE, backgroundColor: BRAND_SOFT },
   chipText: { fontSize: 13.5, color: L.ink },
-  chipTextOn: { fontWeight: '600', color: PURPLE },
-  area: { minHeight: 80, padding: 12, borderRadius: 8, borderWidth: 1, borderColor: '#D5DCE7', fontSize: 14.5, color: L.ink, textAlignVertical: 'top' },
+  chipTextOn: { fontWeight: '600', color: BRAND_BLUE },
+  area: { minHeight: 80, padding: 12, borderRadius: 8, borderWidth: 1, borderColor: Maple.borderStrong, fontSize: 14.5, color: L.ink, textAlignVertical: 'top' },
   doc: { flexDirection: 'row', alignItems: 'center', gap: 14, padding: 14, borderRadius: 12, borderWidth: 1, borderColor: L.line },
-  docError: { borderColor: '#F3B4B4', backgroundColor: '#FFF7F7' },
-  docIcon: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center', borderRadius: 10, backgroundColor: LAVENDER },
-  docIconOn: { backgroundColor: '#DDF4E4' },
+  docError: { borderColor: Palette.red300d, backgroundColor: Maple.errorSoft },
+  docIcon: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center', borderRadius: 10, backgroundColor: BRAND_SOFT },
+  docIconOn: { backgroundColor: Maple.successSoft },
   docTitle: { fontSize: 14.5, fontWeight: '600', color: L.navy },
   small: { fontSize: 13, lineHeight: 18, color: L.body },
-  errorText: { color: '#DC2626' },
+  errorText: { color: Maple.error },
   attach: { height: 34, flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 14, borderRadius: 8, backgroundColor: L.blue },
   attachText: { fontSize: 13, fontWeight: '600', color: L.white },
-  remove: { height: 34, flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 12, borderRadius: 8, backgroundColor: '#F1F4F9' },
+  remove: { height: 34, flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 12, borderRadius: 8, backgroundColor: Maple.blueSoft },
   removeText: { fontSize: 13, fontWeight: '600', color: L.body },
-  summary: { gap: 6, padding: 14, borderRadius: 12, backgroundColor: '#F7F9FD' },
+  summary: { gap: 6, padding: 14, borderRadius: 12, backgroundColor: Maple.blueSoft },
   summaryHead: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   edit: { fontSize: 13.5, fontWeight: '600', color: L.blue },
   summaryRow: { flexDirection: 'row', gap: 12 },
   summaryKey: { width: 170, fontSize: 13.5, color: L.body },
   summaryValue: { flex: 1, fontSize: 13.5, color: L.ink },
-  notice: { flexDirection: 'row', alignItems: 'flex-start', gap: 10, padding: 14, borderRadius: 12, backgroundColor: '#F4F1FE' },
+  notice: { flexDirection: 'row', alignItems: 'flex-start', gap: 10, padding: 14, borderRadius: 12, backgroundColor: Maple.blueSoft },
   noticeText: { flex: 1, fontSize: 13.5, lineHeight: 19, color: L.ink },
 });

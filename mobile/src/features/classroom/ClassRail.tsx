@@ -4,9 +4,10 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Icon } from '@/components/icon';
 import { Brand } from '@/features/public/palette';
 import type { IconName } from '@/lib/icons';
+import { Maple } from '@/constants/maple';
 
-const RAIL = '#0E1B3D';
-const RAIL_ON = '#1D3A8A';
+const RAIL = Maple.navy;
+const RAIL_ON = Maple.blueHover;
 
 export type RailKey = 'class' | 'participants' | 'chat' | 'notes' | 'transcript' | 'assignments' | 'resources' | 'polls' | 'rooms' | 'recording';
 

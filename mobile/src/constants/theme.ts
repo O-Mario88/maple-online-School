@@ -6,38 +6,39 @@ import '@/global.css';
 
 import { Platform } from 'react-native';
 
-// Maple blue on cool, light neutrals, taken from the reference designs, with
-// a white sidebar, and a soft and a strong shade of each status colour. Text
-// on every background meets WCAG AA in both themes.
+import { Maple, Radii } from '@/constants/maple';
+
+// The light theme is the Maple Design System palette (constants/maple.ts).
+// Text on every background meets WCAG AA in both themes.
 export const Colors = {
   light: {
-    text: '#0B1424',
-    textSecondary: '#3D4656',
-    textMuted: '#636B7C',
-    background: '#F5F7FC',
-    backgroundElement: '#FFFFFF',
-    backgroundSelected: '#EEF2FA',
-    border: '#E3E8F2',
-    borderStrong: '#C9D2E3',
-    accent: '#1463F3',
-    accentHover: '#0B4FD1',
-    accentSoft: '#EAF1FF',
-    accentText: '#0B4FD1',
-    onAccent: '#FFFFFF',
-    danger: '#C62828',
-    dangerSoft: '#FDECEC',
-    success: '#15803D',
-    successSoft: '#E6F6EC',
-    warning: '#8A5A00',
-    warningSoft: '#FEF3DC',
-    info: '#1F5FA8',
-    infoSoft: '#E8F0FB',
-    sidebar: '#FFFFFF',
-    sidebarElement: '#EAF1FF',
-    sidebarText: '#0B1424',
-    sidebarMuted: '#636B7C',
-    focus: '#1463F3',
-    overlay: 'rgba(11, 20, 36, 0.45)',
+    text: Maple.navy,
+    textSecondary: Maple.body,
+    textMuted: Maple.secondary,
+    background: Maple.canvas,
+    backgroundElement: Maple.surface,
+    backgroundSelected: Maple.blueSelected,
+    border: Maple.border,
+    borderStrong: Maple.borderStrong,
+    accent: Maple.blue,
+    accentHover: Maple.blueHover,
+    accentSoft: Maple.blueSoft,
+    accentText: Maple.blueText,
+    onAccent: Maple.white,
+    danger: Maple.error,
+    dangerSoft: Maple.errorSoft,
+    success: Maple.successText,
+    successSoft: Maple.successSoft,
+    warning: Maple.warningText,
+    warningSoft: Maple.warningSoft,
+    info: Maple.blueText,
+    infoSoft: Maple.blueSoft,
+    sidebar: Maple.surface,
+    sidebarElement: Maple.blueSelected,
+    sidebarText: Maple.navy,
+    sidebarMuted: Maple.secondary,
+    focus: Maple.blue,
+    overlay: Maple.overlay,
   },
   dark: {
     text: '#EEF2FA',
@@ -107,7 +108,8 @@ export const Spacing = {
   six: 64,
 } as const;
 
-export const Radius = { sm: 8, md: 12, lg: 16, xl: 20, pill: 999 } as const;
+/** Radii from the design system: `control` for buttons and inputs, never `pill` for a button. */
+export const Radius = { sm: Radii.control, control: Radii.control, md: Radii.card, lg: Radii.panel, xl: 20, pill: Radii.pill } as const;
 
 /** Soft shadows; on Android, elevation does the same job. */
 export const Elevation = {
@@ -126,4 +128,3 @@ export const Breakpoints = { wide: 960, extraWide: 1280 } as const;
 
 export const SidebarWidth = 264;
 export const BottomTabInset = Platform.select({ ios: 50, android: 80 }) ?? 0;
-export const MaxContentWidth = 1160;

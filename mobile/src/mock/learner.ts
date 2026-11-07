@@ -1,6 +1,7 @@
 /** Learner fixtures (design builds only; never bundled in deployment). */
 
 import { photos } from './photos';
+import { Maple } from '@/constants/maple';
 
 export type LessonKind = 'video' | 'notes' | 'quiz' | 'live';
 
@@ -283,9 +284,9 @@ export const dashboard = {
     { title: 'English Essay', due: 'Due tomorrow', action: 'View', primary: false, icon: dash('assign-2') },
   ],
   continue: [
-    { title: 'Fractions and Decimals', meta: 'Mathematics • Primary 7', progress: 0.6, color: '#16A34A', photo: dash('thumb-1') },
-    { title: 'Reading Comprehension', meta: 'English • Primary 7', progress: 0.3, color: '#16A34A', photo: dash('thumb-2') },
-    { title: 'Living Things', meta: 'Science • Primary 7', progress: 0.25, color: '#1463F3', photo: dash('thumb-3') },
+    { title: 'Fractions and Decimals', meta: 'Mathematics • Primary 7', progress: 0.6, color: Maple.successText, photo: dash('thumb-1') },
+    { title: 'Reading Comprehension', meta: 'English • Primary 7', progress: 0.3, color: Maple.successText, photo: dash('thumb-2') },
+    { title: 'Living Things', meta: 'Science • Primary 7', progress: 0.25, color: Maple.blue, photo: dash('thumb-3') },
   ],
   activity: [
     { title: 'Completed: Ecosystems Video', at: '2 hours ago', icon: dash('activity-1') },
@@ -364,6 +365,7 @@ export { libraryHub } from './library-hub';
 export { learnerPlan } from './learner-plan';
 export { videoHub } from './learner-video';
 export { schoolNetwork } from './school-network';
+export { careerCompass } from './career-compass';
 export { progressMap } from './progress-map';
 export { squadRoom } from './squad-room';
 export { billingHub } from './billing-hub';

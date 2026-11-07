@@ -34,13 +34,23 @@ export function overallProgress(progress: readonly number[]): number {
 }
 
 /** On track while overall progress keeps up with the share of weeks gone. */
-export const planStatus = (overallPct: number, week: number, weeks: number): 'On track' | 'Behind' => (overallPct >= Math.round((week / weeks) * 100) ? 'On track' : 'Behind');
+export const planStatus = (overallPct: number, week: number, weeks: number): 'On track' | 'Behind' =>
+  overallPct >= Math.round((week / weeks) * 100) ? 'On track' : 'Behind';
 
 /** The phases for a plan of another length: each ends at the same share of the plan, starting the week after the last. */
-export function scalePhases(phases: readonly PlanPhase[], weeks: number, length: number): readonly PlanPhase[] {
+export function scalePhases<T extends PlanPhase>(phases: readonly T[], weeks: number, length: number): readonly T[] {
   if (weeks === length) return phases;
-  return phases.reduce<PlanPhase[]>((out, p) => {
+  return phases.reduce<T[]>((out, p) => {
     const from = out.length ? out[out.length - 1].to + 1 : 1;
     return [...out, { ...p, from, to: Math.max(from, Math.round((p.to * length) / weeks)) }];
   }, []);
+}
+
+/** My Plan's tabs, in order. */
+export const PLAN_TABS = ['plan', 'career', 'subject', 'schedule', 'goals', 'recs'] as const;
+export type PlanTab = (typeof PLAN_TABS)[number];
+
+/** The tab a link's `?tab=` asks for, or null when it names none. */
+export function planTabFromLink(param: unknown): PlanTab | null {
+  return typeof param === 'string' && (PLAN_TABS as readonly string[]).includes(param) ? (param as PlanTab) : null;
 }

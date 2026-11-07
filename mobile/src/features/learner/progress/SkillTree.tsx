@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
@@ -8,18 +8,20 @@ import { leafState, type Leaf, type MapState, type Topic, topicState } from '@/l
 import type { IconName } from '@/lib/icons';
 
 import type { ProgressState } from './useProgress';
+import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
-const NAVY = '#16213E';
-const BODY = '#4A5263';
-const LINE = '#5A78B4';
-const DASH = '#A7B3C9';
+const NAVY = Maple.navy;
+const BODY = Maple.body;
+const LINE = Maple.blue;
+const DASH = Palette.blue400;
 
 /** Gold = mastered, orange = needs review, blue = in progress, grey = locked. */
 export const TONE: Record<MapState, { fill: string; border: string; dot: string; halo: string; icon: IconName; label: string }> = {
-  mastered: { fill: '#FFF6DA', border: '#F2C232', dot: '#DFA200', halo: '#F9DB78', icon: 'star', label: 'Mastered' },
-  review: { fill: '#FFEEE3', border: '#F59A5C', dot: '#F26A1B', halo: '#FDD3B6', icon: 'sparkle', label: 'Needs Review' },
-  progress: { fill: '#E9F2FF', border: '#2F7BF6', dot: '#2F7BF6', halo: '#BFD6FC', icon: 'sparkle', label: 'In Progress' },
-  locked: { fill: '#EEF0F4', border: '#D4D9E1', dot: '#6B7280', halo: '#D9DDE4', icon: 'lock', label: 'Locked' },
+  mastered: { fill: Maple.warningSoft, border: Maple.warning, dot: Maple.warning, halo: Palette.yellow400, icon: 'star', label: 'Mastered' },
+  review: { fill: Palette.orange100, border: Palette.orange400, dot: Palette.orange500, halo: Palette.orange200, icon: 'sparkle', label: 'Needs Review' },
+  progress: { fill: Maple.blueSoft, border: Maple.blue, dot: Maple.blue, halo: Maple.blueLine, icon: 'sparkle', label: 'In Progress' },
+  locked: { fill: Maple.disabledSurface, border: Maple.borderStrong, dot: Maple.secondary, halo: Maple.disabledBorder, icon: 'lock', label: 'Locked' },
 };
 
 type Box = { x: number; y: number; w: number; h: number };
@@ -138,7 +140,7 @@ function Badge({ state, size }: { state: MapState; size: number }) {
   const t = TONE[state];
   return (
     <View style={[styles.badge, { width: size, height: size, borderRadius: size / 2, backgroundColor: t.dot, borderColor: t.halo, borderWidth: size > 24 ? 3 : 2 }]}>
-      <Icon name={t.icon} size={size * 0.46} color="#FFFFFF" />
+      <Icon name={t.icon} size={size * 0.46} color={Maple.surface} />
     </View>
   );
 }
@@ -161,7 +163,7 @@ function TopicNode({ s, box, id, name, done, total }: { s: ProgressState; box: B
       </View>
       {st === 'mastered' ? (
         <View style={styles.check}>
-          <Icon name="check" size={11} color="#FFFFFF" />
+          <Icon name="check" size={11} color={Maple.surface} />
         </View>
       ) : null}
     </Pressable>
@@ -174,12 +176,12 @@ function LeafNode({ s, box, topic, leaf }: { s: ProgressState; box: Box; topic: 
   const icon: IconName = st === 'locked' && leaf.after ? 'star' : t.icon;
   return (
     <Pressable
-      style={[styles.leaf, { left: box.x, top: box.y, width: box.w, height: box.h, backgroundColor: t.fill, borderColor: st === 'locked' ? '#E1E5EB' : t.border }]}
+      style={[styles.leaf, { left: box.x, top: box.y, width: box.w, height: box.h, backgroundColor: t.fill, borderColor: st === 'locked' ? Maple.border : t.border }]}
       onPress={() => s.pick({ id: leaf.id, topic: topic.id })}
       accessibilityRole="button"
       accessibilityLabel={`${leaf.name}: ${t.label}`}>
       <View style={[styles.leafDot, { backgroundColor: t.dot, borderColor: t.halo }]}>
-        <Icon name={icon} size={9} color="#FFFFFF" />
+        <Icon name={icon} size={9} color={Maple.surface} />
       </View>
       <Text style={styles.leafName} numberOfLines={3}>
         {leaf.name}
@@ -207,7 +209,7 @@ export function SkillTreeCard({ s, onExpand }: { s: ProgressState; onExpand?: ()
   const tree = s.tree;
   return (
     <View style={styles.card}>
-      <Image source={s.subject.icon} style={styles.headIcon} contentFit="cover" />
+      <Image decorative source={s.subject.icon} style={styles.headIcon} contentFit="cover" />
       <Text style={styles.title}>{`${s.subject.name} Skill Tree`}</Text>
       <Text style={styles.desc}>{`Explore the key skills in ${s.subject.name}. Click on any skill to see practice, or continue learning.`}</Text>
       <View style={styles.curriculum}>
@@ -270,7 +272,7 @@ export function PhoneTree({ s }: { s: ProgressState }) {
         </View>
         {st === 'mastered' ? (
           <View style={styles.pCheck}>
-            <Icon name="check" size={10} color="#FFFFFF" />
+            <Icon name="check" size={10} color={Maple.surface} />
           </View>
         ) : null}
       </Pressable>
@@ -282,9 +284,9 @@ export function PhoneTree({ s }: { s: ProgressState }) {
     return (
       <View key={x.leaf.id} style={styles.pLeafWrap}>
         <View style={[styles.pStem, st === 'locked' && styles.pStemDashed]} />
-        <Pressable style={[styles.pLeaf, { backgroundColor: t.fill, borderColor: st === 'locked' ? '#E1E5EB' : t.border }]} onPress={() => s.pick({ id: x.leaf.id, topic: x.topic.id })} accessibilityRole="button" accessibilityLabel={`${x.leaf.name}: ${t.label}`}>
+        <Pressable style={[styles.pLeaf, { backgroundColor: t.fill, borderColor: st === 'locked' ? Maple.border : t.border }]} onPress={() => s.pick({ id: x.leaf.id, topic: x.topic.id })} accessibilityRole="button" accessibilityLabel={`${x.leaf.name}: ${t.label}`}>
           <View style={[styles.leafDot, styles.pLeafDot, { backgroundColor: t.dot, borderColor: t.halo }]}>
-            <Icon name={st === 'locked' && x.leaf.after ? 'star' : t.icon} size={10} color="#FFFFFF" />
+            <Icon name={st === 'locked' && x.leaf.after ? 'star' : t.icon} size={10} color={Maple.surface} />
           </View>
           <Text style={styles.pLeafName}>{x.leaf.name}</Text>
         </Pressable>
@@ -333,31 +335,31 @@ export function PhoneTree({ s }: { s: ProgressState }) {
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
-  card: { width: TREE_CARD.w, height: TREE_CARD.h, borderRadius: 12, borderWidth: 1, borderColor: '#E9EEF5', backgroundColor: '#FFFFFF' },
+  card: { width: TREE_CARD.w, height: TREE_CARD.h, borderRadius: 12, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface },
   headIcon: { position: 'absolute', left: 12, top: 11, width: 51, height: 51, borderRadius: 10 },
   title: { position: 'absolute', left: 76, top: 13, fontSize: 19, fontWeight: '800', color: NAVY, letterSpacing: -0.3 },
-  desc: { position: 'absolute', left: 76, top: 39, width: 360, fontSize: 12.5, lineHeight: 17, color: '#3F4A63' },
+  desc: { position: 'absolute', left: 76, top: 39, width: 360, fontSize: 12.5, lineHeight: 17, color: Maple.body },
   curriculum: { position: 'absolute', left: 456, top: 11, zIndex: 20 },
-  curriculumBtn: { width: 160, height: 29, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 12, borderRadius: 6, borderWidth: 1, borderColor: '#DCE5F3', backgroundColor: '#FFFFFF' },
+  curriculumBtn: { width: 160, height: 29, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 12, borderRadius: 6, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface },
   curriculumText: { fontSize: 11.5, color: NAVY },
-  menu: { marginTop: 4, paddingVertical: 4, borderRadius: 8, borderWidth: 1, borderColor: '#E1E7F0', backgroundColor: '#FFFFFF' },
+  menu: { marginTop: 4, paddingVertical: 4, borderRadius: 8, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface },
   menuItem: { height: 28, justifyContent: 'center', paddingHorizontal: 12 },
   menuText: { fontSize: 11.5, color: NAVY },
-  menuOn: { fontWeight: '700', color: '#1463F3' },
-  expand: { position: 'absolute', left: 625, top: 11, width: 28, height: 29, alignItems: 'center', justifyContent: 'center', borderRadius: 6, borderWidth: 1, borderColor: '#DCE5F3' },
-  legendBox: { position: 'absolute', left: 12, top: 83, width: 640, height: 44, justifyContent: 'center', paddingHorizontal: 6, borderRadius: 10, borderWidth: 1, borderColor: '#EDF1F7' },
+  menuOn: { fontWeight: '700', color: Maple.blue },
+  expand: { position: 'absolute', left: 625, top: 11, width: 28, height: 29, alignItems: 'center', justifyContent: 'center', borderRadius: 6, borderWidth: 1, borderColor: Maple.blueSelected },
+  legendBox: { position: 'absolute', left: 12, top: 83, width: 640, height: 44, justifyContent: 'center', paddingHorizontal: 6, borderRadius: 10, borderWidth: 1, borderColor: Maple.blueSelected },
   legend: { flexDirection: 'row', alignItems: 'center', gap: 26 },
   legendInline: { flexWrap: 'wrap', gap: 14 },
   legendItem: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 4, paddingVertical: 4 },
-  legendLocked: { paddingHorizontal: 8, borderRadius: 8, backgroundColor: '#F1F3F7' },
+  legendLocked: { paddingHorizontal: 8, borderRadius: 8, backgroundColor: Maple.canvas },
   legendDot: { width: 12, height: 12, borderRadius: 6, borderWidth: 2.5 },
-  legendText: { fontSize: 11.5, color: '#2E3A55' },
+  legendText: { fontSize: 11.5, color: Maple.body },
   badge: { alignItems: 'center', justifyContent: 'center' },
   topic: { position: 'absolute', flexDirection: 'row', alignItems: 'center', gap: 9, paddingLeft: 11, paddingRight: 10, borderRadius: 10, borderWidth: 2 },
-  glow: { shadowColor: '#F2C232', shadowOpacity: 0.35, shadowRadius: 8, shadowOffset: { width: 0, height: 2 } },
+  glow: { shadowColor: Maple.warning, shadowOpacity: 0.35, shadowRadius: 8, shadowOffset: { width: 0, height: 2 } },
   topicName: { fontSize: 10.5, lineHeight: 13, fontWeight: '700', color: NAVY, letterSpacing: -0.25 },
   topicCount: { marginTop: 3, fontSize: 10.5, color: BODY },
-  check: { position: 'absolute', right: 3, top: 4, width: 18, height: 18, alignItems: 'center', justifyContent: 'center', borderRadius: 9, backgroundColor: '#F5B800' },
+  check: { position: 'absolute', right: 3, top: 4, width: 18, height: 18, alignItems: 'center', justifyContent: 'center', borderRadius: 9, backgroundColor: Maple.warning },
   leaf: { position: 'absolute', flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 7, borderRadius: 8, borderWidth: 1.5 },
   leafDot: { width: 17, height: 17, alignItems: 'center', justifyContent: 'center', borderRadius: 9, borderWidth: 2 },
   leafName: { flex: 1, fontSize: 9.5, lineHeight: 12, color: NAVY, letterSpacing: -0.1 },
@@ -366,7 +368,7 @@ const styles = StyleSheet.create({
   pTopicWide: { width: '72%' },
   pTopicName: { fontSize: 12, lineHeight: 15, fontWeight: '700', color: NAVY },
   pTopicCount: { marginTop: 2, fontSize: 11.5, color: BODY },
-  pCheck: { position: 'absolute', right: -6, top: -6, width: 18, height: 18, alignItems: 'center', justifyContent: 'center', borderRadius: 9, backgroundColor: '#F5B800' },
+  pCheck: { position: 'absolute', right: -6, top: -6, width: 18, height: 18, alignItems: 'center', justifyContent: 'center', borderRadius: 9, backgroundColor: Maple.warning },
   pFork: { width: '50%', alignItems: 'center' },
   pForkStem: { width: 1.5, height: 12, backgroundColor: LINE },
   pForkRail: { alignSelf: 'stretch', height: 12, borderTopWidth: 1.5, borderLeftWidth: 1.5, borderRightWidth: 1.5, borderColor: LINE, borderTopLeftRadius: 8, borderTopRightRadius: 8 },

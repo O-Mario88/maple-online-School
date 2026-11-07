@@ -7,10 +7,11 @@ import { estimateRoi, type RoiEstimate } from '@/lib/roi';
 import type { MockData } from '@/mock';
 
 import { Brand } from '../palette';
+import { Palette } from '@/constants/palette';
 
 type Roi = MockData['publicPages']['schoolsPage']['roi'];
 
-const NAVY = '#0B1E4D';
+const NAVY = Palette.blue950f;
 const DEFAULT_STUDENTS = '300';
 
 /** Students, curriculum and subjects in; the year-one estimate out. */

@@ -5,12 +5,13 @@ import { Icon } from '@/components/icon';
 import { formatMoney } from '@/lib/finance/fees';
 
 import { Brand, CARD_SHADOW } from '../palette';
+import { Maple } from '@/constants/maple';
 
 const GRID = 21;
 const CELL = 6;
 // A receipt QR stays black on white so phone cameras can read it.
-const QR_PAPER = '#FFFFFF';
-const QR_INK = '#111111';
+const QR_PAPER = Maple.surface;
+const QR_INK = Maple.navy;
 
 /** A stand-in QR pattern seeded from the receipt number (the real code comes from the API). */
 function cellOn(seed: number, i: number): boolean {

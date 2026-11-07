@@ -2,9 +2,11 @@ import type { ReactNode } from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
+import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
-const INK = '#0B1F4D';
-const BLUE = '#1463F3';
+const INK = Palette.blue950g;
+const BLUE = Maple.blue;
 
 interface SheetProps {
   visible: boolean;
@@ -59,14 +61,14 @@ export function SheetButton({ label, onPress, primary = false, disabled = false 
 
 const styles = StyleSheet.create({
   scrim: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20, backgroundColor: 'rgba(8,12,20,0.5)' },
-  dialog: { width: '100%', maxWidth: 460, maxHeight: '90%', borderRadius: 14, backgroundColor: '#FFFFFF', overflow: 'hidden' },
+  dialog: { width: '100%', maxWidth: 460, maxHeight: '90%', borderRadius: 14, backgroundColor: Maple.surface, overflow: 'hidden' },
   head: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12, paddingHorizontal: 18, paddingTop: 16 },
   title: { flex: 1, fontSize: 17, fontWeight: '700', color: INK },
   body: { gap: 10, padding: 18 },
   button: { height: 44, alignItems: 'center', justifyContent: 'center', borderRadius: 10 },
   primary: { backgroundColor: BLUE },
-  outline: { borderWidth: 1, borderColor: '#D5DEEB' },
+  outline: { borderWidth: 1, borderColor: Maple.blueLine },
   disabled: { opacity: 0.5 },
   buttonText: { fontSize: 14, fontWeight: '600', color: INK },
-  primaryText: { color: '#FFFFFF' },
+  primaryText: { color: Maple.surface },
 });

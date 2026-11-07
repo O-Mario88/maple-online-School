@@ -1,7 +1,7 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, TextInput, useWindowDimensions, View } from 'react-native';
+import { Pressable, StyleSheet, Text, TextInput, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Icon } from '@/components/icon';
@@ -13,6 +13,9 @@ import { LightOnly } from '@/hooks/use-theme';
 import type { IconName } from '@/lib/icons';
 import { mockData } from '@/lib/mock';
 import type { MockData } from '@/mock';
+import { Maple } from '@/constants/maple';
+import { PageScroll } from '@/components/shell/PageScroll';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
 type Claim = MockData['publicPages']['claimChild'];
 type Stage = 'enter' | 'verify';
@@ -103,7 +106,7 @@ function EnterBlock({ c, f, phone = false }: { c: Claim; f: Form; phone?: boolea
       ) : null}
       <Text style={styles.label}>{`Enter the ${c.codeLength}-character claim code`}</Text>
       <View style={[styles.codeRow, phone && styles.codeRowP]}>
-        <TextInput style={[styles.input, phone && styles.inputP]} value={f.code} onChangeText={f.setCode} placeholder="e.g. A7K9M3D2" placeholderTextColor="#9AA3B2" autoCapitalize="characters" autoCorrect={false} accessibilityLabel="Claim code" />
+        <TextInput style={[styles.input, phone && styles.inputP]} value={f.code} onChangeText={f.setCode} placeholder="e.g. A7K9M3D2" placeholderTextColor={Maple.faint} autoCapitalize="characters" autoCorrect={false} accessibilityLabel="Claim code" />
         <Pressable style={[styles.cont, phone && styles.contP, f.ready && styles.contOn]} disabled={!f.ready} onPress={() => f.setStage('verify')} accessibilityRole="button" accessibilityState={{ disabled: !f.ready }}>
           <Text style={styles.contText}>Continue</Text>
           <Icon name="arrowRight" size={16} color={Brand.surface} />
@@ -229,11 +232,11 @@ function Phone({ c, f }: { c: Claim; f: Form }) {
   return (
     <>
       <AuthPhoneTop />
-      <ScrollView contentContainerStyle={styles.phone} keyboardShouldPersistTaps="handled">
+      <PageScroll contentContainerStyle={styles.phone} keyboardShouldPersistTaps="handled">
         <FlowSteps steps={steps(f.stage)} phone />
         {f.stage === 'enter' ? (
           <>
-            <Text style={styles.titleP} accessibilityRole="header">
+            <Text style={styles.titleP} {...PAGE_TITLE}>
               Claim Your Child
             </Text>
             <Text style={styles.subP}>Scan the school-issued Parent Claim QR Code or enter the claim code manually.</Text>
@@ -243,7 +246,7 @@ function Phone({ c, f }: { c: Claim; f: Form }) {
           <VerifyBlock c={c} f={f} />
         )}
         <SecureBox phone />
-      </ScrollView>
+      </PageScroll>
     </>
   );
 }
@@ -271,21 +274,21 @@ const styles = StyleSheet.create({
   flex: { flex: 1 },
   sky: { flex: 1, backgroundColor: AUTH_SKY },
   bar: { position: 'absolute', left: 16, top: 5 },
-  page: { position: 'absolute', left: 16, top: 72, width: 1128, height: 918, backgroundColor: '#F4F8FD', borderBottomLeftRadius: 14, borderBottomRightRadius: 14 },
+  page: { position: 'absolute', left: 16, top: 72, width: 1128, height: 918, backgroundColor: Maple.blueSoft, borderBottomLeftRadius: 14, borderBottomRightRadius: 14 },
   steps: { position: 'absolute', left: 106, top: 85 },
   panel: { position: 'absolute', left: 26, top: 134, width: 367, height: 846, overflow: 'hidden', borderRadius: 4 },
   hero: { position: 'absolute', left: 34, top: 28, fontSize: 38, lineHeight: 41, fontWeight: '800', color: Brand.surface, letterSpacing: -0.8 },
-  heroAccent: { color: '#4DA3FF' },
-  heroSub: { position: 'absolute', left: 34, top: 120, width: 290, fontSize: 17, lineHeight: 23, color: '#EAF0F8' },
+  heroAccent: { color: Maple.blue },
+  heroSub: { position: 'absolute', left: 34, top: 120, width: 290, fontSize: 17, lineHeight: 23, color: Maple.blueSelected },
   promises: { position: 'absolute', left: 34, top: 230, gap: 16 },
   promise: { flexDirection: 'row', alignItems: 'flex-start', gap: 26 },
   promiseTitle: { fontSize: 14, fontWeight: '600', color: Brand.surface },
-  promiseBody: { marginTop: 2, fontSize: 12.5, lineHeight: 17, color: '#E1E8F5' },
+  promiseBody: { marginTop: 2, fontSize: 12.5, lineHeight: 17, color: Maple.blueSelected },
   mid: { position: 'absolute', left: 403, top: 134, width: 463, height: 818, paddingHorizontal: 22, paddingTop: 26, backgroundColor: Brand.surface },
   h: { fontSize: 22, fontWeight: '700', color: Brand.ink, letterSpacing: -0.4 },
-  sub: { marginTop: 8, marginBottom: 16, fontSize: 14, lineHeight: 19, color: '#4A5263' },
+  sub: { marginTop: 8, marginBottom: 16, fontSize: 14, lineHeight: 19, color: Maple.body },
   tabs: { flexDirection: 'row', gap: 5 },
-  tab: { flex: 1, height: 48, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 12, borderRadius: 6, borderWidth: 1, borderColor: '#E3E8F0', backgroundColor: Brand.surface },
+  tab: { flex: 1, height: 48, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 12, borderRadius: 6, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Brand.surface },
   tabP: { height: 42, gap: 8 },
   tabOn: { borderWidth: 2, borderColor: Brand.blue },
   tabText: { fontSize: 13.5, color: Brand.ink },
@@ -293,47 +296,47 @@ const styles = StyleSheet.create({
   tabTextOn: { color: Brand.blue, fontWeight: '500' },
   scanner: { width: 427, height: 316, marginTop: 13, borderRadius: 6 },
   scannerP: { width: '100%', aspectRatio: 427 / 316, marginTop: 4, borderRadius: 8 },
-  primary: { height: 45, marginTop: 13, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 12, borderRadius: 6, backgroundColor: '#0067FE' },
+  primary: { height: 45, marginTop: 13, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 12, borderRadius: 6, backgroundColor: Maple.blue },
   primaryP: { height: 46, marginTop: 4 },
   primaryText: { fontSize: 14, fontWeight: '500', color: Brand.surface },
   or: { flexDirection: 'row', alignItems: 'center', gap: 18, marginVertical: 14 },
-  line: { flex: 1, height: 1, backgroundColor: '#D5DCE7' },
-  orText: { fontSize: 14, color: '#4A5263' },
+  line: { flex: 1, height: 1, backgroundColor: Maple.borderStrong },
+  orText: { fontSize: 14, color: Maple.body },
   label: { marginBottom: 8, fontSize: 14, color: Brand.ink },
   codeRow: { flexDirection: 'row', gap: 10 },
   codeRowP: { flexDirection: 'column' },
-  input: { flex: 1, height: 46, paddingHorizontal: 14, borderRadius: 6, borderWidth: 1, borderColor: '#DFE4EC', backgroundColor: Brand.surface, fontSize: 14, color: Brand.ink, letterSpacing: 1 },
+  input: { flex: 1, height: 46, paddingHorizontal: 14, borderRadius: 6, borderWidth: 1, borderColor: Maple.border, backgroundColor: Brand.surface, fontSize: 14, color: Brand.ink, letterSpacing: 1 },
   inputP: { flexGrow: 0, flexShrink: 0, flexBasis: 'auto', height: 44 },
-  cont: { width: 137, height: 46, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, borderRadius: 6, backgroundColor: '#76A8FA' },
+  cont: { width: 137, height: 46, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, borderRadius: 6, backgroundColor: Maple.blue },
   contP: { width: '100%', height: 46 },
-  contOn: { backgroundColor: '#0067FE' },
+  contOn: { backgroundColor: Maple.blue },
   contText: { fontSize: 14.5, color: Brand.surface },
   secureWrap: { position: 'absolute', left: 22, right: 22, top: 697 },
-  secure: { flexDirection: 'row', gap: 20, padding: 14, paddingLeft: 12, borderRadius: 8, backgroundColor: '#EEF4FF' },
+  secure: { flexDirection: 'row', gap: 20, padding: 14, paddingLeft: 12, borderRadius: 8, backgroundColor: Maple.blueSoft },
   secureP: { marginTop: 4 },
   lock: { width: 40, height: 40, borderRadius: 20, backgroundColor: Brand.surface, alignItems: 'center', justifyContent: 'center' },
   secureTitle: { fontSize: 14, fontWeight: '600', color: Brand.ink },
-  secureText: { marginTop: 8, fontSize: 10.5, lineHeight: 16, color: '#3D4656' },
+  secureText: { marginTop: 8, fontSize: 10.5, lineHeight: 16, color: Maple.body },
   verify: { gap: 14 },
-  match: { borderRadius: 8, borderWidth: 1, borderColor: '#E3E8F0' },
-  matchRow: { flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 14, paddingVertical: 12, borderTopWidth: 1, borderTopColor: '#EEF1F6' },
-  matchKey: { fontSize: 13, color: '#4A5263' },
+  match: { borderRadius: 8, borderWidth: 1, borderColor: Maple.blueSelected },
+  matchRow: { flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 14, paddingVertical: 12, borderTopWidth: 1, borderTopColor: Maple.blueSelected },
+  matchKey: { fontSize: 13, color: Maple.body },
   matchVal: { fontSize: 13, fontWeight: '600', color: Brand.ink },
   notMine: { alignSelf: 'center', paddingVertical: 6 },
   notMineText: { fontSize: 13, color: Brand.blue },
   side: { position: 'absolute', left: 872, width: 256, borderRadius: 10, backgroundColor: Brand.surface, paddingHorizontal: 17 },
-  whereCard: { top: 153, height: 314, paddingTop: 16, backgroundColor: '#EEF4FB' },
+  whereCard: { top: 153, height: 314, paddingTop: 16, backgroundColor: Maple.blueSoft },
   nextCard: { top: 484, height: 366, paddingTop: 14 },
   sideTitle: { fontSize: 15, fontWeight: '700', color: Brand.ink },
-  sideBody: { marginTop: 10, fontSize: 12.5, lineHeight: 18, color: '#4A5263' },
+  sideBody: { marginTop: 10, fontSize: 12.5, lineHeight: 18, color: Maple.body },
   claimCard: { width: 224, height: 190, marginTop: 14, alignSelf: 'center' },
   next: { flexDirection: 'row', gap: 16, marginTop: 20 },
-  nextNum: { width: 34, height: 34, borderRadius: 17, backgroundColor: '#0067FE', alignItems: 'center', justifyContent: 'center' },
+  nextNum: { width: 34, height: 34, borderRadius: 17, backgroundColor: Maple.blue, alignItems: 'center', justifyContent: 'center' },
   nextNumText: { fontSize: 14, fontWeight: '600', color: Brand.surface },
   nextTitle: { fontSize: 12.5, fontWeight: '600', color: Brand.ink },
-  nextBody: { marginTop: 4, fontSize: 11, lineHeight: 16, color: '#6B7385' },
-  phoneSafe: { flex: 1, backgroundColor: '#F4F7FC' },
+  nextBody: { marginTop: 4, fontSize: 11, lineHeight: 16, color: Maple.secondary },
+  phoneSafe: { flex: 1, backgroundColor: Maple.blueSoft },
   phone: { gap: 14, padding: 16, paddingBottom: 32 },
   titleP: { marginTop: 4, fontSize: 22, fontWeight: '700', color: Brand.ink },
-  subP: { marginTop: -6, fontSize: 14, lineHeight: 19, color: '#4A5263' },
+  subP: { marginTop: -6, fontSize: 14, lineHeight: 19, color: Maple.body },
 });

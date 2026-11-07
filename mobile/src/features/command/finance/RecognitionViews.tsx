@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { useMemo, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
@@ -15,6 +15,8 @@ import type { RecRow } from '@/mock/command-center/pf-revenue';
 
 import { type FormAsk, FormModal } from './FinForm';
 import { CheckList, FinDesk, FinHead, FinPanel, FinPhone, FinStats, FinTabs, num, PhoneRow, type Promo, SumLine, ugx } from './FinKit';
+import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 type D = CommandData['platformFinance']['revenue'];
 const PER_PAGE = 10;
@@ -31,7 +33,7 @@ interface Rules {
   courses: Rule;
   commissions: Rule;
 }
-const PROMO: Promo = { icon: 'layers', color: '#1E6BF0', title: 'Revenue & Recognition', body: 'Track cash, earned revenue and deferred (unearned) revenue with full control.' };
+const PROMO: Promo = { icon: 'layers', color: Maple.blue, title: 'Revenue & Recognition', body: 'Track cash, earned revenue and deferred (unearned) revenue with full control.' };
 const RANGES = ['Last 10 Months', 'This Quarter', 'Year to Date'];
 const FILTERS = { type: ['All Revenue Types', 'Subscription', 'Subject Access', 'Marketplace Commission', 'Cancellation'], status: ['All Statuses', 'Active', 'Completed', 'Recognized', 'Cancelled'] } as const;
 const LEDGER = { deferred: '2400 Deferred Revenue', revenue: '4000 Subscription Revenue', commission: '4100 Marketplace Commission', refunds: '2410 Refunds Payable' } as const;
@@ -170,7 +172,7 @@ type U = ReturnType<typeof useRecognition>;
 function Customer({ r }: { r: RecRow }) {
   return (
     <View style={styles.inline}>
-      {r.avatar ? <Image source={r.avatar} style={styles.avatar} contentFit="cover" accessibilityIgnoresInvertColors /> : <Icon name="building" size={20} color={NAVY} />}
+      {r.avatar ? <Image decorative source={r.avatar} style={styles.avatar} contentFit="cover" accessibilityIgnoresInvertColors /> : <Icon name="building" size={20} color={NAVY} />}
       <View style={styles.flex}>
         <Text style={styles.cellStrong} numberOfLines={1}>{r.customer}</Text>
         <Text style={styles.cell} numberOfLines={1}>{r.ref}</Text>
@@ -202,10 +204,10 @@ function Trend({ d, phone = false }: { d: D; phone?: boolean }) {
       <ComboChart
         labels={f.labels}
         bars={[
-          { name: 'Cash Received', color: '#3B82F6', values: f.cash },
-          { name: 'Revenue Earned (Recognized)', color: '#A78BFA', values: f.earned },
+          { name: 'Cash Received', color: Maple.blue, values: f.cash },
+          { name: 'Revenue Earned (Recognized)', color: Maple.blueLine, values: f.earned },
         ]}
-        line={{ name: 'Deferred Revenue', color: '#F5B731', values: f.deferred, dots: true }}
+        line={{ name: 'Deferred Revenue', color: Maple.warning, values: f.deferred, dots: true }}
         max={600}
         lineMax={600}
         rightAxis={false}
@@ -216,9 +218,9 @@ function Trend({ d, phone = false }: { d: D; phone?: boolean }) {
       <View style={styles.legend}>
         {(
           [
-            ['Cash Received', '#3B82F6'],
-            ['Revenue Earned (Recognized)', '#A78BFA'],
-            ['Deferred Revenue', '#F5B731'],
+            ['Cash Received', Maple.blue],
+            ['Revenue Earned (Recognized)', Maple.blueLine],
+            ['Deferred Revenue', Maple.warning],
           ] as const
         ).map(([l, c]) => (
           <View key={l} style={styles.inline}>
@@ -237,10 +239,10 @@ function Waterfall({ u, phone = false }: { u: U; phone?: boolean }) {
   const height = phone ? 150 : 132;
   const scale = (n: number) => (n / f.cash) * height;
   const steps = [
-    { label: 'Cash Received', value: `${(f.cash / 1e6).toLocaleString('en-US', { maximumFractionDigits: 1, minimumFractionDigits: 1 })}M`, top: f.cash, size: f.cash, color: '#3B82F6' },
-    { label: 'Deferred (Unearned)', value: `(${(f.deferred / 1e6).toLocaleString('en-US', { maximumFractionDigits: 1, minimumFractionDigits: 1 })}M)`, top: f.cash, size: f.deferred, color: '#F87171', down: true },
-    { label: 'Discounts & Cancellations', value: `(${(f.adjustments / 1e6).toFixed(1)}M)`, top: f.cash - f.deferred, size: f.adjustments, color: '#F87171', down: true },
-    { label: 'Revenue Earned', value: `${(f.earned / 1e6).toLocaleString('en-US', { maximumFractionDigits: 1, minimumFractionDigits: 1 })}M`, top: f.earned, size: f.earned, color: '#22A55A' },
+    { label: 'Cash Received', value: `${(f.cash / 1e6).toLocaleString('en-US', { maximumFractionDigits: 1, minimumFractionDigits: 1 })}M`, top: f.cash, size: f.cash, color: Maple.blue },
+    { label: 'Deferred (Unearned)', value: `(${(f.deferred / 1e6).toLocaleString('en-US', { maximumFractionDigits: 1, minimumFractionDigits: 1 })}M)`, top: f.cash, size: f.deferred, color: Palette.red400b, down: true },
+    { label: 'Discounts & Cancellations', value: `(${(f.adjustments / 1e6).toFixed(1)}M)`, top: f.cash - f.deferred, size: f.adjustments, color: Palette.red400b, down: true },
+    { label: 'Revenue Earned', value: `${(f.earned / 1e6).toLocaleString('en-US', { maximumFractionDigits: 1, minimumFractionDigits: 1 })}M`, top: f.earned, size: f.earned, color: Maple.successText },
   ];
   return (
     <FinPanel icon="layers" title="Revenue Flow (YTD)" style={!phone && styles.flex}>
@@ -370,7 +372,7 @@ export function RecognitionPhone({ c }: { c: CommandData }) {
         return (
           <PhoneRow
             key={r.id}
-            lead={r.avatar ? <Image source={r.avatar} style={styles.avatarLg} contentFit="cover" /> : <Icon name="building" size={26} color={NAVY} />}
+            lead={r.avatar ? <Image decorative source={r.avatar} style={styles.avatarLg} contentFit="cover" /> : <Icon name="building" size={26} color={NAVY} />}
             title={`${r.id} • ${r.customer}`}
             sub={`${r.type} • earned ${ugx(l.recognized)} • ${l.reversed ? `reversed ${ugx(l.reversed)}` : `deferred ${ugx(l.deferred)}`}${l.next ? ` • next ${date(l.next.date)}` : ''}`}
             pill={<Pill label={l.status} tone={STATUS_TONE[l.status]} size={11} />}

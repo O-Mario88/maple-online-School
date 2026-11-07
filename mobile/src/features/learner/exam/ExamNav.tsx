@@ -9,6 +9,8 @@ import { type QuestionState, questionState } from '@/lib/exam';
 
 import { BLUE, BODY, GREEN, INK, ORANGE, RED } from './ExamParts';
 import type { ExamState } from './useExam';
+import { Maple } from '@/constants/maple';
+import { prefersReducedMotion } from '@/lib/motion';
 
 const COLS = 5;
 const STRIP_ITEM = 38;
@@ -19,11 +21,11 @@ function Dot({ kind }: { kind: QuestionState }) {
   if (kind === 'answered')
     return (
       <View style={[styles.dot, { backgroundColor: GREEN }]}>
-        <Icon name="check" size={8} color="#FFFFFF" />
+        <Icon name="check" size={8} color={Maple.surface} />
       </View>
     );
   if (kind === 'current') return <View style={styles.dotCurrent} />;
-  return <View style={[styles.dot, { backgroundColor: kind === 'flagged' ? ORANGE : '#E3E8F0' }]} />;
+  return <View style={[styles.dot, { backgroundColor: kind === 'flagged' ? ORANGE : Maple.blueSelected }]} />;
 }
 
 export function Legend({ phone = false }: { phone?: boolean }) {
@@ -85,7 +87,7 @@ export function NavStrip({ s }: { s: ExamState }) {
   const ref = useRef<ComponentRef<typeof ScrollView>>(null);
   const current = s.sheet.current;
   useEffect(() => {
-    ref.current?.scrollTo({ x: Math.max(0, (current - 4) * (STRIP_ITEM + STRIP_GAP)), animated: true });
+    ref.current?.scrollTo({ x: Math.max(0, (current - 4) * (STRIP_ITEM + STRIP_GAP)), animated: !prefersReducedMotion() });
   }, [current]);
   return (
     <ScrollView ref={ref} horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.strip}>
@@ -97,7 +99,7 @@ export function NavStrip({ s }: { s: ExamState }) {
 }
 
 /** A progress ring drawn from two clipped half-circles, so any percentage shows its true arc. */
-export function ProgressRing({ value, size = 92, stroke = 9, color = BLUE, track = '#E3EBF7', label = true, labelSize = 21 }: { value: number; size?: number; stroke?: number; color?: string; track?: string; label?: boolean; labelSize?: number }) {
+export function ProgressRing({ value, size = 92, stroke = 9, color = BLUE, track = Maple.blueSelected, label = true, labelSize = 21 }: { value: number; size?: number; stroke?: number; color?: string; track?: string; label?: boolean; labelSize?: number }) {
   const v = Math.min(1, Math.max(0, value));
   const half = size / 2;
   const arc = { width: size, height: size, borderRadius: half, borderWidth: stroke, borderColor: 'transparent', borderTopColor: color, borderRightColor: color } as const;
@@ -126,7 +128,7 @@ export function ProgressRing({ value, size = 92, stroke = 9, color = BLUE, track
 function Perf({ icon, color, label, value }: { icon: 'check' | 'close' | 'dot'; color: string; label: string; value: number }) {
   return (
     <View style={styles.perf}>
-      <View style={[styles.perfIcon, icon === 'dot' ? styles.perfRing : { backgroundColor: color }]}>{icon === 'dot' ? null : <Icon name={icon} size={8} color="#FFFFFF" />}</View>
+      <View style={[styles.perfIcon, icon === 'dot' ? styles.perfRing : { backgroundColor: color }]}>{icon === 'dot' ? null : <Icon name={icon} size={8} color={Maple.surface} />}</View>
       <Text style={styles.perfLabel}>{label}</Text>
       <Text style={styles.perfValue}>{value}</Text>
     </View>
@@ -143,7 +145,7 @@ export function Progress({ s }: { s: ExamState }) {
         <View style={styles.flex}>
           <Text style={styles.progressText}>{`${m.answered} of ${s.total} questions`}</Text>
           <View style={styles.progressBar}>
-            <Bar value={m.answered / s.total} color={BLUE} track="#E3EBF7" height={7} />
+            <Bar value={m.answered / s.total} color={BLUE} track={Maple.blueSelected} height={7} />
           </View>
         </View>
       </View>
@@ -188,15 +190,15 @@ const styles = StyleSheet.create({
   gridRow: { flexDirection: 'row', gap: 10 },
   cell: { width: 39, height: 32, alignItems: 'center', justifyContent: 'center', borderRadius: 5 },
   round: { width: STRIP_ITEM, height: STRIP_ITEM, alignItems: 'center', justifyContent: 'center', borderRadius: STRIP_ITEM / 2 },
-  answered: { backgroundColor: '#DDF3E5' },
-  current: { backgroundColor: BLUE, borderWidth: 2, borderColor: '#BBD2FB' },
-  flagged: { backgroundColor: '#FDE6CC' },
+  answered: { backgroundColor: Maple.successSoft },
+  current: { backgroundColor: BLUE, borderWidth: 2, borderColor: Maple.blueLine },
+  flagged: { backgroundColor: Maple.warningSoft },
   flaggedRound: { backgroundColor: ORANGE },
-  unanswered: { backgroundColor: '#F1F4F8' },
+  unanswered: { backgroundColor: Maple.blueSoft },
   cellText: { fontSize: 13, color: INK },
-  answeredText: { color: '#1E6B3B', fontWeight: '600' },
-  flaggedText: { color: '#D46A12', fontWeight: '600' },
-  onText: { color: '#FFFFFF', fontWeight: '700' },
+  answeredText: { color: Maple.successText, fontWeight: '600' },
+  flaggedText: { color: Maple.warning, fontWeight: '600' },
+  onText: { color: Maple.surface, fontWeight: '700' },
   strip: { gap: STRIP_GAP, paddingHorizontal: 12 },
   ringLabel: { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, alignItems: 'center', justifyContent: 'center' },
   ringText: { fontSize: 21, fontWeight: '700', color: INK },
@@ -207,11 +209,11 @@ const styles = StyleSheet.create({
   domTitle: { marginTop: 8, marginBottom: 2, fontSize: 12 },
   perf: { height: 25, flexDirection: 'row', alignItems: 'center', gap: 8 },
   perfIcon: { width: 12, height: 12, alignItems: 'center', justifyContent: 'center', borderRadius: 6 },
-  perfRing: { borderWidth: 2, borderColor: '#9AA4B5' },
+  perfRing: { borderWidth: 2, borderColor: Maple.faint },
   perfLabel: { flex: 1, fontSize: 12.5, color: BODY },
   perfValue: { fontSize: 13, fontWeight: '700', color: INK },
-  submit: { height: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 6, backgroundColor: '#0B6BFF' },
+  submit: { height: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 6, backgroundColor: Maple.blue },
   submitP: { height: 46 },
   submitDone: { backgroundColor: GREEN },
-  submitText: { fontSize: 15, fontWeight: '500', color: '#FFFFFF' },
+  submitText: { fontSize: 15, fontWeight: '500', color: Maple.surface },
 });

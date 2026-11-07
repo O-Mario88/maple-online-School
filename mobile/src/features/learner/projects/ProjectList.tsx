@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
@@ -9,16 +9,17 @@ import type { IconName } from '@/lib/icons';
 import type { ProjectStatus } from '@/lib/projects';
 
 import { type Page, type Project, type ProjectsState, STATUS_LABEL } from './useProjects';
+import { Maple } from '@/constants/maple';
 
-const INK = '#0B1424';
-const NAVY = '#0B2A6B';
-const BODY = '#4A5263';
-const BLUE = '#1463F3';
+const INK = Maple.navy;
+const NAVY = Maple.blueHover;
+const BODY = Maple.body;
+const BLUE = Maple.blue;
 export const STATUS_TONE: Record<ProjectStatus, { bg: string; fg: string; bar: string }> = {
-  in_progress: { bg: '#E6EEFC', fg: '#1450C8', bar: '#22A35A' },
-  completed: { bg: '#E3F6E9', fg: '#15803D', bar: '#22A35A' },
-  upcoming: { bg: '#FDF1DC', fg: '#B45309', bar: '#C9D2E0' },
-  attention: { bg: '#FDE2E2', fg: '#C81E1E', bar: '#E5484D' },
+  in_progress: { bg: Maple.blueSelected, fg: Maple.blueHover, bar: Maple.successText },
+  completed: { bg: Maple.successSoft, fg: Maple.successText, bar: Maple.successText },
+  upcoming: { bg: Maple.warningSoft, fg: Maple.warningText, bar: Maple.borderStrong },
+  attention: { bg: Maple.errorSoft, fg: Maple.error, bar: Maple.error },
 };
 
 export function StatusPill({ status }: { status: ProjectStatus }) {
@@ -28,10 +29,10 @@ export function StatusPill({ status }: { status: ProjectStatus }) {
 
 const STAT_ORDER: { key: 'total' | ProjectStatus; label: string; bar?: string }[] = [
   { key: 'total', label: 'Total Projects' },
-  { key: 'completed', label: 'Completed', bar: '#22A35A' },
-  { key: 'in_progress', label: 'In Progress', bar: '#F5A524' },
+  { key: 'completed', label: 'Completed', bar: Maple.successText },
+  { key: 'in_progress', label: 'In Progress', bar: Maple.warning },
   { key: 'upcoming', label: 'Upcoming', bar: BLUE },
-  { key: 'attention', label: 'Needs Attention', bar: '#E5484D' },
+  { key: 'attention', label: 'Needs Attention', bar: Maple.error },
 ];
 
 const STAT_LOOK: Readonly<Record<string, { icon: IconName; tone: Tone }>> = {
@@ -70,14 +71,14 @@ export function StatCards({ page, s, phone = false }: { page: Page; s: ProjectsS
             onPress={() => pick(x.key)}
             accessibilityRole="button"
             accessibilityLabel={`${count} ${x.label}${entry ? `, ${entry.percent}%` : ''}`}>
-            <Image source={page.statIcons[x.key]} style={styles.statIcon} />
+            <Image decorative source={page.statIcons[x.key]} style={styles.statIcon} />
             <View style={styles.flex}>
               <Text style={styles.statNum}>{count}</Text>
               <Text style={styles.statLabel}>{x.label}</Text>
               {entry && x.bar ? (
                 <View style={styles.statBar}>
                   <View style={styles.flex}>
-                    <Bar value={entry.percent / 100} color={x.bar} track="#E6EBF2" height={7} />
+                    <Bar value={entry.percent / 100} color={x.bar} track={Maple.blueSelected} height={7} />
                   </View>
                   <Text style={styles.statPct}>{`${entry.percent}%`}</Text>
                 </View>
@@ -106,7 +107,7 @@ function ProjectCard({ p, s, on, onOpen }: { p: Project; s: ProjectsState; on: b
       }}
       accessibilityRole="button"
       accessibilityState={{ selected: on }} accessibilityLabel={`${p.title}, ${p.subject}, ${STATUS_LABEL[p.status]}, ${p.date}, ${Math.round(p.progress * 100)}%`}>
-      <Image source={p.thumb} style={styles.thumb} contentFit="cover" />
+      <Image decorative source={p.thumb} style={styles.thumb} contentFit="cover" />
       <View style={styles.flex}>
         <View style={styles.cardTop}>
           <Text style={styles.cardTitle} numberOfLines={1}>
@@ -124,7 +125,7 @@ function ProjectCard({ p, s, on, onOpen }: { p: Project; s: ProjectsState; on: b
             {p.date}
           </Text>
           <View style={styles.cardBar}>
-            <Bar value={p.progress} color={t.bar} track="#E6EBF2" height={7} />
+            <Bar value={p.progress} color={t.bar} track={Maple.blueSelected} height={7} />
           </View>
           <Text style={styles.cardPct}>{`${Math.round(p.progress * 100)}%`}</Text>
         </View>
@@ -152,7 +153,7 @@ export function ProjectList({ s, onOpen }: { s: ProjectsState; onOpen?: () => vo
       <View style={styles.searchRow}>
         <View style={styles.search}>
           <Icon name="search" size={15} color={INK} />
-          <TextInput style={styles.searchInput} value={s.query} onChangeText={s.setQuery} placeholder="Search projects..." placeholderTextColor="#6B7385" accessibilityLabel="Search projects" />
+          <TextInput style={styles.searchInput} value={s.query} onChangeText={s.setQuery} placeholder="Search projects..." placeholderTextColor={Maple.secondary} accessibilityLabel="Search projects" />
         </View>
         <Pressable style={[styles.filter, s.attentionOnly && styles.filterOn]} onPress={() => s.setAttentionOnly(!s.attentionOnly)} accessibilityRole="switch" accessibilityState={{ checked: s.attentionOnly }} accessibilityLabel="Show only projects that need attention">
           <Icon name="listBullet" size={15} color={BLUE} />
@@ -187,33 +188,33 @@ export function ProjectList({ s, onOpen }: { s: ProjectsState; onOpen?: () => vo
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
-  white: { color: '#FFFFFF' },
+  white: { color: Maple.surface },
   status: { paddingHorizontal: 9, paddingVertical: 4, borderRadius: 5, fontSize: 10.5, fontWeight: '500', overflow: 'hidden' },
   stats: { flexDirection: 'row', gap: 8 },
   statsP: { flexWrap: 'wrap' },
-  stat: { flex: 1, height: 83, flexDirection: 'row', gap: 14, paddingHorizontal: 12, paddingTop: 10, borderRadius: 8, borderWidth: 1, borderColor: '#E8EDF4', backgroundColor: '#FFFFFF' },
+  stat: { flex: 1, height: 83, flexDirection: 'row', gap: 14, paddingHorizontal: 12, paddingTop: 10, borderRadius: 8, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface },
   statP: { flexBasis: '47%', flexGrow: 1, height: 76 },
   statIcon: { width: 44, height: 44 },
   statNum: { fontSize: 19, fontWeight: '700', color: NAVY },
   statLabel: { marginTop: 1, fontSize: 11.5, color: BODY },
   statBar: { flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 9 },
   statPct: { fontSize: 12, color: INK },
-  tabsScroll: { flexGrow: 0, borderBottomWidth: 1, borderBottomColor: '#E3E8F0' },
+  tabsScroll: { flexGrow: 0, borderBottomWidth: 1, borderBottomColor: Maple.blueSelected },
   tabs: { flexDirection: 'row', gap: 12, paddingHorizontal: 6 },
   tab: { paddingVertical: 8 },
   tabText: { fontSize: 11.5, color: BODY },
   tabOn: { color: BLUE, fontWeight: '700' },
-  tabLine: { position: 'absolute', left: 0, right: 0, bottom: -1, height: 2.5, backgroundColor: BLUE },
+  tabLine: { position: 'absolute', left: 0, right: 0, bottom: -1, height: 3, backgroundColor: BLUE },
   searchRow: { flexDirection: 'row', gap: 12, marginTop: 18 },
-  search: { flex: 1, height: 32, flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 10, borderRadius: 5, borderWidth: 1, borderColor: '#DCE3EE', backgroundColor: '#FFFFFF' },
+  search: { flex: 1, height: 32, flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 10, borderRadius: 5, borderWidth: 1, borderColor: Maple.blueLine, backgroundColor: Maple.surface },
   searchInput: { flex: 1, height: 30, paddingVertical: 0, fontSize: 12, color: INK },
-  filter: { height: 32, flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 9, borderRadius: 5, borderWidth: 1, borderColor: '#DCE3EE', backgroundColor: '#FFFFFF' },
-  filterOn: { borderColor: BLUE, backgroundColor: '#EEF4FF' },
+  filter: { height: 32, flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 9, borderRadius: 5, borderWidth: 1, borderColor: Maple.blueLine, backgroundColor: Maple.surface },
+  filterOn: { borderColor: BLUE, backgroundColor: Maple.blueSoft },
   filterText: { fontSize: 12, color: BLUE },
   cards: { gap: 8, marginTop: 12 },
   empty: { paddingVertical: 30, fontSize: 12.5, color: BODY, textAlign: 'center' },
-  card: { flexDirection: 'row', gap: 12, padding: 10, borderRadius: 6, borderWidth: 1, borderColor: '#E8EDF4', backgroundColor: '#FFFFFF' },
-  cardOn: { borderWidth: 1.5, borderColor: BLUE, backgroundColor: '#F4F8FF' },
+  card: { flexDirection: 'row', gap: 12, padding: 10, borderRadius: 6, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface },
+  cardOn: { borderWidth: 1.5, borderColor: BLUE, backgroundColor: Maple.blueSoft },
   thumb: { width: 74, height: 74, borderRadius: 5 },
   cardTop: { flexDirection: 'row', alignItems: 'flex-start', gap: 8 },
   cardTitle: { flex: 1, fontSize: 13, fontWeight: '700', color: NAVY },
@@ -225,7 +226,7 @@ const styles = StyleSheet.create({
   cardPct: { width: 30, fontSize: 11.5, fontWeight: '600', color: INK, textAlign: 'right' },
   pager: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 20 },
   showing: { fontSize: 12, color: NAVY },
-  pageBtn: { width: 29, height: 31, alignItems: 'center', justifyContent: 'center', borderRadius: 5, borderWidth: 1, borderColor: '#DCE3EE', backgroundColor: '#FFFFFF' },
-  pageOn: { borderColor: '#0B6BFF', backgroundColor: '#0B6BFF' },
+  pageBtn: { width: 29, height: 31, alignItems: 'center', justifyContent: 'center', borderRadius: 5, borderWidth: 1, borderColor: Maple.blueLine, backgroundColor: Maple.surface },
+  pageOn: { borderColor: Maple.blue, backgroundColor: Maple.blue },
   pageText: { fontSize: 12, color: INK },
 });

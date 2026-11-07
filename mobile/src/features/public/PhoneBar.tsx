@@ -1,4 +1,3 @@
-import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
@@ -9,8 +8,8 @@ import { Sheet } from '@/components/ui/Sheet';
 
 import { PUBLIC_MENU } from './HomeNav';
 import { Brand } from './palette';
+import { MapleLogo } from '@/components/brand/MapleLogo';
 
-const LEAF = require('@/assets/images/maple-leaf.png') as number;
 
 /** The reference phone screens' top bar: menu, Maple logo, language and profile. */
 export function PhoneBar() {
@@ -36,11 +35,7 @@ export function PhoneBar() {
         <Icon name="menu" size={22} color={Brand.ink} />
       </Pressable>
       <Pressable style={styles.logo} onPress={() => router.push('/welcome')} accessibilityRole="link" accessibilityLabel="Maple home">
-        <Image source={LEAF} style={styles.leaf} contentFit="contain" />
-        <View>
-          <Text style={styles.name}>Maple</Text>
-          <Text style={styles.tag}>Global Online School</Text>
-        </View>
+        <MapleLogo markStyle={styles.leaf} />
       </Pressable>
       <View style={styles.icons}>
         <LanguageMenu>

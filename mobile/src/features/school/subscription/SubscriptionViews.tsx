@@ -8,15 +8,17 @@ import { BLUE, BODY, LINE, NAVY, WHITE } from '@/features/portal/tokens';
 import { AdminDesk, AdminPhone } from '../kit/AdminKit';
 import { BillingSummary, Capacity, CapacityBanner, ChangeSheet, CurrentPlan, Head, Invoices, Usage } from './SubscriptionParts';
 import { type Admin, longDate, type SubState, TAB_ICONS, TABS, type Tab, ugx, useSubscription } from './useSubscription';
+import { Maple } from '@/constants/maple';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
-const PURPLE = '#5B3FD9';
+const BRAND_BLUE = Maple.blue;
 
 function PageTitle({ phone = false }: { phone?: boolean }) {
   return (
     <View style={s.title}>
       <IconTile icon="receipt" tone="purple" size={phone ? 42 : 48} radius={12} />
       <View style={s.flex}>
-        <Text style={[s.h1, phone && s.h1P]} accessibilityRole="header">
+        <Text style={[s.h1, phone && s.h1P]} {...PAGE_TITLE}>
           Subscription & Billing
         </Text>
         <Text style={s.sub}>Manage your plan, learner capacity, usage, invoices and payments.</Text>
@@ -42,7 +44,7 @@ function Plans({ x, phone }: { x: SubState; phone: boolean }) {
               <Text style={s.small}>per term</Text>
               {[`Up to ${v.learners.toLocaleString('en-US')} learners`, `${v.allowances.liveSessions} live sessions a term`, `${v.allowances.storageGB} GB storage`, `${v.allowances.streamingGB} GB streaming a term`].map((f) => (
                 <View key={f} style={s.row}>
-                  <Icon name="tick" size={14} color="#16A34A" />
+                  <Icon name="tick" size={14} color={Maple.successText} />
                   <Text style={s.body}>{f}</Text>
                 </View>
               ))}
@@ -252,20 +254,20 @@ const s = StyleSheet.create({
   plansP: { flexDirection: 'column' },
   planCol: { gap: 8, padding: 18 },
   planColD: { flex: 1 },
-  planOn: { borderWidth: 1.5, borderColor: '#A897F0', backgroundColor: '#FBFAFF' },
+  planOn: { borderWidth: 1.5, borderColor: Maple.blueLine, backgroundColor: Maple.blueSoft },
   planName: { fontSize: 17, fontWeight: '800', color: NAVY },
   price: { marginTop: 4, fontSize: 20, fontWeight: '800', color: NAVY },
-  countRow: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 6, borderBottomWidth: 1, borderBottomColor: '#EEF2F8' },
+  countRow: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 6, borderBottomWidth: 1, borderBottomColor: Maple.blueSelected },
   countValue: { width: 50, fontSize: 14, fontWeight: '700', color: NAVY, textAlign: 'right' },
   countNote: { width: 200 },
-  upcoming: { borderColor: '#D8CFFB', backgroundColor: '#FBFAFF' },
+  upcoming: { borderColor: Maple.blueLine, backgroundColor: Maple.blueSoft },
   field: { gap: 6 },
   label: { fontSize: 13, fontWeight: '600', color: NAVY },
   input: { height: 40, paddingHorizontal: 12, borderRadius: 8, borderWidth: 1, borderColor: LINE, fontSize: 14, color: NAVY, backgroundColor: WHITE },
   choices: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   choice: { paddingHorizontal: 14, paddingVertical: 8, borderRadius: 999, borderWidth: 1, borderColor: LINE, backgroundColor: WHITE },
-  choiceOn: { borderColor: PURPLE, backgroundColor: '#F1EDFE' },
+  choiceOn: { borderColor: BRAND_BLUE, backgroundColor: Maple.blueSoft },
   choiceText: { fontSize: 13, color: NAVY },
-  choiceTextOn: { fontWeight: '600', color: PURPLE },
+  choiceTextOn: { fontWeight: '600', color: BRAND_BLUE },
   save: { alignSelf: 'flex-start', marginTop: 6, paddingHorizontal: 20, backgroundColor: BLUE },
 });

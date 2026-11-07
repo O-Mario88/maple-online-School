@@ -1,0 +1,11 @@
+{
+  "name": "Maple Global Online School",
+  "short_name": "Maple",
+  "description": "Live classes, lessons, assignments and career guidance in one place.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#2D4A6E",
+  "icons": [{ "src": "/icon-512.png", "sizes": "1024x1024", "type": "image/png", "purpose": "any" }]
+}

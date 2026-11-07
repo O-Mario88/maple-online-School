@@ -10,6 +10,7 @@ import type { LedgerTx } from '@/mock/school-admin';
 
 import { AdminDesk, AdminPhone, BigButton, Cell, type Column, DataTable, Face, Legend, ListCard, ListRow, MiniBtn, money, PageHead, Pager, Search, SelectBox, Segments, StatusCell, useChoice, useSelection } from '../kit/AdminKit';
 import { BarChart, Donut, DonutLabel } from '../kit/Charts';
+import { Maple } from '@/constants/maple';
 
 type Admin = MockData['schoolAdmin'];
 type Ledger = Admin['ledger'];
@@ -210,10 +211,10 @@ export function LedgerDesk({ a }: { a: Admin }) {
         <Card style={[styles.block, styles.colTrend]}>
           <CardHead title="Payment Trend" right={<SelectBox value={months} options={monthsOpts} onChange={setMonths} width={140} />} />
           <View style={styles.legendRow}>
-            <Legend color="#22A55A" label="Payments" />
-            <Legend color="#EF3B4D" label="Outstanding" />
+            <Legend color={Maple.successText} label="Payments" />
+            <Legend color={Maple.error} label="Outstanding" />
           </View>
-          <BarChart labels={l.trend.labels} series={[{ name: 'Payments', color: '#22A55A', values: l.trend.payments }]} line={{ name: 'Outstanding', color: '#EF3B4D', values: l.trend.outstanding }} mode="grouped" max={500} height={210} format={(n) => (n ? `${n}K` : 'UGX 0')} />
+          <BarChart labels={l.trend.labels} series={[{ name: 'Payments', color: Maple.successText, values: l.trend.payments }]} line={{ name: 'Outstanding', color: Maple.error, values: l.trend.outstanding }} mode="grouped" max={500} height={210} format={(n) => (n ? `${n}K` : 'UGX 0')} />
         </Card>
       </View>
       <Card style={[styles.block, styles.txCard]}>
@@ -288,17 +289,17 @@ export function LedgerPhone({ a }: { a: Admin }) {
             <View style={styles.balanceRow}>
               <Donut
                 slices={[
-                  { value: g.paid, color: '#22A55A' },
-                  { value: g.outstanding, color: '#EF3B4D' },
+                  { value: g.paid, color: Maple.successText },
+                  { value: g.outstanding, color: Maple.error },
                 ]}
                 size={132}
                 stroke={20}>
                 <DonutLabel value={`${Math.round((g.paid / (g.paid + g.outstanding)) * 100)}%`} caption="Paid" size={22} />
               </Donut>
               <View style={styles.balanceLegend}>
-                <Legend color="#22A55A" label="Paid" value={money(g.paid)} />
-                <Legend color="#EF3B4D" label="Outstanding" value={money(g.outstanding)} />
-                <Legend color="#A6B0C6" label="Adjusted" value="0" />
+                <Legend color={Maple.successText} label="Paid" value={money(g.paid)} />
+                <Legend color={Maple.error} label="Outstanding" value={money(g.outstanding)} />
+                <Legend color={Maple.faint} label="Adjusted" value="0" />
               </View>
             </View>
           </Card>

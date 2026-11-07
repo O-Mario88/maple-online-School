@@ -1,9 +1,9 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '@/components/icon';
-import { useShell } from '@/components/ui';
+import { useContentWidth, useShell } from '@/components/ui';
 import { LearnerPhoneTop } from '@/features/learner/dashboard/DashPhone';
 import { RefScale } from '@/features/public/home/RefScale';
 
@@ -11,11 +11,12 @@ import { CardHead, GoalCard, Hero, Leaderboard, Members, Resources, Sessions, Se
 import { SquadChat } from './SquadChat';
 import { type Dialog, SquadDialogs, SquadSide } from './SquadSide';
 import { type Room, type Squad, type SquadState, useSquad } from './useSquad';
+import { Maple } from '@/constants/maple';
 
 /** The squad reference's desktop panel (x 16–1172 of 1536), laid out in its pixels. */
 const SQUAD_REF_WIDTH = 1156;
 const MAX_DESK_WIDTH = 1400;
-const BODY = '#4A5263';
+const BODY = Maple.body;
 
 function ChatCard({ room, s, phone = false }: { room: Room; s: SquadState; phone?: boolean }) {
   return (
@@ -114,7 +115,7 @@ export function SquadRoom({ room, squad, avatar }: { room: Room; squad: Squad; a
   const s = useSquad(room, squad);
   const [dialog, setDialog] = useState<Dialog>(null);
   const { wide } = useShell();
-  const { width } = useWindowDimensions();
+  const width = useContentWidth();
   const dialogs = <SquadDialogs room={room} s={s} dialog={dialog} onClose={() => setDialog(null)} />;
   if (!wide)
     return (
@@ -126,7 +127,7 @@ export function SquadRoom({ room, squad, avatar }: { room: Room; squad: Squad; a
           <PhoneContent room={room} s={s} />
           <Pressable style={styles.otherSquads} onPress={() => setDialog('discover')} accessibilityRole="button">
             <Text style={styles.otherText}>Other squads, join by code or create one</Text>
-            <Icon name="chevronRight" size={14} color="#1463F3" />
+            <Icon name="chevronRight" size={14} color={Maple.blue} />
           </Pressable>
         </ScrollView>
         <Toast text={s.toastText} />
@@ -171,26 +172,26 @@ export function NoSquad() {
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
-  deskBg: { backgroundColor: '#EEF3FB' },
+  deskBg: { backgroundColor: Maple.blueSoft },
   deskWrap: { alignItems: 'center', paddingVertical: 16 },
   canvas: { width: SQUAD_REF_WIDTH, flexDirection: 'row', gap: 10 },
   left: { width: 206 },
-  main: { flex: 1, borderRadius: 10, backgroundColor: '#F6F9FD', overflow: 'hidden' },
+  main: { flex: 1, borderRadius: 10, backgroundColor: Maple.blueSoft, overflow: 'hidden' },
   content: { padding: 8 },
   grid: { flexDirection: 'row', gap: 8 },
   colAB: { flex: 1, gap: 10 },
   row: { flexDirection: 'row', gap: 10 },
   colA: { width: 404 },
   colC: { width: 276, gap: 10 },
-  card: { borderRadius: 10, borderWidth: 1, borderColor: '#EAEFF6', backgroundColor: '#FFFFFF' },
+  card: { borderRadius: 10, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface },
   chatCard: { minHeight: 540, gap: 6, padding: 14 },
   chatCardP: { minHeight: 0 },
-  phoneRoot: { flex: 1, backgroundColor: '#F6F9FD' },
+  phoneRoot: { flex: 1, backgroundColor: Maple.blueSoft },
   phone: { gap: 12, padding: 14, paddingBottom: 110 },
   otherSquads: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, paddingVertical: 10 },
-  otherText: { fontSize: 12.5, fontWeight: '500', color: '#1463F3' },
+  otherText: { fontSize: 12.5, fontWeight: '500', color: Maple.blue },
   toast: { position: 'absolute', left: 16, right: 16, bottom: 96, alignItems: 'center' },
-  toastText: { maxWidth: 520, paddingHorizontal: 14, paddingVertical: 10, borderRadius: 10, backgroundColor: 'rgba(11,20,36,0.92)', fontSize: 13, color: '#FFFFFF', textAlign: 'center', overflow: 'hidden' },
-  missing: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 10, backgroundColor: '#FFFFFF' },
-  missingTitle: { fontSize: 17, fontWeight: '700', color: '#0B1424' },
+  toastText: { maxWidth: 520, paddingHorizontal: 14, paddingVertical: 10, borderRadius: 10, backgroundColor: 'rgba(11,20,36,0.92)', fontSize: 13, color: Maple.surface, textAlign: 'center', overflow: 'hidden' },
+  missing: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 10, backgroundColor: Maple.surface },
+  missingTitle: { fontSize: 17, fontWeight: '700', color: Maple.navy },
 });

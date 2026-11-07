@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react';
 import { addTimestamp, moveItem } from '@/lib/course-builder';
 import { toast } from '@/lib/toast';
 import type { BlockKind, BuilderLesson, BuilderModule, BuilderSection, ContentBlock, CourseBuilder, Mark } from '@/mock/teacher-course';
+import { Maple } from '@/constants/maple';
 
 export type LessonTab = 'content' | 'video' | 'interactive' | 'notes' | 'quiz' | 'settings';
 
@@ -146,7 +147,7 @@ export function useCourseBuilder(c: CourseBuilder) {
 
   const lessonMarks = marks[selected] ?? [];
   const addMark = (at: number, label: string) => {
-    setMarks((prev) => ({ ...prev, [selected]: addTimestamp(prev[selected] ?? [], { at, label, icon: 'bookmark', color: '#1463F3' }) }));
+    setMarks((prev) => ({ ...prev, [selected]: addTimestamp(prev[selected] ?? [], { at, label, icon: 'bookmark', color: Maple.blue }) }));
     changed('Timestamp added. Learners can jump straight to it.');
   };
   const removeMark = (at: number) => {

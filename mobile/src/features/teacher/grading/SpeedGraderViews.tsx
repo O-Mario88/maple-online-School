@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
@@ -20,6 +20,7 @@ import { SPEED_GRADER_REF_WIDTH, s, s as deskS } from './SpeedGraderViews.styles
 import { phoneS } from './SpeedGraderViews.phoneStyles';
 import { PhoneScroll } from '@/features/teacher/frame/PhoneScroll';
 import { AnswerSheet } from './AnswerSheet';
+import { Maple } from '@/constants/maple';
 
 export { SPEED_GRADER_REF_WIDTH };
 
@@ -178,7 +179,7 @@ export function SpeedGraderDesk({ g, me, phone = false }: { g: SpeedGrader; me: 
           <Pressable
             style={s.postGradesBtn}
             onPress={() => toast('Posted grades & voice feedback to students!')}>
-            <Icon name="check" size={13} color="#FFFFFF" />
+            <Icon name="check" size={13} color={Maple.surface} />
             <Text style={s.postGradesText}>Post Grades (1)</Text>
           </Pressable>
         </View>
@@ -237,7 +238,7 @@ export function SpeedGraderDesk({ g, me, phone = false }: { g: SpeedGrader; me: 
                     onPress={() => setSelectedSubId(sub.id)}>
                     <View style={[s.checkbox, active && s.checkboxActiveOutline]} />
 
-                    <Image source={sub.photo} style={s.subAvatar} contentFit="cover" />
+                    <Image decorative source={sub.photo} style={s.subAvatar} contentFit="cover" />
 
                     <View style={{ flex: 1, gap: 2 }}>
                       <View style={s.subTopRow}>
@@ -248,7 +249,7 @@ export function SpeedGraderDesk({ g, me, phone = false }: { g: SpeedGrader; me: 
                               style={[
                                 s.scorePillStrong,
                                 sub.score >= 90 && {
-                                  color: '#15803D',
+                                  color: Maple.successText,
                                   textDecorationLine: 'underline',
                                 },
                               ]}>
@@ -332,8 +333,8 @@ export function SpeedGraderDesk({ g, me, phone = false }: { g: SpeedGrader; me: 
               style={[s.drawToolBtn, activeTool === 'redPen' && s.drawToolBtnOn]}
               onPress={() => setActiveTool('redPen')}>
               <View style={s.penStack}>
-                <Icon name="edit" size={12} color="#EF4444" />
-                <View style={[s.penUnderline, { backgroundColor: '#EF4444' }]} />
+                <Icon name="edit" size={12} color={Maple.error} />
+                <View style={[s.penUnderline, { backgroundColor: Maple.error }]} />
               </View>
             </Pressable>
 
@@ -349,7 +350,7 @@ export function SpeedGraderDesk({ g, me, phone = false }: { g: SpeedGrader; me: 
             <Pressable
               style={[s.drawToolBtn, activeTool === 'eraser' && s.drawToolBtnOn]}
               onPress={() => setActiveTool('eraser')}>
-              <Icon name="edit" size={12} color="#475569" />
+              <Icon name="edit" size={12} color={Maple.body} />
             </Pressable>
 
             <Pressable
@@ -424,7 +425,7 @@ export function SpeedGraderDesk({ g, me, phone = false }: { g: SpeedGrader; me: 
                     style={s.thumbItem}
                     onPress={() => setActivePage(pageNum)}>
                     <View style={[s.thumbFrame, on && s.thumbFrameOn]}>
-                      <Image source={img} style={s.thumbImg} contentFit="cover" />
+                      <Image decorative source={img} style={s.thumbImg} contentFit="cover" />
                     </View>
                     <View style={[s.thumbNumPill, on && s.thumbNumPillOn]}>
                       <Text style={[s.thumbNumText, on && s.thumbNumTextOn]}>{pageNum}</Text>
@@ -576,7 +577,7 @@ export function SpeedGraderDesk({ g, me, phone = false }: { g: SpeedGrader; me: 
               accessibilityRole="button"
               accessibilityLabel="Hold to record 30 second voice feedback">
               <View style={s.micCoralCircle}>
-                <Icon name="mic" size={18} color="#FFFFFF" />
+                <Icon name="mic" size={18} color={Maple.surface} />
               </View>
             </Pressable>
 
@@ -590,7 +591,7 @@ export function SpeedGraderDesk({ g, me, phone = false }: { g: SpeedGrader; me: 
                       {
                         height: Math.max(4, Math.round(h * 26)),
                         backgroundColor:
-                          recordingVoice && i % 2 === 0 ? '#EF4444' : '#60A5FA',
+                          recordingVoice && i % 2 === 0 ? Maple.error : Maple.blue,
                       },
                     ]}
                   />
@@ -653,7 +654,7 @@ export function SpeedGraderDesk({ g, me, phone = false }: { g: SpeedGrader; me: 
             </Pressable>
             <Pressable style={s.saveNextBtn} onPress={handleSaveAndNext}>
               <Text style={s.saveNextText}>Save & Next</Text>
-              <Icon name="arrowRight" size={13} color="#FFFFFF" />
+              <Icon name="arrowRight" size={13} color={Maple.surface} />
             </Pressable>
           </View>
         </Panel>
@@ -664,7 +665,7 @@ export function SpeedGraderDesk({ g, me, phone = false }: { g: SpeedGrader; me: 
 
 export function SpeedGraderPhone({ g, me }: { g: SpeedGrader; me: TeacherMe }) {
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: '#EAF1FB' }}>
+    <ScrollView style={{ flex: 1, backgroundColor: Maple.blueSelected }}>
       <TeacherPhoneTop me={me} />
       <SpeedGraderDesk g={g} me={me} phone />
     </ScrollView>
@@ -674,21 +675,21 @@ export function SpeedGraderPhone({ g, me }: { g: SpeedGrader; me: TeacherMe }) {
 function StatusChip({ status }: { status: SpeedGraderSubmission['status'] }) {
   if (status === 'AI Scored') {
     return (
-      <View style={[s.statusTag, { backgroundColor: '#DCFCE7' }]}>
-        <Text style={[s.statusTagText, { color: '#15803D' }]}>• AI Scored</Text>
+      <View style={[s.statusTag, { backgroundColor: Maple.successSoft }]}>
+        <Text style={[s.statusTagText, { color: Maple.successText }]}>• AI Scored</Text>
       </View>
     );
   }
   if (status === 'Graded') {
     return (
-      <View style={[s.statusTag, { backgroundColor: '#DCFCE7' }]}>
-        <Text style={[s.statusTagText, { color: '#15803D' }]}>✓ Graded</Text>
+      <View style={[s.statusTag, { backgroundColor: Maple.successSoft }]}>
+        <Text style={[s.statusTagText, { color: Maple.successText }]}>✓ Graded</Text>
       </View>
     );
   }
   return (
-    <View style={[s.statusTag, { backgroundColor: '#FEF3C7' }]}>
-      <Text style={[s.statusTagText, { color: '#B45309' }]}>• Needs Review</Text>
+    <View style={[s.statusTag, { backgroundColor: Maple.warningSoft }]}>
+      <Text style={[s.statusTagText, { color: Maple.warningText }]}>• Needs Review</Text>
     </View>
   );
 }

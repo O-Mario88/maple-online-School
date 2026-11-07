@@ -13,6 +13,7 @@ import type { Integration, IntegrationType, IntException } from '@/mock/command-
 
 import { type FormAsk, FormModal } from './FinForm';
 import { ActionGrid, FinDesk, FinHead, FinPanel, FinPhone, FinStats, FinTabs, num, PhoneRow, type Promo, RingLegend } from './FinKit';
+import { Maple } from '@/constants/maple';
 
 type O = CommandData['platformFinance']['ops'];
 const TODAY = '2026-10-31';
@@ -20,7 +21,7 @@ const TABS = ['Overview', 'Bank Feeds', 'Payment Gateways', 'Accounting Export',
 const TYPES: readonly IntegrationType[] = ['Bank Feed', 'Payment Gateway', 'Accounting Export', 'Webhook'];
 const STATUS_TONE: Readonly<Record<Integration['status'], Tone>> = { Connected: 'green', Paused: 'orange', Error: 'red' };
 const EX_TONE: Readonly<Record<IntException['status'], Tone>> = { Open: 'red', 'In Progress': 'orange', Retrying: 'blue', Resolved: 'green' };
-const PROMO: Promo = { icon: 'link', color: '#1E6BF0', title: 'Financial Integrations', body: 'Connect banks, payment gateways, accounting tools and webhooks for reliable, automated operations.' };
+const PROMO: Promo = { icon: 'link', color: Maple.blue, title: 'Financial Integrations', body: 'Connect banks, payment gateways, accounting tools and webhooks for reliable, automated operations.' };
 const NOW = 'Oct 31, 2026, 10:45 AM';
 
 function useIntegrations(o: O, me: string) {
@@ -66,7 +67,7 @@ function useIntegrations(o: O, me: string) {
         if (!canUseFeed(entity)) return 'Option C: schools do not connect live feeds. They upload bank statements on the school accounting page.';
         if (!(v.name ?? '').trim()) return 'Name the integration.';
         if ((v.secret ?? '').trim().length < 12) return 'Paste the full API key (at least 12 characters).';
-        const i: Integration = { id: `INT-${String(list.length + 1).padStart(2, '0')}`, name: (v.name ?? '').trim(), type: v.type as IntegrationType, badge: (v.name ?? '?').trim().slice(0, 2).toUpperCase(), color: '#1E6BF0', status: 'Connected', lastSync: 'Never', today: 0, secret: (v.secret ?? '').trim(), lastRotated: TODAY };
+        const i: Integration = { id: `INT-${String(list.length + 1).padStart(2, '0')}`, name: (v.name ?? '').trim(), type: v.type as IntegrationType, badge: (v.name ?? '?').trim().slice(0, 2).toUpperCase(), color: Maple.blue, status: 'Connected', lastSync: 'Never', today: 0, secret: (v.secret ?? '').trim(), lastRotated: TODAY };
         setList((prev) => [...prev, i]);
         note(`connected ${i.name} (${i.type}); key ${maskSecret(i.secret)}`);
         toast(`${i.name} connected. Key stored as ${maskSecret(i.secret)}. First sync runs on the next schedule.`);
@@ -202,7 +203,7 @@ function Imports({ u, phone = false }: { u: U; phone?: boolean }) {
   const t = u.imports.ok + u.imports.warnings + u.imports.failed;
   return (
     <FinPanel icon="download" title="Transaction Imports (Today)" style={!phone && styles.imports}>
-      <RingLegend phone={phone} size={150} center={num(t)} caption="Transactions" parts={[{ label: 'Imported Successfully', value: u.imports.ok, color: '#22A55A', display: num(u.imports.ok) }, { label: 'Imported with Warnings', value: u.imports.warnings, color: '#F5B731', display: num(u.imports.warnings) }, { label: 'Failed / Exceptions', value: u.imports.failed, color: '#E5484D', display: num(u.imports.failed) }]} />
+      <RingLegend phone={phone} size={150} center={num(t)} caption="Transactions" parts={[{ label: 'Imported Successfully', value: u.imports.ok, color: Maple.successText, display: num(u.imports.ok) }, { label: 'Imported with Warnings', value: u.imports.warnings, color: Maple.warning, display: num(u.imports.warnings) }, { label: 'Failed / Exceptions', value: u.imports.failed, color: Maple.error, display: num(u.imports.failed) }]} />
       <View style={styles.note}>
         <Icon name="info" size={15} color={TONES.blue.solid} />
         <Text style={[styles.cell, styles.flex]}>Imports are validated, de-duplicated by provider reference and posted to Maple&apos;s corporate ledger. Schools upload statements instead (Option C – hybrid accounting).</Text>

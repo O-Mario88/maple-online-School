@@ -1,6 +1,6 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { useMemo } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AUTH_SKY, AuthPhoneTop, AuthTopBar, FitScale } from '@/features/auth/AuthChrome';
@@ -9,6 +9,8 @@ import { SignInPanel } from '@/features/auth/SignInPanel';
 import { Brand } from '@/features/public/palette';
 import { LightOnly } from '@/hooks/use-theme';
 import { mockData } from '@/lib/mock';
+import { Maple } from '@/constants/maple';
+import { PageScroll } from '@/components/shell/PageScroll';
 
 /** From this width the page is the reference's desktop layout, scaled to fit the window. */
 const DESKTOP_MIN = 900;
@@ -48,12 +50,12 @@ export default function SignInScreen() {
       <SafeAreaView style={styles.phoneSafe} edges={['top', 'left', 'right']}>
         <AuthPhoneTop />
         <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-          <ScrollView contentContainerStyle={styles.phoneScroll} keyboardShouldPersistTaps="handled">
+          <PageScroll contentContainerStyle={styles.phoneScroll} keyboardShouldPersistTaps="handled">
             {art ? <Image source={art.phone} style={styles.phonePhoto} contentFit="cover" accessibilityLabel="A smiling learner in school uniform" /> : null}
             <View style={[styles.phoneCard, art ? styles.phoneCardOverlap : null]}>
               <SignInCard art={art} phone />
             </View>
-          </ScrollView>
+          </PageScroll>
         </KeyboardAvoidingView>
       </SafeAreaView>
     </LightOnly>
@@ -67,7 +69,7 @@ const styles = StyleSheet.create({
   panel: { position: 'absolute', left: 18, top: 82 },
   card: { position: 'absolute', left: 563, top: 108 },
   phoneSafe: { flex: 1, backgroundColor: Brand.surface },
-  phoneScroll: { paddingBottom: 28, backgroundColor: '#F4F7FC' },
+  phoneScroll: { paddingBottom: 28, backgroundColor: Maple.blueSoft },
   phonePhoto: { width: '100%', aspectRatio: PHONE_PHOTO_RATIO },
   phoneCard: { marginHorizontal: 10, marginTop: 10 },
   phoneCardOverlap: { marginTop: -22 },

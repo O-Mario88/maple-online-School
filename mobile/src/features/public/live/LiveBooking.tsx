@@ -9,11 +9,13 @@ import { calendarLink, seatsLeft, timeLeft } from '@/lib/live-event';
 import type { MockData } from '@/mock';
 
 import { Brand } from '../palette';
+import { Maple } from '@/constants/maple';
+import { Palette } from '@/constants/palette';
 
 export type Session = MockData['publicPages']['liveSession'];
 
 const TICK_MS = 1000;
-const SEAT_BAR = ['#FF393F', '#FE9B4A'] as const;
+const SEAT_BAR = [Maple.error, Palette.orange400b] as const;
 
 /** The current time, updated every second while the page is open. */
 function useNow(): number {
@@ -115,45 +117,45 @@ const styles = StyleSheet.create({
   heading: { fontSize: 13, fontWeight: '700', color: Brand.ink },
   headingP: { fontSize: 14 },
   countdown: { flexDirection: 'row', gap: 5, marginTop: 10 },
-  unit: { flex: 1, height: 54, alignItems: 'center', justifyContent: 'center', borderRadius: 8, backgroundColor: '#F4F6FA' },
+  unit: { flex: 1, height: 54, alignItems: 'center', justifyContent: 'center', borderRadius: 8, backgroundColor: Maple.blueSoft },
   unitP: { height: 62, borderRadius: 10 },
   unitValue: { fontSize: 20, lineHeight: 24, fontWeight: '700', color: Brand.ink },
   unitValueP: { fontSize: 22, lineHeight: 27 },
-  unitLabel: { fontSize: 9.5, color: '#4A5263' },
+  unitLabel: { fontSize: 9.5, color: Maple.body },
   unitLabelP: { fontSize: 11 },
-  seats: { marginTop: 14, paddingHorizontal: 13, paddingTop: 11, paddingBottom: 9, borderRadius: 8, backgroundColor: '#FDF2F3' },
+  seats: { marginTop: 14, paddingHorizontal: 13, paddingTop: 11, paddingBottom: 9, borderRadius: 8, backgroundColor: Maple.errorSoft },
   seatsP: { paddingHorizontal: 14, paddingTop: 13, paddingBottom: 11, borderRadius: 10 },
   seatsHead: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   fire: { fontSize: 12 },
-  seatsTitle: { fontSize: 11, fontWeight: '700', color: '#E5484D' },
+  seatsTitle: { fontSize: 11, fontWeight: '700', color: Maple.error },
   seatsTitleP: { fontSize: 13 },
-  track: { height: 6, marginTop: 10, borderRadius: 3, backgroundColor: '#F8D5D8', overflow: 'hidden' },
+  track: { height: 6, marginTop: 10, borderRadius: 3, backgroundColor: Maple.errorSoft, overflow: 'hidden' },
   fill: { height: 6, borderRadius: 3 },
   seatsFoot: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 8 },
-  small: { fontSize: 9, color: '#2A3242' },
+  small: { fontSize: 9, color: Maple.navy },
   smallP: { fontSize: 11 },
   priceRow: { flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 17 },
   priceRowP: { marginTop: 18 },
   price: { fontSize: 20, fontWeight: '700', color: Brand.ink },
   priceP: { fontSize: 24 },
-  was: { fontSize: 11, color: '#8A92A3', textDecorationLine: 'line-through' },
+  was: { fontSize: 11, color: Maple.muted, textDecorationLine: 'line-through' },
   wasP: { fontSize: 12.5 },
   spacer: { flex: 1 },
-  off: { paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4, backgroundColor: '#12B76A' },
+  off: { paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4, backgroundColor: Maple.successText },
   offText: { fontSize: 9.5, fontWeight: '700', color: Brand.surface },
-  access: { marginTop: 6, fontSize: 10.5, color: '#4A5263' },
+  access: { marginTop: 6, fontSize: 10.5, color: Maple.body },
   accessP: { fontSize: 12 },
   primary: { height: 38, marginTop: 16, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, borderRadius: 6, backgroundColor: Brand.blue },
   primaryP: { height: 50, marginTop: 18, borderRadius: 10 },
   primaryText: { fontSize: 12.5, fontWeight: '600', color: Brand.surface },
   btnTextP: { fontSize: 15 },
-  secondary: { height: 38, marginTop: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, borderRadius: 6, borderWidth: 1, borderColor: '#D5DCE7', backgroundColor: Brand.surface },
+  secondary: { height: 38, marginTop: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, borderRadius: 6, borderWidth: 1, borderColor: Maple.borderStrong, backgroundColor: Brand.surface },
   secondaryP: { height: 48, borderRadius: 10 },
   secondaryText: { fontSize: 12.5, fontWeight: '500', color: Brand.ink },
   perks: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 },
   perksP: { marginTop: 18 },
   perk: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   perkP: { flex: 1, flexDirection: 'column', gap: 4 },
-  perkText: { fontSize: 9, lineHeight: 12.5, color: '#2A3242' },
+  perkText: { fontSize: 9, lineHeight: 12.5, color: Maple.navy },
   perkTextP: { fontSize: 11, lineHeight: 14, textAlign: 'center' },
 });

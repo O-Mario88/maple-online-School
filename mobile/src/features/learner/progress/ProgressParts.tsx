@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { Modal, Pressable, Share, StyleSheet, Text, View } from 'react-native';
 
@@ -10,16 +10,17 @@ import type { IconName } from '@/lib/icons';
 
 import { TONE } from './SkillTree';
 import type { Progress, ProgressState, View as PageView } from './useProgress';
+import { Maple } from '@/constants/maple';
 
-const NAVY = '#16213E';
-const BODY = '#4A5263';
-const BLUE = '#1463F3';
+const NAVY = Maple.navy;
+const BODY = Maple.body;
+const BLUE = Maple.blue;
 const pct = (done: number, total: number) => (total === 0 ? 0 : Math.round((done / total) * 100));
 
 export function GreatProgress({ p, s, phone = false }: { p: Progress; s: ProgressState; phone?: boolean }) {
   return (
     <View style={[styles.great, phone && styles.greatP]}>
-      <Image source={p.trophy} style={styles.trophy} contentFit="contain" />
+      <Image decorative source={p.trophy} style={styles.trophy} contentFit="contain" />
       <View style={styles.flex}>
         <Text style={styles.greatTitle}>{`Great progress, ${p.learner}!`}</Text>
         <Text style={styles.greatSub}>{`You've mastered ${p.termMastered} skills this term.`}</Text>
@@ -39,7 +40,7 @@ export function SubjectTabs({ s }: { s: ProgressState }) {
         const on = i === s.subjectIndex;
         return (
           <Pressable key={x.name} style={styles.tab} onPress={() => s.setSubject(i)} accessibilityRole="tab" accessibilityState={{ selected: on }}>
-            <Image source={x.icon} style={styles.tabIcon} contentFit="contain" />
+            <Image decorative source={x.icon} style={styles.tabIcon} contentFit="contain" />
             <View>
               <Text style={styles.tabName}>{x.name}</Text>
               <Text style={styles.tabCount}>{`${x.done} / ${x.total} skills`}</Text>
@@ -70,7 +71,7 @@ export function SideMenu({ s }: { s: ProgressState }) {
         const on = s.view === m.view;
         return (
           <Pressable key={m.view} style={[styles.menuItem, on && styles.menuOn]} onPress={() => s.setView(m.view)} accessibilityRole="tab" accessibilityState={{ selected: on }}>
-            <Icon name={m.icon} size={17} color={on ? BLUE : '#3B4456'} />
+            <Icon name={m.icon} size={17} color={on ? BLUE : Maple.body} />
             <Text style={[styles.menuText, on && styles.menuTextOn]}>{m.label}</Text>
           </Pressable>
         );
@@ -84,7 +85,7 @@ export function Milestone({ p, s }: { p: Progress; s: ProgressState }) {
   return (
     <View style={styles.box}>
       <View style={styles.milestoneTop}>
-        <Image source={p.milestoneIcon} style={styles.milestoneIcon} contentFit="contain" />
+        <Image decorative source={p.milestoneIcon} style={styles.milestoneIcon} contentFit="contain" />
         <View style={styles.flex}>
           <Text style={styles.boxTitle}>Your Next Milestone</Text>
           {m ? (
@@ -100,7 +101,7 @@ export function Milestone({ p, s }: { p: Progress; s: ProgressState }) {
       {m ? (
         <View style={styles.barRow}>
           <View style={styles.flex}>
-            <Bar value={m.done / m.total} color="#0B6BFF" track="#E4ECF6" height={8} />
+            <Bar value={m.done / m.total} color={Maple.blue} track={Maple.blueSelected} height={8} />
           </View>
           <Text style={styles.barText}>{`${m.done} / ${m.total}`}</Text>
         </View>
@@ -123,7 +124,7 @@ export function Achievements({ p, s, limit = 4 }: { p: Progress; s: ProgressStat
       </View>
       {p.achievements.slice(0, limit).map((a) => (
         <View key={a.title} style={styles.ach}>
-          <Image source={a.icon} style={styles.achIcon} contentFit="contain" />
+          <Image decorative source={a.icon} style={styles.achIcon} contentFit="contain" />
           <View style={styles.flex}>
             <Text style={styles.achTitle}>{a.title}</Text>
             <Text style={styles.achSub}>{a.sub}</Text>
@@ -140,7 +141,7 @@ export function OverallCard({ p, s }: { p: Progress; s: ProgressState }) {
     <View style={styles.box}>
       <Text style={styles.boxTitleSm}>Overall Progress</Text>
       <View style={styles.overallRow}>
-        <ProgressRing value={s.totals.percent / 100} size={78} stroke={9} color="#1FA35C" track="#DCEFE4" labelSize={18} />
+        <ProgressRing value={s.totals.percent / 100} size={78} stroke={9} color={Maple.successText} track={Maple.successSoft} labelSize={18} />
         <View style={styles.flex}>
           <Text style={styles.overallBig}>{`${s.totals.done} / ${s.totals.total}`}</Text>
           <Text style={styles.overallSub}>skills mastered</Text>
@@ -161,10 +162,10 @@ export function BySubject({ s }: { s: ProgressState }) {
       <View style={styles.subjList}>
         {s.subjects.map((x, i) => (
           <Pressable key={x.name} style={styles.subjRow} onPress={() => s.setSubject(i)} accessibilityRole="button" accessibilityLabel={`${x.name}: ${pct(x.done, x.total)}%`}>
-            <Image source={x.icon} style={styles.subjIcon} contentFit="contain" />
+            <Image decorative source={x.icon} style={styles.subjIcon} contentFit="contain" />
             <View style={styles.flex}>
               <Text style={styles.subjName}>{x.name}</Text>
-              <Bar value={x.done / x.total} color={x.color} track="#EEF2F7" height={5} />
+              <Bar value={x.done / x.total} color={x.color} track={Maple.blueSelected} height={5} />
             </View>
             <Text style={styles.subjPct}>{`${pct(x.done, x.total)}%`}</Text>
           </Pressable>
@@ -236,7 +237,7 @@ export function Goals({ p, s }: { p: Progress; s: ProgressState }) {
       </View>
       {p.goals.map((g) => (
         <Pressable key={g.title} style={styles.goal} onPress={() => (g.subject >= 0 ? s.openNode(g.subject, g.node) : router.push('/learn/library'))} accessibilityRole="button" accessibilityLabel={`${g.title}: ${g.done} of ${g.total} ${g.unit}`}>
-          <Image source={g.icon} style={styles.goalIcon} contentFit="contain" />
+          <Image decorative source={g.icon} style={styles.goalIcon} contentFit="contain" />
           <Text style={styles.goalTitle}>{g.title}</Text>
           <Text style={styles.goalCount}>{`${g.done} / ${g.total} ${g.unit}`}</Text>
         </Pressable>
@@ -276,7 +277,7 @@ export function NodeDialog({ s }: { s: ProgressState }) {
         <View style={styles.dialog}>
           <View style={styles.dialogHead}>
             <View style={[styles.dialogDot, { backgroundColor: t.dot, borderColor: t.halo }]}>
-              <Icon name={t.icon} size={14} color="#FFFFFF" />
+              <Icon name={t.icon} size={14} color={Maple.surface} />
             </View>
             <View style={styles.flex}>
               <Text style={styles.dialogTitle}>{name}</Text>
@@ -366,7 +367,7 @@ export function SideView({ p, s }: { p: Progress; s: ProgressState }) {
           <View style={styles.badgeGrid}>
             {p.achievements.map((a) => (
               <View key={a.title} style={styles.badgeCard}>
-                <Image source={a.icon} style={styles.badgeImg} contentFit="contain" />
+                <Image decorative source={a.icon} style={styles.badgeImg} contentFit="contain" />
                 <Text style={styles.achTitle}>{a.title}</Text>
                 <Text style={styles.achSub}>{`${a.sub} • ${a.when}`}</Text>
               </View>
@@ -380,10 +381,10 @@ export function SideView({ p, s }: { p: Progress; s: ProgressState }) {
           <Text style={styles.boxTitleSm}>Goals</Text>
           {p.goals.map((g) => (
             <View key={g.title} style={styles.histRow}>
-              <Image source={g.icon} style={styles.goalIcon} contentFit="contain" />
+              <Image decorative source={g.icon} style={styles.goalIcon} contentFit="contain" />
               <View style={styles.flex}>
                 <Text style={styles.achTitle}>{g.title}</Text>
-                <Bar value={g.done / g.total} color="#0B6BFF" track="#E4ECF6" height={6} />
+                <Bar value={g.done / g.total} color={Maple.blue} track={Maple.blueSelected} height={6} />
               </View>
               <Text style={styles.histScore}>{`${g.done} / ${g.total}`}</Text>
             </View>
@@ -418,39 +419,39 @@ export function SideView({ p, s }: { p: Progress; s: ProgressState }) {
 const styles = StyleSheet.create({
   flex: { flex: 1 },
   bold: { fontWeight: '700', color: BLUE },
-  great: { flexDirection: 'row', alignItems: 'center', gap: 14, paddingHorizontal: 16, borderRadius: 12, borderWidth: 1, borderColor: '#E8EEF6', backgroundColor: '#FFFFFF' },
+  great: { flexDirection: 'row', alignItems: 'center', gap: 14, paddingHorizontal: 16, borderRadius: 12, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface },
   greatP: { paddingVertical: 12 },
   trophy: { width: 42, height: 40 },
   greatTitle: { fontSize: 16.5, fontWeight: '700', color: NAVY },
-  greatSub: { marginTop: 4, fontSize: 12.5, color: '#3F4A63' },
-  keepGoing: { height: 40, flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 15, borderRadius: 8, borderWidth: 1, borderColor: '#CFE0F8', backgroundColor: '#EEF5FF' },
+  greatSub: { marginTop: 4, fontSize: 12.5, color: Maple.body },
+  keepGoing: { height: 40, flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 15, borderRadius: 8, borderWidth: 1, borderColor: Maple.blueLine, backgroundColor: Maple.blueSoft },
   keepText: { fontSize: 13, fontWeight: '500', color: BLUE },
-  tabs: { height: 67, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12, borderRadius: 12, backgroundColor: '#FFFFFF' },
+  tabs: { height: 67, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12, borderRadius: 12, backgroundColor: Maple.surface },
   tab: { flex: 1, height: 67, flexDirection: 'row', alignItems: 'center', gap: 10, paddingLeft: 4 },
   tabIcon: { width: 40, height: 40 },
   tabName: { fontSize: 12.5, fontWeight: '600', color: NAVY },
   tabCount: { marginTop: 2, fontSize: 11.5, color: BODY },
-  tabLine: { position: 'absolute', left: 0, right: 12, bottom: 0, height: 3, borderRadius: 2, backgroundColor: '#0B6BFF' },
+  tabLine: { position: 'absolute', left: 0, right: 12, bottom: 0, height: 3, borderRadius: 2, backgroundColor: Maple.blue },
   menu: { gap: 1 },
   menuItem: { height: 33, flexDirection: 'row', alignItems: 'center', gap: 14, paddingHorizontal: 12, borderRadius: 7 },
-  menuOn: { backgroundColor: '#E6EEFC' },
-  menuText: { fontSize: 13, color: '#2B3445' },
+  menuOn: { backgroundColor: Maple.blueSelected },
+  menuText: { fontSize: 13, color: Maple.navy },
   menuTextOn: { fontWeight: '500', color: BLUE },
-  box: { gap: 10, padding: 12, borderRadius: 12, borderWidth: 1, borderColor: '#E8EEF6', backgroundColor: '#FFFFFF' },
+  box: { gap: 10, padding: 12, borderRadius: 12, borderWidth: 1, borderColor: Maple.blueSelected, backgroundColor: Maple.surface },
   tight: { fontSize: 12.5 },
   boxTitle: { fontSize: 13, fontWeight: '700', color: NAVY },
   boxTitleSm: { fontSize: 13, fontWeight: '700', color: NAVY, letterSpacing: -0.2 },
   headRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   milestoneTop: { flexDirection: 'row', gap: 10 },
   milestoneIcon: { width: 42, height: 42 },
-  milestoneText: { marginTop: 4, fontSize: 12, lineHeight: 16, color: '#3F4A63' },
+  milestoneText: { marginTop: 4, fontSize: 12, lineHeight: 16, color: Maple.body },
   barRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   barText: { fontSize: 12, fontWeight: '600', color: NAVY },
-  primary: { height: 34, alignItems: 'center', justifyContent: 'center', borderRadius: 6, backgroundColor: '#0B6BFF' },
-  primaryText: { fontSize: 12.5, fontWeight: '600', color: '#FFFFFF' },
-  secondary: { height: 34, alignItems: 'center', justifyContent: 'center', borderRadius: 6, borderWidth: 1, borderColor: '#C9DAF8' },
+  primary: { height: 34, alignItems: 'center', justifyContent: 'center', borderRadius: 6, backgroundColor: Maple.blue },
+  primaryText: { fontSize: 12.5, fontWeight: '600', color: Maple.surface },
+  secondary: { height: 34, alignItems: 'center', justifyContent: 'center', borderRadius: 6, borderWidth: 1, borderColor: Maple.blueLine },
   secondaryText: { fontSize: 12.5, fontWeight: '600', color: BLUE },
-  pill: { paddingHorizontal: 7, paddingVertical: 2, borderRadius: 10, borderWidth: 1, borderColor: '#D8E5FA' },
+  pill: { paddingHorizontal: 7, paddingVertical: 2, borderRadius: 10, borderWidth: 1, borderColor: Maple.blueSelected },
   pillText: { fontSize: 11, color: BLUE },
   ach: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   achIcon: { width: 42, height: 42 },
@@ -459,19 +460,19 @@ const styles = StyleSheet.create({
   overallRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   overallBig: { fontSize: 15, fontWeight: '700', color: NAVY },
   overallSub: { fontSize: 12.5, color: BODY },
-  gain: { alignSelf: 'flex-start', flexDirection: 'row', alignItems: 'center', marginTop: 8, paddingHorizontal: 6, paddingVertical: 4, borderRadius: 6, backgroundColor: '#E6F6EC' },
-  gainText: { fontSize: 10, fontWeight: '500', color: '#15803D' },
+  gain: { alignSelf: 'flex-start', flexDirection: 'row', alignItems: 'center', marginTop: 8, paddingHorizontal: 6, paddingVertical: 4, borderRadius: 6, backgroundColor: Maple.successSoft },
+  gainText: { fontSize: 10, fontWeight: '500', color: Maple.successText },
   subjList: { gap: 9 },
   subjRow: { flexDirection: 'row', alignItems: 'center', gap: 9 },
   subjIcon: { width: 20, height: 20 },
   subjName: { marginBottom: 3, fontSize: 11.5, color: NAVY },
   subjPct: { width: 36, fontSize: 11.5, color: NAVY, textAlign: 'right' },
-  period: { height: 24, flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 8, borderRadius: 6, borderWidth: 1, borderColor: '#DCE3EE' },
+  period: { height: 24, flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 8, borderRadius: 6, borderWidth: 1, borderColor: Maple.blueLine },
   periodText: { fontSize: 10.5, color: NAVY },
   chart: { flexDirection: 'row', gap: 6 },
   axis: { justifyContent: 'space-between' },
   axisText: { fontSize: 9.5, color: BODY },
-  bars: { flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: '#E2E8F0' },
+  bars: { flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: Maple.border },
   barCol: { width: 14, borderTopLeftRadius: 3, borderTopRightRadius: 3, overflow: 'hidden' },
   days: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 4 },
   dayText: { width: 22, fontSize: 9.5, color: BODY, textAlign: 'center' },
@@ -484,13 +485,13 @@ const styles = StyleSheet.create({
   goalTitle: { flex: 1, fontSize: 10.5, fontWeight: '500', color: NAVY, letterSpacing: -0.2 },
   goalCount: { fontSize: 10, color: BODY, textDecorationLine: 'underline' },
   scrim: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20, backgroundColor: 'rgba(8,12,20,0.5)' },
-  dialog: { width: '100%', maxWidth: 420, gap: 10, padding: 18, borderRadius: 14, backgroundColor: '#FFFFFF' },
+  dialog: { width: '100%', maxWidth: 420, gap: 10, padding: 18, borderRadius: 14, backgroundColor: Maple.surface },
   dialogHead: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   dialogDot: { width: 30, height: 30, alignItems: 'center', justifyContent: 'center', borderRadius: 15, borderWidth: 3 },
   dialogTitle: { fontSize: 16, fontWeight: '700', color: NAVY },
   dialogMeta: { marginTop: 2, fontSize: 12, color: BODY },
   stateChip: { alignSelf: 'flex-start', paddingHorizontal: 9, paddingVertical: 3, borderRadius: 10, borderWidth: 1, fontSize: 11.5, fontWeight: '600', color: NAVY, overflow: 'hidden' },
-  dialogText: { fontSize: 13, lineHeight: 19, color: '#2B3445' },
+  dialogText: { fontSize: 13, lineHeight: 19, color: Maple.navy },
   leafList: { gap: 6 },
   leafRow: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingVertical: 4 },
   leafRowText: { flex: 1, fontSize: 12.5, color: NAVY },
@@ -499,9 +500,9 @@ const styles = StyleSheet.create({
   stateGrid: { flexDirection: 'row', gap: 10 },
   stateCard: { flex: 1, alignItems: 'center', gap: 2, paddingVertical: 14, borderRadius: 10, borderWidth: 1.5 },
   stateN: { fontSize: 22, fontWeight: '800', color: NAVY },
-  histRow: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: '#F0F3F7' },
+  histRow: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: Maple.blueSelected },
   histScore: { fontSize: 13, fontWeight: '700', color: NAVY },
   badgeGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
-  badgeCard: { width: 190, alignItems: 'center', gap: 4, padding: 14, borderRadius: 12, borderWidth: 1, borderColor: '#EEF1F6' },
+  badgeCard: { width: 190, alignItems: 'center', gap: 4, padding: 14, borderRadius: 12, borderWidth: 1, borderColor: Maple.blueSelected },
   badgeImg: { width: 64, height: 64 },
 });

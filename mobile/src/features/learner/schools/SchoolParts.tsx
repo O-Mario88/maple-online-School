@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import type { ReactNode } from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
@@ -8,10 +8,11 @@ import type { IconName } from '@/lib/icons';
 
 import type { ExamCentre, SchoolCard } from './networkData';
 import type { SchoolPrefs, Stay } from './schoolNetwork';
+import { Maple } from '@/constants/maple';
 
-export const PURPLE = '#5B3FD9';
-export const LAVENDER = '#EEEAFE';
-const STAR = '#F5A524';
+export const BRAND_BLUE = Maple.blue;
+export const BRAND_SOFT = Maple.blueSoft;
+const STAR = Maple.warning;
 
 export const ugx = (n: number) => `UGX ${n.toLocaleString('en-US')}`;
 
@@ -27,7 +28,7 @@ export function examNote(e: ExamCentre): string {
 
 /** The school's crest, or its initials on a tile until it uploads one. */
 export function Crest({ c, size = 40 }: { c: SchoolCard; size?: number }) {
-  if (c.crest) return <Image source={c.crest} style={{ width: size, height: size }} contentFit="contain" />;
+  if (c.crest) return <Image decorative source={c.crest} style={{ width: size, height: size }} contentFit="contain" />;
   const initials = c.name
     .split(/\s+/)
     .filter((w) => /^[A-Za-z]/.test(w))
@@ -46,7 +47,7 @@ export function Campus({ c, style }: { c: SchoolCard; style: object[] }) {
   if (c.photo) return <Image source={c.photo} style={style} contentFit="cover" accessibilityLabel={`${c.name} campus`} />;
   return (
     <View style={[...style, s.campusBlank]} accessibilityLabel={`${c.name} campus photo not added yet`}>
-      <Icon name="building" size={34} color={PURPLE} />
+      <Icon name="building" size={34} color={BRAND_BLUE} />
     </View>
   );
 }
@@ -85,7 +86,7 @@ export function SchoolCardView({ c, saved, onSave, onView, onApply, reason, phon
       <View>
         <Campus c={c} style={[s.photo, phone ? s.photoP : {}]} />
         <Pressable style={s.heart} onPress={onSave} hitSlop={8} accessibilityRole="button" accessibilityState={{ selected: saved }} accessibilityLabel={saved ? `Remove ${c.name} from saved` : `Save ${c.name}`}>
-          <Icon name={saved ? 'heartFill' : 'heart'} size={18} color={saved ? '#EF4444' : L.ink} />
+          <Icon name={saved ? 'heartFill' : 'heart'} size={18} color={saved ? Maple.error : L.ink} />
         </Pressable>
         <View style={s.crest}>
           <Crest c={c} />
@@ -275,19 +276,20 @@ const s = StyleSheet.create({
   photo: { width: '100%', height: 100 },
   photoP: { height: 140 },
   heart: { position: 'absolute', top: 8, right: 8, width: 32, height: 32, alignItems: 'center', justifyContent: 'center', borderRadius: 16, backgroundColor: L.white },
-  crest: { position: 'absolute', left: 14, bottom: -24, width: 56, height: 52, alignItems: 'center', justifyContent: 'center', borderRadius: 10, backgroundColor: L.white, shadowColor: '#0B1A3F', shadowOpacity: 0.12, shadowRadius: 6, shadowOffset: { width: 0, height: 2 }, elevation: 3 },
-  initials: { alignItems: 'center', justifyContent: 'center', backgroundColor: LAVENDER },
-  initialsText: { fontWeight: '800', color: PURPLE },
-  campusBlank: { alignItems: 'center', justifyContent: 'center', backgroundColor: '#EEF2FA' },
+  crest: { position: 'absolute', left: 14, bottom: -24, width: 56, height: 52, alignItems: 'center', justifyContent: 'center', borderRadius: 10, backgroundColor: L.white, shadowColor: Maple.navyDeep, shadowOpacity: 0.12, shadowRadius: 6, shadowOffset: { width: 0, height: 2 }, elevation: 3 },
+  crestImg: { width: 40, height: 40 },
+  initials: { alignItems: 'center', justifyContent: 'center', backgroundColor: BRAND_SOFT },
+  initialsText: { fontWeight: '800', color: BRAND_BLUE },
+  campusBlank: { alignItems: 'center', justifyContent: 'center', backgroundColor: Maple.blueSoft },
   cardBody: { gap: 5, paddingHorizontal: 14, paddingTop: 8, paddingBottom: 12 },
   nameRow: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingLeft: 62 },
   name: { flexShrink: 1, fontSize: 13, letterSpacing: -0.3, fontWeight: '700', color: L.navy },
   placeRow: { flexDirection: 'row', alignItems: 'center', gap: 5, marginTop: 2 },
   place: { fontSize: 12, color: L.body },
-  km: { overflow: 'hidden', marginLeft: 6, paddingHorizontal: 7, paddingVertical: 1, borderRadius: 6, fontSize: 11.5, color: L.ink, backgroundColor: '#F1F4F9' },
+  km: { overflow: 'hidden', marginLeft: 6, paddingHorizontal: 7, paddingVertical: 1, borderRadius: 6, fontSize: 11.5, color: L.ink, backgroundColor: Maple.blueSoft },
   rating: { fontSize: 12, fontWeight: '600', color: L.ink },
   tags: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
-  tag: { overflow: 'hidden', paddingHorizontal: 8, paddingVertical: 2, borderRadius: 6, fontSize: 10.5, fontWeight: '500', color: L.ink, backgroundColor: '#EEF2FA' },
+  tag: { overflow: 'hidden', paddingHorizontal: 8, paddingVertical: 2, borderRadius: 6, fontSize: 10.5, fontWeight: '500', color: L.ink, backgroundColor: Maple.blueSoft },
   blurb: { fontSize: 11.5, lineHeight: 15, color: L.body },
   reason: { flexDirection: 'row', alignItems: 'center', gap: 5 },
   reasonText: { flex: 1, fontSize: 11.5, fontWeight: '500', color: L.green },
@@ -296,7 +298,7 @@ const s = StyleSheet.create({
   statValue: { fontSize: 12.5, fontWeight: '700', color: L.navy },
   statLabel: { fontSize: 8.5, color: L.body },
   buttons: { flexDirection: 'row', gap: 10, marginTop: 6 },
-  view: { flex: 1, height: 32, alignItems: 'center', justifyContent: 'center', borderRadius: 8, backgroundColor: '#E9EEF8' },
+  view: { flex: 1, height: 32, alignItems: 'center', justifyContent: 'center', borderRadius: 8, backgroundColor: Maple.blueSelected },
   viewText: { fontSize: 12.5, fontWeight: '600', color: L.navy },
   apply: { flex: 1, height: 32, alignItems: 'center', justifyContent: 'center', borderRadius: 8, backgroundColor: L.blue },
   applyText: { fontSize: 12.5, fontWeight: '600', color: L.white },
@@ -312,10 +314,10 @@ const s = StyleSheet.create({
   note: { fontSize: 12.5, lineHeight: 17, color: L.body },
   sheetActions: { flexDirection: 'row', gap: 10, marginTop: 4 },
   progress: { gap: 6 },
-  bar: { height: 6, borderRadius: 3, backgroundColor: '#E6EBF3' },
+  bar: { height: 6, borderRadius: 3, backgroundColor: Maple.blueSelected },
   barFill: { height: 6, borderRadius: 3, backgroundColor: L.blue },
   choice: { paddingHorizontal: 12, paddingVertical: 7, borderRadius: 999, borderWidth: 1, borderColor: L.line },
-  choiceOn: { borderColor: PURPLE, backgroundColor: LAVENDER },
+  choiceOn: { borderColor: BRAND_BLUE, backgroundColor: BRAND_SOFT },
   choiceText: { fontSize: 13, color: L.ink },
-  choiceTextOn: { fontWeight: '600', color: PURPLE },
+  choiceTextOn: { fontWeight: '600', color: BRAND_BLUE },
 });

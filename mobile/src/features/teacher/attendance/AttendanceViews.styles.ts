@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 
 import { BLUE, BODY, INK, LINE, MUTED } from '@/features/teacher/frame/TeacherParts';
+import { Maple } from '@/constants/maple';
 
 /** Styles for AttendanceViews (kept apart so the view file stays readable). */
 export const ATTENDANCE_REF_WIDTH = 1220;
@@ -10,7 +11,7 @@ export const s = StyleSheet.create({
     width: ATTENDANCE_REF_WIDTH,
     padding: 12,
     gap: 10,
-    backgroundColor: '#EAF1FB',
+    backgroundColor: Maple.blueSelected,
   },
   body: {
     flexDirection: 'row',
@@ -45,7 +46,7 @@ export const s = StyleSheet.create({
     gap: 8,
     padding: 7,
     borderRadius: 8,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     borderWidth: 1,
     borderColor: LINE,
   },
@@ -76,12 +77,12 @@ export const s = StyleSheet.create({
     borderRadius: 8,
   },
   sideItemOn: {
-    backgroundColor: '#E3EDFF',
+    backgroundColor: Maple.blueSelected,
   },
   sideText: {
     flex: 1,
     fontSize: 11.5,
-    color: '#2B3445',
+    color: Maple.navy,
   },
   sideTextOn: {
     color: BLUE,
@@ -116,7 +117,7 @@ export const s = StyleSheet.create({
     color: BODY,
   },
   completedPill: {
-    backgroundColor: '#DCFCE7',
+    backgroundColor: Maple.successSoft,
     borderRadius: 6,
     paddingHorizontal: 8,
     paddingVertical: 2.5,
@@ -124,7 +125,7 @@ export const s = StyleSheet.create({
   completedPillText: {
     fontSize: 10,
     fontWeight: '700',
-    color: '#15803D',
+    color: Maple.successText,
   },
   headerBtns: {
     flexDirection: 'row',
@@ -138,9 +139,9 @@ export const s = StyleSheet.create({
     gap: 6,
     paddingHorizontal: 12,
     borderRadius: 8,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     borderWidth: 1,
-    borderColor: '#CBD5E1',
+    borderColor: Maple.borderStrong,
   },
   outlineBtnText: {
     fontSize: 11.5,
@@ -158,7 +159,7 @@ export const s = StyleSheet.create({
   saveBtnText: {
     fontSize: 11.5,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
 
   /* KPI Row */
@@ -171,7 +172,7 @@ export const s = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 7,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     borderRadius: 10,
     borderWidth: 1,
     borderColor: LINE,
@@ -249,7 +250,7 @@ export const s = StyleSheet.create({
     borderRadius: 7,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
   },
   searchInput: {
     flex: 1,
@@ -266,7 +267,7 @@ export const s = StyleSheet.create({
     borderRadius: 7,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
   },
   filterBtnText: {
     fontSize: 10,
@@ -280,7 +281,7 @@ export const s = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 10,
     paddingVertical: 7,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
     borderBottomWidth: 1,
     borderBottomColor: LINE,
   },
@@ -296,10 +297,10 @@ export const s = StyleSheet.create({
     paddingVertical: 6.5,
     borderBottomWidth: 1,
     borderBottomColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
   },
   trRowHighlighted: {
-    backgroundColor: '#F5F9FF',
+    backgroundColor: Maple.blueSoft,
   },
   colCheck: { width: 24, alignItems: 'center' },
   colNum: { width: 22 },
@@ -315,10 +316,10 @@ export const s = StyleSheet.create({
     height: 14,
     borderRadius: 3.5,
     borderWidth: 1.5,
-    borderColor: '#CBD5E1',
+    borderColor: Maple.borderStrong,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
   },
   checkboxOn: {
     backgroundColor: BLUE,
@@ -327,7 +328,7 @@ export const s = StyleSheet.create({
   checkboxTick: {
     fontSize: 8.5,
     fontWeight: '800',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   tdNum: {
     fontSize: 10.5,
@@ -370,7 +371,7 @@ export const s = StyleSheet.create({
   statusGlyphText: {
     fontSize: 7.5,
     fontWeight: '800',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   statusPillText: {
     fontSize: 9.5,
@@ -437,7 +438,7 @@ export const s = StyleSheet.create({
     borderRadius: 6,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -451,7 +452,7 @@ export const s = StyleSheet.create({
     color: INK,
   },
   pageBtnTextOn: {
-    color: '#FFFFFF',
+    color: Maple.surface,
     fontWeight: '700',
   },
   rowsPerPage: {
@@ -468,7 +469,7 @@ export const s = StyleSheet.create({
     borderRadius: 6,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
   },
   rowsSelectText: {
     fontSize: 10,
@@ -494,7 +495,7 @@ export const s = StyleSheet.create({
     height: 126,
     borderRadius: 9,
     overflow: 'hidden',
-    backgroundColor: '#0F172A',
+    backgroundColor: Maple.navy,
     alignItems: 'center',
     justifyContent: 'center',
     position: 'relative',
@@ -508,11 +509,11 @@ export const s = StyleSheet.create({
   videoBoardEq: {
     fontSize: 11,
     fontWeight: '700',
-    color: '#1E293B',
+    color: Maple.navy,
   },
   videoBoardSub: {
     fontSize: 9.5,
-    color: '#334155',
+    color: Maple.body,
   },
   playOverlayCircle: {
     width: 38,
@@ -520,7 +521,7 @@ export const s = StyleSheet.create({
     borderRadius: 19,
     backgroundColor: 'rgba(15,23,42,0.68)',
     borderWidth: 1.5,
-    borderColor: '#FFFFFF',
+    borderColor: Maple.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -545,7 +546,7 @@ export const s = StyleSheet.create({
     width: 7,
     height: 7,
     borderRadius: 3.5,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
   },
   videoControlsBottomRow: {
     flexDirection: 'row',
@@ -555,7 +556,7 @@ export const s = StyleSheet.create({
   videoTimeText: {
     fontSize: 9,
     fontWeight: '600',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   speedChip: {
     borderWidth: 1,
@@ -567,7 +568,7 @@ export const s = StyleSheet.create({
   speedChipText: {
     fontSize: 8,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
   chaptersSubTitle: {
     fontSize: 11,
@@ -643,7 +644,7 @@ export const s = StyleSheet.create({
     borderRadius: 7,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: Maple.blueSoft,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 5,
@@ -660,7 +661,7 @@ export const s = StyleSheet.create({
     borderRadius: 7,
     borderWidth: 1,
     borderColor: LINE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Maple.surface,
     paddingHorizontal: 8,
     paddingVertical: 6,
     fontSize: 9.5,
@@ -678,8 +679,8 @@ export const s = StyleSheet.create({
     height: 30,
     borderRadius: 7,
     borderWidth: 1,
-    borderColor: '#CBD5E1',
-    backgroundColor: '#FFFFFF',
+    borderColor: Maple.borderStrong,
+    backgroundColor: Maple.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -699,7 +700,7 @@ export const s = StyleSheet.create({
   overrideUpdateText: {
     fontSize: 10.5,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: Maple.surface,
   },
 });
 

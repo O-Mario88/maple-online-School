@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
@@ -7,10 +7,11 @@ import { formatMoney } from '@/lib/finance/fees';
 import type { MockData } from '@/mock';
 
 import { Brand } from '../palette';
+import { Maple } from '@/constants/maple';
 
 type Storefront = MockData['publicPages']['teacherStorefront'];
 
-const HIGHLIGHT = '#FFD43B';
+const HIGHLIGHT = Maple.warning;
 
 function SectionHead({ title, link, onPress }: { title: string; link?: string; onPress?: () => void }) {
   return (
@@ -79,7 +80,7 @@ export function CoursesRow({ t }: { t: Storefront }) {
           <Pressable key={c.title} style={styles.course} onPress={() => router.push(`/courses/${t.courseSlug}`)} accessibilityRole="link" accessibilityLabel={`${c.title}, ${formatMoney(c.priceUGX, 'UGX')}`}>
             <View style={[styles.courseThumb, { backgroundColor: c.tint }]}>
               {c.photo ? (
-                <Image source={c.photo} style={styles.fill} contentFit="cover" />
+                <Image decorative source={c.photo} style={styles.fill} contentFit="cover" />
               ) : (
                 <>
                   <Icon name="chart" size={30} color="rgba(255,255,255,0.85)" />
@@ -111,7 +112,7 @@ export function ShortsRow({ t }: { t: Storefront }) {
         {t.shorts.map((s) => (
           <Pressable key={s.id} style={[styles.short, { backgroundColor: s.tint }, s.photo ? styles.shortPhoto : null]} onPress={() => router.push(`/shorts?id=${s.id}`)} accessibilityRole="link" accessibilityLabel={`${s.lead} ${s.highlight} ${s.tail}, free short`}>
             {s.photo ? (
-              <Image source={s.photo} style={StyleSheet.absoluteFill} contentFit="cover" />
+              <Image decorative source={s.photo} style={StyleSheet.absoluteFill} contentFit="cover" />
             ) : (
               <>
                 <Text style={styles.shortText}>{s.lead}</Text>

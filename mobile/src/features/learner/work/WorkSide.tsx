@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { Fragment, type ReactNode } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
@@ -12,6 +12,7 @@ import { DomainChip, SkillChip } from '@/features/learner/cbc/CbcParts';
 import { BLUE, BODY, GREEN, INK, MathLine, ORANGE } from './MathText';
 import { FilesList } from './WorkEditor';
 import type { Work, WorkState } from './useWork';
+import { Maple } from '@/constants/maple';
 
 function Num({ n }: { n: number }) {
   return (
@@ -40,7 +41,7 @@ export function Crumbs({ items, phone = false }: { items: readonly string[]; pho
 export function DueChip({ text, phone = false }: { text: string; phone?: boolean }) {
   return (
     <View style={[styles.due, phone && styles.dueP]}>
-      {phone ? <Icon name="calendar" size={12} color="#15803D" /> : null}
+      {phone ? <Icon name="calendar" size={12} color={Maple.successText} /> : null}
       <Text style={[styles.dueText, phone && styles.dueTextP]}>{text}</Text>
     </View>
   );
@@ -53,7 +54,7 @@ export function ProgressCard({ s }: { s: WorkState }) {
       <View style={styles.flex}>
         <Text style={styles.progressTitle}>Your Progress</Text>
         <View style={styles.progressBar}>
-          <Bar value={a / 4} color="#0B6BFF" track="#E3EBF7" height={8} />
+          <Bar value={a / 4} color={Maple.blue} track={Maple.blueSelected} height={8} />
         </View>
       </View>
       <View>
@@ -95,7 +96,7 @@ export function InstructionsCard({ w }: { w: Work }) {
           <View key={q} style={styles.question}>
             <Num n={i + 1} />
             <View style={styles.flex}>
-              <MathLine text={q} size={13.5} color="#2B3445" />
+              <MathLine text={q} size={13.5} color={Maple.navy} />
             </View>
           </View>
         ))}
@@ -116,7 +117,7 @@ export function ResourcesCard({ w, s }: { w: Work; s: WorkState }) {
       <View style={styles.resources}>
         {w.resources.map((r) => (
           <View key={r.title} style={styles.resource}>
-            <Image source={r.icon} style={styles.resIcon} />
+            <Image decorative source={r.icon} style={styles.resIcon} />
             <View style={styles.flex}>
               <Text style={styles.resTitle}>{r.title}</Text>
               <Text style={styles.resMeta}>{r.meta}</Text>
@@ -134,7 +135,7 @@ export function ResourcesCard({ w, s }: { w: Work; s: WorkState }) {
 export function SubmitButton({ s, phone = false }: { s: WorkState; phone?: boolean }) {
   return (
     <Pressable style={[styles.submit, phone && styles.submitP, s.submitted && styles.submitDone]} onPress={s.submit} accessibilityRole="button" accessibilityState={{ disabled: s.submitted }}>
-      <Icon name={s.submitted ? 'check' : 'send'} size={17} color="#FFFFFF" />
+      <Icon name={s.submitted ? 'check' : 'send'} size={17} color={Maple.surface} />
       <Text style={styles.submitText}>{s.submitted ? 'Submitted' : 'Submit Assignment'}</Text>
     </Pressable>
   );
@@ -147,7 +148,7 @@ export function ChecklistCard({ s }: { s: WorkState }) {
       <View style={styles.checks}>
         {s.checks.map((c) => (
           <View key={c.label} style={styles.check} accessibilityRole="checkbox" accessibilityState={{ checked: c.done }}>
-            <View style={[styles.box, c.done && styles.boxOn]}>{c.done ? <Icon name="check" size={13} color="#FFFFFF" /> : null}</View>
+            <View style={[styles.box, c.done && styles.boxOn]}>{c.done ? <Icon name="check" size={13} color={Maple.surface} /> : null}</View>
             <Text style={styles.checkText}>{c.label}</Text>
           </View>
         ))}
@@ -217,44 +218,44 @@ const styles = StyleSheet.create({
   crumbs: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   crumb: { fontSize: 12.5, color: BLUE },
   crumbP: { fontSize: 11 },
-  due: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 9, paddingVertical: 3, borderRadius: 5, backgroundColor: '#E5F6EB' },
+  due: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 9, paddingVertical: 3, borderRadius: 5, backgroundColor: Maple.successSoft },
   dueP: { alignSelf: 'flex-start' },
-  dueText: { fontSize: 12.5, fontWeight: '500', color: '#15803D' },
+  dueText: { fontSize: 12.5, fontWeight: '500', color: Maple.successText },
   dueTextP: { fontSize: 11.5 },
-  progress: { flexDirection: 'row', alignItems: 'center', gap: 20, paddingHorizontal: 16, paddingVertical: 12, borderRadius: 10, backgroundColor: '#FFFFFF' },
+  progress: { flexDirection: 'row', alignItems: 'center', gap: 20, paddingHorizontal: 16, paddingVertical: 12, borderRadius: 10, backgroundColor: Maple.surface },
   progressTitle: { fontSize: 13, fontWeight: '600', color: INK },
   progressBar: { marginTop: 12, width: 230 },
   progressMeta: { fontSize: 11.5, color: BODY },
   progressPct: { marginTop: 8, fontSize: 12.5, fontWeight: '600', color: INK },
-  num: { width: 26, height: 26, alignItems: 'center', justifyContent: 'center', borderRadius: 13, backgroundColor: '#DCE8FD' },
+  num: { width: 26, height: 26, alignItems: 'center', justifyContent: 'center', borderRadius: 13, backgroundColor: Maple.blueSelected },
   numText: { fontSize: 13, fontWeight: '700', color: BLUE },
   steps: { gap: 14, marginTop: 14 },
   stepRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 12 },
-  stepText: { flex: 1, marginTop: 4, fontSize: 13, lineHeight: 19, color: '#2B3445' },
+  stepText: { flex: 1, marginTop: 4, fontSize: 13, lineHeight: 19, color: Maple.navy },
   qTitle: { marginTop: 16 },
-  aoi: { marginTop: 16, padding: 10, borderRadius: 8, backgroundColor: '#F4F8FF' },
+  aoi: { marginTop: 16, padding: 10, borderRadius: 8, backgroundColor: Maple.blueSoft },
   aoiLabel: { fontSize: 10.5, fontWeight: '700', color: BLUE },
   aoiText: { marginTop: 3, fontSize: 12, lineHeight: 17, color: INK },
   tags: { flexDirection: 'row', flexWrap: 'wrap', gap: 5, marginTop: 7 },
   scenario: { marginTop: 6, fontSize: 12, lineHeight: 17, color: BODY, fontStyle: 'italic' },
   questions: { gap: 8, marginTop: 10 },
-  question: { flexDirection: 'row', alignItems: 'flex-start', gap: 12, padding: 10, borderRadius: 6, borderWidth: 1, borderColor: '#E8EDF4' },
+  question: { flexDirection: 'row', alignItems: 'flex-start', gap: 12, padding: 10, borderRadius: 6, borderWidth: 1, borderColor: Maple.blueSelected },
   resources: { gap: 9, marginTop: 12 },
   resource: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   resIcon: { width: 32, height: 32 },
   resTitle: { fontSize: 11.5, fontWeight: '500', color: INK },
   resMeta: { marginTop: 2, fontSize: 10.5, color: BODY },
-  resBtn: { width: 91, height: 28, alignItems: 'center', justifyContent: 'center', borderRadius: 5, backgroundColor: '#E6EEFB' },
+  resBtn: { width: 91, height: 28, alignItems: 'center', justifyContent: 'center', borderRadius: 5, backgroundColor: Maple.blueSelected },
   resBtnText: { fontSize: 11.5, fontWeight: '500', color: BLUE },
   checks: { gap: 13, marginTop: 14 },
   check: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  box: { width: 22, height: 22, alignItems: 'center', justifyContent: 'center', borderRadius: 5, borderWidth: 1.5, borderColor: '#C9D2E0' },
+  box: { width: 22, height: 22, alignItems: 'center', justifyContent: 'center', borderRadius: 5, borderWidth: 1.5, borderColor: Maple.borderStrong },
   boxOn: { borderColor: GREEN, backgroundColor: GREEN },
-  checkText: { fontSize: 12.5, color: '#2B3445' },
-  submit: { height: 44, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, marginTop: 16, borderRadius: 5, backgroundColor: '#0B6BFF' },
+  checkText: { fontSize: 12.5, color: Maple.navy },
+  submit: { height: 44, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, marginTop: 16, borderRadius: 5, backgroundColor: Maple.blue },
   submitP: { height: 46, marginTop: 0, borderRadius: 7 },
   submitDone: { backgroundColor: GREEN },
-  submitText: { fontSize: 14, fontWeight: '500', color: '#FFFFFF' },
+  submitText: { fontSize: 14, fontWeight: '500', color: Maple.surface },
   feedbackLink: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, marginTop: 10 },
   feedbackLinkText: { fontSize: 12, color: BLUE },
   filesGap: { marginTop: 12 },
@@ -262,6 +263,6 @@ const styles = StyleSheet.create({
   detail: { flexDirection: 'row', gap: 12 },
   detailLabel: { fontSize: 12, color: INK },
   detailValue: { marginTop: 4, fontSize: 12, color: BODY },
-  status: { alignSelf: 'flex-start', marginTop: 4, paddingHorizontal: 7, paddingVertical: 2, borderRadius: 4, backgroundColor: '#FDEBD3', fontSize: 11.5, color: ORANGE, overflow: 'hidden' },
-  statusDone: { backgroundColor: '#E5F6EB', color: '#15803D' },
+  status: { alignSelf: 'flex-start', marginTop: 4, paddingHorizontal: 7, paddingVertical: 2, borderRadius: 4, backgroundColor: Maple.warningSoft, fontSize: 11.5, color: ORANGE, overflow: 'hidden' },
+  statusDone: { backgroundColor: Maple.successSoft, color: Maple.successText },
 });

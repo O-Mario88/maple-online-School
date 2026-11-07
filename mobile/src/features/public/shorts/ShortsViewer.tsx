@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Linking from 'expo-linking';
 import { router } from 'expo-router';
@@ -14,14 +14,16 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Brand } from '../palette';
 import { Caption } from './ShortCard';
+import { Maple, Radii } from '@/constants/maple';
+import { prefersReducedMotion } from '@/lib/motion';
 
 const CLIP_SECONDS = 60;
 const TICK_MS = 250;
 /** From this width the video sits in the middle with its buttons beside it, as on YouTube's website. */
 const STAGE_MIN = 768;
 const STAGE_PAD = 24;
-const DARK = '#0F0F0F';
-const BUTTON = '#272727';
+const DARK = Maple.navy;
+const BUTTON = Maple.navy;
 const VIEWABLE = { itemVisiblePercentThreshold: 60 };
 /** The part of a FlatList "viewable item" this screen reads. */
 type Visible = { index?: number | null; item: ShortEntry };
@@ -105,10 +107,10 @@ function ShortPage({ clip, active, width, height, stage, courseSlug }: PageProps
   const rail = (
     <View style={[styles.railCol, !stage && styles.railOverlay, !stage && { bottom: 110 + bottomInset }]}>
       <RailButton label={formatCount(clip.likes + (liked ? 1 : 0))} a11y={liked ? 'Remove like' : 'Like'} onPress={like}>
-        <Icon name="thumbUp" size={22} color={liked ? '#3EA6FF' : Brand.surface} />
+        <Icon name="thumbUp" size={22} color={liked ? Maple.blue : Brand.surface} />
       </RailButton>
       <RailButton label="Dislike" a11y={disliked ? 'Remove dislike' : 'Dislike'} onPress={dislike}>
-        <Icon name="thumbDown" size={22} color={disliked ? '#3EA6FF' : Brand.surface} />
+        <Icon name="thumbDown" size={22} color={disliked ? Maple.blue : Brand.surface} />
       </RailButton>
       <RailButton label={formatCount(clip.comments)} a11y={`${clip.comments} comments`}>
         <Icon name="chat" size={21} color={Brand.surface} />
@@ -117,7 +119,7 @@ function ShortPage({ clip, active, width, height, stage, courseSlug }: PageProps
         <Icon name="share" size={21} color={Brand.surface} />
       </RailButton>
       <RailButton label={saved ? 'Saved' : 'Save'} a11y={saved ? 'Remove from saved' : 'Save'} onPress={() => setSaved((s) => !s)}>
-        <Icon name="star" size={21} color={saved ? '#FFD43B' : Brand.surface} />
+        <Icon name="star" size={21} color={saved ? Maple.warning : Brand.surface} />
       </RailButton>
     </View>
   );
@@ -126,7 +128,7 @@ function ShortPage({ clip, active, width, height, stage, courseSlug }: PageProps
     <View style={[styles.page, { width, height }]}>
       <View style={styles.stageRow}>
         <View style={[styles.video, { width: videoW, height: videoH, borderRadius: stage ? 12 : 0, backgroundColor: clip.tint }]}>
-          {clip.photo ? <Image source={clip.photo} style={StyleSheet.absoluteFill} contentFit="cover" /> : <Caption clip={clip} size={30} />}
+          {clip.photo ? <Image decorative source={clip.photo} style={StyleSheet.absoluteFill} contentFit="cover" /> : <Caption clip={clip} size={30} />}
           {/* Remounts when the short comes on screen, so it always starts from 0:00. */}
           <Playback key={active ? 'on' : 'off'} active={active} />
           <LinearGradient colors={['transparent', 'rgba(0,0,0,0.75)']} style={[styles.shade, { paddingBottom: 20 + bottomInset }]} pointerEvents="box-none">
@@ -192,7 +194,7 @@ export function ShortsViewer({ clips, startId, courseSlug, onChange, onClose }: 
 
   const go = useCallback(
     (delta: number) => {
-      list.current?.scrollToIndex({ index: stepClip(index, delta, clips.length), animated: true });
+      list.current?.scrollToIndex({ index: stepClip(index, delta, clips.length), animated: !prefersReducedMotion() });
     },
     [index, clips.length],
   );
@@ -270,10 +272,10 @@ const styles = StyleSheet.create({
   bigPlayIcon: { fontSize: 28, color: Brand.surface, marginLeft: 4 },
   shade: { paddingHorizontal: 16, paddingTop: 60, paddingBottom: 20, paddingRight: 72, gap: 10 },
   channel: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  avatar: { width: 34, height: 34, borderRadius: 17, backgroundColor: '#8D5524', alignItems: 'center', justifyContent: 'center' },
+  avatar: { width: 34, height: 34, borderRadius: 17, backgroundColor: Maple.warningText, alignItems: 'center', justifyContent: 'center' },
   avatarText: { fontSize: 14, fontWeight: '700', color: Brand.surface },
   channelName: { flexShrink: 1, fontSize: 15, fontWeight: '600', color: Brand.surface },
-  follow: { paddingHorizontal: 14, paddingVertical: 6, borderRadius: 999, backgroundColor: Brand.surface },
+  follow: { paddingHorizontal: 14, paddingVertical: 6, borderRadius: Radii.control, backgroundColor: Brand.surface },
   following: { backgroundColor: 'rgba(255,255,255,0.18)' },
   followText: { fontSize: 13, fontWeight: '700', color: DARK },
   followingText: { color: Brand.surface },

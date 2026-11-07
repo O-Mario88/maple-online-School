@@ -1,4 +1,4 @@
-import { gridColumns, initials } from './layout';
+import { gridColumns, initials, isNarrowPhone, PAGE_MAX_WIDTH, pageWidth } from './layout';
 
 describe('gridColumns', () => {
   it('fits as many equal columns as the minimum width allows', () => {
@@ -19,5 +19,24 @@ describe('initials', () => {
     expect(initials('Head Teacher Adongo')).toBe('HA');
     expect(initials('amina')).toBe('A');
     expect(initials('   ')).toBe('?');
+  });
+});
+
+describe('page width', () => {
+  test('wide web pages stop at one centred width, with the gutter on each side', () => {
+    expect(PAGE_MAX_WIDTH).toBe(1448);
+    expect(pageWidth(2000)).toBe(1448);
+    expect(pageWidth(1448)).toBe(1448);
+    expect(pageWidth(1200)).toBe(1200);
+    expect(pageWidth(0)).toBe(0);
+  });
+});
+
+describe('narrow phones', () => {
+  test('a 320px or 350px phone is narrow; a 360px or wider one is not', () => {
+    expect(isNarrowPhone(320)).toBe(true);
+    expect(isNarrowPhone(359)).toBe(true);
+    expect(isNarrowPhone(360)).toBe(false);
+    expect(isNarrowPhone(390)).toBe(false);
   });
 });

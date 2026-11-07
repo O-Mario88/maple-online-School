@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
@@ -9,6 +9,8 @@ import type { StudioNew } from '@/mock/teacher-studio';
 
 import { AddContent, PhoneSources, Processing, type StudioRun, useStudioRun } from './StudioInput';
 import { type ReviewTab, PhoneReview, ReviewCourse, useCourseDraft } from './StudioReview';
+import { Maple } from '@/constants/maple';
+import { PAGE_TITLE } from '@/lib/fonts/type';
 
 /** The studio reference's desktop (top bar to the end of step 3), laid out in its pixels and scaled. */
 export const STUDIO_REF_WIDTH = 1180;
@@ -69,12 +71,12 @@ function SideCards({ s, onTemplates }: { s: StudioNew; onTemplates: () => void }
   return (
     <View style={styles.sideCards}>
       <View style={styles.promo}>
-        <Image source={p.spark} style={styles.spark} contentFit="contain" />
+        <Image decorative source={p.spark} style={styles.spark} contentFit="contain" />
         <Text style={styles.promoTitle}>{p.title}</Text>
         {p.points.map((x) => (
           <View key={x} style={styles.point}>
             <View style={styles.pointTick}>
-              <Icon name="check" size={9} color="#FFFFFF" />
+              <Icon name="check" size={9} color={Maple.surface} />
             </View>
             <Text style={styles.pointText}>{x}</Text>
           </View>
@@ -83,7 +85,7 @@ function SideCards({ s, onTemplates }: { s: StudioNew; onTemplates: () => void }
       </View>
       <Pressable style={styles.ideas} onPress={onTemplates} accessibilityRole="button" accessibilityLabel="Need ideas? Browse templates">
         <View style={styles.ideasIcon}>
-          <Icon name="sparkle" size={14} color="#FFFFFF" />
+          <Icon name="sparkle" size={14} color={Maple.surface} />
         </View>
         <View>
           <Text style={styles.ideasTitle}>Need Ideas?</Text>
@@ -133,14 +135,14 @@ export function StudioDesk({ s, me }: { s: StudioNew; me: TeacherMe }) {
         <View style={styles.main}>
           <View style={styles.header}>
             <View style={styles.flex}>
-              <Text style={styles.title} accessibilityRole="header">
+              <Text style={styles.title} {...PAGE_TITLE}>
                 Create a New Subject with AI
               </Text>
               <Text style={styles.subtitle}>Upload your content or paste a link and let AI build a complete, interactive subject in 60 seconds.</Text>
             </View>
             <Pressable style={styles.howBtn} onPress={() => setHow((h) => !h)} accessibilityRole="button" accessibilityState={{ expanded: how }} accessibilityLabel="How it works">
               <View style={styles.howPlay}>
-                <Icon name="playFill" size={11} color="#FFFFFF" />
+                <Icon name="playFill" size={11} color={Maple.surface} />
               </View>
               <Text style={styles.howBtnText}>How it works</Text>
             </Pressable>
@@ -176,7 +178,7 @@ export function StudioPhone({ s, me }: { s: StudioNew; me: TeacherMe }) {
       <TeacherPhoneTop me={me} />
       <ScrollView contentContainerStyle={styles.phone}>
         <View>
-          <Text style={styles.titleP} accessibilityRole="header">
+          <Text style={styles.titleP} {...PAGE_TITLE}>
             AI Subject Studio
           </Text>
           <Text style={styles.subP}>Turn any content into an interactive subject in 60 seconds.</Text>
@@ -219,7 +221,7 @@ const styles = StyleSheet.create({
   header: { flexDirection: 'row', alignItems: 'center', gap: 16 },
   title: { fontSize: 29, fontWeight: '800', color: INK, letterSpacing: -0.6 },
   subtitle: { fontSize: 14.5, color: BODY, marginTop: 4 },
-  howBtn: { height: 44, flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 16, borderRadius: 10, backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: LINE },
+  howBtn: { height: 44, flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 16, borderRadius: 10, backgroundColor: Maple.surface, borderWidth: 1, borderColor: LINE },
   howPlay: { width: 22, height: 22, alignItems: 'center', justifyContent: 'center', borderRadius: 11, backgroundColor: BLUE },
   howBtnText: { fontSize: 13.5, fontWeight: '600', color: BLUE },
   row: { flexDirection: 'row', gap: 12 },
@@ -234,21 +236,21 @@ const styles = StyleSheet.create({
   templateBtn: { marginTop: 10, alignSelf: 'flex-start', height: 32 },
   how: { gap: 8, marginTop: 10 },
   howItem: { flexDirection: 'row', gap: 10 },
-  howNum: { width: 20, height: 20, borderRadius: 10, overflow: 'hidden', textAlign: 'center', lineHeight: 20, fontSize: 11, fontWeight: '700', color: '#FFFFFF', backgroundColor: BLUE },
+  howNum: { width: 20, height: 20, borderRadius: 10, overflow: 'hidden', textAlign: 'center', lineHeight: 20, fontSize: 11, fontWeight: '700', color: Maple.surface, backgroundColor: BLUE },
   howText: { flex: 1, fontSize: 13, color: INK },
   sideCards: { gap: 10, marginTop: 16 },
-  promo: { padding: 12, borderRadius: 10, backgroundColor: '#E6EEFB' },
+  promo: { padding: 12, borderRadius: 10, backgroundColor: Maple.blueSelected },
   spark: { width: 40, height: 38 },
   promoTitle: { marginTop: 8, marginBottom: 10, fontSize: 13.5, lineHeight: 18, fontWeight: '800', color: INK },
   point: { flexDirection: 'row', alignItems: 'center', gap: 7, paddingVertical: 3 },
   pointTick: { width: 14, height: 14, alignItems: 'center', justifyContent: 'center', borderRadius: 7, backgroundColor: GREEN },
   pointText: { fontSize: 11, color: INK },
   robot: { width: 56, height: 60, marginTop: 8 },
-  ideas: { flexDirection: 'row', alignItems: 'center', gap: 10, padding: 12, borderRadius: 10, backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: LINE },
-  ideasIcon: { width: 26, height: 26, alignItems: 'center', justifyContent: 'center', borderRadius: 13, backgroundColor: '#7C4DDB' },
+  ideas: { flexDirection: 'row', alignItems: 'center', gap: 10, padding: 12, borderRadius: 10, backgroundColor: Maple.surface, borderWidth: 1, borderColor: LINE },
+  ideasIcon: { width: 26, height: 26, alignItems: 'center', justifyContent: 'center', borderRadius: 13, backgroundColor: Maple.blue },
   ideasTitle: { fontSize: 12, fontWeight: '700', color: INK },
   ideasLink: { fontSize: 12.5, color: BLUE, marginTop: 2 },
-  phoneRoot: { flex: 1, backgroundColor: '#F4F7FB' },
+  phoneRoot: { flex: 1, backgroundColor: Maple.blueSoft },
   phone: { gap: 12, padding: 14, paddingBottom: 110 },
   titleP: { fontSize: 20, fontWeight: '800', color: INK },
   subP: { fontSize: 12.5, color: BODY, marginTop: 4 },

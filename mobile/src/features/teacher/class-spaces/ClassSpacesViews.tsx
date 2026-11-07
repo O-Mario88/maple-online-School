@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { useState } from 'react';
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 
@@ -16,6 +16,7 @@ import type { ClassSpaceRow, ClassSpacesManager } from '@/mock/teacher-class-spa
 import { CLASS_SPACES_REF_WIDTH, s, s as deskS } from './ClassSpacesViews.styles';
 import { phoneS } from './ClassSpacesViews.phoneStyles';
 import { PhoneScroll } from '@/features/teacher/frame/PhoneScroll';
+import { Maple } from '@/constants/maple';
 
 export { CLASS_SPACES_REF_WIDTH };
 
@@ -101,7 +102,7 @@ export function ClassSpacesDesk({ c, me, phone = false }: { c: ClassSpacesManage
             <Pressable
               style={s.createNewTopBtn}
               onPress={handleCreateClassSpace}>
-              <Icon name="plus" size={13} color="#FFFFFF" />
+              <Icon name="plus" size={13} color={Maple.surface} />
               <Text style={s.createNewTopBtnText}>Create New Class</Text>
             </Pressable>
           </View>
@@ -214,7 +215,7 @@ export function ClassSpacesDesk({ c, me, phone = false }: { c: ClassSpacesManage
                     ]}
                     onPress={() => setJoinMethod('code')}>
                     <View style={s.joinCodeCircle}>
-                      <Icon name="grid" size={14} color="#16A34A" />
+                      <Icon name="grid" size={14} color={Maple.successText} />
                     </View>
                     <View style={{ flex: 1, gap: 1 }}>
                       <Text style={s.joinMethodTitle}>6-Digit Join Code</Text>
@@ -236,7 +237,7 @@ export function ClassSpacesDesk({ c, me, phone = false }: { c: ClassSpacesManage
                       joinMethod === 'whatsapp' && s.joinMethodCardOn,
                     ]}
                     onPress={() => setJoinMethod('whatsapp')}>
-                    <Image
+                    <Image decorative
                       source={c.whatsappIcon}
                       style={s.whatsappMethodIcon}
                       contentFit="contain"
@@ -269,7 +270,7 @@ export function ClassSpacesDesk({ c, me, phone = false }: { c: ClassSpacesManage
               <View style={s.principalCard}>
                 <View style={s.principalTopRow}>
                   <View style={s.crownTile}>
-                    <Image
+                    <Image decorative
                       source={c.crownIcon}
                       style={s.crownImg}
                       contentFit="contain"
@@ -456,7 +457,7 @@ export function ClassSpacesDesk({ c, me, phone = false }: { c: ClassSpacesManage
 
                   {/* Class Name + Thumbnail */}
                   <View style={[s.classCell, s.colClass]}>
-                    <Image source={row.thumb} style={s.classThumb} contentFit="cover" />
+                    <Image decorative source={row.thumb} style={s.classThumb} contentFit="cover" />
                     <View style={{ flex: 1, gap: 1 }}>
                       <Text style={s.classTitle}>{row.title}</Text>
                       <Text style={s.classSub}>{row.subtitle}</Text>
@@ -496,7 +497,7 @@ export function ClassSpacesDesk({ c, me, phone = false }: { c: ClassSpacesManage
                           `Join ${row.title} on Maple Global Online School with code ${row.joinCode}: https://maple.school/join/${row.joinCode.replace(' ', '')}`,
                         )
                       }>
-                      <Image
+                      <Image decorative
                         source={c.whatsappIcon}
                         style={s.whatsappBtnIcon}
                         contentFit="contain"
@@ -573,7 +574,7 @@ export function ClassSpacesDesk({ c, me, phone = false }: { c: ClassSpacesManage
           <Panel style={s.rightCard}>
             <View style={s.rightHeaderRow}>
               <View style={s.blueHeaderIcon}>
-                <Icon name="people" size={14} color="#FFFFFF" />
+                <Icon name="people" size={14} color={Maple.surface} />
               </View>
               <Text style={s.rightCardTitle}>How Students Join</Text>
             </View>
@@ -602,7 +603,7 @@ export function ClassSpacesDesk({ c, me, phone = false }: { c: ClassSpacesManage
                 </View>
               </View>
               <View style={s.floatingWhatsappBadge}>
-                <Image
+                <Image decorative
                   source={c.whatsappIcon}
                   style={s.floatingWhatsappImg}
                   contentFit="contain"
@@ -615,7 +616,7 @@ export function ClassSpacesDesk({ c, me, phone = false }: { c: ClassSpacesManage
           <Panel style={s.rightCard}>
             <View style={s.rightHeaderRow}>
               <View style={s.amberHeaderIcon}>
-                <Icon name="sparkle" size={14} color="#FFFFFF" />
+                <Icon name="sparkle" size={14} color={Maple.surface} />
               </View>
               <Text style={s.rightCardTitle}>Class Space Tips</Text>
             </View>
@@ -663,7 +664,7 @@ export function ClassSpacesDesk({ c, me, phone = false }: { c: ClassSpacesManage
 
 export function ClassSpacesPhone({ c, me }: { c: ClassSpacesManager; me: TeacherMe }) {
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: '#EAF1FB' }}>
+    <ScrollView style={{ flex: 1, backgroundColor: Maple.blueSelected }}>
       <TeacherPhoneTop me={me} />
       <ClassSpacesDesk c={c} me={me} phone />
     </ScrollView>

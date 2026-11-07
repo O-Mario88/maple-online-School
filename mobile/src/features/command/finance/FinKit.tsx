@@ -3,7 +3,7 @@
  * tabs, tinted KPI cards and the small panels its pages share. Every finance desktop page sits in
  * FinDesk; every phone page in FinPhone.
  */
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { type ReactNode } from 'react';
 import { Pressable, ScrollView, type StyleProp, StyleSheet, Text, TextInput, View, type ViewStyle } from 'react-native';
 
@@ -18,6 +18,7 @@ import { PageHead } from '@/features/school/kit/AdminKit';
 import type { IconName } from '@/lib/icons';
 import { useSwitcher } from '@/lib/switcher-context';
 import { toast } from '@/lib/toast';
+import { Maple } from '@/constants/maple';
 
 const F = '/command/finance';
 /** The finance references are drawn 1672 wide; pages lay out at that width and scale to the window. */
@@ -83,7 +84,7 @@ function FinTopBar({ search, me }: { search: string; me: Me }) {
         <Icon name="help" size={24} color={BLUE} />
       </Pressable>
       <Pressable style={styles.me} onPress={switcher?.open} accessibilityRole="button" accessibilityLabel={`${me.name}, ${me.role}. Switch mode`}>
-        <Image source={me.avatar} style={styles.meAvatar} contentFit="cover" />
+        <Image decorative source={me.avatar} style={styles.meAvatar} contentFit="cover" />
         <View>
           <Text style={styles.meName}>{me.name}</Text>
           <Text style={styles.meRole}>{me.role}</Text>
@@ -191,7 +192,7 @@ export function FinStat({ k, style, dense = false }: { k: Kpi; style?: StyleProp
             </Text>
           ) : null}
           {k.delta ? (
-            <View style={[styles.deltaPill, { backgroundColor: k.down && !k.good ? '#FDE7EA' : '#DDF5E6' }]}>
+            <View style={[styles.deltaPill, { backgroundColor: k.down && !k.good ? Maple.errorSoft : Maple.successSoft }]}>
               <Icon name={k.down ? 'arrowDown' : 'arrowUp'} size={11} color={deltaColor} />
               <Text style={[styles.deltaText, { color: deltaColor }]}>{k.delta}</Text>
             </View>
@@ -280,7 +281,7 @@ export function RingLegend({ parts, center, caption, size = 150, phone = false, 
 export type Mark = 'ok' | 'warn' | 'fail' | 'info';
 const MARK: Readonly<Record<Mark, { icon: IconName; color: string }>> = {
   ok: { icon: 'check', color: GREEN },
-  warn: { icon: 'alert', color: '#E59400' },
+  warn: { icon: 'alert', color: Maple.warning },
   fail: { icon: 'close', color: RED },
   info: { icon: 'info', color: BLUE },
 };
@@ -390,7 +391,7 @@ const styles = StyleSheet.create({
   inline: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   hover: { opacity: 0.85 },
   top: { flexDirection: 'row', alignItems: 'center', gap: 18, height: 62, paddingHorizontal: 22, backgroundColor: WHITE, borderBottomWidth: 1, borderColor: LINE },
-  search: { flexDirection: 'row', alignItems: 'center', gap: 10, width: 640, height: 38, paddingHorizontal: 14, borderRadius: 10, backgroundColor: '#EEF3FB' },
+  search: { flexDirection: 'row', alignItems: 'center', gap: 10, width: 640, height: 38, paddingHorizontal: 14, borderRadius: 10, backgroundColor: Maple.blueSoft },
   searchInput: { flex: 1, minWidth: 0, height: 38, paddingVertical: 0, fontSize: 13.5, color: NAVY },
   chip: { flexDirection: 'row', alignItems: 'center', gap: 7, height: 36, paddingHorizontal: 12, borderRadius: 9, borderWidth: 1, borderColor: LINE, backgroundColor: WHITE },
   chipText: { fontSize: 13.5, fontWeight: '700', color: NAVY },
@@ -401,7 +402,7 @@ const styles = StyleSheet.create({
   promo: { alignItems: 'center', gap: 8, marginTop: 'auto', paddingVertical: 18, paddingHorizontal: 12, borderRadius: 14, backgroundColor: 'rgba(255,255,255,0.07)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)' },
   promoIcon: { width: 54, height: 54, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
   promoTitle: { fontSize: 18, lineHeight: 22, fontWeight: '800', color: WHITE, textAlign: 'center' },
-  promoBody: { fontSize: 12.5, lineHeight: 18, color: '#C9D3EC', textAlign: 'center' },
+  promoBody: { fontSize: 12.5, lineHeight: 18, color: Maple.blueLine, textAlign: 'center' },
   head: { flexDirection: 'row', alignItems: 'center', gap: 16, paddingHorizontal: 4 },
   headIcon: { width: 58, height: 58, borderRadius: 13, alignItems: 'center', justifyContent: 'center', backgroundColor: BLUE },
   title: { fontSize: 27, fontWeight: '800', color: NAVY, letterSpacing: -0.6 },
@@ -451,7 +452,7 @@ const styles = StyleSheet.create({
   action: { alignItems: 'center', justifyContent: 'center', gap: 5, minHeight: 66, padding: 10, borderRadius: 12 },
   actionText: { fontSize: 11.5, fontWeight: '700', color: NAVY, textAlign: 'center' },
   sum: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingVertical: 6, paddingHorizontal: 4 },
-  sumStrong: { marginTop: 4, paddingHorizontal: 10, paddingVertical: 9, borderRadius: 10, backgroundColor: '#DDF5E6' },
+  sumStrong: { marginTop: 4, paddingHorizontal: 10, paddingVertical: 9, borderRadius: 10, backgroundColor: Maple.successSoft },
   sumLabel: { fontSize: 12, color: NAVY },
   sumLabelStrong: { fontWeight: '800', fontSize: 13 },
   sumValue: { fontSize: 12, fontWeight: '700', color: NAVY },

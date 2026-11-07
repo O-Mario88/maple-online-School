@@ -127,6 +127,16 @@ type AttendanceLessonattendance struct {
 	StudentID        int64
 }
 
+type CareerRequest struct {
+	ID        int64
+	UserID    int64
+	Kind      string
+	Body      string
+	Status    string
+	CreatedAt pgtype.Timestamptz
+	UpdatedAt pgtype.Timestamptz
+}
+
 type ClassesClass struct {
 	ID                   int64
 	Title                string

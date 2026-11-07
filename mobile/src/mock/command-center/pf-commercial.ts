@@ -3,6 +3,7 @@ import type { Contract } from '@/features/command/logic/contracts';
 import type { TeacherPayable } from '@/features/command/logic/payables';
 
 import { face, type KpiData } from './shared';
+import { Maple } from '@/constants/maple';
 
 export interface ContractRow extends Contract {
   ref: string;
@@ -36,10 +37,10 @@ export const conStats: readonly KpiData[] = [
 export const conTotals = { contracts: 142, tcv: 8_760_000_000, acv: 4_920_000_000, discounts: 312_000_000, commissions: 148_600_000, lifecycle: { Draft: 8, Negotiation: 12, Active: 142, 'Renewal Due': 18, Expired: 6 } };
 
 export const conByType: readonly { label: string; value: number; color: string }[] = [
-  { label: 'School Subscription', value: 58, color: '#2563EB' },
-  { label: 'Enterprise / Multi-School', value: 34, color: '#22A55A' },
-  { label: 'Content & Marketplace', value: 28, color: '#F5B731' },
-  { label: 'Service / Implementation', value: 22, color: '#8B5CF6' },
+  { label: 'School Subscription', value: 58, color: Maple.blue },
+  { label: 'Enterprise / Multi-School', value: 34, color: Maple.successText },
+  { label: 'Content & Marketplace', value: 28, color: Maple.warning },
+  { label: 'Service / Implementation', value: 22, color: Maple.blue },
 ];
 
 /** Revenue billed and contracted value (millions), Jan–Oct 2026. */

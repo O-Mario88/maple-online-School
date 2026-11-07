@@ -12,6 +12,7 @@ import { BLUE, BODY, GREEN, LINE, NAVY, RED, type Tone, WHITE } from '@/features
 import { Cell, type Column, DataTable, PageHead, Search, useChoice } from '@/features/school/kit/AdminKit';
 import { toast } from '@/lib/toast';
 import type { AuditEvent, Severity } from '@/mock/command-center/security';
+import { Maple } from '@/constants/maple';
 
 type S = CommandData['security'];
 const PER_PAGE = 15;
@@ -132,7 +133,7 @@ function Details({ s, u, onClose }: { s: S; u: U; onClose?: () => void }) {
         ) : null}
       </View>
       <View style={styles.inline}>
-        <View style={[styles.sevIcon, { backgroundColor: e.severity === 'Critical' ? '#FDECEE' : '#EEF4FF' }]}>
+        <View style={[styles.sevIcon, { backgroundColor: e.severity === 'Critical' ? Maple.errorSoft : Maple.blueSoft }]}>
           <Icon name="shield" size={20} color={e.severity === 'Critical' ? RED : BLUE} />
         </View>
         <View style={styles.flex}>
@@ -349,25 +350,25 @@ const styles = StyleSheet.create({
   filters: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   tableCard: { gap: 10, padding: 12 },
   banner: { flexDirection: 'row', alignItems: 'center', gap: 8, padding: 8, borderRadius: 8 },
-  bannerOk: { backgroundColor: '#E6F7EC' },
-  bannerBad: { backgroundColor: '#FDECEE' },
+  bannerOk: { backgroundColor: Maple.successSoft },
+  bannerBad: { backgroundColor: Maple.errorSoft },
   bannerText: { flex: 1, fontSize: 12, color: NAVY },
   side: { width: 356 },
   panel: { gap: 6, padding: 14 },
   sevIcon: { width: 38, height: 38, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
   eventTitle: { fontSize: 15, fontWeight: '800', color: NAVY },
   detailValue: { fontSize: 12.5, color: NAVY },
-  diff: { gap: 4, padding: 10, borderRadius: 8, backgroundColor: '#F4F7FC' },
+  diff: { gap: 4, padding: 10, borderRadius: 8, backgroundColor: Maple.blueSoft },
   diffHead: { fontSize: 11.5, fontWeight: '700', color: BODY },
-  before: { paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4, backgroundColor: '#FDECEE', fontSize: 12, color: '#B91C1C', textDecorationLine: 'line-through' },
-  after: { paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4, backgroundColor: '#E6F7EC', fontSize: 12, fontWeight: '600', color: '#15803D' },
+  before: { paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4, backgroundColor: Maple.errorSoft, fontSize: 12, color: Maple.error, textDecorationLine: 'line-through' },
+  after: { paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4, backgroundColor: Maple.successSoft, fontSize: 12, fontWeight: '600', color: Maple.successText },
   timeline: { flexDirection: 'row', alignItems: 'flex-start', gap: 8, paddingVertical: 3 },
   tlDot: { width: 10, height: 10, marginTop: 3, borderRadius: 5, borderWidth: 2, borderColor: BLUE, backgroundColor: WHITE },
-  tlDotLast: { borderColor: '#8B5CF6' },
+  tlDotLast: { borderColor: Maple.blue },
   tlTime: { width: 56, fontSize: 11.5, color: BODY },
   tlText: { fontSize: 12, fontWeight: '600', color: NAVY },
   related: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingVertical: 4, borderBottomWidth: 1, borderColor: LINE },
-  lock: { marginTop: 6, padding: 8, borderRadius: 8, backgroundColor: '#F4F7FC', fontSize: 11.5, color: BODY },
+  lock: { marginTop: 6, padding: 8, borderRadius: 8, backgroundColor: Maple.blueSoft, fontSize: 11.5, color: BODY },
   listPanel: { gap: 4 },
   eventRow: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 8, borderBottomWidth: 1, borderColor: LINE },
 });

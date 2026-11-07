@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StyleSheet, Text, View } from 'react-native';
 
@@ -6,10 +6,13 @@ import { Icon } from '@/components/icon';
 import type { MockData } from '@/mock';
 
 import { Brand, CARD_SHADOW } from '../palette';
+import { Maple } from '@/constants/maple';
+import { PAGE_TITLE } from '@/lib/fonts/type';
+import { Palette } from '@/constants/palette';
 
 type Digest = MockData['publicPages']['parentDigest'];
 
-const NAVY = '#0B1E4D';
+const NAVY = Palette.blue950f;
 
 /** The private-link header: logo and how long the link stays valid. */
 export function DigestHeader({ validUntil, wide }: { validUntil: string; wide: boolean }) {
@@ -41,7 +44,7 @@ export function DigestHero({ d, wide }: { d: Digest; wide: boolean }) {
         <Image source={d.heroPhoto} style={[styles.photo, wide && styles.photoWide]} contentFit="cover" accessibilityLabel="A smiling learner in school uniform" />
         <LinearGradient colors={[NAVY, 'rgba(11,30,77,0.85)', 'rgba(11,30,77,0)']} locations={[0, 0.45, 0.75]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={StyleSheet.absoluteFill} />
         <View style={styles.bannerCopy}>
-          <Text style={[styles.title, wide && styles.titleWide]} accessibilityRole="header">
+          <Text style={[styles.title, wide && styles.titleWide]} {...PAGE_TITLE}>
             {'Weekly Learning\n'}
             <Text style={styles.accent}>Digest</Text>
           </Text>
@@ -97,7 +100,7 @@ const styles = StyleSheet.create({
   bannerCopy: { gap: 10, padding: 24, maxWidth: 380 },
   title: { fontSize: 34, lineHeight: 38, fontWeight: '900', color: Brand.surface, letterSpacing: -0.8 },
   titleWide: { fontSize: 42, lineHeight: 46 },
-  accent: { color: '#5B9BFF' },
+  accent: { color: Maple.blue },
   sub: { fontSize: 15, lineHeight: 22, color: 'rgba(255,255,255,0.9)' },
   week: { flexDirection: 'row', alignItems: 'center', gap: 8, alignSelf: 'flex-start', paddingHorizontal: 14, paddingVertical: 9, borderRadius: 999, backgroundColor: 'rgba(255,255,255,0.14)', marginTop: 6 },
   weekText: { fontSize: 14, fontWeight: '600', color: Brand.surface },

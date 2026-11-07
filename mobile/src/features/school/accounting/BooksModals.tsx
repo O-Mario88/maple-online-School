@@ -6,6 +6,7 @@ import { Btn } from '@/features/portal/PortalParts';
 import { BLUE, BODY, GREEN, LINE, MUTED, NAVY, RED, WHITE } from '@/features/portal/tokens';
 
 import { type Account, ACCOUNT_TYPES, type AccountType, codeRange, entryTotals, type JournalLine, validateEntry } from './books';
+import { Maple } from '@/constants/maple';
 
 function Frame({ visible, title, onClose, children, wide = false }: { visible: boolean; title: string; onClose: () => void; children: ReactNode; wide?: boolean }) {
   return (
@@ -253,7 +254,7 @@ const styles = StyleSheet.create({
   field: { height: 42, paddingHorizontal: 11, borderRadius: 9, borderWidth: 1, borderColor: LINE, fontSize: 13.5, color: NAVY, backgroundColor: WHITE },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
   chip: { paddingHorizontal: 11, paddingVertical: 7, borderRadius: 18, borderWidth: 1, borderColor: LINE, backgroundColor: WHITE },
-  chipOn: { borderColor: BLUE, backgroundColor: '#EAF1FE' },
+  chipOn: { borderColor: BLUE, backgroundColor: Maple.blueSoft },
   chipText: { fontSize: 12.5, color: NAVY },
   chipTextOn: { fontWeight: '700', color: BLUE },
   error: { fontSize: 13, lineHeight: 19, color: RED },
@@ -266,7 +267,7 @@ const styles = StyleSheet.create({
   th: { fontSize: 12, fontWeight: '700', color: NAVY },
   amount: { width: 112, textAlign: 'right' },
   removeCol: { width: 22, alignItems: 'center' },
-  suggest: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 11, paddingVertical: 8, borderRadius: 8, backgroundColor: '#F4F7FC' },
+  suggest: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 11, paddingVertical: 8, borderRadius: 8, backgroundColor: Maple.blueSoft },
   suggestText: { flex: 1, fontSize: 12.5, fontWeight: '600', color: NAVY },
   addLine: { flexDirection: 'row', alignItems: 'center', gap: 6, alignSelf: 'flex-start', paddingVertical: 4 },
   link: { fontSize: 13, fontWeight: '600', color: BLUE },

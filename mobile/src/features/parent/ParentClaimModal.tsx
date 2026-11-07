@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Image } from '@/components/picture';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
@@ -9,6 +9,7 @@ import type { ParentChildProfile } from '@/mock/family';
 
 import { BLUE, BODY } from './ParentHomeViews.styles';
 import { useParentSheet } from './ParentSheet';
+import { Maple } from '@/constants/maple';
 
 /**
  * Interactive Cross-School Child Claim Panel (opened when parent clicks "+ Add Child"):
@@ -100,7 +101,7 @@ export function AddChildClaimModal({
               value={input}
               onChangeText={setInput}
               placeholder="e.g. A7K9M3D2 or amina.k@kisubi.maple"
-              placeholderTextColor="#94A3B8"
+              placeholderTextColor={Maple.faint}
               autoCapitalize="none"
               accessibilityLabel="Child claim token"
             />
@@ -116,7 +117,7 @@ export function AddChildClaimModal({
         </View>
 
         <View style={styles.matchedCard}>
-          <Image source={claimable.avatar} style={styles.matchedAvatar} />
+          <Image decorative source={claimable.avatar} style={styles.matchedAvatar} />
           <View style={styles.flex}>
             <View style={styles.matchedTagRow}>
               <Text style={styles.matchedName}>{claimable.fullName}</Text>
@@ -133,7 +134,7 @@ export function AddChildClaimModal({
             onPress={() => onLinkChild(claimable)}
             accessibilityRole="button"
             accessibilityLabel={alreadyLinked ? `Switch to ${claimable.fullName}` : `Link ${claimable.fullName} to dashboard`}>
-            <Icon name="check" size={13} color="#FFFFFF" />
+            <Icon name="check" size={13} color={Maple.surface} />
             <Text style={styles.linkNowText}>{alreadyLinked ? 'Switch Profile' : 'Link Child'}</Text>
           </Pressable>
         </View>

@@ -1,4 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query';
+import { router } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
@@ -75,6 +76,11 @@ export function LiveSetup() {
   const canCreate = me.data.role === 'institution' || me.data.role === 'admin';
   const admissions = admissionsSchools(me.data.memberships).length > 0;
   const last = step === STEPS.length - 1;
+  // Each step saves as it goes (the school, its invitations, family approvals), so Finish confirms and goes home.
+  const finish = () => {
+    toast('Set-up saved. Come back any time.');
+    router.replace('/');
+  };
 
   if (!canCreate && led.length === 0 && !admissions) {
     return (
@@ -117,7 +123,7 @@ export function LiveSetup() {
       {step === 3 && !admissions ? <Body muted>Parents’ requests to see their children appear here for the headteacher, deputy and registrar.</Body> : null}
       <View style={styles.actions}>
         <Button label="Back" variant="secondary" disabled={step === 0} onPress={() => setStep(step - 1)} />
-        <Button label={last ? 'Finish' : 'Continue'} icon="check" onPress={() => (last ? toast('Set-up saved. Come back any time.') : setStep(step + 1))} />
+        <Button label={last ? 'Finish' : 'Continue'} icon="check" onPress={() => (last ? finish() : setStep(step + 1))} />
       </View>
     </Screen>
   );

@@ -1,6 +1,6 @@
 import Head from 'expo-router/head';
 import { useMemo } from 'react';
-import { ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { StyleSheet, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { RefScale } from '@/features/public/home/RefScale';
@@ -13,6 +13,8 @@ import { FeatureTiles, ResultsStrip, SchoolsHero, SetupCard, TrustedRow } from '
 import { PreviewScreen } from '@/features/preview/PreviewScreen';
 import { LightOnly } from '@/hooks/use-theme';
 import { mockData } from '@/lib/mock';
+import { Maple } from '@/constants/maple';
+import { PageScroll } from '@/components/shell/PageScroll';
 
 /** From this width the page is the reference itself, scaled to fit. */
 const DESKTOP_MIN = 1200;
@@ -43,7 +45,7 @@ export default function SchoolsScreen() {
         {head}
         <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
           <PhoneBar />
-          <ScrollView contentContainerStyle={styles.page}>
+          <PageScroll contentContainerStyle={styles.page}>
             <View style={styles.phone}>
               <SchoolsHero page={page} wide={false} phone />
               <ResultsStrip page={page} />
@@ -53,7 +55,7 @@ export default function SchoolsScreen() {
               <TrustedRow page={page} />
               <FeatureTiles page={page} />
             </View>
-          </ScrollView>
+          </PageScroll>
         </SafeAreaView>
       </LightOnly>
     );
@@ -66,7 +68,7 @@ export default function SchoolsScreen() {
         <RefScale width={width}>
           <HomeNav wide tall fullWidth links={PAPER_LINKS} active="For Schools" searchPlaceholder="Search subjects, teachers, or past papers..." />
         </RefScale>
-        <ScrollView style={styles.page}>
+        <PageScroll style={styles.page}>
           <RefScale width={width} refWidth={SCHOOLS_REF_WIDTH}>
             <View style={styles.desk}>
               <View style={styles.deskMain}>
@@ -87,7 +89,7 @@ export default function SchoolsScreen() {
               </View>
             </View>
           </RefScale>
-        </ScrollView>
+        </PageScroll>
       </SafeAreaView>
     </LightOnly>
   );
@@ -95,7 +97,7 @@ export default function SchoolsScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: Brand.surface },
-  page: { backgroundColor: '#F5F9FE', paddingBottom: 40 },
+  page: { backgroundColor: Maple.blueSoft, paddingBottom: 40 },
   phone: { width: '100%', maxWidth: PHONE_MAX, alignSelf: 'center', gap: 16, padding: 16 },
   desk: { flexDirection: 'row', alignItems: 'flex-start', paddingRight: 20 },
   deskMain: { width: 996, gap: 14, paddingLeft: 16, paddingTop: 14 },

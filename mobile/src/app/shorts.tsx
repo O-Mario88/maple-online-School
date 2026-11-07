@@ -19,6 +19,8 @@ import { mockData } from '@/lib/mock';
 import { EMPTY_SHORT_FILTERS, filterShorts, formatCount, type ShortFilters } from '@/lib/shorts';
 import type { ShortEntry } from '@/mock/public';
 import { LightOnly } from '@/hooks/use-theme';
+import { Maple } from '@/constants/maple';
+import { PageScroll } from '@/components/shell/PageScroll';
 
 type ListKey = 'boards' | 'levels' | 'subjects' | 'types' | 'languages';
 
@@ -128,7 +130,7 @@ export default function ShortsScreen() {
             {filterPanel}
           </ScrollView>
         ) : null}
-        <ScrollView style={styles.flex} contentContainerStyle={styles.main}>
+        <PageScroll style={styles.flex} contentContainerStyle={styles.main}>
           {wide ? null : <ShortPlayer clip={current} courseSlug={feed.courseSlug} />}
           <ShortsHero promises={feed.promises} wide={wide} photo={feed.heroPhoto} />
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips}>
@@ -182,7 +184,7 @@ export default function ShortsScreen() {
               </Pressable>
             ))}
           </ScrollView>
-        </ScrollView>
+        </PageScroll>
       </View>
       <VideoSheet visible={trend != null} title={trend ?? ''} seconds={60} onClose={() => setTrend(null)} />
       {/* An opened short plays full screen, YouTube Shorts style; no side player on the web. */}
@@ -228,7 +230,7 @@ const styles = StyleSheet.create({
   trendingTitle: { fontSize: 17, fontWeight: '700', color: Brand.ink, marginTop: 8 },
   trending: { gap: 20 },
   trend: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  trendThumb: { width: 64, height: 44, borderRadius: 6, backgroundColor: '#1E3A8A', alignItems: 'center', justifyContent: 'center' },
+  trendThumb: { width: 64, height: 44, borderRadius: 6, backgroundColor: Maple.blueHover, alignItems: 'center', justifyContent: 'center' },
   trendText: { fontSize: 13, fontWeight: '600', color: Brand.ink },
   muted: { fontSize: 12, color: Brand.muted },
 });
